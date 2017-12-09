@@ -17,8 +17,8 @@
 --
 module Network.Google.Mirror.Types.Product where
 
-import           Network.Google.Mirror.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types.Sum
+import Network.Google.Prelude
 
 -- | Controls how notifications for a timeline item are presented to the
 -- user.
@@ -26,7 +26,7 @@ import           Network.Google.Prelude
 -- /See:/ 'notificationConfig' smart constructor.
 data NotificationConfig = NotificationConfig'
     { _ncDeliveryTime :: !(Maybe DateTime')
-    , _ncLevel        :: !(Maybe Text)
+    , _ncLevel :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationConfig' with the minimum fields required to make a request.
@@ -38,7 +38,7 @@ data NotificationConfig = NotificationConfig'
 -- * 'ncLevel'
 notificationConfig
     :: NotificationConfig
-notificationConfig =
+notificationConfig = 
     NotificationConfig'
     { _ncDeliveryTime = Nothing
     , _ncLevel = Nothing
@@ -85,7 +85,7 @@ newtype Command = Command'
 -- * 'cType'
 command
     :: Command
-command =
+command = 
     Command'
     { _cType = Nothing
     }
@@ -112,7 +112,7 @@ instance ToJSON Command where
 --
 -- /See:/ 'locationsListResponse' smart constructor.
 data LocationsListResponse = LocationsListResponse'
-    { _llrKind  :: !Text
+    { _llrKind :: !Text
     , _llrItems :: !(Maybe [Location])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -125,7 +125,7 @@ data LocationsListResponse = LocationsListResponse'
 -- * 'llrItems'
 locationsListResponse
     :: LocationsListResponse
-locationsListResponse =
+locationsListResponse = 
     LocationsListResponse'
     { _llrKind = "mirror#locationsList"
     , _llrItems = Nothing
@@ -161,14 +161,14 @@ instance ToJSON LocationsListResponse where
 --
 -- /See:/ 'location' smart constructor.
 data Location = Location'
-    { _lKind        :: !Text
-    , _lLatitude    :: !(Maybe (Textual Double))
-    , _lAddress     :: !(Maybe Text)
+    { _lKind :: !Text
+    , _lLatitude :: !(Maybe (Textual Double))
+    , _lAddress :: !(Maybe Text)
     , _lDisplayName :: !(Maybe Text)
-    , _lId          :: !(Maybe Text)
-    , _lAccuracy    :: !(Maybe (Textual Double))
-    , _lLongitude   :: !(Maybe (Textual Double))
-    , _lTimestamp   :: !(Maybe DateTime')
+    , _lId :: !(Maybe Text)
+    , _lAccuracy :: !(Maybe (Textual Double))
+    , _lLongitude :: !(Maybe (Textual Double))
+    , _lTimestamp :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Location' with the minimum fields required to make a request.
@@ -192,7 +192,7 @@ data Location = Location'
 -- * 'lTimestamp'
 location
     :: Location
-location =
+location = 
     Location'
     { _lKind = "mirror#location"
     , _lLatitude = Nothing
@@ -277,12 +277,12 @@ instance ToJSON Location where
 --
 -- /See:/ 'notification' smart constructor.
 data Notification = Notification'
-    { _nOperation   :: !(Maybe Text)
-    , _nItemId      :: !(Maybe Text)
-    , _nCollection  :: !(Maybe Text)
+    { _nOperation :: !(Maybe Text)
+    , _nItemId :: !(Maybe Text)
+    , _nCollection :: !(Maybe Text)
     , _nUserActions :: !(Maybe [UserAction])
     , _nVerifyToken :: !(Maybe Text)
-    , _nUserToken   :: !(Maybe Text)
+    , _nUserToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Notification' with the minimum fields required to make a request.
@@ -302,7 +302,7 @@ data Notification = Notification'
 -- * 'nUserToken'
 notification
     :: Notification
-notification =
+notification = 
     Notification'
     { _nOperation = Nothing
     , _nItemId = Nothing
@@ -371,18 +371,18 @@ instance ToJSON Notification where
 --
 -- /See:/ 'contact' smart constructor.
 data Contact = Contact'
-    { _conAcceptCommands  :: !(Maybe [Command])
+    { _conAcceptCommands :: !(Maybe [Command])
     , _conSharingFeatures :: !(Maybe [Text])
-    , _conImageURLs       :: !(Maybe [Text])
-    , _conPriority        :: !(Maybe (Textual Word32))
-    , _conKind            :: !Text
-    , _conAcceptTypes     :: !(Maybe [Text])
-    , _conPhoneNumber     :: !(Maybe Text)
-    , _conDisplayName     :: !(Maybe Text)
-    , _conSource          :: !(Maybe Text)
-    , _conId              :: !(Maybe Text)
-    , _conType            :: !(Maybe Text)
-    , _conSpeakableName   :: !(Maybe Text)
+    , _conImageURLs :: !(Maybe [Text])
+    , _conPriority :: !(Maybe (Textual Word32))
+    , _conKind :: !Text
+    , _conAcceptTypes :: !(Maybe [Text])
+    , _conPhoneNumber :: !(Maybe Text)
+    , _conDisplayName :: !(Maybe Text)
+    , _conSource :: !(Maybe Text)
+    , _conId :: !(Maybe Text)
+    , _conType :: !(Maybe Text)
+    , _conSpeakableName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Contact' with the minimum fields required to make a request.
@@ -414,7 +414,7 @@ data Contact = Contact'
 -- * 'conSpeakableName'
 contact
     :: Contact
-contact =
+contact = 
     Contact'
     { _conAcceptCommands = Nothing
     , _conSharingFeatures = Nothing
@@ -560,7 +560,7 @@ instance ToJSON Contact where
 -- /See:/ 'authToken' smart constructor.
 data AuthToken = AuthToken'
     { _atAuthToken :: !(Maybe Text)
-    , _atType      :: !(Maybe Text)
+    , _atType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AuthToken' with the minimum fields required to make a request.
@@ -572,7 +572,7 @@ data AuthToken = AuthToken'
 -- * 'atType'
 authToken
     :: AuthToken
-authToken =
+authToken = 
     AuthToken'
     { _atAuthToken = Nothing
     , _atType = Nothing
@@ -604,7 +604,7 @@ instance ToJSON AuthToken where
 --
 -- /See:/ 'attachmentsListResponse' smart constructor.
 data AttachmentsListResponse = AttachmentsListResponse'
-    { _alrKind  :: !Text
+    { _alrKind :: !Text
     , _alrItems :: !(Maybe [Attachment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -617,7 +617,7 @@ data AttachmentsListResponse = AttachmentsListResponse'
 -- * 'alrItems'
 attachmentsListResponse
     :: AttachmentsListResponse
-attachmentsListResponse =
+attachmentsListResponse = 
     AttachmentsListResponse'
     { _alrKind = "mirror#attachmentsList"
     , _alrItems = Nothing
@@ -653,12 +653,12 @@ instance ToJSON AttachmentsListResponse where
 --
 -- /See:/ 'menuItem' smart constructor.
 data MenuItem = MenuItem'
-    { _miValues             :: !(Maybe [MenuValue])
+    { _miValues :: !(Maybe [MenuValue])
     , _miRemoveWhenSelected :: !(Maybe Bool)
-    , _miAction             :: !(Maybe Text)
-    , _miPayload            :: !(Maybe Text)
-    , _miContextualCommand  :: !(Maybe Text)
-    , _miId                 :: !(Maybe Text)
+    , _miAction :: !(Maybe Text)
+    , _miPayload :: !(Maybe Text)
+    , _miContextualCommand :: !(Maybe Text)
+    , _miId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MenuItem' with the minimum fields required to make a request.
@@ -678,7 +678,7 @@ data MenuItem = MenuItem'
 -- * 'miId'
 menuItem
     :: MenuItem
-menuItem =
+menuItem = 
     MenuItem'
     { _miValues = Nothing
     , _miRemoveWhenSelected = Nothing
@@ -787,9 +787,9 @@ instance ToJSON MenuItem where
 --
 -- /See:/ 'setting' smart constructor.
 data Setting = Setting'
-    { _sKind  :: !Text
+    { _sKind :: !Text
     , _sValue :: !(Maybe Text)
-    , _sId    :: !(Maybe Text)
+    , _sId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Setting' with the minimum fields required to make a request.
@@ -803,7 +803,7 @@ data Setting = Setting'
 -- * 'sId'
 setting
     :: Setting
-setting =
+setting = 
     Setting'
     { _sKind = "mirror#setting"
     , _sValue = Nothing
@@ -847,10 +847,10 @@ instance ToJSON Setting where
 --
 -- /See:/ 'attachment' smart constructor.
 data Attachment = Attachment'
-    { _aContentURL          :: !(Maybe Text)
-    , _aId                  :: !(Maybe Text)
+    { _aContentURL :: !(Maybe Text)
+    , _aId :: !(Maybe Text)
     , _aIsProcessingContent :: !(Maybe Bool)
-    , _aContentType         :: !(Maybe Text)
+    , _aContentType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Attachment' with the minimum fields required to make a request.
@@ -866,7 +866,7 @@ data Attachment = Attachment'
 -- * 'aContentType'
 attachment
     :: Attachment
-attachment =
+attachment = 
     Attachment'
     { _aContentURL = Nothing
     , _aId = Nothing
@@ -919,9 +919,9 @@ instance ToJSON Attachment where
 -- /See:/ 'account' smart constructor.
 data Account = Account'
     { _aAuthTokens :: !(Maybe [AuthToken])
-    , _aUserData   :: !(Maybe [UserData])
-    , _aPassword   :: !(Maybe Text)
-    , _aFeatures   :: !(Maybe [Text])
+    , _aUserData :: !(Maybe [UserData])
+    , _aPassword :: !(Maybe Text)
+    , _aFeatures :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Account' with the minimum fields required to make a request.
@@ -937,7 +937,7 @@ data Account = Account'
 -- * 'aFeatures'
 account
     :: Account
-account =
+account = 
     Account'
     { _aAuthTokens = Nothing
     , _aUserData = Nothing
@@ -990,7 +990,7 @@ instance ToJSON Account where
 -- /See:/ 'userData' smart constructor.
 data UserData = UserData'
     { _udValue :: !(Maybe Text)
-    , _udKey   :: !(Maybe Text)
+    , _udKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserData' with the minimum fields required to make a request.
@@ -1002,7 +1002,7 @@ data UserData = UserData'
 -- * 'udKey'
 userData
     :: UserData
-userData =
+userData = 
     UserData'
     { _udValue = Nothing
     , _udKey = Nothing
@@ -1031,7 +1031,7 @@ instance ToJSON UserData where
 -- /See:/ 'userAction' smart constructor.
 data UserAction = UserAction'
     { _uaPayload :: !(Maybe Text)
-    , _uaType    :: !(Maybe Text)
+    , _uaType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserAction' with the minimum fields required to make a request.
@@ -1043,7 +1043,7 @@ data UserAction = UserAction'
 -- * 'uaType'
 userAction
     :: UserAction
-userAction =
+userAction = 
     UserAction'
     { _uaPayload = Nothing
     , _uaType = Nothing
@@ -1085,8 +1085,8 @@ instance ToJSON UserAction where
 -- /See:/ 'timelineListResponse' smart constructor.
 data TimelineListResponse = TimelineListResponse'
     { _tlrNextPageToken :: !(Maybe Text)
-    , _tlrKind          :: !Text
-    , _tlrItems         :: !(Maybe [TimelineItem])
+    , _tlrKind :: !Text
+    , _tlrItems :: !(Maybe [TimelineItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineListResponse' with the minimum fields required to make a request.
@@ -1100,7 +1100,7 @@ data TimelineListResponse = TimelineListResponse'
 -- * 'tlrItems'
 timelineListResponse
     :: TimelineListResponse
-timelineListResponse =
+timelineListResponse = 
     TimelineListResponse'
     { _tlrNextPageToken = Nothing
     , _tlrKind = "mirror#timeline"
@@ -1147,7 +1147,7 @@ instance ToJSON TimelineListResponse where
 --
 -- /See:/ 'contactsListResponse' smart constructor.
 data ContactsListResponse = ContactsListResponse'
-    { _clrKind  :: !Text
+    { _clrKind :: !Text
     , _clrItems :: !(Maybe [Contact])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1160,7 +1160,7 @@ data ContactsListResponse = ContactsListResponse'
 -- * 'clrItems'
 contactsListResponse
     :: ContactsListResponse
-contactsListResponse =
+contactsListResponse = 
     ContactsListResponse'
     { _clrKind = "mirror#contacts"
     , _clrItems = Nothing
@@ -1196,9 +1196,9 @@ instance ToJSON ContactsListResponse where
 --
 -- /See:/ 'menuValue' smart constructor.
 data MenuValue = MenuValue'
-    { _mvState       :: !(Maybe Text)
+    { _mvState :: !(Maybe Text)
     , _mvDisplayName :: !(Maybe Text)
-    , _mvIconURL     :: !(Maybe Text)
+    , _mvIconURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MenuValue' with the minimum fields required to make a request.
@@ -1212,7 +1212,7 @@ data MenuValue = MenuValue'
 -- * 'mvIconURL'
 menuValue
     :: MenuValue
-menuValue =
+menuValue = 
     MenuValue'
     { _mvState = Nothing
     , _mvDisplayName = Nothing
@@ -1260,15 +1260,15 @@ instance ToJSON MenuValue where
 --
 -- /See:/ 'subscription' smart constructor.
 data Subscription = Subscription'
-    { _subCallbackURL  :: !(Maybe Text)
-    , _subOperation    :: !(Maybe [Text])
+    { _subCallbackURL :: !(Maybe Text)
+    , _subOperation :: !(Maybe [Text])
     , _subNotification :: !(Maybe Notification)
-    , _subKind         :: !Text
-    , _subCollection   :: !(Maybe Text)
-    , _subVerifyToken  :: !(Maybe Text)
-    , _subUserToken    :: !(Maybe Text)
-    , _subId           :: !(Maybe Text)
-    , _subUpdated      :: !(Maybe DateTime')
+    , _subKind :: !Text
+    , _subCollection :: !(Maybe Text)
+    , _subVerifyToken :: !(Maybe Text)
+    , _subUserToken :: !(Maybe Text)
+    , _subId :: !(Maybe Text)
+    , _subUpdated :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Subscription' with the minimum fields required to make a request.
@@ -1294,7 +1294,7 @@ data Subscription = Subscription'
 -- * 'subUpdated'
 subscription
     :: Subscription
-subscription =
+subscription = 
     Subscription'
     { _subCallbackURL = Nothing
     , _subOperation = Nothing
@@ -1402,32 +1402,32 @@ instance ToJSON Subscription where
 --
 -- /See:/ 'timelineItem' smart constructor.
 data TimelineItem = TimelineItem'
-    { _tiCreator       :: !(Maybe Contact)
-    , _tiDisplayTime   :: !(Maybe DateTime')
-    , _tiEtag          :: !(Maybe Text)
-    , _tiIsDeleted     :: !(Maybe Bool)
-    , _tiPinScore      :: !(Maybe (Textual Int32))
-    , _tiAttachments   :: !(Maybe [Attachment])
-    , _tiLocation      :: !(Maybe Location)
-    , _tiMenuItems     :: !(Maybe [MenuItem])
-    , _tiNotification  :: !(Maybe NotificationConfig)
-    , _tiText          :: !(Maybe Text)
-    , _tiKind          :: !Text
-    , _tiCreated       :: !(Maybe DateTime')
+    { _tiCreator :: !(Maybe Contact)
+    , _tiDisplayTime :: !(Maybe DateTime')
+    , _tiEtag :: !(Maybe Text)
+    , _tiIsDeleted :: !(Maybe Bool)
+    , _tiPinScore :: !(Maybe (Textual Int32))
+    , _tiAttachments :: !(Maybe [Attachment])
+    , _tiLocation :: !(Maybe Location)
+    , _tiMenuItems :: !(Maybe [MenuItem])
+    , _tiNotification :: !(Maybe NotificationConfig)
+    , _tiText :: !(Maybe Text)
+    , _tiKind :: !Text
+    , _tiCreated :: !(Maybe DateTime')
     , _tiSpeakableText :: !(Maybe Text)
     , _tiIsBundleCover :: !(Maybe Bool)
     , _tiSpeakableType :: !(Maybe Text)
-    , _tiBundleId      :: !(Maybe Text)
-    , _tiCanonicalURL  :: !(Maybe Text)
-    , _tiSelfLink      :: !(Maybe Text)
-    , _tiIsPinned      :: !(Maybe Bool)
-    , _tiSourceItemId  :: !(Maybe Text)
-    , _tiId            :: !(Maybe Text)
-    , _tiHTML          :: !(Maybe Text)
-    , _tiUpdated       :: !(Maybe DateTime')
-    , _tiRecipients    :: !(Maybe [Contact])
-    , _tiTitle         :: !(Maybe Text)
-    , _tiInReplyTo     :: !(Maybe Text)
+    , _tiBundleId :: !(Maybe Text)
+    , _tiCanonicalURL :: !(Maybe Text)
+    , _tiSelfLink :: !(Maybe Text)
+    , _tiIsPinned :: !(Maybe Bool)
+    , _tiSourceItemId :: !(Maybe Text)
+    , _tiId :: !(Maybe Text)
+    , _tiHTML :: !(Maybe Text)
+    , _tiUpdated :: !(Maybe DateTime')
+    , _tiRecipients :: !(Maybe [Contact])
+    , _tiTitle :: !(Maybe Text)
+    , _tiInReplyTo :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineItem' with the minimum fields required to make a request.
@@ -1487,7 +1487,7 @@ data TimelineItem = TimelineItem'
 -- * 'tiInReplyTo'
 timelineItem
     :: TimelineItem
-timelineItem =
+timelineItem = 
     TimelineItem'
     { _tiCreator = Nothing
     , _tiDisplayTime = Nothing
@@ -1782,7 +1782,7 @@ instance ToJSON TimelineItem where
 --
 -- /See:/ 'subscriptionsListResponse' smart constructor.
 data SubscriptionsListResponse = SubscriptionsListResponse'
-    { _slrKind  :: !Text
+    { _slrKind :: !Text
     , _slrItems :: !(Maybe [Subscription])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1795,7 +1795,7 @@ data SubscriptionsListResponse = SubscriptionsListResponse'
 -- * 'slrItems'
 subscriptionsListResponse
     :: SubscriptionsListResponse
-subscriptionsListResponse =
+subscriptionsListResponse = 
     SubscriptionsListResponse'
     { _slrKind = "mirror#subscriptionsList"
     , _slrItems = Nothing

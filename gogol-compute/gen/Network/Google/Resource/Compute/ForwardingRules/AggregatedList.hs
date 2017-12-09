@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.ForwardingRules.AggregatedList
     , fralFilter
     , fralPageToken
     , fralMaxResults
+    , fralFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.forwardingRules.aggregatedList@ method which the
 -- 'ForwardingRulesAggregatedList' request conforms to.
@@ -56,18 +57,20 @@ type ForwardingRulesAggregatedListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ForwardingRuleAggregatedList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ForwardingRuleAggregatedList
 
 -- | Retrieves an aggregated list of forwarding rules.
 --
 -- /See:/ 'forwardingRulesAggregatedList' smart constructor.
 data ForwardingRulesAggregatedList = ForwardingRulesAggregatedList'
-    { _fralOrderBy    :: !(Maybe Text)
-    , _fralProject    :: !Text
-    , _fralFilter     :: !(Maybe Text)
-    , _fralPageToken  :: !(Maybe Text)
+    { _fralOrderBy :: !(Maybe Text)
+    , _fralProject :: !Text
+    , _fralFilter :: !(Maybe Text)
+    , _fralPageToken :: !(Maybe Text)
     , _fralMaxResults :: !(Textual Word32)
+    , _fralFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ForwardingRulesAggregatedList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data ForwardingRulesAggregatedList = ForwardingRulesAggregatedList'
 -- * 'fralPageToken'
 --
 -- * 'fralMaxResults'
+--
+-- * 'fralFields'
 forwardingRulesAggregatedList
     :: Text -- ^ 'fralProject'
     -> ForwardingRulesAggregatedList
-forwardingRulesAggregatedList pFralProject_ =
+forwardingRulesAggregatedList pFralProject_ = 
     ForwardingRulesAggregatedList'
     { _fralOrderBy = Nothing
     , _fralProject = pFralProject_
     , _fralFilter = Nothing
     , _fralPageToken = Nothing
     , _fralMaxResults = 500
+    , _fralFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -112,26 +118,25 @@ fralProject :: Lens' ForwardingRulesAggregatedList Text
 fralProject
   = lens _fralProject (\ s a -> s{_fralProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 fralFilter :: Lens' ForwardingRulesAggregatedList (Maybe Text)
 fralFilter
   = lens _fralFilter (\ s a -> s{_fralFilter = a})
@@ -146,12 +151,18 @@ fralPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 fralMaxResults :: Lens' ForwardingRulesAggregatedList Word32
 fralMaxResults
   = lens _fralMaxResults
       (\ s a -> s{_fralMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+fralFields :: Lens' ForwardingRulesAggregatedList (Maybe Text)
+fralFields
+  = lens _fralFields (\ s a -> s{_fralFields = a})
 
 instance GoogleRequest ForwardingRulesAggregatedList
          where
@@ -165,6 +176,7 @@ instance GoogleRequest ForwardingRulesAggregatedList
           = go _fralProject _fralOrderBy _fralFilter
               _fralPageToken
               (Just _fralMaxResults)
+              _fralFields
               (Just AltJSON)
               computeService
           where go

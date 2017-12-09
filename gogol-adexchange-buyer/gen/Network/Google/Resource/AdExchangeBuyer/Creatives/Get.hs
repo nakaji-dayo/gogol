@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.Get
     -- * Request Lenses
     , cgBuyerCreativeId
     , cgAccountId
+    , cgFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.get@ method which the
 -- 'CreativesGet' request conforms to.
@@ -49,7 +50,8 @@ type CreativesGetResource =
          "creatives" :>
            Capture "accountId" (Textual Int32) :>
              Capture "buyerCreativeId" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Creative
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Creative
 
 -- | Gets the status for a single creative. A creative will be available
 -- 30-40 minutes after submission.
@@ -57,7 +59,8 @@ type CreativesGetResource =
 -- /See:/ 'creativesGet' smart constructor.
 data CreativesGet = CreativesGet'
     { _cgBuyerCreativeId :: !Text
-    , _cgAccountId       :: !(Textual Int32)
+    , _cgAccountId :: !(Textual Int32)
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativesGet = CreativesGet'
 -- * 'cgBuyerCreativeId'
 --
 -- * 'cgAccountId'
+--
+-- * 'cgFields'
 creativesGet
     :: Text -- ^ 'cgBuyerCreativeId'
     -> Int32 -- ^ 'cgAccountId'
     -> CreativesGet
-creativesGet pCgBuyerCreativeId_ pCgAccountId_ =
+creativesGet pCgBuyerCreativeId_ pCgAccountId_ = 
     CreativesGet'
     { _cgBuyerCreativeId = pCgBuyerCreativeId_
     , _cgAccountId = _Coerce # pCgAccountId_
+    , _cgFields = Nothing
     }
 
 -- | The buyer-specific id for this creative.
@@ -89,12 +95,17 @@ cgAccountId
   = lens _cgAccountId (\ s a -> s{_cgAccountId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CreativesGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CreativesGet where
         type Rs CreativesGet = Creative
         type Scopes CreativesGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient CreativesGet'{..}
-          = go _cgAccountId _cgBuyerCreativeId (Just AltJSON)
+          = go _cgAccountId _cgBuyerCreativeId _cgFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy CreativesGetResource)

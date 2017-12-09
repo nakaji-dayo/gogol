@@ -33,10 +33,12 @@ module Network.Google.Resource.GamesManagement.TurnBasedMatches.Reset
     , turnBasedMatchesReset
     , TurnBasedMatchesReset
 
+    -- * Request Lenses
+    , tbmrFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.turnBasedMatches.reset@ method which the
 -- 'TurnBasedMatchesReset' request conforms to.
@@ -45,29 +47,42 @@ type TurnBasedMatchesResetResource =
        "v1management" :>
          "turnbasedmatches" :>
            "reset" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Reset all turn-based match data for a user. This method is only
 -- accessible to whitelisted tester accounts for your application.
 --
 -- /See:/ 'turnBasedMatchesReset' smart constructor.
-data TurnBasedMatchesReset =
-    TurnBasedMatchesReset'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype TurnBasedMatchesReset = TurnBasedMatchesReset'
+    { _tbmrFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesReset' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tbmrFields'
 turnBasedMatchesReset
     :: TurnBasedMatchesReset
-turnBasedMatchesReset = TurnBasedMatchesReset'
+turnBasedMatchesReset = 
+    TurnBasedMatchesReset'
+    { _tbmrFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+tbmrFields :: Lens' TurnBasedMatchesReset (Maybe Text)
+tbmrFields
+  = lens _tbmrFields (\ s a -> s{_tbmrFields = a})
 
 instance GoogleRequest TurnBasedMatchesReset where
         type Rs TurnBasedMatchesReset = ()
         type Scopes TurnBasedMatchesReset =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient TurnBasedMatchesReset'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient TurnBasedMatchesReset'{..}
+          = go _tbmrFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy TurnBasedMatchesResetResource)

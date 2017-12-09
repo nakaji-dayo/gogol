@@ -32,10 +32,12 @@ module Network.Google.Resource.Calendar.Colors.Get
     , colorsGet
     , ColorsGet
 
+    -- * Request Lenses
+    , cFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.colors.get@ method which the
 -- 'ColorsGet' request conforms to.
@@ -43,28 +45,39 @@ type ColorsGetResource =
      "calendar" :>
        "v3" :>
          "colors" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] Colors
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] Colors
 
 -- | Returns the color definitions for calendars and events.
 --
 -- /See:/ 'colorsGet' smart constructor.
-data ColorsGet =
-    ColorsGet'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype ColorsGet = ColorsGet'
+    { _cFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColorsGet' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cFields'
 colorsGet
     :: ColorsGet
-colorsGet = ColorsGet'
+colorsGet = 
+    ColorsGet'
+    { _cFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+cFields :: Lens' ColorsGet (Maybe Text)
+cFields = lens _cFields (\ s a -> s{_cFields = a})
 
 instance GoogleRequest ColorsGet where
         type Rs ColorsGet = Colors
         type Scopes ColorsGet =
              '["https://www.googleapis.com/auth/calendar",
                "https://www.googleapis.com/auth/calendar.readonly"]
-        requestClient ColorsGet'{}
-          = go (Just AltJSON) appsCalendarService
+        requestClient ColorsGet'{..}
+          = go _cFields (Just AltJSON) appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy ColorsGetResource)
                       mempty

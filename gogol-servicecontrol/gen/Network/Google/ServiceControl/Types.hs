@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -23,10 +23,23 @@ module Network.Google.ServiceControl.Types
     , serviceControlScope
     , cloudPlatformScope
 
+    -- * StartReconciliationResponse
+    , StartReconciliationResponse
+    , startReconciliationResponse
+    , srrQuotaMetrics
+    , srrReconciliationErrors
+    , srrServiceConfigId
+    , srrOperationId
+
     -- * AuditLogServiceData
     , AuditLogServiceData
     , auditLogServiceData
     , alsdAddtional
+
+    -- * AuditLogMetadata
+    , AuditLogMetadata
+    , auditLogMetadata
+    , almAddtional
 
     -- * Status
     , Status
@@ -40,6 +53,7 @@ module Network.Google.ServiceControl.Types
     , requestMetadata
     , rmCallerSuppliedUserAgent
     , rmCallerIP
+    , rmCallerNetwork
 
     -- * ReportRequest
     , ReportRequest
@@ -51,7 +65,9 @@ module Network.Google.ServiceControl.Types
     , CheckRequest
     , checkRequest
     , crOperation
+    , crRequestProjectSettings
     , crServiceConfigId
+    , crSkipActivationCheck
 
     -- * MetricValueLabels
     , MetricValueLabels
@@ -71,6 +87,9 @@ module Network.Google.ServiceControl.Types
     , dBucketCounts
     , dExplicitBuckets
 
+    -- * QuotaPropertiesQuotaMode
+    , QuotaPropertiesQuotaMode (..)
+
     -- * ExponentialBuckets
     , ExponentialBuckets
     , exponentialBuckets
@@ -89,7 +108,11 @@ module Network.Google.ServiceControl.Types
     , Operation
     , operation
     , oImportance
+    , oResourceContainer
     , oStartTime
+    , oResources
+    , oUserLabels
+    , oQuotaProperties
     , oEndTime
     , oOperationName
     , oLabels
@@ -121,8 +144,42 @@ module Network.Google.ServiceControl.Types
     , lbWidth
     , lbNumFiniteBuckets
 
+    -- * QuotaInfo
+    , QuotaInfo
+    , quotaInfo
+    , qiLimitExceeded
+    , qiQuotaMetrics
+    , qiQuotaConsumed
+
+    -- * Money
+    , Money
+    , money
+    , mCurrencyCode
+    , mNanos
+    , mUnits
+
+    -- * ConsumerInfo
+    , ConsumerInfo
+    , consumerInfo
+    , ciProjectNumber
+
+    -- * AllocateInfo
+    , AllocateInfo
+    , allocateInfo
+    , aiUnusedArguments
+
     -- * CheckErrorCode
     , CheckErrorCode (..)
+
+    -- * QuotaOperation
+    , QuotaOperation
+    , quotaOperation
+    , qoQuotaMode
+    , qoMethodName
+    , qoQuotaMetrics
+    , qoLabels
+    , qoOperationId
+    , qoConsumerId
 
     -- * StatusDetailsItem
     , StatusDetailsItem
@@ -135,26 +192,77 @@ module Network.Google.ServiceControl.Types
     , ceCode
     , ceDetail
 
+    -- * QuotaOperationQuotaMode
+    , QuotaOperationQuotaMode (..)
+
+    -- * QuotaOperationLabels
+    , QuotaOperationLabels
+    , quotaOperationLabels
+    , qolAddtional
+
     -- * ReportError
     , ReportError
     , reportError
     , reStatus
     , reOperationId
 
+    -- * ReleaseQuotaRequest
+    , ReleaseQuotaRequest
+    , releaseQuotaRequest
+    , rqrReleaseOperation
+    , rqrServiceConfigId
+
     -- * OperationImportance
     , OperationImportance (..)
+
+    -- * EndReconciliationRequest
+    , EndReconciliationRequest
+    , endReconciliationRequest
+    , errServiceConfigId
+    , errReconciliationOperation
+
+    -- * AuthenticationInfoThirdPartyPrincipal
+    , AuthenticationInfoThirdPartyPrincipal
+    , authenticationInfoThirdPartyPrincipal
+    , aitppAddtional
+
+    -- * ReleaseQuotaResponse
+    , ReleaseQuotaResponse
+    , releaseQuotaResponse
+    , rQuotaMetrics
+    , rServiceConfigId
+    , rReleaseErrors
+    , rOperationId
+
+    -- * ResourceInfo
+    , ResourceInfo
+    , resourceInfo
+    , riResourceName
+    , riResourceContainer
 
     -- * MetricValue
     , MetricValue
     , metricValue
     , mvBoolValue
     , mvStartTime
+    , mvMoneyValue
     , mvDoubleValue
     , mvStringValue
     , mvDistributionValue
     , mvEndTime
     , mvInt64Value
     , mvLabels
+
+    -- * QuotaProperties
+    , QuotaProperties
+    , quotaProperties
+    , qpQuotaMode
+
+    -- * AllocateQuotaRequest
+    , AllocateQuotaRequest
+    , allocateQuotaRequest
+    , aqrServiceConfigId
+    , aqrAllocateOperation
 
     -- * Xgafv
     , Xgafv (..)
@@ -168,14 +276,23 @@ module Network.Google.ServiceControl.Types
     , CheckResponse
     , checkResponse
     , cCheckErrors
+    , cQuotaInfo
     , cServiceConfigId
+    , cCheckInfo
     , cOperationId
 
     -- * ReportResponse
     , ReportResponse
     , reportResponse
-    , rReportErrors
-    , rServiceConfigId
+    , repReportErrors
+    , repReportInfos
+    , repServiceConfigId
+
+    -- * ReportInfo
+    , ReportInfo
+    , reportInfo
+    , riQuotaInfo
+    , riOperationId
 
     -- * LogEntry
     , LogEntry
@@ -199,6 +316,29 @@ module Network.Google.ServiceControl.Types
     , operationLabels
     , olAddtional
 
+    -- * CheckInfo
+    , CheckInfo
+    , checkInfo
+    , ciConsumerInfo
+    , ciUnusedArguments
+
+    -- * AllocateQuotaResponse
+    , AllocateQuotaResponse
+    , allocateQuotaResponse
+    , aAllocateInfo
+    , aAllocateErrors
+    , aQuotaMetrics
+    , aServiceConfigId
+    , aOperationId
+
+    -- * EndReconciliationResponse
+    , EndReconciliationResponse
+    , endReconciliationResponse
+    , eQuotaMetrics
+    , eReconciliationErrors
+    , eServiceConfigId
+    , eOperationId
+
     -- * LogEntrySeverity
     , LogEntrySeverity (..)
 
@@ -207,11 +347,33 @@ module Network.Google.ServiceControl.Types
     , explicitBuckets
     , ebBounds
 
+    -- * QuotaErrorCode
+    , QuotaErrorCode (..)
+
+    -- * QuotaError
+    , QuotaError
+    , quotaError
+    , qeSubject
+    , qeCode
+    , qeDescription
+
+    -- * StartReconciliationRequest
+    , StartReconciliationRequest
+    , startReconciliationRequest
+    , sServiceConfigId
+    , sReconciliationOperation
+
     -- * AuthenticationInfo
     , AuthenticationInfo
     , authenticationInfo
+    , aiThirdPartyPrincipal
     , aiPrincipalEmail
     , aiAuthoritySelector
+
+    -- * QuotaInfoQuotaConsumed
+    , QuotaInfoQuotaConsumed
+    , quotaInfoQuotaConsumed
+    , qiqcAddtional
 
     -- * AuditLog
     , AuditLog
@@ -224,9 +386,15 @@ module Network.Google.ServiceControl.Types
     , alMethodName
     , alResponse
     , alServiceName
+    , alMetadata
     , alNumResponseItems
     , alAuthenticationInfo
     , alRequest
+
+    -- * OperationUserLabels
+    , OperationUserLabels
+    , operationUserLabels
+    , oulAddtional
 
     -- * LogEntryStructPayload
     , LogEntryStructPayload
@@ -234,9 +402,9 @@ module Network.Google.ServiceControl.Types
     , lespAddtional
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceControl.Types.Product
-import           Network.Google.ServiceControl.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ServiceControl.Types.Product
+import Network.Google.ServiceControl.Types.Sum
 
 -- | Default request referring to version 'v1' of the Google Service Control API. This contains the host and root path used as a starting point for constructing service requests.
 serviceControlService :: ServiceConfig

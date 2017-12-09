@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Details.Get
     -- * Request Lenses
     , edgPackageName
     , edgEditId
+    , edgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.details.get@ method which the
 -- 'EditsDetailsGet' request conforms to.
@@ -51,7 +52,8 @@ type EditsDetailsGetResource =
              "edits" :>
                Capture "editId" Text :>
                  "details" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] AppDetails
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] AppDetails
 
 -- | Fetches app details for this edit. This includes the default language
 -- and developer support contact information.
@@ -59,7 +61,8 @@ type EditsDetailsGetResource =
 -- /See:/ 'editsDetailsGet' smart constructor.
 data EditsDetailsGet = EditsDetailsGet'
     { _edgPackageName :: !Text
-    , _edgEditId      :: !Text
+    , _edgEditId :: !Text
+    , _edgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsDetailsGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data EditsDetailsGet = EditsDetailsGet'
 -- * 'edgPackageName'
 --
 -- * 'edgEditId'
+--
+-- * 'edgFields'
 editsDetailsGet
     :: Text -- ^ 'edgPackageName'
     -> Text -- ^ 'edgEditId'
     -> EditsDetailsGet
-editsDetailsGet pEdgPackageName_ pEdgEditId_ =
+editsDetailsGet pEdgPackageName_ pEdgEditId_ = 
     EditsDetailsGet'
     { _edgPackageName = pEdgPackageName_
     , _edgEditId = pEdgEditId_
+    , _edgFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -91,12 +97,18 @@ edgEditId :: Lens' EditsDetailsGet Text
 edgEditId
   = lens _edgEditId (\ s a -> s{_edgEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+edgFields :: Lens' EditsDetailsGet (Maybe Text)
+edgFields
+  = lens _edgFields (\ s a -> s{_edgFields = a})
+
 instance GoogleRequest EditsDetailsGet where
         type Rs EditsDetailsGet = AppDetails
         type Scopes EditsDetailsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsDetailsGet'{..}
-          = go _edgPackageName _edgEditId (Just AltJSON)
+          = go _edgPackageName _edgEditId _edgFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient

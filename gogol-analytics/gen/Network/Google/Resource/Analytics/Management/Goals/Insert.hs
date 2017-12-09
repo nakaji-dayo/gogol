@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Goals.Insert
     , mgiProFileId
     , mgiPayload
     , mgiAccountId
+    , mgiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.goals.insert@ method which the
 -- 'ManagementGoalsInsert' request conforms to.
@@ -55,17 +56,19 @@ type ManagementGoalsInsertResource =
                    "profiles" :>
                      Capture "profileId" Text :>
                        "goals" :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Goal :> Post '[JSON] Goal
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Goal :> Post '[JSON] Goal
 
 -- | Create a new goal.
 --
 -- /See:/ 'managementGoalsInsert' smart constructor.
 data ManagementGoalsInsert = ManagementGoalsInsert'
     { _mgiWebPropertyId :: !Text
-    , _mgiProFileId     :: !Text
-    , _mgiPayload       :: !Goal
-    , _mgiAccountId     :: !Text
+    , _mgiProFileId :: !Text
+    , _mgiPayload :: !Goal
+    , _mgiAccountId :: !Text
+    , _mgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementGoalsInsert' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementGoalsInsert = ManagementGoalsInsert'
 -- * 'mgiPayload'
 --
 -- * 'mgiAccountId'
+--
+-- * 'mgiFields'
 managementGoalsInsert
     :: Text -- ^ 'mgiWebPropertyId'
     -> Text -- ^ 'mgiProFileId'
     -> Goal -- ^ 'mgiPayload'
     -> Text -- ^ 'mgiAccountId'
     -> ManagementGoalsInsert
-managementGoalsInsert pMgiWebPropertyId_ pMgiProFileId_ pMgiPayload_ pMgiAccountId_ =
+managementGoalsInsert pMgiWebPropertyId_ pMgiProFileId_ pMgiPayload_ pMgiAccountId_ = 
     ManagementGoalsInsert'
     { _mgiWebPropertyId = pMgiWebPropertyId_
     , _mgiProFileId = pMgiProFileId_
     , _mgiPayload = pMgiPayload_
     , _mgiAccountId = pMgiAccountId_
+    , _mgiFields = Nothing
     }
 
 -- | Web property ID to create the goal for.
@@ -114,12 +120,18 @@ mgiAccountId :: Lens' ManagementGoalsInsert Text
 mgiAccountId
   = lens _mgiAccountId (\ s a -> s{_mgiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mgiFields :: Lens' ManagementGoalsInsert (Maybe Text)
+mgiFields
+  = lens _mgiFields (\ s a -> s{_mgiFields = a})
+
 instance GoogleRequest ManagementGoalsInsert where
         type Rs ManagementGoalsInsert = Goal
         type Scopes ManagementGoalsInsert =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementGoalsInsert'{..}
           = go _mgiAccountId _mgiWebPropertyId _mgiProFileId
+              _mgiFields
               (Just AltJSON)
               _mgiPayload
               analyticsService

@@ -43,11 +43,12 @@ module Network.Google.Resource.Monitoring.Projects.CollectdTimeSeries.Create
     , pctscPayload
     , pctscBearerToken
     , pctscName
+    , pctscFields
     , pctscCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.collectdTimeSeries.create@ method which the
 -- 'ProjectsCollectdTimeSeriesCreate' request conforms to.
@@ -62,9 +63,10 @@ type ProjectsCollectdTimeSeriesCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CreateCollectdTimeSeriesRequest :>
-                             Post '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CreateCollectdTimeSeriesRequest :>
+                               Post '[JSON] CreateCollectdTimeSeriesResponse
 
 -- | Stackdriver Monitoring Agent only: Creates a new time series.
 -- This method is only for use by the Stackdriver Monitoring Agent. Use
@@ -72,15 +74,16 @@ type ProjectsCollectdTimeSeriesCreateResource =
 --
 -- /See:/ 'projectsCollectdTimeSeriesCreate' smart constructor.
 data ProjectsCollectdTimeSeriesCreate = ProjectsCollectdTimeSeriesCreate'
-    { _pctscXgafv          :: !(Maybe Xgafv)
+    { _pctscXgafv :: !(Maybe Xgafv)
     , _pctscUploadProtocol :: !(Maybe Text)
-    , _pctscPp             :: !Bool
-    , _pctscAccessToken    :: !(Maybe Text)
-    , _pctscUploadType     :: !(Maybe Text)
-    , _pctscPayload        :: !CreateCollectdTimeSeriesRequest
-    , _pctscBearerToken    :: !(Maybe Text)
-    , _pctscName           :: !Text
-    , _pctscCallback       :: !(Maybe Text)
+    , _pctscPp :: !Bool
+    , _pctscAccessToken :: !(Maybe Text)
+    , _pctscUploadType :: !(Maybe Text)
+    , _pctscPayload :: !CreateCollectdTimeSeriesRequest
+    , _pctscBearerToken :: !(Maybe Text)
+    , _pctscName :: !Text
+    , _pctscFields :: !(Maybe Text)
+    , _pctscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsCollectdTimeSeriesCreate' with the minimum fields required to make a request.
@@ -103,12 +106,14 @@ data ProjectsCollectdTimeSeriesCreate = ProjectsCollectdTimeSeriesCreate'
 --
 -- * 'pctscName'
 --
+-- * 'pctscFields'
+--
 -- * 'pctscCallback'
 projectsCollectdTimeSeriesCreate
     :: CreateCollectdTimeSeriesRequest -- ^ 'pctscPayload'
     -> Text -- ^ 'pctscName'
     -> ProjectsCollectdTimeSeriesCreate
-projectsCollectdTimeSeriesCreate pPctscPayload_ pPctscName_ =
+projectsCollectdTimeSeriesCreate pPctscPayload_ pPctscName_ = 
     ProjectsCollectdTimeSeriesCreate'
     { _pctscXgafv = Nothing
     , _pctscUploadProtocol = Nothing
@@ -118,6 +123,7 @@ projectsCollectdTimeSeriesCreate pPctscPayload_ pPctscName_ =
     , _pctscPayload = pPctscPayload_
     , _pctscBearerToken = Nothing
     , _pctscName = pPctscName_
+    , _pctscFields = Nothing
     , _pctscCallback = Nothing
     }
 
@@ -165,6 +171,11 @@ pctscName :: Lens' ProjectsCollectdTimeSeriesCreate Text
 pctscName
   = lens _pctscName (\ s a -> s{_pctscName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pctscFields :: Lens' ProjectsCollectdTimeSeriesCreate (Maybe Text)
+pctscFields
+  = lens _pctscFields (\ s a -> s{_pctscFields = a})
+
 -- | JSONP
 pctscCallback :: Lens' ProjectsCollectdTimeSeriesCreate (Maybe Text)
 pctscCallback
@@ -173,7 +184,8 @@ pctscCallback
 
 instance GoogleRequest
          ProjectsCollectdTimeSeriesCreate where
-        type Rs ProjectsCollectdTimeSeriesCreate = Empty
+        type Rs ProjectsCollectdTimeSeriesCreate =
+             CreateCollectdTimeSeriesResponse
         type Scopes ProjectsCollectdTimeSeriesCreate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/monitoring",
@@ -185,6 +197,7 @@ instance GoogleRequest
               _pctscUploadType
               _pctscBearerToken
               _pctscCallback
+              _pctscFields
               (Just AltJSON)
               _pctscPayload
               monitoringService

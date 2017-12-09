@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.UploadAccount
 
     -- * Request Lenses
     , rpuaPayload
+    , rpuaFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.uploadAccount@ method which the
 -- 'RelyingPartyUploadAccount' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyUploadAccountResource =
        "v3" :>
          "relyingparty" :>
            "uploadAccount" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyUploadAccountRequest
-                 :> Post '[JSON] UploadAccountResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyUploadAccountRequest
+                   :> Post '[JSON] UploadAccountResponse
 
 -- | Batch upload existing user accounts.
 --
 -- /See:/ 'relyingPartyUploadAccount' smart constructor.
-newtype RelyingPartyUploadAccount = RelyingPartyUploadAccount'
-    { _rpuaPayload :: IdentitytoolkitRelyingPartyUploadAccountRequest
+data RelyingPartyUploadAccount = RelyingPartyUploadAccount'
+    { _rpuaPayload :: !IdentitytoolkitRelyingPartyUploadAccountRequest
+    , _rpuaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyUploadAccount' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyUploadAccount = RelyingPartyUploadAccount'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpuaPayload'
+--
+-- * 'rpuaFields'
 relyingPartyUploadAccount
     :: IdentitytoolkitRelyingPartyUploadAccountRequest -- ^ 'rpuaPayload'
     -> RelyingPartyUploadAccount
-relyingPartyUploadAccount pRpuaPayload_ =
+relyingPartyUploadAccount pRpuaPayload_ = 
     RelyingPartyUploadAccount'
     { _rpuaPayload = pRpuaPayload_
+    , _rpuaFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpuaPayload :: Lens' RelyingPartyUploadAccount IdentitytoolkitRelyingPartyUploadAccountRequest
 rpuaPayload
   = lens _rpuaPayload (\ s a -> s{_rpuaPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpuaFields :: Lens' RelyingPartyUploadAccount (Maybe Text)
+rpuaFields
+  = lens _rpuaFields (\ s a -> s{_rpuaFields = a})
 
 instance GoogleRequest RelyingPartyUploadAccount
          where
@@ -84,7 +95,7 @@ instance GoogleRequest RelyingPartyUploadAccount
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/firebase"]
         requestClient RelyingPartyUploadAccount'{..}
-          = go (Just AltJSON) _rpuaPayload
+          = go _rpuaFields (Just AltJSON) _rpuaPayload
               identityToolkitService
           where go
                   = buildClient

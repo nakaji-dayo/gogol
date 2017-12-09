@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.ManagedZones.Update
     , mzuPayload
     , mzuManagedZone
     , mzuClientOperationId
+    , mzuFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.update@ method which the
 -- 'ManagedZonesUpdate' request conforms to.
@@ -52,17 +53,19 @@ type ManagedZonesUpdateResource =
              "managedZones" :>
                Capture "managedZone" Text :>
                  QueryParam "clientOperationId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ManagedZone :> Put '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ManagedZone :> Put '[JSON] Operation
 
 -- | Update an existing ManagedZone.
 --
 -- /See:/ 'managedZonesUpdate' smart constructor.
 data ManagedZonesUpdate = ManagedZonesUpdate'
-    { _mzuProject           :: !Text
-    , _mzuPayload           :: !ManagedZone
-    , _mzuManagedZone       :: !Text
+    { _mzuProject :: !Text
+    , _mzuPayload :: !ManagedZone
+    , _mzuManagedZone :: !Text
     , _mzuClientOperationId :: !(Maybe Text)
+    , _mzuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesUpdate' with the minimum fields required to make a request.
@@ -76,17 +79,20 @@ data ManagedZonesUpdate = ManagedZonesUpdate'
 -- * 'mzuManagedZone'
 --
 -- * 'mzuClientOperationId'
+--
+-- * 'mzuFields'
 managedZonesUpdate
     :: Text -- ^ 'mzuProject'
     -> ManagedZone -- ^ 'mzuPayload'
     -> Text -- ^ 'mzuManagedZone'
     -> ManagedZonesUpdate
-managedZonesUpdate pMzuProject_ pMzuPayload_ pMzuManagedZone_ =
+managedZonesUpdate pMzuProject_ pMzuPayload_ pMzuManagedZone_ = 
     ManagedZonesUpdate'
     { _mzuProject = pMzuProject_
     , _mzuPayload = pMzuPayload_
     , _mzuManagedZone = pMzuManagedZone_
     , _mzuClientOperationId = Nothing
+    , _mzuFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -114,6 +120,11 @@ mzuClientOperationId
   = lens _mzuClientOperationId
       (\ s a -> s{_mzuClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzuFields :: Lens' ManagedZonesUpdate (Maybe Text)
+mzuFields
+  = lens _mzuFields (\ s a -> s{_mzuFields = a})
+
 instance GoogleRequest ManagedZonesUpdate where
         type Rs ManagedZonesUpdate = Operation
         type Scopes ManagedZonesUpdate =
@@ -122,6 +133,7 @@ instance GoogleRequest ManagedZonesUpdate where
         requestClient ManagedZonesUpdate'{..}
           = go _mzuProject _mzuManagedZone
               _mzuClientOperationId
+              _mzuFields
               (Just AltJSON)
               _mzuPayload
               dNSService

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.Marketplaceprivateauction.Updatep
     -- * Request Lenses
     , muPrivateAuctionId
     , muPayload
+    , muFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplaceprivateauction.updateproposal@ method which the
 -- 'MarketplaceprivateauctionUpdateproposal' request conforms to.
@@ -49,16 +50,18 @@ type MarketplaceprivateauctionUpdateproposalResource
          "privateauction" :>
            Capture "privateAuctionId" Text :>
              "updateproposal" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] UpdatePrivateAuctionProposalRequest
-                   :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] UpdatePrivateAuctionProposalRequest
+                     :> Post '[JSON] ()
 
 -- | Update a given private auction proposal
 --
 -- /See:/ 'marketplaceprivateauctionUpdateproposal' smart constructor.
 data MarketplaceprivateauctionUpdateproposal = MarketplaceprivateauctionUpdateproposal'
     { _muPrivateAuctionId :: !Text
-    , _muPayload          :: !UpdatePrivateAuctionProposalRequest
+    , _muPayload :: !UpdatePrivateAuctionProposalRequest
+    , _muFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceprivateauctionUpdateproposal' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MarketplaceprivateauctionUpdateproposal = MarketplaceprivateauctionUpdatepr
 -- * 'muPrivateAuctionId'
 --
 -- * 'muPayload'
+--
+-- * 'muFields'
 marketplaceprivateauctionUpdateproposal
     :: Text -- ^ 'muPrivateAuctionId'
     -> UpdatePrivateAuctionProposalRequest -- ^ 'muPayload'
     -> MarketplaceprivateauctionUpdateproposal
-marketplaceprivateauctionUpdateproposal pMuPrivateAuctionId_ pMuPayload_ =
+marketplaceprivateauctionUpdateproposal pMuPrivateAuctionId_ pMuPayload_ = 
     MarketplaceprivateauctionUpdateproposal'
     { _muPrivateAuctionId = pMuPrivateAuctionId_
     , _muPayload = pMuPayload_
+    , _muFields = Nothing
     }
 
 -- | The private auction id to be updated.
@@ -89,6 +95,10 @@ muPayload :: Lens' MarketplaceprivateauctionUpdateproposal UpdatePrivateAuctionP
 muPayload
   = lens _muPayload (\ s a -> s{_muPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+muFields :: Lens' MarketplaceprivateauctionUpdateproposal (Maybe Text)
+muFields = lens _muFields (\ s a -> s{_muFields = a})
+
 instance GoogleRequest
          MarketplaceprivateauctionUpdateproposal where
         type Rs MarketplaceprivateauctionUpdateproposal = ()
@@ -96,7 +106,8 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient
           MarketplaceprivateauctionUpdateproposal'{..}
-          = go _muPrivateAuctionId (Just AltJSON) _muPayload
+          = go _muPrivateAuctionId _muFields (Just AltJSON)
+              _muPayload
               adExchangeBuyerService
           where go
                   = buildClient

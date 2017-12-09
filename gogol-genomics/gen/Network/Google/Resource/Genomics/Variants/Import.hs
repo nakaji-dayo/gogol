@@ -52,11 +52,12 @@ module Network.Google.Resource.Genomics.Variants.Import
     , viUploadType
     , viPayload
     , viBearerToken
+    , viFields
     , viCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variants.import@ method which the
 -- 'VariantsImport' request conforms to.
@@ -70,9 +71,10 @@ type VariantsImportResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ImportVariantsRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ImportVariantsRequest :>
+                             Post '[JSON] Operation
 
 -- | Creates variant data by asynchronously importing the provided
 -- information. For the definitions of variant sets and other genomics
@@ -90,14 +92,15 @@ type VariantsImportResource =
 --
 -- /See:/ 'variantsImport' smart constructor.
 data VariantsImport = VariantsImport'
-    { _viXgafv          :: !(Maybe Xgafv)
+    { _viXgafv :: !(Maybe Xgafv)
     , _viUploadProtocol :: !(Maybe Text)
-    , _viPp             :: !Bool
-    , _viAccessToken    :: !(Maybe Text)
-    , _viUploadType     :: !(Maybe Text)
-    , _viPayload        :: !ImportVariantsRequest
-    , _viBearerToken    :: !(Maybe Text)
-    , _viCallback       :: !(Maybe Text)
+    , _viPp :: !Bool
+    , _viAccessToken :: !(Maybe Text)
+    , _viUploadType :: !(Maybe Text)
+    , _viPayload :: !ImportVariantsRequest
+    , _viBearerToken :: !(Maybe Text)
+    , _viFields :: !(Maybe Text)
+    , _viCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantsImport' with the minimum fields required to make a request.
@@ -118,11 +121,13 @@ data VariantsImport = VariantsImport'
 --
 -- * 'viBearerToken'
 --
+-- * 'viFields'
+--
 -- * 'viCallback'
 variantsImport
     :: ImportVariantsRequest -- ^ 'viPayload'
     -> VariantsImport
-variantsImport pViPayload_ =
+variantsImport pViPayload_ = 
     VariantsImport'
     { _viXgafv = Nothing
     , _viUploadProtocol = Nothing
@@ -131,6 +136,7 @@ variantsImport pViPayload_ =
     , _viUploadType = Nothing
     , _viPayload = pViPayload_
     , _viBearerToken = Nothing
+    , _viFields = Nothing
     , _viCallback = Nothing
     }
 
@@ -170,6 +176,10 @@ viBearerToken
   = lens _viBearerToken
       (\ s a -> s{_viBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+viFields :: Lens' VariantsImport (Maybe Text)
+viFields = lens _viFields (\ s a -> s{_viFields = a})
+
 -- | JSONP
 viCallback :: Lens' VariantsImport (Maybe Text)
 viCallback
@@ -187,6 +197,7 @@ instance GoogleRequest VariantsImport where
               _viUploadType
               _viBearerToken
               _viCallback
+              _viFields
               (Just AltJSON)
               _viPayload
               genomicsService

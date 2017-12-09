@@ -46,10 +46,11 @@ module Network.Google.Resource.Directory.Users.Watch
     , uwProjection
     , uwPageToken
     , uwMaxResults
+    , uwFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.watch@ method which the
 -- 'UsersWatch' request conforms to.
@@ -71,27 +72,29 @@ type UsersWatchResource =
                                  QueryParam "projection" UsersWatchProjection :>
                                    QueryParam "pageToken" Text :>
                                      QueryParam "maxResults" (Textual Int32) :>
-                                       QueryParam "alt" AltJSON :>
-                                         ReqBody '[JSON] Channel :>
-                                           Post '[JSON] Channel
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           ReqBody '[JSON] Channel :>
+                                             Post '[JSON] Channel
 
 -- | Watch for changes in users list
 --
 -- /See:/ 'usersWatch' smart constructor.
 data UsersWatch = UsersWatch'
-    { _uwEvent           :: !(Maybe UsersWatchEvent)
-    , _uwOrderBy         :: !(Maybe UsersWatchOrderBy)
-    , _uwViewType        :: !UsersWatchViewType
+    { _uwEvent :: !(Maybe UsersWatchEvent)
+    , _uwOrderBy :: !(Maybe UsersWatchOrderBy)
+    , _uwViewType :: !UsersWatchViewType
     , _uwCustomFieldMask :: !(Maybe Text)
-    , _uwDomain          :: !(Maybe Text)
-    , _uwShowDeleted     :: !(Maybe Text)
-    , _uwPayload         :: !Channel
-    , _uwSortOrder       :: !(Maybe UsersWatchSortOrder)
-    , _uwCustomer        :: !(Maybe Text)
-    , _uwQuery           :: !(Maybe Text)
-    , _uwProjection      :: !UsersWatchProjection
-    , _uwPageToken       :: !(Maybe Text)
-    , _uwMaxResults      :: !(Maybe (Textual Int32))
+    , _uwDomain :: !(Maybe Text)
+    , _uwShowDeleted :: !(Maybe Text)
+    , _uwPayload :: !Channel
+    , _uwSortOrder :: !(Maybe UsersWatchSortOrder)
+    , _uwCustomer :: !(Maybe Text)
+    , _uwQuery :: !(Maybe Text)
+    , _uwProjection :: !UsersWatchProjection
+    , _uwPageToken :: !(Maybe Text)
+    , _uwMaxResults :: !(Maybe (Textual Int32))
+    , _uwFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersWatch' with the minimum fields required to make a request.
@@ -123,10 +126,12 @@ data UsersWatch = UsersWatch'
 -- * 'uwPageToken'
 --
 -- * 'uwMaxResults'
+--
+-- * 'uwFields'
 usersWatch
     :: Channel -- ^ 'uwPayload'
     -> UsersWatch
-usersWatch pUwPayload_ =
+usersWatch pUwPayload_ = 
     UsersWatch'
     { _uwEvent = Nothing
     , _uwOrderBy = Nothing
@@ -141,6 +146,7 @@ usersWatch pUwPayload_ =
     , _uwProjection = UWPBasic
     , _uwPageToken = Nothing
     , _uwMaxResults = Nothing
+    , _uwFields = Nothing
     }
 
 -- | Event on which subscription is intended (if subscribing)
@@ -185,8 +191,8 @@ uwSortOrder :: Lens' UsersWatch (Maybe UsersWatchSortOrder)
 uwSortOrder
   = lens _uwSortOrder (\ s a -> s{_uwSortOrder = a})
 
--- | Immutable id of the Google Apps account. In case of multi-domain, to
--- fetch all users for a customer, fill this field instead of domain.
+-- | Immutable ID of the G Suite account. In case of multi-domain, to fetch
+-- all users for a customer, fill this field instead of domain.
 uwCustomer :: Lens' UsersWatch (Maybe Text)
 uwCustomer
   = lens _uwCustomer (\ s a -> s{_uwCustomer = a})
@@ -213,6 +219,10 @@ uwMaxResults
   = lens _uwMaxResults (\ s a -> s{_uwMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+uwFields :: Lens' UsersWatch (Maybe Text)
+uwFields = lens _uwFields (\ s a -> s{_uwFields = a})
+
 instance GoogleRequest UsersWatch where
         type Rs UsersWatch = Channel
         type Scopes UsersWatch =
@@ -229,6 +239,7 @@ instance GoogleRequest UsersWatch where
               (Just _uwProjection)
               _uwPageToken
               _uwMaxResults
+              _uwFields
               (Just AltJSON)
               _uwPayload
               directoryService

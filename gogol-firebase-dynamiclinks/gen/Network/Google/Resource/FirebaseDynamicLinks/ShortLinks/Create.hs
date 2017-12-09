@@ -45,11 +45,12 @@ module Network.Google.Resource.FirebaseDynamicLinks.ShortLinks.Create
     , slcUploadType
     , slcPayload
     , slcBearerToken
+    , slcFields
     , slcCallback
     ) where
 
-import           Network.Google.FirebaseDynamicLinks.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseDynamicLinks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebasedynamiclinks.shortLinks.create@ method which the
 -- 'ShortLinksCreate' request conforms to.
@@ -63,9 +64,10 @@ type ShortLinksCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] CreateShortDynamicLinkRequest :>
-                           Post '[JSON] CreateShortDynamicLinkResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] CreateShortDynamicLinkRequest :>
+                             Post '[JSON] CreateShortDynamicLinkResponse
 
 -- | Creates a short Dynamic Link given either a valid long Dynamic Link or
 -- details such as Dynamic Link domain, Android and iOS app information.
@@ -76,14 +78,15 @@ type ShortLinksCreateResource =
 --
 -- /See:/ 'shortLinksCreate' smart constructor.
 data ShortLinksCreate = ShortLinksCreate'
-    { _slcXgafv          :: !(Maybe Xgafv)
+    { _slcXgafv :: !(Maybe Xgafv)
     , _slcUploadProtocol :: !(Maybe Text)
-    , _slcPp             :: !Bool
-    , _slcAccessToken    :: !(Maybe Text)
-    , _slcUploadType     :: !(Maybe Text)
-    , _slcPayload        :: !CreateShortDynamicLinkRequest
-    , _slcBearerToken    :: !(Maybe Text)
-    , _slcCallback       :: !(Maybe Text)
+    , _slcPp :: !Bool
+    , _slcAccessToken :: !(Maybe Text)
+    , _slcUploadType :: !(Maybe Text)
+    , _slcPayload :: !CreateShortDynamicLinkRequest
+    , _slcBearerToken :: !(Maybe Text)
+    , _slcFields :: !(Maybe Text)
+    , _slcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ShortLinksCreate' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ShortLinksCreate = ShortLinksCreate'
 --
 -- * 'slcBearerToken'
 --
+-- * 'slcFields'
+--
 -- * 'slcCallback'
 shortLinksCreate
     :: CreateShortDynamicLinkRequest -- ^ 'slcPayload'
     -> ShortLinksCreate
-shortLinksCreate pSlcPayload_ =
+shortLinksCreate pSlcPayload_ = 
     ShortLinksCreate'
     { _slcXgafv = Nothing
     , _slcUploadProtocol = Nothing
@@ -117,6 +122,7 @@ shortLinksCreate pSlcPayload_ =
     , _slcUploadType = Nothing
     , _slcPayload = pSlcPayload_
     , _slcBearerToken = Nothing
+    , _slcFields = Nothing
     , _slcCallback = Nothing
     }
 
@@ -157,6 +163,11 @@ slcBearerToken
   = lens _slcBearerToken
       (\ s a -> s{_slcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+slcFields :: Lens' ShortLinksCreate (Maybe Text)
+slcFields
+  = lens _slcFields (\ s a -> s{_slcFields = a})
+
 -- | JSONP
 slcCallback :: Lens' ShortLinksCreate (Maybe Text)
 slcCallback
@@ -173,6 +184,7 @@ instance GoogleRequest ShortLinksCreate where
               _slcUploadType
               _slcBearerToken
               _slcCallback
+              _slcFields
               (Just AltJSON)
               _slcPayload
               firebaseDynamicLinksService

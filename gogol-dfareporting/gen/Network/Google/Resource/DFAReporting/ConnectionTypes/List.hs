@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.ConnectionTypes.List
 
     -- * Request Lenses
     , ctlProFileId
+    , ctlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.connectionTypes.list@ method which the
 -- 'ConnectionTypesList' request conforms to.
 type ConnectionTypesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "connectionTypes" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] ConnectionTypesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ConnectionTypesListResponse
 
 -- | Retrieves a list of connection types.
 --
 -- /See:/ 'connectionTypesList' smart constructor.
-newtype ConnectionTypesList = ConnectionTypesList'
-    { _ctlProFileId :: Textual Int64
+data ConnectionTypesList = ConnectionTypesList'
+    { _ctlProFileId :: !(Textual Int64)
+    , _ctlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConnectionTypesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype ConnectionTypesList = ConnectionTypesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ctlProFileId'
+--
+-- * 'ctlFields'
 connectionTypesList
     :: Int64 -- ^ 'ctlProFileId'
     -> ConnectionTypesList
-connectionTypesList pCtlProFileId_ =
+connectionTypesList pCtlProFileId_ = 
     ConnectionTypesList'
     { _ctlProFileId = _Coerce # pCtlProFileId_
+    , _ctlFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,13 +82,19 @@ ctlProFileId
   = lens _ctlProFileId (\ s a -> s{_ctlProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ctlFields :: Lens' ConnectionTypesList (Maybe Text)
+ctlFields
+  = lens _ctlFields (\ s a -> s{_ctlFields = a})
+
 instance GoogleRequest ConnectionTypesList where
         type Rs ConnectionTypesList =
              ConnectionTypesListResponse
         type Scopes ConnectionTypesList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ConnectionTypesList'{..}
-          = go _ctlProFileId (Just AltJSON) dFAReportingService
+          = go _ctlProFileId _ctlFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy ConnectionTypesListResource)

@@ -53,11 +53,12 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.Create
     , ccwcUploadType
     , ccwcPayload
     , ccwcBearerToken
+    , ccwcFields
     , ccwcCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.create@ method which the
 -- 'CoursesCourseWorkCreate' request conforms to.
@@ -66,16 +67,17 @@ type CoursesCourseWorkCreateResource =
        "courses" :>
          Capture "courseId" Text :>
            "courseWork" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] CourseWork :>
-                               Post '[JSON] CourseWork
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] CourseWork :>
+                                 Post '[JSON] CourseWork
 
 -- | Creates course work. The resulting course work (and corresponding
 -- student submissions) are associated with the Developer Console project
@@ -93,15 +95,16 @@ type CoursesCourseWorkCreateResource =
 --
 -- /See:/ 'coursesCourseWorkCreate' smart constructor.
 data CoursesCourseWorkCreate = CoursesCourseWorkCreate'
-    { _ccwcXgafv          :: !(Maybe Text)
+    { _ccwcXgafv :: !(Maybe Xgafv)
     , _ccwcUploadProtocol :: !(Maybe Text)
-    , _ccwcPp             :: !Bool
-    , _ccwcCourseId       :: !Text
-    , _ccwcAccessToken    :: !(Maybe Text)
-    , _ccwcUploadType     :: !(Maybe Text)
-    , _ccwcPayload        :: !CourseWork
-    , _ccwcBearerToken    :: !(Maybe Text)
-    , _ccwcCallback       :: !(Maybe Text)
+    , _ccwcPp :: !Bool
+    , _ccwcCourseId :: !Text
+    , _ccwcAccessToken :: !(Maybe Text)
+    , _ccwcUploadType :: !(Maybe Text)
+    , _ccwcPayload :: !CourseWork
+    , _ccwcBearerToken :: !(Maybe Text)
+    , _ccwcFields :: !(Maybe Text)
+    , _ccwcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkCreate' with the minimum fields required to make a request.
@@ -124,12 +127,14 @@ data CoursesCourseWorkCreate = CoursesCourseWorkCreate'
 --
 -- * 'ccwcBearerToken'
 --
+-- * 'ccwcFields'
+--
 -- * 'ccwcCallback'
 coursesCourseWorkCreate
     :: Text -- ^ 'ccwcCourseId'
     -> CourseWork -- ^ 'ccwcPayload'
     -> CoursesCourseWorkCreate
-coursesCourseWorkCreate pCcwcCourseId_ pCcwcPayload_ =
+coursesCourseWorkCreate pCcwcCourseId_ pCcwcPayload_ = 
     CoursesCourseWorkCreate'
     { _ccwcXgafv = Nothing
     , _ccwcUploadProtocol = Nothing
@@ -139,11 +144,12 @@ coursesCourseWorkCreate pCcwcCourseId_ pCcwcPayload_ =
     , _ccwcUploadType = Nothing
     , _ccwcPayload = pCcwcPayload_
     , _ccwcBearerToken = Nothing
+    , _ccwcFields = Nothing
     , _ccwcCallback = Nothing
     }
 
 -- | V1 error format.
-ccwcXgafv :: Lens' CoursesCourseWorkCreate (Maybe Text)
+ccwcXgafv :: Lens' CoursesCourseWorkCreate (Maybe Xgafv)
 ccwcXgafv
   = lens _ccwcXgafv (\ s a -> s{_ccwcXgafv = a})
 
@@ -186,6 +192,11 @@ ccwcBearerToken
   = lens _ccwcBearerToken
       (\ s a -> s{_ccwcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwcFields :: Lens' CoursesCourseWorkCreate (Maybe Text)
+ccwcFields
+  = lens _ccwcFields (\ s a -> s{_ccwcFields = a})
+
 -- | JSONP
 ccwcCallback :: Lens' CoursesCourseWorkCreate (Maybe Text)
 ccwcCallback
@@ -202,6 +213,7 @@ instance GoogleRequest CoursesCourseWorkCreate where
               _ccwcUploadType
               _ccwcBearerToken
               _ccwcCallback
+              _ccwcFields
               (Just AltJSON)
               _ccwcPayload
               classroomService

@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Settings.GetAutoForwarding
 
     -- * Request Lenses
     , usgafUserId
+    , usgafFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.getAutoForwarding@ method which the
 -- 'UsersSettingsGetAutoForwarding' request conforms to.
@@ -48,14 +49,16 @@ type UsersSettingsGetAutoForwardingResource =
            Capture "userId" Text :>
              "settings" :>
                "autoForwarding" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AutoForwarding
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AutoForwarding
 
 -- | Gets the auto-forwarding setting for the specified account.
 --
 -- /See:/ 'usersSettingsGetAutoForwarding' smart constructor.
-newtype UsersSettingsGetAutoForwarding = UsersSettingsGetAutoForwarding'
-    { _usgafUserId :: Text
+data UsersSettingsGetAutoForwarding = UsersSettingsGetAutoForwarding'
+    { _usgafUserId :: !Text
+    , _usgafFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsGetAutoForwarding' with the minimum fields required to make a request.
@@ -63,11 +66,14 @@ newtype UsersSettingsGetAutoForwarding = UsersSettingsGetAutoForwarding'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'usgafUserId'
+--
+-- * 'usgafFields'
 usersSettingsGetAutoForwarding
     :: UsersSettingsGetAutoForwarding
-usersSettingsGetAutoForwarding =
+usersSettingsGetAutoForwarding = 
     UsersSettingsGetAutoForwarding'
     { _usgafUserId = "me"
+    , _usgafFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -75,6 +81,11 @@ usersSettingsGetAutoForwarding =
 usgafUserId :: Lens' UsersSettingsGetAutoForwarding Text
 usgafUserId
   = lens _usgafUserId (\ s a -> s{_usgafUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+usgafFields :: Lens' UsersSettingsGetAutoForwarding (Maybe Text)
+usgafFields
+  = lens _usgafFields (\ s a -> s{_usgafFields = a})
 
 instance GoogleRequest UsersSettingsGetAutoForwarding
          where
@@ -86,7 +97,8 @@ instance GoogleRequest UsersSettingsGetAutoForwarding
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsGetAutoForwarding'{..}
-          = go _usgafUserId (Just AltJSON) gmailService
+          = go _usgafUserId _usgafFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy ::

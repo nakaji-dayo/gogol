@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.RemarketingAudience.Get
     , mragWebPropertyId
     , mragAccountId
     , mragRemarketingAudienceId
+    , mragFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.remarketingAudience.get@ method which the
 -- 'ManagementRemarketingAudienceGet' request conforms to.
@@ -53,16 +54,18 @@ type ManagementRemarketingAudienceGetResource =
                  Capture "webPropertyId" Text :>
                    "remarketingAudiences" :>
                      Capture "remarketingAudienceId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] RemarketingAudience
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] RemarketingAudience
 
 -- | Gets a remarketing audience to which the user has access.
 --
 -- /See:/ 'managementRemarketingAudienceGet' smart constructor.
 data ManagementRemarketingAudienceGet = ManagementRemarketingAudienceGet'
-    { _mragWebPropertyId         :: !Text
-    , _mragAccountId             :: !Text
+    { _mragWebPropertyId :: !Text
+    , _mragAccountId :: !Text
     , _mragRemarketingAudienceId :: !Text
+    , _mragFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementRemarketingAudienceGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementRemarketingAudienceGet = ManagementRemarketingAudienceGet'
 -- * 'mragAccountId'
 --
 -- * 'mragRemarketingAudienceId'
+--
+-- * 'mragFields'
 managementRemarketingAudienceGet
     :: Text -- ^ 'mragWebPropertyId'
     -> Text -- ^ 'mragAccountId'
     -> Text -- ^ 'mragRemarketingAudienceId'
     -> ManagementRemarketingAudienceGet
-managementRemarketingAudienceGet pMragWebPropertyId_ pMragAccountId_ pMragRemarketingAudienceId_ =
+managementRemarketingAudienceGet pMragWebPropertyId_ pMragAccountId_ pMragRemarketingAudienceId_ = 
     ManagementRemarketingAudienceGet'
     { _mragWebPropertyId = pMragWebPropertyId_
     , _mragAccountId = pMragAccountId_
     , _mragRemarketingAudienceId = pMragRemarketingAudienceId_
+    , _mragFields = Nothing
     }
 
 -- | The web property ID of the remarketing audience to retrieve.
@@ -104,6 +110,11 @@ mragRemarketingAudienceId
   = lens _mragRemarketingAudienceId
       (\ s a -> s{_mragRemarketingAudienceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mragFields :: Lens' ManagementRemarketingAudienceGet (Maybe Text)
+mragFields
+  = lens _mragFields (\ s a -> s{_mragFields = a})
+
 instance GoogleRequest
          ManagementRemarketingAudienceGet where
         type Rs ManagementRemarketingAudienceGet =
@@ -114,6 +125,7 @@ instance GoogleRequest
         requestClient ManagementRemarketingAudienceGet'{..}
           = go _mragAccountId _mragWebPropertyId
               _mragRemarketingAudienceId
+              _mragFields
               (Just AltJSON)
               analyticsService
           where go

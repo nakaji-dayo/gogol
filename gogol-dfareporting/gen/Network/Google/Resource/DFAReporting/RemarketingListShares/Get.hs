@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.RemarketingListShares.Get
     -- * Request Lenses
     , rlsgProFileId
     , rlsgRemarketingListId
+    , rlsgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingListShares.get@ method which the
 -- 'RemarketingListSharesGet' request conforms to.
 type RemarketingListSharesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingListShares" :>
                Capture "remarketingListId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] RemarketingListShare
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] RemarketingListShare
 
 -- | Gets one remarketing list share by remarketing list ID.
 --
 -- /See:/ 'remarketingListSharesGet' smart constructor.
 data RemarketingListSharesGet = RemarketingListSharesGet'
-    { _rlsgProFileId         :: !(Textual Int64)
+    { _rlsgProFileId :: !(Textual Int64)
     , _rlsgRemarketingListId :: !(Textual Int64)
+    , _rlsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListSharesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data RemarketingListSharesGet = RemarketingListSharesGet'
 -- * 'rlsgProFileId'
 --
 -- * 'rlsgRemarketingListId'
+--
+-- * 'rlsgFields'
 remarketingListSharesGet
     :: Int64 -- ^ 'rlsgProFileId'
     -> Int64 -- ^ 'rlsgRemarketingListId'
     -> RemarketingListSharesGet
-remarketingListSharesGet pRlsgProFileId_ pRlsgRemarketingListId_ =
+remarketingListSharesGet pRlsgProFileId_ pRlsgRemarketingListId_ = 
     RemarketingListSharesGet'
     { _rlsgProFileId = _Coerce # pRlsgProFileId_
     , _rlsgRemarketingListId = _Coerce # pRlsgRemarketingListId_
+    , _rlsgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -91,6 +97,11 @@ rlsgRemarketingListId
       (\ s a -> s{_rlsgRemarketingListId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlsgFields :: Lens' RemarketingListSharesGet (Maybe Text)
+rlsgFields
+  = lens _rlsgFields (\ s a -> s{_rlsgFields = a})
+
 instance GoogleRequest RemarketingListSharesGet where
         type Rs RemarketingListSharesGet =
              RemarketingListShare
@@ -98,6 +109,7 @@ instance GoogleRequest RemarketingListSharesGet where
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListSharesGet'{..}
           = go _rlsgProFileId _rlsgRemarketingListId
+              _rlsgFields
               (Just AltJSON)
               dFAReportingService
           where go

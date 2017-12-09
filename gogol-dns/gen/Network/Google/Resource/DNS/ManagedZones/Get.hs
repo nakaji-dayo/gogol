@@ -36,10 +36,11 @@ module Network.Google.Resource.DNS.ManagedZones.Get
     , mzgProject
     , mzgManagedZone
     , mzgClientOperationId
+    , mzgFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.get@ method which the
 -- 'ManagedZonesGet' request conforms to.
@@ -51,15 +52,17 @@ type ManagedZonesGetResource =
              "managedZones" :>
                Capture "managedZone" Text :>
                  QueryParam "clientOperationId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] ManagedZone
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] ManagedZone
 
 -- | Fetch the representation of an existing ManagedZone.
 --
 -- /See:/ 'managedZonesGet' smart constructor.
 data ManagedZonesGet = ManagedZonesGet'
-    { _mzgProject           :: !Text
-    , _mzgManagedZone       :: !Text
+    { _mzgProject :: !Text
+    , _mzgManagedZone :: !Text
     , _mzgClientOperationId :: !(Maybe Text)
+    , _mzgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data ManagedZonesGet = ManagedZonesGet'
 -- * 'mzgManagedZone'
 --
 -- * 'mzgClientOperationId'
+--
+-- * 'mzgFields'
 managedZonesGet
     :: Text -- ^ 'mzgProject'
     -> Text -- ^ 'mzgManagedZone'
     -> ManagedZonesGet
-managedZonesGet pMzgProject_ pMzgManagedZone_ =
+managedZonesGet pMzgProject_ pMzgManagedZone_ = 
     ManagedZonesGet'
     { _mzgProject = pMzgProject_
     , _mzgManagedZone = pMzgManagedZone_
     , _mzgClientOperationId = Nothing
+    , _mzgFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -102,6 +108,11 @@ mzgClientOperationId
   = lens _mzgClientOperationId
       (\ s a -> s{_mzgClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzgFields :: Lens' ManagedZonesGet (Maybe Text)
+mzgFields
+  = lens _mzgFields (\ s a -> s{_mzgFields = a})
+
 instance GoogleRequest ManagedZonesGet where
         type Rs ManagedZonesGet = ManagedZone
         type Scopes ManagedZonesGet =
@@ -112,6 +123,7 @@ instance GoogleRequest ManagedZonesGet where
         requestClient ManagedZonesGet'{..}
           = go _mzgProject _mzgManagedZone
               _mzgClientOperationId
+              _mzgFields
               (Just AltJSON)
               dNSService
           where go

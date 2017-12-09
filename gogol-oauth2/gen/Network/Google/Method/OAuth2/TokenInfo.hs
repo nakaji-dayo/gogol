@@ -33,11 +33,12 @@ module Network.Google.Method.OAuth2.TokenInfo
     -- * Request Lenses
     , tAccessToken
     , tTokenHandle
+    , tFields
     , tIdToken
     ) where
 
-import           Network.Google.OAuth2.Types
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @oauth2.tokeninfo@ method which the
 -- 'TokenInfo'' request conforms to.
@@ -48,14 +49,16 @@ type TokenInfoMethod =
            QueryParam "access_token" Text :>
              QueryParam "token_handle" Text :>
                QueryParam "id_token" Text :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] TokenInfo
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] TokenInfo
 
 --
 -- /See:/ 'tokenInfo'' smart constructor.
 data TokenInfo' = TokenInfo''
     { _tAccessToken :: !(Maybe Text)
     , _tTokenHandle :: !(Maybe Text)
-    , _tIdToken     :: !(Maybe Text)
+    , _tFields :: !(Maybe Text)
+    , _tIdToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TokenInfo'' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data TokenInfo' = TokenInfo''
 --
 -- * 'tTokenHandle'
 --
+-- * 'tFields'
+--
 -- * 'tIdToken'
 tokenInfo'
     :: TokenInfo'
-tokenInfo' =
+tokenInfo' = 
     TokenInfo''
     { _tAccessToken = Nothing
     , _tTokenHandle = Nothing
+    , _tFields = Nothing
     , _tIdToken = Nothing
     }
 
@@ -84,6 +90,10 @@ tTokenHandle :: Lens' TokenInfo' (Maybe Text)
 tTokenHandle
   = lens _tTokenHandle (\ s a -> s{_tTokenHandle = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tFields :: Lens' TokenInfo' (Maybe Text)
+tFields = lens _tFields (\ s a -> s{_tFields = a})
+
 tIdToken :: Lens' TokenInfo' (Maybe Text)
 tIdToken = lens _tIdToken (\ s a -> s{_tIdToken = a})
 
@@ -91,7 +101,7 @@ instance GoogleRequest TokenInfo' where
         type Rs TokenInfo' = TokenInfo
         type Scopes TokenInfo' = '[]
         requestClient TokenInfo''{..}
-          = go _tAccessToken _tTokenHandle _tIdToken
+          = go _tAccessToken _tTokenHandle _tIdToken _tFields
               (Just AltJSON)
               oAuth2Service
           where go

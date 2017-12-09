@@ -38,10 +38,11 @@ module Network.Google.Resource.Books.Onboarding.ListCategoryVolumes
     , olcvCategoryId
     , olcvPageToken
     , olcvPageSize
+    , olcvFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.onboarding.listCategoryVolumes@ method which the
 -- 'OnboardingListCategoryVolumes' request conforms to.
@@ -57,17 +58,19 @@ type OnboardingListCategoryVolumesResource =
                  QueryParams "categoryId" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "pageSize" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Volume2
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Volume2
 
 -- | List available volumes under categories for onboarding experience.
 --
 -- /See:/ 'onboardingListCategoryVolumes' smart constructor.
 data OnboardingListCategoryVolumes = OnboardingListCategoryVolumes'
-    { _olcvLocale                   :: !(Maybe Text)
+    { _olcvLocale :: !(Maybe Text)
     , _olcvMaxAllowedMaturityRating :: !(Maybe OnboardingListCategoryVolumesMaxAllowedMaturityRating)
-    , _olcvCategoryId               :: !(Maybe [Text])
-    , _olcvPageToken                :: !(Maybe Text)
-    , _olcvPageSize                 :: !(Maybe (Textual Word32))
+    , _olcvCategoryId :: !(Maybe [Text])
+    , _olcvPageToken :: !(Maybe Text)
+    , _olcvPageSize :: !(Maybe (Textual Word32))
+    , _olcvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OnboardingListCategoryVolumes' with the minimum fields required to make a request.
@@ -83,15 +86,18 @@ data OnboardingListCategoryVolumes = OnboardingListCategoryVolumes'
 -- * 'olcvPageToken'
 --
 -- * 'olcvPageSize'
+--
+-- * 'olcvFields'
 onboardingListCategoryVolumes
     :: OnboardingListCategoryVolumes
-onboardingListCategoryVolumes =
+onboardingListCategoryVolumes = 
     OnboardingListCategoryVolumes'
     { _olcvLocale = Nothing
     , _olcvMaxAllowedMaturityRating = Nothing
     , _olcvCategoryId = Nothing
     , _olcvPageToken = Nothing
     , _olcvPageSize = Nothing
+    , _olcvFields = Nothing
     }
 
 -- | ISO-639-1 language and ISO-3166-1 country code. Default is en-US if
@@ -127,6 +133,11 @@ olcvPageSize
   = lens _olcvPageSize (\ s a -> s{_olcvPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+olcvFields :: Lens' OnboardingListCategoryVolumes (Maybe Text)
+olcvFields
+  = lens _olcvFields (\ s a -> s{_olcvFields = a})
+
 instance GoogleRequest OnboardingListCategoryVolumes
          where
         type Rs OnboardingListCategoryVolumes = Volume2
@@ -137,6 +148,7 @@ instance GoogleRequest OnboardingListCategoryVolumes
               (_olcvCategoryId ^. _Default)
               _olcvPageToken
               _olcvPageSize
+              _olcvFields
               (Just AltJSON)
               booksService
           where go

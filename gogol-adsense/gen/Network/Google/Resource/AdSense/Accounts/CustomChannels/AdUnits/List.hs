@@ -39,10 +39,11 @@ module Network.Google.Resource.AdSense.Accounts.CustomChannels.AdUnits.List
     , accaulAccountId
     , accaulPageToken
     , accaulMaxResults
+    , accaulFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.customchannels.adunits.list@ method which the
 -- 'AccountsCustomChannelsAdUnitsList' request conforms to.
@@ -59,7 +60,8 @@ type AccountsCustomChannelsAdUnitsListResource =
                        QueryParam "includeInactive" Bool :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] AdUnits
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] AdUnits
 
 -- | List all ad units in the specified custom channel.
 --
@@ -67,10 +69,11 @@ type AccountsCustomChannelsAdUnitsListResource =
 data AccountsCustomChannelsAdUnitsList = AccountsCustomChannelsAdUnitsList'
     { _accaulIncludeInactive :: !(Maybe Bool)
     , _accaulCustomChannelId :: !Text
-    , _accaulAdClientId      :: !Text
-    , _accaulAccountId       :: !Text
-    , _accaulPageToken       :: !(Maybe Text)
-    , _accaulMaxResults      :: !(Maybe (Textual Int32))
+    , _accaulAdClientId :: !Text
+    , _accaulAccountId :: !Text
+    , _accaulPageToken :: !(Maybe Text)
+    , _accaulMaxResults :: !(Maybe (Textual Int32))
+    , _accaulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsCustomChannelsAdUnitsList' with the minimum fields required to make a request.
@@ -88,12 +91,14 @@ data AccountsCustomChannelsAdUnitsList = AccountsCustomChannelsAdUnitsList'
 -- * 'accaulPageToken'
 --
 -- * 'accaulMaxResults'
+--
+-- * 'accaulFields'
 accountsCustomChannelsAdUnitsList
     :: Text -- ^ 'accaulCustomChannelId'
     -> Text -- ^ 'accaulAdClientId'
     -> Text -- ^ 'accaulAccountId'
     -> AccountsCustomChannelsAdUnitsList
-accountsCustomChannelsAdUnitsList pAccaulCustomChannelId_ pAccaulAdClientId_ pAccaulAccountId_ =
+accountsCustomChannelsAdUnitsList pAccaulCustomChannelId_ pAccaulAdClientId_ pAccaulAccountId_ = 
     AccountsCustomChannelsAdUnitsList'
     { _accaulIncludeInactive = Nothing
     , _accaulCustomChannelId = pAccaulCustomChannelId_
@@ -101,6 +106,7 @@ accountsCustomChannelsAdUnitsList pAccaulCustomChannelId_ pAccaulAdClientId_ pAc
     , _accaulAccountId = pAccaulAccountId_
     , _accaulPageToken = Nothing
     , _accaulMaxResults = Nothing
+    , _accaulFields = Nothing
     }
 
 -- | Whether to include inactive ad units. Default: true.
@@ -143,6 +149,11 @@ accaulMaxResults
       (\ s a -> s{_accaulMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+accaulFields :: Lens' AccountsCustomChannelsAdUnitsList (Maybe Text)
+accaulFields
+  = lens _accaulFields (\ s a -> s{_accaulFields = a})
+
 instance GoogleRequest
          AccountsCustomChannelsAdUnitsList where
         type Rs AccountsCustomChannelsAdUnitsList = AdUnits
@@ -155,6 +166,7 @@ instance GoogleRequest
               _accaulIncludeInactive
               _accaulPageToken
               _accaulMaxResults
+              _accaulFields
               (Just AltJSON)
               adSenseService
           where go

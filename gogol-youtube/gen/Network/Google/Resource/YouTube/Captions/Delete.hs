@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.Captions.Delete
     , cddOnBehalfOf
     , cddOnBehalfOfContentOwner
     , cddId
+    , cddFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.captions.delete@ method which the
 -- 'CaptionsDelete' request conforms to.
@@ -50,15 +51,17 @@ type CaptionsDeleteResource =
            QueryParam "id" Text :>
              QueryParam "onBehalfOf" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a specified caption track.
 --
 -- /See:/ 'captionsDelete' smart constructor.
 data CaptionsDelete = CaptionsDelete'
-    { _cddOnBehalfOf             :: !(Maybe Text)
+    { _cddOnBehalfOf :: !(Maybe Text)
     , _cddOnBehalfOfContentOwner :: !(Maybe Text)
-    , _cddId                     :: !Text
+    , _cddId :: !Text
+    , _cddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CaptionsDelete' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data CaptionsDelete = CaptionsDelete'
 -- * 'cddOnBehalfOfContentOwner'
 --
 -- * 'cddId'
+--
+-- * 'cddFields'
 captionsDelete
     :: Text -- ^ 'cddId'
     -> CaptionsDelete
-captionsDelete pCddId_ =
+captionsDelete pCddId_ = 
     CaptionsDelete'
     { _cddOnBehalfOf = Nothing
     , _cddOnBehalfOfContentOwner = Nothing
     , _cddId = pCddId_
+    , _cddFields = Nothing
     }
 
 -- | ID of the Google+ Page for the channel that the request is be on behalf
@@ -108,6 +114,11 @@ cddOnBehalfOfContentOwner
 cddId :: Lens' CaptionsDelete Text
 cddId = lens _cddId (\ s a -> s{_cddId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cddFields :: Lens' CaptionsDelete (Maybe Text)
+cddFields
+  = lens _cddFields (\ s a -> s{_cddFields = a})
+
 instance GoogleRequest CaptionsDelete where
         type Rs CaptionsDelete = ()
         type Scopes CaptionsDelete =
@@ -116,6 +127,7 @@ instance GoogleRequest CaptionsDelete where
         requestClient CaptionsDelete'{..}
           = go (Just _cddId) _cddOnBehalfOf
               _cddOnBehalfOfContentOwner
+              _cddFields
               (Just AltJSON)
               youTubeService
           where go

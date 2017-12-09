@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Settings.SendAs.List
 
     -- * Request Lenses
     , ussalUserId
+    , ussalFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.sendAs.list@ method which the
 -- 'UsersSettingsSendAsList' request conforms to.
@@ -50,16 +51,18 @@ type UsersSettingsSendAsListResource =
            Capture "userId" Text :>
              "settings" :>
                "sendAs" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ListSendAsResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ListSendAsResponse
 
 -- | Lists the send-as aliases for the specified account. The result includes
 -- the primary send-as address associated with the account as well as any
 -- custom \"from\" aliases.
 --
 -- /See:/ 'usersSettingsSendAsList' smart constructor.
-newtype UsersSettingsSendAsList = UsersSettingsSendAsList'
-    { _ussalUserId :: Text
+data UsersSettingsSendAsList = UsersSettingsSendAsList'
+    { _ussalUserId :: !Text
+    , _ussalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsSendAsList' with the minimum fields required to make a request.
@@ -67,11 +70,14 @@ newtype UsersSettingsSendAsList = UsersSettingsSendAsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ussalUserId'
+--
+-- * 'ussalFields'
 usersSettingsSendAsList
     :: UsersSettingsSendAsList
-usersSettingsSendAsList =
+usersSettingsSendAsList = 
     UsersSettingsSendAsList'
     { _ussalUserId = "me"
+    , _ussalFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -79,6 +85,11 @@ usersSettingsSendAsList =
 ussalUserId :: Lens' UsersSettingsSendAsList Text
 ussalUserId
   = lens _ussalUserId (\ s a -> s{_ussalUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ussalFields :: Lens' UsersSettingsSendAsList (Maybe Text)
+ussalFields
+  = lens _ussalFields (\ s a -> s{_ussalFields = a})
 
 instance GoogleRequest UsersSettingsSendAsList where
         type Rs UsersSettingsSendAsList = ListSendAsResponse
@@ -88,7 +99,8 @@ instance GoogleRequest UsersSettingsSendAsList where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsSendAsList'{..}
-          = go _ussalUserId (Just AltJSON) gmailService
+          = go _ussalUserId _ussalFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsSendAsListResource)

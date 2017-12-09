@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.PlayLists.Update
     , pluPart
     , pluPayload
     , pluOnBehalfOfContentOwner
+    , pluFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlists.update@ method which the
 -- 'PlayListsUpdate' request conforms to.
@@ -50,17 +51,19 @@ type PlayListsUpdateResource =
          "playlists" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlayList :> Put '[JSON] PlayList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlayList :> Put '[JSON] PlayList
 
 -- | Modifies a playlist. For example, you could change a playlist\'s title,
 -- description, or privacy status.
 --
 -- /See:/ 'playListsUpdate' smart constructor.
 data PlayListsUpdate = PlayListsUpdate'
-    { _pluPart                   :: !Text
-    , _pluPayload                :: !PlayList
+    { _pluPart :: !Text
+    , _pluPayload :: !PlayList
     , _pluOnBehalfOfContentOwner :: !(Maybe Text)
+    , _pluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListsUpdate' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data PlayListsUpdate = PlayListsUpdate'
 -- * 'pluPayload'
 --
 -- * 'pluOnBehalfOfContentOwner'
+--
+-- * 'pluFields'
 playListsUpdate
     :: Text -- ^ 'pluPart'
     -> PlayList -- ^ 'pluPayload'
     -> PlayListsUpdate
-playListsUpdate pPluPart_ pPluPayload_ =
+playListsUpdate pPluPart_ pPluPayload_ = 
     PlayListsUpdate'
     { _pluPart = pPluPart_
     , _pluPayload = pPluPayload_
     , _pluOnBehalfOfContentOwner = Nothing
+    , _pluFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -115,6 +121,11 @@ pluOnBehalfOfContentOwner
   = lens _pluOnBehalfOfContentOwner
       (\ s a -> s{_pluOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pluFields :: Lens' PlayListsUpdate (Maybe Text)
+pluFields
+  = lens _pluFields (\ s a -> s{_pluFields = a})
+
 instance GoogleRequest PlayListsUpdate where
         type Rs PlayListsUpdate = PlayList
         type Scopes PlayListsUpdate =
@@ -123,6 +134,7 @@ instance GoogleRequest PlayListsUpdate where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient PlayListsUpdate'{..}
           = go (Just _pluPart) _pluOnBehalfOfContentOwner
+              _pluFields
               (Just AltJSON)
               _pluPayload
               youTubeService

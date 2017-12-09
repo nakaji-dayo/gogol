@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.Autoscalers.Get
     , agProject
     , agZone
     , agAutoscaler
+    , agFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.autoscalers.get@ method which the
 -- 'AutoscalersGet' request conforms to.
@@ -53,16 +54,18 @@ type AutoscalersGetResource =
                Capture "zone" Text :>
                  "autoscalers" :>
                    Capture "autoscaler" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Autoscaler
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Autoscaler
 
 -- | Returns the specified autoscaler resource. Get a list of available
 -- autoscalers by making a list() request.
 --
 -- /See:/ 'autoscalersGet' smart constructor.
 data AutoscalersGet = AutoscalersGet'
-    { _agProject    :: !Text
-    , _agZone       :: !Text
+    { _agProject :: !Text
+    , _agZone :: !Text
     , _agAutoscaler :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalersGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data AutoscalersGet = AutoscalersGet'
 -- * 'agZone'
 --
 -- * 'agAutoscaler'
+--
+-- * 'agFields'
 autoscalersGet
     :: Text -- ^ 'agProject'
     -> Text -- ^ 'agZone'
     -> Text -- ^ 'agAutoscaler'
     -> AutoscalersGet
-autoscalersGet pAgProject_ pAgZone_ pAgAutoscaler_ =
+autoscalersGet pAgProject_ pAgZone_ pAgAutoscaler_ = 
     AutoscalersGet'
     { _agProject = pAgProject_
     , _agZone = pAgZone_
     , _agAutoscaler = pAgAutoscaler_
+    , _agFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -100,6 +106,10 @@ agAutoscaler :: Lens' AutoscalersGet Text
 agAutoscaler
   = lens _agAutoscaler (\ s a -> s{_agAutoscaler = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AutoscalersGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AutoscalersGet where
         type Rs AutoscalersGet = Autoscaler
         type Scopes AutoscalersGet =
@@ -107,7 +117,8 @@ instance GoogleRequest AutoscalersGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient AutoscalersGet'{..}
-          = go _agProject _agZone _agAutoscaler (Just AltJSON)
+          = go _agProject _agZone _agAutoscaler _agFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy AutoscalersGetResource)

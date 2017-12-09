@@ -35,14 +35,16 @@ module Network.Google.Resource.Compute.InstanceGroups.AddInstances
     , InstanceGroupsAddInstances
 
     -- * Request Lenses
+    , igaiRequestId
     , igaiProject
     , igaiZone
     , igaiPayload
     , igaiInstanceGroup
+    , igaiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroups.addInstances@ method which the
 -- 'InstanceGroupsAddInstances' request conforms to.
@@ -56,9 +58,11 @@ type InstanceGroupsAddInstancesResource =
                  "instanceGroups" :>
                    Capture "instanceGroup" Text :>
                      "addInstances" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] InstanceGroupsAddInstancesRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] InstanceGroupsAddInstancesRequest
+                               :> Post '[JSON] Operation
 
 -- | Adds a list of instances to the specified instance group. All of the
 -- instances in the instance group must be in the same network\/subnetwork.
@@ -66,15 +70,19 @@ type InstanceGroupsAddInstancesResource =
 --
 -- /See:/ 'instanceGroupsAddInstances' smart constructor.
 data InstanceGroupsAddInstances = InstanceGroupsAddInstances'
-    { _igaiProject       :: !Text
-    , _igaiZone          :: !Text
-    , _igaiPayload       :: !InstanceGroupsAddInstancesRequest
+    { _igaiRequestId :: !(Maybe Text)
+    , _igaiProject :: !Text
+    , _igaiZone :: !Text
+    , _igaiPayload :: !InstanceGroupsAddInstancesRequest
     , _igaiInstanceGroup :: !Text
+    , _igaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupsAddInstances' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'igaiRequestId'
 --
 -- * 'igaiProject'
 --
@@ -83,19 +91,38 @@ data InstanceGroupsAddInstances = InstanceGroupsAddInstances'
 -- * 'igaiPayload'
 --
 -- * 'igaiInstanceGroup'
+--
+-- * 'igaiFields'
 instanceGroupsAddInstances
     :: Text -- ^ 'igaiProject'
     -> Text -- ^ 'igaiZone'
     -> InstanceGroupsAddInstancesRequest -- ^ 'igaiPayload'
     -> Text -- ^ 'igaiInstanceGroup'
     -> InstanceGroupsAddInstances
-instanceGroupsAddInstances pIgaiProject_ pIgaiZone_ pIgaiPayload_ pIgaiInstanceGroup_ =
+instanceGroupsAddInstances pIgaiProject_ pIgaiZone_ pIgaiPayload_ pIgaiInstanceGroup_ = 
     InstanceGroupsAddInstances'
-    { _igaiProject = pIgaiProject_
+    { _igaiRequestId = Nothing
+    , _igaiProject = pIgaiProject_
     , _igaiZone = pIgaiZone_
     , _igaiPayload = pIgaiPayload_
     , _igaiInstanceGroup = pIgaiInstanceGroup_
+    , _igaiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igaiRequestId :: Lens' InstanceGroupsAddInstances (Maybe Text)
+igaiRequestId
+  = lens _igaiRequestId
+      (\ s a -> s{_igaiRequestId = a})
 
 -- | Project ID for this request.
 igaiProject :: Lens' InstanceGroupsAddInstances Text
@@ -117,6 +144,11 @@ igaiInstanceGroup
   = lens _igaiInstanceGroup
       (\ s a -> s{_igaiInstanceGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igaiFields :: Lens' InstanceGroupsAddInstances (Maybe Text)
+igaiFields
+  = lens _igaiFields (\ s a -> s{_igaiFields = a})
+
 instance GoogleRequest InstanceGroupsAddInstances
          where
         type Rs InstanceGroupsAddInstances = Operation
@@ -125,6 +157,8 @@ instance GoogleRequest InstanceGroupsAddInstances
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupsAddInstances'{..}
           = go _igaiProject _igaiZone _igaiInstanceGroup
+              _igaiRequestId
+              _igaiFields
               (Just AltJSON)
               _igaiPayload
               computeService

@@ -34,10 +34,11 @@ module Network.Google.Resource.YouTube.Subscriptions.Delete
 
     -- * Request Lenses
     , sdId
+    , sdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.subscriptions.delete@ method which the
 -- 'SubscriptionsDelete' request conforms to.
@@ -46,13 +47,15 @@ type SubscriptionsDeleteResource =
        "v3" :>
          "subscriptions" :>
            QueryParam "id" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a subscription.
 --
 -- /See:/ 'subscriptionsDelete' smart constructor.
-newtype SubscriptionsDelete = SubscriptionsDelete'
-    { _sdId :: Text
+data SubscriptionsDelete = SubscriptionsDelete'
+    { _sdId :: !Text
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsDelete' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype SubscriptionsDelete = SubscriptionsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sdId'
+--
+-- * 'sdFields'
 subscriptionsDelete
     :: Text -- ^ 'sdId'
     -> SubscriptionsDelete
-subscriptionsDelete pSdId_ =
+subscriptionsDelete pSdId_ = 
     SubscriptionsDelete'
     { _sdId = pSdId_
+    , _sdFields = Nothing
     }
 
 -- | The id parameter specifies the YouTube subscription ID for the resource
@@ -74,6 +80,10 @@ subscriptionsDelete pSdId_ =
 sdId :: Lens' SubscriptionsDelete Text
 sdId = lens _sdId (\ s a -> s{_sdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' SubscriptionsDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest SubscriptionsDelete where
         type Rs SubscriptionsDelete = ()
         type Scopes SubscriptionsDelete =
@@ -81,7 +91,8 @@ instance GoogleRequest SubscriptionsDelete where
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient SubscriptionsDelete'{..}
-          = go (Just _sdId) (Just AltJSON) youTubeService
+          = go (Just _sdId) _sdFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient
                       (Proxy :: Proxy SubscriptionsDeleteResource)

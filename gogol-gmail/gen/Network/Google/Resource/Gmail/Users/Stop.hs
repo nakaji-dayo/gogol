@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Stop
 
     -- * Request Lenses
     , usUserId
+    , usFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.stop@ method which the
 -- 'UsersStop' request conforms to.
@@ -46,13 +47,16 @@ type UsersStopResource =
        "v1" :>
          "users" :>
            Capture "userId" Text :>
-             "stop" :> QueryParam "alt" AltJSON :> Post '[JSON] ()
+             "stop" :>
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Stop receiving push notifications for the given user mailbox.
 --
 -- /See:/ 'usersStop' smart constructor.
-newtype UsersStop = UsersStop'
-    { _usUserId :: Text
+data UsersStop = UsersStop'
+    { _usUserId :: !Text
+    , _usFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersStop' with the minimum fields required to make a request.
@@ -60,17 +64,24 @@ newtype UsersStop = UsersStop'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'usUserId'
+--
+-- * 'usFields'
 usersStop
     :: UsersStop
-usersStop =
+usersStop = 
     UsersStop'
     { _usUserId = "me"
+    , _usFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
 -- the authenticated user.
 usUserId :: Lens' UsersStop Text
 usUserId = lens _usUserId (\ s a -> s{_usUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+usFields :: Lens' UsersStop (Maybe Text)
+usFields = lens _usFields (\ s a -> s{_usFields = a})
 
 instance GoogleRequest UsersStop where
         type Rs UsersStop = ()
@@ -80,7 +91,7 @@ instance GoogleRequest UsersStop where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersStop'{..}
-          = go _usUserId (Just AltJSON) gmailService
+          = go _usUserId _usFields (Just AltJSON) gmailService
           where go
                   = buildClient (Proxy :: Proxy UsersStopResource)
                       mempty

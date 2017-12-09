@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Column.List
     , clPageToken
     , clTableId
     , clMaxResults
+    , clFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.column.list@ method which the
 -- 'ColumnList'' request conforms to.
@@ -51,15 +52,17 @@ type ColumnListResource =
              "columns" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] ColumnList
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] ColumnList
 
 -- | Retrieves a list of columns.
 --
 -- /See:/ 'columnList'' smart constructor.
 data ColumnList' = ColumnList''
-    { _clPageToken  :: !(Maybe Text)
-    , _clTableId    :: !Text
+    { _clPageToken :: !(Maybe Text)
+    , _clTableId :: !Text
     , _clMaxResults :: !(Maybe (Textual Word32))
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColumnList'' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data ColumnList' = ColumnList''
 -- * 'clTableId'
 --
 -- * 'clMaxResults'
+--
+-- * 'clFields'
 columnList'
     :: Text -- ^ 'clTableId'
     -> ColumnList'
-columnList' pClTableId_ =
+columnList' pClTableId_ = 
     ColumnList''
     { _clPageToken = Nothing
     , _clTableId = pClTableId_
     , _clMaxResults = Nothing
+    , _clFields = Nothing
     }
 
 -- | Continuation token specifying which result page to return.
@@ -97,13 +103,17 @@ clMaxResults
   = lens _clMaxResults (\ s a -> s{_clMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' ColumnList' (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 instance GoogleRequest ColumnList' where
         type Rs ColumnList' = ColumnList
         type Scopes ColumnList' =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient ColumnList''{..}
-          = go _clTableId _clPageToken _clMaxResults
+          = go _clTableId _clPageToken _clMaxResults _clFields
               (Just AltJSON)
               fusionTablesService
           where go

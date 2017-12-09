@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.OperatingSystems.List
 
     -- * Request Lenses
     , oslProFileId
+    , oslFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.operatingSystems.list@ method which the
 -- 'OperatingSystemsList' request conforms to.
 type OperatingSystemsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "operatingSystems" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] OperatingSystemsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] OperatingSystemsListResponse
 
 -- | Retrieves a list of operating systems.
 --
 -- /See:/ 'operatingSystemsList' smart constructor.
-newtype OperatingSystemsList = OperatingSystemsList'
-    { _oslProFileId :: Textual Int64
+data OperatingSystemsList = OperatingSystemsList'
+    { _oslProFileId :: !(Textual Int64)
+    , _oslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperatingSystemsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype OperatingSystemsList = OperatingSystemsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'oslProFileId'
+--
+-- * 'oslFields'
 operatingSystemsList
     :: Int64 -- ^ 'oslProFileId'
     -> OperatingSystemsList
-operatingSystemsList pOslProFileId_ =
+operatingSystemsList pOslProFileId_ = 
     OperatingSystemsList'
     { _oslProFileId = _Coerce # pOslProFileId_
+    , _oslFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,13 +82,19 @@ oslProFileId
   = lens _oslProFileId (\ s a -> s{_oslProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+oslFields :: Lens' OperatingSystemsList (Maybe Text)
+oslFields
+  = lens _oslFields (\ s a -> s{_oslFields = a})
+
 instance GoogleRequest OperatingSystemsList where
         type Rs OperatingSystemsList =
              OperatingSystemsListResponse
         type Scopes OperatingSystemsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient OperatingSystemsList'{..}
-          = go _oslProFileId (Just AltJSON) dFAReportingService
+          = go _oslProFileId _oslFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy OperatingSystemsListResource)

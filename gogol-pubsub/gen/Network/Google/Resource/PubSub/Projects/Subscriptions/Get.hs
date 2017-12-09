@@ -40,11 +40,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.Get
     , psgUploadType
     , psgBearerToken
     , psgSubscription
+    , psgFields
     , psgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.get@ method which the
 -- 'ProjectsSubscriptionsGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsSubscriptionsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Subscription
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Subscription
 
 -- | Gets the configuration details of a subscription.
 --
 -- /See:/ 'projectsSubscriptionsGet' smart constructor.
 data ProjectsSubscriptionsGet = ProjectsSubscriptionsGet'
-    { _psgXgafv          :: !(Maybe Xgafv)
+    { _psgXgafv :: !(Maybe Xgafv)
     , _psgUploadProtocol :: !(Maybe Text)
-    , _psgPp             :: !Bool
-    , _psgAccessToken    :: !(Maybe Text)
-    , _psgUploadType     :: !(Maybe Text)
-    , _psgBearerToken    :: !(Maybe Text)
-    , _psgSubscription   :: !Text
-    , _psgCallback       :: !(Maybe Text)
+    , _psgPp :: !Bool
+    , _psgAccessToken :: !(Maybe Text)
+    , _psgUploadType :: !(Maybe Text)
+    , _psgBearerToken :: !(Maybe Text)
+    , _psgSubscription :: !Text
+    , _psgFields :: !(Maybe Text)
+    , _psgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsSubscriptionsGet = ProjectsSubscriptionsGet'
 --
 -- * 'psgSubscription'
 --
+-- * 'psgFields'
+--
 -- * 'psgCallback'
 projectsSubscriptionsGet
     :: Text -- ^ 'psgSubscription'
     -> ProjectsSubscriptionsGet
-projectsSubscriptionsGet pPsgSubscription_ =
+projectsSubscriptionsGet pPsgSubscription_ = 
     ProjectsSubscriptionsGet'
     { _psgXgafv = Nothing
     , _psgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsSubscriptionsGet pPsgSubscription_ =
     , _psgUploadType = Nothing
     , _psgBearerToken = Nothing
     , _psgSubscription = pPsgSubscription_
+    , _psgFields = Nothing
     , _psgCallback = Nothing
     }
 
@@ -147,6 +153,11 @@ psgSubscription
   = lens _psgSubscription
       (\ s a -> s{_psgSubscription = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psgFields :: Lens' ProjectsSubscriptionsGet (Maybe Text)
+psgFields
+  = lens _psgFields (\ s a -> s{_psgFields = a})
+
 -- | JSONP
 psgCallback :: Lens' ProjectsSubscriptionsGet (Maybe Text)
 psgCallback
@@ -164,6 +175,7 @@ instance GoogleRequest ProjectsSubscriptionsGet where
               _psgUploadType
               _psgBearerToken
               _psgCallback
+              _psgFields
               (Just AltJSON)
               pubSubService
           where go

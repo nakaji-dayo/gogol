@@ -41,11 +41,12 @@ module Network.Google.Resource.AppEngine.Apps.Locations.Get
     , algBearerToken
     , algAppsId
     , algLocationsId
+    , algFields
     , algCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.locations.get@ method which the
 -- 'AppsLocationsGet' request conforms to.
@@ -55,28 +56,30 @@ type AppsLocationsGetResource =
          Capture "appsId" Text :>
            "locations" :>
              Capture "locationsId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Location
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Location
 
 -- | Get information about a location.
 --
 -- /See:/ 'appsLocationsGet' smart constructor.
 data AppsLocationsGet = AppsLocationsGet'
-    { _algXgafv          :: !(Maybe Text)
+    { _algXgafv :: !(Maybe Xgafv)
     , _algUploadProtocol :: !(Maybe Text)
-    , _algPp             :: !Bool
-    , _algAccessToken    :: !(Maybe Text)
-    , _algUploadType     :: !(Maybe Text)
-    , _algBearerToken    :: !(Maybe Text)
-    , _algAppsId         :: !Text
-    , _algLocationsId    :: !Text
-    , _algCallback       :: !(Maybe Text)
+    , _algPp :: !Bool
+    , _algAccessToken :: !(Maybe Text)
+    , _algUploadType :: !(Maybe Text)
+    , _algBearerToken :: !(Maybe Text)
+    , _algAppsId :: !Text
+    , _algLocationsId :: !Text
+    , _algFields :: !(Maybe Text)
+    , _algCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsLocationsGet' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data AppsLocationsGet = AppsLocationsGet'
 --
 -- * 'algLocationsId'
 --
+-- * 'algFields'
+--
 -- * 'algCallback'
 appsLocationsGet
     :: Text -- ^ 'algAppsId'
     -> Text -- ^ 'algLocationsId'
     -> AppsLocationsGet
-appsLocationsGet pAlgAppsId_ pAlgLocationsId_ =
+appsLocationsGet pAlgAppsId_ pAlgLocationsId_ = 
     AppsLocationsGet'
     { _algXgafv = Nothing
     , _algUploadProtocol = Nothing
@@ -114,11 +119,12 @@ appsLocationsGet pAlgAppsId_ pAlgLocationsId_ =
     , _algBearerToken = Nothing
     , _algAppsId = pAlgAppsId_
     , _algLocationsId = pAlgLocationsId_
+    , _algFields = Nothing
     , _algCallback = Nothing
     }
 
 -- | V1 error format.
-algXgafv :: Lens' AppsLocationsGet (Maybe Text)
+algXgafv :: Lens' AppsLocationsGet (Maybe Xgafv)
 algXgafv = lens _algXgafv (\ s a -> s{_algXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -160,6 +166,11 @@ algLocationsId
   = lens _algLocationsId
       (\ s a -> s{_algLocationsId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+algFields :: Lens' AppsLocationsGet (Maybe Text)
+algFields
+  = lens _algFields (\ s a -> s{_algFields = a})
+
 -- | JSONP
 algCallback :: Lens' AppsLocationsGet (Maybe Text)
 algCallback
@@ -179,6 +190,7 @@ instance GoogleRequest AppsLocationsGet where
               _algUploadType
               _algBearerToken
               _algCallback
+              _algFields
               (Just AltJSON)
               appEngineService
           where go

@@ -21,7 +21,9 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates a send-as alias. If a signature is provided, Gmail will sanitize
--- the HTML before saving it with the alias.
+-- the HTML before saving it with the alias. Addresses other than the
+-- primary address for the account can only be updated by service account
+-- clients that have been delegated domain-wide authority.
 --
 -- /See:/ <https://developers.google.com/gmail/api/ Gmail API Reference> for @gmail.users.settings.sendAs.update@.
 module Network.Google.Resource.Gmail.Users.Settings.SendAs.Update
@@ -37,10 +39,11 @@ module Network.Google.Resource.Gmail.Users.Settings.SendAs.Update
     , ussauPayload
     , ussauUserId
     , ussauSendAsEmail
+    , ussauFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.sendAs.update@ method which the
 -- 'UsersSettingsSendAsUpdate' request conforms to.
@@ -52,17 +55,21 @@ type UsersSettingsSendAsUpdateResource =
              "settings" :>
                "sendAs" :>
                  Capture "sendAsEmail" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] SendAs :> Put '[JSON] SendAs
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] SendAs :> Put '[JSON] SendAs
 
 -- | Updates a send-as alias. If a signature is provided, Gmail will sanitize
--- the HTML before saving it with the alias.
+-- the HTML before saving it with the alias. Addresses other than the
+-- primary address for the account can only be updated by service account
+-- clients that have been delegated domain-wide authority.
 --
 -- /See:/ 'usersSettingsSendAsUpdate' smart constructor.
 data UsersSettingsSendAsUpdate = UsersSettingsSendAsUpdate'
-    { _ussauPayload     :: !SendAs
-    , _ussauUserId      :: !Text
+    { _ussauPayload :: !SendAs
+    , _ussauUserId :: !Text
     , _ussauSendAsEmail :: !Text
+    , _ussauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsSendAsUpdate' with the minimum fields required to make a request.
@@ -74,15 +81,18 @@ data UsersSettingsSendAsUpdate = UsersSettingsSendAsUpdate'
 -- * 'ussauUserId'
 --
 -- * 'ussauSendAsEmail'
+--
+-- * 'ussauFields'
 usersSettingsSendAsUpdate
     :: SendAs -- ^ 'ussauPayload'
     -> Text -- ^ 'ussauSendAsEmail'
     -> UsersSettingsSendAsUpdate
-usersSettingsSendAsUpdate pUssauPayload_ pUssauSendAsEmail_ =
+usersSettingsSendAsUpdate pUssauPayload_ pUssauSendAsEmail_ = 
     UsersSettingsSendAsUpdate'
     { _ussauPayload = pUssauPayload_
     , _ussauUserId = "me"
     , _ussauSendAsEmail = pUssauSendAsEmail_
+    , _ussauFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -102,6 +112,11 @@ ussauSendAsEmail
   = lens _ussauSendAsEmail
       (\ s a -> s{_ussauSendAsEmail = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ussauFields :: Lens' UsersSettingsSendAsUpdate (Maybe Text)
+ussauFields
+  = lens _ussauFields (\ s a -> s{_ussauFields = a})
+
 instance GoogleRequest UsersSettingsSendAsUpdate
          where
         type Rs UsersSettingsSendAsUpdate = SendAs
@@ -109,7 +124,8 @@ instance GoogleRequest UsersSettingsSendAsUpdate
              '["https://www.googleapis.com/auth/gmail.settings.basic",
                "https://www.googleapis.com/auth/gmail.settings.sharing"]
         requestClient UsersSettingsSendAsUpdate'{..}
-          = go _ussauUserId _ussauSendAsEmail (Just AltJSON)
+          = go _ussauUserId _ussauSendAsEmail _ussauFields
+              (Just AltJSON)
               _ussauPayload
               gmailService
           where go

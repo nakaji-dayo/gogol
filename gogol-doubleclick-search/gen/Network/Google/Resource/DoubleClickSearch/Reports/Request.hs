@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickSearch.Reports.Request
 
     -- * Request Lenses
     , rrPayload
+    , rrFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.reports.request@ method which the
 -- 'ReportsRequest' request conforms to.
@@ -45,14 +46,16 @@ type ReportsRequestResource =
      "doubleclicksearch" :>
        "v2" :>
          "reports" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] ReportRequest :> Post '[JSON] Report
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] ReportRequest :> Post '[JSON] Report
 
 -- | Inserts a report request into the reporting system.
 --
 -- /See:/ 'reportsRequest' smart constructor.
-newtype ReportsRequest = ReportsRequest'
-    { _rrPayload :: ReportRequest
+data ReportsRequest = ReportsRequest'
+    { _rrPayload :: !ReportRequest
+    , _rrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsRequest' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype ReportsRequest = ReportsRequest'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rrPayload'
+--
+-- * 'rrFields'
 reportsRequest
     :: ReportRequest -- ^ 'rrPayload'
     -> ReportsRequest
-reportsRequest pRrPayload_ =
+reportsRequest pRrPayload_ = 
     ReportsRequest'
     { _rrPayload = pRrPayload_
+    , _rrFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,16 @@ rrPayload :: Lens' ReportsRequest ReportRequest
 rrPayload
   = lens _rrPayload (\ s a -> s{_rrPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rrFields :: Lens' ReportsRequest (Maybe Text)
+rrFields = lens _rrFields (\ s a -> s{_rrFields = a})
+
 instance GoogleRequest ReportsRequest where
         type Rs ReportsRequest = Report
         type Scopes ReportsRequest =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient ReportsRequest'{..}
-          = go (Just AltJSON) _rrPayload
+          = go _rrFields (Just AltJSON) _rrPayload
               doubleClickSearchService
           where go
                   = buildClient (Proxy :: Proxy ReportsRequestResource)

@@ -34,10 +34,11 @@ module Network.Google.Resource.Books.Onboarding.ListCategories
 
     -- * Request Lenses
     , olcLocale
+    , olcFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.onboarding.listCategories@ method which the
 -- 'OnboardingListCategories' request conforms to.
@@ -47,13 +48,15 @@ type OnboardingListCategoriesResource =
          "onboarding" :>
            "listCategories" :>
              QueryParam "locale" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Category
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Category
 
 -- | List categories for onboarding experience.
 --
 -- /See:/ 'onboardingListCategories' smart constructor.
-newtype OnboardingListCategories = OnboardingListCategories'
-    { _olcLocale :: Maybe Text
+data OnboardingListCategories = OnboardingListCategories'
+    { _olcLocale :: !(Maybe Text)
+    , _olcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OnboardingListCategories' with the minimum fields required to make a request.
@@ -61,11 +64,14 @@ newtype OnboardingListCategories = OnboardingListCategories'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'olcLocale'
+--
+-- * 'olcFields'
 onboardingListCategories
     :: OnboardingListCategories
-onboardingListCategories =
+onboardingListCategories = 
     OnboardingListCategories'
     { _olcLocale = Nothing
+    , _olcFields = Nothing
     }
 
 -- | ISO-639-1 language and ISO-3166-1 country code. Default is en-US if
@@ -74,12 +80,18 @@ olcLocale :: Lens' OnboardingListCategories (Maybe Text)
 olcLocale
   = lens _olcLocale (\ s a -> s{_olcLocale = a})
 
+-- | Selector specifying which fields to include in a partial response.
+olcFields :: Lens' OnboardingListCategories (Maybe Text)
+olcFields
+  = lens _olcFields (\ s a -> s{_olcFields = a})
+
 instance GoogleRequest OnboardingListCategories where
         type Rs OnboardingListCategories = Category
         type Scopes OnboardingListCategories =
              '["https://www.googleapis.com/auth/books"]
         requestClient OnboardingListCategories'{..}
-          = go _olcLocale (Just AltJSON) booksService
+          = go _olcLocale _olcFields (Just AltJSON)
+              booksService
           where go
                   = buildClient
                       (Proxy :: Proxy OnboardingListCategoriesResource)

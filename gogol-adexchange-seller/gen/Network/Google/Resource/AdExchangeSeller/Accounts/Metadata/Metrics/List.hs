@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.Metadata.Metrics.List
 
     -- * Request Lenses
     , ammlAccountId
+    , ammlFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.metadata.metrics.list@ method which the
 -- 'AccountsMetadataMetricsList' request conforms to.
@@ -48,13 +49,15 @@ type AccountsMetadataMetricsListResource =
            Capture "accountId" Text :>
              "metadata" :>
                "metrics" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Metadata
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Metadata
 
 -- | List the metadata for the metrics available to this AdExchange account.
 --
 -- /See:/ 'accountsMetadataMetricsList' smart constructor.
-newtype AccountsMetadataMetricsList = AccountsMetadataMetricsList'
-    { _ammlAccountId :: Text
+data AccountsMetadataMetricsList = AccountsMetadataMetricsList'
+    { _ammlAccountId :: !Text
+    , _ammlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsMetadataMetricsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype AccountsMetadataMetricsList = AccountsMetadataMetricsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ammlAccountId'
+--
+-- * 'ammlFields'
 accountsMetadataMetricsList
     :: Text -- ^ 'ammlAccountId'
     -> AccountsMetadataMetricsList
-accountsMetadataMetricsList pAmmlAccountId_ =
+accountsMetadataMetricsList pAmmlAccountId_ = 
     AccountsMetadataMetricsList'
     { _ammlAccountId = pAmmlAccountId_
+    , _ammlFields = Nothing
     }
 
 -- | Account with visibility to the metrics.
@@ -76,6 +82,11 @@ ammlAccountId
   = lens _ammlAccountId
       (\ s a -> s{_ammlAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ammlFields :: Lens' AccountsMetadataMetricsList (Maybe Text)
+ammlFields
+  = lens _ammlFields (\ s a -> s{_ammlFields = a})
+
 instance GoogleRequest AccountsMetadataMetricsList
          where
         type Rs AccountsMetadataMetricsList = Metadata
@@ -83,7 +94,7 @@ instance GoogleRequest AccountsMetadataMetricsList
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsMetadataMetricsList'{..}
-          = go _ammlAccountId (Just AltJSON)
+          = go _ammlAccountId _ammlFields (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient

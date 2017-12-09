@@ -22,7 +22,7 @@
 --
 -- Lists all Containers that belongs to a GTM Account.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.list@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.list@.
 module Network.Google.Resource.TagManager.Accounts.Containers.List
     (
     -- * REST Resource
@@ -33,47 +33,68 @@ module Network.Google.Resource.TagManager.Accounts.Containers.List
     , AccountsContainersList
 
     -- * Request Lenses
-    , aclAccountId
+    , aclParent
+    , aclPageToken
+    , aclFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.list@ method which the
 -- 'AccountsContainersList' request conforms to.
 type AccountsContainersListResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] ListContainersResponse
+       "v2" :>
+         Capture "parent" Text :>
+           "containers" :>
+             QueryParam "pageToken" Text :>
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ListContainersResponse
 
 -- | Lists all Containers that belongs to a GTM Account.
 --
 -- /See:/ 'accountsContainersList' smart constructor.
-newtype AccountsContainersList = AccountsContainersList'
-    { _aclAccountId :: Text
+data AccountsContainersList = AccountsContainersList'
+    { _aclParent :: !Text
+    , _aclPageToken :: !(Maybe Text)
+    , _aclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'aclAccountId'
+-- * 'aclParent'
+--
+-- * 'aclPageToken'
+--
+-- * 'aclFields'
 accountsContainersList
-    :: Text -- ^ 'aclAccountId'
+    :: Text -- ^ 'aclParent'
     -> AccountsContainersList
-accountsContainersList pAclAccountId_ =
+accountsContainersList pAclParent_ = 
     AccountsContainersList'
-    { _aclAccountId = pAclAccountId_
+    { _aclParent = pAclParent_
+    , _aclPageToken = Nothing
+    , _aclFields = Nothing
     }
 
--- | The GTM Account ID.
-aclAccountId :: Lens' AccountsContainersList Text
-aclAccountId
-  = lens _aclAccountId (\ s a -> s{_aclAccountId = a})
+-- | GTM Accounts\'s API relative path. Example: accounts\/{account_id}.
+aclParent :: Lens' AccountsContainersList Text
+aclParent
+  = lens _aclParent (\ s a -> s{_aclParent = a})
+
+-- | Continuation token for fetching the next page of results.
+aclPageToken :: Lens' AccountsContainersList (Maybe Text)
+aclPageToken
+  = lens _aclPageToken (\ s a -> s{_aclPageToken = a})
+
+-- | Selector specifying which fields to include in a partial response.
+aclFields :: Lens' AccountsContainersList (Maybe Text)
+aclFields
+  = lens _aclFields (\ s a -> s{_aclFields = a})
 
 instance GoogleRequest AccountsContainersList where
         type Rs AccountsContainersList =
@@ -82,7 +103,9 @@ instance GoogleRequest AccountsContainersList where
              '["https://www.googleapis.com/auth/tagmanager.edit.containers",
                "https://www.googleapis.com/auth/tagmanager.readonly"]
         requestClient AccountsContainersList'{..}
-          = go _aclAccountId (Just AltJSON) tagManagerService
+          = go _aclParent _aclPageToken _aclFields
+              (Just AltJSON)
+              tagManagerService
           where go
                   = buildClient
                       (Proxy :: Proxy AccountsContainersListResource)

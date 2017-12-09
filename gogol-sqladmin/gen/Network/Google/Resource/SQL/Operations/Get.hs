@@ -35,10 +35,11 @@ module Network.Google.Resource.SQL.Operations.Get
     -- * Request Lenses
     , ogProject
     , ogOperation
+    , ogFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.operations.get@ method which the
 -- 'OperationsGet' request conforms to.
@@ -49,14 +50,16 @@ type OperationsGetResource =
            Capture "project" Text :>
              "operations" :>
                Capture "operation" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Retrieves an instance operation that has been performed on an instance.
 --
 -- /See:/ 'operationsGet' smart constructor.
 data OperationsGet = OperationsGet'
-    { _ogProject   :: !Text
+    { _ogProject :: !Text
     , _ogOperation :: !Text
+    , _ogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data OperationsGet = OperationsGet'
 -- * 'ogProject'
 --
 -- * 'ogOperation'
+--
+-- * 'ogFields'
 operationsGet
     :: Text -- ^ 'ogProject'
     -> Text -- ^ 'ogOperation'
     -> OperationsGet
-operationsGet pOgProject_ pOgOperation_ =
+operationsGet pOgProject_ pOgOperation_ = 
     OperationsGet'
     { _ogProject = pOgProject_
     , _ogOperation = pOgOperation_
+    , _ogFields = Nothing
     }
 
 -- | Project ID of the project that contains the instance.
@@ -86,13 +92,17 @@ ogOperation :: Lens' OperationsGet Text
 ogOperation
   = lens _ogOperation (\ s a -> s{_ogOperation = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ogFields :: Lens' OperationsGet (Maybe Text)
+ogFields = lens _ogFields (\ s a -> s{_ogFields = a})
+
 instance GoogleRequest OperationsGet where
         type Rs OperationsGet = Operation
         type Scopes OperationsGet =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient OperationsGet'{..}
-          = go _ogProject _ogOperation (Just AltJSON)
+          = go _ogProject _ogOperation _ogFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy OperationsGetResource)

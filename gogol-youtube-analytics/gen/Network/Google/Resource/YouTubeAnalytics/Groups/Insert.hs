@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTubeAnalytics.Groups.Insert
     -- * Request Lenses
     , giPayload
     , giOnBehalfOfContentOwner
+    , giFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groups.insert@ method which the
 -- 'GroupsInsert' request conforms to.
@@ -48,15 +49,17 @@ type GroupsInsertResource =
          "v1" :>
            "groups" :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Group :> Post '[JSON] Group
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Group :> Post '[JSON] Group
 
 -- | Creates a group.
 --
 -- /See:/ 'groupsInsert' smart constructor.
 data GroupsInsert = GroupsInsert'
-    { _giPayload                :: !Group
+    { _giPayload :: !Group
     , _giOnBehalfOfContentOwner :: !(Maybe Text)
+    , _giFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsInsert' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data GroupsInsert = GroupsInsert'
 -- * 'giPayload'
 --
 -- * 'giOnBehalfOfContentOwner'
+--
+-- * 'giFields'
 groupsInsert
     :: Group -- ^ 'giPayload'
     -> GroupsInsert
-groupsInsert pGiPayload_ =
+groupsInsert pGiPayload_ = 
     GroupsInsert'
     { _giPayload = pGiPayload_
     , _giOnBehalfOfContentOwner = Nothing
+    , _giFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -95,13 +101,18 @@ giOnBehalfOfContentOwner
   = lens _giOnBehalfOfContentOwner
       (\ s a -> s{_giOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+giFields :: Lens' GroupsInsert (Maybe Text)
+giFields = lens _giFields (\ s a -> s{_giFields = a})
+
 instance GoogleRequest GroupsInsert where
         type Rs GroupsInsert = Group
         type Scopes GroupsInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient GroupsInsert'{..}
-          = go _giOnBehalfOfContentOwner (Just AltJSON)
+          = go _giOnBehalfOfContentOwner _giFields
+              (Just AltJSON)
               _giPayload
               youTubeAnalyticsService
           where go

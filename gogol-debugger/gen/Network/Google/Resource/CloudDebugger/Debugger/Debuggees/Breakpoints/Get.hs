@@ -42,11 +42,12 @@ module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Get
     , ddbgBearerToken
     , ddbgDebuggeeId
     , ddbgClientVersion
+    , ddbgFields
     , ddbgCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.debugger.debuggees.breakpoints.get@ method which the
 -- 'DebuggerDebuggeesBreakpointsGet' request conforms to.
@@ -65,23 +66,25 @@ type DebuggerDebuggeesBreakpointsGetResource =
                            QueryParam "bearer_token" Text :>
                              QueryParam "clientVersion" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] GetBreakpointResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] GetBreakpointResponse
 
 -- | Gets breakpoint information.
 --
 -- /See:/ 'debuggerDebuggeesBreakpointsGet' smart constructor.
 data DebuggerDebuggeesBreakpointsGet = DebuggerDebuggeesBreakpointsGet'
-    { _ddbgXgafv          :: !(Maybe Xgafv)
+    { _ddbgXgafv :: !(Maybe Xgafv)
     , _ddbgUploadProtocol :: !(Maybe Text)
-    , _ddbgPp             :: !Bool
-    , _ddbgAccessToken    :: !(Maybe Text)
-    , _ddbgUploadType     :: !(Maybe Text)
-    , _ddbgBreakpointId   :: !Text
-    , _ddbgBearerToken    :: !(Maybe Text)
-    , _ddbgDebuggeeId     :: !Text
-    , _ddbgClientVersion  :: !(Maybe Text)
-    , _ddbgCallback       :: !(Maybe Text)
+    , _ddbgPp :: !Bool
+    , _ddbgAccessToken :: !(Maybe Text)
+    , _ddbgUploadType :: !(Maybe Text)
+    , _ddbgBreakpointId :: !Text
+    , _ddbgBearerToken :: !(Maybe Text)
+    , _ddbgDebuggeeId :: !Text
+    , _ddbgClientVersion :: !(Maybe Text)
+    , _ddbgFields :: !(Maybe Text)
+    , _ddbgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DebuggerDebuggeesBreakpointsGet' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data DebuggerDebuggeesBreakpointsGet = DebuggerDebuggeesBreakpointsGet'
 --
 -- * 'ddbgClientVersion'
 --
+-- * 'ddbgFields'
+--
 -- * 'ddbgCallback'
 debuggerDebuggeesBreakpointsGet
     :: Text -- ^ 'ddbgBreakpointId'
     -> Text -- ^ 'ddbgDebuggeeId'
     -> DebuggerDebuggeesBreakpointsGet
-debuggerDebuggeesBreakpointsGet pDdbgBreakpointId_ pDdbgDebuggeeId_ =
+debuggerDebuggeesBreakpointsGet pDdbgBreakpointId_ pDdbgDebuggeeId_ = 
     DebuggerDebuggeesBreakpointsGet'
     { _ddbgXgafv = Nothing
     , _ddbgUploadProtocol = Nothing
@@ -122,6 +127,7 @@ debuggerDebuggeesBreakpointsGet pDdbgBreakpointId_ pDdbgDebuggeeId_ =
     , _ddbgBearerToken = Nothing
     , _ddbgDebuggeeId = pDdbgDebuggeeId_
     , _ddbgClientVersion = Nothing
+    , _ddbgFields = Nothing
     , _ddbgCallback = Nothing
     }
 
@@ -170,12 +176,17 @@ ddbgDebuggeeId
   = lens _ddbgDebuggeeId
       (\ s a -> s{_ddbgDebuggeeId = a})
 
--- | The client version making the call. Following: \`domain\/type\/version\`
+-- | The client version making the call. Schema: \`domain\/type\/version\`
 -- (e.g., \`google.com\/intellij\/v1\`).
 ddbgClientVersion :: Lens' DebuggerDebuggeesBreakpointsGet (Maybe Text)
 ddbgClientVersion
   = lens _ddbgClientVersion
       (\ s a -> s{_ddbgClientVersion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ddbgFields :: Lens' DebuggerDebuggeesBreakpointsGet (Maybe Text)
+ddbgFields
+  = lens _ddbgFields (\ s a -> s{_ddbgFields = a})
 
 -- | JSONP
 ddbgCallback :: Lens' DebuggerDebuggeesBreakpointsGet (Maybe Text)
@@ -198,6 +209,7 @@ instance GoogleRequest
               _ddbgBearerToken
               _ddbgClientVersion
               _ddbgCallback
+              _ddbgFields
               (Just AltJSON)
               debuggerService
           where go

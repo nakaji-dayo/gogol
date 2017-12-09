@@ -41,11 +41,12 @@ module Network.Google.Resource.Genomics.AnnotationSets.Delete
     , asdAccessToken
     , asdUploadType
     , asdBearerToken
+    , asdFields
     , asdCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotationsets.delete@ method which the
 -- 'AnnotationSetsDelete' request conforms to.
@@ -60,21 +61,23 @@ type AnnotationSetsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an annotation set. Caller must have WRITE permission for the
 -- associated annotation set.
 --
 -- /See:/ 'annotationSetsDelete' smart constructor.
 data AnnotationSetsDelete = AnnotationSetsDelete'
-    { _asdXgafv           :: !(Maybe Xgafv)
-    , _asdUploadProtocol  :: !(Maybe Text)
+    { _asdXgafv :: !(Maybe Xgafv)
+    , _asdUploadProtocol :: !(Maybe Text)
     , _asdAnnotationSetId :: !Text
-    , _asdPp              :: !Bool
-    , _asdAccessToken     :: !(Maybe Text)
-    , _asdUploadType      :: !(Maybe Text)
-    , _asdBearerToken     :: !(Maybe Text)
-    , _asdCallback        :: !(Maybe Text)
+    , _asdPp :: !Bool
+    , _asdAccessToken :: !(Maybe Text)
+    , _asdUploadType :: !(Maybe Text)
+    , _asdBearerToken :: !(Maybe Text)
+    , _asdFields :: !(Maybe Text)
+    , _asdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationSetsDelete' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data AnnotationSetsDelete = AnnotationSetsDelete'
 --
 -- * 'asdBearerToken'
 --
+-- * 'asdFields'
+--
 -- * 'asdCallback'
 annotationSetsDelete
     :: Text -- ^ 'asdAnnotationSetId'
     -> AnnotationSetsDelete
-annotationSetsDelete pAsdAnnotationSetId_ =
+annotationSetsDelete pAsdAnnotationSetId_ = 
     AnnotationSetsDelete'
     { _asdXgafv = Nothing
     , _asdUploadProtocol = Nothing
@@ -108,6 +113,7 @@ annotationSetsDelete pAsdAnnotationSetId_ =
     , _asdAccessToken = Nothing
     , _asdUploadType = Nothing
     , _asdBearerToken = Nothing
+    , _asdFields = Nothing
     , _asdCallback = Nothing
     }
 
@@ -149,6 +155,11 @@ asdBearerToken
   = lens _asdBearerToken
       (\ s a -> s{_asdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asdFields :: Lens' AnnotationSetsDelete (Maybe Text)
+asdFields
+  = lens _asdFields (\ s a -> s{_asdFields = a})
+
 -- | JSONP
 asdCallback :: Lens' AnnotationSetsDelete (Maybe Text)
 asdCallback
@@ -166,6 +177,7 @@ instance GoogleRequest AnnotationSetsDelete where
               _asdUploadType
               _asdBearerToken
               _asdCallback
+              _asdFields
               (Just AltJSON)
               genomicsService
           where go

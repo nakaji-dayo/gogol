@@ -36,10 +36,11 @@ module Network.Google.Resource.Webmasters.Sitemaps.List
     -- * Request Lenses
     , slSiteURL
     , slSitemapIndex
+    , slFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sitemaps.list@ method which the
 -- 'SitemapsList' request conforms to.
@@ -50,16 +51,18 @@ type SitemapsListResource =
            Capture "siteUrl" Text :>
              "sitemaps" :>
                QueryParam "sitemapIndex" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] SitemapsListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] SitemapsListResponse
 
 -- | Lists the sitemaps-entries submitted for this site, or included in the
 -- sitemap index file (if sitemapIndex is specified in the request).
 --
 -- /See:/ 'sitemapsList' smart constructor.
 data SitemapsList = SitemapsList'
-    { _slSiteURL      :: !Text
+    { _slSiteURL :: !Text
     , _slSitemapIndex :: !(Maybe Text)
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitemapsList' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data SitemapsList = SitemapsList'
 -- * 'slSiteURL'
 --
 -- * 'slSitemapIndex'
+--
+-- * 'slFields'
 sitemapsList
     :: Text -- ^ 'slSiteURL'
     -> SitemapsList
-sitemapsList pSlSiteURL_ =
+sitemapsList pSlSiteURL_ = 
     SitemapsList'
     { _slSiteURL = pSlSiteURL_
     , _slSitemapIndex = Nothing
+    , _slFields = Nothing
     }
 
 -- | The site\'s URL, including protocol. For example:
@@ -91,13 +97,18 @@ slSitemapIndex
   = lens _slSitemapIndex
       (\ s a -> s{_slSitemapIndex = a})
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SitemapsList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SitemapsList where
         type Rs SitemapsList = SitemapsListResponse
         type Scopes SitemapsList =
              '["https://www.googleapis.com/auth/webmasters",
                "https://www.googleapis.com/auth/webmasters.readonly"]
         requestClient SitemapsList'{..}
-          = go _slSiteURL _slSitemapIndex (Just AltJSON)
+          = go _slSiteURL _slSitemapIndex _slFields
+              (Just AltJSON)
               webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitemapsListResource)

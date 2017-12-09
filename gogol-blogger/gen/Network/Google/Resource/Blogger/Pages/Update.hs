@@ -38,10 +38,11 @@ module Network.Google.Resource.Blogger.Pages.Update
     , puuPayload
     , puuRevert
     , puuPublish
+    , puuFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.update@ method which the
 -- 'PagesUpdate' request conforms to.
@@ -54,18 +55,20 @@ type PagesUpdateResource =
                Capture "pageId" Text :>
                  QueryParam "revert" Bool :>
                    QueryParam "publish" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Page :> Put '[JSON] Page
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Page :> Put '[JSON] Page
 
 -- | Update a page.
 --
 -- /See:/ 'pagesUpdate' smart constructor.
 data PagesUpdate = PagesUpdate'
-    { _puuBlogId  :: !Text
-    , _puuPageId  :: !Text
+    { _puuBlogId :: !Text
+    , _puuPageId :: !Text
     , _puuPayload :: !Page
-    , _puuRevert  :: !(Maybe Bool)
+    , _puuRevert :: !(Maybe Bool)
     , _puuPublish :: !(Maybe Bool)
+    , _puuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesUpdate' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data PagesUpdate = PagesUpdate'
 -- * 'puuRevert'
 --
 -- * 'puuPublish'
+--
+-- * 'puuFields'
 pagesUpdate
     :: Text -- ^ 'puuBlogId'
     -> Text -- ^ 'puuPageId'
     -> Page -- ^ 'puuPayload'
     -> PagesUpdate
-pagesUpdate pPuuBlogId_ pPuuPageId_ pPuuPayload_ =
+pagesUpdate pPuuBlogId_ pPuuPageId_ pPuuPayload_ = 
     PagesUpdate'
     { _puuBlogId = pPuuBlogId_
     , _puuPageId = pPuuPageId_
     , _puuPayload = pPuuPayload_
     , _puuRevert = Nothing
     , _puuPublish = Nothing
+    , _puuFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -122,12 +128,18 @@ puuPublish :: Lens' PagesUpdate (Maybe Bool)
 puuPublish
   = lens _puuPublish (\ s a -> s{_puuPublish = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puuFields :: Lens' PagesUpdate (Maybe Text)
+puuFields
+  = lens _puuFields (\ s a -> s{_puuFields = a})
+
 instance GoogleRequest PagesUpdate where
         type Rs PagesUpdate = Page
         type Scopes PagesUpdate =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesUpdate'{..}
           = go _puuBlogId _puuPageId _puuRevert _puuPublish
+              _puuFields
               (Just AltJSON)
               _puuPayload
               bloggerService

@@ -39,10 +39,11 @@ module Network.Google.Resource.FusionTables.Table.ImportRows
     , tirDelimiter
     , tirEncoding
     , tirIsStrict
+    , tirFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.importRows@ method which the
 -- 'TableImportRows' request conforms to.
@@ -57,7 +58,8 @@ type TableImportRowsResource =
                    QueryParam "delimiter" Text :>
                      QueryParam "encoding" Text :>
                        QueryParam "isStrict" Bool :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Import
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Import
        :<|>
        "upload" :>
          "fusiontables" :>
@@ -70,20 +72,22 @@ type TableImportRowsResource =
                        QueryParam "delimiter" Text :>
                          QueryParam "encoding" Text :>
                            QueryParam "isStrict" Bool :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" AltMedia :>
-                                 AltMedia :> Post '[JSON] Import
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" AltMedia :>
+                                   AltMedia :> Post '[JSON] Import
 
 -- | Imports more rows into a table.
 --
 -- /See:/ 'tableImportRows' smart constructor.
 data TableImportRows = TableImportRows'
     { _tirStartLine :: !(Maybe (Textual Int32))
-    , _tirEndLine   :: !(Maybe (Textual Int32))
-    , _tirTableId   :: !Text
+    , _tirEndLine :: !(Maybe (Textual Int32))
+    , _tirTableId :: !Text
     , _tirDelimiter :: !(Maybe Text)
-    , _tirEncoding  :: !(Maybe Text)
-    , _tirIsStrict  :: !(Maybe Bool)
+    , _tirEncoding :: !(Maybe Text)
+    , _tirIsStrict :: !(Maybe Bool)
+    , _tirFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableImportRows' with the minimum fields required to make a request.
@@ -101,10 +105,12 @@ data TableImportRows = TableImportRows'
 -- * 'tirEncoding'
 --
 -- * 'tirIsStrict'
+--
+-- * 'tirFields'
 tableImportRows
     :: Text -- ^ 'tirTableId'
     -> TableImportRows
-tableImportRows pTirTableId_ =
+tableImportRows pTirTableId_ = 
     TableImportRows'
     { _tirStartLine = Nothing
     , _tirEndLine = Nothing
@@ -112,6 +118,7 @@ tableImportRows pTirTableId_ =
     , _tirDelimiter = Nothing
     , _tirEncoding = Nothing
     , _tirIsStrict = Nothing
+    , _tirFields = Nothing
     }
 
 -- | The index of the first line from which to start importing, inclusive.
@@ -154,6 +161,11 @@ tirIsStrict :: Lens' TableImportRows (Maybe Bool)
 tirIsStrict
   = lens _tirIsStrict (\ s a -> s{_tirIsStrict = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tirFields :: Lens' TableImportRows (Maybe Text)
+tirFields
+  = lens _tirFields (\ s a -> s{_tirFields = a})
+
 instance GoogleRequest TableImportRows where
         type Rs TableImportRows = Import
         type Scopes TableImportRows =
@@ -163,6 +175,7 @@ instance GoogleRequest TableImportRows where
               _tirDelimiter
               _tirEncoding
               _tirIsStrict
+              _tirFields
               (Just AltJSON)
               fusionTablesService
           where go :<|> _
@@ -180,6 +193,7 @@ instance GoogleRequest (MediaUpload TableImportRows)
               _tirDelimiter
               _tirEncoding
               _tirIsStrict
+              _tirFields
               (Just AltJSON)
               (Just AltMedia)
               body

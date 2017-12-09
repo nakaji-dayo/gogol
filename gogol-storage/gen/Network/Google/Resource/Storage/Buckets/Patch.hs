@@ -40,12 +40,14 @@ module Network.Google.Resource.Storage.Buckets.Patch
     , bpBucket
     , bpPayload
     , bpPredefinedDefaultObjectACL
+    , bpUserProject
     , bpIfMetagenerationNotMatch
     , bpProjection
+    , bpFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.buckets.patch@ method which the
 -- 'BucketsPatch' request conforms to.
@@ -60,11 +62,13 @@ type BucketsPatchResource =
                  QueryParam "predefinedDefaultObjectAcl"
                    BucketsPatchPredefinedDefaultObjectACL
                    :>
-                   QueryParam "ifMetagenerationNotMatch" (Textual Int64)
-                     :>
-                     QueryParam "projection" BucketsPatchProjection :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Bucket :> Patch '[JSON] Bucket
+                   QueryParam "userProject" Text :>
+                     QueryParam "ifMetagenerationNotMatch" (Textual Int64)
+                       :>
+                       QueryParam "projection" BucketsPatchProjection :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Bucket :> Patch '[JSON] Bucket
 
 -- | Updates a bucket. Changes to the bucket will be readable immediately
 -- after writing, but configuration changes may take time to propagate.
@@ -72,13 +76,15 @@ type BucketsPatchResource =
 --
 -- /See:/ 'bucketsPatch' smart constructor.
 data BucketsPatch = BucketsPatch'
-    { _bpIfMetagenerationMatch      :: !(Maybe (Textual Int64))
-    , _bpPredefinedACL              :: !(Maybe BucketsPatchPredefinedACL)
-    , _bpBucket                     :: !Text
-    , _bpPayload                    :: !Bucket
+    { _bpIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _bpPredefinedACL :: !(Maybe BucketsPatchPredefinedACL)
+    , _bpBucket :: !Text
+    , _bpPayload :: !Bucket
     , _bpPredefinedDefaultObjectACL :: !(Maybe BucketsPatchPredefinedDefaultObjectACL)
-    , _bpIfMetagenerationNotMatch   :: !(Maybe (Textual Int64))
-    , _bpProjection                 :: !(Maybe BucketsPatchProjection)
+    , _bpUserProject :: !(Maybe Text)
+    , _bpIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
+    , _bpProjection :: !(Maybe BucketsPatchProjection)
+    , _bpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BucketsPatch' with the minimum fields required to make a request.
@@ -95,22 +101,28 @@ data BucketsPatch = BucketsPatch'
 --
 -- * 'bpPredefinedDefaultObjectACL'
 --
+-- * 'bpUserProject'
+--
 -- * 'bpIfMetagenerationNotMatch'
 --
 -- * 'bpProjection'
+--
+-- * 'bpFields'
 bucketsPatch
     :: Text -- ^ 'bpBucket'
     -> Bucket -- ^ 'bpPayload'
     -> BucketsPatch
-bucketsPatch pBpBucket_ pBpPayload_ =
+bucketsPatch pBpBucket_ pBpPayload_ = 
     BucketsPatch'
     { _bpIfMetagenerationMatch = Nothing
     , _bpPredefinedACL = Nothing
     , _bpBucket = pBpBucket_
     , _bpPayload = pBpPayload_
     , _bpPredefinedDefaultObjectACL = Nothing
+    , _bpUserProject = Nothing
     , _bpIfMetagenerationNotMatch = Nothing
     , _bpProjection = Nothing
+    , _bpFields = Nothing
     }
 
 -- | Makes the return of the bucket metadata conditional on whether the
@@ -142,6 +154,13 @@ bpPredefinedDefaultObjectACL
   = lens _bpPredefinedDefaultObjectACL
       (\ s a -> s{_bpPredefinedDefaultObjectACL = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+bpUserProject :: Lens' BucketsPatch (Maybe Text)
+bpUserProject
+  = lens _bpUserProject
+      (\ s a -> s{_bpUserProject = a})
+
 -- | Makes the return of the bucket metadata conditional on whether the
 -- bucket\'s current metageneration does not match the given value.
 bpIfMetagenerationNotMatch :: Lens' BucketsPatch (Maybe Int64)
@@ -155,6 +174,10 @@ bpProjection :: Lens' BucketsPatch (Maybe BucketsPatchProjection)
 bpProjection
   = lens _bpProjection (\ s a -> s{_bpProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bpFields :: Lens' BucketsPatch (Maybe Text)
+bpFields = lens _bpFields (\ s a -> s{_bpFields = a})
+
 instance GoogleRequest BucketsPatch where
         type Rs BucketsPatch = Bucket
         type Scopes BucketsPatch =
@@ -164,8 +187,10 @@ instance GoogleRequest BucketsPatch where
           = go _bpBucket _bpIfMetagenerationMatch
               _bpPredefinedACL
               _bpPredefinedDefaultObjectACL
+              _bpUserProject
               _bpIfMetagenerationNotMatch
               _bpProjection
+              _bpFields
               (Just AltJSON)
               _bpPayload
               storageService

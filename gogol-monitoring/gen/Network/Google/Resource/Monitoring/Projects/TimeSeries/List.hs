@@ -52,11 +52,12 @@ module Network.Google.Resource.Monitoring.Projects.TimeSeries.List
     , ptslPageToken
     , ptslIntervalEndTime
     , ptslPageSize
+    , ptslFields
     , ptslCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.timeSeries.list@ method which the
 -- 'ProjectsTimeSeriesList' request conforms to.
@@ -88,34 +89,36 @@ type ProjectsTimeSeriesListResource =
                                            QueryParam "pageSize" (Textual Int32)
                                              :>
                                              QueryParam "callback" Text :>
-                                               QueryParam "alt" AltJSON :>
-                                                 Get '[JSON]
-                                                   ListTimeSeriesResponse
+                                               QueryParam "fields" Text :>
+                                                 QueryParam "alt" AltJSON :>
+                                                   Get '[JSON]
+                                                     ListTimeSeriesResponse
 
 -- | Lists time series that match a filter. This method does not require a
 -- Stackdriver account.
 --
 -- /See:/ 'projectsTimeSeriesList' smart constructor.
 data ProjectsTimeSeriesList = ProjectsTimeSeriesList'
-    { _ptslIntervalStartTime             :: !(Maybe DateTime')
-    , _ptslXgafv                         :: !(Maybe Xgafv)
-    , _ptslUploadProtocol                :: !(Maybe Text)
-    , _ptslOrderBy                       :: !(Maybe Text)
-    , _ptslPp                            :: !Bool
-    , _ptslAccessToken                   :: !(Maybe Text)
-    , _ptslUploadType                    :: !(Maybe Text)
-    , _ptslAggregationPerSeriesAligner   :: !(Maybe Text)
-    , _ptslBearerToken                   :: !(Maybe Text)
-    , _ptslName                          :: !Text
-    , _ptslAggregationGroupByFields      :: !(Maybe [Text])
-    , _ptslView                          :: !(Maybe Text)
+    { _ptslIntervalStartTime :: !(Maybe DateTime')
+    , _ptslXgafv :: !(Maybe Xgafv)
+    , _ptslUploadProtocol :: !(Maybe Text)
+    , _ptslOrderBy :: !(Maybe Text)
+    , _ptslPp :: !Bool
+    , _ptslAccessToken :: !(Maybe Text)
+    , _ptslUploadType :: !(Maybe Text)
+    , _ptslAggregationPerSeriesAligner :: !(Maybe Text)
+    , _ptslBearerToken :: !(Maybe Text)
+    , _ptslName :: !Text
+    , _ptslAggregationGroupByFields :: !(Maybe [Text])
+    , _ptslView :: !(Maybe Text)
     , _ptslAggregationCrossSeriesReducer :: !(Maybe Text)
-    , _ptslFilter                        :: !(Maybe Text)
-    , _ptslAggregationAlignmentPeriod    :: !(Maybe Duration)
-    , _ptslPageToken                     :: !(Maybe Text)
-    , _ptslIntervalEndTime               :: !(Maybe DateTime')
-    , _ptslPageSize                      :: !(Maybe (Textual Int32))
-    , _ptslCallback                      :: !(Maybe Text)
+    , _ptslFilter :: !(Maybe Text)
+    , _ptslAggregationAlignmentPeriod :: !(Maybe Duration)
+    , _ptslPageToken :: !(Maybe Text)
+    , _ptslIntervalEndTime :: !(Maybe DateTime')
+    , _ptslPageSize :: !(Maybe (Textual Int32))
+    , _ptslFields :: !(Maybe Text)
+    , _ptslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTimeSeriesList' with the minimum fields required to make a request.
@@ -158,11 +161,13 @@ data ProjectsTimeSeriesList = ProjectsTimeSeriesList'
 --
 -- * 'ptslPageSize'
 --
+-- * 'ptslFields'
+--
 -- * 'ptslCallback'
 projectsTimeSeriesList
     :: Text -- ^ 'ptslName'
     -> ProjectsTimeSeriesList
-projectsTimeSeriesList pPtslName_ =
+projectsTimeSeriesList pPtslName_ = 
     ProjectsTimeSeriesList'
     { _ptslIntervalStartTime = Nothing
     , _ptslXgafv = Nothing
@@ -182,6 +187,7 @@ projectsTimeSeriesList pPtslName_ =
     , _ptslPageToken = Nothing
     , _ptslIntervalEndTime = Nothing
     , _ptslPageSize = Nothing
+    , _ptslFields = Nothing
     , _ptslCallback = Nothing
     }
 
@@ -334,6 +340,11 @@ ptslPageSize
   = lens _ptslPageSize (\ s a -> s{_ptslPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ptslFields :: Lens' ProjectsTimeSeriesList (Maybe Text)
+ptslFields
+  = lens _ptslFields (\ s a -> s{_ptslFields = a})
+
 -- | JSONP
 ptslCallback :: Lens' ProjectsTimeSeriesList (Maybe Text)
 ptslCallback
@@ -364,6 +375,7 @@ instance GoogleRequest ProjectsTimeSeriesList where
               _ptslIntervalEndTime
               _ptslPageSize
               _ptslCallback
+              _ptslFields
               (Just AltJSON)
               monitoringService
           where go

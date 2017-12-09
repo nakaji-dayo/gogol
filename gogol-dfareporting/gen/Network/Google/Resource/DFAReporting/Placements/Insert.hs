@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Placements.Insert
     -- * Request Lenses
     , piProFileId
     , piPayload
+    , piFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placements.insert@ method which the
 -- 'PlacementsInsert' request conforms to.
 type PlacementsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placements" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Placement :> Post '[JSON] Placement
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Placement :> Post '[JSON] Placement
 
 -- | Inserts a new placement.
 --
 -- /See:/ 'placementsInsert' smart constructor.
 data PlacementsInsert = PlacementsInsert'
     { _piProFileId :: !(Textual Int64)
-    , _piPayload   :: !Placement
+    , _piPayload :: !Placement
+    , _piFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PlacementsInsert = PlacementsInsert'
 -- * 'piProFileId'
 --
 -- * 'piPayload'
+--
+-- * 'piFields'
 placementsInsert
     :: Int64 -- ^ 'piProFileId'
     -> Placement -- ^ 'piPayload'
     -> PlacementsInsert
-placementsInsert pPiProFileId_ pPiPayload_ =
+placementsInsert pPiProFileId_ pPiPayload_ = 
     PlacementsInsert'
     { _piProFileId = _Coerce # pPiProFileId_
     , _piPayload = pPiPayload_
+    , _piFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ piPayload :: Lens' PlacementsInsert Placement
 piPayload
   = lens _piPayload (\ s a -> s{_piPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+piFields :: Lens' PlacementsInsert (Maybe Text)
+piFields = lens _piFields (\ s a -> s{_piFields = a})
+
 instance GoogleRequest PlacementsInsert where
         type Rs PlacementsInsert = Placement
         type Scopes PlacementsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementsInsert'{..}
-          = go _piProFileId (Just AltJSON) _piPayload
+          = go _piProFileId _piFields (Just AltJSON) _piPayload
               dFAReportingService
           where go
                   = buildClient

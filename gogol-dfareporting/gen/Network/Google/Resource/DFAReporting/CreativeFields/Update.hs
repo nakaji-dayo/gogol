@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.CreativeFields.Update
     -- * Request Lenses
     , cfuProFileId
     , cfuPayload
+    , cfuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFields.update@ method which the
 -- 'CreativeFieldsUpdate' request conforms to.
 type CreativeFieldsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CreativeField :>
-                   Put '[JSON] CreativeField
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CreativeField :>
+                     Put '[JSON] CreativeField
 
 -- | Updates an existing creative field.
 --
 -- /See:/ 'creativeFieldsUpdate' smart constructor.
 data CreativeFieldsUpdate = CreativeFieldsUpdate'
     { _cfuProFileId :: !(Textual Int64)
-    , _cfuPayload   :: !CreativeField
+    , _cfuPayload :: !CreativeField
+    , _cfuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativeFieldsUpdate = CreativeFieldsUpdate'
 -- * 'cfuProFileId'
 --
 -- * 'cfuPayload'
+--
+-- * 'cfuFields'
 creativeFieldsUpdate
     :: Int64 -- ^ 'cfuProFileId'
     -> CreativeField -- ^ 'cfuPayload'
     -> CreativeFieldsUpdate
-creativeFieldsUpdate pCfuProFileId_ pCfuPayload_ =
+creativeFieldsUpdate pCfuProFileId_ pCfuPayload_ = 
     CreativeFieldsUpdate'
     { _cfuProFileId = _Coerce # pCfuProFileId_
     , _cfuPayload = pCfuPayload_
+    , _cfuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cfuPayload :: Lens' CreativeFieldsUpdate CreativeField
 cfuPayload
   = lens _cfuPayload (\ s a -> s{_cfuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cfuFields :: Lens' CreativeFieldsUpdate (Maybe Text)
+cfuFields
+  = lens _cfuFields (\ s a -> s{_cfuFields = a})
+
 instance GoogleRequest CreativeFieldsUpdate where
         type Rs CreativeFieldsUpdate = CreativeField
         type Scopes CreativeFieldsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldsUpdate'{..}
-          = go _cfuProFileId (Just AltJSON) _cfuPayload
+          = go _cfuProFileId _cfuFields (Just AltJSON)
+              _cfuPayload
               dFAReportingService
           where go
                   = buildClient

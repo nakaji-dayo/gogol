@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.DataSets.TestIAMPermissions
     , dstipPayload
     , dstipBearerToken
     , dstipResource
+    , dstipFields
     , dstipCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.testIamPermissions@ method which the
 -- 'DataSetsTestIAMPermissions' request conforms to.
@@ -63,9 +64,10 @@ type DataSetsTestIAMPermissionsResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TestIAMPermissionsRequest :>
-                           Post '[JSON] TestIAMPermissionsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] TestIAMPermissionsRequest :>
+                             Post '[JSON] TestIAMPermissionsResponse
 
 -- | Returns permissions that a caller has on the specified resource. See
 -- </iam/docs/managing-policies#testing_permissions Testing Permissions>
@@ -75,15 +77,16 @@ type DataSetsTestIAMPermissionsResource =
 --
 -- /See:/ 'dataSetsTestIAMPermissions' smart constructor.
 data DataSetsTestIAMPermissions = DataSetsTestIAMPermissions'
-    { _dstipXgafv          :: !(Maybe Xgafv)
+    { _dstipXgafv :: !(Maybe Xgafv)
     , _dstipUploadProtocol :: !(Maybe Text)
-    , _dstipPp             :: !Bool
-    , _dstipAccessToken    :: !(Maybe Text)
-    , _dstipUploadType     :: !(Maybe Text)
-    , _dstipPayload        :: !TestIAMPermissionsRequest
-    , _dstipBearerToken    :: !(Maybe Text)
-    , _dstipResource       :: !Text
-    , _dstipCallback       :: !(Maybe Text)
+    , _dstipPp :: !Bool
+    , _dstipAccessToken :: !(Maybe Text)
+    , _dstipUploadType :: !(Maybe Text)
+    , _dstipPayload :: !TestIAMPermissionsRequest
+    , _dstipBearerToken :: !(Maybe Text)
+    , _dstipResource :: !Text
+    , _dstipFields :: !(Maybe Text)
+    , _dstipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsTestIAMPermissions' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data DataSetsTestIAMPermissions = DataSetsTestIAMPermissions'
 --
 -- * 'dstipResource'
 --
+-- * 'dstipFields'
+--
 -- * 'dstipCallback'
 dataSetsTestIAMPermissions
     :: TestIAMPermissionsRequest -- ^ 'dstipPayload'
     -> Text -- ^ 'dstipResource'
     -> DataSetsTestIAMPermissions
-dataSetsTestIAMPermissions pDstipPayload_ pDstipResource_ =
+dataSetsTestIAMPermissions pDstipPayload_ pDstipResource_ = 
     DataSetsTestIAMPermissions'
     { _dstipXgafv = Nothing
     , _dstipUploadProtocol = Nothing
@@ -121,6 +126,7 @@ dataSetsTestIAMPermissions pDstipPayload_ pDstipResource_ =
     , _dstipPayload = pDstipPayload_
     , _dstipBearerToken = Nothing
     , _dstipResource = pDstipResource_
+    , _dstipFields = Nothing
     , _dstipCallback = Nothing
     }
 
@@ -169,6 +175,11 @@ dstipResource
   = lens _dstipResource
       (\ s a -> s{_dstipResource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dstipFields :: Lens' DataSetsTestIAMPermissions (Maybe Text)
+dstipFields
+  = lens _dstipFields (\ s a -> s{_dstipFields = a})
+
 -- | JSONP
 dstipCallback :: Lens' DataSetsTestIAMPermissions (Maybe Text)
 dstipCallback
@@ -189,6 +200,7 @@ instance GoogleRequest DataSetsTestIAMPermissions
               _dstipUploadType
               _dstipBearerToken
               _dstipCallback
+              _dstipFields
               (Just AltJSON)
               _dstipPayload
               genomicsService

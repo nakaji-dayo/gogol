@@ -42,11 +42,12 @@ module Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Create
     , pmdcPayload
     , pmdcBearerToken
     , pmdcName
+    , pmdcFields
     , pmdcCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.metricDescriptors.create@ method which the
 -- 'ProjectsMetricDescriptorsCreate' request conforms to.
@@ -61,24 +62,26 @@ type ProjectsMetricDescriptorsCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] MetricDescriptor :>
-                             Post '[JSON] MetricDescriptor
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] MetricDescriptor :>
+                               Post '[JSON] MetricDescriptor
 
 -- | Creates a new metric descriptor. User-created metric descriptors define
 -- custom metrics.
 --
 -- /See:/ 'projectsMetricDescriptorsCreate' smart constructor.
 data ProjectsMetricDescriptorsCreate = ProjectsMetricDescriptorsCreate'
-    { _pmdcXgafv          :: !(Maybe Xgafv)
+    { _pmdcXgafv :: !(Maybe Xgafv)
     , _pmdcUploadProtocol :: !(Maybe Text)
-    , _pmdcPp             :: !Bool
-    , _pmdcAccessToken    :: !(Maybe Text)
-    , _pmdcUploadType     :: !(Maybe Text)
-    , _pmdcPayload        :: !MetricDescriptor
-    , _pmdcBearerToken    :: !(Maybe Text)
-    , _pmdcName           :: !Text
-    , _pmdcCallback       :: !(Maybe Text)
+    , _pmdcPp :: !Bool
+    , _pmdcAccessToken :: !(Maybe Text)
+    , _pmdcUploadType :: !(Maybe Text)
+    , _pmdcPayload :: !MetricDescriptor
+    , _pmdcBearerToken :: !(Maybe Text)
+    , _pmdcName :: !Text
+    , _pmdcFields :: !(Maybe Text)
+    , _pmdcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricDescriptorsCreate' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsMetricDescriptorsCreate = ProjectsMetricDescriptorsCreate'
 --
 -- * 'pmdcName'
 --
+-- * 'pmdcFields'
+--
 -- * 'pmdcCallback'
 projectsMetricDescriptorsCreate
     :: MetricDescriptor -- ^ 'pmdcPayload'
     -> Text -- ^ 'pmdcName'
     -> ProjectsMetricDescriptorsCreate
-projectsMetricDescriptorsCreate pPmdcPayload_ pPmdcName_ =
+projectsMetricDescriptorsCreate pPmdcPayload_ pPmdcName_ = 
     ProjectsMetricDescriptorsCreate'
     { _pmdcXgafv = Nothing
     , _pmdcUploadProtocol = Nothing
@@ -116,6 +121,7 @@ projectsMetricDescriptorsCreate pPmdcPayload_ pPmdcName_ =
     , _pmdcPayload = pPmdcPayload_
     , _pmdcBearerToken = Nothing
     , _pmdcName = pPmdcName_
+    , _pmdcFields = Nothing
     , _pmdcCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ pmdcBearerToken
 pmdcName :: Lens' ProjectsMetricDescriptorsCreate Text
 pmdcName = lens _pmdcName (\ s a -> s{_pmdcName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmdcFields :: Lens' ProjectsMetricDescriptorsCreate (Maybe Text)
+pmdcFields
+  = lens _pmdcFields (\ s a -> s{_pmdcFields = a})
+
 -- | JSONP
 pmdcCallback :: Lens' ProjectsMetricDescriptorsCreate (Maybe Text)
 pmdcCallback
@@ -182,6 +193,7 @@ instance GoogleRequest
               _pmdcUploadType
               _pmdcBearerToken
               _pmdcCallback
+              _pmdcFields
               (Just AltJSON)
               _pmdcPayload
               monitoringService

@@ -34,12 +34,14 @@ module Network.Google.Resource.Compute.SSLCertificates.Insert
     , SSLCertificatesInsert
 
     -- * Request Lenses
+    , sciRequestId
     , sciProject
     , sciPayload
+    , sciFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.sslCertificates.insert@ method which the
 -- 'SSLCertificatesInsert' request conforms to.
@@ -50,35 +52,59 @@ type SSLCertificatesInsertResource =
            Capture "project" Text :>
              "global" :>
                "sslCertificates" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] SSLCertificate :>
-                     Post '[JSON] Operation
+                 QueryParam "requestId" Text :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] SSLCertificate :>
+                         Post '[JSON] Operation
 
 -- | Creates a SslCertificate resource in the specified project using the
 -- data included in the request.
 --
 -- /See:/ 'sslCertificatesInsert' smart constructor.
 data SSLCertificatesInsert = SSLCertificatesInsert'
-    { _sciProject :: !Text
+    { _sciRequestId :: !(Maybe Text)
+    , _sciProject :: !Text
     , _sciPayload :: !SSLCertificate
+    , _sciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SSLCertificatesInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'sciRequestId'
+--
 -- * 'sciProject'
 --
 -- * 'sciPayload'
+--
+-- * 'sciFields'
 sslCertificatesInsert
     :: Text -- ^ 'sciProject'
     -> SSLCertificate -- ^ 'sciPayload'
     -> SSLCertificatesInsert
-sslCertificatesInsert pSciProject_ pSciPayload_ =
+sslCertificatesInsert pSciProject_ pSciPayload_ = 
     SSLCertificatesInsert'
-    { _sciProject = pSciProject_
+    { _sciRequestId = Nothing
+    , _sciProject = pSciProject_
     , _sciPayload = pSciPayload_
+    , _sciFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+sciRequestId :: Lens' SSLCertificatesInsert (Maybe Text)
+sciRequestId
+  = lens _sciRequestId (\ s a -> s{_sciRequestId = a})
 
 -- | Project ID for this request.
 sciProject :: Lens' SSLCertificatesInsert Text
@@ -90,13 +116,20 @@ sciPayload :: Lens' SSLCertificatesInsert SSLCertificate
 sciPayload
   = lens _sciPayload (\ s a -> s{_sciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sciFields :: Lens' SSLCertificatesInsert (Maybe Text)
+sciFields
+  = lens _sciFields (\ s a -> s{_sciFields = a})
+
 instance GoogleRequest SSLCertificatesInsert where
         type Rs SSLCertificatesInsert = Operation
         type Scopes SSLCertificatesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient SSLCertificatesInsert'{..}
-          = go _sciProject (Just AltJSON) _sciPayload
+          = go _sciProject _sciRequestId _sciFields
+              (Just AltJSON)
+              _sciPayload
               computeService
           where go
                   = buildClient

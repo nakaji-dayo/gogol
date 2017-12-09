@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.Rooms.ReportStatus
     , rrsPayload
     , rrsRoomId
     , rrsLanguage
+    , rrsFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.rooms.reportStatus@ method which the
 -- 'RoomsReportStatus' request conforms to.
@@ -54,9 +55,10 @@ type RoomsReportStatusResource =
              "reportstatus" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] RoomP2PStatuses :>
-                       Post '[JSON] RoomStatus
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] RoomP2PStatuses :>
+                         Post '[JSON] RoomStatus
 
 -- | Updates sent by a client reporting the status of peers in a room. For
 -- internal use by the Games SDK only. Calling this method directly is
@@ -65,9 +67,10 @@ type RoomsReportStatusResource =
 -- /See:/ 'roomsReportStatus' smart constructor.
 data RoomsReportStatus = RoomsReportStatus'
     { _rrsConsistencyToken :: !(Maybe (Textual Int64))
-    , _rrsPayload          :: !RoomP2PStatuses
-    , _rrsRoomId           :: !Text
-    , _rrsLanguage         :: !(Maybe Text)
+    , _rrsPayload :: !RoomP2PStatuses
+    , _rrsRoomId :: !Text
+    , _rrsLanguage :: !(Maybe Text)
+    , _rrsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsReportStatus' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data RoomsReportStatus = RoomsReportStatus'
 -- * 'rrsRoomId'
 --
 -- * 'rrsLanguage'
+--
+-- * 'rrsFields'
 roomsReportStatus
     :: RoomP2PStatuses -- ^ 'rrsPayload'
     -> Text -- ^ 'rrsRoomId'
     -> RoomsReportStatus
-roomsReportStatus pRrsPayload_ pRrsRoomId_ =
+roomsReportStatus pRrsPayload_ pRrsRoomId_ = 
     RoomsReportStatus'
     { _rrsConsistencyToken = Nothing
     , _rrsPayload = pRrsPayload_
     , _rrsRoomId = pRrsRoomId_
     , _rrsLanguage = Nothing
+    , _rrsFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -115,6 +121,11 @@ rrsLanguage :: Lens' RoomsReportStatus (Maybe Text)
 rrsLanguage
   = lens _rrsLanguage (\ s a -> s{_rrsLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rrsFields :: Lens' RoomsReportStatus (Maybe Text)
+rrsFields
+  = lens _rrsFields (\ s a -> s{_rrsFields = a})
+
 instance GoogleRequest RoomsReportStatus where
         type Rs RoomsReportStatus = RoomStatus
         type Scopes RoomsReportStatus =
@@ -122,6 +133,7 @@ instance GoogleRequest RoomsReportStatus where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RoomsReportStatus'{..}
           = go _rrsRoomId _rrsConsistencyToken _rrsLanguage
+              _rrsFields
               (Just AltJSON)
               _rrsPayload
               gamesService

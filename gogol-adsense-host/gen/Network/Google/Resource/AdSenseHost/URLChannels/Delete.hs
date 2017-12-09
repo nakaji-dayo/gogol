@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSenseHost.URLChannels.Delete
     -- * Request Lenses
     , ucdURLChannelId
     , ucdAdClientId
+    , ucdFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.urlchannels.delete@ method which the
 -- 'URLChannelsDelete' request conforms to.
@@ -49,14 +50,16 @@ type URLChannelsDeleteResource =
            Capture "adClientId" Text :>
              "urlchannels" :>
                Capture "urlChannelId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] URLChannel
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] URLChannel
 
 -- | Delete a URL channel from the host AdSense account.
 --
 -- /See:/ 'urlChannelsDelete' smart constructor.
 data URLChannelsDelete = URLChannelsDelete'
     { _ucdURLChannelId :: !Text
-    , _ucdAdClientId   :: !Text
+    , _ucdAdClientId :: !Text
+    , _ucdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLChannelsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data URLChannelsDelete = URLChannelsDelete'
 -- * 'ucdURLChannelId'
 --
 -- * 'ucdAdClientId'
+--
+-- * 'ucdFields'
 urlChannelsDelete
     :: Text -- ^ 'ucdURLChannelId'
     -> Text -- ^ 'ucdAdClientId'
     -> URLChannelsDelete
-urlChannelsDelete pUcdURLChannelId_ pUcdAdClientId_ =
+urlChannelsDelete pUcdURLChannelId_ pUcdAdClientId_ = 
     URLChannelsDelete'
     { _ucdURLChannelId = pUcdURLChannelId_
     , _ucdAdClientId = pUcdAdClientId_
+    , _ucdFields = Nothing
     }
 
 -- | URL channel to delete.
@@ -88,12 +94,18 @@ ucdAdClientId
   = lens _ucdAdClientId
       (\ s a -> s{_ucdAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ucdFields :: Lens' URLChannelsDelete (Maybe Text)
+ucdFields
+  = lens _ucdFields (\ s a -> s{_ucdFields = a})
+
 instance GoogleRequest URLChannelsDelete where
         type Rs URLChannelsDelete = URLChannel
         type Scopes URLChannelsDelete =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient URLChannelsDelete'{..}
-          = go _ucdAdClientId _ucdURLChannelId (Just AltJSON)
+          = go _ucdAdClientId _ucdURLChannelId _ucdFields
+              (Just AltJSON)
               adSenseHostService
           where go
                   = buildClient

@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.Update
     , mpffluPayload
     , mpffluAccountId
     , mpffluLinkId
+    , mpffluFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.update@ method which the
 -- 'ManagementProFileFilterLinksUpdate' request conforms to.
@@ -57,19 +58,21 @@ type ManagementProFileFilterLinksUpdateResource =
                      Capture "profileId" Text :>
                        "profileFilterLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] ProFileFilterLink :>
-                               Put '[JSON] ProFileFilterLink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] ProFileFilterLink :>
+                                 Put '[JSON] ProFileFilterLink
 
 -- | Update an existing profile filter link.
 --
 -- /See:/ 'managementProFileFilterLinksUpdate' smart constructor.
 data ManagementProFileFilterLinksUpdate = ManagementProFileFilterLinksUpdate'
     { _mpffluWebPropertyId :: !Text
-    , _mpffluProFileId     :: !Text
-    , _mpffluPayload       :: !ProFileFilterLink
-    , _mpffluAccountId     :: !Text
-    , _mpffluLinkId        :: !Text
+    , _mpffluProFileId :: !Text
+    , _mpffluPayload :: !ProFileFilterLink
+    , _mpffluAccountId :: !Text
+    , _mpffluLinkId :: !Text
+    , _mpffluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksUpdate' with the minimum fields required to make a request.
@@ -85,6 +88,8 @@ data ManagementProFileFilterLinksUpdate = ManagementProFileFilterLinksUpdate'
 -- * 'mpffluAccountId'
 --
 -- * 'mpffluLinkId'
+--
+-- * 'mpffluFields'
 managementProFileFilterLinksUpdate
     :: Text -- ^ 'mpffluWebPropertyId'
     -> Text -- ^ 'mpffluProFileId'
@@ -92,13 +97,14 @@ managementProFileFilterLinksUpdate
     -> Text -- ^ 'mpffluAccountId'
     -> Text -- ^ 'mpffluLinkId'
     -> ManagementProFileFilterLinksUpdate
-managementProFileFilterLinksUpdate pMpffluWebPropertyId_ pMpffluProFileId_ pMpffluPayload_ pMpffluAccountId_ pMpffluLinkId_ =
+managementProFileFilterLinksUpdate pMpffluWebPropertyId_ pMpffluProFileId_ pMpffluPayload_ pMpffluAccountId_ pMpffluLinkId_ = 
     ManagementProFileFilterLinksUpdate'
     { _mpffluWebPropertyId = pMpffluWebPropertyId_
     , _mpffluProFileId = pMpffluProFileId_
     , _mpffluPayload = pMpffluPayload_
     , _mpffluAccountId = pMpffluAccountId_
     , _mpffluLinkId = pMpffluLinkId_
+    , _mpffluFields = Nothing
     }
 
 -- | Web property Id to which profile filter link belongs
@@ -130,6 +136,11 @@ mpffluLinkId :: Lens' ManagementProFileFilterLinksUpdate Text
 mpffluLinkId
   = lens _mpffluLinkId (\ s a -> s{_mpffluLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpffluFields :: Lens' ManagementProFileFilterLinksUpdate (Maybe Text)
+mpffluFields
+  = lens _mpffluFields (\ s a -> s{_mpffluFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksUpdate where
         type Rs ManagementProFileFilterLinksUpdate =
@@ -140,6 +151,7 @@ instance GoogleRequest
           = go _mpffluAccountId _mpffluWebPropertyId
               _mpffluProFileId
               _mpffluLinkId
+              _mpffluFields
               (Just AltJSON)
               _mpffluPayload
               analyticsService

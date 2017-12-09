@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.Images.Delete
     , ImagesDelete
 
     -- * Request Lenses
-    , imaImage
-    , imaProject
+    , iddRequestId
+    , iddImage
+    , iddProject
+    , iddFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.images.delete@ method which the
 -- 'ImagesDelete' request conforms to.
@@ -50,41 +52,70 @@ type ImagesDeleteResource =
              "global" :>
                "images" :>
                  Capture "image" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified image.
 --
 -- /See:/ 'imagesDelete' smart constructor.
 data ImagesDelete = ImagesDelete'
-    { _imaImage   :: !Text
-    , _imaProject :: !Text
+    { _iddRequestId :: !(Maybe Text)
+    , _iddImage :: !Text
+    , _iddProject :: !Text
+    , _iddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImagesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'imaImage'
+-- * 'iddRequestId'
 --
--- * 'imaProject'
+-- * 'iddImage'
+--
+-- * 'iddProject'
+--
+-- * 'iddFields'
 imagesDelete
-    :: Text -- ^ 'imaImage'
-    -> Text -- ^ 'imaProject'
+    :: Text -- ^ 'iddImage'
+    -> Text -- ^ 'iddProject'
     -> ImagesDelete
-imagesDelete pImaImage_ pImaProject_ =
+imagesDelete pIddImage_ pIddProject_ = 
     ImagesDelete'
-    { _imaImage = pImaImage_
-    , _imaProject = pImaProject_
+    { _iddRequestId = Nothing
+    , _iddImage = pIddImage_
+    , _iddProject = pIddProject_
+    , _iddFields = Nothing
     }
 
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+iddRequestId :: Lens' ImagesDelete (Maybe Text)
+iddRequestId
+  = lens _iddRequestId (\ s a -> s{_iddRequestId = a})
+
 -- | Name of the image resource to delete.
-imaImage :: Lens' ImagesDelete Text
-imaImage = lens _imaImage (\ s a -> s{_imaImage = a})
+iddImage :: Lens' ImagesDelete Text
+iddImage = lens _iddImage (\ s a -> s{_iddImage = a})
 
 -- | Project ID for this request.
-imaProject :: Lens' ImagesDelete Text
-imaProject
-  = lens _imaProject (\ s a -> s{_imaProject = a})
+iddProject :: Lens' ImagesDelete Text
+iddProject
+  = lens _iddProject (\ s a -> s{_iddProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+iddFields :: Lens' ImagesDelete (Maybe Text)
+iddFields
+  = lens _iddFields (\ s a -> s{_iddFields = a})
 
 instance GoogleRequest ImagesDelete where
         type Rs ImagesDelete = Operation
@@ -92,7 +123,8 @@ instance GoogleRequest ImagesDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient ImagesDelete'{..}
-          = go _imaProject _imaImage (Just AltJSON)
+          = go _iddProject _iddImage _iddRequestId _iddFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy ImagesDeleteResource)

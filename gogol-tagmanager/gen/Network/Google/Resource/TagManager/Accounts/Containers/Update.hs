@@ -22,7 +22,7 @@
 --
 -- Updates a Container.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.update@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.update@.
 module Network.Google.Resource.TagManager.Accounts.Containers.Update
     (
     -- * REST Resource
@@ -33,67 +33,63 @@ module Network.Google.Resource.TagManager.Accounts.Containers.Update
     , AccountsContainersUpdate
 
     -- * Request Lenses
-    , acuContainerId
+    , acuPath
     , acuFingerprint
     , acuPayload
-    , acuAccountId
+    , acuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.update@ method which the
 -- 'AccountsContainersUpdate' request conforms to.
 type AccountsContainersUpdateResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               Capture "containerId" Text :>
-                 QueryParam "fingerprint" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Container :> Put '[JSON] Container
+       "v2" :>
+         Capture "path" Text :>
+           QueryParam "fingerprint" Text :>
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Container :> Put '[JSON] Container
 
 -- | Updates a Container.
 --
 -- /See:/ 'accountsContainersUpdate' smart constructor.
 data AccountsContainersUpdate = AccountsContainersUpdate'
-    { _acuContainerId :: !Text
+    { _acuPath :: !Text
     , _acuFingerprint :: !(Maybe Text)
-    , _acuPayload     :: !Container
-    , _acuAccountId   :: !Text
+    , _acuPayload :: !Container
+    , _acuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersUpdate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acuContainerId'
+-- * 'acuPath'
 --
 -- * 'acuFingerprint'
 --
 -- * 'acuPayload'
 --
--- * 'acuAccountId'
+-- * 'acuFields'
 accountsContainersUpdate
-    :: Text -- ^ 'acuContainerId'
+    :: Text -- ^ 'acuPath'
     -> Container -- ^ 'acuPayload'
-    -> Text -- ^ 'acuAccountId'
     -> AccountsContainersUpdate
-accountsContainersUpdate pAcuContainerId_ pAcuPayload_ pAcuAccountId_ =
+accountsContainersUpdate pAcuPath_ pAcuPayload_ = 
     AccountsContainersUpdate'
-    { _acuContainerId = pAcuContainerId_
+    { _acuPath = pAcuPath_
     , _acuFingerprint = Nothing
     , _acuPayload = pAcuPayload_
-    , _acuAccountId = pAcuAccountId_
+    , _acuFields = Nothing
     }
 
--- | The GTM Container ID.
-acuContainerId :: Lens' AccountsContainersUpdate Text
-acuContainerId
-  = lens _acuContainerId
-      (\ s a -> s{_acuContainerId = a})
+-- | GTM Container\'s API relative path. Example:
+-- accounts\/{account_id}\/containers\/{container_id}
+acuPath :: Lens' AccountsContainersUpdate Text
+acuPath = lens _acuPath (\ s a -> s{_acuPath = a})
 
 -- | When provided, this fingerprint must match the fingerprint of the
 -- container in storage.
@@ -107,17 +103,17 @@ acuPayload :: Lens' AccountsContainersUpdate Container
 acuPayload
   = lens _acuPayload (\ s a -> s{_acuPayload = a})
 
--- | The GTM Account ID.
-acuAccountId :: Lens' AccountsContainersUpdate Text
-acuAccountId
-  = lens _acuAccountId (\ s a -> s{_acuAccountId = a})
+-- | Selector specifying which fields to include in a partial response.
+acuFields :: Lens' AccountsContainersUpdate (Maybe Text)
+acuFields
+  = lens _acuFields (\ s a -> s{_acuFields = a})
 
 instance GoogleRequest AccountsContainersUpdate where
         type Rs AccountsContainersUpdate = Container
         type Scopes AccountsContainersUpdate =
              '["https://www.googleapis.com/auth/tagmanager.edit.containers"]
         requestClient AccountsContainersUpdate'{..}
-          = go _acuAccountId _acuContainerId _acuFingerprint
+          = go _acuPath _acuFingerprint _acuFields
               (Just AltJSON)
               _acuPayload
               tagManagerService

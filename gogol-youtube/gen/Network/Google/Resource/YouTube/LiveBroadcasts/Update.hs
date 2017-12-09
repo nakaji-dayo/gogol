@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Update
     , lbuPayload
     , lbuOnBehalfOfContentOwner
     , lbuOnBehalfOfContentOwnerChannel
+    , lbuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.update@ method which the
 -- 'LiveBroadcastsUpdate' request conforms to.
@@ -52,19 +53,21 @@ type LiveBroadcastsUpdateResource =
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] LiveBroadcast :>
-                     Put '[JSON] LiveBroadcast
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] LiveBroadcast :>
+                       Put '[JSON] LiveBroadcast
 
 -- | Updates a broadcast. For example, you could modify the broadcast
 -- settings defined in the liveBroadcast resource\'s contentDetails object.
 --
 -- /See:/ 'liveBroadcastsUpdate' smart constructor.
 data LiveBroadcastsUpdate = LiveBroadcastsUpdate'
-    { _lbuPart                          :: !Text
-    , _lbuPayload                       :: !LiveBroadcast
-    , _lbuOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbuPart :: !Text
+    , _lbuPayload :: !LiveBroadcast
+    , _lbuOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbuOnBehalfOfContentOwnerChannel :: !(Maybe Text)
+    , _lbuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsUpdate' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data LiveBroadcastsUpdate = LiveBroadcastsUpdate'
 -- * 'lbuOnBehalfOfContentOwner'
 --
 -- * 'lbuOnBehalfOfContentOwnerChannel'
+--
+-- * 'lbuFields'
 liveBroadcastsUpdate
     :: Text -- ^ 'lbuPart'
     -> LiveBroadcast -- ^ 'lbuPayload'
     -> LiveBroadcastsUpdate
-liveBroadcastsUpdate pLbuPart_ pLbuPayload_ =
+liveBroadcastsUpdate pLbuPart_ pLbuPayload_ = 
     LiveBroadcastsUpdate'
     { _lbuPart = pLbuPart_
     , _lbuPayload = pLbuPayload_
     , _lbuOnBehalfOfContentOwner = Nothing
     , _lbuOnBehalfOfContentOwnerChannel = Nothing
+    , _lbuFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -147,6 +153,11 @@ lbuOnBehalfOfContentOwnerChannel
   = lens _lbuOnBehalfOfContentOwnerChannel
       (\ s a -> s{_lbuOnBehalfOfContentOwnerChannel = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lbuFields :: Lens' LiveBroadcastsUpdate (Maybe Text)
+lbuFields
+  = lens _lbuFields (\ s a -> s{_lbuFields = a})
+
 instance GoogleRequest LiveBroadcastsUpdate where
         type Rs LiveBroadcastsUpdate = LiveBroadcast
         type Scopes LiveBroadcastsUpdate =
@@ -155,6 +166,7 @@ instance GoogleRequest LiveBroadcastsUpdate where
         requestClient LiveBroadcastsUpdate'{..}
           = go (Just _lbuPart) _lbuOnBehalfOfContentOwner
               _lbuOnBehalfOfContentOwnerChannel
+              _lbuFields
               (Just AltJSON)
               _lbuPayload
               youTubeService

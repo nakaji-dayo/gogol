@@ -41,10 +41,11 @@ module Network.Google.Resource.CloudMonitoring.Timeseries.Write
     -- * Request Lenses
     , twProject
     , twPayload
+    , twFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.timeseries.write@ method which the
 -- 'TimeseriesWrite' request conforms to.
@@ -54,9 +55,10 @@ type TimeseriesWriteResource =
          "projects" :>
            Capture "project" Text :>
              "timeseries:write" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] WriteTimeseriesRequest :>
-                   Post '[JSON] WriteTimeseriesResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] WriteTimeseriesRequest :>
+                     Post '[JSON] WriteTimeseriesResponse
 
 -- | Put data points to one or more time series for one or more metrics. If a
 -- time series does not exist, a new time series will be created. It is not
@@ -70,6 +72,7 @@ type TimeseriesWriteResource =
 data TimeseriesWrite = TimeseriesWrite'
     { _twProject :: !Text
     , _twPayload :: !WriteTimeseriesRequest
+    , _twFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeseriesWrite' with the minimum fields required to make a request.
@@ -79,14 +82,17 @@ data TimeseriesWrite = TimeseriesWrite'
 -- * 'twProject'
 --
 -- * 'twPayload'
+--
+-- * 'twFields'
 timeseriesWrite
     :: Text -- ^ 'twProject'
     -> WriteTimeseriesRequest -- ^ 'twPayload'
     -> TimeseriesWrite
-timeseriesWrite pTwProject_ pTwPayload_ =
+timeseriesWrite pTwProject_ pTwPayload_ = 
     TimeseriesWrite'
     { _twProject = pTwProject_
     , _twPayload = pTwPayload_
+    , _twFields = Nothing
     }
 
 -- | The project ID. The value can be the numeric project ID or string-based
@@ -100,13 +106,17 @@ twPayload :: Lens' TimeseriesWrite WriteTimeseriesRequest
 twPayload
   = lens _twPayload (\ s a -> s{_twPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+twFields :: Lens' TimeseriesWrite (Maybe Text)
+twFields = lens _twFields (\ s a -> s{_twFields = a})
+
 instance GoogleRequest TimeseriesWrite where
         type Rs TimeseriesWrite = WriteTimeseriesResponse
         type Scopes TimeseriesWrite =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/monitoring"]
         requestClient TimeseriesWrite'{..}
-          = go _twProject (Just AltJSON) _twPayload
+          = go _twProject _twFields (Just AltJSON) _twPayload
               cloudMonitoringService
           where go
                   = buildClient

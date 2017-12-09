@@ -37,10 +37,11 @@ module Network.Google.Resource.Books.CloudLoading.AddBook
     , clabUploadClientToken
     , clabName
     , clabDriveDocumentId
+    , clabFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.cloudloading.addBook@ method which the
 -- 'CloudLoadingAddBook' request conforms to.
@@ -53,17 +54,19 @@ type CloudLoadingAddBookResource =
                QueryParam "upload_client_token" Text :>
                  QueryParam "name" Text :>
                    QueryParam "drive_document_id" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Post '[JSON] BooksCloudLoadingResource
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Post '[JSON] BooksCloudLoadingResource
 
 -- |
 --
 -- /See:/ 'cloudLoadingAddBook' smart constructor.
 data CloudLoadingAddBook = CloudLoadingAddBook'
-    { _clabMimeType          :: !(Maybe Text)
+    { _clabMimeType :: !(Maybe Text)
     , _clabUploadClientToken :: !(Maybe Text)
-    , _clabName              :: !(Maybe Text)
-    , _clabDriveDocumentId   :: !(Maybe Text)
+    , _clabName :: !(Maybe Text)
+    , _clabDriveDocumentId :: !(Maybe Text)
+    , _clabFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CloudLoadingAddBook' with the minimum fields required to make a request.
@@ -77,14 +80,17 @@ data CloudLoadingAddBook = CloudLoadingAddBook'
 -- * 'clabName'
 --
 -- * 'clabDriveDocumentId'
+--
+-- * 'clabFields'
 cloudLoadingAddBook
     :: CloudLoadingAddBook
-cloudLoadingAddBook =
+cloudLoadingAddBook = 
     CloudLoadingAddBook'
     { _clabMimeType = Nothing
     , _clabUploadClientToken = Nothing
     , _clabName = Nothing
     , _clabDriveDocumentId = Nothing
+    , _clabFields = Nothing
     }
 
 -- | The document MIME type. It can be set only if the drive_document_id is
@@ -108,6 +114,11 @@ clabDriveDocumentId
   = lens _clabDriveDocumentId
       (\ s a -> s{_clabDriveDocumentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+clabFields :: Lens' CloudLoadingAddBook (Maybe Text)
+clabFields
+  = lens _clabFields (\ s a -> s{_clabFields = a})
+
 instance GoogleRequest CloudLoadingAddBook where
         type Rs CloudLoadingAddBook =
              BooksCloudLoadingResource
@@ -116,6 +127,7 @@ instance GoogleRequest CloudLoadingAddBook where
         requestClient CloudLoadingAddBook'{..}
           = go _clabMimeType _clabUploadClientToken _clabName
               _clabDriveDocumentId
+              _clabFields
               (Just AltJSON)
               booksService
           where go

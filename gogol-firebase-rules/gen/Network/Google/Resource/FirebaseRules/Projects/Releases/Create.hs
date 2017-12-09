@@ -35,9 +35,7 @@
 -- The table reflects the \`Ruleset\` rollout in progress. The \`prod\` and
 -- \`prod\/beta\` releases refer to the same \`Ruleset\`. However,
 -- \`prod\/v23\` refers to a new \`Ruleset\`. The \`Ruleset\` reference for
--- a \`Release\` may be updated using the UpdateRelease method, and the
--- custom \`Release\` name may be referenced by specifying the
--- \`X-Firebase-Rules-Release-Name\` header.
+-- a \`Release\` may be updated using the UpdateRelease method.
 --
 -- /See:/ <https://firebase.google.com/docs/storage/security Firebase Rules API Reference> for @firebaserules.projects.releases.create@.
 module Network.Google.Resource.FirebaseRules.Projects.Releases.Create
@@ -58,11 +56,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Releases.Create
     , prcrPayload
     , prcrBearerToken
     , prcrName
+    , prcrFields
     , prcrCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.releases.create@ method which the
 -- 'ProjectsReleasesCreate' request conforms to.
@@ -77,8 +76,9 @@ type ProjectsReleasesCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Release :> Post '[JSON] Release
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Release :> Post '[JSON] Release
 
 -- | Create a \`Release\`. Release names should reflect the developer\'s
 -- deployment practices. For example, the release name may include the
@@ -95,21 +95,20 @@ type ProjectsReleasesCreateResource =
 -- The table reflects the \`Ruleset\` rollout in progress. The \`prod\` and
 -- \`prod\/beta\` releases refer to the same \`Ruleset\`. However,
 -- \`prod\/v23\` refers to a new \`Ruleset\`. The \`Ruleset\` reference for
--- a \`Release\` may be updated using the UpdateRelease method, and the
--- custom \`Release\` name may be referenced by specifying the
--- \`X-Firebase-Rules-Release-Name\` header.
+-- a \`Release\` may be updated using the UpdateRelease method.
 --
 -- /See:/ 'projectsReleasesCreate' smart constructor.
 data ProjectsReleasesCreate = ProjectsReleasesCreate'
-    { _prcrXgafv          :: !(Maybe Xgafv)
+    { _prcrXgafv :: !(Maybe Xgafv)
     , _prcrUploadProtocol :: !(Maybe Text)
-    , _prcrPp             :: !Bool
-    , _prcrAccessToken    :: !(Maybe Text)
-    , _prcrUploadType     :: !(Maybe Text)
-    , _prcrPayload        :: !Release
-    , _prcrBearerToken    :: !(Maybe Text)
-    , _prcrName           :: !Text
-    , _prcrCallback       :: !(Maybe Text)
+    , _prcrPp :: !Bool
+    , _prcrAccessToken :: !(Maybe Text)
+    , _prcrUploadType :: !(Maybe Text)
+    , _prcrPayload :: !Release
+    , _prcrBearerToken :: !(Maybe Text)
+    , _prcrName :: !Text
+    , _prcrFields :: !(Maybe Text)
+    , _prcrCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsReleasesCreate' with the minimum fields required to make a request.
@@ -132,12 +131,14 @@ data ProjectsReleasesCreate = ProjectsReleasesCreate'
 --
 -- * 'prcrName'
 --
+-- * 'prcrFields'
+--
 -- * 'prcrCallback'
 projectsReleasesCreate
     :: Release -- ^ 'prcrPayload'
     -> Text -- ^ 'prcrName'
     -> ProjectsReleasesCreate
-projectsReleasesCreate pPrcrPayload_ pPrcrName_ =
+projectsReleasesCreate pPrcrPayload_ pPrcrName_ = 
     ProjectsReleasesCreate'
     { _prcrXgafv = Nothing
     , _prcrUploadProtocol = Nothing
@@ -147,6 +148,7 @@ projectsReleasesCreate pPrcrPayload_ pPrcrName_ =
     , _prcrPayload = pPrcrPayload_
     , _prcrBearerToken = Nothing
     , _prcrName = pPrcrName_
+    , _prcrFields = Nothing
     , _prcrCallback = Nothing
     }
 
@@ -193,6 +195,11 @@ prcrBearerToken
 prcrName :: Lens' ProjectsReleasesCreate Text
 prcrName = lens _prcrName (\ s a -> s{_prcrName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prcrFields :: Lens' ProjectsReleasesCreate (Maybe Text)
+prcrFields
+  = lens _prcrFields (\ s a -> s{_prcrFields = a})
+
 -- | JSONP
 prcrCallback :: Lens' ProjectsReleasesCreate (Maybe Text)
 prcrCallback
@@ -210,6 +217,7 @@ instance GoogleRequest ProjectsReleasesCreate where
               _prcrUploadType
               _prcrBearerToken
               _prcrCallback
+              _prcrFields
               (Just AltJSON)
               _prcrPayload
               firebaseRulesService

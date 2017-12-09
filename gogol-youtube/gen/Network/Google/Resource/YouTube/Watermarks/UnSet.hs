@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Watermarks.UnSet
     -- * Request Lenses
     , wusChannelId
     , wusOnBehalfOfContentOwner
+    , wusFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.watermarks.unset@ method which the
 -- 'WatermarksUnSet' request conforms to.
@@ -49,14 +50,16 @@ type WatermarksUnSetResource =
            "unset" :>
              QueryParam "channelId" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Deletes a channel\'s watermark image.
 --
 -- /See:/ 'watermarksUnSet' smart constructor.
 data WatermarksUnSet = WatermarksUnSet'
-    { _wusChannelId              :: !Text
+    { _wusChannelId :: !Text
     , _wusOnBehalfOfContentOwner :: !(Maybe Text)
+    , _wusFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WatermarksUnSet' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data WatermarksUnSet = WatermarksUnSet'
 -- * 'wusChannelId'
 --
 -- * 'wusOnBehalfOfContentOwner'
+--
+-- * 'wusFields'
 watermarksUnSet
     :: Text -- ^ 'wusChannelId'
     -> WatermarksUnSet
-watermarksUnSet pWusChannelId_ =
+watermarksUnSet pWusChannelId_ = 
     WatermarksUnSet'
     { _wusChannelId = pWusChannelId_
     , _wusOnBehalfOfContentOwner = Nothing
+    , _wusFields = Nothing
     }
 
 -- | The channelId parameter specifies the YouTube channel ID for which the
@@ -96,6 +102,11 @@ wusOnBehalfOfContentOwner
   = lens _wusOnBehalfOfContentOwner
       (\ s a -> s{_wusOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wusFields :: Lens' WatermarksUnSet (Maybe Text)
+wusFields
+  = lens _wusFields (\ s a -> s{_wusFields = a})
+
 instance GoogleRequest WatermarksUnSet where
         type Rs WatermarksUnSet = ()
         type Scopes WatermarksUnSet =
@@ -104,6 +115,7 @@ instance GoogleRequest WatermarksUnSet where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient WatermarksUnSet'{..}
           = go (Just _wusChannelId) _wusOnBehalfOfContentOwner
+              _wusFields
               (Just AltJSON)
               youTubeService
           where go

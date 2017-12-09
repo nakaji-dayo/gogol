@@ -38,10 +38,11 @@ module Network.Google.Resource.Drive.Comments.List
     , cFileId
     , cPageSize
     , cIncludeDeleted
+    , cFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.comments.list@ method which the
 -- 'CommentsList' request conforms to.
@@ -55,17 +56,19 @@ type CommentsListResource =
                  QueryParam "pageToken" Text :>
                    QueryParam "pageSize" (Textual Int32) :>
                      QueryParam "includeDeleted" Bool :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] CommentList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] CommentList
 
 -- | Lists a file\'s comments.
 --
 -- /See:/ 'commentsList' smart constructor.
 data CommentsList = CommentsList'
     { _cStartModifiedTime :: !(Maybe Text)
-    , _cPageToken         :: !(Maybe Text)
-    , _cFileId            :: !Text
-    , _cPageSize          :: !(Textual Int32)
-    , _cIncludeDeleted    :: !Bool
+    , _cPageToken :: !(Maybe Text)
+    , _cFileId :: !Text
+    , _cPageSize :: !(Textual Int32)
+    , _cIncludeDeleted :: !Bool
+    , _cFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsList' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data CommentsList = CommentsList'
 -- * 'cPageSize'
 --
 -- * 'cIncludeDeleted'
+--
+-- * 'cFields'
 commentsList
     :: Text -- ^ 'cFileId'
     -> CommentsList
-commentsList pCFileId_ =
+commentsList pCFileId_ = 
     CommentsList'
     { _cStartModifiedTime = Nothing
     , _cPageToken = Nothing
     , _cFileId = pCFileId_
     , _cPageSize = 20
     , _cIncludeDeleted = False
+    , _cFields = Nothing
     }
 
 -- | The minimum value of \'modifiedTime\' for the result comments (RFC 3339
@@ -124,6 +130,10 @@ cIncludeDeleted
   = lens _cIncludeDeleted
       (\ s a -> s{_cIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cFields :: Lens' CommentsList (Maybe Text)
+cFields = lens _cFields (\ s a -> s{_cFields = a})
+
 instance GoogleRequest CommentsList where
         type Rs CommentsList = CommentList
         type Scopes CommentsList =
@@ -134,6 +144,7 @@ instance GoogleRequest CommentsList where
           = go _cFileId _cStartModifiedTime _cPageToken
               (Just _cPageSize)
               (Just _cIncludeDeleted)
+              _cFields
               (Just AltJSON)
               driveService
           where go

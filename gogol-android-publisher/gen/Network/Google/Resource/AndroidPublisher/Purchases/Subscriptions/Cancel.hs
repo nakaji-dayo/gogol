@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Cancel
     , pscPackageName
     , pscToken
     , pscSubscriptionId
+    , pscFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.purchases.subscriptions.cancel@ method which the
 -- 'PurchasesSubscriptionsCancel' request conforms to.
@@ -54,16 +55,18 @@ type PurchasesSubscriptionsCancelResource =
                  Capture "subscriptionId" Text :>
                    "tokens" :>
                      CaptureMode "token" "cancel" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Cancels a user\'s subscription purchase. The subscription remains valid
 -- until its expiration time.
 --
 -- /See:/ 'purchasesSubscriptionsCancel' smart constructor.
 data PurchasesSubscriptionsCancel = PurchasesSubscriptionsCancel'
-    { _pscPackageName    :: !Text
-    , _pscToken          :: !Text
+    { _pscPackageName :: !Text
+    , _pscToken :: !Text
     , _pscSubscriptionId :: !Text
+    , _pscFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PurchasesSubscriptionsCancel' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data PurchasesSubscriptionsCancel = PurchasesSubscriptionsCancel'
 -- * 'pscToken'
 --
 -- * 'pscSubscriptionId'
+--
+-- * 'pscFields'
 purchasesSubscriptionsCancel
     :: Text -- ^ 'pscPackageName'
     -> Text -- ^ 'pscToken'
     -> Text -- ^ 'pscSubscriptionId'
     -> PurchasesSubscriptionsCancel
-purchasesSubscriptionsCancel pPscPackageName_ pPscToken_ pPscSubscriptionId_ =
+purchasesSubscriptionsCancel pPscPackageName_ pPscToken_ pPscSubscriptionId_ = 
     PurchasesSubscriptionsCancel'
     { _pscPackageName = pPscPackageName_
     , _pscToken = pPscToken_
     , _pscSubscriptionId = pPscSubscriptionId_
+    , _pscFields = Nothing
     }
 
 -- | The package name of the application for which this subscription was
@@ -105,6 +111,11 @@ pscSubscriptionId
   = lens _pscSubscriptionId
       (\ s a -> s{_pscSubscriptionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pscFields :: Lens' PurchasesSubscriptionsCancel (Maybe Text)
+pscFields
+  = lens _pscFields (\ s a -> s{_pscFields = a})
+
 instance GoogleRequest PurchasesSubscriptionsCancel
          where
         type Rs PurchasesSubscriptionsCancel = ()
@@ -112,6 +123,7 @@ instance GoogleRequest PurchasesSubscriptionsCancel
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient PurchasesSubscriptionsCancel'{..}
           = go _pscPackageName _pscSubscriptionId _pscToken
+              _pscFields
               (Just AltJSON)
               androidPublisherService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.RemovePublicKey
     , urpkProject
     , urpkFingerprint
     , urpkUser
+    , urpkFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.removePublicKey@ method which the
 -- 'UsersRemovePublicKey' request conforms to.
@@ -53,15 +54,17 @@ type UsersRemovePublicKeyResource =
                  Capture "user" Text :>
                    "removePublicKey" :>
                      QueryParam "fingerprint" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Removes the specified public key from the user.
 --
 -- /See:/ 'usersRemovePublicKey' smart constructor.
 data UsersRemovePublicKey = UsersRemovePublicKey'
-    { _urpkProject     :: !Text
+    { _urpkProject :: !Text
     , _urpkFingerprint :: !Text
-    , _urpkUser        :: !Text
+    , _urpkUser :: !Text
+    , _urpkFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersRemovePublicKey' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data UsersRemovePublicKey = UsersRemovePublicKey'
 -- * 'urpkFingerprint'
 --
 -- * 'urpkUser'
+--
+-- * 'urpkFields'
 usersRemovePublicKey
     :: Text -- ^ 'urpkProject'
     -> Text -- ^ 'urpkFingerprint'
     -> Text -- ^ 'urpkUser'
     -> UsersRemovePublicKey
-usersRemovePublicKey pUrpkProject_ pUrpkFingerprint_ pUrpkUser_ =
+usersRemovePublicKey pUrpkProject_ pUrpkFingerprint_ pUrpkUser_ = 
     UsersRemovePublicKey'
     { _urpkProject = pUrpkProject_
     , _urpkFingerprint = pUrpkFingerprint_
     , _urpkUser = pUrpkUser_
+    , _urpkFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -102,6 +108,11 @@ urpkFingerprint
 urpkUser :: Lens' UsersRemovePublicKey Text
 urpkUser = lens _urpkUser (\ s a -> s{_urpkUser = a})
 
+-- | Selector specifying which fields to include in a partial response.
+urpkFields :: Lens' UsersRemovePublicKey (Maybe Text)
+urpkFields
+  = lens _urpkFields (\ s a -> s{_urpkFields = a})
+
 instance GoogleRequest UsersRemovePublicKey where
         type Rs UsersRemovePublicKey = Operation
         type Scopes UsersRemovePublicKey =
@@ -109,6 +120,7 @@ instance GoogleRequest UsersRemovePublicKey where
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient UsersRemovePublicKey'{..}
           = go _urpkProject _urpkUser (Just _urpkFingerprint)
+              _urpkFields
               (Just AltJSON)
               userAccountsService
           where go

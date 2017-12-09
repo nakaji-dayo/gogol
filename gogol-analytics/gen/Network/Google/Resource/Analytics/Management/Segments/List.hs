@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.Segments.List
     -- * Request Lenses
     , mslStartIndex
     , mslMaxResults
+    , mslFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.segments.list@ method which the
 -- 'ManagementSegmentsList' request conforms to.
@@ -49,7 +50,8 @@ type ManagementSegmentsListResource =
            "segments" :>
              QueryParam "start-index" (Textual Int32) :>
                QueryParam "max-results" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Segments
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Segments
 
 -- | Lists segments to which the user has access.
 --
@@ -57,6 +59,7 @@ type ManagementSegmentsListResource =
 data ManagementSegmentsList = ManagementSegmentsList'
     { _mslStartIndex :: !(Maybe (Textual Int32))
     , _mslMaxResults :: !(Maybe (Textual Int32))
+    , _mslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementSegmentsList' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ data ManagementSegmentsList = ManagementSegmentsList'
 -- * 'mslStartIndex'
 --
 -- * 'mslMaxResults'
+--
+-- * 'mslFields'
 managementSegmentsList
     :: ManagementSegmentsList
-managementSegmentsList =
+managementSegmentsList = 
     ManagementSegmentsList'
     { _mslStartIndex = Nothing
     , _mslMaxResults = Nothing
+    , _mslFields = Nothing
     }
 
 -- | An index of the first segment to retrieve. Use this parameter as a
@@ -89,6 +95,11 @@ mslMaxResults
       (\ s a -> s{_mslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mslFields :: Lens' ManagementSegmentsList (Maybe Text)
+mslFields
+  = lens _mslFields (\ s a -> s{_mslFields = a})
+
 instance GoogleRequest ManagementSegmentsList where
         type Rs ManagementSegmentsList = Segments
         type Scopes ManagementSegmentsList =
@@ -96,7 +107,8 @@ instance GoogleRequest ManagementSegmentsList where
                "https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementSegmentsList'{..}
-          = go _mslStartIndex _mslMaxResults (Just AltJSON)
+          = go _mslStartIndex _mslMaxResults _mslFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

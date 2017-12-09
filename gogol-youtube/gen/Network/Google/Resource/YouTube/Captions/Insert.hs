@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.Captions.Insert
     , ciPayload
     , ciOnBehalfOfContentOwner
     , ciSync
+    , ciFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.captions.insert@ method which the
 -- 'CaptionsInsert' request conforms to.
@@ -53,8 +54,9 @@ type CaptionsInsertResource =
              QueryParam "onBehalfOf" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
                  QueryParam "sync" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Caption :> Post '[JSON] Caption
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Caption :> Post '[JSON] Caption
        :<|>
        "upload" :>
          "youtube" :>
@@ -64,20 +66,22 @@ type CaptionsInsertResource =
                  QueryParam "onBehalfOf" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "sync" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" Multipart :>
-                           MultipartRelated '[JSON] Caption :>
-                             Post '[JSON] Caption
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" Multipart :>
+                             MultipartRelated '[JSON] Caption :>
+                               Post '[JSON] Caption
 
 -- | Uploads a caption track.
 --
 -- /See:/ 'captionsInsert' smart constructor.
 data CaptionsInsert = CaptionsInsert'
-    { _ciOnBehalfOf             :: !(Maybe Text)
-    , _ciPart                   :: !Text
-    , _ciPayload                :: !Caption
+    { _ciOnBehalfOf :: !(Maybe Text)
+    , _ciPart :: !Text
+    , _ciPayload :: !Caption
     , _ciOnBehalfOfContentOwner :: !(Maybe Text)
-    , _ciSync                   :: !(Maybe Bool)
+    , _ciSync :: !(Maybe Bool)
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CaptionsInsert' with the minimum fields required to make a request.
@@ -93,17 +97,20 @@ data CaptionsInsert = CaptionsInsert'
 -- * 'ciOnBehalfOfContentOwner'
 --
 -- * 'ciSync'
+--
+-- * 'ciFields'
 captionsInsert
     :: Text -- ^ 'ciPart'
     -> Caption -- ^ 'ciPayload'
     -> CaptionsInsert
-captionsInsert pCiPart_ pCiPayload_ =
+captionsInsert pCiPart_ pCiPayload_ = 
     CaptionsInsert'
     { _ciOnBehalfOf = Nothing
     , _ciPart = pCiPart_
     , _ciPayload = pCiPayload_
     , _ciOnBehalfOfContentOwner = Nothing
     , _ciSync = Nothing
+    , _ciFields = Nothing
     }
 
 -- | ID of the Google+ Page for the channel that the request is be on behalf
@@ -147,6 +154,10 @@ ciOnBehalfOfContentOwner
 ciSync :: Lens' CaptionsInsert (Maybe Bool)
 ciSync = lens _ciSync (\ s a -> s{_ciSync = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' CaptionsInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest CaptionsInsert where
         type Rs CaptionsInsert = Caption
         type Scopes CaptionsInsert =
@@ -156,6 +167,7 @@ instance GoogleRequest CaptionsInsert where
           = go (Just _ciPart) _ciOnBehalfOf
               _ciOnBehalfOfContentOwner
               _ciSync
+              _ciFields
               (Just AltJSON)
               _ciPayload
               youTubeService
@@ -172,6 +184,7 @@ instance GoogleRequest (MediaUpload CaptionsInsert)
           = go (Just _ciPart) _ciOnBehalfOf
               _ciOnBehalfOfContentOwner
               _ciSync
+              _ciFields
               (Just AltJSON)
               (Just Multipart)
               _ciPayload

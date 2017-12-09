@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.AccountSummaries.List
     -- * Request Lenses
     , maslStartIndex
     , maslMaxResults
+    , maslFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.accountSummaries.list@ method which the
 -- 'ManagementAccountSummariesList' request conforms to.
@@ -50,8 +51,9 @@ type ManagementAccountSummariesListResource =
            "accountSummaries" :>
              QueryParam "start-index" (Textual Int32) :>
                QueryParam "max-results" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccountSummaries
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccountSummaries
 
 -- | Lists account summaries (lightweight tree comprised of
 -- accounts\/properties\/profiles) to which the user has access.
@@ -60,6 +62,7 @@ type ManagementAccountSummariesListResource =
 data ManagementAccountSummariesList = ManagementAccountSummariesList'
     { _maslStartIndex :: !(Maybe (Textual Int32))
     , _maslMaxResults :: !(Maybe (Textual Int32))
+    , _maslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementAccountSummariesList' with the minimum fields required to make a request.
@@ -69,12 +72,15 @@ data ManagementAccountSummariesList = ManagementAccountSummariesList'
 -- * 'maslStartIndex'
 --
 -- * 'maslMaxResults'
+--
+-- * 'maslFields'
 managementAccountSummariesList
     :: ManagementAccountSummariesList
-managementAccountSummariesList =
+managementAccountSummariesList = 
     ManagementAccountSummariesList'
     { _maslStartIndex = Nothing
     , _maslMaxResults = Nothing
+    , _maslFields = Nothing
     }
 
 -- | An index of the first entity to retrieve. Use this parameter as a
@@ -93,6 +99,11 @@ maslMaxResults
       (\ s a -> s{_maslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+maslFields :: Lens' ManagementAccountSummariesList (Maybe Text)
+maslFields
+  = lens _maslFields (\ s a -> s{_maslFields = a})
+
 instance GoogleRequest ManagementAccountSummariesList
          where
         type Rs ManagementAccountSummariesList =
@@ -101,7 +112,8 @@ instance GoogleRequest ManagementAccountSummariesList
              '["https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementAccountSummariesList'{..}
-          = go _maslStartIndex _maslMaxResults (Just AltJSON)
+          = go _maslStartIndex _maslMaxResults _maslFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

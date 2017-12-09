@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.FloodlightConfigurations.Patch
     , fcpProFileId
     , fcpPayload
     , fcpId
+    , fcpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightConfigurations.patch@ method which the
 -- 'FloodlightConfigurationsPatch' request conforms to.
 type FloodlightConfigurationsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightConfigurations" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] FloodlightConfiguration :>
-                     Patch '[JSON] FloodlightConfiguration
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] FloodlightConfiguration :>
+                       Patch '[JSON] FloodlightConfiguration
 
 -- | Updates an existing floodlight configuration. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type FloodlightConfigurationsPatchResource =
 -- /See:/ 'floodlightConfigurationsPatch' smart constructor.
 data FloodlightConfigurationsPatch = FloodlightConfigurationsPatch'
     { _fcpProFileId :: !(Textual Int64)
-    , _fcpPayload   :: !FloodlightConfiguration
-    , _fcpId        :: !(Textual Int64)
+    , _fcpPayload :: !FloodlightConfiguration
+    , _fcpId :: !(Textual Int64)
+    , _fcpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightConfigurationsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data FloodlightConfigurationsPatch = FloodlightConfigurationsPatch'
 -- * 'fcpPayload'
 --
 -- * 'fcpId'
+--
+-- * 'fcpFields'
 floodlightConfigurationsPatch
     :: Int64 -- ^ 'fcpProFileId'
     -> FloodlightConfiguration -- ^ 'fcpPayload'
     -> Int64 -- ^ 'fcpId'
     -> FloodlightConfigurationsPatch
-floodlightConfigurationsPatch pFcpProFileId_ pFcpPayload_ pFcpId_ =
+floodlightConfigurationsPatch pFcpProFileId_ pFcpPayload_ pFcpId_ = 
     FloodlightConfigurationsPatch'
     { _fcpProFileId = _Coerce # pFcpProFileId_
     , _fcpPayload = pFcpPayload_
     , _fcpId = _Coerce # pFcpId_
+    , _fcpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,6 +108,11 @@ fcpId :: Lens' FloodlightConfigurationsPatch Int64
 fcpId
   = lens _fcpId (\ s a -> s{_fcpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fcpFields :: Lens' FloodlightConfigurationsPatch (Maybe Text)
+fcpFields
+  = lens _fcpFields (\ s a -> s{_fcpFields = a})
+
 instance GoogleRequest FloodlightConfigurationsPatch
          where
         type Rs FloodlightConfigurationsPatch =
@@ -109,7 +120,8 @@ instance GoogleRequest FloodlightConfigurationsPatch
         type Scopes FloodlightConfigurationsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightConfigurationsPatch'{..}
-          = go _fcpProFileId (Just _fcpId) (Just AltJSON)
+          = go _fcpProFileId (Just _fcpId) _fcpFields
+              (Just AltJSON)
               _fcpPayload
               dFAReportingService
           where go

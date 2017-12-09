@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -45,8 +45,6 @@ module Network.Google.Script.Types
     , oDone
     , oError
     , oResponse
-    , oName
-    , oMetadata
 
     -- * ExecutionRequest
     , ExecutionRequest
@@ -67,17 +65,15 @@ module Network.Google.Script.Types
     , ssteFunction
     , ssteLineNumber
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * ExecutionError
     , ExecutionError
     , executionError
     , eeScriptStackTraceElements
     , eeErrorType
     , eeErrorMessage
-
-    -- * OperationMetadata
-    , OperationMetadata
-    , operationMetadata
-    , omAddtional
 
     -- * OperationResponse
     , OperationResponse
@@ -87,21 +83,20 @@ module Network.Google.Script.Types
     -- * ExecutionResponse
     , ExecutionResponse
     , executionResponse
-    , erStatus
     , erResult
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Script.Types.Product
-import           Network.Google.Script.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Script.Types.Product
+import Network.Google.Script.Types.Sum
 
--- | Default request referring to version 'v1' of the Google Apps Script Execution API. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'v1' of the Google Apps Script API. This contains the host and root path used as a starting point for constructing service requests.
 scriptService :: ServiceConfig
 scriptService
   = defaultService (ServiceId "script:v1")
       "script.googleapis.com"
 
--- | View and manage your mail
+-- | Read, send, delete, and manage your email
 mailGoogleComScope :: Proxy '["https://mail.google.com/"]
 mailGoogleComScope = Proxy;
 

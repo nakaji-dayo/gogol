@@ -46,11 +46,12 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.List
     , prjlPageToken
     , prjlProjectId
     , prjlPageSize
+    , prjlFields
     , prjlCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.jobs.list@ method which the
 -- 'ProjectsRegionsJobsList' request conforms to.
@@ -62,7 +63,7 @@ type ProjectsRegionsJobsListResource =
              Capture "region" Text :>
                "jobs" :>
                  QueryParam "jobStateMatcher" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
@@ -73,27 +74,29 @@ type ProjectsRegionsJobsListResource =
                                    QueryParam "pageToken" Text :>
                                      QueryParam "pageSize" (Textual Int32) :>
                                        QueryParam "callback" Text :>
-                                         QueryParam "alt" AltJSON :>
-                                           Get '[JSON] ListJobsResponse
+                                         QueryParam "fields" Text :>
+                                           QueryParam "alt" AltJSON :>
+                                             Get '[JSON] ListJobsResponse
 
 -- | Lists regions\/{region}\/jobs in a project.
 --
 -- /See:/ 'projectsRegionsJobsList' smart constructor.
 data ProjectsRegionsJobsList = ProjectsRegionsJobsList'
     { _prjlJobStateMatcher :: !(Maybe Text)
-    , _prjlXgafv           :: !(Maybe Text)
-    , _prjlUploadProtocol  :: !(Maybe Text)
-    , _prjlPp              :: !Bool
-    , _prjlAccessToken     :: !(Maybe Text)
-    , _prjlUploadType      :: !(Maybe Text)
-    , _prjlBearerToken     :: !(Maybe Text)
-    , _prjlClusterName     :: !(Maybe Text)
-    , _prjlFilter          :: !(Maybe Text)
-    , _prjlRegion          :: !Text
-    , _prjlPageToken       :: !(Maybe Text)
-    , _prjlProjectId       :: !Text
-    , _prjlPageSize        :: !(Maybe (Textual Int32))
-    , _prjlCallback        :: !(Maybe Text)
+    , _prjlXgafv :: !(Maybe Xgafv)
+    , _prjlUploadProtocol :: !(Maybe Text)
+    , _prjlPp :: !Bool
+    , _prjlAccessToken :: !(Maybe Text)
+    , _prjlUploadType :: !(Maybe Text)
+    , _prjlBearerToken :: !(Maybe Text)
+    , _prjlClusterName :: !(Maybe Text)
+    , _prjlFilter :: !(Maybe Text)
+    , _prjlRegion :: !Text
+    , _prjlPageToken :: !(Maybe Text)
+    , _prjlProjectId :: !Text
+    , _prjlPageSize :: !(Maybe (Textual Int32))
+    , _prjlFields :: !(Maybe Text)
+    , _prjlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsJobsList' with the minimum fields required to make a request.
@@ -126,12 +129,14 @@ data ProjectsRegionsJobsList = ProjectsRegionsJobsList'
 --
 -- * 'prjlPageSize'
 --
+-- * 'prjlFields'
+--
 -- * 'prjlCallback'
 projectsRegionsJobsList
     :: Text -- ^ 'prjlRegion'
     -> Text -- ^ 'prjlProjectId'
     -> ProjectsRegionsJobsList
-projectsRegionsJobsList pPrjlRegion_ pPrjlProjectId_ =
+projectsRegionsJobsList pPrjlRegion_ pPrjlProjectId_ = 
     ProjectsRegionsJobsList'
     { _prjlJobStateMatcher = Nothing
     , _prjlXgafv = Nothing
@@ -146,18 +151,19 @@ projectsRegionsJobsList pPrjlRegion_ pPrjlProjectId_ =
     , _prjlPageToken = Nothing
     , _prjlProjectId = pPrjlProjectId_
     , _prjlPageSize = Nothing
+    , _prjlFields = Nothing
     , _prjlCallback = Nothing
     }
 
--- | [Optional] Specifies enumerated categories of jobs to list (default =
--- match ALL jobs).
+-- | Optional. Specifies enumerated categories of jobs to list. (default =
+-- match ALL jobs).If filter is provided, jobStateMatcher will be ignored.
 prjlJobStateMatcher :: Lens' ProjectsRegionsJobsList (Maybe Text)
 prjlJobStateMatcher
   = lens _prjlJobStateMatcher
       (\ s a -> s{_prjlJobStateMatcher = a})
 
 -- | V1 error format.
-prjlXgafv :: Lens' ProjectsRegionsJobsList (Maybe Text)
+prjlXgafv :: Lens' ProjectsRegionsJobsList (Maybe Xgafv)
 prjlXgafv
   = lens _prjlXgafv (\ s a -> s{_prjlXgafv = a})
 
@@ -189,51 +195,54 @@ prjlBearerToken
   = lens _prjlBearerToken
       (\ s a -> s{_prjlBearerToken = a})
 
--- | [Optional] If set, the returned jobs list includes only jobs that were
+-- | Optional. If set, the returned jobs list includes only jobs that were
 -- submitted to the named cluster.
 prjlClusterName :: Lens' ProjectsRegionsJobsList (Maybe Text)
 prjlClusterName
   = lens _prjlClusterName
       (\ s a -> s{_prjlClusterName = a})
 
--- | [Optional] A filter constraining the jobs to list. Filters are
--- case-sensitive and have the following syntax: field:value] ... or [field
--- = value] AND [field [= value]] ... where **field** is \`status.state\`
--- or \`labels.[KEY]\`, and \`[KEY]\` is a label key. **value** can be
--- \`*\` to match all values. \`status.state\` can be either \`ACTIVE\` or
--- \`INACTIVE\`. Only the logical \`AND\` operator is supported;
--- space-separated items are treated as having an implicit \`AND\`
--- operator. Example valid filters are: status.state:ACTIVE
--- labels.env:staging labels.starred:* and status.state = ACTIVE AND
--- labels.env = staging AND labels.starred = *
+-- | Optional. A filter constraining the jobs to list. Filters are
+-- case-sensitive and have the following syntax:field = value AND field =
+-- value ...where field is status.state or labels.[KEY], and [KEY] is a
+-- label key. value can be * to match all values. status.state can be
+-- either ACTIVE or NON_ACTIVE. Only the logical AND operator is supported;
+-- space-separated items are treated as having an implicit AND
+-- operator.Example filter:status.state = ACTIVE AND labels.env = staging
+-- AND labels.starred = *
 prjlFilter :: Lens' ProjectsRegionsJobsList (Maybe Text)
 prjlFilter
   = lens _prjlFilter (\ s a -> s{_prjlFilter = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prjlRegion :: Lens' ProjectsRegionsJobsList Text
 prjlRegion
   = lens _prjlRegion (\ s a -> s{_prjlRegion = a})
 
--- | [Optional] The page token, returned by a previous call, to request the
+-- | Optional. The page token, returned by a previous call, to request the
 -- next page of results.
 prjlPageToken :: Lens' ProjectsRegionsJobsList (Maybe Text)
 prjlPageToken
   = lens _prjlPageToken
       (\ s a -> s{_prjlPageToken = a})
 
--- | [Required] The ID of the Google Cloud Platform project that the job
+-- | Required. The ID of the Google Cloud Platform project that the job
 -- belongs to.
 prjlProjectId :: Lens' ProjectsRegionsJobsList Text
 prjlProjectId
   = lens _prjlProjectId
       (\ s a -> s{_prjlProjectId = a})
 
--- | [Optional] The number of results to return in each response.
+-- | Optional. The number of results to return in each response.
 prjlPageSize :: Lens' ProjectsRegionsJobsList (Maybe Int32)
 prjlPageSize
   = lens _prjlPageSize (\ s a -> s{_prjlPageSize = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+prjlFields :: Lens' ProjectsRegionsJobsList (Maybe Text)
+prjlFields
+  = lens _prjlFields (\ s a -> s{_prjlFields = a})
 
 -- | JSONP
 prjlCallback :: Lens' ProjectsRegionsJobsList (Maybe Text)
@@ -257,6 +266,7 @@ instance GoogleRequest ProjectsRegionsJobsList where
               _prjlPageToken
               _prjlPageSize
               _prjlCallback
+              _prjlFields
               (Just AltJSON)
               dataprocService
           where go

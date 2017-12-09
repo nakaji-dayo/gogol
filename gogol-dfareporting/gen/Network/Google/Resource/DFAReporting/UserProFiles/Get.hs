@@ -34,25 +34,28 @@ module Network.Google.Resource.DFAReporting.UserProFiles.Get
 
     -- * Request Lenses
     , upfgProFileId
+    , upfgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userProfiles.get@ method which the
 -- 'UserProFilesGet' request conforms to.
 type UserProFilesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
-             QueryParam "alt" AltJSON :> Get '[JSON] UserProFile
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] UserProFile
 
 -- | Gets one user profile by ID.
 --
 -- /See:/ 'userProFilesGet' smart constructor.
-newtype UserProFilesGet = UserProFilesGet'
-    { _upfgProFileId :: Textual Int64
+data UserProFilesGet = UserProFilesGet'
+    { _upfgProFileId :: !(Textual Int64)
+    , _upfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFilesGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype UserProFilesGet = UserProFilesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'upfgProFileId'
+--
+-- * 'upfgFields'
 userProFilesGet
     :: Int64 -- ^ 'upfgProFileId'
     -> UserProFilesGet
-userProFilesGet pUpfgProFileId_ =
+userProFilesGet pUpfgProFileId_ = 
     UserProFilesGet'
     { _upfgProFileId = _Coerce # pUpfgProFileId_
+    , _upfgFields = Nothing
     }
 
 -- | The user profile ID.
@@ -75,13 +81,18 @@ upfgProFileId
       (\ s a -> s{_upfgProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+upfgFields :: Lens' UserProFilesGet (Maybe Text)
+upfgFields
+  = lens _upfgFields (\ s a -> s{_upfgFields = a})
+
 instance GoogleRequest UserProFilesGet where
         type Rs UserProFilesGet = UserProFile
         type Scopes UserProFilesGet =
              '["https://www.googleapis.com/auth/dfareporting",
                "https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserProFilesGet'{..}
-          = go _upfgProFileId (Just AltJSON)
+          = go _upfgProFileId _upfgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

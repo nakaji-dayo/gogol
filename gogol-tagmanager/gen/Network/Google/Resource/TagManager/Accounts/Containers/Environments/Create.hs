@@ -22,7 +22,7 @@
 --
 -- Creates a GTM Environment.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.create@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.create@.
 module Network.Google.Resource.TagManager.Accounts.Containers.Environments.Create
     (
     -- * REST Resource
@@ -33,74 +33,70 @@ module Network.Google.Resource.TagManager.Accounts.Containers.Environments.Creat
     , AccountsContainersEnvironmentsCreate
 
     -- * Request Lenses
-    , acecContainerId
+    , acecParent
     , acecPayload
-    , acecAccountId
+    , acecFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.environments.create@ method which the
 -- 'AccountsContainersEnvironmentsCreate' request conforms to.
 type AccountsContainersEnvironmentsCreateResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               Capture "containerId" Text :>
-                 "environments" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Environment :>
-                       Post '[JSON] Environment
+       "v2" :>
+         Capture "parent" Text :>
+           "environments" :>
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Environment :>
+                   Post '[JSON] Environment
 
 -- | Creates a GTM Environment.
 --
 -- /See:/ 'accountsContainersEnvironmentsCreate' smart constructor.
 data AccountsContainersEnvironmentsCreate = AccountsContainersEnvironmentsCreate'
-    { _acecContainerId :: !Text
-    , _acecPayload     :: !Environment
-    , _acecAccountId   :: !Text
+    { _acecParent :: !Text
+    , _acecPayload :: !Environment
+    , _acecFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersEnvironmentsCreate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acecContainerId'
+-- * 'acecParent'
 --
 -- * 'acecPayload'
 --
--- * 'acecAccountId'
+-- * 'acecFields'
 accountsContainersEnvironmentsCreate
-    :: Text -- ^ 'acecContainerId'
+    :: Text -- ^ 'acecParent'
     -> Environment -- ^ 'acecPayload'
-    -> Text -- ^ 'acecAccountId'
     -> AccountsContainersEnvironmentsCreate
-accountsContainersEnvironmentsCreate pAcecContainerId_ pAcecPayload_ pAcecAccountId_ =
+accountsContainersEnvironmentsCreate pAcecParent_ pAcecPayload_ = 
     AccountsContainersEnvironmentsCreate'
-    { _acecContainerId = pAcecContainerId_
+    { _acecParent = pAcecParent_
     , _acecPayload = pAcecPayload_
-    , _acecAccountId = pAcecAccountId_
+    , _acecFields = Nothing
     }
 
--- | The GTM Container ID.
-acecContainerId :: Lens' AccountsContainersEnvironmentsCreate Text
-acecContainerId
-  = lens _acecContainerId
-      (\ s a -> s{_acecContainerId = a})
+-- | GTM Container\'s API relative path. Example:
+-- accounts\/{account_id}\/containers\/{container_id}
+acecParent :: Lens' AccountsContainersEnvironmentsCreate Text
+acecParent
+  = lens _acecParent (\ s a -> s{_acecParent = a})
 
 -- | Multipart request metadata.
 acecPayload :: Lens' AccountsContainersEnvironmentsCreate Environment
 acecPayload
   = lens _acecPayload (\ s a -> s{_acecPayload = a})
 
--- | The GTM Account ID.
-acecAccountId :: Lens' AccountsContainersEnvironmentsCreate Text
-acecAccountId
-  = lens _acecAccountId
-      (\ s a -> s{_acecAccountId = a})
+-- | Selector specifying which fields to include in a partial response.
+acecFields :: Lens' AccountsContainersEnvironmentsCreate (Maybe Text)
+acecFields
+  = lens _acecFields (\ s a -> s{_acecFields = a})
 
 instance GoogleRequest
          AccountsContainersEnvironmentsCreate where
@@ -110,7 +106,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/tagmanager.edit.containers"]
         requestClient
           AccountsContainersEnvironmentsCreate'{..}
-          = go _acecAccountId _acecContainerId (Just AltJSON)
+          = go _acecParent _acecFields (Just AltJSON)
               _acecPayload
               tagManagerService
           where go

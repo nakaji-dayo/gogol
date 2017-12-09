@@ -69,11 +69,12 @@ module Network.Google.Resource.Genomics.Variants.Merge
     , vmUploadType
     , vmPayload
     , vmBearerToken
+    , vmFields
     , vmCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variants.merge@ method which the
 -- 'VariantsMerge' request conforms to.
@@ -87,9 +88,10 @@ type VariantsMergeResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] MergeVariantsRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] MergeVariantsRequest :>
+                             Post '[JSON] Empty
 
 -- | Merges the given variants with existing variants. For the definitions of
 -- variants and other genomics resources, see [Fundamentals of Google
@@ -124,14 +126,15 @@ type VariantsMergeResource =
 --
 -- /See:/ 'variantsMerge' smart constructor.
 data VariantsMerge = VariantsMerge'
-    { _vmXgafv          :: !(Maybe Xgafv)
+    { _vmXgafv :: !(Maybe Xgafv)
     , _vmUploadProtocol :: !(Maybe Text)
-    , _vmPp             :: !Bool
-    , _vmAccessToken    :: !(Maybe Text)
-    , _vmUploadType     :: !(Maybe Text)
-    , _vmPayload        :: !MergeVariantsRequest
-    , _vmBearerToken    :: !(Maybe Text)
-    , _vmCallback       :: !(Maybe Text)
+    , _vmPp :: !Bool
+    , _vmAccessToken :: !(Maybe Text)
+    , _vmUploadType :: !(Maybe Text)
+    , _vmPayload :: !MergeVariantsRequest
+    , _vmBearerToken :: !(Maybe Text)
+    , _vmFields :: !(Maybe Text)
+    , _vmCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantsMerge' with the minimum fields required to make a request.
@@ -152,11 +155,13 @@ data VariantsMerge = VariantsMerge'
 --
 -- * 'vmBearerToken'
 --
+-- * 'vmFields'
+--
 -- * 'vmCallback'
 variantsMerge
     :: MergeVariantsRequest -- ^ 'vmPayload'
     -> VariantsMerge
-variantsMerge pVmPayload_ =
+variantsMerge pVmPayload_ = 
     VariantsMerge'
     { _vmXgafv = Nothing
     , _vmUploadProtocol = Nothing
@@ -165,6 +170,7 @@ variantsMerge pVmPayload_ =
     , _vmUploadType = Nothing
     , _vmPayload = pVmPayload_
     , _vmBearerToken = Nothing
+    , _vmFields = Nothing
     , _vmCallback = Nothing
     }
 
@@ -204,6 +210,10 @@ vmBearerToken
   = lens _vmBearerToken
       (\ s a -> s{_vmBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vmFields :: Lens' VariantsMerge (Maybe Text)
+vmFields = lens _vmFields (\ s a -> s{_vmFields = a})
+
 -- | JSONP
 vmCallback :: Lens' VariantsMerge (Maybe Text)
 vmCallback
@@ -220,6 +230,7 @@ instance GoogleRequest VariantsMerge where
               _vmUploadType
               _vmBearerToken
               _vmCallback
+              _vmFields
               (Just AltJSON)
               _vmPayload
               genomicsService

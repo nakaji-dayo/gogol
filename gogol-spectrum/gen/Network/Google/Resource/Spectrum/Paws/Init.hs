@@ -35,10 +35,11 @@ module Network.Google.Resource.Spectrum.Paws.Init
 
     -- * Request Lenses
     , piPayload
+    , piFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Spectrum.Types
+import Network.Google.Prelude
+import Network.Google.Spectrum.Types
 
 -- | A resource alias for @spectrum.paws.init@ method which the
 -- 'PawsInit' request conforms to.
@@ -47,16 +48,18 @@ type PawsInitResource =
        "v1explorer" :>
          "paws" :>
            "init" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] PawsInitRequest :>
-                 Post '[JSON] PawsInitResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] PawsInitRequest :>
+                   Post '[JSON] PawsInitResponse
 
 -- | Initializes the connection between a white space device and the
 -- database.
 --
 -- /See:/ 'pawsInit' smart constructor.
-newtype PawsInit = PawsInit'
-    { _piPayload :: PawsInitRequest
+data PawsInit = PawsInit'
+    { _piPayload :: !PawsInitRequest
+    , _piFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PawsInit' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype PawsInit = PawsInit'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'piPayload'
+--
+-- * 'piFields'
 pawsInit
     :: PawsInitRequest -- ^ 'piPayload'
     -> PawsInit
-pawsInit pPiPayload_ =
+pawsInit pPiPayload_ = 
     PawsInit'
     { _piPayload = pPiPayload_
+    , _piFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -77,11 +83,16 @@ piPayload :: Lens' PawsInit PawsInitRequest
 piPayload
   = lens _piPayload (\ s a -> s{_piPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+piFields :: Lens' PawsInit (Maybe Text)
+piFields = lens _piFields (\ s a -> s{_piFields = a})
+
 instance GoogleRequest PawsInit where
         type Rs PawsInit = PawsInitResponse
         type Scopes PawsInit = '[]
         requestClient PawsInit'{..}
-          = go (Just AltJSON) _piPayload spectrumService
+          = go _piFields (Just AltJSON) _piPayload
+              spectrumService
           where go
                   = buildClient (Proxy :: Proxy PawsInitResource)
                       mempty

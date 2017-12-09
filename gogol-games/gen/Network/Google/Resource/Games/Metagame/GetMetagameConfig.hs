@@ -34,10 +34,11 @@ module Network.Google.Resource.Games.Metagame.GetMetagameConfig
 
     -- * Request Lenses
     , mgmcConsistencyToken
+    , mgmcFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.metagame.getMetagameConfig@ method which the
 -- 'MetagameGetMetagameConfig' request conforms to.
@@ -46,14 +47,16 @@ type MetagameGetMetagameConfigResource =
        "v1" :>
          "metagameConfig" :>
            QueryParam "consistencyToken" (Textual Int64) :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] MetagameConfig
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] MetagameConfig
 
 -- | Return the metagame configuration data for the calling application.
 --
 -- /See:/ 'metagameGetMetagameConfig' smart constructor.
-newtype MetagameGetMetagameConfig = MetagameGetMetagameConfig'
-    { _mgmcConsistencyToken :: Maybe (Textual Int64)
+data MetagameGetMetagameConfig = MetagameGetMetagameConfig'
+    { _mgmcConsistencyToken :: !(Maybe (Textual Int64))
+    , _mgmcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetagameGetMetagameConfig' with the minimum fields required to make a request.
@@ -61,11 +64,14 @@ newtype MetagameGetMetagameConfig = MetagameGetMetagameConfig'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'mgmcConsistencyToken'
+--
+-- * 'mgmcFields'
 metagameGetMetagameConfig
     :: MetagameGetMetagameConfig
-metagameGetMetagameConfig =
+metagameGetMetagameConfig = 
     MetagameGetMetagameConfig'
     { _mgmcConsistencyToken = Nothing
+    , _mgmcFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -75,6 +81,11 @@ mgmcConsistencyToken
       (\ s a -> s{_mgmcConsistencyToken = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mgmcFields :: Lens' MetagameGetMetagameConfig (Maybe Text)
+mgmcFields
+  = lens _mgmcFields (\ s a -> s{_mgmcFields = a})
+
 instance GoogleRequest MetagameGetMetagameConfig
          where
         type Rs MetagameGetMetagameConfig = MetagameConfig
@@ -82,7 +93,7 @@ instance GoogleRequest MetagameGetMetagameConfig
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient MetagameGetMetagameConfig'{..}
-          = go _mgmcConsistencyToken (Just AltJSON)
+          = go _mgmcConsistencyToken _mgmcFields (Just AltJSON)
               gamesService
           where go
                   = buildClient

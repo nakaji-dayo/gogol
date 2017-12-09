@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.AccountUserLinks.Update
     , mauluPayload
     , mauluAccountId
     , mauluLinkId
+    , mauluFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.accountUserLinks.update@ method which the
 -- 'ManagementAccountUserLinksUpdate' request conforms to.
@@ -51,17 +52,19 @@ type ManagementAccountUserLinksUpdateResource =
              Capture "accountId" Text :>
                "entityUserLinks" :>
                  Capture "linkId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] EntityUserLink :>
-                       Put '[JSON] EntityUserLink
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] EntityUserLink :>
+                         Put '[JSON] EntityUserLink
 
 -- | Updates permissions for an existing user on the given account.
 --
 -- /See:/ 'managementAccountUserLinksUpdate' smart constructor.
 data ManagementAccountUserLinksUpdate = ManagementAccountUserLinksUpdate'
-    { _mauluPayload   :: !EntityUserLink
+    { _mauluPayload :: !EntityUserLink
     , _mauluAccountId :: !Text
-    , _mauluLinkId    :: !Text
+    , _mauluLinkId :: !Text
+    , _mauluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementAccountUserLinksUpdate' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementAccountUserLinksUpdate = ManagementAccountUserLinksUpdate'
 -- * 'mauluAccountId'
 --
 -- * 'mauluLinkId'
+--
+-- * 'mauluFields'
 managementAccountUserLinksUpdate
     :: EntityUserLink -- ^ 'mauluPayload'
     -> Text -- ^ 'mauluAccountId'
     -> Text -- ^ 'mauluLinkId'
     -> ManagementAccountUserLinksUpdate
-managementAccountUserLinksUpdate pMauluPayload_ pMauluAccountId_ pMauluLinkId_ =
+managementAccountUserLinksUpdate pMauluPayload_ pMauluAccountId_ pMauluLinkId_ = 
     ManagementAccountUserLinksUpdate'
     { _mauluPayload = pMauluPayload_
     , _mauluAccountId = pMauluAccountId_
     , _mauluLinkId = pMauluLinkId_
+    , _mauluFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -101,6 +107,11 @@ mauluLinkId :: Lens' ManagementAccountUserLinksUpdate Text
 mauluLinkId
   = lens _mauluLinkId (\ s a -> s{_mauluLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mauluFields :: Lens' ManagementAccountUserLinksUpdate (Maybe Text)
+mauluFields
+  = lens _mauluFields (\ s a -> s{_mauluFields = a})
+
 instance GoogleRequest
          ManagementAccountUserLinksUpdate where
         type Rs ManagementAccountUserLinksUpdate =
@@ -108,7 +119,8 @@ instance GoogleRequest
         type Scopes ManagementAccountUserLinksUpdate =
              '["https://www.googleapis.com/auth/analytics.manage.users"]
         requestClient ManagementAccountUserLinksUpdate'{..}
-          = go _mauluAccountId _mauluLinkId (Just AltJSON)
+          = go _mauluAccountId _mauluLinkId _mauluFields
+              (Just AltJSON)
               _mauluPayload
               analyticsService
           where go

@@ -20,10 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the shipping settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account. This method supports patch semantics.
+-- Updates the shipping settings of the account. This method supports patch
+-- semantics.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.shippingsettings.patch@.
 module Network.Google.Resource.Content.ShippingSettings.Patch
@@ -40,10 +38,11 @@ module Network.Google.Resource.Content.ShippingSettings.Patch
     , sspPayload
     , sspAccountId
     , sspDryRun
+    , sspFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.shippingsettings.patch@ method which the
 -- 'ShippingSettingsPatch' request conforms to.
@@ -54,21 +53,21 @@ type ShippingSettingsPatchResource =
            "shippingsettings" :>
              Capture "accountId" (Textual Word64) :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ShippingSettings :>
-                     Patch '[JSON] ShippingSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ShippingSettings :>
+                       Patch '[JSON] ShippingSettings
 
--- | Updates the shipping settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account. This method supports patch semantics.
+-- | Updates the shipping settings of the account. This method supports patch
+-- semantics.
 --
 -- /See:/ 'shippingSettingsPatch' smart constructor.
 data ShippingSettingsPatch = ShippingSettingsPatch'
     { _sspMerchantId :: !(Textual Word64)
-    , _sspPayload    :: !ShippingSettings
-    , _sspAccountId  :: !(Textual Word64)
-    , _sspDryRun     :: !(Maybe Bool)
+    , _sspPayload :: !ShippingSettings
+    , _sspAccountId :: !(Textual Word64)
+    , _sspDryRun :: !(Maybe Bool)
+    , _sspFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ShippingSettingsPatch' with the minimum fields required to make a request.
@@ -82,20 +81,25 @@ data ShippingSettingsPatch = ShippingSettingsPatch'
 -- * 'sspAccountId'
 --
 -- * 'sspDryRun'
+--
+-- * 'sspFields'
 shippingSettingsPatch
     :: Word64 -- ^ 'sspMerchantId'
     -> ShippingSettings -- ^ 'sspPayload'
     -> Word64 -- ^ 'sspAccountId'
     -> ShippingSettingsPatch
-shippingSettingsPatch pSspMerchantId_ pSspPayload_ pSspAccountId_ =
+shippingSettingsPatch pSspMerchantId_ pSspPayload_ pSspAccountId_ = 
     ShippingSettingsPatch'
     { _sspMerchantId = _Coerce # pSspMerchantId_
     , _sspPayload = pSspPayload_
     , _sspAccountId = _Coerce # pSspAccountId_
     , _sspDryRun = Nothing
+    , _sspFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
 sspMerchantId :: Lens' ShippingSettingsPatch Word64
 sspMerchantId
   = lens _sspMerchantId
@@ -118,12 +122,18 @@ sspDryRun :: Lens' ShippingSettingsPatch (Maybe Bool)
 sspDryRun
   = lens _sspDryRun (\ s a -> s{_sspDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sspFields :: Lens' ShippingSettingsPatch (Maybe Text)
+sspFields
+  = lens _sspFields (\ s a -> s{_sspFields = a})
+
 instance GoogleRequest ShippingSettingsPatch where
         type Rs ShippingSettingsPatch = ShippingSettings
         type Scopes ShippingSettingsPatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient ShippingSettingsPatch'{..}
           = go _sspMerchantId _sspAccountId _sspDryRun
+              _sspFields
               (Just AltJSON)
               _sspPayload
               shoppingContentService

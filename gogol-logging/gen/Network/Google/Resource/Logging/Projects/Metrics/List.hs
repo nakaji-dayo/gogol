@@ -42,11 +42,12 @@ module Network.Google.Resource.Logging.Projects.Metrics.List
     , pmlBearerToken
     , pmlPageToken
     , pmlPageSize
+    , pmlFields
     , pmlCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.metrics.list@ method which the
 -- 'ProjectsMetricsList' request conforms to.
@@ -63,23 +64,25 @@ type ProjectsMetricsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListLogMetricsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListLogMetricsResponse
 
 -- | Lists logs-based metrics.
 --
 -- /See:/ 'projectsMetricsList' smart constructor.
 data ProjectsMetricsList = ProjectsMetricsList'
-    { _pmlParent         :: !Text
-    , _pmlXgafv          :: !(Maybe Xgafv)
+    { _pmlParent :: !Text
+    , _pmlXgafv :: !(Maybe Xgafv)
     , _pmlUploadProtocol :: !(Maybe Text)
-    , _pmlPp             :: !Bool
-    , _pmlAccessToken    :: !(Maybe Text)
-    , _pmlUploadType     :: !(Maybe Text)
-    , _pmlBearerToken    :: !(Maybe Text)
-    , _pmlPageToken      :: !(Maybe Text)
-    , _pmlPageSize       :: !(Maybe (Textual Int32))
-    , _pmlCallback       :: !(Maybe Text)
+    , _pmlPp :: !Bool
+    , _pmlAccessToken :: !(Maybe Text)
+    , _pmlUploadType :: !(Maybe Text)
+    , _pmlBearerToken :: !(Maybe Text)
+    , _pmlPageToken :: !(Maybe Text)
+    , _pmlPageSize :: !(Maybe (Textual Int32))
+    , _pmlFields :: !(Maybe Text)
+    , _pmlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricsList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ProjectsMetricsList = ProjectsMetricsList'
 --
 -- * 'pmlPageSize'
 --
+-- * 'pmlFields'
+--
 -- * 'pmlCallback'
 projectsMetricsList
     :: Text -- ^ 'pmlParent'
     -> ProjectsMetricsList
-projectsMetricsList pPmlParent_ =
+projectsMetricsList pPmlParent_ = 
     ProjectsMetricsList'
     { _pmlParent = pPmlParent_
     , _pmlXgafv = Nothing
@@ -119,6 +124,7 @@ projectsMetricsList pPmlParent_ =
     , _pmlBearerToken = Nothing
     , _pmlPageToken = Nothing
     , _pmlPageSize = Nothing
+    , _pmlFields = Nothing
     , _pmlCallback = Nothing
     }
 
@@ -176,6 +182,11 @@ pmlPageSize
   = lens _pmlPageSize (\ s a -> s{_pmlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pmlFields :: Lens' ProjectsMetricsList (Maybe Text)
+pmlFields
+  = lens _pmlFields (\ s a -> s{_pmlFields = a})
+
 -- | JSONP
 pmlCallback :: Lens' ProjectsMetricsList (Maybe Text)
 pmlCallback
@@ -197,6 +208,7 @@ instance GoogleRequest ProjectsMetricsList where
               _pmlPageToken
               _pmlPageSize
               _pmlCallback
+              _pmlFields
               (Just AltJSON)
               loggingService
           where go

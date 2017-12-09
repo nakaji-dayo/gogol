@@ -13,8 +13,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Firebase Dynamic Links API enables third party developers to
--- programmatically create and manage Dynamic Links.
+-- Programmatically creates and manages Firebase Dynamic Links.
 --
 -- /See:/ <https://firebase.google.com/docs/dynamic-links/ Firebase Dynamic Links API Reference>
 module Network.Google.FirebaseDynamicLinks
@@ -30,10 +29,29 @@ module Network.Google.FirebaseDynamicLinks
 
     -- * Resources
 
+    -- ** firebasedynamiclinks.getLinkStats
+    , module Network.Google.Resource.FirebaseDynamicLinks.GetLinkStats
+
+    -- ** firebasedynamiclinks.installAttribution
+    , module Network.Google.Resource.FirebaseDynamicLinks.InstallAttribution
+
     -- ** firebasedynamiclinks.shortLinks.create
     , module Network.Google.Resource.FirebaseDynamicLinks.ShortLinks.Create
 
     -- * Types
+
+    -- ** NavigationInfo
+    , NavigationInfo
+    , navigationInfo
+    , niEnableForcedRedirect
+
+    -- ** DesktopInfo
+    , DesktopInfo
+    , desktopInfo
+    , diDesktopFallbackLink
+
+    -- ** DynamicLinkEventStatPlatform
+    , DynamicLinkEventStatPlatform (..)
 
     -- ** Suffix
     , Suffix
@@ -44,6 +62,7 @@ module Network.Google.FirebaseDynamicLinks
     , DynamicLinkWarning
     , dynamicLinkWarning
     , dlwWarningCode
+    , dlwWarningDocumentLink
     , dlwWarningMessage
 
     -- ** CreateShortDynamicLinkRequest
@@ -67,6 +86,13 @@ module Network.Google.FirebaseDynamicLinks
     , csdlrWarning
     , csdlrShortLink
 
+    -- ** DynamicLinkEventStat
+    , DynamicLinkEventStat
+    , dynamicLinkEventStat
+    , dlesEvent
+    , dlesPlatform
+    , dlesCount
+
     -- ** IosInfo
     , IosInfo
     , iosInfo
@@ -80,6 +106,8 @@ module Network.Google.FirebaseDynamicLinks
     -- ** DynamicLinkInfo
     , DynamicLinkInfo
     , dynamicLinkInfo
+    , dliNavigationInfo
+    , dliDesktopInfo
     , dliSocialMetaTagInfo
     , dliDynamicLinkDomain
     , dliLink
@@ -87,11 +115,37 @@ module Network.Google.FirebaseDynamicLinks
     , dliAndroidInfo
     , dliAnalyticsInfo
 
+    -- ** GetIosPostInstallAttributionRequestVisualStyle
+    , GetIosPostInstallAttributionRequestVisualStyle (..)
+
+    -- ** DynamicLinkStats
+    , DynamicLinkStats
+    , dynamicLinkStats
+    , dlsLinkEventStats
+
     -- ** SuffixOption
     , SuffixOption (..)
 
+    -- ** DynamicLinkEventStatEvent
+    , DynamicLinkEventStatEvent (..)
+
+    -- ** GetIosPostInstallAttributionRequest
+    , GetIosPostInstallAttributionRequest
+    , getIosPostInstallAttributionRequest
+    , gipiarIosVersion
+    , gipiarUniqueMatchLinkToCheck
+    , gipiarAppInstallationTime
+    , gipiarDevice
+    , gipiarSdkVersion
+    , gipiarBundleId
+    , gipiarRetrievalMethod
+    , gipiarVisualStyle
+
     -- ** Xgafv
     , Xgafv (..)
+
+    -- ** GetIosPostInstallAttributionResponseAttributionConfidence
+    , GetIosPostInstallAttributionResponseAttributionConfidence (..)
 
     -- ** AndroidInfo
     , AndroidInfo
@@ -118,6 +172,23 @@ module Network.Google.FirebaseDynamicLinks
     , itcaPt
     , itcaCt
 
+    -- ** GetIosPostInstallAttributionResponse
+    , GetIosPostInstallAttributionResponse
+    , getIosPostInstallAttributionResponse
+    , gipiarDeepLink
+    , gipiarAppMinimumVersion
+    , gipiarAttributionConfidence
+    , gipiarExternalBrowserDestinationLink
+    , gipiarResolvedLink
+    , gipiarRequestedLink
+    , gipiarUtmMedium
+    , gipiarFallbackLink
+    , gipiarInvitationId
+    , gipiarIsStrongMatchExecutable
+    , gipiarUtmCampaign
+    , gipiarMatchMessage
+    , gipiarUtmSource
+
     -- ** GooglePlayAnalytics
     , GooglePlayAnalytics
     , googlePlayAnalytics
@@ -127,11 +198,26 @@ module Network.Google.FirebaseDynamicLinks
     , gpaUtmCampaign
     , gpaGclid
     , gpaUtmSource
+
+    -- ** GetIosPostInstallAttributionRequestRetrievalMethod
+    , GetIosPostInstallAttributionRequestRetrievalMethod (..)
+
+    -- ** DeviceInfo
+    , DeviceInfo
+    , deviceInfo
+    , diScreenResolutionWidth
+    , diLanguageCode
+    , diDeviceModelName
+    , diScreenResolutionHeight
+    , diLanguageCodeRaw
+    , diTimezone
     ) where
 
-import           Network.Google.FirebaseDynamicLinks.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.FirebaseDynamicLinks.ShortLinks.Create
+import Network.Google.Prelude
+import Network.Google.FirebaseDynamicLinks.Types
+import Network.Google.Resource.FirebaseDynamicLinks.GetLinkStats
+import Network.Google.Resource.FirebaseDynamicLinks.InstallAttribution
+import Network.Google.Resource.FirebaseDynamicLinks.ShortLinks.Create
 
 {- $resources
 TODO
@@ -139,4 +225,5 @@ TODO
 
 -- | Represents the entirety of the methods and resources available for the Firebase Dynamic Links API service.
 type FirebaseDynamicLinksAPI =
-     ShortLinksCreateResource
+     InstallAttributionResource :<|> GetLinkStatsResource
+       :<|> ShortLinksCreateResource

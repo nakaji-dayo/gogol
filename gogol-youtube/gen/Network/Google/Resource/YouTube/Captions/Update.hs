@@ -40,10 +40,11 @@ module Network.Google.Resource.YouTube.Captions.Update
     , capPayload
     , capOnBehalfOfContentOwner
     , capSync
+    , capFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.captions.update@ method which the
 -- 'CaptionsUpdate' request conforms to.
@@ -55,8 +56,9 @@ type CaptionsUpdateResource =
              QueryParam "onBehalfOf" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
                  QueryParam "sync" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Caption :> Put '[JSON] Caption
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Caption :> Put '[JSON] Caption
        :<|>
        "upload" :>
          "youtube" :>
@@ -66,10 +68,11 @@ type CaptionsUpdateResource =
                  QueryParam "onBehalfOf" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "sync" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" Multipart :>
-                           MultipartRelated '[JSON] Caption :>
-                             Put '[JSON] Caption
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" Multipart :>
+                             MultipartRelated '[JSON] Caption :>
+                               Put '[JSON] Caption
 
 -- | Updates a caption track. When updating a caption track, you can change
 -- the track\'s draft status, upload a new caption file for the track, or
@@ -77,11 +80,12 @@ type CaptionsUpdateResource =
 --
 -- /See:/ 'captionsUpdate' smart constructor.
 data CaptionsUpdate = CaptionsUpdate'
-    { _capOnBehalfOf             :: !(Maybe Text)
-    , _capPart                   :: !Text
-    , _capPayload                :: !Caption
+    { _capOnBehalfOf :: !(Maybe Text)
+    , _capPart :: !Text
+    , _capPayload :: !Caption
     , _capOnBehalfOfContentOwner :: !(Maybe Text)
-    , _capSync                   :: !(Maybe Bool)
+    , _capSync :: !(Maybe Bool)
+    , _capFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CaptionsUpdate' with the minimum fields required to make a request.
@@ -97,17 +101,20 @@ data CaptionsUpdate = CaptionsUpdate'
 -- * 'capOnBehalfOfContentOwner'
 --
 -- * 'capSync'
+--
+-- * 'capFields'
 captionsUpdate
     :: Text -- ^ 'capPart'
     -> Caption -- ^ 'capPayload'
     -> CaptionsUpdate
-captionsUpdate pCapPart_ pCapPayload_ =
+captionsUpdate pCapPart_ pCapPayload_ = 
     CaptionsUpdate'
     { _capOnBehalfOf = Nothing
     , _capPart = pCapPart_
     , _capPayload = pCapPayload_
     , _capOnBehalfOfContentOwner = Nothing
     , _capSync = Nothing
+    , _capFields = Nothing
     }
 
 -- | ID of the Google+ Page for the channel that the request is be on behalf
@@ -153,6 +160,11 @@ capOnBehalfOfContentOwner
 capSync :: Lens' CaptionsUpdate (Maybe Bool)
 capSync = lens _capSync (\ s a -> s{_capSync = a})
 
+-- | Selector specifying which fields to include in a partial response.
+capFields :: Lens' CaptionsUpdate (Maybe Text)
+capFields
+  = lens _capFields (\ s a -> s{_capFields = a})
+
 instance GoogleRequest CaptionsUpdate where
         type Rs CaptionsUpdate = Caption
         type Scopes CaptionsUpdate =
@@ -162,6 +174,7 @@ instance GoogleRequest CaptionsUpdate where
           = go (Just _capPart) _capOnBehalfOf
               _capOnBehalfOfContentOwner
               _capSync
+              _capFields
               (Just AltJSON)
               _capPayload
               youTubeService
@@ -178,6 +191,7 @@ instance GoogleRequest (MediaUpload CaptionsUpdate)
           = go (Just _capPart) _capOnBehalfOf
               _capOnBehalfOfContentOwner
               _capSync
+              _capFields
               (Just AltJSON)
               (Just Multipart)
               _capPayload

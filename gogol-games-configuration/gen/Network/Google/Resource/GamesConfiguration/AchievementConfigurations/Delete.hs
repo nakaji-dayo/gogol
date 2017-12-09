@@ -34,10 +34,11 @@ module Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Dele
 
     -- * Request Lenses
     , acdAchievementId
+    , acdFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.achievementConfigurations.delete@ method which the
 -- 'AchievementConfigurationsDelete' request conforms to.
@@ -46,13 +47,15 @@ type AchievementConfigurationsDeleteResource =
        "v1configuration" :>
          "achievements" :>
            Capture "achievementId" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete the achievement configuration with the given ID.
 --
 -- /See:/ 'achievementConfigurationsDelete' smart constructor.
-newtype AchievementConfigurationsDelete = AchievementConfigurationsDelete'
-    { _acdAchievementId :: Text
+data AchievementConfigurationsDelete = AchievementConfigurationsDelete'
+    { _acdAchievementId :: !Text
+    , _acdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationsDelete' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype AchievementConfigurationsDelete = AchievementConfigurationsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'acdAchievementId'
+--
+-- * 'acdFields'
 achievementConfigurationsDelete
     :: Text -- ^ 'acdAchievementId'
     -> AchievementConfigurationsDelete
-achievementConfigurationsDelete pAcdAchievementId_ =
+achievementConfigurationsDelete pAcdAchievementId_ = 
     AchievementConfigurationsDelete'
     { _acdAchievementId = pAcdAchievementId_
+    , _acdFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -74,13 +80,18 @@ acdAchievementId
   = lens _acdAchievementId
       (\ s a -> s{_acdAchievementId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acdFields :: Lens' AchievementConfigurationsDelete (Maybe Text)
+acdFields
+  = lens _acdFields (\ s a -> s{_acdFields = a})
+
 instance GoogleRequest
          AchievementConfigurationsDelete where
         type Rs AchievementConfigurationsDelete = ()
         type Scopes AchievementConfigurationsDelete =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient AchievementConfigurationsDelete'{..}
-          = go _acdAchievementId (Just AltJSON)
+          = go _acdAchievementId _acdFields (Just AltJSON)
               gamesConfigurationService
           where go
                   = buildClient

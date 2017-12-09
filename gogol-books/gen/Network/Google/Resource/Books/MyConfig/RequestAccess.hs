@@ -38,11 +38,12 @@ module Network.Google.Resource.Books.MyConfig.RequestAccess
     , mcraLicenseTypes
     , mcraVolumeId
     , mcraSource
+    , mcraFields
     , mcraNonce
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.myconfig.requestAccess@ method which the
 -- 'MyConfigRequestAccess' request conforms to.
@@ -59,19 +60,21 @@ type MyConfigRequestAccessResource =
                        QueryParam "licenseTypes"
                          MyConfigRequestAccessLicenseTypes
                          :>
-                         QueryParam "alt" AltJSON :>
-                           Post '[JSON] RequestAccess
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Post '[JSON] RequestAccess
 
 -- | Request concurrent and download access restrictions.
 --
 -- /See:/ 'myConfigRequestAccess' smart constructor.
 data MyConfigRequestAccess = MyConfigRequestAccess'
-    { _mcraCpksver      :: !Text
-    , _mcraLocale       :: !(Maybe Text)
+    { _mcraCpksver :: !Text
+    , _mcraLocale :: !(Maybe Text)
     , _mcraLicenseTypes :: !(Maybe MyConfigRequestAccessLicenseTypes)
-    , _mcraVolumeId     :: !Text
-    , _mcraSource       :: !Text
-    , _mcraNonce        :: !Text
+    , _mcraVolumeId :: !Text
+    , _mcraSource :: !Text
+    , _mcraFields :: !(Maybe Text)
+    , _mcraNonce :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyConfigRequestAccess' with the minimum fields required to make a request.
@@ -88,6 +91,8 @@ data MyConfigRequestAccess = MyConfigRequestAccess'
 --
 -- * 'mcraSource'
 --
+-- * 'mcraFields'
+--
 -- * 'mcraNonce'
 myConfigRequestAccess
     :: Text -- ^ 'mcraCpksver'
@@ -95,13 +100,14 @@ myConfigRequestAccess
     -> Text -- ^ 'mcraSource'
     -> Text -- ^ 'mcraNonce'
     -> MyConfigRequestAccess
-myConfigRequestAccess pMcraCpksver_ pMcraVolumeId_ pMcraSource_ pMcraNonce_ =
+myConfigRequestAccess pMcraCpksver_ pMcraVolumeId_ pMcraSource_ pMcraNonce_ = 
     MyConfigRequestAccess'
     { _mcraCpksver = pMcraCpksver_
     , _mcraLocale = Nothing
     , _mcraLicenseTypes = Nothing
     , _mcraVolumeId = pMcraVolumeId_
     , _mcraSource = pMcraSource_
+    , _mcraFields = Nothing
     , _mcraNonce = pMcraNonce_
     }
 
@@ -132,6 +138,11 @@ mcraSource :: Lens' MyConfigRequestAccess Text
 mcraSource
   = lens _mcraSource (\ s a -> s{_mcraSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcraFields :: Lens' MyConfigRequestAccess (Maybe Text)
+mcraFields
+  = lens _mcraFields (\ s a -> s{_mcraFields = a})
+
 -- | The client nonce value.
 mcraNonce :: Lens' MyConfigRequestAccess Text
 mcraNonce
@@ -147,6 +158,7 @@ instance GoogleRequest MyConfigRequestAccess where
               (Just _mcraCpksver)
               _mcraLocale
               _mcraLicenseTypes
+              _mcraFields
               (Just AltJSON)
               booksService
           where go

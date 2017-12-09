@@ -35,10 +35,11 @@ module Network.Google.Resource.PlusDomains.Circles.Insert
     -- * Request Lenses
     , ciPayload
     , ciUserId
+    , ciFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.circles.insert@ method which the
 -- 'CirclesInsert' request conforms to.
@@ -48,15 +49,17 @@ type CirclesInsertResource =
          "people" :>
            Capture "userId" Text :>
              "circles" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Circle :> Post '[JSON] Circle
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Circle :> Post '[JSON] Circle
 
 -- | Create a new circle for the authenticated user.
 --
 -- /See:/ 'circlesInsert' smart constructor.
 data CirclesInsert = CirclesInsert'
     { _ciPayload :: !Circle
-    , _ciUserId  :: !Text
+    , _ciUserId :: !Text
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CirclesInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CirclesInsert = CirclesInsert'
 -- * 'ciPayload'
 --
 -- * 'ciUserId'
+--
+-- * 'ciFields'
 circlesInsert
     :: Circle -- ^ 'ciPayload'
     -> Text -- ^ 'ciUserId'
     -> CirclesInsert
-circlesInsert pCiPayload_ pCiUserId_ =
+circlesInsert pCiPayload_ pCiUserId_ = 
     CirclesInsert'
     { _ciPayload = pCiPayload_
     , _ciUserId = pCiUserId_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,6 +92,10 @@ ciPayload
 ciUserId :: Lens' CirclesInsert Text
 ciUserId = lens _ciUserId (\ s a -> s{_ciUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' CirclesInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest CirclesInsert where
         type Rs CirclesInsert = Circle
         type Scopes CirclesInsert =
@@ -93,7 +103,7 @@ instance GoogleRequest CirclesInsert where
                "https://www.googleapis.com/auth/plus.login",
                "https://www.googleapis.com/auth/plus.me"]
         requestClient CirclesInsert'{..}
-          = go _ciUserId (Just AltJSON) _ciPayload
+          = go _ciUserId _ciFields (Just AltJSON) _ciPayload
               plusDomainsService
           where go
                   = buildClient (Proxy :: Proxy CirclesInsertResource)

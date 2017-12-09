@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.ContentCategories.Get
     -- * Request Lenses
     , ccgProFileId
     , ccgId
+    , ccgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.contentCategories.get@ method which the
 -- 'ContentCategoriesGet' request conforms to.
 type ContentCategoriesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "contentCategories" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ContentCategory
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ContentCategory
 
 -- | Gets one content category by ID.
 --
 -- /See:/ 'contentCategoriesGet' smart constructor.
 data ContentCategoriesGet = ContentCategoriesGet'
     { _ccgProFileId :: !(Textual Int64)
-    , _ccgId        :: !(Textual Int64)
+    , _ccgId :: !(Textual Int64)
+    , _ccgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategoriesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ContentCategoriesGet = ContentCategoriesGet'
 -- * 'ccgProFileId'
 --
 -- * 'ccgId'
+--
+-- * 'ccgFields'
 contentCategoriesGet
     :: Int64 -- ^ 'ccgProFileId'
     -> Int64 -- ^ 'ccgId'
     -> ContentCategoriesGet
-contentCategoriesGet pCcgProFileId_ pCcgId_ =
+contentCategoriesGet pCcgProFileId_ pCcgId_ = 
     ContentCategoriesGet'
     { _ccgProFileId = _Coerce # pCcgProFileId_
     , _ccgId = _Coerce # pCcgId_
+    , _ccgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ ccgId :: Lens' ContentCategoriesGet Int64
 ccgId
   = lens _ccgId (\ s a -> s{_ccgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ccgFields :: Lens' ContentCategoriesGet (Maybe Text)
+ccgFields
+  = lens _ccgFields (\ s a -> s{_ccgFields = a})
+
 instance GoogleRequest ContentCategoriesGet where
         type Rs ContentCategoriesGet = ContentCategory
         type Scopes ContentCategoriesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ContentCategoriesGet'{..}
-          = go _ccgProFileId _ccgId (Just AltJSON)
+          = go _ccgProFileId _ccgId _ccgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

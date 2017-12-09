@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSenseHost.CustomChannels.Update
     -- * Request Lenses
     , ccuPayload
     , ccuAdClientId
+    , ccuFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.customchannels.update@ method which the
 -- 'CustomChannelsUpdate' request conforms to.
@@ -48,16 +49,18 @@ type CustomChannelsUpdateResource =
          "adclients" :>
            Capture "adClientId" Text :>
              "customchannels" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CustomChannel :>
-                   Put '[JSON] CustomChannel
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CustomChannel :>
+                     Put '[JSON] CustomChannel
 
 -- | Update a custom channel in the host AdSense account.
 --
 -- /See:/ 'customChannelsUpdate' smart constructor.
 data CustomChannelsUpdate = CustomChannelsUpdate'
-    { _ccuPayload    :: !CustomChannel
+    { _ccuPayload :: !CustomChannel
     , _ccuAdClientId :: !Text
+    , _ccuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CustomChannelsUpdate = CustomChannelsUpdate'
 -- * 'ccuPayload'
 --
 -- * 'ccuAdClientId'
+--
+-- * 'ccuFields'
 customChannelsUpdate
     :: CustomChannel -- ^ 'ccuPayload'
     -> Text -- ^ 'ccuAdClientId'
     -> CustomChannelsUpdate
-customChannelsUpdate pCcuPayload_ pCcuAdClientId_ =
+customChannelsUpdate pCcuPayload_ pCcuAdClientId_ = 
     CustomChannelsUpdate'
     { _ccuPayload = pCcuPayload_
     , _ccuAdClientId = pCcuAdClientId_
+    , _ccuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,12 +94,18 @@ ccuAdClientId
   = lens _ccuAdClientId
       (\ s a -> s{_ccuAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccuFields :: Lens' CustomChannelsUpdate (Maybe Text)
+ccuFields
+  = lens _ccuFields (\ s a -> s{_ccuFields = a})
+
 instance GoogleRequest CustomChannelsUpdate where
         type Rs CustomChannelsUpdate = CustomChannel
         type Scopes CustomChannelsUpdate =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient CustomChannelsUpdate'{..}
-          = go _ccuAdClientId (Just AltJSON) _ccuPayload
+          = go _ccuAdClientId _ccuFields (Just AltJSON)
+              _ccuPayload
               adSenseHostService
           where go
                   = buildClient

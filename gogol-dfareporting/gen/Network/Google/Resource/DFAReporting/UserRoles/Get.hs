@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.UserRoles.Get
     -- * Request Lenses
     , urgProFileId
     , urgId
+    , urgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRoles.get@ method which the
 -- 'UserRolesGet' request conforms to.
 type UserRolesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRoles" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] UserRole
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] UserRole
 
 -- | Gets one user role by ID.
 --
 -- /See:/ 'userRolesGet' smart constructor.
 data UserRolesGet = UserRolesGet'
     { _urgProFileId :: !(Textual Int64)
-    , _urgId        :: !(Textual Int64)
+    , _urgId :: !(Textual Int64)
+    , _urgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UserRolesGet = UserRolesGet'
 -- * 'urgProFileId'
 --
 -- * 'urgId'
+--
+-- * 'urgFields'
 userRolesGet
     :: Int64 -- ^ 'urgProFileId'
     -> Int64 -- ^ 'urgId'
     -> UserRolesGet
-userRolesGet pUrgProFileId_ pUrgId_ =
+userRolesGet pUrgProFileId_ pUrgId_ = 
     UserRolesGet'
     { _urgProFileId = _Coerce # pUrgProFileId_
     , _urgId = _Coerce # pUrgId_
+    , _urgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ urgId :: Lens' UserRolesGet Int64
 urgId
   = lens _urgId (\ s a -> s{_urgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+urgFields :: Lens' UserRolesGet (Maybe Text)
+urgFields
+  = lens _urgFields (\ s a -> s{_urgFields = a})
+
 instance GoogleRequest UserRolesGet where
         type Rs UserRolesGet = UserRole
         type Scopes UserRolesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserRolesGet'{..}
-          = go _urgProFileId _urgId (Just AltJSON)
+          = go _urgProFileId _urgId _urgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy UserRolesGetResource)

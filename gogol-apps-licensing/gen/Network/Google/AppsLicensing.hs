@@ -13,7 +13,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Licensing API to view and manage license for your domain.
+-- Views and manages licenses for your domain.
 --
 -- /See:/ <https://developers.google.com/google-apps/licensing/ Enterprise License Manager API Reference>
 module Network.Google.AppsLicensing
@@ -68,7 +68,9 @@ module Network.Google.AppsLicensing
     -- ** LicenseAssignment
     , LicenseAssignment
     , licenseAssignment
+    , laProductName
     , laEtags
+    , laSKUName
     , laKind
     , laSKUId
     , laUserId
@@ -76,15 +78,15 @@ module Network.Google.AppsLicensing
     , laProductId
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Licensing.LicenseAssignments.Delete
-import           Network.Google.Resource.Licensing.LicenseAssignments.Get
-import           Network.Google.Resource.Licensing.LicenseAssignments.Insert
-import           Network.Google.Resource.Licensing.LicenseAssignments.ListForProduct
-import           Network.Google.Resource.Licensing.LicenseAssignments.ListForProductAndSKU
-import           Network.Google.Resource.Licensing.LicenseAssignments.Patch
-import           Network.Google.Resource.Licensing.LicenseAssignments.Update
+import Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Resource.Licensing.LicenseAssignments.Delete
+import Network.Google.Resource.Licensing.LicenseAssignments.Get
+import Network.Google.Resource.Licensing.LicenseAssignments.Insert
+import Network.Google.Resource.Licensing.LicenseAssignments.ListForProduct
+import Network.Google.Resource.Licensing.LicenseAssignments.ListForProductAndSKU
+import Network.Google.Resource.Licensing.LicenseAssignments.Patch
+import Network.Google.Resource.Licensing.LicenseAssignments.Update
 
 {- $resources
 TODO

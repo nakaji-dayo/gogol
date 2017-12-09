@@ -50,11 +50,12 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Attachments.BatchDelete
     , babdBearerToken
     , babdNamespacedType
     , babdProjectId
+    , babdFields
     , babdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.attachments.batchDelete@ method which the
 -- 'BeaconsAttachmentsBatchDelete' request conforms to.
@@ -62,7 +63,7 @@ type BeaconsAttachmentsBatchDeleteResource =
      "v1beta1" :>
        Capture "beaconName" Text :>
          "attachments:batchDelete" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -71,8 +72,9 @@ type BeaconsAttachmentsBatchDeleteResource =
                        QueryParam "namespacedType" Text :>
                          QueryParam "projectId" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Post '[JSON] DeleteAttachmentsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Post '[JSON] DeleteAttachmentsResponse
 
 -- | Deletes multiple attachments on a given beacon. This operation is
 -- permanent and cannot be undone. You can optionally specify
@@ -86,16 +88,17 @@ type BeaconsAttachmentsBatchDeleteResource =
 --
 -- /See:/ 'beaconsAttachmentsBatchDelete' smart constructor.
 data BeaconsAttachmentsBatchDelete = BeaconsAttachmentsBatchDelete'
-    { _babdXgafv          :: !(Maybe Text)
+    { _babdXgafv :: !(Maybe Xgafv)
     , _babdUploadProtocol :: !(Maybe Text)
-    , _babdPp             :: !Bool
-    , _babdAccessToken    :: !(Maybe Text)
-    , _babdBeaconName     :: !Text
-    , _babdUploadType     :: !(Maybe Text)
-    , _babdBearerToken    :: !(Maybe Text)
+    , _babdPp :: !Bool
+    , _babdAccessToken :: !(Maybe Text)
+    , _babdBeaconName :: !Text
+    , _babdUploadType :: !(Maybe Text)
+    , _babdBearerToken :: !(Maybe Text)
     , _babdNamespacedType :: !(Maybe Text)
-    , _babdProjectId      :: !(Maybe Text)
-    , _babdCallback       :: !(Maybe Text)
+    , _babdProjectId :: !(Maybe Text)
+    , _babdFields :: !(Maybe Text)
+    , _babdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsAttachmentsBatchDelete' with the minimum fields required to make a request.
@@ -120,11 +123,13 @@ data BeaconsAttachmentsBatchDelete = BeaconsAttachmentsBatchDelete'
 --
 -- * 'babdProjectId'
 --
+-- * 'babdFields'
+--
 -- * 'babdCallback'
 beaconsAttachmentsBatchDelete
     :: Text -- ^ 'babdBeaconName'
     -> BeaconsAttachmentsBatchDelete
-beaconsAttachmentsBatchDelete pBabdBeaconName_ =
+beaconsAttachmentsBatchDelete pBabdBeaconName_ = 
     BeaconsAttachmentsBatchDelete'
     { _babdXgafv = Nothing
     , _babdUploadProtocol = Nothing
@@ -135,11 +140,12 @@ beaconsAttachmentsBatchDelete pBabdBeaconName_ =
     , _babdBearerToken = Nothing
     , _babdNamespacedType = Nothing
     , _babdProjectId = Nothing
+    , _babdFields = Nothing
     , _babdCallback = Nothing
     }
 
 -- | V1 error format.
-babdXgafv :: Lens' BeaconsAttachmentsBatchDelete (Maybe Text)
+babdXgafv :: Lens' BeaconsAttachmentsBatchDelete (Maybe Xgafv)
 babdXgafv
   = lens _babdXgafv (\ s a -> s{_babdXgafv = a})
 
@@ -200,6 +206,11 @@ babdProjectId
   = lens _babdProjectId
       (\ s a -> s{_babdProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+babdFields :: Lens' BeaconsAttachmentsBatchDelete (Maybe Text)
+babdFields
+  = lens _babdFields (\ s a -> s{_babdFields = a})
+
 -- | JSONP
 babdCallback :: Lens' BeaconsAttachmentsBatchDelete (Maybe Text)
 babdCallback
@@ -220,6 +231,7 @@ instance GoogleRequest BeaconsAttachmentsBatchDelete
               _babdNamespacedType
               _babdProjectId
               _babdCallback
+              _babdFields
               (Just AltJSON)
               proximityBeaconService
           where go

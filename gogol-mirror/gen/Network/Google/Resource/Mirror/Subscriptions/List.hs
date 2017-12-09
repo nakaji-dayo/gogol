@@ -33,10 +33,12 @@ module Network.Google.Resource.Mirror.Subscriptions.List
     , subscriptionsList
     , SubscriptionsList
 
+    -- * Request Lenses
+    , slFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.subscriptions.list@ method which the
 -- 'SubscriptionsList' request conforms to.
@@ -44,29 +46,40 @@ type SubscriptionsListResource =
      "mirror" :>
        "v1" :>
          "subscriptions" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] SubscriptionsListResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] SubscriptionsListResponse
 
 -- | Retrieves a list of subscriptions for the authenticated user and
 -- service.
 --
 -- /See:/ 'subscriptionsList' smart constructor.
-data SubscriptionsList =
-    SubscriptionsList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype SubscriptionsList = SubscriptionsList'
+    { _slFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'slFields'
 subscriptionsList
     :: SubscriptionsList
-subscriptionsList = SubscriptionsList'
+subscriptionsList = 
+    SubscriptionsList'
+    { _slFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SubscriptionsList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
 
 instance GoogleRequest SubscriptionsList where
         type Rs SubscriptionsList = SubscriptionsListResponse
         type Scopes SubscriptionsList =
              '["https://www.googleapis.com/auth/glass.timeline"]
-        requestClient SubscriptionsList'{}
-          = go (Just AltJSON) mirrorService
+        requestClient SubscriptionsList'{..}
+          = go _slFields (Just AltJSON) mirrorService
           where go
                   = buildClient
                       (Proxy :: Proxy SubscriptionsListResource)

@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.CustomDimensions.Update
     , mcduPayload
     , mcduAccountId
     , mcduCustomDimensionId
+    , mcduFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDimensions.update@ method which the
 -- 'ManagementCustomDimensionsUpdate' request conforms to.
@@ -56,19 +57,21 @@ type ManagementCustomDimensionsUpdateResource =
                    "customDimensions" :>
                      Capture "customDimensionId" Text :>
                        QueryParam "ignoreCustomDataSourceLinks" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CustomDimension :>
-                             Put '[JSON] CustomDimension
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CustomDimension :>
+                               Put '[JSON] CustomDimension
 
 -- | Updates an existing custom dimension.
 --
 -- /See:/ 'managementCustomDimensionsUpdate' smart constructor.
 data ManagementCustomDimensionsUpdate = ManagementCustomDimensionsUpdate'
-    { _mcduWebPropertyId               :: !Text
+    { _mcduWebPropertyId :: !Text
     , _mcduIgnoreCustomDataSourceLinks :: !Bool
-    , _mcduPayload                     :: !CustomDimension
-    , _mcduAccountId                   :: !Text
-    , _mcduCustomDimensionId           :: !Text
+    , _mcduPayload :: !CustomDimension
+    , _mcduAccountId :: !Text
+    , _mcduCustomDimensionId :: !Text
+    , _mcduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDimensionsUpdate' with the minimum fields required to make a request.
@@ -84,19 +87,22 @@ data ManagementCustomDimensionsUpdate = ManagementCustomDimensionsUpdate'
 -- * 'mcduAccountId'
 --
 -- * 'mcduCustomDimensionId'
+--
+-- * 'mcduFields'
 managementCustomDimensionsUpdate
     :: Text -- ^ 'mcduWebPropertyId'
     -> CustomDimension -- ^ 'mcduPayload'
     -> Text -- ^ 'mcduAccountId'
     -> Text -- ^ 'mcduCustomDimensionId'
     -> ManagementCustomDimensionsUpdate
-managementCustomDimensionsUpdate pMcduWebPropertyId_ pMcduPayload_ pMcduAccountId_ pMcduCustomDimensionId_ =
+managementCustomDimensionsUpdate pMcduWebPropertyId_ pMcduPayload_ pMcduAccountId_ pMcduCustomDimensionId_ = 
     ManagementCustomDimensionsUpdate'
     { _mcduWebPropertyId = pMcduWebPropertyId_
     , _mcduIgnoreCustomDataSourceLinks = False
     , _mcduPayload = pMcduPayload_
     , _mcduAccountId = pMcduAccountId_
     , _mcduCustomDimensionId = pMcduCustomDimensionId_
+    , _mcduFields = Nothing
     }
 
 -- | Web property ID for the custom dimension to update.
@@ -129,6 +135,11 @@ mcduCustomDimensionId
   = lens _mcduCustomDimensionId
       (\ s a -> s{_mcduCustomDimensionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcduFields :: Lens' ManagementCustomDimensionsUpdate (Maybe Text)
+mcduFields
+  = lens _mcduFields (\ s a -> s{_mcduFields = a})
+
 instance GoogleRequest
          ManagementCustomDimensionsUpdate where
         type Rs ManagementCustomDimensionsUpdate =
@@ -139,6 +150,7 @@ instance GoogleRequest
           = go _mcduAccountId _mcduWebPropertyId
               _mcduCustomDimensionId
               (Just _mcduIgnoreCustomDataSourceLinks)
+              _mcduFields
               (Just AltJSON)
               _mcduPayload
               analyticsService

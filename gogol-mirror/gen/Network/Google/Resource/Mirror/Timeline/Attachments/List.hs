@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Timeline.Attachments.List
 
     -- * Request Lenses
     , talItemId
+    , talFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.attachments.list@ method which the
 -- 'TimelineAttachmentsList' request conforms to.
@@ -47,14 +48,16 @@ type TimelineAttachmentsListResource =
          "timeline" :>
            Capture "itemId" Text :>
              "attachments" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] AttachmentsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] AttachmentsListResponse
 
 -- | Returns a list of attachments for a timeline item.
 --
 -- /See:/ 'timelineAttachmentsList' smart constructor.
-newtype TimelineAttachmentsList = TimelineAttachmentsList'
-    { _talItemId :: Text
+data TimelineAttachmentsList = TimelineAttachmentsList'
+    { _talItemId :: !Text
+    , _talFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineAttachmentsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype TimelineAttachmentsList = TimelineAttachmentsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'talItemId'
+--
+-- * 'talFields'
 timelineAttachmentsList
     :: Text -- ^ 'talItemId'
     -> TimelineAttachmentsList
-timelineAttachmentsList pTalItemId_ =
+timelineAttachmentsList pTalItemId_ = 
     TimelineAttachmentsList'
     { _talItemId = pTalItemId_
+    , _talFields = Nothing
     }
 
 -- | The ID of the timeline item whose attachments should be listed.
@@ -75,13 +81,19 @@ talItemId :: Lens' TimelineAttachmentsList Text
 talItemId
   = lens _talItemId (\ s a -> s{_talItemId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+talFields :: Lens' TimelineAttachmentsList (Maybe Text)
+talFields
+  = lens _talFields (\ s a -> s{_talFields = a})
+
 instance GoogleRequest TimelineAttachmentsList where
         type Rs TimelineAttachmentsList =
              AttachmentsListResponse
         type Scopes TimelineAttachmentsList =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineAttachmentsList'{..}
-          = go _talItemId (Just AltJSON) mirrorService
+          = go _talItemId _talFields (Just AltJSON)
+              mirrorService
           where go
                   = buildClient
                       (Proxy :: Proxy TimelineAttachmentsListResource)

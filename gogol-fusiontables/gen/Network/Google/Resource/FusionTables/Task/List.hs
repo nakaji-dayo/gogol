@@ -37,10 +37,11 @@ module Network.Google.Resource.FusionTables.Task.List
     , tlTableId
     , tlStartIndex
     , tlMaxResults
+    , tlFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.task.list@ method which the
 -- 'TaskList'' request conforms to.
@@ -53,16 +54,18 @@ type TaskListResource =
                QueryParam "pageToken" Text :>
                  QueryParam "startIndex" (Textual Word32) :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] TaskList
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] TaskList
 
 -- | Retrieves a list of tasks.
 --
 -- /See:/ 'taskList'' smart constructor.
 data TaskList' = TaskList''
-    { _tlPageToken  :: !(Maybe Text)
-    , _tlTableId    :: !Text
+    { _tlPageToken :: !(Maybe Text)
+    , _tlTableId :: !Text
     , _tlStartIndex :: !(Maybe (Textual Word32))
     , _tlMaxResults :: !(Maybe (Textual Word32))
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskList'' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data TaskList' = TaskList''
 -- * 'tlStartIndex'
 --
 -- * 'tlMaxResults'
+--
+-- * 'tlFields'
 taskList'
     :: Text -- ^ 'tlTableId'
     -> TaskList'
-taskList' pTlTableId_ =
+taskList' pTlTableId_ = 
     TaskList''
     { _tlPageToken = Nothing
     , _tlTableId = pTlTableId_
     , _tlStartIndex = Nothing
     , _tlMaxResults = Nothing
+    , _tlFields = Nothing
     }
 
 -- | Continuation token specifying which result page to return.
@@ -109,6 +115,10 @@ tlMaxResults
   = lens _tlMaxResults (\ s a -> s{_tlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TaskList' (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TaskList' where
         type Rs TaskList' = TaskList
         type Scopes TaskList' =
@@ -117,6 +127,7 @@ instance GoogleRequest TaskList' where
         requestClient TaskList''{..}
           = go _tlTableId _tlPageToken _tlStartIndex
               _tlMaxResults
+              _tlFields
               (Just AltJSON)
               fusionTablesService
           where go

@@ -20,7 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves a report file by its report ID and file ID.
+-- Retrieves a report file by its report ID and file ID. This method
+-- supports media download.
 --
 -- /See:/ <https://developers.google.com/doubleclick-advertisers/ DCM/DFA Reporting And Trafficking API Reference> for @dfareporting.files.get@.
 module Network.Google.Resource.DFAReporting.Files.Get
@@ -35,37 +36,42 @@ module Network.Google.Resource.DFAReporting.Files.Get
     -- * Request Lenses
     , fgReportId
     , fgFileId
+    , fgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.files.get@ method which the
 -- 'FilesGet' request conforms to.
 type FilesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "reports" :>
            Capture "reportId" (Textual Int64) :>
              "files" :>
                Capture "fileId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] File
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] File
        :<|>
        "dfareporting" :>
-         "v2.7" :>
+         "v3.0" :>
            "reports" :>
              Capture "reportId" (Textual Int64) :>
                "files" :>
                  Capture "fileId" (Textual Int64) :>
-                   QueryParam "alt" AltMedia :>
-                     Get '[OctetStream] Stream
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Get '[OctetStream] Stream
 
--- | Retrieves a report file by its report ID and file ID.
+-- | Retrieves a report file by its report ID and file ID. This method
+-- supports media download.
 --
 -- /See:/ 'filesGet' smart constructor.
 data FilesGet = FilesGet'
     { _fgReportId :: !(Textual Int64)
-    , _fgFileId   :: !(Textual Int64)
+    , _fgFileId :: !(Textual Int64)
+    , _fgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesGet' with the minimum fields required to make a request.
@@ -75,14 +81,17 @@ data FilesGet = FilesGet'
 -- * 'fgReportId'
 --
 -- * 'fgFileId'
+--
+-- * 'fgFields'
 filesGet
     :: Int64 -- ^ 'fgReportId'
     -> Int64 -- ^ 'fgFileId'
     -> FilesGet
-filesGet pFgReportId_ pFgFileId_ =
+filesGet pFgReportId_ pFgFileId_ = 
     FilesGet'
     { _fgReportId = _Coerce # pFgReportId_
     , _fgFileId = _Coerce # pFgFileId_
+    , _fgFields = Nothing
     }
 
 -- | The ID of the report.
@@ -97,12 +106,16 @@ fgFileId
   = lens _fgFileId (\ s a -> s{_fgFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fgFields :: Lens' FilesGet (Maybe Text)
+fgFields = lens _fgFields (\ s a -> s{_fgFields = a})
+
 instance GoogleRequest FilesGet where
         type Rs FilesGet = File
         type Scopes FilesGet =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient FilesGet'{..}
-          = go _fgReportId _fgFileId (Just AltJSON)
+          = go _fgReportId _fgFileId _fgFields (Just AltJSON)
               dFAReportingService
           where go :<|> _
                   = buildClient (Proxy :: Proxy FilesGetResource)
@@ -113,7 +126,7 @@ instance GoogleRequest (MediaDownload FilesGet) where
         type Scopes (MediaDownload FilesGet) =
              Scopes FilesGet
         requestClient (MediaDownload FilesGet'{..})
-          = go _fgReportId _fgFileId (Just AltMedia)
+          = go _fgReportId _fgFileId _fgFields (Just AltMedia)
               dFAReportingService
           where _ :<|> go
                   = buildClient (Proxy :: Proxy FilesGetResource)

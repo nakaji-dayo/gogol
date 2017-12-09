@@ -37,11 +37,12 @@ module Network.Google.Resource.Books.Volumes.Associated.List
     , valMaxAllowedMaturityRating
     , valVolumeId
     , valSource
+    , valFields
     , valAssociation
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.associated.list@ method which the
 -- 'VolumesAssociatedList' request conforms to.
@@ -58,17 +59,20 @@ type VolumesAssociatedListResource =
                    QueryParam "source" Text :>
                      QueryParam "association"
                        VolumesAssociatedListAssociation
-                       :> QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                       :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Return a list of associated books.
 --
 -- /See:/ 'volumesAssociatedList' smart constructor.
 data VolumesAssociatedList = VolumesAssociatedList'
-    { _valLocale                   :: !(Maybe Text)
+    { _valLocale :: !(Maybe Text)
     , _valMaxAllowedMaturityRating :: !(Maybe VolumesAssociatedListMaxAllowedMaturityRating)
-    , _valVolumeId                 :: !Text
-    , _valSource                   :: !(Maybe Text)
-    , _valAssociation              :: !(Maybe VolumesAssociatedListAssociation)
+    , _valVolumeId :: !Text
+    , _valSource :: !(Maybe Text)
+    , _valFields :: !(Maybe Text)
+    , _valAssociation :: !(Maybe VolumesAssociatedListAssociation)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesAssociatedList' with the minimum fields required to make a request.
@@ -83,16 +87,19 @@ data VolumesAssociatedList = VolumesAssociatedList'
 --
 -- * 'valSource'
 --
+-- * 'valFields'
+--
 -- * 'valAssociation'
 volumesAssociatedList
     :: Text -- ^ 'valVolumeId'
     -> VolumesAssociatedList
-volumesAssociatedList pValVolumeId_ =
+volumesAssociatedList pValVolumeId_ = 
     VolumesAssociatedList'
     { _valLocale = Nothing
     , _valMaxAllowedMaturityRating = Nothing
     , _valVolumeId = pValVolumeId_
     , _valSource = Nothing
+    , _valFields = Nothing
     , _valAssociation = Nothing
     }
 
@@ -119,6 +126,11 @@ valSource :: Lens' VolumesAssociatedList (Maybe Text)
 valSource
   = lens _valSource (\ s a -> s{_valSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+valFields :: Lens' VolumesAssociatedList (Maybe Text)
+valFields
+  = lens _valFields (\ s a -> s{_valFields = a})
+
 -- | Association type.
 valAssociation :: Lens' VolumesAssociatedList (Maybe VolumesAssociatedListAssociation)
 valAssociation
@@ -134,6 +146,7 @@ instance GoogleRequest VolumesAssociatedList where
               _valMaxAllowedMaturityRating
               _valSource
               _valAssociation
+              _valFields
               (Just AltJSON)
               booksService
           where go

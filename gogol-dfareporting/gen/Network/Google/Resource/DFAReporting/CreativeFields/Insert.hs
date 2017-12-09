@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.CreativeFields.Insert
     -- * Request Lenses
     , cfiProFileId
     , cfiPayload
+    , cfiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFields.insert@ method which the
 -- 'CreativeFieldsInsert' request conforms to.
 type CreativeFieldsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CreativeField :>
-                   Post '[JSON] CreativeField
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CreativeField :>
+                     Post '[JSON] CreativeField
 
 -- | Inserts a new creative field.
 --
 -- /See:/ 'creativeFieldsInsert' smart constructor.
 data CreativeFieldsInsert = CreativeFieldsInsert'
     { _cfiProFileId :: !(Textual Int64)
-    , _cfiPayload   :: !CreativeField
+    , _cfiPayload :: !CreativeField
+    , _cfiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativeFieldsInsert = CreativeFieldsInsert'
 -- * 'cfiProFileId'
 --
 -- * 'cfiPayload'
+--
+-- * 'cfiFields'
 creativeFieldsInsert
     :: Int64 -- ^ 'cfiProFileId'
     -> CreativeField -- ^ 'cfiPayload'
     -> CreativeFieldsInsert
-creativeFieldsInsert pCfiProFileId_ pCfiPayload_ =
+creativeFieldsInsert pCfiProFileId_ pCfiPayload_ = 
     CreativeFieldsInsert'
     { _cfiProFileId = _Coerce # pCfiProFileId_
     , _cfiPayload = pCfiPayload_
+    , _cfiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cfiPayload :: Lens' CreativeFieldsInsert CreativeField
 cfiPayload
   = lens _cfiPayload (\ s a -> s{_cfiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cfiFields :: Lens' CreativeFieldsInsert (Maybe Text)
+cfiFields
+  = lens _cfiFields (\ s a -> s{_cfiFields = a})
+
 instance GoogleRequest CreativeFieldsInsert where
         type Rs CreativeFieldsInsert = CreativeField
         type Scopes CreativeFieldsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldsInsert'{..}
-          = go _cfiProFileId (Just AltJSON) _cfiPayload
+          = go _cfiProFileId _cfiFields (Just AltJSON)
+              _cfiPayload
               dFAReportingService
           where go
                   = buildClient

@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.PlayLists.Insert
     , pliPayload
     , pliOnBehalfOfContentOwner
     , pliOnBehalfOfContentOwnerChannel
+    , pliFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlists.insert@ method which the
 -- 'PlayListsInsert' request conforms to.
@@ -51,17 +52,19 @@ type PlayListsInsertResource =
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] PlayList :> Post '[JSON] PlayList
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] PlayList :> Post '[JSON] PlayList
 
 -- | Creates a playlist.
 --
 -- /See:/ 'playListsInsert' smart constructor.
 data PlayListsInsert = PlayListsInsert'
-    { _pliPart                          :: !Text
-    , _pliPayload                       :: !PlayList
-    , _pliOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _pliPart :: !Text
+    , _pliPayload :: !PlayList
+    , _pliOnBehalfOfContentOwner :: !(Maybe Text)
     , _pliOnBehalfOfContentOwnerChannel :: !(Maybe Text)
+    , _pliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListsInsert' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data PlayListsInsert = PlayListsInsert'
 -- * 'pliOnBehalfOfContentOwner'
 --
 -- * 'pliOnBehalfOfContentOwnerChannel'
+--
+-- * 'pliFields'
 playListsInsert
     :: Text -- ^ 'pliPart'
     -> PlayList -- ^ 'pliPayload'
     -> PlayListsInsert
-playListsInsert pPliPart_ pPliPayload_ =
+playListsInsert pPliPart_ pPliPayload_ = 
     PlayListsInsert'
     { _pliPart = pPliPart_
     , _pliPayload = pPliPayload_
     , _pliOnBehalfOfContentOwner = Nothing
     , _pliOnBehalfOfContentOwnerChannel = Nothing
+    , _pliFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -134,6 +140,11 @@ pliOnBehalfOfContentOwnerChannel
   = lens _pliOnBehalfOfContentOwnerChannel
       (\ s a -> s{_pliOnBehalfOfContentOwnerChannel = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pliFields :: Lens' PlayListsInsert (Maybe Text)
+pliFields
+  = lens _pliFields (\ s a -> s{_pliFields = a})
+
 instance GoogleRequest PlayListsInsert where
         type Rs PlayListsInsert = PlayList
         type Scopes PlayListsInsert =
@@ -143,6 +154,7 @@ instance GoogleRequest PlayListsInsert where
         requestClient PlayListsInsert'{..}
           = go (Just _pliPart) _pliOnBehalfOfContentOwner
               _pliOnBehalfOfContentOwnerChannel
+              _pliFields
               (Just AltJSON)
               _pliPayload
               youTubeService

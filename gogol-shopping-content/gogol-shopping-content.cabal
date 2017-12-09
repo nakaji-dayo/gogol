@@ -35,6 +35,7 @@ library
 
     exposed-modules:
           Network.Google.Resource.Content.Accounts.AuthInfo
+        , Network.Google.Resource.Content.Accounts.Claimwebsite
         , Network.Google.Resource.Content.Accounts.Custombatch
         , Network.Google.Resource.Content.Accounts.Delete
         , Network.Google.Resource.Content.Accounts.Get
@@ -42,11 +43,6 @@ library
         , Network.Google.Resource.Content.Accounts.List
         , Network.Google.Resource.Content.Accounts.Patch
         , Network.Google.Resource.Content.Accounts.Update
-        , Network.Google.Resource.Content.Accountshipping.Custombatch
-        , Network.Google.Resource.Content.Accountshipping.Get
-        , Network.Google.Resource.Content.Accountshipping.List
-        , Network.Google.Resource.Content.Accountshipping.Patch
-        , Network.Google.Resource.Content.Accountshipping.Update
         , Network.Google.Resource.Content.Accountstatuses.Custombatch
         , Network.Google.Resource.Content.Accountstatuses.Get
         , Network.Google.Resource.Content.Accountstatuses.List

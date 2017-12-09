@@ -39,10 +39,12 @@ module Network.Google.Resource.Drive.Files.Copy
     , fKeepRevisionForever
     , fIgnoreDefaultVisibility
     , fFileId
+    , fSupportsTeamDrives
+    , fFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.copy@ method which the
 -- 'FilesCopy' request conforms to.
@@ -55,19 +57,23 @@ type FilesCopyResource =
                QueryParam "ocrLanguage" Text :>
                  QueryParam "keepRevisionForever" Bool :>
                    QueryParam "ignoreDefaultVisibility" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] File :> Post '[JSON] File
+                     QueryParam "supportsTeamDrives" Bool :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] File :> Post '[JSON] File
 
 -- | Creates a copy of a file and applies any requested updates with patch
 -- semantics.
 --
 -- /See:/ 'filesCopy' smart constructor.
 data FilesCopy = FilesCopy'
-    { _fPayload                 :: !File
-    , _fOCRLanguage             :: !(Maybe Text)
-    , _fKeepRevisionForever     :: !Bool
+    { _fPayload :: !File
+    , _fOCRLanguage :: !(Maybe Text)
+    , _fKeepRevisionForever :: !Bool
     , _fIgnoreDefaultVisibility :: !Bool
-    , _fFileId                  :: !Text
+    , _fFileId :: !Text
+    , _fSupportsTeamDrives :: !Bool
+    , _fFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesCopy' with the minimum fields required to make a request.
@@ -83,17 +89,23 @@ data FilesCopy = FilesCopy'
 -- * 'fIgnoreDefaultVisibility'
 --
 -- * 'fFileId'
+--
+-- * 'fSupportsTeamDrives'
+--
+-- * 'fFields'
 filesCopy
     :: File -- ^ 'fPayload'
     -> Text -- ^ 'fFileId'
     -> FilesCopy
-filesCopy pFPayload_ pFFileId_ =
+filesCopy pFPayload_ pFFileId_ = 
     FilesCopy'
     { _fPayload = pFPayload_
     , _fOCRLanguage = Nothing
     , _fKeepRevisionForever = False
     , _fIgnoreDefaultVisibility = False
     , _fFileId = pFFileId_
+    , _fSupportsTeamDrives = False
+    , _fFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -126,6 +138,16 @@ fIgnoreDefaultVisibility
 fFileId :: Lens' FilesCopy Text
 fFileId = lens _fFileId (\ s a -> s{_fFileId = a})
 
+-- | Whether the requesting application supports Team Drives.
+fSupportsTeamDrives :: Lens' FilesCopy Bool
+fSupportsTeamDrives
+  = lens _fSupportsTeamDrives
+      (\ s a -> s{_fSupportsTeamDrives = a})
+
+-- | Selector specifying which fields to include in a partial response.
+fFields :: Lens' FilesCopy (Maybe Text)
+fFields = lens _fFields (\ s a -> s{_fFields = a})
+
 instance GoogleRequest FilesCopy where
         type Rs FilesCopy = File
         type Scopes FilesCopy =
@@ -137,6 +159,8 @@ instance GoogleRequest FilesCopy where
           = go _fFileId _fOCRLanguage
               (Just _fKeepRevisionForever)
               (Just _fIgnoreDefaultVisibility)
+              (Just _fSupportsTeamDrives)
+              _fFields
               (Just AltJSON)
               _fPayload
               driveService

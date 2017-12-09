@@ -43,10 +43,11 @@ module Network.Google.Resource.Games.Scores.ListWindow
     , slwResultsAbove
     , slwPageToken
     , slwMaxResults
+    , slwFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.scores.listWindow@ method which the
 -- 'ScoresListWindow' request conforms to.
@@ -64,23 +65,25 @@ type ScoresListWindowResource =
                          QueryParam "resultsAbove" (Textual Int32) :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] LeaderboardScores
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] LeaderboardScores
 
 -- | Lists the scores in a leaderboard around (and including) a player\'s
 -- score.
 --
 -- /See:/ 'scoresListWindow' smart constructor.
 data ScoresListWindow = ScoresListWindow'
-    { _slwConsistencyToken  :: !(Maybe (Textual Int64))
-    , _slwCollection        :: !ScoresListWindowCollection
-    , _slwTimeSpan          :: !ScoresListWindowTimeSpan
+    { _slwConsistencyToken :: !(Maybe (Textual Int64))
+    , _slwCollection :: !ScoresListWindowCollection
+    , _slwTimeSpan :: !ScoresListWindowTimeSpan
     , _slwReturnTopIfAbsent :: !(Maybe Bool)
-    , _slwLeaderboardId     :: !Text
-    , _slwLanguage          :: !(Maybe Text)
-    , _slwResultsAbove      :: !(Maybe (Textual Int32))
-    , _slwPageToken         :: !(Maybe Text)
-    , _slwMaxResults        :: !(Maybe (Textual Int32))
+    , _slwLeaderboardId :: !Text
+    , _slwLanguage :: !(Maybe Text)
+    , _slwResultsAbove :: !(Maybe (Textual Int32))
+    , _slwPageToken :: !(Maybe Text)
+    , _slwMaxResults :: !(Maybe (Textual Int32))
+    , _slwFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresListWindow' with the minimum fields required to make a request.
@@ -104,12 +107,14 @@ data ScoresListWindow = ScoresListWindow'
 -- * 'slwPageToken'
 --
 -- * 'slwMaxResults'
+--
+-- * 'slwFields'
 scoresListWindow
     :: ScoresListWindowCollection -- ^ 'slwCollection'
     -> ScoresListWindowTimeSpan -- ^ 'slwTimeSpan'
     -> Text -- ^ 'slwLeaderboardId'
     -> ScoresListWindow
-scoresListWindow pSlwCollection_ pSlwTimeSpan_ pSlwLeaderboardId_ =
+scoresListWindow pSlwCollection_ pSlwTimeSpan_ pSlwLeaderboardId_ = 
     ScoresListWindow'
     { _slwConsistencyToken = Nothing
     , _slwCollection = pSlwCollection_
@@ -120,6 +125,7 @@ scoresListWindow pSlwCollection_ pSlwTimeSpan_ pSlwLeaderboardId_ =
     , _slwResultsAbove = Nothing
     , _slwPageToken = Nothing
     , _slwMaxResults = Nothing
+    , _slwFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -182,6 +188,11 @@ slwMaxResults
       (\ s a -> s{_slwMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slwFields :: Lens' ScoresListWindow (Maybe Text)
+slwFields
+  = lens _slwFields (\ s a -> s{_slwFields = a})
+
 instance GoogleRequest ScoresListWindow where
         type Rs ScoresListWindow = LeaderboardScores
         type Scopes ScoresListWindow =
@@ -196,6 +207,7 @@ instance GoogleRequest ScoresListWindow where
               _slwResultsAbove
               _slwPageToken
               _slwMaxResults
+              _slwFields
               (Just AltJSON)
               gamesService
           where go

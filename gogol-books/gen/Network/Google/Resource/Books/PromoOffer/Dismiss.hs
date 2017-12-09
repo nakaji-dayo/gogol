@@ -40,10 +40,11 @@ module Network.Google.Resource.Books.PromoOffer.Dismiss
     , podOfferId
     , podProduct
     , podAndroidId
+    , podFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.promooffer.dismiss@ method which the
 -- 'PromoOfferDismiss' request conforms to.
@@ -59,19 +60,21 @@ type PromoOfferDismissResource =
                      QueryParam "offerId" Text :>
                        QueryParam "product" Text :>
                          QueryParam "androidId" Text :>
-                           QueryParam "alt" AltJSON :> Post '[JSON] ()
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- |
 --
 -- /See:/ 'promoOfferDismiss' smart constructor.
 data PromoOfferDismiss = PromoOfferDismiss'
     { _podManufacturer :: !(Maybe Text)
-    , _podSerial       :: !(Maybe Text)
-    , _podDevice       :: !(Maybe Text)
-    , _podModel        :: !(Maybe Text)
-    , _podOfferId      :: !(Maybe Text)
-    , _podProduct      :: !(Maybe Text)
-    , _podAndroidId    :: !(Maybe Text)
+    , _podSerial :: !(Maybe Text)
+    , _podDevice :: !(Maybe Text)
+    , _podModel :: !(Maybe Text)
+    , _podOfferId :: !(Maybe Text)
+    , _podProduct :: !(Maybe Text)
+    , _podAndroidId :: !(Maybe Text)
+    , _podFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PromoOfferDismiss' with the minimum fields required to make a request.
@@ -91,9 +94,11 @@ data PromoOfferDismiss = PromoOfferDismiss'
 -- * 'podProduct'
 --
 -- * 'podAndroidId'
+--
+-- * 'podFields'
 promoOfferDismiss
     :: PromoOfferDismiss
-promoOfferDismiss =
+promoOfferDismiss = 
     PromoOfferDismiss'
     { _podManufacturer = Nothing
     , _podSerial = Nothing
@@ -102,6 +107,7 @@ promoOfferDismiss =
     , _podOfferId = Nothing
     , _podProduct = Nothing
     , _podAndroidId = Nothing
+    , _podFields = Nothing
     }
 
 -- | device manufacturer
@@ -139,6 +145,11 @@ podAndroidId :: Lens' PromoOfferDismiss (Maybe Text)
 podAndroidId
   = lens _podAndroidId (\ s a -> s{_podAndroidId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+podFields :: Lens' PromoOfferDismiss (Maybe Text)
+podFields
+  = lens _podFields (\ s a -> s{_podFields = a})
+
 instance GoogleRequest PromoOfferDismiss where
         type Rs PromoOfferDismiss = ()
         type Scopes PromoOfferDismiss =
@@ -148,6 +159,7 @@ instance GoogleRequest PromoOfferDismiss where
               _podOfferId
               _podProduct
               _podAndroidId
+              _podFields
               (Just AltJSON)
               booksService
           where go

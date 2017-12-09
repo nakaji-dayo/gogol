@@ -39,10 +39,11 @@ module Network.Google.Resource.Books.Volumes.UserUploaded.List
     , vuulSource
     , vuulStartIndex
     , vuulMaxResults
+    , vuulFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.useruploaded.list@ method which the
 -- 'VolumesUserUploadedList' request conforms to.
@@ -59,18 +60,20 @@ type VolumesUserUploadedListResource =
                    QueryParam "source" Text :>
                      QueryParam "startIndex" (Textual Word32) :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Return a list of books uploaded by the current user.
 --
 -- /See:/ 'volumesUserUploadedList' smart constructor.
 data VolumesUserUploadedList = VolumesUserUploadedList'
     { _vuulProcessingState :: !(Maybe [VolumesUserUploadedListProcessingState])
-    , _vuulLocale          :: !(Maybe Text)
-    , _vuulVolumeId        :: !(Maybe [Text])
-    , _vuulSource          :: !(Maybe Text)
-    , _vuulStartIndex      :: !(Maybe (Textual Word32))
-    , _vuulMaxResults      :: !(Maybe (Textual Word32))
+    , _vuulLocale :: !(Maybe Text)
+    , _vuulVolumeId :: !(Maybe [Text])
+    , _vuulSource :: !(Maybe Text)
+    , _vuulStartIndex :: !(Maybe (Textual Word32))
+    , _vuulMaxResults :: !(Maybe (Textual Word32))
+    , _vuulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesUserUploadedList' with the minimum fields required to make a request.
@@ -88,9 +91,11 @@ data VolumesUserUploadedList = VolumesUserUploadedList'
 -- * 'vuulStartIndex'
 --
 -- * 'vuulMaxResults'
+--
+-- * 'vuulFields'
 volumesUserUploadedList
     :: VolumesUserUploadedList
-volumesUserUploadedList =
+volumesUserUploadedList = 
     VolumesUserUploadedList'
     { _vuulProcessingState = Nothing
     , _vuulLocale = Nothing
@@ -98,6 +103,7 @@ volumesUserUploadedList =
     , _vuulSource = Nothing
     , _vuulStartIndex = Nothing
     , _vuulMaxResults = Nothing
+    , _vuulFields = Nothing
     }
 
 -- | The processing state of the user uploaded volumes to be returned.
@@ -141,6 +147,11 @@ vuulMaxResults
       (\ s a -> s{_vuulMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+vuulFields :: Lens' VolumesUserUploadedList (Maybe Text)
+vuulFields
+  = lens _vuulFields (\ s a -> s{_vuulFields = a})
+
 instance GoogleRequest VolumesUserUploadedList where
         type Rs VolumesUserUploadedList = Volumes
         type Scopes VolumesUserUploadedList =
@@ -151,6 +162,7 @@ instance GoogleRequest VolumesUserUploadedList where
               _vuulSource
               _vuulStartIndex
               _vuulMaxResults
+              _vuulFields
               (Just AltJSON)
               booksService
           where go

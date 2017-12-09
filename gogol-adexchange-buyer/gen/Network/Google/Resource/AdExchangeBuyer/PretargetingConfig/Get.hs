@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.PretargetingConfig.Get
     -- * Request Lenses
     , pcgAccountId
     , pcgConfigId
+    , pcgFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.pretargetingConfig.get@ method which the
 -- 'PretargetingConfigGet' request conforms to.
@@ -48,15 +49,17 @@ type PretargetingConfigGetResource =
          "pretargetingconfigs" :>
            Capture "accountId" (Textual Int64) :>
              Capture "configId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] PretargetingConfig
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] PretargetingConfig
 
 -- | Gets a specific pretargeting configuration
 --
 -- /See:/ 'pretargetingConfigGet' smart constructor.
 data PretargetingConfigGet = PretargetingConfigGet'
     { _pcgAccountId :: !(Textual Int64)
-    , _pcgConfigId  :: !(Textual Int64)
+    , _pcgConfigId :: !(Textual Int64)
+    , _pcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PretargetingConfigGet = PretargetingConfigGet'
 -- * 'pcgAccountId'
 --
 -- * 'pcgConfigId'
+--
+-- * 'pcgFields'
 pretargetingConfigGet
     :: Int64 -- ^ 'pcgAccountId'
     -> Int64 -- ^ 'pcgConfigId'
     -> PretargetingConfigGet
-pretargetingConfigGet pPcgAccountId_ pPcgConfigId_ =
+pretargetingConfigGet pPcgAccountId_ pPcgConfigId_ = 
     PretargetingConfigGet'
     { _pcgAccountId = _Coerce # pPcgAccountId_
     , _pcgConfigId = _Coerce # pPcgConfigId_
+    , _pcgFields = Nothing
     }
 
 -- | The account id to get the pretargeting config for.
@@ -88,12 +94,18 @@ pcgConfigId
   = lens _pcgConfigId (\ s a -> s{_pcgConfigId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pcgFields :: Lens' PretargetingConfigGet (Maybe Text)
+pcgFields
+  = lens _pcgFields (\ s a -> s{_pcgFields = a})
+
 instance GoogleRequest PretargetingConfigGet where
         type Rs PretargetingConfigGet = PretargetingConfig
         type Scopes PretargetingConfigGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient PretargetingConfigGet'{..}
-          = go _pcgAccountId _pcgConfigId (Just AltJSON)
+          = go _pcgAccountId _pcgConfigId _pcgFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

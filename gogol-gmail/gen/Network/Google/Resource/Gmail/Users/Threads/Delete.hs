@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Threads.Delete
     -- * Request Lenses
     , utdUserId
     , utdId
+    , utdFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.threads.delete@ method which the
 -- 'UsersThreadsDelete' request conforms to.
@@ -50,7 +51,8 @@ type UsersThreadsDeleteResource =
            Capture "userId" Text :>
              "threads" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Immediately and permanently deletes the specified thread. This operation
 -- cannot be undone. Prefer threads.trash instead.
@@ -58,7 +60,8 @@ type UsersThreadsDeleteResource =
 -- /See:/ 'usersThreadsDelete' smart constructor.
 data UsersThreadsDelete = UsersThreadsDelete'
     { _utdUserId :: !Text
-    , _utdId     :: !Text
+    , _utdId :: !Text
+    , _utdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersThreadsDelete' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersThreadsDelete = UsersThreadsDelete'
 -- * 'utdUserId'
 --
 -- * 'utdId'
+--
+-- * 'utdFields'
 usersThreadsDelete
     :: Text -- ^ 'utdId'
     -> UsersThreadsDelete
-usersThreadsDelete pUtdId_ =
+usersThreadsDelete pUtdId_ = 
     UsersThreadsDelete'
     { _utdUserId = "me"
     , _utdId = pUtdId_
+    , _utdFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -87,12 +93,18 @@ utdUserId
 utdId :: Lens' UsersThreadsDelete Text
 utdId = lens _utdId (\ s a -> s{_utdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+utdFields :: Lens' UsersThreadsDelete (Maybe Text)
+utdFields
+  = lens _utdFields (\ s a -> s{_utdFields = a})
+
 instance GoogleRequest UsersThreadsDelete where
         type Rs UsersThreadsDelete = ()
         type Scopes UsersThreadsDelete =
              '["https://mail.google.com/"]
         requestClient UsersThreadsDelete'{..}
-          = go _utdUserId _utdId (Just AltJSON) gmailService
+          = go _utdUserId _utdId _utdFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersThreadsDeleteResource)

@@ -267,10 +267,10 @@ module Network.Google.Discovery
     , rParameterName
     ) where
 
-import           Network.Google.Discovery.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Discovery.APIs.GetRest
-import           Network.Google.Resource.Discovery.APIs.List
+import Network.Google.Prelude
+import Network.Google.Discovery.Types
+import Network.Google.Resource.Discovery.APIs.GetRest
+import Network.Google.Resource.Discovery.APIs.List
 
 {- $resources
 TODO

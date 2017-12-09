@@ -38,8 +38,14 @@ module Network.Google.AndroidEnterprise
     -- ** androidenterprise.devices.list
     , module Network.Google.Resource.AndroidEnterprise.Devices.List
 
+    -- ** androidenterprise.devices.patch
+    , module Network.Google.Resource.AndroidEnterprise.Devices.Patch
+
     -- ** androidenterprise.devices.setState
     , module Network.Google.Resource.AndroidEnterprise.Devices.SetState
+
+    -- ** androidenterprise.devices.update
+    , module Network.Google.Resource.AndroidEnterprise.Devices.Update
 
     -- ** androidenterprise.enterprises.acknowledgeNotificationSet
     , module Network.Google.Resource.AndroidEnterprise.Enterprises.AcknowledgeNotificationSet
@@ -62,6 +68,9 @@ module Network.Google.AndroidEnterprise
     -- ** androidenterprise.enterprises.get
     , module Network.Google.Resource.AndroidEnterprise.Enterprises.Get
 
+    -- ** androidenterprise.enterprises.getAndroidDevicePolicyConfig
+    , module Network.Google.Resource.AndroidEnterprise.Enterprises.GetAndroidDevicePolicyConfig
+
     -- ** androidenterprise.enterprises.getServiceAccount
     , module Network.Google.Resource.AndroidEnterprise.Enterprises.GetServiceAccount
 
@@ -82,6 +91,9 @@ module Network.Google.AndroidEnterprise
 
     -- ** androidenterprise.enterprises.setAccount
     , module Network.Google.Resource.AndroidEnterprise.Enterprises.SetAccount
+
+    -- ** androidenterprise.enterprises.setAndroidDevicePolicyConfig
+    , module Network.Google.Resource.AndroidEnterprise.Enterprises.SetAndroidDevicePolicyConfig
 
     -- ** androidenterprise.enterprises.setStoreLayout
     , module Network.Google.Resource.AndroidEnterprise.Enterprises.SetStoreLayout
@@ -157,6 +169,9 @@ module Network.Google.AndroidEnterprise
 
     -- ** androidenterprise.managedconfigurationsforuser.update
     , module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Update
+
+    -- ** androidenterprise.managedconfigurationssettings.list
+    , module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationssettings.List
 
     -- ** androidenterprise.permissions.get
     , module Network.Google.Resource.AndroidEnterprise.Permissions.Get
@@ -251,6 +266,9 @@ module Network.Google.AndroidEnterprise
     -- ** androidenterprise.users.patch
     , module Network.Google.Resource.AndroidEnterprise.Users.Patch
 
+    -- ** androidenterprise.users.revokeDeviceAccess
+    , module Network.Google.Resource.AndroidEnterprise.Users.RevokeDeviceAccess
+
     -- ** androidenterprise.users.revokeToken
     , module Network.Google.Resource.AndroidEnterprise.Users.RevokeToken
 
@@ -269,6 +287,7 @@ module Network.Google.AndroidEnterprise
     , glNumProvisioned
     , glNumPurchased
     , glApproval
+    , glPermissions
     , glProductId
     , glAcquisitionKind
 
@@ -317,6 +336,12 @@ module Network.Google.AndroidEnterprise
     , auiApprovalURL
     , auiKind
 
+    -- ** ManagedConfigurationsSettingsListResponse
+    , ManagedConfigurationsSettingsListResponse
+    , managedConfigurationsSettingsListResponse
+    , mcslrKind
+    , mcslrManagedConfigurationsSettings
+
     -- ** ManagedProperty
     , ManagedProperty
     , managedProperty
@@ -339,6 +364,7 @@ module Network.Google.AndroidEnterprise
     , managedConfiguration
     , mcManagedProperty
     , mcKind
+    , mcConfigurationVariables
     , mcProductId
 
     -- ** StoreCluster
@@ -357,6 +383,12 @@ module Network.Google.AndroidEnterprise
     , awtsKind
     , awtsPermission
 
+    -- ** ProductVisibility
+    , ProductVisibility
+    , productVisibility
+    , pvTracks
+    , pvProductId
+
     -- ** Notification
     , Notification
     , notification
@@ -366,6 +398,7 @@ module Network.Google.AndroidEnterprise
     , nProductAvailabilityChangeEvent
     , nAppUpdateEvent
     , nInstallFailureEvent
+    , nNotificationType
     , nAppRestrictionsSchemaChangeEvent
     , nNewDeviceEvent
     , nTimestampMillis
@@ -406,6 +439,7 @@ module Network.Google.AndroidEnterprise
     , Device
     , device
     , dKind
+    , dPolicy
     , dManagementType
     , dAndroidId
 
@@ -436,6 +470,12 @@ module Network.Google.AndroidEnterprise
     , arsrDescription
     , arsrNestedRestriction
 
+    -- ** ProductPolicy
+    , ProductPolicy
+    , productPolicy
+    , ppTracks
+    , ppProductId
+
     -- ** Administrator
     , Administrator
     , administrator
@@ -453,9 +493,18 @@ module Network.Google.AndroidEnterprise
     , atKind
     , atToken
 
+    -- ** ManagedConfigurationsSettings
+    , ManagedConfigurationsSettings
+    , managedConfigurationsSettings
+    , mcsManagedProperty
+    , mcsKind
+    , mcsMcmId
+    , mcsName
+
     -- ** AppVersion
     , AppVersion
     , appVersion
+    , avTrack
     , avVersionCode
     , avVersionString
 
@@ -473,9 +522,16 @@ module Network.Google.AndroidEnterprise
     , gllrGroupLicense
     , gllrKind
 
+    -- ** AndroidDevicePolicyConfig
+    , AndroidDevicePolicyConfig
+    , androidDevicePolicyConfig
+    , adpcState
+    , adpcKind
+
     -- ** ProductSet
     , ProductSet
     , productSet
+    , psProductVisibility
     , psKind
     , psProductSetBehavior
     , psProductId
@@ -536,6 +592,13 @@ module Network.Google.AndroidEnterprise
     , saKey
     , saName
 
+    -- ** VariableSet
+    , VariableSet
+    , variableSet
+    , vsKind
+    , vsUserValue
+    , vsPlaceholder
+
     -- ** AppUpdateEvent
     , AppUpdateEvent
     , appUpdateEvent
@@ -579,6 +642,12 @@ module Network.Google.AndroidEnterprise
     , dlrKind
     , dlrDevice
 
+    -- ** ProductSigningCertificate
+    , ProductSigningCertificate
+    , productSigningCertificate
+    , pscCertificateHashSha256
+    , pscCertificateHashSha1
+
     -- ** Enterprise
     , Enterprise
     , enterprise
@@ -603,6 +672,13 @@ module Network.Google.AndroidEnterprise
     , mcfulrManagedConfigurationForUser
     , mcfulrKind
 
+    -- ** ConfigurationVariables
+    , ConfigurationVariables
+    , configurationVariables
+    , cvKind
+    , cvMcmId
+    , cvVariableSet
+
     -- ** StoreLayout
     , StoreLayout
     , storeLayout
@@ -622,6 +698,12 @@ module Network.Google.AndroidEnterprise
     , ndeDeviceId
     , ndeManagementType
 
+    -- ** Policy
+    , Policy
+    , policy
+    , pProductAvailabilityPolicy
+    , pProductPolicy
+
     -- ** AdministratorWebToken
     , AdministratorWebToken
     , administratorWebToken
@@ -638,17 +720,28 @@ module Network.Google.AndroidEnterprise
     -- ** Product
     , Product
     , product
+    , pScreenshotURLs
+    , pLastUpdatedTimestampMillis
     , pSmallIconURL
     , pAuthorName
     , pKind
     , pWorkDetailsURL
     , pRequiresContainerApp
+    , pCategory
     , pAppVersion
     , pProductPricing
     , pDistributionChannel
+    , pMinAndroidSdkVersion
+    , pAvailableCountries
+    , pAvailableTracks
     , pIconURL
+    , pPermissions
     , pTitle
+    , pSigningCertificate
+    , pContentRating
     , pProductId
+    , pRecentChanges
+    , pDescription
     , pDetailsURL
 
     -- ** EntitlementsListResponse
@@ -663,9 +756,9 @@ module Network.Google.AndroidEnterprise
     -- ** ProductPermissions
     , ProductPermissions
     , productPermissions
-    , ppKind
-    , ppPermission
-    , ppProductId
+    , ppsKind
+    , ppsPermission
+    , ppsProductId
 
     -- ** Permission
     , Permission
@@ -679,6 +772,7 @@ module Network.Google.AndroidEnterprise
     , ProductsApproveRequest
     , productsApproveRequest
     , parApprovalURLInfo
+    , parApprovedPermissions
 
     -- ** Entitlement
     , Entitlement
@@ -696,85 +790,91 @@ module Network.Google.AndroidEnterprise
     , plrProduct
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.AndroidEnterprise.Devices.Get
-import           Network.Google.Resource.AndroidEnterprise.Devices.GetState
-import           Network.Google.Resource.AndroidEnterprise.Devices.List
-import           Network.Google.Resource.AndroidEnterprise.Devices.SetState
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.AcknowledgeNotificationSet
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.CompleteSignup
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.CreateWebToken
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.Delete
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.Enroll
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.GenerateSignupURL
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.Get
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.GetServiceAccount
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.GetStoreLayout
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.Insert
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.List
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.PullNotificationSet
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.SendTestPushNotification
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.SetAccount
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.SetStoreLayout
-import           Network.Google.Resource.AndroidEnterprise.Enterprises.Unenroll
-import           Network.Google.Resource.AndroidEnterprise.Entitlements.Delete
-import           Network.Google.Resource.AndroidEnterprise.Entitlements.Get
-import           Network.Google.Resource.AndroidEnterprise.Entitlements.List
-import           Network.Google.Resource.AndroidEnterprise.Entitlements.Patch
-import           Network.Google.Resource.AndroidEnterprise.Entitlements.Update
-import           Network.Google.Resource.AndroidEnterprise.Grouplicenses.Get
-import           Network.Google.Resource.AndroidEnterprise.Grouplicenses.List
-import           Network.Google.Resource.AndroidEnterprise.GrouplicenseUsers.List
-import           Network.Google.Resource.AndroidEnterprise.Installs.Delete
-import           Network.Google.Resource.AndroidEnterprise.Installs.Get
-import           Network.Google.Resource.AndroidEnterprise.Installs.List
-import           Network.Google.Resource.AndroidEnterprise.Installs.Patch
-import           Network.Google.Resource.AndroidEnterprise.Installs.Update
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Delete
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Get
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.List
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Patch
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Update
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Delete
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Get
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.List
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Patch
-import           Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Update
-import           Network.Google.Resource.AndroidEnterprise.Permissions.Get
-import           Network.Google.Resource.AndroidEnterprise.Products.Approve
-import           Network.Google.Resource.AndroidEnterprise.Products.GenerateApprovalURL
-import           Network.Google.Resource.AndroidEnterprise.Products.Get
-import           Network.Google.Resource.AndroidEnterprise.Products.GetAppRestrictionsSchema
-import           Network.Google.Resource.AndroidEnterprise.Products.GetPermissions
-import           Network.Google.Resource.AndroidEnterprise.Products.List
-import           Network.Google.Resource.AndroidEnterprise.Products.UnApprove
-import           Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Delete
-import           Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Insert
-import           Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.List
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Delete
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Get
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Insert
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.List
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Patch
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Update
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Delete
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Get
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Insert
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.List
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Patch
-import           Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Update
-import           Network.Google.Resource.AndroidEnterprise.Users.Delete
-import           Network.Google.Resource.AndroidEnterprise.Users.GenerateAuthenticationToken
-import           Network.Google.Resource.AndroidEnterprise.Users.GenerateToken
-import           Network.Google.Resource.AndroidEnterprise.Users.Get
-import           Network.Google.Resource.AndroidEnterprise.Users.GetAvailableProductSet
-import           Network.Google.Resource.AndroidEnterprise.Users.Insert
-import           Network.Google.Resource.AndroidEnterprise.Users.List
-import           Network.Google.Resource.AndroidEnterprise.Users.Patch
-import           Network.Google.Resource.AndroidEnterprise.Users.RevokeToken
-import           Network.Google.Resource.AndroidEnterprise.Users.SetAvailableProductSet
-import           Network.Google.Resource.AndroidEnterprise.Users.Update
+import Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Resource.AndroidEnterprise.Devices.Get
+import Network.Google.Resource.AndroidEnterprise.Devices.GetState
+import Network.Google.Resource.AndroidEnterprise.Devices.List
+import Network.Google.Resource.AndroidEnterprise.Devices.Patch
+import Network.Google.Resource.AndroidEnterprise.Devices.SetState
+import Network.Google.Resource.AndroidEnterprise.Devices.Update
+import Network.Google.Resource.AndroidEnterprise.Enterprises.AcknowledgeNotificationSet
+import Network.Google.Resource.AndroidEnterprise.Enterprises.CompleteSignup
+import Network.Google.Resource.AndroidEnterprise.Enterprises.CreateWebToken
+import Network.Google.Resource.AndroidEnterprise.Enterprises.Delete
+import Network.Google.Resource.AndroidEnterprise.Enterprises.Enroll
+import Network.Google.Resource.AndroidEnterprise.Enterprises.GenerateSignupURL
+import Network.Google.Resource.AndroidEnterprise.Enterprises.Get
+import Network.Google.Resource.AndroidEnterprise.Enterprises.GetAndroidDevicePolicyConfig
+import Network.Google.Resource.AndroidEnterprise.Enterprises.GetServiceAccount
+import Network.Google.Resource.AndroidEnterprise.Enterprises.GetStoreLayout
+import Network.Google.Resource.AndroidEnterprise.Enterprises.Insert
+import Network.Google.Resource.AndroidEnterprise.Enterprises.List
+import Network.Google.Resource.AndroidEnterprise.Enterprises.PullNotificationSet
+import Network.Google.Resource.AndroidEnterprise.Enterprises.SendTestPushNotification
+import Network.Google.Resource.AndroidEnterprise.Enterprises.SetAccount
+import Network.Google.Resource.AndroidEnterprise.Enterprises.SetAndroidDevicePolicyConfig
+import Network.Google.Resource.AndroidEnterprise.Enterprises.SetStoreLayout
+import Network.Google.Resource.AndroidEnterprise.Enterprises.Unenroll
+import Network.Google.Resource.AndroidEnterprise.Entitlements.Delete
+import Network.Google.Resource.AndroidEnterprise.Entitlements.Get
+import Network.Google.Resource.AndroidEnterprise.Entitlements.List
+import Network.Google.Resource.AndroidEnterprise.Entitlements.Patch
+import Network.Google.Resource.AndroidEnterprise.Entitlements.Update
+import Network.Google.Resource.AndroidEnterprise.GrouplicenseUsers.List
+import Network.Google.Resource.AndroidEnterprise.Grouplicenses.Get
+import Network.Google.Resource.AndroidEnterprise.Grouplicenses.List
+import Network.Google.Resource.AndroidEnterprise.Installs.Delete
+import Network.Google.Resource.AndroidEnterprise.Installs.Get
+import Network.Google.Resource.AndroidEnterprise.Installs.List
+import Network.Google.Resource.AndroidEnterprise.Installs.Patch
+import Network.Google.Resource.AndroidEnterprise.Installs.Update
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Delete
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Get
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.List
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Patch
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.Update
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Delete
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Get
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.List
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Patch
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Update
+import Network.Google.Resource.AndroidEnterprise.ManagedConfigurationssettings.List
+import Network.Google.Resource.AndroidEnterprise.Permissions.Get
+import Network.Google.Resource.AndroidEnterprise.Products.Approve
+import Network.Google.Resource.AndroidEnterprise.Products.GenerateApprovalURL
+import Network.Google.Resource.AndroidEnterprise.Products.Get
+import Network.Google.Resource.AndroidEnterprise.Products.GetAppRestrictionsSchema
+import Network.Google.Resource.AndroidEnterprise.Products.GetPermissions
+import Network.Google.Resource.AndroidEnterprise.Products.List
+import Network.Google.Resource.AndroidEnterprise.Products.UnApprove
+import Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Delete
+import Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Insert
+import Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.List
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Delete
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Get
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Insert
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.List
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Patch
+import Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Update
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Delete
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Get
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Insert
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.List
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Patch
+import Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Update
+import Network.Google.Resource.AndroidEnterprise.Users.Delete
+import Network.Google.Resource.AndroidEnterprise.Users.GenerateAuthenticationToken
+import Network.Google.Resource.AndroidEnterprise.Users.GenerateToken
+import Network.Google.Resource.AndroidEnterprise.Users.Get
+import Network.Google.Resource.AndroidEnterprise.Users.GetAvailableProductSet
+import Network.Google.Resource.AndroidEnterprise.Users.Insert
+import Network.Google.Resource.AndroidEnterprise.Users.List
+import Network.Google.Resource.AndroidEnterprise.Users.Patch
+import Network.Google.Resource.AndroidEnterprise.Users.RevokeDeviceAccess
+import Network.Google.Resource.AndroidEnterprise.Users.RevokeToken
+import Network.Google.Resource.AndroidEnterprise.Users.SetAvailableProductSet
+import Network.Google.Resource.AndroidEnterprise.Users.Update
 
 {- $resources
 TODO
@@ -794,6 +894,7 @@ type AndroidEnterpriseAPI =
        :<|> UsersGenerateAuthenticationTokenResource
        :<|> UsersPatchResource
        :<|> UsersGetResource
+       :<|> UsersRevokeDeviceAccessResource
        :<|> UsersSetAvailableProductSetResource
        :<|> UsersRevokeTokenResource
        :<|> UsersGetAvailableProductSetResource
@@ -813,6 +914,7 @@ type AndroidEnterpriseAPI =
        :<|> ServiceAccountkeysInsertResource
        :<|> ServiceAccountkeysListResource
        :<|> ServiceAccountkeysDeleteResource
+       :<|> ManagedConfigurationssettingsListResource
        :<|> EnterprisesCompleteSignupResource
        :<|> EnterprisesCreateWebTokenResource
        :<|> EnterprisesInsertResource
@@ -820,12 +922,14 @@ type AndroidEnterpriseAPI =
        :<|> EnterprisesListResource
        :<|> EnterprisesUnenrollResource
        :<|> EnterprisesGetStoreLayoutResource
+       :<|> EnterprisesSetAndroidDevicePolicyConfigResource
        :<|> EnterprisesSetAccountResource
        :<|> EnterprisesEnrollResource
        :<|> EnterprisesGetResource
        :<|> EnterprisesGenerateSignupURLResource
        :<|> EnterprisesSendTestPushNotificationResource
        :<|> EnterprisesSetStoreLayoutResource
+       :<|> EnterprisesGetAndroidDevicePolicyConfigResource
        :<|> EnterprisesAcknowledgeNotificationSetResource
        :<|> EnterprisesPullNotificationSetResource
        :<|> EnterprisesDeleteResource
@@ -856,6 +960,8 @@ type AndroidEnterpriseAPI =
        :<|> ProductsGetPermissionsResource
        :<|> DevicesListResource
        :<|> DevicesSetStateResource
+       :<|> DevicesPatchResource
        :<|> DevicesGetResource
        :<|> DevicesGetStateResource
+       :<|> DevicesUpdateResource
        :<|> GrouplicenseUsersListResource

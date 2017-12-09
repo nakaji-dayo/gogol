@@ -48,18 +48,19 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Deactivate
     , bdUploadType
     , bdBearerToken
     , bdProjectId
+    , bdFields
     , bdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.deactivate@ method which the
 -- 'BeaconsDeactivate' request conforms to.
 type BeaconsDeactivateResource =
      "v1beta1" :>
        CaptureMode "beaconName" "deactivate" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -67,7 +68,8 @@ type BeaconsDeactivateResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Empty
 
 -- | Deactivates a beacon. Once deactivated, the API will not return
 -- information nor attachment data for the beacon when queried via
@@ -80,15 +82,16 @@ type BeaconsDeactivateResource =
 --
 -- /See:/ 'beaconsDeactivate' smart constructor.
 data BeaconsDeactivate = BeaconsDeactivate'
-    { _bdXgafv          :: !(Maybe Text)
+    { _bdXgafv :: !(Maybe Xgafv)
     , _bdUploadProtocol :: !(Maybe Text)
-    , _bdPp             :: !Bool
-    , _bdAccessToken    :: !(Maybe Text)
-    , _bdBeaconName     :: !Text
-    , _bdUploadType     :: !(Maybe Text)
-    , _bdBearerToken    :: !(Maybe Text)
-    , _bdProjectId      :: !(Maybe Text)
-    , _bdCallback       :: !(Maybe Text)
+    , _bdPp :: !Bool
+    , _bdAccessToken :: !(Maybe Text)
+    , _bdBeaconName :: !Text
+    , _bdUploadType :: !(Maybe Text)
+    , _bdBearerToken :: !(Maybe Text)
+    , _bdProjectId :: !(Maybe Text)
+    , _bdFields :: !(Maybe Text)
+    , _bdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsDeactivate' with the minimum fields required to make a request.
@@ -111,11 +114,13 @@ data BeaconsDeactivate = BeaconsDeactivate'
 --
 -- * 'bdProjectId'
 --
+-- * 'bdFields'
+--
 -- * 'bdCallback'
 beaconsDeactivate
     :: Text -- ^ 'bdBeaconName'
     -> BeaconsDeactivate
-beaconsDeactivate pBdBeaconName_ =
+beaconsDeactivate pBdBeaconName_ = 
     BeaconsDeactivate'
     { _bdXgafv = Nothing
     , _bdUploadProtocol = Nothing
@@ -125,11 +130,12 @@ beaconsDeactivate pBdBeaconName_ =
     , _bdUploadType = Nothing
     , _bdBearerToken = Nothing
     , _bdProjectId = Nothing
+    , _bdFields = Nothing
     , _bdCallback = Nothing
     }
 
 -- | V1 error format.
-bdXgafv :: Lens' BeaconsDeactivate (Maybe Text)
+bdXgafv :: Lens' BeaconsDeactivate (Maybe Xgafv)
 bdXgafv = lens _bdXgafv (\ s a -> s{_bdXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -176,6 +182,10 @@ bdProjectId :: Lens' BeaconsDeactivate (Maybe Text)
 bdProjectId
   = lens _bdProjectId (\ s a -> s{_bdProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bdFields :: Lens' BeaconsDeactivate (Maybe Text)
+bdFields = lens _bdFields (\ s a -> s{_bdFields = a})
+
 -- | JSONP
 bdCallback :: Lens' BeaconsDeactivate (Maybe Text)
 bdCallback
@@ -193,6 +203,7 @@ instance GoogleRequest BeaconsDeactivate where
               _bdBearerToken
               _bdProjectId
               _bdCallback
+              _bdFields
               (Just AltJSON)
               proximityBeaconService
           where go

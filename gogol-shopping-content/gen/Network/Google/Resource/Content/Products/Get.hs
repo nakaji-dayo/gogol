@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves a product from your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- Retrieves a product from your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.products.get@.
 module Network.Google.Resource.Content.Products.Get
@@ -36,10 +35,11 @@ module Network.Google.Resource.Content.Products.Get
     -- * Request Lenses
     , pggMerchantId
     , pggProductId
+    , pggFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.products.get@ method which the
 -- 'ProductsGet' request conforms to.
@@ -49,15 +49,16 @@ type ProductsGetResource =
          Capture "merchantId" (Textual Word64) :>
            "products" :>
              Capture "productId" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Product
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Product
 
--- | Retrieves a product from your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- | Retrieves a product from your Merchant Center account.
 --
 -- /See:/ 'productsGet' smart constructor.
 data ProductsGet = ProductsGet'
     { _pggMerchantId :: !(Textual Word64)
-    , _pggProductId  :: !Text
+    , _pggProductId :: !Text
+    , _pggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGet' with the minimum fields required to make a request.
@@ -67,34 +68,44 @@ data ProductsGet = ProductsGet'
 -- * 'pggMerchantId'
 --
 -- * 'pggProductId'
+--
+-- * 'pggFields'
 productsGet
     :: Word64 -- ^ 'pggMerchantId'
     -> Text -- ^ 'pggProductId'
     -> ProductsGet
-productsGet pPggMerchantId_ pPggProductId_ =
+productsGet pPggMerchantId_ pPggProductId_ = 
     ProductsGet'
     { _pggMerchantId = _Coerce # pPggMerchantId_
     , _pggProductId = pPggProductId_
+    , _pggFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that contains the product. This account cannot be
+-- a multi-client account.
 pggMerchantId :: Lens' ProductsGet Word64
 pggMerchantId
   = lens _pggMerchantId
       (\ s a -> s{_pggMerchantId = a})
       . _Coerce
 
--- | The ID of the product.
+-- | The REST id of the product.
 pggProductId :: Lens' ProductsGet Text
 pggProductId
   = lens _pggProductId (\ s a -> s{_pggProductId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pggFields :: Lens' ProductsGet (Maybe Text)
+pggFields
+  = lens _pggFields (\ s a -> s{_pggFields = a})
 
 instance GoogleRequest ProductsGet where
         type Rs ProductsGet = Product
         type Scopes ProductsGet =
              '["https://www.googleapis.com/auth/content"]
         requestClient ProductsGet'{..}
-          = go _pggMerchantId _pggProductId (Just AltJSON)
+          = go _pggMerchantId _pggProductId _pggFields
+              (Just AltJSON)
               shoppingContentService
           where go
                   = buildClient (Proxy :: Proxy ProductsGetResource)

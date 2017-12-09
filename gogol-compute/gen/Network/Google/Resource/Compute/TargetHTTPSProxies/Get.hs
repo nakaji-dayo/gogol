@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.TargetHTTPSProxies.Get
     -- * Request Lenses
     , thpgProject
     , thpgTargetHTTPSProxy
+    , thpgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetHttpsProxies.get@ method which the
 -- 'TargetHTTPSProxiesGet' request conforms to.
@@ -51,16 +52,18 @@ type TargetHTTPSProxiesGetResource =
              "global" :>
                "targetHttpsProxies" :>
                  Capture "targetHttpsProxy" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] TargetHTTPSProxy
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] TargetHTTPSProxy
 
 -- | Returns the specified TargetHttpsProxy resource. Get a list of available
 -- target HTTPS proxies by making a list() request.
 --
 -- /See:/ 'targetHTTPSProxiesGet' smart constructor.
 data TargetHTTPSProxiesGet = TargetHTTPSProxiesGet'
-    { _thpgProject          :: !Text
+    { _thpgProject :: !Text
     , _thpgTargetHTTPSProxy :: !Text
+    , _thpgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetHTTPSProxiesGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data TargetHTTPSProxiesGet = TargetHTTPSProxiesGet'
 -- * 'thpgProject'
 --
 -- * 'thpgTargetHTTPSProxy'
+--
+-- * 'thpgFields'
 targetHTTPSProxiesGet
     :: Text -- ^ 'thpgProject'
     -> Text -- ^ 'thpgTargetHTTPSProxy'
     -> TargetHTTPSProxiesGet
-targetHTTPSProxiesGet pThpgProject_ pThpgTargetHTTPSProxy_ =
+targetHTTPSProxiesGet pThpgProject_ pThpgTargetHTTPSProxy_ = 
     TargetHTTPSProxiesGet'
     { _thpgProject = pThpgProject_
     , _thpgTargetHTTPSProxy = pThpgTargetHTTPSProxy_
+    , _thpgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -91,6 +97,11 @@ thpgTargetHTTPSProxy
   = lens _thpgTargetHTTPSProxy
       (\ s a -> s{_thpgTargetHTTPSProxy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+thpgFields :: Lens' TargetHTTPSProxiesGet (Maybe Text)
+thpgFields
+  = lens _thpgFields (\ s a -> s{_thpgFields = a})
+
 instance GoogleRequest TargetHTTPSProxiesGet where
         type Rs TargetHTTPSProxiesGet = TargetHTTPSProxy
         type Scopes TargetHTTPSProxiesGet =
@@ -98,7 +109,7 @@ instance GoogleRequest TargetHTTPSProxiesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient TargetHTTPSProxiesGet'{..}
-          = go _thpgProject _thpgTargetHTTPSProxy
+          = go _thpgProject _thpgTargetHTTPSProxy _thpgFields
               (Just AltJSON)
               computeService
           where go

@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Databases.List
 
     -- * Request Lenses
     , dlProject
+    , dlFields
     , dlInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.list@ method which the
 -- 'DatabasesList' request conforms to.
@@ -50,14 +51,16 @@ type DatabasesListResource =
              "instances" :>
                Capture "instance" Text :>
                  "databases" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] DatabasesListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] DatabasesListResponse
 
 -- | Lists databases in the specified Cloud SQL instance.
 --
 -- /See:/ 'databasesList' smart constructor.
 data DatabasesList = DatabasesList'
-    { _dlProject  :: !Text
+    { _dlProject :: !Text
+    , _dlFields :: !(Maybe Text)
     , _dlInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -67,14 +70,17 @@ data DatabasesList = DatabasesList'
 --
 -- * 'dlProject'
 --
+-- * 'dlFields'
+--
 -- * 'dlInstance'
 databasesList
     :: Text -- ^ 'dlProject'
     -> Text -- ^ 'dlInstance'
     -> DatabasesList
-databasesList pDlProject_ pDlInstance_ =
+databasesList pDlProject_ pDlInstance_ = 
     DatabasesList'
     { _dlProject = pDlProject_
+    , _dlFields = Nothing
     , _dlInstance = pDlInstance_
     }
 
@@ -82,6 +88,10 @@ databasesList pDlProject_ pDlInstance_ =
 dlProject :: Lens' DatabasesList Text
 dlProject
   = lens _dlProject (\ s a -> s{_dlProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dlFields :: Lens' DatabasesList (Maybe Text)
+dlFields = lens _dlFields (\ s a -> s{_dlFields = a})
 
 -- | Cloud SQL instance ID. This does not include the project ID.
 dlInstance :: Lens' DatabasesList Text
@@ -94,7 +104,7 @@ instance GoogleRequest DatabasesList where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesList'{..}
-          = go _dlProject _dlInstance (Just AltJSON)
+          = go _dlProject _dlInstance _dlFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy DatabasesListResource)

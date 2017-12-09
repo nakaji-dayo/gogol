@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.VariantSets.Create
     , vscUploadType
     , vscPayload
     , vscBearerToken
+    , vscFields
     , vscCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variantsets.create@ method which the
 -- 'VariantSetsCreate' request conforms to.
@@ -63,8 +64,9 @@ type VariantSetsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] VariantSet :> Post '[JSON] VariantSet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] VariantSet :> Post '[JSON] VariantSet
 
 -- | Creates a new variant set. For the definitions of variant sets and other
 -- genomics resources, see [Fundamentals of Google
@@ -75,14 +77,15 @@ type VariantSetsCreateResource =
 --
 -- /See:/ 'variantSetsCreate' smart constructor.
 data VariantSetsCreate = VariantSetsCreate'
-    { _vscXgafv          :: !(Maybe Xgafv)
+    { _vscXgafv :: !(Maybe Xgafv)
     , _vscUploadProtocol :: !(Maybe Text)
-    , _vscPp             :: !Bool
-    , _vscAccessToken    :: !(Maybe Text)
-    , _vscUploadType     :: !(Maybe Text)
-    , _vscPayload        :: !VariantSet
-    , _vscBearerToken    :: !(Maybe Text)
-    , _vscCallback       :: !(Maybe Text)
+    , _vscPp :: !Bool
+    , _vscAccessToken :: !(Maybe Text)
+    , _vscUploadType :: !(Maybe Text)
+    , _vscPayload :: !VariantSet
+    , _vscBearerToken :: !(Maybe Text)
+    , _vscFields :: !(Maybe Text)
+    , _vscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantSetsCreate' with the minimum fields required to make a request.
@@ -103,11 +106,13 @@ data VariantSetsCreate = VariantSetsCreate'
 --
 -- * 'vscBearerToken'
 --
+-- * 'vscFields'
+--
 -- * 'vscCallback'
 variantSetsCreate
     :: VariantSet -- ^ 'vscPayload'
     -> VariantSetsCreate
-variantSetsCreate pVscPayload_ =
+variantSetsCreate pVscPayload_ = 
     VariantSetsCreate'
     { _vscXgafv = Nothing
     , _vscUploadProtocol = Nothing
@@ -116,6 +121,7 @@ variantSetsCreate pVscPayload_ =
     , _vscUploadType = Nothing
     , _vscPayload = pVscPayload_
     , _vscBearerToken = Nothing
+    , _vscFields = Nothing
     , _vscCallback = Nothing
     }
 
@@ -156,6 +162,11 @@ vscBearerToken
   = lens _vscBearerToken
       (\ s a -> s{_vscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vscFields :: Lens' VariantSetsCreate (Maybe Text)
+vscFields
+  = lens _vscFields (\ s a -> s{_vscFields = a})
+
 -- | JSONP
 vscCallback :: Lens' VariantSetsCreate (Maybe Text)
 vscCallback
@@ -172,6 +183,7 @@ instance GoogleRequest VariantSetsCreate where
               _vscUploadType
               _vscBearerToken
               _vscCallback
+              _vscFields
               (Just AltJSON)
               _vscPayload
               genomicsService

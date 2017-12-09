@@ -17,8 +17,8 @@
 --
 module Network.Google.RuntimeConfig.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.RuntimeConfig.Types.Sum
+import Network.Google.Prelude
+import Network.Google.RuntimeConfig.Types.Sum
 
 -- | The \`Status\` type defines a logical error model that is suitable for
 -- different programming environments, including REST APIs and RPC APIs. It
@@ -33,7 +33,7 @@ import           Network.Google.RuntimeConfig.Types.Sum
 -- needed, put the localized message in the error details or localize it in
 -- the client. The optional error details may contain arbitrary information
 -- about the error. There is a predefined set of error detail types in the
--- package \`google.rpc\` which can be used for common error conditions. #
+-- package \`google.rpc\` that can be used for common error conditions. #
 -- Language mapping The \`Status\` message is the logical representation of
 -- the error model, but it is not necessarily the actual wire format. When
 -- the \`Status\` message is exposed in different client libraries and
@@ -46,20 +46,20 @@ import           Network.Google.RuntimeConfig.Types.Sum
 -- Partial errors. If a service needs to return partial errors to the
 -- client, it may embed the \`Status\` in the normal response to indicate
 -- the partial errors. - Workflow errors. A typical workflow has multiple
--- steps. Each step may have a \`Status\` message for error reporting
--- purpose. - Batch operations. If a client uses batch request and batch
--- response, the \`Status\` message should be used directly inside batch
--- response, one for each error sub-response. - Asynchronous operations. If
--- an API call embeds asynchronous operation results in its response, the
--- status of those operations should be represented directly using the
--- \`Status\` message. - Logging. If some API errors are stored in logs,
--- the message \`Status\` could be used directly after any stripping needed
--- for security\/privacy reasons.
+-- steps. Each step may have a \`Status\` message for error reporting. -
+-- Batch operations. If a client uses batch request and batch response, the
+-- \`Status\` message should be used directly inside batch response, one
+-- for each error sub-response. - Asynchronous operations. If an API call
+-- embeds asynchronous operation results in its response, the status of
+-- those operations should be represented directly using the \`Status\`
+-- message. - Logging. If some API errors are stored in logs, the message
+-- \`Status\` could be used directly after any stripping needed for
+-- security\/privacy reasons.
 --
 -- /See:/ 'status' smart constructor.
 data Status = Status'
     { _sDetails :: !(Maybe [StatusDetailsItem])
-    , _sCode    :: !(Maybe (Textual Int32))
+    , _sCode :: !(Maybe (Textual Int32))
     , _sMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -74,15 +74,15 @@ data Status = Status'
 -- * 'sMessage'
 status
     :: Status
-status =
+status = 
     Status'
     { _sDetails = Nothing
     , _sCode = Nothing
     , _sMessage = Nothing
     }
 
--- | A list of messages that carry the error details. There will be a common
--- set of message types for APIs to use.
+-- | A list of messages that carry the error details. There is a common set
+-- of message types for APIs to use.
 sDetails :: Lens' Status [StatusDetailsItem]
 sDetails
   = lens _sDetails (\ s a -> s{_sDetails = a}) .
@@ -122,7 +122,7 @@ instance ToJSON Status where
 -- /See:/ 'listOperationsResponse' smart constructor.
 data ListOperationsResponse = ListOperationsResponse'
     { _lorNextPageToken :: !(Maybe Text)
-    , _lorOperations    :: !(Maybe [Operation])
+    , _lorOperations :: !(Maybe [Operation])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListOperationsResponse' with the minimum fields required to make a request.
@@ -134,7 +134,7 @@ data ListOperationsResponse = ListOperationsResponse'
 -- * 'lorOperations'
 listOperationsResponse
     :: ListOperationsResponse
-listOperationsResponse =
+listOperationsResponse = 
     ListOperationsResponse'
     { _lorNextPageToken = Nothing
     , _lorOperations = Nothing
@@ -173,7 +173,7 @@ instance ToJSON ListOperationsResponse where
 --
 -- /See:/ 'cancelOperationRequest' smart constructor.
 data CancelOperationRequest =
-    CancelOperationRequest'
+    CancelOperationRequest' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CancelOperationRequest' with the minimum fields required to make a request.
@@ -195,10 +195,10 @@ instance ToJSON CancelOperationRequest where
 --
 -- /See:/ 'operation' smart constructor.
 data Operation = Operation'
-    { _oDone     :: !(Maybe Bool)
-    , _oError    :: !(Maybe Status)
+    { _oDone :: !(Maybe Bool)
+    , _oError :: !(Maybe Status)
     , _oResponse :: !(Maybe OperationResponse)
-    , _oName     :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
     , _oMetadata :: !(Maybe OperationMetadata)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -217,7 +217,7 @@ data Operation = Operation'
 -- * 'oMetadata'
 operation
     :: Operation
-operation =
+operation = 
     Operation'
     { _oDone = Nothing
     , _oError = Nothing
@@ -227,7 +227,7 @@ operation =
     }
 
 -- | If the value is \`false\`, it means the operation is still in progress.
--- If true, the operation is completed, and either \`error\` or
+-- If \`true\`, the operation is completed, and either \`error\` or
 -- \`response\` is available.
 oDone :: Lens' Operation (Maybe Bool)
 oDone = lens _oDone (\ s a -> s{_oDone = a})
@@ -289,7 +289,7 @@ instance ToJSON Operation where
 --
 -- /See:/ 'empty' smart constructor.
 data Empty =
-    Empty'
+    Empty' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Empty' with the minimum fields required to make a request.
@@ -318,7 +318,7 @@ newtype StatusDetailsItem = StatusDetailsItem'
 statusDetailsItem
     :: HashMap Text JSONValue -- ^ 'sdiAddtional'
     -> StatusDetailsItem
-statusDetailsItem pSdiAddtional_ =
+statusDetailsItem pSdiAddtional_ = 
     StatusDetailsItem'
     { _sdiAddtional = _Coerce # pSdiAddtional_
     }
@@ -355,7 +355,7 @@ newtype OperationMetadata = OperationMetadata'
 operationMetadata
     :: HashMap Text JSONValue -- ^ 'omAddtional'
     -> OperationMetadata
-operationMetadata pOmAddtional_ =
+operationMetadata pOmAddtional_ = 
     OperationMetadata'
     { _omAddtional = _Coerce # pOmAddtional_
     }
@@ -396,7 +396,7 @@ newtype OperationResponse = OperationResponse'
 operationResponse
     :: HashMap Text JSONValue -- ^ 'orAddtional'
     -> OperationResponse
-operationResponse pOrAddtional_ =
+operationResponse pOrAddtional_ = 
     OperationResponse'
     { _orAddtional = _Coerce # pOrAddtional_
     }

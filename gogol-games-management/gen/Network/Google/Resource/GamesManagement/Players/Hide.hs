@@ -37,10 +37,11 @@ module Network.Google.Resource.GamesManagement.Players.Hide
     -- * Request Lenses
     , phApplicationId
     , phPlayerId
+    , phFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.players.hide@ method which the
 -- 'PlayersHide' request conforms to.
@@ -52,7 +53,8 @@ type PlayersHideResource =
              "players" :>
                "hidden" :>
                  Capture "playerId" Text :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Hide the given player\'s leaderboard scores from the given application.
 -- This method is only available to user accounts for your developer
@@ -61,7 +63,8 @@ type PlayersHideResource =
 -- /See:/ 'playersHide' smart constructor.
 data PlayersHide = PlayersHide'
     { _phApplicationId :: !Text
-    , _phPlayerId      :: !Text
+    , _phPlayerId :: !Text
+    , _phFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayersHide' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data PlayersHide = PlayersHide'
 -- * 'phApplicationId'
 --
 -- * 'phPlayerId'
+--
+-- * 'phFields'
 playersHide
     :: Text -- ^ 'phApplicationId'
     -> Text -- ^ 'phPlayerId'
     -> PlayersHide
-playersHide pPhApplicationId_ pPhPlayerId_ =
+playersHide pPhApplicationId_ pPhPlayerId_ = 
     PlayersHide'
     { _phApplicationId = pPhApplicationId_
     , _phPlayerId = pPhPlayerId_
+    , _phFields = Nothing
     }
 
 -- | The application ID from the Google Play developer console.
@@ -93,13 +99,18 @@ phPlayerId :: Lens' PlayersHide Text
 phPlayerId
   = lens _phPlayerId (\ s a -> s{_phPlayerId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+phFields :: Lens' PlayersHide (Maybe Text)
+phFields = lens _phFields (\ s a -> s{_phFields = a})
+
 instance GoogleRequest PlayersHide where
         type Rs PlayersHide = ()
         type Scopes PlayersHide =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient PlayersHide'{..}
-          = go _phApplicationId _phPlayerId (Just AltJSON)
+          = go _phApplicationId _phPlayerId _phFields
+              (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy PlayersHideResource)

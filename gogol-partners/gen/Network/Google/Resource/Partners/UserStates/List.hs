@@ -46,18 +46,19 @@ module Network.Google.Resource.Partners.UserStates.List
     , uslRequestMetadataTrafficSourceTrafficSubId
     , uslRequestMetadataUserOverridesUserId
     , uslRequestMetadataTrafficSourceTrafficSourceId
+    , uslFields
     , uslCallback
     ) where
 
-import           Network.Google.Partners.Types
-import           Network.Google.Prelude
+import Network.Google.Partners.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @partners.userStates.list@ method which the
 -- 'UserStatesList' request conforms to.
 type UserStatesListResource =
      "v2" :>
        "userStates" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -82,27 +83,29 @@ type UserStatesListResource =
                                    Text
                                    :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] ListUserStatesResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] ListUserStatesResponse
 
 -- | Lists states for current user.
 --
 -- /See:/ 'userStatesList' smart constructor.
 data UserStatesList = UserStatesList'
-    { _uslXgafv                                       :: !(Maybe Text)
-    , _uslUploadProtocol                              :: !(Maybe Text)
-    , _uslPp                                          :: !Bool
-    , _uslAccessToken                                 :: !(Maybe Text)
-    , _uslUploadType                                  :: !(Maybe Text)
-    , _uslRequestMetadataPartnersSessionId            :: !(Maybe Text)
-    , _uslBearerToken                                 :: !(Maybe Text)
-    , _uslRequestMetadataLocale                       :: !(Maybe Text)
-    , _uslRequestMetadataExperimentIds                :: !(Maybe [Text])
-    , _uslRequestMetadataUserOverridesIPAddress       :: !(Maybe Text)
-    , _uslRequestMetadataTrafficSourceTrafficSubId    :: !(Maybe Text)
-    , _uslRequestMetadataUserOverridesUserId          :: !(Maybe Text)
+    { _uslXgafv :: !(Maybe Xgafv)
+    , _uslUploadProtocol :: !(Maybe Text)
+    , _uslPp :: !Bool
+    , _uslAccessToken :: !(Maybe Text)
+    , _uslUploadType :: !(Maybe Text)
+    , _uslRequestMetadataPartnersSessionId :: !(Maybe Text)
+    , _uslBearerToken :: !(Maybe Text)
+    , _uslRequestMetadataLocale :: !(Maybe Text)
+    , _uslRequestMetadataExperimentIds :: !(Maybe [Text])
+    , _uslRequestMetadataUserOverridesIPAddress :: !(Maybe Text)
+    , _uslRequestMetadataTrafficSourceTrafficSubId :: !(Maybe Text)
+    , _uslRequestMetadataUserOverridesUserId :: !(Maybe Text)
     , _uslRequestMetadataTrafficSourceTrafficSourceId :: !(Maybe Text)
-    , _uslCallback                                    :: !(Maybe Text)
+    , _uslFields :: !(Maybe Text)
+    , _uslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserStatesList' with the minimum fields required to make a request.
@@ -135,10 +138,12 @@ data UserStatesList = UserStatesList'
 --
 -- * 'uslRequestMetadataTrafficSourceTrafficSourceId'
 --
+-- * 'uslFields'
+--
 -- * 'uslCallback'
 userStatesList
     :: UserStatesList
-userStatesList =
+userStatesList = 
     UserStatesList'
     { _uslXgafv = Nothing
     , _uslUploadProtocol = Nothing
@@ -153,11 +158,12 @@ userStatesList =
     , _uslRequestMetadataTrafficSourceTrafficSubId = Nothing
     , _uslRequestMetadataUserOverridesUserId = Nothing
     , _uslRequestMetadataTrafficSourceTrafficSourceId = Nothing
+    , _uslFields = Nothing
     , _uslCallback = Nothing
     }
 
 -- | V1 error format.
-uslXgafv :: Lens' UserStatesList (Maybe Text)
+uslXgafv :: Lens' UserStatesList (Maybe Xgafv)
 uslXgafv = lens _uslXgafv (\ s a -> s{_uslXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -242,6 +248,11 @@ uslRequestMetadataTrafficSourceTrafficSourceId
          s{_uslRequestMetadataTrafficSourceTrafficSourceId =
              a})
 
+-- | Selector specifying which fields to include in a partial response.
+uslFields :: Lens' UserStatesList (Maybe Text)
+uslFields
+  = lens _uslFields (\ s a -> s{_uslFields = a})
+
 -- | JSONP
 uslCallback :: Lens' UserStatesList (Maybe Text)
 uslCallback
@@ -263,6 +274,7 @@ instance GoogleRequest UserStatesList where
               _uslRequestMetadataUserOverridesUserId
               _uslRequestMetadataTrafficSourceTrafficSourceId
               _uslCallback
+              _uslFields
               (Just AltJSON)
               partnersService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Insert
     , igmiSize
     , igmiZone
     , igmiPayload
+    , igmiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.insert@ method which the
 -- 'InstanceGroupManagersInsert' request conforms to.
@@ -54,9 +55,10 @@ type InstanceGroupManagersInsertResource =
                Capture "zone" Text :>
                  "instanceGroupManagers" :>
                    QueryParam "size" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] InstanceGroupManager :>
-                         Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] InstanceGroupManager :>
+                           Post '[JSON] Operation
 
 -- | Creates an instance group manager, as well as the instance group and the
 -- specified number of instances.
@@ -64,9 +66,10 @@ type InstanceGroupManagersInsertResource =
 -- /See:/ 'instanceGroupManagersInsert' smart constructor.
 data InstanceGroupManagersInsert = InstanceGroupManagersInsert'
     { _igmiProject :: !Text
-    , _igmiSize    :: !(Textual Int32)
-    , _igmiZone    :: !Text
+    , _igmiSize :: !(Textual Int32)
+    , _igmiZone :: !Text
     , _igmiPayload :: !InstanceGroupManager
+    , _igmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersInsert' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data InstanceGroupManagersInsert = InstanceGroupManagersInsert'
 -- * 'igmiZone'
 --
 -- * 'igmiPayload'
+--
+-- * 'igmiFields'
 instanceGroupManagersInsert
     :: Text -- ^ 'igmiProject'
     -> Int32 -- ^ 'igmiSize'
     -> Text -- ^ 'igmiZone'
     -> InstanceGroupManager -- ^ 'igmiPayload'
     -> InstanceGroupManagersInsert
-instanceGroupManagersInsert pIgmiProject_ pIgmiSize_ pIgmiZone_ pIgmiPayload_ =
+instanceGroupManagersInsert pIgmiProject_ pIgmiSize_ pIgmiZone_ pIgmiPayload_ = 
     InstanceGroupManagersInsert'
     { _igmiProject = pIgmiProject_
     , _igmiSize = _Coerce # pIgmiSize_
     , _igmiZone = pIgmiZone_
     , _igmiPayload = pIgmiPayload_
+    , _igmiFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -114,6 +120,11 @@ igmiPayload :: Lens' InstanceGroupManagersInsert InstanceGroupManager
 igmiPayload
   = lens _igmiPayload (\ s a -> s{_igmiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmiFields :: Lens' InstanceGroupManagersInsert (Maybe Text)
+igmiFields
+  = lens _igmiFields (\ s a -> s{_igmiFields = a})
+
 instance GoogleRequest InstanceGroupManagersInsert
          where
         type Rs InstanceGroupManagersInsert = Operation
@@ -122,6 +133,7 @@ instance GoogleRequest InstanceGroupManagersInsert
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupManagersInsert'{..}
           = go _igmiProject _igmiZone (Just _igmiSize)
+              _igmiFields
               (Just AltJSON)
               _igmiPayload
               replicaPoolService

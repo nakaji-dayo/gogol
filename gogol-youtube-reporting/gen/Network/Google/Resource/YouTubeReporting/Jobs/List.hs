@@ -43,11 +43,12 @@ module Network.Google.Resource.YouTubeReporting.Jobs.List
     , jlBearerToken
     , jlPageToken
     , jlPageSize
+    , jlFields
     , jlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.jobs.list@ method which the
 -- 'JobsList' request conforms to.
@@ -65,24 +66,26 @@ type JobsListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListJobsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListJobsResponse
 
 -- | Lists jobs.
 --
 -- /See:/ 'jobsList' smart constructor.
 data JobsList = JobsList'
-    { _jlXgafv                  :: !(Maybe Xgafv)
-    , _jlUploadProtocol         :: !(Maybe Text)
-    , _jlPp                     :: !Bool
-    , _jlAccessToken            :: !(Maybe Text)
-    , _jlUploadType             :: !(Maybe Text)
-    , _jlIncludeSystemManaged   :: !(Maybe Bool)
+    { _jlXgafv :: !(Maybe Xgafv)
+    , _jlUploadProtocol :: !(Maybe Text)
+    , _jlPp :: !Bool
+    , _jlAccessToken :: !(Maybe Text)
+    , _jlUploadType :: !(Maybe Text)
+    , _jlIncludeSystemManaged :: !(Maybe Bool)
     , _jlOnBehalfOfContentOwner :: !(Maybe Text)
-    , _jlBearerToken            :: !(Maybe Text)
-    , _jlPageToken              :: !(Maybe Text)
-    , _jlPageSize               :: !(Maybe (Textual Int32))
-    , _jlCallback               :: !(Maybe Text)
+    , _jlBearerToken :: !(Maybe Text)
+    , _jlPageToken :: !(Maybe Text)
+    , _jlPageSize :: !(Maybe (Textual Int32))
+    , _jlFields :: !(Maybe Text)
+    , _jlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsList' with the minimum fields required to make a request.
@@ -109,10 +112,12 @@ data JobsList = JobsList'
 --
 -- * 'jlPageSize'
 --
+-- * 'jlFields'
+--
 -- * 'jlCallback'
 jobsList
     :: JobsList
-jobsList =
+jobsList = 
     JobsList'
     { _jlXgafv = Nothing
     , _jlUploadProtocol = Nothing
@@ -124,6 +129,7 @@ jobsList =
     , _jlBearerToken = Nothing
     , _jlPageToken = Nothing
     , _jlPageSize = Nothing
+    , _jlFields = Nothing
     , _jlCallback = Nothing
     }
 
@@ -187,6 +193,10 @@ jlPageSize
   = lens _jlPageSize (\ s a -> s{_jlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+jlFields :: Lens' JobsList (Maybe Text)
+jlFields = lens _jlFields (\ s a -> s{_jlFields = a})
+
 -- | JSONP
 jlCallback :: Lens' JobsList (Maybe Text)
 jlCallback
@@ -207,6 +217,7 @@ instance GoogleRequest JobsList where
               _jlPageToken
               _jlPageSize
               _jlCallback
+              _jlFields
               (Just AltJSON)
               youTubeReportingService
           where go

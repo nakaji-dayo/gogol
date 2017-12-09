@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.CallSets.Search
     , cssUploadType
     , cssPayload
     , cssBearerToken
+    , cssFields
     , cssCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.callsets.search@ method which the
 -- 'CallSetsSearch' request conforms to.
@@ -63,9 +64,10 @@ type CallSetsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchCallSetsRequest :>
-                             Post '[JSON] SearchCallSetsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchCallSetsRequest :>
+                               Post '[JSON] SearchCallSetsResponse
 
 -- | Gets a list of call sets matching the criteria. For the definitions of
 -- call sets and other genomics resources, see [Fundamentals of Google
@@ -75,14 +77,15 @@ type CallSetsSearchResource =
 --
 -- /See:/ 'callSetsSearch' smart constructor.
 data CallSetsSearch = CallSetsSearch'
-    { _cssXgafv          :: !(Maybe Xgafv)
+    { _cssXgafv :: !(Maybe Xgafv)
     , _cssUploadProtocol :: !(Maybe Text)
-    , _cssPp             :: !Bool
-    , _cssAccessToken    :: !(Maybe Text)
-    , _cssUploadType     :: !(Maybe Text)
-    , _cssPayload        :: !SearchCallSetsRequest
-    , _cssBearerToken    :: !(Maybe Text)
-    , _cssCallback       :: !(Maybe Text)
+    , _cssPp :: !Bool
+    , _cssAccessToken :: !(Maybe Text)
+    , _cssUploadType :: !(Maybe Text)
+    , _cssPayload :: !SearchCallSetsRequest
+    , _cssBearerToken :: !(Maybe Text)
+    , _cssFields :: !(Maybe Text)
+    , _cssCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CallSetsSearch' with the minimum fields required to make a request.
@@ -103,11 +106,13 @@ data CallSetsSearch = CallSetsSearch'
 --
 -- * 'cssBearerToken'
 --
+-- * 'cssFields'
+--
 -- * 'cssCallback'
 callSetsSearch
     :: SearchCallSetsRequest -- ^ 'cssPayload'
     -> CallSetsSearch
-callSetsSearch pCssPayload_ =
+callSetsSearch pCssPayload_ = 
     CallSetsSearch'
     { _cssXgafv = Nothing
     , _cssUploadProtocol = Nothing
@@ -116,6 +121,7 @@ callSetsSearch pCssPayload_ =
     , _cssUploadType = Nothing
     , _cssPayload = pCssPayload_
     , _cssBearerToken = Nothing
+    , _cssFields = Nothing
     , _cssCallback = Nothing
     }
 
@@ -156,6 +162,11 @@ cssBearerToken
   = lens _cssBearerToken
       (\ s a -> s{_cssBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cssFields :: Lens' CallSetsSearch (Maybe Text)
+cssFields
+  = lens _cssFields (\ s a -> s{_cssFields = a})
+
 -- | JSONP
 cssCallback :: Lens' CallSetsSearch (Maybe Text)
 cssCallback
@@ -173,6 +184,7 @@ instance GoogleRequest CallSetsSearch where
               _cssUploadType
               _cssBearerToken
               _cssCallback
+              _cssFields
               (Just AltJSON)
               _cssPayload
               genomicsService

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.List
     -- * Request Lenses
     , alPageToken
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.list@ method which the
 -- 'AccountsList' request conforms to.
@@ -48,14 +49,16 @@ type AccountsListResource =
          "accounts" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Int32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Accounts
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Accounts
 
 -- | List all accounts available to this Ad Exchange account.
 --
 -- /See:/ 'accountsList' smart constructor.
 data AccountsList = AccountsList'
-    { _alPageToken  :: !(Maybe Text)
+    { _alPageToken :: !(Maybe Text)
     , _alMaxResults :: !(Maybe (Textual Int32))
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsList' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data AccountsList = AccountsList'
 -- * 'alPageToken'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 accountsList
     :: AccountsList
-accountsList =
+accountsList = 
     AccountsList'
     { _alPageToken = Nothing
     , _alMaxResults = Nothing
+    , _alFields = Nothing
     }
 
 -- | A continuation token, used to page through accounts. To retrieve the
@@ -87,13 +93,18 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' AccountsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest AccountsList where
         type Rs AccountsList = Accounts
         type Scopes AccountsList =
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsList'{..}
-          = go _alPageToken _alMaxResults (Just AltJSON)
+          = go _alPageToken _alMaxResults _alFields
+              (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient (Proxy :: Proxy AccountsListResource)

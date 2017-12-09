@@ -14,8 +14,9 @@ cabal-version:         >= 1.10
 extra-source-files:    README.md src/.gitkeep
 
 description:
-    Builds and manages clusters that run container-based applications,
-    powered by open source Kubernetes technology.
+    The Google Container Engine API is used for building and managing
+    container based applications, powered by the open source Kubernetes
+    technology.
     .
     /Warning:/ This is an experimental prototype/preview release which is still
     under exploratory development and not intended for public use, caveat emptor!
@@ -36,16 +37,31 @@ library
     exposed-modules:
           Network.Google.Container
         , Network.Google.Container.Types
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.Addons
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.CompleteIPRotation
         , Network.Google.Resource.Container.Projects.Zones.Clusters.Create
         , Network.Google.Resource.Container.Projects.Zones.Clusters.Delete
         , Network.Google.Resource.Container.Projects.Zones.Clusters.Get
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.LegacyAbac
         , Network.Google.Resource.Container.Projects.Zones.Clusters.List
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.Locations
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.Logging
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.Master
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.Monitoring
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Autoscaling
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Create
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Delete
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Get
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.List
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Rollback
         , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.SetManagement
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.SetSize
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Update
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.ResourceLabels
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.SetMaintenancePolicy
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.SetMasterAuth
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.SetNetworkPolicy
+        , Network.Google.Resource.Container.Projects.Zones.Clusters.StartIPRotation
         , Network.Google.Resource.Container.Projects.Zones.Clusters.Update
         , Network.Google.Resource.Container.Projects.Zones.GetServerConfig
         , Network.Google.Resource.Container.Projects.Zones.Operations.Cancel

@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.ChromeosDevices.Get
     , cdgCustomerId
     , cdgDeviceId
     , cdgProjection
+    , cdgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.chromeosdevices.get@ method which the
 -- 'ChromeosDevicesGet' request conforms to.
@@ -54,16 +55,18 @@ type ChromeosDevicesGetResource =
                    Capture "deviceId" Text :>
                      QueryParam "projection" ChromeosDevicesGetProjection
                        :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] ChromeOSDevice
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ChromeOSDevice
 
 -- | Retrieve Chrome OS Device
 --
 -- /See:/ 'chromeosDevicesGet' smart constructor.
 data ChromeosDevicesGet = ChromeosDevicesGet'
     { _cdgCustomerId :: !Text
-    , _cdgDeviceId   :: !Text
+    , _cdgDeviceId :: !Text
     , _cdgProjection :: !(Maybe ChromeosDevicesGetProjection)
+    , _cdgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeosDevicesGet' with the minimum fields required to make a request.
@@ -75,24 +78,27 @@ data ChromeosDevicesGet = ChromeosDevicesGet'
 -- * 'cdgDeviceId'
 --
 -- * 'cdgProjection'
+--
+-- * 'cdgFields'
 chromeosDevicesGet
     :: Text -- ^ 'cdgCustomerId'
     -> Text -- ^ 'cdgDeviceId'
     -> ChromeosDevicesGet
-chromeosDevicesGet pCdgCustomerId_ pCdgDeviceId_ =
+chromeosDevicesGet pCdgCustomerId_ pCdgDeviceId_ = 
     ChromeosDevicesGet'
     { _cdgCustomerId = pCdgCustomerId_
     , _cdgDeviceId = pCdgDeviceId_
     , _cdgProjection = Nothing
+    , _cdgFields = Nothing
     }
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 cdgCustomerId :: Lens' ChromeosDevicesGet Text
 cdgCustomerId
   = lens _cdgCustomerId
       (\ s a -> s{_cdgCustomerId = a})
 
--- | Immutable id of Chrome OS Device
+-- | Immutable ID of Chrome OS Device
 cdgDeviceId :: Lens' ChromeosDevicesGet Text
 cdgDeviceId
   = lens _cdgDeviceId (\ s a -> s{_cdgDeviceId = a})
@@ -103,6 +109,11 @@ cdgProjection
   = lens _cdgProjection
       (\ s a -> s{_cdgProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdgFields :: Lens' ChromeosDevicesGet (Maybe Text)
+cdgFields
+  = lens _cdgFields (\ s a -> s{_cdgFields = a})
+
 instance GoogleRequest ChromeosDevicesGet where
         type Rs ChromeosDevicesGet = ChromeOSDevice
         type Scopes ChromeosDevicesGet =
@@ -110,6 +121,7 @@ instance GoogleRequest ChromeosDevicesGet where
                "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"]
         requestClient ChromeosDevicesGet'{..}
           = go _cdgCustomerId _cdgDeviceId _cdgProjection
+              _cdgFields
               (Just AltJSON)
               directoryService
           where go

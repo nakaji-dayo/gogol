@@ -36,10 +36,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.Insert
     , laiSKUId
     , laiPayload
     , laiProductId
+    , laiFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.insert@ method which the
 -- 'LicenseAssignmentsInsert' request conforms to.
@@ -52,17 +53,19 @@ type LicenseAssignmentsInsertResource =
                "sku" :>
                  Capture "skuId" Text :>
                    "user" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] LicenseAssignmentInsert :>
-                         Post '[JSON] LicenseAssignment
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] LicenseAssignmentInsert :>
+                           Post '[JSON] LicenseAssignment
 
 -- | Assign License.
 --
 -- /See:/ 'licenseAssignmentsInsert' smart constructor.
 data LicenseAssignmentsInsert = LicenseAssignmentsInsert'
-    { _laiSKUId     :: !Text
-    , _laiPayload   :: !LicenseAssignmentInsert
+    { _laiSKUId :: !Text
+    , _laiPayload :: !LicenseAssignmentInsert
     , _laiProductId :: !Text
+    , _laiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data LicenseAssignmentsInsert = LicenseAssignmentsInsert'
 -- * 'laiPayload'
 --
 -- * 'laiProductId'
+--
+-- * 'laiFields'
 licenseAssignmentsInsert
     :: Text -- ^ 'laiSKUId'
     -> LicenseAssignmentInsert -- ^ 'laiPayload'
     -> Text -- ^ 'laiProductId'
     -> LicenseAssignmentsInsert
-licenseAssignmentsInsert pLaiSKUId_ pLaiPayload_ pLaiProductId_ =
+licenseAssignmentsInsert pLaiSKUId_ pLaiPayload_ pLaiProductId_ = 
     LicenseAssignmentsInsert'
     { _laiSKUId = pLaiSKUId_
     , _laiPayload = pLaiPayload_
     , _laiProductId = pLaiProductId_
+    , _laiFields = Nothing
     }
 
 -- | Name for sku
@@ -100,12 +106,18 @@ laiProductId :: Lens' LicenseAssignmentsInsert Text
 laiProductId
   = lens _laiProductId (\ s a -> s{_laiProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+laiFields :: Lens' LicenseAssignmentsInsert (Maybe Text)
+laiFields
+  = lens _laiFields (\ s a -> s{_laiFields = a})
+
 instance GoogleRequest LicenseAssignmentsInsert where
         type Rs LicenseAssignmentsInsert = LicenseAssignment
         type Scopes LicenseAssignmentsInsert =
              '["https://www.googleapis.com/auth/apps.licensing"]
         requestClient LicenseAssignmentsInsert'{..}
-          = go _laiProductId _laiSKUId (Just AltJSON)
+          = go _laiProductId _laiSKUId _laiFields
+              (Just AltJSON)
               _laiPayload
               appsLicensingService
           where go

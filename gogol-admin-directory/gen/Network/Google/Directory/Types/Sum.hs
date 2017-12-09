@@ -16,7 +16,7 @@
 --
 module Network.Google.Directory.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Event on which subscription is intended (if subscribing)
 data UsersListEvent
@@ -257,7 +257,7 @@ instance ToJSON UsersListViewType where
 data OrgUnitsListType
     = All
       -- ^ @all@
-      -- All sub-organization units.
+      -- All sub-organizational units.
     | Children
       -- ^ @children@
       -- Immediate children only (default).

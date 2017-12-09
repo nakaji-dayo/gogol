@@ -35,11 +35,12 @@ module Network.Google.Resource.Games.Snapshots.Get
     -- * Request Lenses
     , sConsistencyToken
     , sLanguage
+    , sFields
     , sSnapshotId
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.snapshots.get@ method which the
 -- 'SnapshotsGet' request conforms to.
@@ -50,15 +51,17 @@ type SnapshotsGetResource =
            Capture "snapshotId" Text :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Snapshot
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Snapshot
 
 -- | Retrieves the metadata for a given snapshot ID.
 --
 -- /See:/ 'snapshotsGet' smart constructor.
 data SnapshotsGet = SnapshotsGet'
     { _sConsistencyToken :: !(Maybe (Textual Int64))
-    , _sLanguage         :: !(Maybe Text)
-    , _sSnapshotId       :: !Text
+    , _sLanguage :: !(Maybe Text)
+    , _sFields :: !(Maybe Text)
+    , _sSnapshotId :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SnapshotsGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data SnapshotsGet = SnapshotsGet'
 --
 -- * 'sLanguage'
 --
+-- * 'sFields'
+--
 -- * 'sSnapshotId'
 snapshotsGet
     :: Text -- ^ 'sSnapshotId'
     -> SnapshotsGet
-snapshotsGet pSSnapshotId_ =
+snapshotsGet pSSnapshotId_ = 
     SnapshotsGet'
     { _sConsistencyToken = Nothing
     , _sLanguage = Nothing
+    , _sFields = Nothing
     , _sSnapshotId = pSSnapshotId_
     }
 
@@ -92,6 +98,10 @@ sLanguage :: Lens' SnapshotsGet (Maybe Text)
 sLanguage
   = lens _sLanguage (\ s a -> s{_sLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' SnapshotsGet (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
+
 -- | The ID of the snapshot.
 sSnapshotId :: Lens' SnapshotsGet Text
 sSnapshotId
@@ -105,6 +115,7 @@ instance GoogleRequest SnapshotsGet where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient SnapshotsGet'{..}
           = go _sSnapshotId _sConsistencyToken _sLanguage
+              _sFields
               (Just AltJSON)
               gamesService
           where go

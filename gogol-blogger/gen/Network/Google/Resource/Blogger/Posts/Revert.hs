@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Posts.Revert
     -- * Request Lenses
     , prBlogId
     , prPostId
+    , prFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.revert@ method which the
 -- 'PostsRevert' request conforms to.
@@ -50,7 +51,8 @@ type PostsRevertResource =
              "posts" :>
                Capture "postId" Text :>
                  "revert" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Post'
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Post'
 
 -- | Revert a published or scheduled post to draft state.
 --
@@ -58,6 +60,7 @@ type PostsRevertResource =
 data PostsRevert = PostsRevert'
     { _prBlogId :: !Text
     , _prPostId :: !Text
+    , _prFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsRevert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PostsRevert = PostsRevert'
 -- * 'prBlogId'
 --
 -- * 'prPostId'
+--
+-- * 'prFields'
 postsRevert
     :: Text -- ^ 'prBlogId'
     -> Text -- ^ 'prPostId'
     -> PostsRevert
-postsRevert pPrBlogId_ pPrPostId_ =
+postsRevert pPrBlogId_ pPrPostId_ = 
     PostsRevert'
     { _prBlogId = pPrBlogId_
     , _prPostId = pPrPostId_
+    , _prFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -85,12 +91,16 @@ prBlogId = lens _prBlogId (\ s a -> s{_prBlogId = a})
 prPostId :: Lens' PostsRevert Text
 prPostId = lens _prPostId (\ s a -> s{_prPostId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prFields :: Lens' PostsRevert (Maybe Text)
+prFields = lens _prFields (\ s a -> s{_prFields = a})
+
 instance GoogleRequest PostsRevert where
         type Rs PostsRevert = Post'
         type Scopes PostsRevert =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PostsRevert'{..}
-          = go _prBlogId _prPostId (Just AltJSON)
+          = go _prBlogId _prPostId _prFields (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PostsRevertResource)

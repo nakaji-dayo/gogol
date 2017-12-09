@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.Patch
     , agpProFileId
     , agpPayload
     , agpId
+    , agpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.patch@ method which the
 -- 'AdvertiserGroupsPatch' request conforms to.
 type AdvertiserGroupsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AdvertiserGroup :>
-                     Patch '[JSON] AdvertiserGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AdvertiserGroup :>
+                       Patch '[JSON] AdvertiserGroup
 
 -- | Updates an existing advertiser group. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type AdvertiserGroupsPatchResource =
 -- /See:/ 'advertiserGroupsPatch' smart constructor.
 data AdvertiserGroupsPatch = AdvertiserGroupsPatch'
     { _agpProFileId :: !(Textual Int64)
-    , _agpPayload   :: !AdvertiserGroup
-    , _agpId        :: !(Textual Int64)
+    , _agpPayload :: !AdvertiserGroup
+    , _agpId :: !(Textual Int64)
+    , _agpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data AdvertiserGroupsPatch = AdvertiserGroupsPatch'
 -- * 'agpPayload'
 --
 -- * 'agpId'
+--
+-- * 'agpFields'
 advertiserGroupsPatch
     :: Int64 -- ^ 'agpProFileId'
     -> AdvertiserGroup -- ^ 'agpPayload'
     -> Int64 -- ^ 'agpId'
     -> AdvertiserGroupsPatch
-advertiserGroupsPatch pAgpProFileId_ pAgpPayload_ pAgpId_ =
+advertiserGroupsPatch pAgpProFileId_ pAgpPayload_ pAgpId_ = 
     AdvertiserGroupsPatch'
     { _agpProFileId = _Coerce # pAgpProFileId_
     , _agpPayload = pAgpPayload_
     , _agpId = _Coerce # pAgpId_
+    , _agpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ agpId :: Lens' AdvertiserGroupsPatch Int64
 agpId
   = lens _agpId (\ s a -> s{_agpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agpFields :: Lens' AdvertiserGroupsPatch (Maybe Text)
+agpFields
+  = lens _agpFields (\ s a -> s{_agpFields = a})
+
 instance GoogleRequest AdvertiserGroupsPatch where
         type Rs AdvertiserGroupsPatch = AdvertiserGroup
         type Scopes AdvertiserGroupsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertiserGroupsPatch'{..}
-          = go _agpProFileId (Just _agpId) (Just AltJSON)
+          = go _agpProFileId (Just _agpId) _agpFields
+              (Just AltJSON)
               _agpPayload
               dFAReportingService
           where go

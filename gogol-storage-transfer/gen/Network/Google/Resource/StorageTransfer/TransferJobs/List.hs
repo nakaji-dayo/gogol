@@ -42,18 +42,19 @@ module Network.Google.Resource.StorageTransfer.TransferJobs.List
     , tjlFilter
     , tjlPageToken
     , tjlPageSize
+    , tjlFields
     , tjlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferJobs.list@ method which the
 -- 'TransferJobsList' request conforms to.
 type TransferJobsListResource =
      "v1" :>
        "transferJobs" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -63,23 +64,25 @@ type TransferJobsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListTransferJobsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListTransferJobsResponse
 
 -- | Lists transfer jobs.
 --
 -- /See:/ 'transferJobsList' smart constructor.
 data TransferJobsList = TransferJobsList'
-    { _tjlXgafv          :: !(Maybe Text)
+    { _tjlXgafv :: !(Maybe Xgafv)
     , _tjlUploadProtocol :: !(Maybe Text)
-    , _tjlPp             :: !Bool
-    , _tjlAccessToken    :: !(Maybe Text)
-    , _tjlUploadType     :: !(Maybe Text)
-    , _tjlBearerToken    :: !(Maybe Text)
-    , _tjlFilter         :: !(Maybe Text)
-    , _tjlPageToken      :: !(Maybe Text)
-    , _tjlPageSize       :: !(Maybe (Textual Int32))
-    , _tjlCallback       :: !(Maybe Text)
+    , _tjlPp :: !Bool
+    , _tjlAccessToken :: !(Maybe Text)
+    , _tjlUploadType :: !(Maybe Text)
+    , _tjlBearerToken :: !(Maybe Text)
+    , _tjlFilter :: !(Maybe Text)
+    , _tjlPageToken :: !(Maybe Text)
+    , _tjlPageSize :: !(Maybe (Textual Int32))
+    , _tjlFields :: !(Maybe Text)
+    , _tjlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferJobsList' with the minimum fields required to make a request.
@@ -104,10 +107,12 @@ data TransferJobsList = TransferJobsList'
 --
 -- * 'tjlPageSize'
 --
+-- * 'tjlFields'
+--
 -- * 'tjlCallback'
 transferJobsList
     :: TransferJobsList
-transferJobsList =
+transferJobsList = 
     TransferJobsList'
     { _tjlXgafv = Nothing
     , _tjlUploadProtocol = Nothing
@@ -118,11 +123,12 @@ transferJobsList =
     , _tjlFilter = Nothing
     , _tjlPageToken = Nothing
     , _tjlPageSize = Nothing
+    , _tjlFields = Nothing
     , _tjlCallback = Nothing
     }
 
 -- | V1 error format.
-tjlXgafv :: Lens' TransferJobsList (Maybe Text)
+tjlXgafv :: Lens' TransferJobsList (Maybe Xgafv)
 tjlXgafv = lens _tjlXgafv (\ s a -> s{_tjlXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -154,13 +160,13 @@ tjlBearerToken
       (\ s a -> s{_tjlBearerToken = a})
 
 -- | A list of query parameters specified as JSON text in the form of
--- {\"\`project_id\`\":\"my_project_id\",
--- \"\`job_names\`\":[\"jobid1\",\"jobid2\",...],
--- \"\`job_statuses\`\":[\"status1\",\"status2\",...]}. Since \`job_names\`
--- and \`job_statuses\` support multiple values, their values must be
--- specified with array notation. \`project_id\` is required. \`job_names\`
--- and \`job_statuses\` are optional. The valid values for \`job_statuses\`
--- are case-insensitive: \`ENABLED\`, \`DISABLED\`, and \`DELETED\`.
+-- {\"project_id\":\"my_project_id\",
+-- \"job_names\":[\"jobid1\",\"jobid2\",...],
+-- \"job_statuses\":[\"status1\",\"status2\",...]}. Since \`job_names\` and
+-- \`job_statuses\` support multiple values, their values must be specified
+-- with array notation. \`project_id\` is required. \`job_names\` and
+-- \`job_statuses\` are optional. The valid values for \`job_statuses\` are
+-- case-insensitive: \`ENABLED\`, \`DISABLED\`, and \`DELETED\`.
 tjlFilter :: Lens' TransferJobsList (Maybe Text)
 tjlFilter
   = lens _tjlFilter (\ s a -> s{_tjlFilter = a})
@@ -175,6 +181,11 @@ tjlPageSize :: Lens' TransferJobsList (Maybe Int32)
 tjlPageSize
   = lens _tjlPageSize (\ s a -> s{_tjlPageSize = a}) .
       mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+tjlFields :: Lens' TransferJobsList (Maybe Text)
+tjlFields
+  = lens _tjlFields (\ s a -> s{_tjlFields = a})
 
 -- | JSONP
 tjlCallback :: Lens' TransferJobsList (Maybe Text)
@@ -194,6 +205,7 @@ instance GoogleRequest TransferJobsList where
               _tjlPageToken
               _tjlPageSize
               _tjlCallback
+              _tjlFields
               (Just AltJSON)
               storageTransferService
           where go

@@ -17,15 +17,15 @@
 --
 module Network.Google.SiteVerification.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types.Sum
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types.Sum
 
 -- | The site for which a verification token will be generated.
 --
 -- /See:/ 'siteVerificationWebResourceGettokenRequestSite' smart constructor.
 data SiteVerificationWebResourceGettokenRequestSite = SiteVerificationWebResourceGettokenRequestSite'
     { _svwrgrsIdentifier :: !(Maybe Text)
-    , _svwrgrsType       :: !(Maybe Text)
+    , _svwrgrsType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SiteVerificationWebResourceGettokenRequestSite' with the minimum fields required to make a request.
@@ -37,7 +37,7 @@ data SiteVerificationWebResourceGettokenRequestSite = SiteVerificationWebResourc
 -- * 'svwrgrsType'
 siteVerificationWebResourceGettokenRequestSite
     :: SiteVerificationWebResourceGettokenRequestSite
-siteVerificationWebResourceGettokenRequestSite =
+siteVerificationWebResourceGettokenRequestSite = 
     SiteVerificationWebResourceGettokenRequestSite'
     { _svwrgrsIdentifier = Nothing
     , _svwrgrsType = Nothing
@@ -78,7 +78,7 @@ instance ToJSON
 --
 -- /See:/ 'siteVerificationWebResourceGettokenResponse' smart constructor.
 data SiteVerificationWebResourceGettokenResponse = SiteVerificationWebResourceGettokenResponse'
-    { _svwrgrToken  :: !(Maybe Text)
+    { _svwrgrToken :: !(Maybe Text)
     , _svwrgrMethod :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -91,7 +91,7 @@ data SiteVerificationWebResourceGettokenResponse = SiteVerificationWebResourceGe
 -- * 'svwrgrMethod'
 siteVerificationWebResourceGettokenResponse
     :: SiteVerificationWebResourceGettokenResponse
-siteVerificationWebResourceGettokenResponse =
+siteVerificationWebResourceGettokenResponse = 
     SiteVerificationWebResourceGettokenResponse'
     { _svwrgrToken = Nothing
     , _svwrgrMethod = Nothing
@@ -143,7 +143,7 @@ newtype SiteVerificationWebResourceListResponse = SiteVerificationWebResourceLis
 -- * 'svwrlrItems'
 siteVerificationWebResourceListResponse
     :: SiteVerificationWebResourceListResponse
-siteVerificationWebResourceListResponse =
+siteVerificationWebResourceListResponse = 
     SiteVerificationWebResourceListResponse'
     { _svwrlrItems = Nothing
     }
@@ -174,7 +174,7 @@ instance ToJSON
 -- /See:/ 'siteVerificationWebResourceResourceSite' smart constructor.
 data SiteVerificationWebResourceResourceSite = SiteVerificationWebResourceResourceSite'
     { _svwrrsIdentifier :: !(Maybe Text)
-    , _svwrrsType       :: !(Maybe Text)
+    , _svwrrsType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SiteVerificationWebResourceResourceSite' with the minimum fields required to make a request.
@@ -186,7 +186,7 @@ data SiteVerificationWebResourceResourceSite = SiteVerificationWebResourceResour
 -- * 'svwrrsType'
 siteVerificationWebResourceResourceSite
     :: SiteVerificationWebResourceResourceSite
-siteVerificationWebResourceResourceSite =
+siteVerificationWebResourceResourceSite = 
     SiteVerificationWebResourceResourceSite'
     { _svwrrsIdentifier = Nothing
     , _svwrrsType = Nothing
@@ -225,7 +225,7 @@ instance ToJSON
 --
 -- /See:/ 'siteVerificationWebResourceGettokenRequest' smart constructor.
 data SiteVerificationWebResourceGettokenRequest = SiteVerificationWebResourceGettokenRequest'
-    { _svwrgrSite               :: !(Maybe SiteVerificationWebResourceGettokenRequestSite)
+    { _svwrgrSite :: !(Maybe SiteVerificationWebResourceGettokenRequestSite)
     , _svwrgrVerificationMethod :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -238,7 +238,7 @@ data SiteVerificationWebResourceGettokenRequest = SiteVerificationWebResourceGet
 -- * 'svwrgrVerificationMethod'
 siteVerificationWebResourceGettokenRequest
     :: SiteVerificationWebResourceGettokenRequest
-siteVerificationWebResourceGettokenRequest =
+siteVerificationWebResourceGettokenRequest = 
     SiteVerificationWebResourceGettokenRequest'
     { _svwrgrSite = Nothing
     , _svwrgrVerificationMethod = Nothing
@@ -280,8 +280,8 @@ instance ToJSON
 -- /See:/ 'siteVerificationWebResourceResource' smart constructor.
 data SiteVerificationWebResourceResource = SiteVerificationWebResourceResource'
     { _svwrrOwners :: !(Maybe [Text])
-    , _svwrrId     :: !(Maybe Text)
-    , _svwrrSite   :: !(Maybe SiteVerificationWebResourceResourceSite)
+    , _svwrrId :: !(Maybe Text)
+    , _svwrrSite :: !(Maybe SiteVerificationWebResourceResourceSite)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SiteVerificationWebResourceResource' with the minimum fields required to make a request.
@@ -295,7 +295,7 @@ data SiteVerificationWebResourceResource = SiteVerificationWebResourceResource'
 -- * 'svwrrSite'
 siteVerificationWebResourceResource
     :: SiteVerificationWebResourceResource
-siteVerificationWebResourceResource =
+siteVerificationWebResourceResource = 
     SiteVerificationWebResourceResource'
     { _svwrrOwners = Nothing
     , _svwrrId = Nothing

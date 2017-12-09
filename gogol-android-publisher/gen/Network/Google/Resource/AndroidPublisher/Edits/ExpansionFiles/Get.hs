@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Get
     , eefgAPKVersionCode
     , eefgExpansionFileType
     , eefgEditId
+    , eefgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.expansionfiles.get@ method which the
 -- 'EditsExpansionFilesGet' request conforms to.
@@ -57,16 +58,18 @@ type EditsExpansionFilesGetResource =
                        Capture "expansionFileType"
                          EditsExpansionFilesGetExpansionFileType
                          :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] ExpansionFile
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] ExpansionFile
 
 -- | Fetches the Expansion File configuration for the APK specified.
 --
 -- /See:/ 'editsExpansionFilesGet' smart constructor.
 data EditsExpansionFilesGet = EditsExpansionFilesGet'
-    { _eefgPackageName       :: !Text
-    , _eefgAPKVersionCode    :: !(Textual Int32)
+    { _eefgPackageName :: !Text
+    , _eefgAPKVersionCode :: !(Textual Int32)
     , _eefgExpansionFileType :: !EditsExpansionFilesGetExpansionFileType
-    , _eefgEditId            :: !Text
+    , _eefgEditId :: !Text
+    , _eefgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsExpansionFilesGet' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data EditsExpansionFilesGet = EditsExpansionFilesGet'
 -- * 'eefgExpansionFileType'
 --
 -- * 'eefgEditId'
+--
+-- * 'eefgFields'
 editsExpansionFilesGet
     :: Text -- ^ 'eefgPackageName'
     -> Int32 -- ^ 'eefgAPKVersionCode'
     -> EditsExpansionFilesGetExpansionFileType -- ^ 'eefgExpansionFileType'
     -> Text -- ^ 'eefgEditId'
     -> EditsExpansionFilesGet
-editsExpansionFilesGet pEefgPackageName_ pEefgAPKVersionCode_ pEefgExpansionFileType_ pEefgEditId_ =
+editsExpansionFilesGet pEefgPackageName_ pEefgAPKVersionCode_ pEefgExpansionFileType_ pEefgEditId_ = 
     EditsExpansionFilesGet'
     { _eefgPackageName = pEefgPackageName_
     , _eefgAPKVersionCode = _Coerce # pEefgAPKVersionCode_
     , _eefgExpansionFileType = pEefgExpansionFileType_
     , _eefgEditId = pEefgEditId_
+    , _eefgFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -119,6 +125,11 @@ eefgEditId :: Lens' EditsExpansionFilesGet Text
 eefgEditId
   = lens _eefgEditId (\ s a -> s{_eefgEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eefgFields :: Lens' EditsExpansionFilesGet (Maybe Text)
+eefgFields
+  = lens _eefgFields (\ s a -> s{_eefgFields = a})
+
 instance GoogleRequest EditsExpansionFilesGet where
         type Rs EditsExpansionFilesGet = ExpansionFile
         type Scopes EditsExpansionFilesGet =
@@ -126,6 +137,7 @@ instance GoogleRequest EditsExpansionFilesGet where
         requestClient EditsExpansionFilesGet'{..}
           = go _eefgPackageName _eefgEditId _eefgAPKVersionCode
               _eefgExpansionFileType
+              _eefgFields
               (Just AltJSON)
               androidPublisherService
           where go

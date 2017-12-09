@@ -43,11 +43,12 @@ module Network.Google.Resource.Genomics.VariantSets.Delete
     , vsdAccessToken
     , vsdUploadType
     , vsdBearerToken
+    , vsdFields
     , vsdCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variantsets.delete@ method which the
 -- 'VariantSetsDelete' request conforms to.
@@ -62,7 +63,8 @@ type VariantSetsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a variant set including all variants, call sets, and calls
 -- within. This is not reversible. For the definitions of variant sets and
@@ -71,14 +73,15 @@ type VariantSetsDeleteResource =
 --
 -- /See:/ 'variantSetsDelete' smart constructor.
 data VariantSetsDelete = VariantSetsDelete'
-    { _vsdXgafv          :: !(Maybe Xgafv)
+    { _vsdXgafv :: !(Maybe Xgafv)
     , _vsdUploadProtocol :: !(Maybe Text)
-    , _vsdPp             :: !Bool
-    , _vsdVariantSetId   :: !Text
-    , _vsdAccessToken    :: !(Maybe Text)
-    , _vsdUploadType     :: !(Maybe Text)
-    , _vsdBearerToken    :: !(Maybe Text)
-    , _vsdCallback       :: !(Maybe Text)
+    , _vsdPp :: !Bool
+    , _vsdVariantSetId :: !Text
+    , _vsdAccessToken :: !(Maybe Text)
+    , _vsdUploadType :: !(Maybe Text)
+    , _vsdBearerToken :: !(Maybe Text)
+    , _vsdFields :: !(Maybe Text)
+    , _vsdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantSetsDelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data VariantSetsDelete = VariantSetsDelete'
 --
 -- * 'vsdBearerToken'
 --
+-- * 'vsdFields'
+--
 -- * 'vsdCallback'
 variantSetsDelete
     :: Text -- ^ 'vsdVariantSetId'
     -> VariantSetsDelete
-variantSetsDelete pVsdVariantSetId_ =
+variantSetsDelete pVsdVariantSetId_ = 
     VariantSetsDelete'
     { _vsdXgafv = Nothing
     , _vsdUploadProtocol = Nothing
@@ -112,6 +117,7 @@ variantSetsDelete pVsdVariantSetId_ =
     , _vsdAccessToken = Nothing
     , _vsdUploadType = Nothing
     , _vsdBearerToken = Nothing
+    , _vsdFields = Nothing
     , _vsdCallback = Nothing
     }
 
@@ -153,6 +159,11 @@ vsdBearerToken
   = lens _vsdBearerToken
       (\ s a -> s{_vsdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vsdFields :: Lens' VariantSetsDelete (Maybe Text)
+vsdFields
+  = lens _vsdFields (\ s a -> s{_vsdFields = a})
+
 -- | JSONP
 vsdCallback :: Lens' VariantSetsDelete (Maybe Text)
 vsdCallback
@@ -170,6 +181,7 @@ instance GoogleRequest VariantSetsDelete where
               _vsdUploadType
               _vsdBearerToken
               _vsdCallback
+              _vsdFields
               (Just AltJSON)
               genomicsService
           where go

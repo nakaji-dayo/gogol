@@ -34,10 +34,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.Get
 
     -- * Request Lenses
     , eEnterpriseId
+    , eFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.get@ method which the
 -- 'EnterprisesGet' request conforms to.
@@ -46,13 +47,15 @@ type EnterprisesGetResource =
        "v1" :>
          "enterprises" :>
            Capture "enterpriseId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Enterprise
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Enterprise
 
 -- | Retrieves the name and domain of an enterprise.
 --
 -- /See:/ 'enterprisesGet' smart constructor.
-newtype EnterprisesGet = EnterprisesGet'
-    { _eEnterpriseId :: Text
+data EnterprisesGet = EnterprisesGet'
+    { _eEnterpriseId :: !Text
+    , _eFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype EnterprisesGet = EnterprisesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'eEnterpriseId'
+--
+-- * 'eFields'
 enterprisesGet
     :: Text -- ^ 'eEnterpriseId'
     -> EnterprisesGet
-enterprisesGet pEEnterpriseId_ =
+enterprisesGet pEEnterpriseId_ = 
     EnterprisesGet'
     { _eEnterpriseId = pEEnterpriseId_
+    , _eFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -74,12 +80,16 @@ eEnterpriseId
   = lens _eEnterpriseId
       (\ s a -> s{_eEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eFields :: Lens' EnterprisesGet (Maybe Text)
+eFields = lens _eFields (\ s a -> s{_eFields = a})
+
 instance GoogleRequest EnterprisesGet where
         type Rs EnterprisesGet = Enterprise
         type Scopes EnterprisesGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesGet'{..}
-          = go _eEnterpriseId (Just AltJSON)
+          = go _eEnterpriseId _eFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy EnterprisesGetResource)

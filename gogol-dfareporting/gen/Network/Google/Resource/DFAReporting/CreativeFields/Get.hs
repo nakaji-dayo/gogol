@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.CreativeFields.Get
     -- * Request Lenses
     , cfgProFileId
     , cfgId
+    , cfgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFields.get@ method which the
 -- 'CreativeFieldsGet' request conforms to.
 type CreativeFieldsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] CreativeField
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] CreativeField
 
 -- | Gets one creative field by ID.
 --
 -- /See:/ 'creativeFieldsGet' smart constructor.
 data CreativeFieldsGet = CreativeFieldsGet'
     { _cfgProFileId :: !(Textual Int64)
-    , _cfgId        :: !(Textual Int64)
+    , _cfgId :: !(Textual Int64)
+    , _cfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativeFieldsGet = CreativeFieldsGet'
 -- * 'cfgProFileId'
 --
 -- * 'cfgId'
+--
+-- * 'cfgFields'
 creativeFieldsGet
     :: Int64 -- ^ 'cfgProFileId'
     -> Int64 -- ^ 'cfgId'
     -> CreativeFieldsGet
-creativeFieldsGet pCfgProFileId_ pCfgId_ =
+creativeFieldsGet pCfgProFileId_ pCfgId_ = 
     CreativeFieldsGet'
     { _cfgProFileId = _Coerce # pCfgProFileId_
     , _cfgId = _Coerce # pCfgId_
+    , _cfgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ cfgId :: Lens' CreativeFieldsGet Int64
 cfgId
   = lens _cfgId (\ s a -> s{_cfgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfgFields :: Lens' CreativeFieldsGet (Maybe Text)
+cfgFields
+  = lens _cfgFields (\ s a -> s{_cfgFields = a})
+
 instance GoogleRequest CreativeFieldsGet where
         type Rs CreativeFieldsGet = CreativeField
         type Scopes CreativeFieldsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldsGet'{..}
-          = go _cfgProFileId _cfgId (Just AltJSON)
+          = go _cfgProFileId _cfgId _cfgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

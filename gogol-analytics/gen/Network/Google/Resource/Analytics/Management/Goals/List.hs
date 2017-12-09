@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Goals.List
     , mglAccountId
     , mglStartIndex
     , mglMaxResults
+    , mglFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.goals.list@ method which the
 -- 'ManagementGoalsList' request conforms to.
@@ -58,17 +59,19 @@ type ManagementGoalsListResource =
                        "goals" :>
                          QueryParam "start-index" (Textual Int32) :>
                            QueryParam "max-results" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Goals
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Goals
 
 -- | Lists goals to which the user has access.
 --
 -- /See:/ 'managementGoalsList' smart constructor.
 data ManagementGoalsList = ManagementGoalsList'
     { _mglWebPropertyId :: !Text
-    , _mglProFileId     :: !Text
-    , _mglAccountId     :: !Text
-    , _mglStartIndex    :: !(Maybe (Textual Int32))
-    , _mglMaxResults    :: !(Maybe (Textual Int32))
+    , _mglProFileId :: !Text
+    , _mglAccountId :: !Text
+    , _mglStartIndex :: !(Maybe (Textual Int32))
+    , _mglMaxResults :: !(Maybe (Textual Int32))
+    , _mglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementGoalsList' with the minimum fields required to make a request.
@@ -84,18 +87,21 @@ data ManagementGoalsList = ManagementGoalsList'
 -- * 'mglStartIndex'
 --
 -- * 'mglMaxResults'
+--
+-- * 'mglFields'
 managementGoalsList
     :: Text -- ^ 'mglWebPropertyId'
     -> Text -- ^ 'mglProFileId'
     -> Text -- ^ 'mglAccountId'
     -> ManagementGoalsList
-managementGoalsList pMglWebPropertyId_ pMglProFileId_ pMglAccountId_ =
+managementGoalsList pMglWebPropertyId_ pMglProFileId_ pMglAccountId_ = 
     ManagementGoalsList'
     { _mglWebPropertyId = pMglWebPropertyId_
     , _mglProFileId = pMglProFileId_
     , _mglAccountId = pMglAccountId_
     , _mglStartIndex = Nothing
     , _mglMaxResults = Nothing
+    , _mglFields = Nothing
     }
 
 -- | Web property ID to retrieve goals for. Can either be a specific web
@@ -134,6 +140,11 @@ mglMaxResults
       (\ s a -> s{_mglMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mglFields :: Lens' ManagementGoalsList (Maybe Text)
+mglFields
+  = lens _mglFields (\ s a -> s{_mglFields = a})
+
 instance GoogleRequest ManagementGoalsList where
         type Rs ManagementGoalsList = Goals
         type Scopes ManagementGoalsList =
@@ -144,6 +155,7 @@ instance GoogleRequest ManagementGoalsList where
           = go _mglAccountId _mglWebPropertyId _mglProFileId
               _mglStartIndex
               _mglMaxResults
+              _mglFields
               (Just AltJSON)
               analyticsService
           where go

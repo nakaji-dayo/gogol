@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Instances.ResetSSLConfig
 
     -- * Request Lenses
     , irscProject
+    , irscFields
     , irscInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.resetSslConfig@ method which the
 -- 'InstancesResetSSLConfig' request conforms to.
@@ -53,7 +54,8 @@ type InstancesResetSSLConfigResource =
              "instances" :>
                Capture "instance" Text :>
                  "resetSslConfig" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Deletes all client certificates and generates a new server SSL
 -- certificate for the instance. The changes will not take effect until the
@@ -62,7 +64,8 @@ type InstancesResetSSLConfigResource =
 --
 -- /See:/ 'instancesResetSSLConfig' smart constructor.
 data InstancesResetSSLConfig = InstancesResetSSLConfig'
-    { _irscProject  :: !Text
+    { _irscProject :: !Text
+    , _irscFields :: !(Maybe Text)
     , _irscInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,14 +75,17 @@ data InstancesResetSSLConfig = InstancesResetSSLConfig'
 --
 -- * 'irscProject'
 --
+-- * 'irscFields'
+--
 -- * 'irscInstance'
 instancesResetSSLConfig
     :: Text -- ^ 'irscProject'
     -> Text -- ^ 'irscInstance'
     -> InstancesResetSSLConfig
-instancesResetSSLConfig pIrscProject_ pIrscInstance_ =
+instancesResetSSLConfig pIrscProject_ pIrscInstance_ = 
     InstancesResetSSLConfig'
     { _irscProject = pIrscProject_
+    , _irscFields = Nothing
     , _irscInstance = pIrscInstance_
     }
 
@@ -87,6 +93,11 @@ instancesResetSSLConfig pIrscProject_ pIrscInstance_ =
 irscProject :: Lens' InstancesResetSSLConfig Text
 irscProject
   = lens _irscProject (\ s a -> s{_irscProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+irscFields :: Lens' InstancesResetSSLConfig (Maybe Text)
+irscFields
+  = lens _irscFields (\ s a -> s{_irscFields = a})
 
 -- | Cloud SQL instance ID. This does not include the project ID.
 irscInstance :: Lens' InstancesResetSSLConfig Text
@@ -99,7 +110,8 @@ instance GoogleRequest InstancesResetSSLConfig where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesResetSSLConfig'{..}
-          = go _irscProject _irscInstance (Just AltJSON)
+          = go _irscProject _irscInstance _irscFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

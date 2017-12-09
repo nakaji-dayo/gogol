@@ -37,10 +37,11 @@ module Network.Google.Resource.GamesManagement.Applications.ListHidden
     , alhApplicationId
     , alhPageToken
     , alhMaxResults
+    , alhFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.applications.listHidden@ method which the
 -- 'ApplicationsListHidden' request conforms to.
@@ -53,8 +54,9 @@ type ApplicationsListHiddenResource =
                "hidden" :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] HiddenPlayerList
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] HiddenPlayerList
 
 -- | Get the list of players hidden from the given application. This method
 -- is only available to user accounts for your developer console.
@@ -62,8 +64,9 @@ type ApplicationsListHiddenResource =
 -- /See:/ 'applicationsListHidden' smart constructor.
 data ApplicationsListHidden = ApplicationsListHidden'
     { _alhApplicationId :: !Text
-    , _alhPageToken     :: !(Maybe Text)
-    , _alhMaxResults    :: !(Maybe (Textual Int32))
+    , _alhPageToken :: !(Maybe Text)
+    , _alhMaxResults :: !(Maybe (Textual Int32))
+    , _alhFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsListHidden' with the minimum fields required to make a request.
@@ -75,14 +78,17 @@ data ApplicationsListHidden = ApplicationsListHidden'
 -- * 'alhPageToken'
 --
 -- * 'alhMaxResults'
+--
+-- * 'alhFields'
 applicationsListHidden
     :: Text -- ^ 'alhApplicationId'
     -> ApplicationsListHidden
-applicationsListHidden pAlhApplicationId_ =
+applicationsListHidden pAlhApplicationId_ = 
     ApplicationsListHidden'
     { _alhApplicationId = pAlhApplicationId_
     , _alhPageToken = Nothing
     , _alhMaxResults = Nothing
+    , _alhFields = Nothing
     }
 
 -- | The application ID from the Google Play developer console.
@@ -105,6 +111,11 @@ alhMaxResults
       (\ s a -> s{_alhMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alhFields :: Lens' ApplicationsListHidden (Maybe Text)
+alhFields
+  = lens _alhFields (\ s a -> s{_alhFields = a})
+
 instance GoogleRequest ApplicationsListHidden where
         type Rs ApplicationsListHidden = HiddenPlayerList
         type Scopes ApplicationsListHidden =
@@ -112,6 +123,7 @@ instance GoogleRequest ApplicationsListHidden where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient ApplicationsListHidden'{..}
           = go _alhApplicationId _alhPageToken _alhMaxResults
+              _alhFields
               (Just AltJSON)
               gamesManagementService
           where go

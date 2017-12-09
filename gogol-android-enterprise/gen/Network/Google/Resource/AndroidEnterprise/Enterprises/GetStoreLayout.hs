@@ -21,8 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Returns the store layout for the enterprise. If the store layout has not
--- been set, or if the store layout has no homepageId set, returns a
--- NOT_FOUND error.
+-- been set, returns \"basic\" as the store layout type and no homepage.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.enterprises.getStoreLayout@.
 module Network.Google.Resource.AndroidEnterprise.Enterprises.GetStoreLayout
@@ -36,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.GetStoreLayout
 
     -- * Request Lenses
     , egslEnterpriseId
+    , egslFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.getStoreLayout@ method which the
 -- 'EnterprisesGetStoreLayout' request conforms to.
@@ -49,15 +49,16 @@ type EnterprisesGetStoreLayoutResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "storeLayout" :>
-               QueryParam "alt" AltJSON :> Get '[JSON] StoreLayout
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] StoreLayout
 
 -- | Returns the store layout for the enterprise. If the store layout has not
--- been set, or if the store layout has no homepageId set, returns a
--- NOT_FOUND error.
+-- been set, returns \"basic\" as the store layout type and no homepage.
 --
 -- /See:/ 'enterprisesGetStoreLayout' smart constructor.
-newtype EnterprisesGetStoreLayout = EnterprisesGetStoreLayout'
-    { _egslEnterpriseId :: Text
+data EnterprisesGetStoreLayout = EnterprisesGetStoreLayout'
+    { _egslEnterpriseId :: !Text
+    , _egslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesGetStoreLayout' with the minimum fields required to make a request.
@@ -65,12 +66,15 @@ newtype EnterprisesGetStoreLayout = EnterprisesGetStoreLayout'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'egslEnterpriseId'
+--
+-- * 'egslFields'
 enterprisesGetStoreLayout
     :: Text -- ^ 'egslEnterpriseId'
     -> EnterprisesGetStoreLayout
-enterprisesGetStoreLayout pEgslEnterpriseId_ =
+enterprisesGetStoreLayout pEgslEnterpriseId_ = 
     EnterprisesGetStoreLayout'
     { _egslEnterpriseId = pEgslEnterpriseId_
+    , _egslFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -79,13 +83,18 @@ egslEnterpriseId
   = lens _egslEnterpriseId
       (\ s a -> s{_egslEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egslFields :: Lens' EnterprisesGetStoreLayout (Maybe Text)
+egslFields
+  = lens _egslFields (\ s a -> s{_egslFields = a})
+
 instance GoogleRequest EnterprisesGetStoreLayout
          where
         type Rs EnterprisesGetStoreLayout = StoreLayout
         type Scopes EnterprisesGetStoreLayout =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesGetStoreLayout'{..}
-          = go _egslEnterpriseId (Just AltJSON)
+          = go _egslEnterpriseId _egslFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

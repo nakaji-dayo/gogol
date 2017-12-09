@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdUnits.List
     , aaulAccountId
     , aaulPageToken
     , aaulMaxResults
+    , aaulFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adunits.list@ method which the
 -- 'AccountsAdUnitsList' request conforms to.
@@ -56,17 +57,19 @@ type AccountsAdUnitsListResource =
                    QueryParam "includeInactive" Bool :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] AdUnits
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] AdUnits
 
 -- | List all ad units in the specified publisher\'s AdSense account.
 --
 -- /See:/ 'accountsAdUnitsList' smart constructor.
 data AccountsAdUnitsList = AccountsAdUnitsList'
     { _aaulIncludeInactive :: !(Maybe Bool)
-    , _aaulAdClientId      :: !Text
-    , _aaulAccountId       :: !Text
-    , _aaulPageToken       :: !(Maybe Text)
-    , _aaulMaxResults      :: !(Maybe (Textual Word32))
+    , _aaulAdClientId :: !Text
+    , _aaulAccountId :: !Text
+    , _aaulPageToken :: !(Maybe Text)
+    , _aaulMaxResults :: !(Maybe (Textual Word32))
+    , _aaulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsList' with the minimum fields required to make a request.
@@ -82,17 +85,20 @@ data AccountsAdUnitsList = AccountsAdUnitsList'
 -- * 'aaulPageToken'
 --
 -- * 'aaulMaxResults'
+--
+-- * 'aaulFields'
 accountsAdUnitsList
     :: Text -- ^ 'aaulAdClientId'
     -> Text -- ^ 'aaulAccountId'
     -> AccountsAdUnitsList
-accountsAdUnitsList pAaulAdClientId_ pAaulAccountId_ =
+accountsAdUnitsList pAaulAdClientId_ pAaulAccountId_ = 
     AccountsAdUnitsList'
     { _aaulIncludeInactive = Nothing
     , _aaulAdClientId = pAaulAdClientId_
     , _aaulAccountId = pAaulAccountId_
     , _aaulPageToken = Nothing
     , _aaulMaxResults = Nothing
+    , _aaulFields = Nothing
     }
 
 -- | Whether to include inactive ad units. Default: true.
@@ -129,6 +135,11 @@ aaulMaxResults
       (\ s a -> s{_aaulMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aaulFields :: Lens' AccountsAdUnitsList (Maybe Text)
+aaulFields
+  = lens _aaulFields (\ s a -> s{_aaulFields = a})
+
 instance GoogleRequest AccountsAdUnitsList where
         type Rs AccountsAdUnitsList = AdUnits
         type Scopes AccountsAdUnitsList =
@@ -138,6 +149,7 @@ instance GoogleRequest AccountsAdUnitsList where
               _aaulIncludeInactive
               _aaulPageToken
               _aaulMaxResults
+              _aaulFields
               (Just AltJSON)
               adSenseHostService
           where go

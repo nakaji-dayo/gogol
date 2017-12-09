@@ -35,10 +35,11 @@ module Network.Google.Resource.Books.MyLibrary.Bookshelves.ClearVolumes
     -- * Request Lenses
     , mlbcvShelf
     , mlbcvSource
+    , mlbcvFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.bookshelves.clearVolumes@ method which the
 -- 'MyLibraryBookshelvesClearVolumes' request conforms to.
@@ -50,14 +51,16 @@ type MyLibraryBookshelvesClearVolumesResource =
              Capture "shelf" Text :>
                "clearVolumes" :>
                  QueryParam "source" Text :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Clears all volumes from a bookshelf.
 --
 -- /See:/ 'myLibraryBookshelvesClearVolumes' smart constructor.
 data MyLibraryBookshelvesClearVolumes = MyLibraryBookshelvesClearVolumes'
-    { _mlbcvShelf  :: !Text
+    { _mlbcvShelf :: !Text
     , _mlbcvSource :: !(Maybe Text)
+    , _mlbcvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryBookshelvesClearVolumes' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data MyLibraryBookshelvesClearVolumes = MyLibraryBookshelvesClearVolumes'
 -- * 'mlbcvShelf'
 --
 -- * 'mlbcvSource'
+--
+-- * 'mlbcvFields'
 myLibraryBookshelvesClearVolumes
     :: Text -- ^ 'mlbcvShelf'
     -> MyLibraryBookshelvesClearVolumes
-myLibraryBookshelvesClearVolumes pMlbcvShelf_ =
+myLibraryBookshelvesClearVolumes pMlbcvShelf_ = 
     MyLibraryBookshelvesClearVolumes'
     { _mlbcvShelf = pMlbcvShelf_
     , _mlbcvSource = Nothing
+    , _mlbcvFields = Nothing
     }
 
 -- | ID of bookshelf from which to remove a volume.
@@ -86,13 +92,19 @@ mlbcvSource :: Lens' MyLibraryBookshelvesClearVolumes (Maybe Text)
 mlbcvSource
   = lens _mlbcvSource (\ s a -> s{_mlbcvSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlbcvFields :: Lens' MyLibraryBookshelvesClearVolumes (Maybe Text)
+mlbcvFields
+  = lens _mlbcvFields (\ s a -> s{_mlbcvFields = a})
+
 instance GoogleRequest
          MyLibraryBookshelvesClearVolumes where
         type Rs MyLibraryBookshelvesClearVolumes = ()
         type Scopes MyLibraryBookshelvesClearVolumes =
              '["https://www.googleapis.com/auth/books"]
         requestClient MyLibraryBookshelvesClearVolumes'{..}
-          = go _mlbcvShelf _mlbcvSource (Just AltJSON)
+          = go _mlbcvShelf _mlbcvSource _mlbcvFields
+              (Just AltJSON)
               booksService
           where go
                   = buildClient

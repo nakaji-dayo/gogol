@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Gets the statuses of multiple products in a single request. This method
--- can only be called for non-multi-client accounts.
+-- Gets the statuses of multiple products in a single request.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.productstatuses.custombatch@.
 module Network.Google.Resource.Content.Productstatuses.Custombatch
@@ -35,10 +34,12 @@ module Network.Google.Resource.Content.Productstatuses.Custombatch
 
     -- * Request Lenses
     , pPayload
+    , pIncludeAttributes
+    , pFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.productstatuses.custombatch@ method which the
 -- 'ProductstatusesCustombatch' request conforms to.
@@ -47,16 +48,19 @@ type ProductstatusesCustombatchResource =
        "v2" :>
          "productstatuses" :>
            "batch" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] ProductstatusesCustomBatchRequest :>
-                 Post '[JSON] ProductstatusesCustomBatchResponse
+             QueryParam "includeAttributes" Bool :>
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ProductstatusesCustomBatchRequest :>
+                     Post '[JSON] ProductstatusesCustomBatchResponse
 
--- | Gets the statuses of multiple products in a single request. This method
--- can only be called for non-multi-client accounts.
+-- | Gets the statuses of multiple products in a single request.
 --
 -- /See:/ 'productstatusesCustombatch' smart constructor.
-newtype ProductstatusesCustombatch = ProductstatusesCustombatch'
-    { _pPayload :: ProductstatusesCustomBatchRequest
+data ProductstatusesCustombatch = ProductstatusesCustombatch'
+    { _pPayload :: !ProductstatusesCustomBatchRequest
+    , _pIncludeAttributes :: !(Maybe Bool)
+    , _pFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductstatusesCustombatch' with the minimum fields required to make a request.
@@ -64,17 +68,34 @@ newtype ProductstatusesCustombatch = ProductstatusesCustombatch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pPayload'
+--
+-- * 'pIncludeAttributes'
+--
+-- * 'pFields'
 productstatusesCustombatch
     :: ProductstatusesCustomBatchRequest -- ^ 'pPayload'
     -> ProductstatusesCustombatch
-productstatusesCustombatch pPPayload_ =
+productstatusesCustombatch pPPayload_ = 
     ProductstatusesCustombatch'
     { _pPayload = pPPayload_
+    , _pIncludeAttributes = Nothing
+    , _pFields = Nothing
     }
 
 -- | Multipart request metadata.
 pPayload :: Lens' ProductstatusesCustombatch ProductstatusesCustomBatchRequest
 pPayload = lens _pPayload (\ s a -> s{_pPayload = a})
+
+-- | Flag to include full product data in the results of this request. The
+-- default value is false.
+pIncludeAttributes :: Lens' ProductstatusesCustombatch (Maybe Bool)
+pIncludeAttributes
+  = lens _pIncludeAttributes
+      (\ s a -> s{_pIncludeAttributes = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' ProductstatusesCustombatch (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
 
 instance GoogleRequest ProductstatusesCustombatch
          where
@@ -83,7 +104,9 @@ instance GoogleRequest ProductstatusesCustombatch
         type Scopes ProductstatusesCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient ProductstatusesCustombatch'{..}
-          = go (Just AltJSON) _pPayload shoppingContentService
+          = go _pIncludeAttributes _pFields (Just AltJSON)
+              _pPayload
+              shoppingContentService
           where go
                   = buildClient
                       (Proxy :: Proxy ProductstatusesCustombatchResource)

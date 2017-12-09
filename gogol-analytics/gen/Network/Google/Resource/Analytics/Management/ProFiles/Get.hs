@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.Get
     , mpfgWebPropertyId
     , mpfgProFileId
     , mpfgAccountId
+    , mpfgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.get@ method which the
 -- 'ManagementProFilesGet' request conforms to.
@@ -53,15 +54,17 @@ type ManagementProFilesGetResource =
                  Capture "webPropertyId" Text :>
                    "profiles" :>
                      Capture "profileId" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] ProFile
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] ProFile
 
 -- | Gets a view (profile) to which the user has access.
 --
 -- /See:/ 'managementProFilesGet' smart constructor.
 data ManagementProFilesGet = ManagementProFilesGet'
     { _mpfgWebPropertyId :: !Text
-    , _mpfgProFileId     :: !Text
-    , _mpfgAccountId     :: !Text
+    , _mpfgProFileId :: !Text
+    , _mpfgAccountId :: !Text
+    , _mpfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementProFilesGet = ManagementProFilesGet'
 -- * 'mpfgProFileId'
 --
 -- * 'mpfgAccountId'
+--
+-- * 'mpfgFields'
 managementProFilesGet
     :: Text -- ^ 'mpfgWebPropertyId'
     -> Text -- ^ 'mpfgProFileId'
     -> Text -- ^ 'mpfgAccountId'
     -> ManagementProFilesGet
-managementProFilesGet pMpfgWebPropertyId_ pMpfgProFileId_ pMpfgAccountId_ =
+managementProFilesGet pMpfgWebPropertyId_ pMpfgProFileId_ pMpfgAccountId_ = 
     ManagementProFilesGet'
     { _mpfgWebPropertyId = pMpfgWebPropertyId_
     , _mpfgProFileId = pMpfgProFileId_
     , _mpfgAccountId = pMpfgAccountId_
+    , _mpfgFields = Nothing
     }
 
 -- | Web property ID to retrieve the view (profile) for.
@@ -103,6 +109,11 @@ mpfgAccountId
   = lens _mpfgAccountId
       (\ s a -> s{_mpfgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfgFields :: Lens' ManagementProFilesGet (Maybe Text)
+mpfgFields
+  = lens _mpfgFields (\ s a -> s{_mpfgFields = a})
+
 instance GoogleRequest ManagementProFilesGet where
         type Rs ManagementProFilesGet = ProFile
         type Scopes ManagementProFilesGet =
@@ -110,6 +121,7 @@ instance GoogleRequest ManagementProFilesGet where
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementProFilesGet'{..}
           = go _mpfgAccountId _mpfgWebPropertyId _mpfgProFileId
+              _mpfgFields
               (Just AltJSON)
               analyticsService
           where go

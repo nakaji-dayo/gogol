@@ -47,11 +47,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.Messages.List
     , pljmlPageToken
     , pljmlProjectId
     , pljmlPageSize
+    , pljmlFields
     , pljmlCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.messages.list@ method which the
 -- 'ProjectsLocationsJobsMessagesList' request conforms to.
@@ -64,42 +65,44 @@ type ProjectsLocationsJobsMessagesListResource =
                "jobs" :>
                  Capture "jobId" Text :>
                    "messages" :>
-                     QueryParam "$.xgafv" Text :>
+                     QueryParam "$.xgafv" Xgafv :>
                        QueryParam "upload_protocol" Text :>
-                         QueryParam "startTime" Text :>
+                         QueryParam "startTime" DateTime' :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
-                                   QueryParam "endTime" Text :>
+                                   QueryParam "endTime" DateTime' :>
                                      QueryParam "minimumImportance" Text :>
                                        QueryParam "pageToken" Text :>
                                          QueryParam "pageSize" (Textual Int32)
                                            :>
                                            QueryParam "callback" Text :>
-                                             QueryParam "alt" AltJSON :>
-                                               Get '[JSON]
-                                                 ListJobMessagesResponse
+                                             QueryParam "fields" Text :>
+                                               QueryParam "alt" AltJSON :>
+                                                 Get '[JSON]
+                                                   ListJobMessagesResponse
 
 -- | Request the job status.
 --
 -- /See:/ 'projectsLocationsJobsMessagesList' smart constructor.
 data ProjectsLocationsJobsMessagesList = ProjectsLocationsJobsMessagesList'
-    { _pljmlXgafv             :: !(Maybe Text)
-    , _pljmlJobId             :: !Text
-    , _pljmlUploadProtocol    :: !(Maybe Text)
-    , _pljmlLocation          :: !Text
-    , _pljmlStartTime         :: !(Maybe Text)
-    , _pljmlPp                :: !Bool
-    , _pljmlAccessToken       :: !(Maybe Text)
-    , _pljmlUploadType        :: !(Maybe Text)
-    , _pljmlBearerToken       :: !(Maybe Text)
-    , _pljmlEndTime           :: !(Maybe Text)
+    { _pljmlXgafv :: !(Maybe Xgafv)
+    , _pljmlJobId :: !Text
+    , _pljmlUploadProtocol :: !(Maybe Text)
+    , _pljmlLocation :: !Text
+    , _pljmlStartTime :: !(Maybe DateTime')
+    , _pljmlPp :: !Bool
+    , _pljmlAccessToken :: !(Maybe Text)
+    , _pljmlUploadType :: !(Maybe Text)
+    , _pljmlBearerToken :: !(Maybe Text)
+    , _pljmlEndTime :: !(Maybe DateTime')
     , _pljmlMinimumImportance :: !(Maybe Text)
-    , _pljmlPageToken         :: !(Maybe Text)
-    , _pljmlProjectId         :: !Text
-    , _pljmlPageSize          :: !(Maybe (Textual Int32))
-    , _pljmlCallback          :: !(Maybe Text)
+    , _pljmlPageToken :: !(Maybe Text)
+    , _pljmlProjectId :: !Text
+    , _pljmlPageSize :: !(Maybe (Textual Int32))
+    , _pljmlFields :: !(Maybe Text)
+    , _pljmlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsMessagesList' with the minimum fields required to make a request.
@@ -134,13 +137,15 @@ data ProjectsLocationsJobsMessagesList = ProjectsLocationsJobsMessagesList'
 --
 -- * 'pljmlPageSize'
 --
+-- * 'pljmlFields'
+--
 -- * 'pljmlCallback'
 projectsLocationsJobsMessagesList
     :: Text -- ^ 'pljmlJobId'
     -> Text -- ^ 'pljmlLocation'
     -> Text -- ^ 'pljmlProjectId'
     -> ProjectsLocationsJobsMessagesList
-projectsLocationsJobsMessagesList pPljmlJobId_ pPljmlLocation_ pPljmlProjectId_ =
+projectsLocationsJobsMessagesList pPljmlJobId_ pPljmlLocation_ pPljmlProjectId_ = 
     ProjectsLocationsJobsMessagesList'
     { _pljmlXgafv = Nothing
     , _pljmlJobId = pPljmlJobId_
@@ -156,11 +161,12 @@ projectsLocationsJobsMessagesList pPljmlJobId_ pPljmlLocation_ pPljmlProjectId_ 
     , _pljmlPageToken = Nothing
     , _pljmlProjectId = pPljmlProjectId_
     , _pljmlPageSize = Nothing
+    , _pljmlFields = Nothing
     , _pljmlCallback = Nothing
     }
 
 -- | V1 error format.
-pljmlXgafv :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
+pljmlXgafv :: Lens' ProjectsLocationsJobsMessagesList (Maybe Xgafv)
 pljmlXgafv
   = lens _pljmlXgafv (\ s a -> s{_pljmlXgafv = a})
 
@@ -183,10 +189,11 @@ pljmlLocation
 
 -- | If specified, return only messages with timestamps >= start_time. The
 -- default is the job creation time (i.e. beginning of messages).
-pljmlStartTime :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
+pljmlStartTime :: Lens' ProjectsLocationsJobsMessagesList (Maybe UTCTime)
 pljmlStartTime
   = lens _pljmlStartTime
       (\ s a -> s{_pljmlStartTime = a})
+      . mapping _DateTime
 
 -- | Pretty-print response.
 pljmlPp :: Lens' ProjectsLocationsJobsMessagesList Bool
@@ -212,9 +219,10 @@ pljmlBearerToken
 
 -- | Return only messages with timestamps \< end_time. The default is now
 -- (i.e. return up to the latest messages available).
-pljmlEndTime :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
+pljmlEndTime :: Lens' ProjectsLocationsJobsMessagesList (Maybe UTCTime)
 pljmlEndTime
   = lens _pljmlEndTime (\ s a -> s{_pljmlEndTime = a})
+      . mapping _DateTime
 
 -- | Filter to only get messages with importance >= level
 pljmlMinimumImportance :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
@@ -244,6 +252,11 @@ pljmlPageSize
       (\ s a -> s{_pljmlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pljmlFields :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
+pljmlFields
+  = lens _pljmlFields (\ s a -> s{_pljmlFields = a})
+
 -- | JSONP
 pljmlCallback :: Lens' ProjectsLocationsJobsMessagesList (Maybe Text)
 pljmlCallback
@@ -256,6 +269,8 @@ instance GoogleRequest
              ListJobMessagesResponse
         type Scopes ProjectsLocationsJobsMessagesList =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsLocationsJobsMessagesList'{..}
           = go _pljmlProjectId _pljmlLocation _pljmlJobId
@@ -271,6 +286,7 @@ instance GoogleRequest
               _pljmlPageToken
               _pljmlPageSize
               _pljmlCallback
+              _pljmlFields
               (Just AltJSON)
               dataflowService
           where go

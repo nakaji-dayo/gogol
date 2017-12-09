@@ -42,16 +42,17 @@ module Network.Google.Resource.DFAReporting.TargetingTemplates.List
     , ttlPageToken
     , ttlSortField
     , ttlMaxResults
+    , ttlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.targetingTemplates.list@ method which the
 -- 'TargetingTemplatesList' request conforms to.
 type TargetingTemplatesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "targetingTemplates" :>
@@ -66,8 +67,9 @@ type TargetingTemplatesListResource =
                            TargetingTemplatesListSortField
                            :>
                            QueryParam "maxResults" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] TargetingTemplatesListResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] TargetingTemplatesListResponse
 
 -- | Retrieves a list of targeting templates, optionally filtered. This
 -- method supports paging.
@@ -76,12 +78,13 @@ type TargetingTemplatesListResource =
 data TargetingTemplatesList = TargetingTemplatesList'
     { _ttlAdvertiserId :: !(Maybe (Textual Int64))
     , _ttlSearchString :: !(Maybe Text)
-    , _ttlIds          :: !(Maybe [Textual Int64])
-    , _ttlProFileId    :: !(Textual Int64)
-    , _ttlSortOrder    :: !(Maybe TargetingTemplatesListSortOrder)
-    , _ttlPageToken    :: !(Maybe Text)
-    , _ttlSortField    :: !(Maybe TargetingTemplatesListSortField)
-    , _ttlMaxResults   :: !(Maybe (Textual Int32))
+    , _ttlIds :: !(Maybe [Textual Int64])
+    , _ttlProFileId :: !(Textual Int64)
+    , _ttlSortOrder :: !TargetingTemplatesListSortOrder
+    , _ttlPageToken :: !(Maybe Text)
+    , _ttlSortField :: !TargetingTemplatesListSortField
+    , _ttlMaxResults :: !(Textual Int32)
+    , _ttlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingTemplatesList' with the minimum fields required to make a request.
@@ -103,19 +106,22 @@ data TargetingTemplatesList = TargetingTemplatesList'
 -- * 'ttlSortField'
 --
 -- * 'ttlMaxResults'
+--
+-- * 'ttlFields'
 targetingTemplatesList
     :: Int64 -- ^ 'ttlProFileId'
     -> TargetingTemplatesList
-targetingTemplatesList pTtlProFileId_ =
+targetingTemplatesList pTtlProFileId_ = 
     TargetingTemplatesList'
     { _ttlAdvertiserId = Nothing
     , _ttlSearchString = Nothing
     , _ttlIds = Nothing
     , _ttlProFileId = _Coerce # pTtlProFileId_
-    , _ttlSortOrder = Nothing
+    , _ttlSortOrder = TTLSOAscending
     , _ttlPageToken = Nothing
-    , _ttlSortField = Nothing
-    , _ttlMaxResults = Nothing
+    , _ttlSortField = TTLSFID
+    , _ttlMaxResults = 1000
+    , _ttlFields = Nothing
     }
 
 -- | Select only targeting templates with this advertiser ID.
@@ -149,8 +155,8 @@ ttlProFileId
   = lens _ttlProFileId (\ s a -> s{_ttlProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-ttlSortOrder :: Lens' TargetingTemplatesList (Maybe TargetingTemplatesListSortOrder)
+-- | Order of sorted results.
+ttlSortOrder :: Lens' TargetingTemplatesList TargetingTemplatesListSortOrder
 ttlSortOrder
   = lens _ttlSortOrder (\ s a -> s{_ttlSortOrder = a})
 
@@ -160,16 +166,21 @@ ttlPageToken
   = lens _ttlPageToken (\ s a -> s{_ttlPageToken = a})
 
 -- | Field by which to sort the list.
-ttlSortField :: Lens' TargetingTemplatesList (Maybe TargetingTemplatesListSortField)
+ttlSortField :: Lens' TargetingTemplatesList TargetingTemplatesListSortField
 ttlSortField
   = lens _ttlSortField (\ s a -> s{_ttlSortField = a})
 
 -- | Maximum number of results to return.
-ttlMaxResults :: Lens' TargetingTemplatesList (Maybe Int32)
+ttlMaxResults :: Lens' TargetingTemplatesList Int32
 ttlMaxResults
   = lens _ttlMaxResults
       (\ s a -> s{_ttlMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+ttlFields :: Lens' TargetingTemplatesList (Maybe Text)
+ttlFields
+  = lens _ttlFields (\ s a -> s{_ttlFields = a})
 
 instance GoogleRequest TargetingTemplatesList where
         type Rs TargetingTemplatesList =
@@ -179,10 +190,11 @@ instance GoogleRequest TargetingTemplatesList where
         requestClient TargetingTemplatesList'{..}
           = go _ttlProFileId _ttlAdvertiserId _ttlSearchString
               (_ttlIds ^. _Default)
-              _ttlSortOrder
+              (Just _ttlSortOrder)
               _ttlPageToken
-              _ttlSortField
-              _ttlMaxResults
+              (Just _ttlSortField)
+              (Just _ttlMaxResults)
+              _ttlFields
               (Just AltJSON)
               dFAReportingService
           where go

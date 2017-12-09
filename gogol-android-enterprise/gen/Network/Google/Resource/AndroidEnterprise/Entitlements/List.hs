@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- List of all entitlements for the specified user. Only the ID is set.
+-- Lists all entitlements for the specified user. Only the ID is set.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.entitlements.list@.
 module Network.Google.Resource.AndroidEnterprise.Entitlements.List
@@ -33,12 +33,13 @@ module Network.Google.Resource.AndroidEnterprise.Entitlements.List
     , EntitlementsList
 
     -- * Request Lenses
-    , elEnterpriseId
-    , elUserId
+    , ellEnterpriseId
+    , ellUserId
+    , ellFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.entitlements.list@ method which the
 -- 'EntitlementsList' request conforms to.
@@ -50,50 +51,62 @@ type EntitlementsListResource =
              "users" :>
                Capture "userId" Text :>
                  "entitlements" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] EntitlementsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] EntitlementsListResponse
 
--- | List of all entitlements for the specified user. Only the ID is set.
+-- | Lists all entitlements for the specified user. Only the ID is set.
 --
 -- /See:/ 'entitlementsList' smart constructor.
 data EntitlementsList = EntitlementsList'
-    { _elEnterpriseId :: !Text
-    , _elUserId       :: !Text
+    { _ellEnterpriseId :: !Text
+    , _ellUserId :: !Text
+    , _ellFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitlementsList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'elEnterpriseId'
+-- * 'ellEnterpriseId'
 --
--- * 'elUserId'
+-- * 'ellUserId'
+--
+-- * 'ellFields'
 entitlementsList
-    :: Text -- ^ 'elEnterpriseId'
-    -> Text -- ^ 'elUserId'
+    :: Text -- ^ 'ellEnterpriseId'
+    -> Text -- ^ 'ellUserId'
     -> EntitlementsList
-entitlementsList pElEnterpriseId_ pElUserId_ =
+entitlementsList pEllEnterpriseId_ pEllUserId_ = 
     EntitlementsList'
-    { _elEnterpriseId = pElEnterpriseId_
-    , _elUserId = pElUserId_
+    { _ellEnterpriseId = pEllEnterpriseId_
+    , _ellUserId = pEllUserId_
+    , _ellFields = Nothing
     }
 
 -- | The ID of the enterprise.
-elEnterpriseId :: Lens' EntitlementsList Text
-elEnterpriseId
-  = lens _elEnterpriseId
-      (\ s a -> s{_elEnterpriseId = a})
+ellEnterpriseId :: Lens' EntitlementsList Text
+ellEnterpriseId
+  = lens _ellEnterpriseId
+      (\ s a -> s{_ellEnterpriseId = a})
 
 -- | The ID of the user.
-elUserId :: Lens' EntitlementsList Text
-elUserId = lens _elUserId (\ s a -> s{_elUserId = a})
+ellUserId :: Lens' EntitlementsList Text
+ellUserId
+  = lens _ellUserId (\ s a -> s{_ellUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ellFields :: Lens' EntitlementsList (Maybe Text)
+ellFields
+  = lens _ellFields (\ s a -> s{_ellFields = a})
 
 instance GoogleRequest EntitlementsList where
         type Rs EntitlementsList = EntitlementsListResponse
         type Scopes EntitlementsList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EntitlementsList'{..}
-          = go _elEnterpriseId _elUserId (Just AltJSON)
+          = go _ellEnterpriseId _ellUserId _ellFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

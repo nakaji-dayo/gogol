@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.RemarketingLists.Patch
     , rlpProFileId
     , rlpPayload
     , rlpId
+    , rlpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingLists.patch@ method which the
 -- 'RemarketingListsPatch' request conforms to.
 type RemarketingListsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingLists" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] RemarketingList :>
-                     Patch '[JSON] RemarketingList
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] RemarketingList :>
+                       Patch '[JSON] RemarketingList
 
 -- | Updates an existing remarketing list. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type RemarketingListsPatchResource =
 -- /See:/ 'remarketingListsPatch' smart constructor.
 data RemarketingListsPatch = RemarketingListsPatch'
     { _rlpProFileId :: !(Textual Int64)
-    , _rlpPayload   :: !RemarketingList
-    , _rlpId        :: !(Textual Int64)
+    , _rlpPayload :: !RemarketingList
+    , _rlpId :: !(Textual Int64)
+    , _rlpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data RemarketingListsPatch = RemarketingListsPatch'
 -- * 'rlpPayload'
 --
 -- * 'rlpId'
+--
+-- * 'rlpFields'
 remarketingListsPatch
     :: Int64 -- ^ 'rlpProFileId'
     -> RemarketingList -- ^ 'rlpPayload'
     -> Int64 -- ^ 'rlpId'
     -> RemarketingListsPatch
-remarketingListsPatch pRlpProFileId_ pRlpPayload_ pRlpId_ =
+remarketingListsPatch pRlpProFileId_ pRlpPayload_ pRlpId_ = 
     RemarketingListsPatch'
     { _rlpProFileId = _Coerce # pRlpProFileId_
     , _rlpPayload = pRlpPayload_
     , _rlpId = _Coerce # pRlpId_
+    , _rlpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ rlpId :: Lens' RemarketingListsPatch Int64
 rlpId
   = lens _rlpId (\ s a -> s{_rlpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlpFields :: Lens' RemarketingListsPatch (Maybe Text)
+rlpFields
+  = lens _rlpFields (\ s a -> s{_rlpFields = a})
+
 instance GoogleRequest RemarketingListsPatch where
         type Rs RemarketingListsPatch = RemarketingList
         type Scopes RemarketingListsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListsPatch'{..}
-          = go _rlpProFileId (Just _rlpId) (Just AltJSON)
+          = go _rlpProFileId (Just _rlpId) _rlpFields
+              (Just AltJSON)
               _rlpPayload
               dFAReportingService
           where go

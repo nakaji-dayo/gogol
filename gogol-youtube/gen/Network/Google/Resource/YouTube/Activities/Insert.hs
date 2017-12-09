@@ -41,10 +41,11 @@ module Network.Google.Resource.YouTube.Activities.Insert
     -- * Request Lenses
     , aiPart
     , aiPayload
+    , aiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.activities.insert@ method which the
 -- 'ActivitiesInsert' request conforms to.
@@ -53,8 +54,9 @@ type ActivitiesInsertResource =
        "v3" :>
          "activities" :>
            QueryParam "part" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Activity :> Post '[JSON] Activity
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Activity :> Post '[JSON] Activity
 
 -- | Posts a bulletin for a specific channel. (The user submitting the
 -- request must be authorized to act on the channel\'s behalf.) Note: Even
@@ -66,8 +68,9 @@ type ActivitiesInsertResource =
 --
 -- /See:/ 'activitiesInsert' smart constructor.
 data ActivitiesInsert = ActivitiesInsert'
-    { _aiPart    :: !Text
+    { _aiPart :: !Text
     , _aiPayload :: !Activity
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesInsert' with the minimum fields required to make a request.
@@ -77,14 +80,17 @@ data ActivitiesInsert = ActivitiesInsert'
 -- * 'aiPart'
 --
 -- * 'aiPayload'
+--
+-- * 'aiFields'
 activitiesInsert
     :: Text -- ^ 'aiPart'
     -> Activity -- ^ 'aiPayload'
     -> ActivitiesInsert
-activitiesInsert pAiPart_ pAiPayload_ =
+activitiesInsert pAiPart_ pAiPayload_ = 
     ActivitiesInsert'
     { _aiPart = pAiPart_
     , _aiPayload = pAiPayload_
+    , _aiFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -98,13 +104,18 @@ aiPayload :: Lens' ActivitiesInsert Activity
 aiPayload
   = lens _aiPayload (\ s a -> s{_aiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' ActivitiesInsert (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest ActivitiesInsert where
         type Rs ActivitiesInsert = Activity
         type Scopes ActivitiesInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient ActivitiesInsert'{..}
-          = go (Just _aiPart) (Just AltJSON) _aiPayload
+          = go (Just _aiPart) _aiFields (Just AltJSON)
+              _aiPayload
               youTubeService
           where go
                   = buildClient

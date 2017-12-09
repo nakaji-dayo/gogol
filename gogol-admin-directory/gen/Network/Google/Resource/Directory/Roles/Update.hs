@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Roles.Update
     , ruPayload
     , ruRoleId
     , ruCustomer
+    , ruFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roles.update@ method which the
 -- 'RolesUpdate' request conforms to.
@@ -51,16 +52,18 @@ type RolesUpdateResource =
              Capture "customer" Text :>
                "roles" :>
                  Capture "roleId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Role :> Put '[JSON] Role
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Role :> Put '[JSON] Role
 
 -- | Updates a role.
 --
 -- /See:/ 'rolesUpdate' smart constructor.
 data RolesUpdate = RolesUpdate'
-    { _ruPayload  :: !Role
-    , _ruRoleId   :: !Text
+    { _ruPayload :: !Role
+    , _ruRoleId :: !Text
     , _ruCustomer :: !Text
+    , _ruFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RolesUpdate = RolesUpdate'
 -- * 'ruRoleId'
 --
 -- * 'ruCustomer'
+--
+-- * 'ruFields'
 rolesUpdate
     :: Role -- ^ 'ruPayload'
     -> Text -- ^ 'ruRoleId'
     -> Text -- ^ 'ruCustomer'
     -> RolesUpdate
-rolesUpdate pRuPayload_ pRuRoleId_ pRuCustomer_ =
+rolesUpdate pRuPayload_ pRuRoleId_ pRuCustomer_ = 
     RolesUpdate'
     { _ruPayload = pRuPayload_
     , _ruRoleId = pRuRoleId_
     , _ruCustomer = pRuCustomer_
+    , _ruFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -93,17 +99,22 @@ ruPayload
 ruRoleId :: Lens' RolesUpdate Text
 ruRoleId = lens _ruRoleId (\ s a -> s{_ruRoleId = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 ruCustomer :: Lens' RolesUpdate Text
 ruCustomer
   = lens _ruCustomer (\ s a -> s{_ruCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ruFields :: Lens' RolesUpdate (Maybe Text)
+ruFields = lens _ruFields (\ s a -> s{_ruFields = a})
 
 instance GoogleRequest RolesUpdate where
         type Rs RolesUpdate = Role
         type Scopes RolesUpdate =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
         requestClient RolesUpdate'{..}
-          = go _ruCustomer _ruRoleId (Just AltJSON) _ruPayload
+          = go _ruCustomer _ruRoleId _ruFields (Just AltJSON)
+              _ruPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy RolesUpdateResource)

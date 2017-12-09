@@ -36,10 +36,11 @@ module Network.Google.Resource.AdSense.Accounts.Alerts.Delete
     -- * Request Lenses
     , aadAlertId
     , aadAccountId
+    , aadFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.alerts.delete@ method which the
 -- 'AccountsAlertsDelete' request conforms to.
@@ -50,15 +51,17 @@ type AccountsAlertsDeleteResource =
            Capture "accountId" Text :>
              "alerts" :>
                Capture "alertId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Dismiss (delete) the specified alert from the specified publisher
 -- AdSense account.
 --
 -- /See:/ 'accountsAlertsDelete' smart constructor.
 data AccountsAlertsDelete = AccountsAlertsDelete'
-    { _aadAlertId   :: !Text
+    { _aadAlertId :: !Text
     , _aadAccountId :: !Text
+    , _aadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAlertsDelete' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data AccountsAlertsDelete = AccountsAlertsDelete'
 -- * 'aadAlertId'
 --
 -- * 'aadAccountId'
+--
+-- * 'aadFields'
 accountsAlertsDelete
     :: Text -- ^ 'aadAlertId'
     -> Text -- ^ 'aadAccountId'
     -> AccountsAlertsDelete
-accountsAlertsDelete pAadAlertId_ pAadAccountId_ =
+accountsAlertsDelete pAadAlertId_ pAadAccountId_ = 
     AccountsAlertsDelete'
     { _aadAlertId = pAadAlertId_
     , _aadAccountId = pAadAccountId_
+    , _aadFields = Nothing
     }
 
 -- | Alert to delete.
@@ -88,12 +94,18 @@ aadAccountId :: Lens' AccountsAlertsDelete Text
 aadAccountId
   = lens _aadAccountId (\ s a -> s{_aadAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aadFields :: Lens' AccountsAlertsDelete (Maybe Text)
+aadFields
+  = lens _aadFields (\ s a -> s{_aadFields = a})
+
 instance GoogleRequest AccountsAlertsDelete where
         type Rs AccountsAlertsDelete = ()
         type Scopes AccountsAlertsDelete =
              '["https://www.googleapis.com/auth/adsense"]
         requestClient AccountsAlertsDelete'{..}
-          = go _aadAccountId _aadAlertId (Just AltJSON)
+          = go _aadAccountId _aadAlertId _aadFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient

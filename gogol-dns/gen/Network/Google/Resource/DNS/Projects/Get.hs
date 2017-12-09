@@ -35,10 +35,11 @@ module Network.Google.Resource.DNS.Projects.Get
     -- * Request Lenses
     , pgProject
     , pgClientOperationId
+    , pgFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.projects.get@ method which the
 -- 'ProjectsGet' request conforms to.
@@ -48,14 +49,16 @@ type ProjectsGetResource =
          "projects" :>
            Capture "project" Text :>
              QueryParam "clientOperationId" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Project
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Project
 
 -- | Fetch the representation of an existing Project.
 --
 -- /See:/ 'projectsGet' smart constructor.
 data ProjectsGet = ProjectsGet'
-    { _pgProject           :: !Text
+    { _pgProject :: !Text
     , _pgClientOperationId :: !(Maybe Text)
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGet' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data ProjectsGet = ProjectsGet'
 -- * 'pgProject'
 --
 -- * 'pgClientOperationId'
+--
+-- * 'pgFields'
 projectsGet
     :: Text -- ^ 'pgProject'
     -> ProjectsGet
-projectsGet pPgProject_ =
+projectsGet pPgProject_ = 
     ProjectsGet'
     { _pgProject = pPgProject_
     , _pgClientOperationId = Nothing
+    , _pgFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -87,6 +93,10 @@ pgClientOperationId
   = lens _pgClientOperationId
       (\ s a -> s{_pgClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' ProjectsGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest ProjectsGet where
         type Rs ProjectsGet = Project
         type Scopes ProjectsGet =
@@ -95,7 +105,8 @@ instance GoogleRequest ProjectsGet where
                "https://www.googleapis.com/auth/ndev.clouddns.readonly",
                "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]
         requestClient ProjectsGet'{..}
-          = go _pgProject _pgClientOperationId (Just AltJSON)
+          = go _pgProject _pgClientOperationId _pgFields
+              (Just AltJSON)
               dNSService
           where go
                   = buildClient (Proxy :: Proxy ProjectsGetResource)

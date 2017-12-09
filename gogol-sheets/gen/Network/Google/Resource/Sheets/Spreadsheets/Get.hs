@@ -52,11 +52,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Get
     , sgRanges
     , sgIncludeGridData
     , sgBearerToken
+    , sgFields
     , sgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.get@ method which the
 -- 'SpreadsheetsGet' request conforms to.
@@ -73,7 +74,9 @@ type SpreadsheetsGetResource =
                        QueryParam "includeGridData" Bool :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Spreadsheet
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] Spreadsheet
 
 -- | Returns the spreadsheet at the given ID. The caller must specify the
 -- spreadsheet ID. By default, data within grids will not be returned. You
@@ -89,16 +92,17 @@ type SpreadsheetsGetResource =
 --
 -- /See:/ 'spreadsheetsGet' smart constructor.
 data SpreadsheetsGet = SpreadsheetsGet'
-    { _sgXgafv           :: !(Maybe Xgafv)
-    , _sgUploadProtocol  :: !(Maybe Text)
-    , _sgPp              :: !Bool
-    , _sgAccessToken     :: !(Maybe Text)
-    , _sgSpreadsheetId   :: !Text
-    , _sgUploadType      :: !(Maybe Text)
-    , _sgRanges          :: !(Maybe [Text])
+    { _sgXgafv :: !(Maybe Xgafv)
+    , _sgUploadProtocol :: !(Maybe Text)
+    , _sgPp :: !Bool
+    , _sgAccessToken :: !(Maybe Text)
+    , _sgSpreadsheetId :: !Text
+    , _sgUploadType :: !(Maybe Text)
+    , _sgRanges :: !(Maybe [Text])
     , _sgIncludeGridData :: !(Maybe Bool)
-    , _sgBearerToken     :: !(Maybe Text)
-    , _sgCallback        :: !(Maybe Text)
+    , _sgBearerToken :: !(Maybe Text)
+    , _sgFields :: !(Maybe Text)
+    , _sgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsGet' with the minimum fields required to make a request.
@@ -123,11 +127,13 @@ data SpreadsheetsGet = SpreadsheetsGet'
 --
 -- * 'sgBearerToken'
 --
+-- * 'sgFields'
+--
 -- * 'sgCallback'
 spreadsheetsGet
     :: Text -- ^ 'sgSpreadsheetId'
     -> SpreadsheetsGet
-spreadsheetsGet pSgSpreadsheetId_ =
+spreadsheetsGet pSgSpreadsheetId_ = 
     SpreadsheetsGet'
     { _sgXgafv = Nothing
     , _sgUploadProtocol = Nothing
@@ -138,6 +144,7 @@ spreadsheetsGet pSgSpreadsheetId_ =
     , _sgRanges = Nothing
     , _sgIncludeGridData = Nothing
     , _sgBearerToken = Nothing
+    , _sgFields = Nothing
     , _sgCallback = Nothing
     }
 
@@ -192,6 +199,10 @@ sgBearerToken
   = lens _sgBearerToken
       (\ s a -> s{_sgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SpreadsheetsGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 -- | JSONP
 sgCallback :: Lens' SpreadsheetsGet (Maybe Text)
 sgCallback
@@ -201,6 +212,7 @@ instance GoogleRequest SpreadsheetsGet where
         type Rs SpreadsheetsGet = Spreadsheet
         type Scopes SpreadsheetsGet =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/drive.readonly",
                "https://www.googleapis.com/auth/spreadsheets",
                "https://www.googleapis.com/auth/spreadsheets.readonly"]
@@ -213,6 +225,7 @@ instance GoogleRequest SpreadsheetsGet where
               _sgIncludeGridData
               _sgBearerToken
               _sgCallback
+              _sgFields
               (Just AltJSON)
               sheetsService
           where go

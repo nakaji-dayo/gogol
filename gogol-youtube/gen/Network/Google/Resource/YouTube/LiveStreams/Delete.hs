@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.LiveStreams.Delete
     , lsdOnBehalfOfContentOwner
     , lsdOnBehalfOfContentOwnerChannel
     , lsdId
+    , lsdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveStreams.delete@ method which the
 -- 'LiveStreamsDelete' request conforms to.
@@ -50,15 +51,17 @@ type LiveStreamsDeleteResource =
            QueryParam "id" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a video stream.
 --
 -- /See:/ 'liveStreamsDelete' smart constructor.
 data LiveStreamsDelete = LiveStreamsDelete'
-    { _lsdOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lsdOnBehalfOfContentOwner :: !(Maybe Text)
     , _lsdOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lsdId                            :: !Text
+    , _lsdId :: !Text
+    , _lsdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveStreamsDelete' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data LiveStreamsDelete = LiveStreamsDelete'
 -- * 'lsdOnBehalfOfContentOwnerChannel'
 --
 -- * 'lsdId'
+--
+-- * 'lsdFields'
 liveStreamsDelete
     :: Text -- ^ 'lsdId'
     -> LiveStreamsDelete
-liveStreamsDelete pLsdId_ =
+liveStreamsDelete pLsdId_ = 
     LiveStreamsDelete'
     { _lsdOnBehalfOfContentOwner = Nothing
     , _lsdOnBehalfOfContentOwnerChannel = Nothing
     , _lsdId = pLsdId_
+    , _lsdFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -121,6 +127,11 @@ lsdOnBehalfOfContentOwnerChannel
 lsdId :: Lens' LiveStreamsDelete Text
 lsdId = lens _lsdId (\ s a -> s{_lsdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lsdFields :: Lens' LiveStreamsDelete (Maybe Text)
+lsdFields
+  = lens _lsdFields (\ s a -> s{_lsdFields = a})
+
 instance GoogleRequest LiveStreamsDelete where
         type Rs LiveStreamsDelete = ()
         type Scopes LiveStreamsDelete =
@@ -129,6 +140,7 @@ instance GoogleRequest LiveStreamsDelete where
         requestClient LiveStreamsDelete'{..}
           = go (Just _lsdId) _lsdOnBehalfOfContentOwner
               _lsdOnBehalfOfContentOwnerChannel
+              _lsdFields
               (Just AltJSON)
               youTubeService
           where go

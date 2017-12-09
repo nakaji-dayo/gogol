@@ -38,11 +38,12 @@ module Network.Google.Resource.DNS.Changes.List
     , clPageToken
     , clManagedZone
     , clMaxResults
+    , clFields
     , clSortBy
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.changes.list@ method which the
 -- 'ChangesList' request conforms to.
@@ -58,19 +59,21 @@ type ChangesListResource =
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
                          QueryParam "sortBy" ChangesListSortBy :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] ChangesListResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] ChangesListResponse
 
 -- | Enumerate Changes to a ResourceRecordSet collection.
 --
 -- /See:/ 'changesList' smart constructor.
 data ChangesList = ChangesList'
-    { _clProject     :: !Text
-    , _clSortOrder   :: !(Maybe Text)
-    , _clPageToken   :: !(Maybe Text)
+    { _clProject :: !Text
+    , _clSortOrder :: !(Maybe Text)
+    , _clPageToken :: !(Maybe Text)
     , _clManagedZone :: !Text
-    , _clMaxResults  :: !(Maybe (Textual Int32))
-    , _clSortBy      :: !ChangesListSortBy
+    , _clMaxResults :: !(Maybe (Textual Int32))
+    , _clFields :: !(Maybe Text)
+    , _clSortBy :: !ChangesListSortBy
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesList' with the minimum fields required to make a request.
@@ -87,18 +90,21 @@ data ChangesList = ChangesList'
 --
 -- * 'clMaxResults'
 --
+-- * 'clFields'
+--
 -- * 'clSortBy'
 changesList
     :: Text -- ^ 'clProject'
     -> Text -- ^ 'clManagedZone'
     -> ChangesList
-changesList pClProject_ pClManagedZone_ =
+changesList pClProject_ pClManagedZone_ = 
     ChangesList'
     { _clProject = pClProject_
     , _clSortOrder = Nothing
     , _clPageToken = Nothing
     , _clManagedZone = pClManagedZone_
     , _clMaxResults = Nothing
+    , _clFields = Nothing
     , _clSortBy = ChangeSequence
     }
 
@@ -132,6 +138,10 @@ clMaxResults
   = lens _clMaxResults (\ s a -> s{_clMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' ChangesList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 -- | Sorting criterion. The only supported value is change sequence.
 clSortBy :: Lens' ChangesList ChangesListSortBy
 clSortBy = lens _clSortBy (\ s a -> s{_clSortBy = a})
@@ -148,6 +158,7 @@ instance GoogleRequest ChangesList where
               _clPageToken
               _clMaxResults
               (Just _clSortBy)
+              _clFields
               (Just AltJSON)
               dNSService
           where go

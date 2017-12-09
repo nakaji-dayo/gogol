@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.Get
     -- * Request Lenses
     , ugProject
     , ugUser
+    , ugFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.get@ method which the
 -- 'UsersGet' request conforms to.
@@ -50,14 +51,16 @@ type UsersGetResource =
              "global" :>
                "users" :>
                  Capture "user" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] User
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] User
 
 -- | Returns the specified User resource.
 --
 -- /See:/ 'usersGet' smart constructor.
 data UsersGet = UsersGet'
     { _ugProject :: !Text
-    , _ugUser    :: !Text
+    , _ugUser :: !Text
+    , _ugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersGet = UsersGet'
 -- * 'ugProject'
 --
 -- * 'ugUser'
+--
+-- * 'ugFields'
 usersGet
     :: Text -- ^ 'ugProject'
     -> Text -- ^ 'ugUser'
     -> UsersGet
-usersGet pUgProject_ pUgUser_ =
+usersGet pUgProject_ pUgUser_ = 
     UsersGet'
     { _ugProject = pUgProject_
     , _ugUser = pUgUser_
+    , _ugFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -86,6 +92,10 @@ ugProject
 ugUser :: Lens' UsersGet Text
 ugUser = lens _ugUser (\ s a -> s{_ugUser = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugFields :: Lens' UsersGet (Maybe Text)
+ugFields = lens _ugFields (\ s a -> s{_ugFields = a})
+
 instance GoogleRequest UsersGet where
         type Rs UsersGet = User
         type Scopes UsersGet =
@@ -94,7 +104,7 @@ instance GoogleRequest UsersGet where
                "https://www.googleapis.com/auth/cloud.useraccounts",
                "https://www.googleapis.com/auth/cloud.useraccounts.readonly"]
         requestClient UsersGet'{..}
-          = go _ugProject _ugUser (Just AltJSON)
+          = go _ugProject _ugUser _ugFields (Just AltJSON)
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy UsersGetResource)

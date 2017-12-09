@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.Update
     , uuEnterpriseId
     , uuPayload
     , uuUserId
+    , uuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.update@ method which the
 -- 'UsersUpdate' request conforms to.
@@ -53,8 +54,9 @@ type UsersUpdateResource =
            Capture "enterpriseId" Text :>
              "users" :>
                Capture "userId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] User :> Put '[JSON] User
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] User :> Put '[JSON] User
 
 -- | Updates the details of an EMM-managed user. Can be used with EMM-managed
 -- users only (not Google managed users). Pass the new details in the Users
@@ -64,8 +66,9 @@ type UsersUpdateResource =
 -- /See:/ 'usersUpdate' smart constructor.
 data UsersUpdate = UsersUpdate'
     { _uuEnterpriseId :: !Text
-    , _uuPayload      :: !User
-    , _uuUserId       :: !Text
+    , _uuPayload :: !User
+    , _uuUserId :: !Text
+    , _uuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersUpdate' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data UsersUpdate = UsersUpdate'
 -- * 'uuPayload'
 --
 -- * 'uuUserId'
+--
+-- * 'uuFields'
 usersUpdate
     :: Text -- ^ 'uuEnterpriseId'
     -> User -- ^ 'uuPayload'
     -> Text -- ^ 'uuUserId'
     -> UsersUpdate
-usersUpdate pUuEnterpriseId_ pUuPayload_ pUuUserId_ =
+usersUpdate pUuEnterpriseId_ pUuPayload_ pUuUserId_ = 
     UsersUpdate'
     { _uuEnterpriseId = pUuEnterpriseId_
     , _uuPayload = pUuPayload_
     , _uuUserId = pUuUserId_
+    , _uuFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -104,12 +110,17 @@ uuPayload
 uuUserId :: Lens' UsersUpdate Text
 uuUserId = lens _uuUserId (\ s a -> s{_uuUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uuFields :: Lens' UsersUpdate (Maybe Text)
+uuFields = lens _uuFields (\ s a -> s{_uuFields = a})
+
 instance GoogleRequest UsersUpdate where
         type Rs UsersUpdate = User
         type Scopes UsersUpdate =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersUpdate'{..}
-          = go _uuEnterpriseId _uuUserId (Just AltJSON)
+          = go _uuEnterpriseId _uuUserId _uuFields
+              (Just AltJSON)
               _uuPayload
               androidEnterpriseService
           where go

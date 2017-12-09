@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.Patch
     , mepPayload
     , mepAccountId
     , mepExperimentId
+    , mepFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.patch@ method which the
 -- 'ManagementExperimentsPatch' request conforms to.
@@ -57,19 +58,21 @@ type ManagementExperimentsPatchResource =
                      Capture "profileId" Text :>
                        "experiments" :>
                          Capture "experimentId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Experiment :>
-                               Patch '[JSON] Experiment
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Experiment :>
+                                 Patch '[JSON] Experiment
 
 -- | Update an existing experiment. This method supports patch semantics.
 --
 -- /See:/ 'managementExperimentsPatch' smart constructor.
 data ManagementExperimentsPatch = ManagementExperimentsPatch'
     { _mepWebPropertyId :: !Text
-    , _mepProFileId     :: !Text
-    , _mepPayload       :: !Experiment
-    , _mepAccountId     :: !Text
-    , _mepExperimentId  :: !Text
+    , _mepProFileId :: !Text
+    , _mepPayload :: !Experiment
+    , _mepAccountId :: !Text
+    , _mepExperimentId :: !Text
+    , _mepFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsPatch' with the minimum fields required to make a request.
@@ -85,6 +88,8 @@ data ManagementExperimentsPatch = ManagementExperimentsPatch'
 -- * 'mepAccountId'
 --
 -- * 'mepExperimentId'
+--
+-- * 'mepFields'
 managementExperimentsPatch
     :: Text -- ^ 'mepWebPropertyId'
     -> Text -- ^ 'mepProFileId'
@@ -92,13 +97,14 @@ managementExperimentsPatch
     -> Text -- ^ 'mepAccountId'
     -> Text -- ^ 'mepExperimentId'
     -> ManagementExperimentsPatch
-managementExperimentsPatch pMepWebPropertyId_ pMepProFileId_ pMepPayload_ pMepAccountId_ pMepExperimentId_ =
+managementExperimentsPatch pMepWebPropertyId_ pMepProFileId_ pMepPayload_ pMepAccountId_ pMepExperimentId_ = 
     ManagementExperimentsPatch'
     { _mepWebPropertyId = pMepWebPropertyId_
     , _mepProFileId = pMepProFileId_
     , _mepPayload = pMepPayload_
     , _mepAccountId = pMepAccountId_
     , _mepExperimentId = pMepExperimentId_
+    , _mepFields = Nothing
     }
 
 -- | Web property ID of the experiment to update.
@@ -128,6 +134,11 @@ mepExperimentId
   = lens _mepExperimentId
       (\ s a -> s{_mepExperimentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mepFields :: Lens' ManagementExperimentsPatch (Maybe Text)
+mepFields
+  = lens _mepFields (\ s a -> s{_mepFields = a})
+
 instance GoogleRequest ManagementExperimentsPatch
          where
         type Rs ManagementExperimentsPatch = Experiment
@@ -137,6 +148,7 @@ instance GoogleRequest ManagementExperimentsPatch
         requestClient ManagementExperimentsPatch'{..}
           = go _mepAccountId _mepWebPropertyId _mepProFileId
               _mepExperimentId
+              _mepFields
               (Just AltJSON)
               _mepPayload
               analyticsService

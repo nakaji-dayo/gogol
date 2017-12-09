@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Instances.PromoteReplica
 
     -- * Request Lenses
     , iprProject
+    , iprFields
     , iprInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.promoteReplica@ method which the
 -- 'InstancesPromoteReplica' request conforms to.
@@ -51,14 +52,16 @@ type InstancesPromoteReplicaResource =
              "instances" :>
                Capture "instance" Text :>
                  "promoteReplica" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Promotes the read replica instance to be a stand-alone Cloud SQL
 -- instance.
 --
 -- /See:/ 'instancesPromoteReplica' smart constructor.
 data InstancesPromoteReplica = InstancesPromoteReplica'
-    { _iprProject  :: !Text
+    { _iprProject :: !Text
+    , _iprFields :: !(Maybe Text)
     , _iprInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -68,14 +71,17 @@ data InstancesPromoteReplica = InstancesPromoteReplica'
 --
 -- * 'iprProject'
 --
+-- * 'iprFields'
+--
 -- * 'iprInstance'
 instancesPromoteReplica
     :: Text -- ^ 'iprProject'
     -> Text -- ^ 'iprInstance'
     -> InstancesPromoteReplica
-instancesPromoteReplica pIprProject_ pIprInstance_ =
+instancesPromoteReplica pIprProject_ pIprInstance_ = 
     InstancesPromoteReplica'
     { _iprProject = pIprProject_
+    , _iprFields = Nothing
     , _iprInstance = pIprInstance_
     }
 
@@ -83,6 +89,11 @@ instancesPromoteReplica pIprProject_ pIprInstance_ =
 iprProject :: Lens' InstancesPromoteReplica Text
 iprProject
   = lens _iprProject (\ s a -> s{_iprProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+iprFields :: Lens' InstancesPromoteReplica (Maybe Text)
+iprFields
+  = lens _iprFields (\ s a -> s{_iprFields = a})
 
 -- | Cloud SQL read replica instance name.
 iprInstance :: Lens' InstancesPromoteReplica Text
@@ -95,7 +106,8 @@ instance GoogleRequest InstancesPromoteReplica where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesPromoteReplica'{..}
-          = go _iprProject _iprInstance (Just AltJSON)
+          = go _iprProject _iprInstance _iprFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

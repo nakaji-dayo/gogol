@@ -45,11 +45,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.Clear
     , svcPayload
     , svcBearerToken
     , svcRange
+    , svcFields
     , svcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.clear@ method which the
 -- 'SpreadsheetsValuesClear' request conforms to.
@@ -66,9 +67,10 @@ type SpreadsheetsValuesClearResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               ReqBody '[JSON] ClearValuesRequest :>
-                                 Post '[JSON] ClearValuesResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON] ClearValuesRequest :>
+                                   Post '[JSON] ClearValuesResponse
 
 -- | Clears values from a spreadsheet. The caller must specify the
 -- spreadsheet ID and range. Only values are cleared -- all other
@@ -77,16 +79,17 @@ type SpreadsheetsValuesClearResource =
 --
 -- /See:/ 'spreadsheetsValuesClear' smart constructor.
 data SpreadsheetsValuesClear = SpreadsheetsValuesClear'
-    { _svcXgafv          :: !(Maybe Xgafv)
+    { _svcXgafv :: !(Maybe Xgafv)
     , _svcUploadProtocol :: !(Maybe Text)
-    , _svcPp             :: !Bool
-    , _svcAccessToken    :: !(Maybe Text)
-    , _svcSpreadsheetId  :: !Text
-    , _svcUploadType     :: !(Maybe Text)
-    , _svcPayload        :: !ClearValuesRequest
-    , _svcBearerToken    :: !(Maybe Text)
-    , _svcRange          :: !Text
-    , _svcCallback       :: !(Maybe Text)
+    , _svcPp :: !Bool
+    , _svcAccessToken :: !(Maybe Text)
+    , _svcSpreadsheetId :: !Text
+    , _svcUploadType :: !(Maybe Text)
+    , _svcPayload :: !ClearValuesRequest
+    , _svcBearerToken :: !(Maybe Text)
+    , _svcRange :: !Text
+    , _svcFields :: !(Maybe Text)
+    , _svcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesClear' with the minimum fields required to make a request.
@@ -111,13 +114,15 @@ data SpreadsheetsValuesClear = SpreadsheetsValuesClear'
 --
 -- * 'svcRange'
 --
+-- * 'svcFields'
+--
 -- * 'svcCallback'
 spreadsheetsValuesClear
     :: Text -- ^ 'svcSpreadsheetId'
     -> ClearValuesRequest -- ^ 'svcPayload'
     -> Text -- ^ 'svcRange'
     -> SpreadsheetsValuesClear
-spreadsheetsValuesClear pSvcSpreadsheetId_ pSvcPayload_ pSvcRange_ =
+spreadsheetsValuesClear pSvcSpreadsheetId_ pSvcPayload_ pSvcRange_ = 
     SpreadsheetsValuesClear'
     { _svcXgafv = Nothing
     , _svcUploadProtocol = Nothing
@@ -128,6 +133,7 @@ spreadsheetsValuesClear pSvcSpreadsheetId_ pSvcPayload_ pSvcRange_ =
     , _svcPayload = pSvcPayload_
     , _svcBearerToken = Nothing
     , _svcRange = pSvcRange_
+    , _svcFields = Nothing
     , _svcCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ svcBearerToken
 svcRange :: Lens' SpreadsheetsValuesClear Text
 svcRange = lens _svcRange (\ s a -> s{_svcRange = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svcFields :: Lens' SpreadsheetsValuesClear (Maybe Text)
+svcFields
+  = lens _svcFields (\ s a -> s{_svcFields = a})
+
 -- | JSONP
 svcCallback :: Lens' SpreadsheetsValuesClear (Maybe Text)
 svcCallback
@@ -187,6 +198,7 @@ instance GoogleRequest SpreadsheetsValuesClear where
         type Rs SpreadsheetsValuesClear = ClearValuesResponse
         type Scopes SpreadsheetsValuesClear =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsValuesClear'{..}
           = go _svcSpreadsheetId _svcRange _svcXgafv
@@ -196,6 +208,7 @@ instance GoogleRequest SpreadsheetsValuesClear where
               _svcUploadType
               _svcBearerToken
               _svcCallback
+              _svcFields
               (Just AltJSON)
               _svcPayload
               sheetsService

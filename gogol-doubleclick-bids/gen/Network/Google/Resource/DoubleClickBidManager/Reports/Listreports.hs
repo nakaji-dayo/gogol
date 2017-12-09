@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Reports.Listreports
 
     -- * Request Lenses
     , rlQueryId
+    , rlFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.reports.listreports@ method which the
 -- 'ReportsListreports' request conforms to.
@@ -47,14 +48,16 @@ type ReportsListreportsResource =
          "queries" :>
            Capture "queryId" (Textual Int64) :>
              "reports" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] ListReportsResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ListReportsResponse
 
 -- | Retrieves stored reports.
 --
 -- /See:/ 'reportsListreports' smart constructor.
-newtype ReportsListreports = ReportsListreports'
-    { _rlQueryId :: Textual Int64
+data ReportsListreports = ReportsListreports'
+    { _rlQueryId :: !(Textual Int64)
+    , _rlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsListreports' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype ReportsListreports = ReportsListreports'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rlQueryId'
+--
+-- * 'rlFields'
 reportsListreports
     :: Int64 -- ^ 'rlQueryId'
     -> ReportsListreports
-reportsListreports pRlQueryId_ =
+reportsListreports pRlQueryId_ = 
     ReportsListreports'
     { _rlQueryId = _Coerce # pRlQueryId_
+    , _rlFields = Nothing
     }
 
 -- | Query ID with which the reports are associated.
@@ -76,11 +82,17 @@ rlQueryId
   = lens _rlQueryId (\ s a -> s{_rlQueryId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlFields :: Lens' ReportsListreports (Maybe Text)
+rlFields = lens _rlFields (\ s a -> s{_rlFields = a})
+
 instance GoogleRequest ReportsListreports where
         type Rs ReportsListreports = ListReportsResponse
-        type Scopes ReportsListreports = '[]
+        type Scopes ReportsListreports =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient ReportsListreports'{..}
-          = go _rlQueryId (Just AltJSON) doubleClickBidsService
+          = go _rlQueryId _rlFields (Just AltJSON)
+              doubleClickBidsService
           where go
                   = buildClient
                       (Proxy :: Proxy ReportsListreportsResource)

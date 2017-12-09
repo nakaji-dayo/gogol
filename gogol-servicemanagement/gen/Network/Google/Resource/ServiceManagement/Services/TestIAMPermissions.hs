@@ -22,7 +22,10 @@
 --
 -- Returns permissions that a caller has on the specified resource. If the
 -- resource does not exist, this will return an empty set of permissions,
--- not a NOT_FOUND error.
+-- not a NOT_FOUND error. Note: This operation is designed to be used for
+-- building permission-aware UIs and command-line tools, not for
+-- authorization checking. This operation may \"fail open\" without
+-- warning.
 --
 -- /See:/ <https://cloud.google.com/service-management/ Google Service Management API Reference> for @servicemanagement.services.testIamPermissions@.
 module Network.Google.Resource.ServiceManagement.Services.TestIAMPermissions
@@ -43,11 +46,12 @@ module Network.Google.Resource.ServiceManagement.Services.TestIAMPermissions
     , stipPayload
     , stipBearerToken
     , stipResource
+    , stipFields
     , stipCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.testIamPermissions@ method which the
 -- 'ServicesTestIAMPermissions' request conforms to.
@@ -61,25 +65,30 @@ type ServicesTestIAMPermissionsResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TestIAMPermissionsRequest :>
-                           Post '[JSON] TestIAMPermissionsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] TestIAMPermissionsRequest :>
+                             Post '[JSON] TestIAMPermissionsResponse
 
 -- | Returns permissions that a caller has on the specified resource. If the
 -- resource does not exist, this will return an empty set of permissions,
--- not a NOT_FOUND error.
+-- not a NOT_FOUND error. Note: This operation is designed to be used for
+-- building permission-aware UIs and command-line tools, not for
+-- authorization checking. This operation may \"fail open\" without
+-- warning.
 --
 -- /See:/ 'servicesTestIAMPermissions' smart constructor.
 data ServicesTestIAMPermissions = ServicesTestIAMPermissions'
-    { _stipXgafv          :: !(Maybe Xgafv)
+    { _stipXgafv :: !(Maybe Xgafv)
     , _stipUploadProtocol :: !(Maybe Text)
-    , _stipPp             :: !Bool
-    , _stipAccessToken    :: !(Maybe Text)
-    , _stipUploadType     :: !(Maybe Text)
-    , _stipPayload        :: !TestIAMPermissionsRequest
-    , _stipBearerToken    :: !(Maybe Text)
-    , _stipResource       :: !Text
-    , _stipCallback       :: !(Maybe Text)
+    , _stipPp :: !Bool
+    , _stipAccessToken :: !(Maybe Text)
+    , _stipUploadType :: !(Maybe Text)
+    , _stipPayload :: !TestIAMPermissionsRequest
+    , _stipBearerToken :: !(Maybe Text)
+    , _stipResource :: !Text
+    , _stipFields :: !(Maybe Text)
+    , _stipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesTestIAMPermissions' with the minimum fields required to make a request.
@@ -102,12 +111,14 @@ data ServicesTestIAMPermissions = ServicesTestIAMPermissions'
 --
 -- * 'stipResource'
 --
+-- * 'stipFields'
+--
 -- * 'stipCallback'
 servicesTestIAMPermissions
     :: TestIAMPermissionsRequest -- ^ 'stipPayload'
     -> Text -- ^ 'stipResource'
     -> ServicesTestIAMPermissions
-servicesTestIAMPermissions pStipPayload_ pStipResource_ =
+servicesTestIAMPermissions pStipPayload_ pStipResource_ = 
     ServicesTestIAMPermissions'
     { _stipXgafv = Nothing
     , _stipUploadProtocol = Nothing
@@ -117,6 +128,7 @@ servicesTestIAMPermissions pStipPayload_ pStipResource_ =
     , _stipPayload = pStipPayload_
     , _stipBearerToken = Nothing
     , _stipResource = pStipResource_
+    , _stipFields = Nothing
     , _stipCallback = Nothing
     }
 
@@ -159,11 +171,16 @@ stipBearerToken
       (\ s a -> s{_stipBearerToken = a})
 
 -- | REQUIRED: The resource for which the policy detail is being requested.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- See the operation documentation for the appropriate value for this
+-- field.
 stipResource :: Lens' ServicesTestIAMPermissions Text
 stipResource
   = lens _stipResource (\ s a -> s{_stipResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+stipFields :: Lens' ServicesTestIAMPermissions (Maybe Text)
+stipFields
+  = lens _stipFields (\ s a -> s{_stipFields = a})
 
 -- | JSONP
 stipCallback :: Lens' ServicesTestIAMPermissions (Maybe Text)
@@ -176,7 +193,9 @@ instance GoogleRequest ServicesTestIAMPermissions
              TestIAMPermissionsResponse
         type Scopes ServicesTestIAMPermissions =
              '["https://www.googleapis.com/auth/cloud-platform",
-               "https://www.googleapis.com/auth/service.management"]
+               "https://www.googleapis.com/auth/cloud-platform.read-only",
+               "https://www.googleapis.com/auth/service.management",
+               "https://www.googleapis.com/auth/service.management.readonly"]
         requestClient ServicesTestIAMPermissions'{..}
           = go _stipResource _stipXgafv _stipUploadProtocol
               (Just _stipPp)
@@ -184,6 +203,7 @@ instance GoogleRequest ServicesTestIAMPermissions
               _stipUploadType
               _stipBearerToken
               _stipCallback
+              _stipFields
               (Just AltJSON)
               _stipPayload
               serviceManagementService

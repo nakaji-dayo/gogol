@@ -37,10 +37,11 @@ module Network.Google.Resource.GamesManagement.Players.Unhide
     -- * Request Lenses
     , puApplicationId
     , puPlayerId
+    , puFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.players.unhide@ method which the
 -- 'PlayersUnhide' request conforms to.
@@ -52,7 +53,8 @@ type PlayersUnhideResource =
              "players" :>
                "hidden" :>
                  Capture "playerId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Unhide the given player\'s leaderboard scores from the given
 -- application. This method is only available to user accounts for your
@@ -61,7 +63,8 @@ type PlayersUnhideResource =
 -- /See:/ 'playersUnhide' smart constructor.
 data PlayersUnhide = PlayersUnhide'
     { _puApplicationId :: !Text
-    , _puPlayerId      :: !Text
+    , _puPlayerId :: !Text
+    , _puFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayersUnhide' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data PlayersUnhide = PlayersUnhide'
 -- * 'puApplicationId'
 --
 -- * 'puPlayerId'
+--
+-- * 'puFields'
 playersUnhide
     :: Text -- ^ 'puApplicationId'
     -> Text -- ^ 'puPlayerId'
     -> PlayersUnhide
-playersUnhide pPuApplicationId_ pPuPlayerId_ =
+playersUnhide pPuApplicationId_ pPuPlayerId_ = 
     PlayersUnhide'
     { _puApplicationId = pPuApplicationId_
     , _puPlayerId = pPuPlayerId_
+    , _puFields = Nothing
     }
 
 -- | The application ID from the Google Play developer console.
@@ -93,13 +99,18 @@ puPlayerId :: Lens' PlayersUnhide Text
 puPlayerId
   = lens _puPlayerId (\ s a -> s{_puPlayerId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puFields :: Lens' PlayersUnhide (Maybe Text)
+puFields = lens _puFields (\ s a -> s{_puFields = a})
+
 instance GoogleRequest PlayersUnhide where
         type Rs PlayersUnhide = ()
         type Scopes PlayersUnhide =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient PlayersUnhide'{..}
-          = go _puApplicationId _puPlayerId (Just AltJSON)
+          = go _puApplicationId _puPlayerId _puFields
+              (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy PlayersUnhideResource)

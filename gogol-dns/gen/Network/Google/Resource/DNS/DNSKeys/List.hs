@@ -38,10 +38,11 @@ module Network.Google.Resource.DNS.DNSKeys.List
     , dklPageToken
     , dklManagedZone
     , dklMaxResults
+    , dklFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.dnsKeys.list@ method which the
 -- 'DNSKeysList' request conforms to.
@@ -56,18 +57,20 @@ type DNSKeysListResource =
                    QueryParam "digestType" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] DNSKeysListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] DNSKeysListResponse
 
 -- | Enumerate DnsKeys to a ResourceRecordSet collection.
 --
 -- /See:/ 'dnsKeysList' smart constructor.
 data DNSKeysList = DNSKeysList'
-    { _dklProject     :: !Text
-    , _dklDigestType  :: !(Maybe Text)
-    , _dklPageToken   :: !(Maybe Text)
+    { _dklProject :: !Text
+    , _dklDigestType :: !(Maybe Text)
+    , _dklPageToken :: !(Maybe Text)
     , _dklManagedZone :: !Text
-    , _dklMaxResults  :: !(Maybe (Textual Int32))
+    , _dklMaxResults :: !(Maybe (Textual Int32))
+    , _dklFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DNSKeysList' with the minimum fields required to make a request.
@@ -83,17 +86,20 @@ data DNSKeysList = DNSKeysList'
 -- * 'dklManagedZone'
 --
 -- * 'dklMaxResults'
+--
+-- * 'dklFields'
 dnsKeysList
     :: Text -- ^ 'dklProject'
     -> Text -- ^ 'dklManagedZone'
     -> DNSKeysList
-dnsKeysList pDklProject_ pDklManagedZone_ =
+dnsKeysList pDklProject_ pDklManagedZone_ = 
     DNSKeysList'
     { _dklProject = pDklProject_
     , _dklDigestType = Nothing
     , _dklPageToken = Nothing
     , _dklManagedZone = pDklManagedZone_
     , _dklMaxResults = Nothing
+    , _dklFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -130,6 +136,11 @@ dklMaxResults
       (\ s a -> s{_dklMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dklFields :: Lens' DNSKeysList (Maybe Text)
+dklFields
+  = lens _dklFields (\ s a -> s{_dklFields = a})
+
 instance GoogleRequest DNSKeysList where
         type Rs DNSKeysList = DNSKeysListResponse
         type Scopes DNSKeysList =
@@ -141,6 +152,7 @@ instance GoogleRequest DNSKeysList where
           = go _dklProject _dklManagedZone _dklDigestType
               _dklPageToken
               _dklMaxResults
+              _dklFields
               (Just AltJSON)
               dNSService
           where go

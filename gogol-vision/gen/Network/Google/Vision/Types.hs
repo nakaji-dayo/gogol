@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -20,6 +20,7 @@ module Network.Google.Vision.Types
       visionService
 
     -- * OAuth Scopes
+    , cloudVisionScope
     , cloudPlatformScope
 
     -- * LatLng
@@ -47,6 +48,7 @@ module Network.Google.Vision.Types
     -- * Property
     , Property
     , property
+    , pUint64Value
     , pValue
     , pName
 
@@ -62,6 +64,23 @@ module Network.Google.Vision.Types
     , lType
     , lPosition
 
+    -- * CropHintsParams
+    , CropHintsParams
+    , cropHintsParams
+    , chpAspectRatios
+
+    -- * TextProperty
+    , TextProperty
+    , textProperty
+    , tpDetectedLanguages
+    , tpDetectedBreak
+
+    -- * TextAnnotation
+    , TextAnnotation
+    , textAnnotation
+    , taText
+    , taPages
+
     -- * Color
     , Color
     , color
@@ -72,6 +91,9 @@ module Network.Google.Vision.Types
 
     -- * FaceAnnotationHeadwearLikelihood
     , FaceAnnotationHeadwearLikelihood (..)
+
+    -- * BlockBlockType
+    , BlockBlockType (..)
 
     -- * BoundingPoly
     , BoundingPoly
@@ -86,6 +108,13 @@ module Network.Google.Vision.Types
     , vertex
     , vX
     , vY
+
+    -- * WebEntity
+    , WebEntity
+    , webEntity
+    , weScore
+    , weEntityId
+    , weDescription
 
     -- * FaceAnnotationAngerLikelihood
     , FaceAnnotationAngerLikelihood (..)
@@ -108,12 +137,34 @@ module Network.Google.Vision.Types
     , batchAnnotateImagesRequest
     , bairRequests
 
+    -- * Page
+    , Page
+    , page
+    , pProperty
+    , pHeight
+    , pBlocks
+    , pWidth
+
     -- * ColorInfo
     , ColorInfo
     , colorInfo
     , ciColor
     , ciScore
     , ciPixelFraction
+
+    -- * Paragraph
+    , Paragraph
+    , paragraph
+    , parProperty
+    , parBoundingBox
+    , parWords
+
+    -- * Symbol
+    , Symbol
+    , symbol
+    , sProperty
+    , sBoundingBox
+    , sText
 
     -- * FaceAnnotationBlurredLikelihood
     , FaceAnnotationBlurredLikelihood (..)
@@ -125,9 +176,12 @@ module Network.Google.Vision.Types
     , airLabelAnnotations
     , airFaceAnnotations
     , airError
+    , airWebDetection
     , airSafeSearchAnnotation
     , airLandmarkAnnotations
     , airTextAnnotations
+    , airCropHintsAnnotation
+    , airFullTextAnnotation
     , airImagePropertiesAnnotation
 
     -- * ImageProperties
@@ -153,6 +207,20 @@ module Network.Google.Vision.Types
     , faSorrowLikelihood
     , faJoyLikelihood
     , faLandmarks
+
+    -- * DetectedBreak
+    , DetectedBreak
+    , detectedBreak
+    , dbIsPrefix
+    , dbType
+
+    -- * Block
+    , Block
+    , block
+    , bProperty
+    , bBoundingBox
+    , bParagraphs
+    , bBlockType
 
     -- * SafeSearchAnnotationViolence
     , SafeSearchAnnotationViolence (..)
@@ -180,6 +248,27 @@ module Network.Google.Vision.Types
     , airFeatures
     , airImageContext
 
+    -- * DetectedLanguage
+    , DetectedLanguage
+    , detectedLanguage
+    , dlLanguageCode
+    , dlConfidence
+
+    -- * WebImage
+    , WebImage
+    , webImage
+    , wiScore
+    , wiURL
+
+    -- * WebDetection
+    , WebDetection
+    , webDetection
+    , wdVisuallySimilarImages
+    , wdPagesWithMatchingImages
+    , wdPartialMatchingImages
+    , wdFullMatchingImages
+    , wdWebEntities
+
     -- * LandmarkType
     , LandmarkType (..)
 
@@ -190,6 +279,14 @@ module Network.Google.Vision.Types
     , ImageSource
     , imageSource
     , isGcsImageURI
+    , isImageURI
+
+    -- * CropHint
+    , CropHint
+    , cropHint
+    , chBoundingPoly
+    , chConfidence
+    , chImportanceFraction
 
     -- * SafeSearchAnnotationSpoof
     , SafeSearchAnnotationSpoof (..)
@@ -214,8 +311,15 @@ module Network.Google.Vision.Types
     -- * ImageContext
     , ImageContext
     , imageContext
+    , icCropHintsParams
     , icLanguageHints
     , icLatLongRect
+
+    -- * WebPage
+    , WebPage
+    , webPage
+    , wpScore
+    , wpURL
 
     -- * DominantColorsAnnotation
     , DominantColorsAnnotation
@@ -228,10 +332,25 @@ module Network.Google.Vision.Types
     , llrMaxLatLng
     , llrMinLatLng
 
+    -- * Word
+    , Word
+    , word
+    , wProperty
+    , wBoundingBox
+    , wSymbols
+
+    -- * DetectedBreakType
+    , DetectedBreakType (..)
+
     -- * BatchAnnotateImagesResponse
     , BatchAnnotateImagesResponse
     , batchAnnotateImagesResponse
     , bairResponses
+
+    -- * CropHintsAnnotation
+    , CropHintsAnnotation
+    , cropHintsAnnotation
+    , chaCropHints
 
     -- * Position
     , Position
@@ -241,15 +360,19 @@ module Network.Google.Vision.Types
     , pY
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Vision.Types.Product
-import           Network.Google.Vision.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Vision.Types.Product
+import Network.Google.Vision.Types.Sum
 
 -- | Default request referring to version 'v1' of the Google Cloud Vision API. This contains the host and root path used as a starting point for constructing service requests.
 visionService :: ServiceConfig
 visionService
   = defaultService (ServiceId "vision:v1")
       "vision.googleapis.com"
+
+-- | Apply machine learning models to understand and label images
+cloudVisionScope :: Proxy '["https://www.googleapis.com/auth/cloud-vision"]
+cloudVisionScope = Proxy;
 
 -- | View and manage your data across Google Cloud Platform services
 cloudPlatformScope :: Proxy '["https://www.googleapis.com/auth/cloud-platform"]

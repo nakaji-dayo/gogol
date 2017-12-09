@@ -37,10 +37,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.List
     , zvlZone
     , zvlPageToken
     , zvlMaxResults
+    , zvlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.list@ method which the
 -- 'ZoneViewsList'' request conforms to.
@@ -54,16 +55,18 @@ type ZoneViewsListResource =
                  "resourceViews" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] ZoneViewsList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] ZoneViewsList
 
 -- | List resource views.
 --
 -- /See:/ 'zoneViewsList'' smart constructor.
 data ZoneViewsList' = ZoneViewsList''
-    { _zvlProject    :: !Text
-    , _zvlZone       :: !Text
-    , _zvlPageToken  :: !(Maybe Text)
+    { _zvlProject :: !Text
+    , _zvlZone :: !Text
+    , _zvlPageToken :: !(Maybe Text)
     , _zvlMaxResults :: !(Textual Int32)
+    , _zvlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsList'' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data ZoneViewsList' = ZoneViewsList''
 -- * 'zvlPageToken'
 --
 -- * 'zvlMaxResults'
+--
+-- * 'zvlFields'
 zoneViewsList'
     :: Text -- ^ 'zvlProject'
     -> Text -- ^ 'zvlZone'
     -> ZoneViewsList'
-zoneViewsList' pZvlProject_ pZvlZone_ =
+zoneViewsList' pZvlProject_ pZvlZone_ = 
     ZoneViewsList''
     { _zvlProject = pZvlProject_
     , _zvlZone = pZvlZone_
     , _zvlPageToken = Nothing
     , _zvlMaxResults = 5000
+    , _zvlFields = Nothing
     }
 
 -- | The project name of the resource view.
@@ -113,6 +119,11 @@ zvlMaxResults
       (\ s a -> s{_zvlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+zvlFields :: Lens' ZoneViewsList' (Maybe Text)
+zvlFields
+  = lens _zvlFields (\ s a -> s{_zvlFields = a})
+
 instance GoogleRequest ZoneViewsList' where
         type Rs ZoneViewsList' = ZoneViewsList
         type Scopes ZoneViewsList' =
@@ -125,6 +136,7 @@ instance GoogleRequest ZoneViewsList' where
         requestClient ZoneViewsList''{..}
           = go _zvlProject _zvlZone _zvlPageToken
               (Just _zvlMaxResults)
+              _zvlFields
               (Just AltJSON)
               resourceViewsService
           where go

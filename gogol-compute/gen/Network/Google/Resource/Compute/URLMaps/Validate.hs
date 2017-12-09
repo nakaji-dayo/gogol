@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.URLMaps.Validate
     , umvURLMap
     , umvProject
     , umvPayload
+    , umvFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.urlMaps.validate@ method which the
 -- 'URLMapsValidate' request conforms to.
@@ -54,9 +55,10 @@ type URLMapsValidateResource =
                "urlMaps" :>
                  Capture "urlMap" Text :>
                    "validate" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] URLMapsValidateRequest :>
-                         Post '[JSON] URLMapsValidateResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] URLMapsValidateRequest :>
+                           Post '[JSON] URLMapsValidateResponse
 
 -- | Runs static validation for the UrlMap. In particular, the tests of the
 -- provided UrlMap will be run. Calling this method does NOT create the
@@ -64,9 +66,10 @@ type URLMapsValidateResource =
 --
 -- /See:/ 'urlMapsValidate' smart constructor.
 data URLMapsValidate = URLMapsValidate'
-    { _umvURLMap  :: !Text
+    { _umvURLMap :: !Text
     , _umvProject :: !Text
     , _umvPayload :: !URLMapsValidateRequest
+    , _umvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLMapsValidate' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data URLMapsValidate = URLMapsValidate'
 -- * 'umvProject'
 --
 -- * 'umvPayload'
+--
+-- * 'umvFields'
 urlMapsValidate
     :: Text -- ^ 'umvURLMap'
     -> Text -- ^ 'umvProject'
     -> URLMapsValidateRequest -- ^ 'umvPayload'
     -> URLMapsValidate
-urlMapsValidate pUmvURLMap_ pUmvProject_ pUmvPayload_ =
+urlMapsValidate pUmvURLMap_ pUmvProject_ pUmvPayload_ = 
     URLMapsValidate'
     { _umvURLMap = pUmvURLMap_
     , _umvProject = pUmvProject_
     , _umvPayload = pUmvPayload_
+    , _umvFields = Nothing
     }
 
 -- | Name of the UrlMap resource to be validated as.
@@ -105,13 +111,18 @@ umvPayload :: Lens' URLMapsValidate URLMapsValidateRequest
 umvPayload
   = lens _umvPayload (\ s a -> s{_umvPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umvFields :: Lens' URLMapsValidate (Maybe Text)
+umvFields
+  = lens _umvFields (\ s a -> s{_umvFields = a})
+
 instance GoogleRequest URLMapsValidate where
         type Rs URLMapsValidate = URLMapsValidateResponse
         type Scopes URLMapsValidate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient URLMapsValidate'{..}
-          = go _umvProject _umvURLMap (Just AltJSON)
+          = go _umvProject _umvURLMap _umvFields (Just AltJSON)
               _umvPayload
               computeService
           where go

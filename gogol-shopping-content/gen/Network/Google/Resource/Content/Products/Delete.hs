@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Deletes a product from your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- Deletes a product from your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.products.delete@.
 module Network.Google.Resource.Content.Products.Delete
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Products.Delete
     , pdMerchantId
     , pdProductId
     , pdDryRun
+    , pdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.products.delete@ method which the
 -- 'ProductsDelete' request conforms to.
@@ -51,16 +51,17 @@ type ProductsDeleteResource =
            "products" :>
              Capture "productId" Text :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
--- | Deletes a product from your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- | Deletes a product from your Merchant Center account.
 --
 -- /See:/ 'productsDelete' smart constructor.
 data ProductsDelete = ProductsDelete'
     { _pdMerchantId :: !(Textual Word64)
-    , _pdProductId  :: !Text
-    , _pdDryRun     :: !(Maybe Bool)
+    , _pdProductId :: !Text
+    , _pdDryRun :: !(Maybe Bool)
+    , _pdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsDelete' with the minimum fields required to make a request.
@@ -72,24 +73,28 @@ data ProductsDelete = ProductsDelete'
 -- * 'pdProductId'
 --
 -- * 'pdDryRun'
+--
+-- * 'pdFields'
 productsDelete
     :: Word64 -- ^ 'pdMerchantId'
     -> Text -- ^ 'pdProductId'
     -> ProductsDelete
-productsDelete pPdMerchantId_ pPdProductId_ =
+productsDelete pPdMerchantId_ pPdProductId_ = 
     ProductsDelete'
     { _pdMerchantId = _Coerce # pPdMerchantId_
     , _pdProductId = pPdProductId_
     , _pdDryRun = Nothing
+    , _pdFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that contains the product. This account cannot be
+-- a multi-client account.
 pdMerchantId :: Lens' ProductsDelete Word64
 pdMerchantId
   = lens _pdMerchantId (\ s a -> s{_pdMerchantId = a})
       . _Coerce
 
--- | The ID of the product.
+-- | The REST id of the product.
 pdProductId :: Lens' ProductsDelete Text
 pdProductId
   = lens _pdProductId (\ s a -> s{_pdProductId = a})
@@ -98,12 +103,16 @@ pdProductId
 pdDryRun :: Lens' ProductsDelete (Maybe Bool)
 pdDryRun = lens _pdDryRun (\ s a -> s{_pdDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pdFields :: Lens' ProductsDelete (Maybe Text)
+pdFields = lens _pdFields (\ s a -> s{_pdFields = a})
+
 instance GoogleRequest ProductsDelete where
         type Rs ProductsDelete = ()
         type Scopes ProductsDelete =
              '["https://www.googleapis.com/auth/content"]
         requestClient ProductsDelete'{..}
-          = go _pdMerchantId _pdProductId _pdDryRun
+          = go _pdMerchantId _pdProductId _pdDryRun _pdFields
               (Just AltJSON)
               shoppingContentService
           where go

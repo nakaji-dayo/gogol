@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.DomainAliases.Delete
     -- * Request Lenses
     , dadDomainAliasName
     , dadCustomer
+    , dadFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domainAliases.delete@ method which the
 -- 'DomainAliasesDelete' request conforms to.
@@ -50,14 +51,16 @@ type DomainAliasesDeleteResource =
              Capture "customer" Text :>
                "domainaliases" :>
                  Capture "domainAliasName" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a Domain Alias of the customer.
 --
 -- /See:/ 'domainAliasesDelete' smart constructor.
 data DomainAliasesDelete = DomainAliasesDelete'
     { _dadDomainAliasName :: !Text
-    , _dadCustomer        :: !Text
+    , _dadCustomer :: !Text
+    , _dadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainAliasesDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data DomainAliasesDelete = DomainAliasesDelete'
 -- * 'dadDomainAliasName'
 --
 -- * 'dadCustomer'
+--
+-- * 'dadFields'
 domainAliasesDelete
     :: Text -- ^ 'dadDomainAliasName'
     -> Text -- ^ 'dadCustomer'
     -> DomainAliasesDelete
-domainAliasesDelete pDadDomainAliasName_ pDadCustomer_ =
+domainAliasesDelete pDadDomainAliasName_ pDadCustomer_ = 
     DomainAliasesDelete'
     { _dadDomainAliasName = pDadDomainAliasName_
     , _dadCustomer = pDadCustomer_
+    , _dadFields = Nothing
     }
 
 -- | Name of domain alias to be retrieved.
@@ -83,17 +89,23 @@ dadDomainAliasName
   = lens _dadDomainAliasName
       (\ s a -> s{_dadDomainAliasName = a})
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 dadCustomer :: Lens' DomainAliasesDelete Text
 dadCustomer
   = lens _dadCustomer (\ s a -> s{_dadCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dadFields :: Lens' DomainAliasesDelete (Maybe Text)
+dadFields
+  = lens _dadFields (\ s a -> s{_dadFields = a})
 
 instance GoogleRequest DomainAliasesDelete where
         type Rs DomainAliasesDelete = ()
         type Scopes DomainAliasesDelete =
              '["https://www.googleapis.com/auth/admin.directory.domain"]
         requestClient DomainAliasesDelete'{..}
-          = go _dadCustomer _dadDomainAliasName (Just AltJSON)
+          = go _dadCustomer _dadDomainAliasName _dadFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

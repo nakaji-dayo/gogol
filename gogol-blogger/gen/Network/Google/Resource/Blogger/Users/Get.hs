@@ -34,10 +34,11 @@ module Network.Google.Resource.Blogger.Users.Get
 
     -- * Request Lenses
     , ugUserId
+    , ugFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.users.get@ method which the
 -- 'UsersGet' request conforms to.
@@ -46,13 +47,15 @@ type UsersGetResource =
        "v3" :>
          "users" :>
            Capture "userId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] User
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] User
 
 -- | Gets one user by ID.
 --
 -- /See:/ 'usersGet' smart constructor.
-newtype UsersGet = UsersGet'
-    { _ugUserId :: Text
+data UsersGet = UsersGet'
+    { _ugUserId :: !Text
+    , _ugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGet' with the minimum fields required to make a request.
@@ -60,17 +63,24 @@ newtype UsersGet = UsersGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ugUserId'
+--
+-- * 'ugFields'
 usersGet
     :: Text -- ^ 'ugUserId'
     -> UsersGet
-usersGet pUgUserId_ =
+usersGet pUgUserId_ = 
     UsersGet'
     { _ugUserId = pUgUserId_
+    , _ugFields = Nothing
     }
 
 -- | The ID of the user to get.
 ugUserId :: Lens' UsersGet Text
 ugUserId = lens _ugUserId (\ s a -> s{_ugUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ugFields :: Lens' UsersGet (Maybe Text)
+ugFields = lens _ugFields (\ s a -> s{_ugFields = a})
 
 instance GoogleRequest UsersGet where
         type Rs UsersGet = User
@@ -78,7 +88,8 @@ instance GoogleRequest UsersGet where
              '["https://www.googleapis.com/auth/blogger",
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient UsersGet'{..}
-          = go _ugUserId (Just AltJSON) bloggerService
+          = go _ugUserId _ugFields (Just AltJSON)
+              bloggerService
           where go
                   = buildClient (Proxy :: Proxy UsersGetResource)
                       mempty

@@ -42,11 +42,12 @@ module Network.Google.Resource.Logging.Projects.Sinks.List
     , pslBearerToken
     , pslPageToken
     , pslPageSize
+    , pslFields
     , pslCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.sinks.list@ method which the
 -- 'ProjectsSinksList' request conforms to.
@@ -63,23 +64,25 @@ type ProjectsSinksListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListSinksResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListSinksResponse
 
 -- | Lists sinks.
 --
 -- /See:/ 'projectsSinksList' smart constructor.
 data ProjectsSinksList = ProjectsSinksList'
-    { _pslParent         :: !Text
-    , _pslXgafv          :: !(Maybe Xgafv)
+    { _pslParent :: !Text
+    , _pslXgafv :: !(Maybe Xgafv)
     , _pslUploadProtocol :: !(Maybe Text)
-    , _pslPp             :: !Bool
-    , _pslAccessToken    :: !(Maybe Text)
-    , _pslUploadType     :: !(Maybe Text)
-    , _pslBearerToken    :: !(Maybe Text)
-    , _pslPageToken      :: !(Maybe Text)
-    , _pslPageSize       :: !(Maybe (Textual Int32))
-    , _pslCallback       :: !(Maybe Text)
+    , _pslPp :: !Bool
+    , _pslAccessToken :: !(Maybe Text)
+    , _pslUploadType :: !(Maybe Text)
+    , _pslBearerToken :: !(Maybe Text)
+    , _pslPageToken :: !(Maybe Text)
+    , _pslPageSize :: !(Maybe (Textual Int32))
+    , _pslFields :: !(Maybe Text)
+    , _pslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSinksList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ProjectsSinksList = ProjectsSinksList'
 --
 -- * 'pslPageSize'
 --
+-- * 'pslFields'
+--
 -- * 'pslCallback'
 projectsSinksList
     :: Text -- ^ 'pslParent'
     -> ProjectsSinksList
-projectsSinksList pPslParent_ =
+projectsSinksList pPslParent_ = 
     ProjectsSinksList'
     { _pslParent = pPslParent_
     , _pslXgafv = Nothing
@@ -119,11 +124,13 @@ projectsSinksList pPslParent_ =
     , _pslBearerToken = Nothing
     , _pslPageToken = Nothing
     , _pslPageSize = Nothing
+    , _pslFields = Nothing
     , _pslCallback = Nothing
     }
 
--- | Required. The parent resource whose sinks are to be listed. Examples:
--- \"projects\/my-logging-project\", \"organizations\/123456789\".
+-- | Required. The parent resource whose sinks are to be listed:
+-- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 pslParent :: Lens' ProjectsSinksList Text
 pslParent
   = lens _pslParent (\ s a -> s{_pslParent = a})
@@ -176,6 +183,11 @@ pslPageSize
   = lens _pslPageSize (\ s a -> s{_pslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pslFields :: Lens' ProjectsSinksList (Maybe Text)
+pslFields
+  = lens _pslFields (\ s a -> s{_pslFields = a})
+
 -- | JSONP
 pslCallback :: Lens' ProjectsSinksList (Maybe Text)
 pslCallback
@@ -197,6 +209,7 @@ instance GoogleRequest ProjectsSinksList where
               _pslPageToken
               _pslPageSize
               _pslCallback
+              _pslFields
               (Just AltJSON)
               loggingService
           where go

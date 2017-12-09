@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.Autoscalers.Insert
     , AutoscalersInsert
 
     -- * Request Lenses
+    , aiiRequestId
     , aiiProject
     , aiiZone
     , aiiPayload
+    , aiiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.autoscalers.insert@ method which the
 -- 'AutoscalersInsert' request conforms to.
@@ -52,39 +54,63 @@ type AutoscalersInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "autoscalers" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Autoscaler :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Autoscaler :> Post '[JSON] Operation
 
 -- | Creates an autoscaler in the specified project using the data included
 -- in the request.
 --
 -- /See:/ 'autoscalersInsert' smart constructor.
 data AutoscalersInsert = AutoscalersInsert'
-    { _aiiProject :: !Text
-    , _aiiZone    :: !Text
+    { _aiiRequestId :: !(Maybe Text)
+    , _aiiProject :: !Text
+    , _aiiZone :: !Text
     , _aiiPayload :: !Autoscaler
+    , _aiiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalersInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'aiiRequestId'
+--
 -- * 'aiiProject'
 --
 -- * 'aiiZone'
 --
 -- * 'aiiPayload'
+--
+-- * 'aiiFields'
 autoscalersInsert
     :: Text -- ^ 'aiiProject'
     -> Text -- ^ 'aiiZone'
     -> Autoscaler -- ^ 'aiiPayload'
     -> AutoscalersInsert
-autoscalersInsert pAiiProject_ pAiiZone_ pAiiPayload_ =
+autoscalersInsert pAiiProject_ pAiiZone_ pAiiPayload_ = 
     AutoscalersInsert'
-    { _aiiProject = pAiiProject_
+    { _aiiRequestId = Nothing
+    , _aiiProject = pAiiProject_
     , _aiiZone = pAiiZone_
     , _aiiPayload = pAiiPayload_
+    , _aiiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+aiiRequestId :: Lens' AutoscalersInsert (Maybe Text)
+aiiRequestId
+  = lens _aiiRequestId (\ s a -> s{_aiiRequestId = a})
 
 -- | Project ID for this request.
 aiiProject :: Lens' AutoscalersInsert Text
@@ -100,13 +126,20 @@ aiiPayload :: Lens' AutoscalersInsert Autoscaler
 aiiPayload
   = lens _aiiPayload (\ s a -> s{_aiiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiiFields :: Lens' AutoscalersInsert (Maybe Text)
+aiiFields
+  = lens _aiiFields (\ s a -> s{_aiiFields = a})
+
 instance GoogleRequest AutoscalersInsert where
         type Rs AutoscalersInsert = Operation
         type Scopes AutoscalersInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient AutoscalersInsert'{..}
-          = go _aiiProject _aiiZone (Just AltJSON) _aiiPayload
+          = go _aiiProject _aiiZone _aiiRequestId _aiiFields
+              (Just AltJSON)
+              _aiiPayload
               computeService
           where go
                   = buildClient

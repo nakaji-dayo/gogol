@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Li
     -- * Request Lenses
     , mculEnterpriseId
     , mculUserId
+    , mculFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsforuser.list@ method which the
 -- 'ManagedConfigurationsforUserList' request conforms to.
@@ -51,8 +52,9 @@ type ManagedConfigurationsforUserListResource =
              "users" :>
                Capture "userId" Text :>
                  "managedConfigurationsForUser" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ManagedConfigurationsForUserListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ManagedConfigurationsForUserListResponse
 
 -- | Lists all the per-user managed configurations for the specified user.
 -- Only the ID is set.
@@ -60,7 +62,8 @@ type ManagedConfigurationsforUserListResource =
 -- /See:/ 'managedConfigurationsforUserList' smart constructor.
 data ManagedConfigurationsforUserList = ManagedConfigurationsforUserList'
     { _mculEnterpriseId :: !Text
-    , _mculUserId       :: !Text
+    , _mculUserId :: !Text
+    , _mculFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforUserList' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data ManagedConfigurationsforUserList = ManagedConfigurationsforUserList'
 -- * 'mculEnterpriseId'
 --
 -- * 'mculUserId'
+--
+-- * 'mculFields'
 managedConfigurationsforUserList
     :: Text -- ^ 'mculEnterpriseId'
     -> Text -- ^ 'mculUserId'
     -> ManagedConfigurationsforUserList
-managedConfigurationsforUserList pMculEnterpriseId_ pMculUserId_ =
+managedConfigurationsforUserList pMculEnterpriseId_ pMculUserId_ = 
     ManagedConfigurationsforUserList'
     { _mculEnterpriseId = pMculEnterpriseId_
     , _mculUserId = pMculUserId_
+    , _mculFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -91,6 +97,11 @@ mculUserId :: Lens' ManagedConfigurationsforUserList Text
 mculUserId
   = lens _mculUserId (\ s a -> s{_mculUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mculFields :: Lens' ManagedConfigurationsforUserList (Maybe Text)
+mculFields
+  = lens _mculFields (\ s a -> s{_mculFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforUserList where
         type Rs ManagedConfigurationsforUserList =
@@ -98,7 +109,8 @@ instance GoogleRequest
         type Scopes ManagedConfigurationsforUserList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ManagedConfigurationsforUserList'{..}
-          = go _mculEnterpriseId _mculUserId (Just AltJSON)
+          = go _mculEnterpriseId _mculUserId _mculFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

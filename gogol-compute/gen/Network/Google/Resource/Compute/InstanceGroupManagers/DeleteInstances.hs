@@ -26,7 +26,11 @@
 -- the managed instance group by the number of instances that you delete.
 -- This operation is marked as DONE when the action is scheduled even if
 -- the instances are still being deleted. You must separately verify the
--- status of the deleting action with the listmanagedinstances method.
+-- status of the deleting action with the listmanagedinstances method. If
+-- the group is part of a backend service that has enabled connection
+-- draining, it can take up to 60 seconds after the connection draining
+-- duration has elapsed before the VM instance is removed or deleted. You
+-- can specify a maximum of 1000 instances with this method per request.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.instanceGroupManagers.deleteInstances@.
 module Network.Google.Resource.Compute.InstanceGroupManagers.DeleteInstances
@@ -39,14 +43,16 @@ module Network.Google.Resource.Compute.InstanceGroupManagers.DeleteInstances
     , InstanceGroupManagersDeleteInstances
 
     -- * Request Lenses
+    , igmdiRequestId
     , igmdiProject
     , igmdiInstanceGroupManager
     , igmdiZone
     , igmdiPayload
+    , igmdiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroupManagers.deleteInstances@ method which the
 -- 'InstanceGroupManagersDeleteInstances' request conforms to.
@@ -60,10 +66,12 @@ type InstanceGroupManagersDeleteInstancesResource =
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "deleteInstances" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           InstanceGroupManagersDeleteInstancesRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON]
+                               InstanceGroupManagersDeleteInstancesRequest
+                               :> Post '[JSON] Operation
 
 -- | Schedules a group action to delete the specified instances in the
 -- managed instance group. The instances are also removed from any target
@@ -71,19 +79,27 @@ type InstanceGroupManagersDeleteInstancesResource =
 -- the managed instance group by the number of instances that you delete.
 -- This operation is marked as DONE when the action is scheduled even if
 -- the instances are still being deleted. You must separately verify the
--- status of the deleting action with the listmanagedinstances method.
+-- status of the deleting action with the listmanagedinstances method. If
+-- the group is part of a backend service that has enabled connection
+-- draining, it can take up to 60 seconds after the connection draining
+-- duration has elapsed before the VM instance is removed or deleted. You
+-- can specify a maximum of 1000 instances with this method per request.
 --
 -- /See:/ 'instanceGroupManagersDeleteInstances' smart constructor.
 data InstanceGroupManagersDeleteInstances = InstanceGroupManagersDeleteInstances'
-    { _igmdiProject              :: !Text
+    { _igmdiRequestId :: !(Maybe Text)
+    , _igmdiProject :: !Text
     , _igmdiInstanceGroupManager :: !Text
-    , _igmdiZone                 :: !Text
-    , _igmdiPayload              :: !InstanceGroupManagersDeleteInstancesRequest
+    , _igmdiZone :: !Text
+    , _igmdiPayload :: !InstanceGroupManagersDeleteInstancesRequest
+    , _igmdiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersDeleteInstances' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'igmdiRequestId'
 --
 -- * 'igmdiProject'
 --
@@ -92,19 +108,38 @@ data InstanceGroupManagersDeleteInstances = InstanceGroupManagersDeleteInstances
 -- * 'igmdiZone'
 --
 -- * 'igmdiPayload'
+--
+-- * 'igmdiFields'
 instanceGroupManagersDeleteInstances
     :: Text -- ^ 'igmdiProject'
     -> Text -- ^ 'igmdiInstanceGroupManager'
     -> Text -- ^ 'igmdiZone'
     -> InstanceGroupManagersDeleteInstancesRequest -- ^ 'igmdiPayload'
     -> InstanceGroupManagersDeleteInstances
-instanceGroupManagersDeleteInstances pIgmdiProject_ pIgmdiInstanceGroupManager_ pIgmdiZone_ pIgmdiPayload_ =
+instanceGroupManagersDeleteInstances pIgmdiProject_ pIgmdiInstanceGroupManager_ pIgmdiZone_ pIgmdiPayload_ = 
     InstanceGroupManagersDeleteInstances'
-    { _igmdiProject = pIgmdiProject_
+    { _igmdiRequestId = Nothing
+    , _igmdiProject = pIgmdiProject_
     , _igmdiInstanceGroupManager = pIgmdiInstanceGroupManager_
     , _igmdiZone = pIgmdiZone_
     , _igmdiPayload = pIgmdiPayload_
+    , _igmdiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igmdiRequestId :: Lens' InstanceGroupManagersDeleteInstances (Maybe Text)
+igmdiRequestId
+  = lens _igmdiRequestId
+      (\ s a -> s{_igmdiRequestId = a})
 
 -- | Project ID for this request.
 igmdiProject :: Lens' InstanceGroupManagersDeleteInstances Text
@@ -127,6 +162,11 @@ igmdiPayload :: Lens' InstanceGroupManagersDeleteInstances InstanceGroupManagers
 igmdiPayload
   = lens _igmdiPayload (\ s a -> s{_igmdiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmdiFields :: Lens' InstanceGroupManagersDeleteInstances (Maybe Text)
+igmdiFields
+  = lens _igmdiFields (\ s a -> s{_igmdiFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersDeleteInstances where
         type Rs InstanceGroupManagersDeleteInstances =
@@ -138,6 +178,8 @@ instance GoogleRequest
           InstanceGroupManagersDeleteInstances'{..}
           = go _igmdiProject _igmdiZone
               _igmdiInstanceGroupManager
+              _igmdiRequestId
+              _igmdiFields
               (Just AltJSON)
               _igmdiPayload
               computeService

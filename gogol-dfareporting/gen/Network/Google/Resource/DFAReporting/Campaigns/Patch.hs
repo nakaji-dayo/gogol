@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Campaigns.Patch
     , cpProFileId
     , cpPayload
     , cpId
+    , cpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.campaigns.patch@ method which the
 -- 'CampaignsPatch' request conforms to.
 type CampaignsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "campaigns" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Campaign :> Patch '[JSON] Campaign
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Campaign :> Patch '[JSON] Campaign
 
 -- | Updates an existing campaign. This method supports patch semantics.
 --
 -- /See:/ 'campaignsPatch' smart constructor.
 data CampaignsPatch = CampaignsPatch'
     { _cpProFileId :: !(Textual Int64)
-    , _cpPayload   :: !Campaign
-    , _cpId        :: !(Textual Int64)
+    , _cpPayload :: !Campaign
+    , _cpId :: !(Textual Int64)
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CampaignsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data CampaignsPatch = CampaignsPatch'
 -- * 'cpPayload'
 --
 -- * 'cpId'
+--
+-- * 'cpFields'
 campaignsPatch
     :: Int64 -- ^ 'cpProFileId'
     -> Campaign -- ^ 'cpPayload'
     -> Int64 -- ^ 'cpId'
     -> CampaignsPatch
-campaignsPatch pCpProFileId_ pCpPayload_ pCpId_ =
+campaignsPatch pCpProFileId_ pCpPayload_ pCpId_ = 
     CampaignsPatch'
     { _cpProFileId = _Coerce # pCpProFileId_
     , _cpPayload = pCpPayload_
     , _cpId = _Coerce # pCpId_
+    , _cpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -98,12 +104,17 @@ cpPayload
 cpId :: Lens' CampaignsPatch Int64
 cpId = lens _cpId (\ s a -> s{_cpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' CampaignsPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest CampaignsPatch where
         type Rs CampaignsPatch = Campaign
         type Scopes CampaignsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CampaignsPatch'{..}
-          = go _cpProFileId (Just _cpId) (Just AltJSON)
+          = go _cpProFileId (Just _cpId) _cpFields
+              (Just AltJSON)
               _cpPayload
               dFAReportingService
           where go

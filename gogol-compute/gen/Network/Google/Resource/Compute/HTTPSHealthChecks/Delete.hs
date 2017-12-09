@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.HTTPSHealthChecks.Delete
     , HTTPSHealthChecksDelete
 
     -- * Request Lenses
+    , hhcdRequestId
     , hhcdProject
     , hhcdHTTPSHealthCheck
+    , hhcdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.httpsHealthChecks.delete@ method which the
 -- 'HTTPSHealthChecksDelete' request conforms to.
@@ -50,32 +52,57 @@ type HTTPSHealthChecksDeleteResource =
              "global" :>
                "httpsHealthChecks" :>
                  Capture "httpsHealthCheck" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified HttpsHealthCheck resource.
 --
 -- /See:/ 'httpsHealthChecksDelete' smart constructor.
 data HTTPSHealthChecksDelete = HTTPSHealthChecksDelete'
-    { _hhcdProject          :: !Text
+    { _hhcdRequestId :: !(Maybe Text)
+    , _hhcdProject :: !Text
     , _hhcdHTTPSHealthCheck :: !Text
+    , _hhcdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HTTPSHealthChecksDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'hhcdRequestId'
+--
 -- * 'hhcdProject'
 --
 -- * 'hhcdHTTPSHealthCheck'
+--
+-- * 'hhcdFields'
 httpsHealthChecksDelete
     :: Text -- ^ 'hhcdProject'
     -> Text -- ^ 'hhcdHTTPSHealthCheck'
     -> HTTPSHealthChecksDelete
-httpsHealthChecksDelete pHhcdProject_ pHhcdHTTPSHealthCheck_ =
+httpsHealthChecksDelete pHhcdProject_ pHhcdHTTPSHealthCheck_ = 
     HTTPSHealthChecksDelete'
-    { _hhcdProject = pHhcdProject_
+    { _hhcdRequestId = Nothing
+    , _hhcdProject = pHhcdProject_
     , _hhcdHTTPSHealthCheck = pHhcdHTTPSHealthCheck_
+    , _hhcdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+hhcdRequestId :: Lens' HTTPSHealthChecksDelete (Maybe Text)
+hhcdRequestId
+  = lens _hhcdRequestId
+      (\ s a -> s{_hhcdRequestId = a})
 
 -- | Project ID for this request.
 hhcdProject :: Lens' HTTPSHealthChecksDelete Text
@@ -88,6 +115,11 @@ hhcdHTTPSHealthCheck
   = lens _hhcdHTTPSHealthCheck
       (\ s a -> s{_hhcdHTTPSHealthCheck = a})
 
+-- | Selector specifying which fields to include in a partial response.
+hhcdFields :: Lens' HTTPSHealthChecksDelete (Maybe Text)
+hhcdFields
+  = lens _hhcdFields (\ s a -> s{_hhcdFields = a})
+
 instance GoogleRequest HTTPSHealthChecksDelete where
         type Rs HTTPSHealthChecksDelete = Operation
         type Scopes HTTPSHealthChecksDelete =
@@ -95,6 +127,8 @@ instance GoogleRequest HTTPSHealthChecksDelete where
                "https://www.googleapis.com/auth/compute"]
         requestClient HTTPSHealthChecksDelete'{..}
           = go _hhcdProject _hhcdHTTPSHealthCheck
+              _hhcdRequestId
+              _hhcdFields
               (Just AltJSON)
               computeService
           where go

@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.Instances.Insert
     , InstancesInsert
 
     -- * Request Lenses
+    , iiiRequestId
     , iiiProject
     , iiiZone
     , iiiPayload
+    , iiiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.insert@ method which the
 -- 'InstancesInsert' request conforms to.
@@ -52,39 +54,63 @@ type InstancesInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "instances" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Instance :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Instance :> Post '[JSON] Operation
 
 -- | Creates an instance resource in the specified project using the data
 -- included in the request.
 --
 -- /See:/ 'instancesInsert' smart constructor.
 data InstancesInsert = InstancesInsert'
-    { _iiiProject :: !Text
-    , _iiiZone    :: !Text
+    { _iiiRequestId :: !(Maybe Text)
+    , _iiiProject :: !Text
+    , _iiiZone :: !Text
     , _iiiPayload :: !Instance
+    , _iiiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'iiiRequestId'
+--
 -- * 'iiiProject'
 --
 -- * 'iiiZone'
 --
 -- * 'iiiPayload'
+--
+-- * 'iiiFields'
 instancesInsert
     :: Text -- ^ 'iiiProject'
     -> Text -- ^ 'iiiZone'
     -> Instance -- ^ 'iiiPayload'
     -> InstancesInsert
-instancesInsert pIiiProject_ pIiiZone_ pIiiPayload_ =
+instancesInsert pIiiProject_ pIiiZone_ pIiiPayload_ = 
     InstancesInsert'
-    { _iiiProject = pIiiProject_
+    { _iiiRequestId = Nothing
+    , _iiiProject = pIiiProject_
     , _iiiZone = pIiiZone_
     , _iiiPayload = pIiiPayload_
+    , _iiiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+iiiRequestId :: Lens' InstancesInsert (Maybe Text)
+iiiRequestId
+  = lens _iiiRequestId (\ s a -> s{_iiiRequestId = a})
 
 -- | Project ID for this request.
 iiiProject :: Lens' InstancesInsert Text
@@ -100,13 +126,20 @@ iiiPayload :: Lens' InstancesInsert Instance
 iiiPayload
   = lens _iiiPayload (\ s a -> s{_iiiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iiiFields :: Lens' InstancesInsert (Maybe Text)
+iiiFields
+  = lens _iiiFields (\ s a -> s{_iiiFields = a})
+
 instance GoogleRequest InstancesInsert where
         type Rs InstancesInsert = Operation
         type Scopes InstancesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient InstancesInsert'{..}
-          = go _iiiProject _iiiZone (Just AltJSON) _iiiPayload
+          = go _iiiProject _iiiZone _iiiRequestId _iiiFields
+              (Just AltJSON)
+              _iiiPayload
               computeService
           where go
                   = buildClient

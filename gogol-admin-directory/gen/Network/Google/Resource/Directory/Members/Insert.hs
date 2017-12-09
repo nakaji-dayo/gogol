@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Members.Insert
     -- * Request Lenses
     , miGroupKey
     , miPayload
+    , miFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.members.insert@ method which the
 -- 'MembersInsert' request conforms to.
@@ -49,15 +50,17 @@ type MembersInsertResource =
            "groups" :>
              Capture "groupKey" Text :>
                "members" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Member :> Post '[JSON] Member
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Member :> Post '[JSON] Member
 
 -- | Add user to the specified group.
 --
 -- /See:/ 'membersInsert' smart constructor.
 data MembersInsert = MembersInsert'
     { _miGroupKey :: !Text
-    , _miPayload  :: !Member
+    , _miPayload :: !Member
+    , _miFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MembersInsert' with the minimum fields required to make a request.
@@ -67,17 +70,20 @@ data MembersInsert = MembersInsert'
 -- * 'miGroupKey'
 --
 -- * 'miPayload'
+--
+-- * 'miFields'
 membersInsert
     :: Text -- ^ 'miGroupKey'
     -> Member -- ^ 'miPayload'
     -> MembersInsert
-membersInsert pMiGroupKey_ pMiPayload_ =
+membersInsert pMiGroupKey_ pMiPayload_ = 
     MembersInsert'
     { _miGroupKey = pMiGroupKey_
     , _miPayload = pMiPayload_
+    , _miFields = Nothing
     }
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 miGroupKey :: Lens' MembersInsert Text
 miGroupKey
   = lens _miGroupKey (\ s a -> s{_miGroupKey = a})
@@ -87,13 +93,17 @@ miPayload :: Lens' MembersInsert Member
 miPayload
   = lens _miPayload (\ s a -> s{_miPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+miFields :: Lens' MembersInsert (Maybe Text)
+miFields = lens _miFields (\ s a -> s{_miFields = a})
+
 instance GoogleRequest MembersInsert where
         type Rs MembersInsert = Member
         type Scopes MembersInsert =
              '["https://www.googleapis.com/auth/admin.directory.group",
                "https://www.googleapis.com/auth/admin.directory.group.member"]
         requestClient MembersInsert'{..}
-          = go _miGroupKey (Just AltJSON) _miPayload
+          = go _miGroupKey _miFields (Just AltJSON) _miPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy MembersInsertResource)

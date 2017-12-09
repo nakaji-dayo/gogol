@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Insert
     -- * Request Lenses
     , eiPackageName
     , eiPayload
+    , eiFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.insert@ method which the
 -- 'EditsInsert' request conforms to.
@@ -48,15 +49,17 @@ type EditsInsertResource =
          "applications" :>
            Capture "packageName" Text :>
              "edits" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AppEdit :> Post '[JSON] AppEdit
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AppEdit :> Post '[JSON] AppEdit
 
 -- | Creates a new edit for an app, populated with the app\'s current state.
 --
 -- /See:/ 'editsInsert' smart constructor.
 data EditsInsert = EditsInsert'
     { _eiPackageName :: !Text
-    , _eiPayload     :: !AppEdit
+    , _eiPayload :: !AppEdit
+    , _eiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data EditsInsert = EditsInsert'
 -- * 'eiPackageName'
 --
 -- * 'eiPayload'
+--
+-- * 'eiFields'
 editsInsert
     :: Text -- ^ 'eiPackageName'
     -> AppEdit -- ^ 'eiPayload'
     -> EditsInsert
-editsInsert pEiPackageName_ pEiPayload_ =
+editsInsert pEiPackageName_ pEiPayload_ = 
     EditsInsert'
     { _eiPackageName = pEiPackageName_
     , _eiPayload = pEiPayload_
+    , _eiFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -88,12 +94,17 @@ eiPayload :: Lens' EditsInsert AppEdit
 eiPayload
   = lens _eiPayload (\ s a -> s{_eiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eiFields :: Lens' EditsInsert (Maybe Text)
+eiFields = lens _eiFields (\ s a -> s{_eiFields = a})
+
 instance GoogleRequest EditsInsert where
         type Rs EditsInsert = AppEdit
         type Scopes EditsInsert =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsInsert'{..}
-          = go _eiPackageName (Just AltJSON) _eiPayload
+          = go _eiPackageName _eiFields (Just AltJSON)
+              _eiPayload
               androidPublisherService
           where go
                   = buildClient (Proxy :: Proxy EditsInsertResource)

@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.TakeTurn
     , tbmttPayload
     , tbmttLanguage
     , tbmttMatchId
+    , tbmttFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.takeTurn@ method which the
 -- 'TurnBasedMatchesTakeTurn' request conforms to.
@@ -52,18 +53,20 @@ type TurnBasedMatchesTakeTurnResource =
              "turn" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] TurnBasedMatchTurn :>
-                       Put '[JSON] TurnBasedMatch
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] TurnBasedMatchTurn :>
+                         Put '[JSON] TurnBasedMatch
 
 -- | Commit the results of a player turn.
 --
 -- /See:/ 'turnBasedMatchesTakeTurn' smart constructor.
 data TurnBasedMatchesTakeTurn = TurnBasedMatchesTakeTurn'
     { _tbmttConsistencyToken :: !(Maybe (Textual Int64))
-    , _tbmttPayload          :: !TurnBasedMatchTurn
-    , _tbmttLanguage         :: !(Maybe Text)
-    , _tbmttMatchId          :: !Text
+    , _tbmttPayload :: !TurnBasedMatchTurn
+    , _tbmttLanguage :: !(Maybe Text)
+    , _tbmttMatchId :: !Text
+    , _tbmttFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesTakeTurn' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data TurnBasedMatchesTakeTurn = TurnBasedMatchesTakeTurn'
 -- * 'tbmttLanguage'
 --
 -- * 'tbmttMatchId'
+--
+-- * 'tbmttFields'
 turnBasedMatchesTakeTurn
     :: TurnBasedMatchTurn -- ^ 'tbmttPayload'
     -> Text -- ^ 'tbmttMatchId'
     -> TurnBasedMatchesTakeTurn
-turnBasedMatchesTakeTurn pTbmttPayload_ pTbmttMatchId_ =
+turnBasedMatchesTakeTurn pTbmttPayload_ pTbmttMatchId_ = 
     TurnBasedMatchesTakeTurn'
     { _tbmttConsistencyToken = Nothing
     , _tbmttPayload = pTbmttPayload_
     , _tbmttLanguage = Nothing
     , _tbmttMatchId = pTbmttMatchId_
+    , _tbmttFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -112,6 +118,11 @@ tbmttMatchId :: Lens' TurnBasedMatchesTakeTurn Text
 tbmttMatchId
   = lens _tbmttMatchId (\ s a -> s{_tbmttMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmttFields :: Lens' TurnBasedMatchesTakeTurn (Maybe Text)
+tbmttFields
+  = lens _tbmttFields (\ s a -> s{_tbmttFields = a})
+
 instance GoogleRequest TurnBasedMatchesTakeTurn where
         type Rs TurnBasedMatchesTakeTurn = TurnBasedMatch
         type Scopes TurnBasedMatchesTakeTurn =
@@ -120,6 +131,7 @@ instance GoogleRequest TurnBasedMatchesTakeTurn where
         requestClient TurnBasedMatchesTakeTurn'{..}
           = go _tbmttMatchId _tbmttConsistencyToken
               _tbmttLanguage
+              _tbmttFields
               (Just AltJSON)
               _tbmttPayload
               gamesService

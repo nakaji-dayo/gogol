@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Privileges.List
 
     -- * Request Lenses
     , plCustomer
+    , plFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.privileges.list@ method which the
 -- 'PrivilegesList' request conforms to.
@@ -50,13 +51,15 @@ type PrivilegesListResource =
                "roles" :>
                  "ALL" :>
                    "privileges" :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Privileges
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Privileges
 
 -- | Retrieves a paginated list of all privileges for a customer.
 --
 -- /See:/ 'privilegesList' smart constructor.
-newtype PrivilegesList = PrivilegesList'
-    { _plCustomer :: Text
+data PrivilegesList = PrivilegesList'
+    { _plCustomer :: !Text
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PrivilegesList' with the minimum fields required to make a request.
@@ -64,18 +67,25 @@ newtype PrivilegesList = PrivilegesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'plCustomer'
+--
+-- * 'plFields'
 privilegesList
     :: Text -- ^ 'plCustomer'
     -> PrivilegesList
-privilegesList pPlCustomer_ =
+privilegesList pPlCustomer_ = 
     PrivilegesList'
     { _plCustomer = pPlCustomer_
+    , _plFields = Nothing
     }
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 plCustomer :: Lens' PrivilegesList Text
 plCustomer
   = lens _plCustomer (\ s a -> s{_plCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' PrivilegesList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
 
 instance GoogleRequest PrivilegesList where
         type Rs PrivilegesList = Privileges
@@ -83,7 +93,8 @@ instance GoogleRequest PrivilegesList where
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement",
                "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"]
         requestClient PrivilegesList'{..}
-          = go _plCustomer (Just AltJSON) directoryService
+          = go _plCustomer _plFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy PrivilegesListResource)
                       mempty

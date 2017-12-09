@@ -30,10 +30,12 @@ module Network.Google.Resource.OAuth2.UserInfo.Get
     , userInfoGet
     , UserInfoGet
 
+    -- * Request Lenses
+    , uigFields
     ) where
 
-import           Network.Google.OAuth2.Types
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @oauth2.userinfo.get@ method which the
 -- 'UserInfoGet' request conforms to.
@@ -41,19 +43,31 @@ type UserInfoGetResource =
      "oauth2" :>
        "v2" :>
          "userinfo" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] UserInfoplus
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] UserInfoplus
 
 --
 -- /See:/ 'userInfoGet' smart constructor.
-data UserInfoGet =
-    UserInfoGet'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype UserInfoGet = UserInfoGet'
+    { _uigFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserInfoGet' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uigFields'
 userInfoGet
     :: UserInfoGet
-userInfoGet = UserInfoGet'
+userInfoGet = 
+    UserInfoGet'
+    { _uigFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+uigFields :: Lens' UserInfoGet (Maybe Text)
+uigFields
+  = lens _uigFields (\ s a -> s{_uigFields = a})
 
 instance GoogleRequest UserInfoGet where
         type Rs UserInfoGet = UserInfoplus
@@ -62,8 +76,8 @@ instance GoogleRequest UserInfoGet where
                "https://www.googleapis.com/auth/plus.me",
                "https://www.googleapis.com/auth/userinfo.email",
                "https://www.googleapis.com/auth/userinfo.profile"]
-        requestClient UserInfoGet'{}
-          = go (Just AltJSON) oAuth2Service
+        requestClient UserInfoGet'{..}
+          = go _uigFields (Just AltJSON) oAuth2Service
           where go
                   = buildClient (Proxy :: Proxy UserInfoGetResource)
                       mempty

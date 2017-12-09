@@ -16,7 +16,7 @@
 --
 module Network.Google.AppsCalendar.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | The order of the events returned in the result. Optional. The default is
 -- an unspecified, stable order.

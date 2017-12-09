@@ -28,7 +28,7 @@
 -- project already had a billing account, this method changes the billing
 -- account used for resource usage charges. *Note:* Incurred charges that
 -- have not yet been reported in the transaction history of the Google
--- Developers Console may be billed to the new billing account, even if the
+-- Cloud Console may be billed to the new billing account, even if the
 -- charge occurred before the new billing account was assigned to the
 -- project. The current authenticated user must have ownership privileges
 -- for both the
@@ -67,11 +67,12 @@ module Network.Google.Resource.CloudBilling.Projects.UpdateBillingInfo
     , pubiPayload
     , pubiBearerToken
     , pubiName
+    , pubiFields
     , pubiCallback
     ) where
 
-import           Network.Google.Billing.Types
-import           Network.Google.Prelude
+import Network.Google.Billing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbilling.projects.updateBillingInfo@ method which the
 -- 'ProjectsUpdateBillingInfo' request conforms to.
@@ -79,16 +80,17 @@ type ProjectsUpdateBillingInfoResource =
      "v1" :>
        Capture "name" Text :>
          "billingInfo" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ProjectBillingInfo :>
-                             Put '[JSON] ProjectBillingInfo
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ProjectBillingInfo :>
+                               Put '[JSON] ProjectBillingInfo
 
 -- | Sets or updates the billing account associated with a project. You
 -- specify the new billing account by setting the \`billing_account_name\`
@@ -98,7 +100,7 @@ type ProjectsUpdateBillingInfoResource =
 -- project already had a billing account, this method changes the billing
 -- account used for resource usage charges. *Note:* Incurred charges that
 -- have not yet been reported in the transaction history of the Google
--- Developers Console may be billed to the new billing account, even if the
+-- Cloud Console may be billed to the new billing account, even if the
 -- charge occurred before the new billing account was assigned to the
 -- project. The current authenticated user must have ownership privileges
 -- for both the
@@ -120,15 +122,16 @@ type ProjectsUpdateBillingInfoResource =
 --
 -- /See:/ 'projectsUpdateBillingInfo' smart constructor.
 data ProjectsUpdateBillingInfo = ProjectsUpdateBillingInfo'
-    { _pubiXgafv          :: !(Maybe Text)
+    { _pubiXgafv :: !(Maybe Xgafv)
     , _pubiUploadProtocol :: !(Maybe Text)
-    , _pubiPp             :: !Bool
-    , _pubiAccessToken    :: !(Maybe Text)
-    , _pubiUploadType     :: !(Maybe Text)
-    , _pubiPayload        :: !ProjectBillingInfo
-    , _pubiBearerToken    :: !(Maybe Text)
-    , _pubiName           :: !Text
-    , _pubiCallback       :: !(Maybe Text)
+    , _pubiPp :: !Bool
+    , _pubiAccessToken :: !(Maybe Text)
+    , _pubiUploadType :: !(Maybe Text)
+    , _pubiPayload :: !ProjectBillingInfo
+    , _pubiBearerToken :: !(Maybe Text)
+    , _pubiName :: !Text
+    , _pubiFields :: !(Maybe Text)
+    , _pubiCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsUpdateBillingInfo' with the minimum fields required to make a request.
@@ -151,12 +154,14 @@ data ProjectsUpdateBillingInfo = ProjectsUpdateBillingInfo'
 --
 -- * 'pubiName'
 --
+-- * 'pubiFields'
+--
 -- * 'pubiCallback'
 projectsUpdateBillingInfo
     :: ProjectBillingInfo -- ^ 'pubiPayload'
     -> Text -- ^ 'pubiName'
     -> ProjectsUpdateBillingInfo
-projectsUpdateBillingInfo pPubiPayload_ pPubiName_ =
+projectsUpdateBillingInfo pPubiPayload_ pPubiName_ = 
     ProjectsUpdateBillingInfo'
     { _pubiXgafv = Nothing
     , _pubiUploadProtocol = Nothing
@@ -166,11 +171,12 @@ projectsUpdateBillingInfo pPubiPayload_ pPubiName_ =
     , _pubiPayload = pPubiPayload_
     , _pubiBearerToken = Nothing
     , _pubiName = pPubiName_
+    , _pubiFields = Nothing
     , _pubiCallback = Nothing
     }
 
 -- | V1 error format.
-pubiXgafv :: Lens' ProjectsUpdateBillingInfo (Maybe Text)
+pubiXgafv :: Lens' ProjectsUpdateBillingInfo (Maybe Xgafv)
 pubiXgafv
   = lens _pubiXgafv (\ s a -> s{_pubiXgafv = a})
 
@@ -212,6 +218,11 @@ pubiBearerToken
 pubiName :: Lens' ProjectsUpdateBillingInfo Text
 pubiName = lens _pubiName (\ s a -> s{_pubiName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pubiFields :: Lens' ProjectsUpdateBillingInfo (Maybe Text)
+pubiFields
+  = lens _pubiFields (\ s a -> s{_pubiFields = a})
+
 -- | JSONP
 pubiCallback :: Lens' ProjectsUpdateBillingInfo (Maybe Text)
 pubiCallback
@@ -230,6 +241,7 @@ instance GoogleRequest ProjectsUpdateBillingInfo
               _pubiUploadType
               _pubiBearerToken
               _pubiCallback
+              _pubiFields
               (Just AltJSON)
               _pubiPayload
               billingService

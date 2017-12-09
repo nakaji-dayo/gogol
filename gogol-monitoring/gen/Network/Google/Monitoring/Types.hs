@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -40,17 +40,21 @@ module Network.Google.Monitoring.Types
     -- * CollectdValueDataSourceType
     , CollectdValueDataSourceType (..)
 
+    -- * Status
+    , Status
+    , status
+    , sDetails
+    , sCode
+    , sMessage
+
     -- * ListTimeSeriesResponse
     , ListTimeSeriesResponse
     , listTimeSeriesResponse
     , ltsrNextPageToken
     , ltsrTimeSeries
 
-    -- * ListMetricAssociationsResponse
-    , ListMetricAssociationsResponse
-    , listMetricAssociationsResponse
-    , lmarNextPageToken
-    , lmarMetricAssociations
+    -- * UptimeCheckIPRegion
+    , UptimeCheckIPRegion (..)
 
     -- * MetricDescriptor
     , MetricDescriptor
@@ -92,6 +96,12 @@ module Network.Google.Monitoring.Types
     , sourceContext
     , scFileName
 
+    -- * BasicAuthentication
+    , BasicAuthentication
+    , basicAuthentication
+    , baUsername
+    , baPassword
+
     -- * Distribution
     , Distribution
     , distribution
@@ -119,13 +129,6 @@ module Network.Google.Monitoring.Types
     -- * FieldKind
     , FieldKind (..)
 
-    -- * MetricAssociation
-    , MetricAssociation
-    , metricAssociation
-    , maMetricType
-    , maName
-    , maIsDefault
-
     -- * Empty
     , Empty
     , empty
@@ -147,19 +150,24 @@ module Network.Google.Monitoring.Types
     , optionValue
     , ovAddtional
 
-    -- * Category
-    , Category
-    , category
-    , cShortName
-    , cName
-    , cDisplayName
-    , cDescription
-    , cIsDefault
-
     -- * CreateTimeSeriesRequest
     , CreateTimeSeriesRequest
     , createTimeSeriesRequest
     , ctsrTimeSeries
+
+    -- * StatusDetailsItem
+    , StatusDetailsItem
+    , statusDetailsItem
+    , sdiAddtional
+
+    -- * InternalChecker
+    , InternalChecker
+    , internalChecker
+    , icNetwork
+    , icCheckerId
+    , icGcpZone
+    , icDisplayName
+    , icProjectId
 
     -- * ListMonitoredResourceDescriptorsResponse
     , ListMonitoredResourceDescriptorsResponse
@@ -202,6 +210,22 @@ module Network.Google.Monitoring.Types
     -- * TypeSyntax
     , TypeSyntax (..)
 
+    -- * UptimeCheckConfig
+    , UptimeCheckConfig
+    , uptimeCheckConfig
+    , uccInternalCheckers
+    , uccPeriod
+    , uccContentMatchers
+    , uccName
+    , uccMonitoredResource
+    , uccSelectedRegions
+    , uccIsInternal
+    , uccDisplayName
+    , uccResourceGroup
+    , uccTimeout
+    , uccHTTPCheck
+    , uccTCPCheck
+
     -- * Point
     , Point
     , point
@@ -226,6 +250,13 @@ module Network.Google.Monitoring.Types
     , mLabels
     , mType
 
+    -- * CollectdPayloadError
+    , CollectdPayloadError
+    , collectdPayloadError
+    , cpeError
+    , cpeValueErrors
+    , cpeIndex
+
     -- * Exponential
     , Exponential
     , exponential
@@ -233,11 +264,8 @@ module Network.Google.Monitoring.Types
     , eScale
     , eNumFiniteBuckets
 
-    -- * ListCategoriesResponse
-    , ListCategoriesResponse
-    , listCategoriesResponse
-    , lcrNextPageToken
-    , lcrCategory
+    -- * ResourceGroupResourceType
+    , ResourceGroupResourceType (..)
 
     -- * Range
     , Range
@@ -251,6 +279,13 @@ module Network.Google.Monitoring.Types
     , mrLabels
     , mrType
 
+    -- * UptimeCheckIP
+    , UptimeCheckIP
+    , uptimeCheckIP
+    , uciIPAddress
+    , uciLocation
+    , uciRegion
+
     -- * Xgafv
     , Xgafv (..)
 
@@ -260,8 +295,18 @@ module Network.Google.Monitoring.Types
     , tiStartTime
     , tiEndTime
 
+    -- * HTTPCheckHeaders
+    , HTTPCheckHeaders
+    , hTTPCheckHeaders
+    , httpchAddtional
+
     -- * TimeSeriesMetricKind
     , TimeSeriesMetricKind (..)
+
+    -- * ContentMatcher
+    , ContentMatcher
+    , contentMatcher
+    , cmContent
 
     -- * ListGroupMembersResponse
     , ListGroupMembersResponse
@@ -287,6 +332,18 @@ module Network.Google.Monitoring.Types
     , lWidth
     , lNumFiniteBuckets
 
+    -- * ListUptimeCheckIPsResponse
+    , ListUptimeCheckIPsResponse
+    , listUptimeCheckIPsResponse
+    , lucirNextPageToken
+    , lucirUptimeCheckIPs
+
+    -- * ResourceGroup
+    , ResourceGroup
+    , resourceGroup
+    , rgResourceType
+    , rgGroupId
+
     -- * FieldCardinality
     , FieldCardinality (..)
 
@@ -303,6 +360,11 @@ module Network.Google.Monitoring.Types
     -- * MetricDescriptorMetricKind
     , MetricDescriptorMetricKind (..)
 
+    -- * CreateCollectdTimeSeriesResponse
+    , CreateCollectdTimeSeriesResponse
+    , createCollectdTimeSeriesResponse
+    , cctsrPayloadErrors
+
     -- * Option
     , Option
     , option
@@ -316,6 +378,22 @@ module Network.Google.Monitoring.Types
     , boLinearBuckets
     , boExplicitBuckets
 
+    -- * ListUptimeCheckConfigsResponse
+    , ListUptimeCheckConfigsResponse
+    , listUptimeCheckConfigsResponse
+    , luccrUptimeCheckConfigs
+    , luccrNextPageToken
+
+    -- * HTTPCheck
+    , HTTPCheck
+    , hTTPCheck
+    , httpcUseSSL
+    , httpcPath
+    , httpcMaskHeaders
+    , httpcHeaders
+    , httpcAuthInfo
+    , httpcPort
+
     -- * TimeSeries
     , TimeSeries
     , timeSeries
@@ -324,11 +402,22 @@ module Network.Google.Monitoring.Types
     , tsMetric
     , tsResource
     , tsValueType
+
+    -- * TCPCheck
+    , TCPCheck
+    , tcpCheck
+    , tcPort
+
+    -- * CollectdValueError
+    , CollectdValueError
+    , collectdValueError
+    , cveError
+    , cveIndex
     ) where
 
-import           Network.Google.Monitoring.Types.Product
-import           Network.Google.Monitoring.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types.Product
+import Network.Google.Monitoring.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v3' of the Stackdriver Monitoring API. This contains the host and root path used as a starting point for constructing service requests.
 monitoringService :: ServiceConfig

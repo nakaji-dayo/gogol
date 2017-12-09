@@ -37,10 +37,11 @@ module Network.Google.Resource.Books.MyConfig.ReleaseDownloadAccess
     , mcrdaLocale
     , mcrdaVolumeIds
     , mcrdaSource
+    , mcrdaFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.myconfig.releaseDownloadAccess@ method which the
 -- 'MyConfigReleaseDownloadAccess' request conforms to.
@@ -53,17 +54,19 @@ type MyConfigReleaseDownloadAccessResource =
                QueryParam "cpksver" Text :>
                  QueryParam "locale" Text :>
                    QueryParam "source" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Post '[JSON] DownloadAccesses
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Post '[JSON] DownloadAccesses
 
 -- | Release downloaded content access restriction.
 --
 -- /See:/ 'myConfigReleaseDownloadAccess' smart constructor.
 data MyConfigReleaseDownloadAccess = MyConfigReleaseDownloadAccess'
-    { _mcrdaCpksver   :: !Text
-    , _mcrdaLocale    :: !(Maybe Text)
+    { _mcrdaCpksver :: !Text
+    , _mcrdaLocale :: !(Maybe Text)
     , _mcrdaVolumeIds :: ![Text]
-    , _mcrdaSource    :: !(Maybe Text)
+    , _mcrdaSource :: !(Maybe Text)
+    , _mcrdaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyConfigReleaseDownloadAccess' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data MyConfigReleaseDownloadAccess = MyConfigReleaseDownloadAccess'
 -- * 'mcrdaVolumeIds'
 --
 -- * 'mcrdaSource'
+--
+-- * 'mcrdaFields'
 myConfigReleaseDownloadAccess
     :: Text -- ^ 'mcrdaCpksver'
     -> [Text] -- ^ 'mcrdaVolumeIds'
     -> MyConfigReleaseDownloadAccess
-myConfigReleaseDownloadAccess pMcrdaCpksver_ pMcrdaVolumeIds_ =
+myConfigReleaseDownloadAccess pMcrdaCpksver_ pMcrdaVolumeIds_ = 
     MyConfigReleaseDownloadAccess'
     { _mcrdaCpksver = pMcrdaCpksver_
     , _mcrdaLocale = Nothing
     , _mcrdaVolumeIds = _Coerce # pMcrdaVolumeIds_
     , _mcrdaSource = Nothing
+    , _mcrdaFields = Nothing
     }
 
 -- | The device\/version ID from which to release the restriction.
@@ -111,6 +117,11 @@ mcrdaSource :: Lens' MyConfigReleaseDownloadAccess (Maybe Text)
 mcrdaSource
   = lens _mcrdaSource (\ s a -> s{_mcrdaSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcrdaFields :: Lens' MyConfigReleaseDownloadAccess (Maybe Text)
+mcrdaFields
+  = lens _mcrdaFields (\ s a -> s{_mcrdaFields = a})
+
 instance GoogleRequest MyConfigReleaseDownloadAccess
          where
         type Rs MyConfigReleaseDownloadAccess =
@@ -121,6 +132,7 @@ instance GoogleRequest MyConfigReleaseDownloadAccess
           = go _mcrdaVolumeIds (Just _mcrdaCpksver)
               _mcrdaLocale
               _mcrdaSource
+              _mcrdaFields
               (Just AltJSON)
               booksService
           where go

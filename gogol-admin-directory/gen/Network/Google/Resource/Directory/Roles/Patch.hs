@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Roles.Patch
     , rpPayload
     , rpRoleId
     , rpCustomer
+    , rpFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roles.patch@ method which the
 -- 'RolesPatch' request conforms to.
@@ -51,16 +52,18 @@ type RolesPatchResource =
              Capture "customer" Text :>
                "roles" :>
                  Capture "roleId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Role :> Patch '[JSON] Role
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Role :> Patch '[JSON] Role
 
 -- | Updates a role. This method supports patch semantics.
 --
 -- /See:/ 'rolesPatch' smart constructor.
 data RolesPatch = RolesPatch'
-    { _rpPayload  :: !Role
-    , _rpRoleId   :: !Text
+    { _rpPayload :: !Role
+    , _rpRoleId :: !Text
     , _rpCustomer :: !Text
+    , _rpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesPatch' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RolesPatch = RolesPatch'
 -- * 'rpRoleId'
 --
 -- * 'rpCustomer'
+--
+-- * 'rpFields'
 rolesPatch
     :: Role -- ^ 'rpPayload'
     -> Text -- ^ 'rpRoleId'
     -> Text -- ^ 'rpCustomer'
     -> RolesPatch
-rolesPatch pRpPayload_ pRpRoleId_ pRpCustomer_ =
+rolesPatch pRpPayload_ pRpRoleId_ pRpCustomer_ = 
     RolesPatch'
     { _rpPayload = pRpPayload_
     , _rpRoleId = pRpRoleId_
     , _rpCustomer = pRpCustomer_
+    , _rpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -93,17 +99,22 @@ rpPayload
 rpRoleId :: Lens' RolesPatch Text
 rpRoleId = lens _rpRoleId (\ s a -> s{_rpRoleId = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 rpCustomer :: Lens' RolesPatch Text
 rpCustomer
   = lens _rpCustomer (\ s a -> s{_rpCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpFields :: Lens' RolesPatch (Maybe Text)
+rpFields = lens _rpFields (\ s a -> s{_rpFields = a})
 
 instance GoogleRequest RolesPatch where
         type Rs RolesPatch = Role
         type Scopes RolesPatch =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
         requestClient RolesPatch'{..}
-          = go _rpCustomer _rpRoleId (Just AltJSON) _rpPayload
+          = go _rpCustomer _rpRoleId _rpFields (Just AltJSON)
+              _rpPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy RolesPatchResource)

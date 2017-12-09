@@ -33,11 +33,12 @@ module Network.Google.Resource.DoubleClickSearch.Reports.Generate
     , ReportsGenerate
 
     -- * Request Lenses
-    , rgPayload
+    , rPayload
+    , rFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.reports.generate@ method which the
 -- 'ReportsGenerate' request conforms to.
@@ -46,40 +47,48 @@ type ReportsGenerateResource =
        "v2" :>
          "reports" :>
            "generate" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] ReportRequest :> Post '[JSON] Report
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] ReportRequest :> Post '[JSON] Report
 
 -- | Generates and returns a report immediately.
 --
 -- /See:/ 'reportsGenerate' smart constructor.
-newtype ReportsGenerate = ReportsGenerate'
-    { _rgPayload :: ReportRequest
+data ReportsGenerate = ReportsGenerate'
+    { _rPayload :: !ReportRequest
+    , _rFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsGenerate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'rgPayload'
+-- * 'rPayload'
+--
+-- * 'rFields'
 reportsGenerate
-    :: ReportRequest -- ^ 'rgPayload'
+    :: ReportRequest -- ^ 'rPayload'
     -> ReportsGenerate
-reportsGenerate pRgPayload_ =
+reportsGenerate pRPayload_ = 
     ReportsGenerate'
-    { _rgPayload = pRgPayload_
+    { _rPayload = pRPayload_
+    , _rFields = Nothing
     }
 
 -- | Multipart request metadata.
-rgPayload :: Lens' ReportsGenerate ReportRequest
-rgPayload
-  = lens _rgPayload (\ s a -> s{_rgPayload = a})
+rPayload :: Lens' ReportsGenerate ReportRequest
+rPayload = lens _rPayload (\ s a -> s{_rPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rFields :: Lens' ReportsGenerate (Maybe Text)
+rFields = lens _rFields (\ s a -> s{_rFields = a})
 
 instance GoogleRequest ReportsGenerate where
         type Rs ReportsGenerate = Report
         type Scopes ReportsGenerate =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient ReportsGenerate'{..}
-          = go (Just AltJSON) _rgPayload
+          = go _rFields (Just AltJSON) _rPayload
               doubleClickSearchService
           where go
                   = buildClient

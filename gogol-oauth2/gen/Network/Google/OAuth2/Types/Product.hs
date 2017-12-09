@@ -17,21 +17,21 @@
 --
 module Network.Google.OAuth2.Types.Product where
 
-import           Network.Google.OAuth2.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types.Sum
+import Network.Google.Prelude
 
 --
 -- /See:/ 'tokenInfo' smart constructor.
 data TokenInfo = TokenInfo'
-    { _tiAudience      :: !(Maybe Text)
-    , _tiEmail         :: !(Maybe Text)
-    , _tiExpiresIn     :: !(Maybe (Textual Int32))
-    , _tiAccessType    :: !(Maybe Text)
-    , _tiScope         :: !(Maybe Text)
+    { _tiAudience :: !(Maybe Text)
+    , _tiEmail :: !(Maybe Text)
+    , _tiExpiresIn :: !(Maybe (Textual Int32))
+    , _tiAccessType :: !(Maybe Text)
+    , _tiScope :: !(Maybe Text)
     , _tiVerifiedEmail :: !(Maybe Bool)
-    , _tiUserId        :: !(Maybe Text)
-    , _tiTokenHandle   :: !(Maybe Text)
-    , _tiIssuedTo      :: !(Maybe Text)
+    , _tiUserId :: !(Maybe Text)
+    , _tiTokenHandle :: !(Maybe Text)
+    , _tiIssuedTo :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TokenInfo' with the minimum fields required to make a request.
@@ -57,7 +57,7 @@ data TokenInfo = TokenInfo'
 -- * 'tiIssuedTo'
 tokenInfo
     :: TokenInfo
-tokenInfo =
+tokenInfo = 
     TokenInfo'
     { _tiAudience = Nothing
     , _tiEmail = Nothing
@@ -159,7 +159,7 @@ newtype JWK = JWK'
 -- * 'jKeys'
 jwk
     :: JWK
-jwk =
+jwk = 
     JWK'
     { _jKeys = Nothing
     }
@@ -184,8 +184,8 @@ data JWKKeysItem = JWKKeysItem'
     { _jkiAlg :: !Text
     , _jkiUse :: !Text
     , _jkiKid :: !(Maybe Text)
-    , _jkiN   :: !(Maybe Text)
-    , _jkiE   :: !(Maybe Text)
+    , _jkiN :: !(Maybe Text)
+    , _jkiE :: !(Maybe Text)
     , _jkiKty :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -206,7 +206,7 @@ data JWKKeysItem = JWKKeysItem'
 -- * 'jkiKty'
 jwkKeysItem
     :: JWKKeysItem
-jwkKeysItem =
+jwkKeysItem = 
     JWKKeysItem'
     { _jkiAlg = "RS256"
     , _jkiUse = "sig"
@@ -256,17 +256,17 @@ instance ToJSON JWKKeysItem where
 --
 -- /See:/ 'userInfoplus' smart constructor.
 data UserInfoplus = UserInfoplus'
-    { _uiHd            :: !(Maybe Text)
-    , _uiEmail         :: !(Maybe Text)
-    , _uiLink          :: !(Maybe Text)
-    , _uiLocale        :: !(Maybe Text)
-    , _uiGivenName     :: !(Maybe Text)
-    , _uiFamilyName    :: !(Maybe Text)
-    , _uiPicture       :: !(Maybe Text)
-    , _uiGender        :: !(Maybe Text)
-    , _uiName          :: !(Maybe Text)
+    { _uiHd :: !(Maybe Text)
+    , _uiEmail :: !(Maybe Text)
+    , _uiLink :: !(Maybe Text)
+    , _uiLocale :: !(Maybe Text)
+    , _uiGivenName :: !(Maybe Text)
+    , _uiFamilyName :: !(Maybe Text)
+    , _uiPicture :: !(Maybe Text)
+    , _uiGender :: !(Maybe Text)
+    , _uiName :: !(Maybe Text)
     , _uiVerifiedEmail :: !Bool
-    , _uiId            :: !(Maybe Text)
+    , _uiId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserInfoplus' with the minimum fields required to make a request.
@@ -296,7 +296,7 @@ data UserInfoplus = UserInfoplus'
 -- * 'uiId'
 userInfoplus
     :: UserInfoplus
-userInfoplus =
+userInfoplus = 
     UserInfoplus'
     { _uiHd = Nothing
     , _uiEmail = Nothing

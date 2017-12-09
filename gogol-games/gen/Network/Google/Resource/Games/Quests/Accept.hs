@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Quests.Accept
     , qaConsistencyToken
     , qaLanguage
     , qaQuestId
+    , qaFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.quests.accept@ method which the
 -- 'QuestsAccept' request conforms to.
@@ -52,7 +53,8 @@ type QuestsAcceptResource =
              "accept" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Quest
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Quest
 
 -- | Indicates that the currently authorized user will participate in the
 -- quest.
@@ -60,8 +62,9 @@ type QuestsAcceptResource =
 -- /See:/ 'questsAccept' smart constructor.
 data QuestsAccept = QuestsAccept'
     { _qaConsistencyToken :: !(Maybe (Textual Int64))
-    , _qaLanguage         :: !(Maybe Text)
-    , _qaQuestId          :: !Text
+    , _qaLanguage :: !(Maybe Text)
+    , _qaQuestId :: !Text
+    , _qaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsAccept' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data QuestsAccept = QuestsAccept'
 -- * 'qaLanguage'
 --
 -- * 'qaQuestId'
+--
+-- * 'qaFields'
 questsAccept
     :: Text -- ^ 'qaQuestId'
     -> QuestsAccept
-questsAccept pQaQuestId_ =
+questsAccept pQaQuestId_ = 
     QuestsAccept'
     { _qaConsistencyToken = Nothing
     , _qaLanguage = Nothing
     , _qaQuestId = pQaQuestId_
+    , _qaFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -100,6 +106,10 @@ qaQuestId :: Lens' QuestsAccept Text
 qaQuestId
   = lens _qaQuestId (\ s a -> s{_qaQuestId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qaFields :: Lens' QuestsAccept (Maybe Text)
+qaFields = lens _qaFields (\ s a -> s{_qaFields = a})
+
 instance GoogleRequest QuestsAccept where
         type Rs QuestsAccept = Quest
         type Scopes QuestsAccept =
@@ -107,6 +117,7 @@ instance GoogleRequest QuestsAccept where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient QuestsAccept'{..}
           = go _qaQuestId _qaConsistencyToken _qaLanguage
+              _qaFields
               (Just AltJSON)
               gamesService
           where go

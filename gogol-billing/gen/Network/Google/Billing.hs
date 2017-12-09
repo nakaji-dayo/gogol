@@ -13,8 +13,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves Google Developers Console billing accounts and associates them
--- with projects.
+-- Allows developers to manage billing for their Google Cloud Platform
+-- projects programmatically.
 --
 -- /See:/ <https://cloud.google.com/billing/ Google Cloud Billing API Reference>
 module Network.Google.Billing
@@ -45,7 +45,19 @@ module Network.Google.Billing
     -- ** cloudbilling.projects.updateBillingInfo
     , module Network.Google.Resource.CloudBilling.Projects.UpdateBillingInfo
 
+    -- ** cloudbilling.services.list
+    , module Network.Google.Resource.CloudBilling.Services.List
+
+    -- ** cloudbilling.services.skus.list
+    , module Network.Google.Resource.CloudBilling.Services.SKUs.List
+
     -- * Types
+
+    -- ** ListServicesResponse
+    , ListServicesResponse
+    , listServicesResponse
+    , lsrNextPageToken
+    , lsrServices
 
     -- ** BillingAccount
     , BillingAccount
@@ -53,6 +65,13 @@ module Network.Google.Billing
     , baOpen
     , baName
     , baDisplayName
+
+    -- ** Service
+    , Service
+    , service
+    , sName
+    , sDisplayName
+    , sServiceId
 
     -- ** ProjectBillingInfo
     , ProjectBillingInfo
@@ -62,26 +81,102 @@ module Network.Google.Billing
     , pbiProjectId
     , pbiBillingEnabled
 
+    -- ** TierRate
+    , TierRate
+    , tierRate
+    , trUnitPrice
+    , trStartUsageAmount
+
+    -- ** Money
+    , Money
+    , money
+    , mCurrencyCode
+    , mNanos
+    , mUnits
+
+    -- ** Category
+    , Category
+    , category
+    , cResourceFamily
+    , cUsageType
+    , cServiceDisplayName
+    , cResourceGroup
+
+    -- ** AggregationInfoAggregationLevel
+    , AggregationInfoAggregationLevel (..)
+
     -- ** ListProjectBillingInfoResponse
     , ListProjectBillingInfoResponse
     , listProjectBillingInfoResponse
     , lpbirNextPageToken
     , lpbirProjectBillingInfo
 
+    -- ** ListSKUsResponse
+    , ListSKUsResponse
+    , listSKUsResponse
+    , lskurNextPageToken
+    , lskurSKUs
+
+    -- ** PricingExpression
+    , PricingExpression
+    , pricingExpression
+    , peUsageUnitDescription
+    , peBaseUnit
+    , peBaseUnitConversionFactor
+    , peDisplayQuantity
+    , peTieredRates
+    , peBaseUnitDescription
+    , peUsageUnit
+
+    -- ** Xgafv
+    , Xgafv (..)
+
+    -- ** AggregationInfo
+    , AggregationInfo
+    , aggregationInfo
+    , aiAggregationInterval
+    , aiAggregationCount
+    , aiAggregationLevel
+
+    -- ** SKU
+    , SKU
+    , sKU
+    , skukCategory
+    , skukSKUId
+    , skukServiceProviderName
+    , skukServiceRegions
+    , skukName
+    , skukPricingInfo
+    , skukDescription
+
     -- ** ListBillingAccountsResponse
     , ListBillingAccountsResponse
     , listBillingAccountsResponse
     , lbarNextPageToken
     , lbarBillingAccounts
+
+    -- ** PricingInfo
+    , PricingInfo
+    , pricingInfo
+    , piSummary
+    , piAggregationInfo
+    , piPricingExpression
+    , piCurrencyConversionRate
+    , piEffectiveTime
+
+    -- ** AggregationInfoAggregationInterval
+    , AggregationInfoAggregationInterval (..)
     ) where
 
-import           Network.Google.Billing.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.CloudBilling.BillingAccounts.Get
-import           Network.Google.Resource.CloudBilling.BillingAccounts.List
-import           Network.Google.Resource.CloudBilling.BillingAccounts.Projects.List
-import           Network.Google.Resource.CloudBilling.Projects.GetBillingInfo
-import           Network.Google.Resource.CloudBilling.Projects.UpdateBillingInfo
+import Network.Google.Prelude
+import Network.Google.Billing.Types
+import Network.Google.Resource.CloudBilling.BillingAccounts.Get
+import Network.Google.Resource.CloudBilling.BillingAccounts.List
+import Network.Google.Resource.CloudBilling.BillingAccounts.Projects.List
+import Network.Google.Resource.CloudBilling.Projects.GetBillingInfo
+import Network.Google.Resource.CloudBilling.Projects.UpdateBillingInfo
+import Network.Google.Resource.CloudBilling.Services.List
+import Network.Google.Resource.CloudBilling.Services.SKUs.List
 
 {- $resources
 TODO
@@ -91,6 +186,8 @@ TODO
 type BillingAPI =
      ProjectsGetBillingInfoResource :<|>
        ProjectsUpdateBillingInfoResource
+       :<|> ServicesSKUsListResource
+       :<|> ServicesListResource
        :<|> BillingAccountsProjectsListResource
        :<|> BillingAccountsListResource
        :<|> BillingAccountsGetResource

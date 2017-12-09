@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.ForwardingRules.Get
     , frgProject
     , frgForwardingRule
     , frgRegion
+    , frgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.forwardingRules.get@ method which the
 -- 'ForwardingRulesGet' request conforms to.
@@ -52,16 +53,18 @@ type ForwardingRulesGetResource =
                Capture "region" Text :>
                  "forwardingRules" :>
                    Capture "forwardingRule" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] ForwardingRule
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] ForwardingRule
 
 -- | Returns the specified ForwardingRule resource.
 --
 -- /See:/ 'forwardingRulesGet' smart constructor.
 data ForwardingRulesGet = ForwardingRulesGet'
-    { _frgProject        :: !Text
+    { _frgProject :: !Text
     , _frgForwardingRule :: !Text
-    , _frgRegion         :: !Text
+    , _frgRegion :: !Text
+    , _frgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ForwardingRulesGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ForwardingRulesGet = ForwardingRulesGet'
 -- * 'frgForwardingRule'
 --
 -- * 'frgRegion'
+--
+-- * 'frgFields'
 forwardingRulesGet
     :: Text -- ^ 'frgProject'
     -> Text -- ^ 'frgForwardingRule'
     -> Text -- ^ 'frgRegion'
     -> ForwardingRulesGet
-forwardingRulesGet pFrgProject_ pFrgForwardingRule_ pFrgRegion_ =
+forwardingRulesGet pFrgProject_ pFrgForwardingRule_ pFrgRegion_ = 
     ForwardingRulesGet'
     { _frgProject = pFrgProject_
     , _frgForwardingRule = pFrgForwardingRule_
     , _frgRegion = pFrgRegion_
+    , _frgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ frgRegion :: Lens' ForwardingRulesGet Text
 frgRegion
   = lens _frgRegion (\ s a -> s{_frgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+frgFields :: Lens' ForwardingRulesGet (Maybe Text)
+frgFields
+  = lens _frgFields (\ s a -> s{_frgFields = a})
+
 instance GoogleRequest ForwardingRulesGet where
         type Rs ForwardingRulesGet = ForwardingRule
         type Scopes ForwardingRulesGet =
@@ -109,6 +120,7 @@ instance GoogleRequest ForwardingRulesGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient ForwardingRulesGet'{..}
           = go _frgProject _frgRegion _frgForwardingRule
+              _frgFields
               (Just AltJSON)
               computeService
           where go

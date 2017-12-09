@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -28,17 +28,15 @@ module Network.Google.Dataproc.Types
     , jrJobId
     , jrProjectId
 
+    -- * JobStatusState
+    , JobStatusState (..)
+
     -- * Status
     , Status
     , status
     , sDetails
     , sCode
     , sMessage
-
-    -- * OperationSchema
-    , OperationSchema
-    , operationSchema
-    , osAddtional
 
     -- * PySparkJobProperties
     , PySparkJobProperties
@@ -57,6 +55,7 @@ module Network.Google.Dataproc.Types
     , igcDiskConfig
     , igcIsPreemptible
     , igcImageURI
+    , igcAccelerators
     , igcInstanceNames
     , igcManagedGroupConfig
     , igcMachineTypeURI
@@ -77,6 +76,11 @@ module Network.Google.Dataproc.Types
     , SoftwareConfigProperties
     , softwareConfigProperties
     , scpAddtional
+
+    -- * JobScheduling
+    , JobScheduling
+    , jobScheduling
+    , jsMaxFailuresPerHour
 
     -- * DiskConfig
     , DiskConfig
@@ -121,6 +125,9 @@ module Network.Google.Dataproc.Types
     , SubmitJobRequest
     , submitJobRequest
     , sjrJob
+
+    -- * ClusterStatusSubState
+    , ClusterStatusSubState (..)
 
     -- * ClusterMetrics
     , ClusterMetrics
@@ -219,32 +226,29 @@ module Network.Google.Dataproc.Types
     , gccInternalIPOnly
     , gccNetworkURI
     , gccZoneURI
+    , gccServiceAccount
     , gccMetadata
     , gccServiceAccountScopes
     , gccTags
 
-    -- * OperationStatus
-    , OperationStatus
-    , operationStatus
-    , osState
-    , osInnerState
-    , osStateStartTime
-    , osDetails
+    -- * YarnApplicationState
+    , YarnApplicationState (..)
+
+    -- * ClusterStatusState
+    , ClusterStatusState (..)
 
     -- * GceClusterConfigMetadata
     , GceClusterConfigMetadata
     , gceClusterConfigMetadata
     , gccmAddtional
 
+    -- * ClusterOperationStatusState
+    , ClusterOperationStatusState (..)
+
     -- * HiveJobProperties
     , HiveJobProperties
     , hiveJobProperties
     , hAddtional
-
-    -- * DiagnoseClusterOutputLocation
-    , DiagnoseClusterOutputLocation
-    , diagnoseClusterOutputLocation
-    , dcolOutputURI
 
     -- * ClusterLabels
     , ClusterLabels
@@ -265,6 +269,7 @@ module Network.Google.Dataproc.Types
     , jLabels
     , jPysparkJob
     , jDriverOutputResourceURI
+    , jScheduling
     , jStatusHistory
     , jPlacement
     , jPigJob
@@ -285,11 +290,15 @@ module Network.Google.Dataproc.Types
     , hLoggingConfig
     , hProperties
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * ClusterOperationMetadata
     , ClusterOperationMetadata
     , clusterOperationMetadata
     , comStatus
     , comClusterUuid
+    , comWarnings
     , comClusterName
     , comLabels
     , comOperationType
@@ -317,6 +326,12 @@ module Network.Google.Dataproc.Types
     , listJobsResponse
     , ljrNextPageToken
     , ljrJobs
+
+    -- * AcceleratorConfig
+    , AcceleratorConfig
+    , acceleratorConfig
+    , acAcceleratorCount
+    , acAcceleratorTypeURI
 
     -- * SparkJobProperties
     , SparkJobProperties
@@ -347,6 +362,9 @@ module Network.Google.Dataproc.Types
     , lcrNextPageToken
     , lcrClusters
 
+    -- * JobStatusSubState
+    , JobStatusSubState (..)
+
     -- * CancelJobRequest
     , CancelJobRequest
     , cancelJobRequest
@@ -359,23 +377,13 @@ module Network.Google.Dataproc.Types
     -- * OperationMetadata
     , OperationMetadata
     , operationMetadata
-    , omStatus
-    , omState
-    , omClusterUuid
-    , omInsertTime
-    , omStartTime
-    , omInnerState
-    , omEndTime
-    , omDetails
-    , omClusterName
-    , omOperationType
-    , omStatusHistory
-    , omDescription
+    , omAddtional
 
     -- * JobStatus
     , JobStatus
     , jobStatus
     , jsState
+    , jsSubState
     , jsStateStartTime
     , jsDetails
 
@@ -403,6 +411,7 @@ module Network.Google.Dataproc.Types
     , ClusterStatus
     , clusterStatus
     , csState
+    , csSubState
     , csStateStartTime
     , csDetail
 
@@ -431,9 +440,9 @@ module Network.Google.Dataproc.Types
     , lcDriverLogLevels
     ) where
 
-import           Network.Google.Dataproc.Types.Product
-import           Network.Google.Dataproc.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types.Product
+import Network.Google.Dataproc.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Google Cloud Dataproc API. This contains the host and root path used as a starting point for constructing service requests.
 dataprocService :: ServiceConfig

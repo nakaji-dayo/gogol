@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.AdClients.List
     -- * Request Lenses
     , aclPageToken
     , aclMaxResults
+    , aclFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.adclients.list@ method which the
 -- 'AdClientsList' request conforms to.
@@ -48,14 +49,16 @@ type AdClientsListResource =
          "adclients" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Int32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] AdClients
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] AdClients
 
 -- | List all ad clients in this AdSense account.
 --
 -- /See:/ 'adClientsList' smart constructor.
 data AdClientsList = AdClientsList'
-    { _aclPageToken  :: !(Maybe Text)
+    { _aclPageToken :: !(Maybe Text)
     , _aclMaxResults :: !(Maybe (Textual Int32))
+    , _aclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdClientsList' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data AdClientsList = AdClientsList'
 -- * 'aclPageToken'
 --
 -- * 'aclMaxResults'
+--
+-- * 'aclFields'
 adClientsList
     :: AdClientsList
-adClientsList =
+adClientsList = 
     AdClientsList'
     { _aclPageToken = Nothing
     , _aclMaxResults = Nothing
+    , _aclFields = Nothing
     }
 
 -- | A continuation token, used to page through ad clients. To retrieve the
@@ -88,13 +94,19 @@ aclMaxResults
       (\ s a -> s{_aclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aclFields :: Lens' AdClientsList (Maybe Text)
+aclFields
+  = lens _aclFields (\ s a -> s{_aclFields = a})
+
 instance GoogleRequest AdClientsList where
         type Rs AdClientsList = AdClients
         type Scopes AdClientsList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AdClientsList'{..}
-          = go _aclPageToken _aclMaxResults (Just AltJSON)
+          = go _aclPageToken _aclMaxResults _aclFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient (Proxy :: Proxy AdClientsListResource)

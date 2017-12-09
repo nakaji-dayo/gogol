@@ -38,10 +38,11 @@ module Network.Google.Resource.Games.Players.List
     , plLanguage
     , plPageToken
     , plMaxResults
+    , plFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.players.list@ method which the
 -- 'PlayersList' request conforms to.
@@ -56,18 +57,20 @@ type PlayersListResource =
                    QueryParam "language" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] PlayerListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] PlayerListResponse
 
 -- | Get the collection of players for the currently authenticated user.
 --
 -- /See:/ 'playersList' smart constructor.
 data PlayersList = PlayersList'
     { _plConsistencyToken :: !(Maybe (Textual Int64))
-    , _plCollection       :: !PlayersListCollection
-    , _plLanguage         :: !(Maybe Text)
-    , _plPageToken        :: !(Maybe Text)
-    , _plMaxResults       :: !(Maybe (Textual Int32))
+    , _plCollection :: !PlayersListCollection
+    , _plLanguage :: !(Maybe Text)
+    , _plPageToken :: !(Maybe Text)
+    , _plMaxResults :: !(Maybe (Textual Int32))
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayersList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data PlayersList = PlayersList'
 -- * 'plPageToken'
 --
 -- * 'plMaxResults'
+--
+-- * 'plFields'
 playersList
     :: PlayersListCollection -- ^ 'plCollection'
     -> PlayersList
-playersList pPlCollection_ =
+playersList pPlCollection_ = 
     PlayersList'
     { _plConsistencyToken = Nothing
     , _plCollection = pPlCollection_
     , _plLanguage = Nothing
     , _plPageToken = Nothing
     , _plMaxResults = Nothing
+    , _plFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -125,6 +131,10 @@ plMaxResults
   = lens _plMaxResults (\ s a -> s{_plMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' PlayersList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 instance GoogleRequest PlayersList where
         type Rs PlayersList = PlayerListResponse
         type Scopes PlayersList =
@@ -134,6 +144,7 @@ instance GoogleRequest PlayersList where
           = go _plCollection _plConsistencyToken _plLanguage
               _plPageToken
               _plMaxResults
+              _plFields
               (Just AltJSON)
               gamesService
           where go

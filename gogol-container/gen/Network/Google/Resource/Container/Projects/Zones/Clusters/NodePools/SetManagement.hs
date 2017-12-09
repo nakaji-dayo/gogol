@@ -44,11 +44,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.SetMa
     , pzcnpsmBearerToken
     , pzcnpsmClusterId
     , pzcnpsmProjectId
+    , pzcnpsmFields
     , pzcnpsmCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.nodePools.setManagement@ method which the
 -- 'ProjectsZonesClustersNodePoolsSetManagement' request conforms to.
@@ -64,34 +65,36 @@ type ProjectsZonesClustersNodePoolsSetManagementResource
                    "nodePools" :>
                      Capture "nodePoolId" Text :>
                        "setManagement" :>
-                         QueryParam "$.xgafv" Text :>
+                         QueryParam "$.xgafv" Xgafv :>
                            QueryParam "upload_protocol" Text :>
                              QueryParam "pp" Bool :>
                                QueryParam "access_token" Text :>
                                  QueryParam "uploadType" Text :>
                                    QueryParam "bearer_token" Text :>
                                      QueryParam "callback" Text :>
-                                       QueryParam "alt" AltJSON :>
-                                         ReqBody '[JSON]
-                                           SetNodePoolManagementRequest
-                                           :> Post '[JSON] Operation
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           ReqBody '[JSON]
+                                             SetNodePoolManagementRequest
+                                             :> Post '[JSON] Operation
 
 -- | Sets the NodeManagement options for a node pool.
 --
 -- /See:/ 'projectsZonesClustersNodePoolsSetManagement' smart constructor.
 data ProjectsZonesClustersNodePoolsSetManagement = ProjectsZonesClustersNodePoolsSetManagement'
-    { _pzcnpsmXgafv          :: !(Maybe Text)
+    { _pzcnpsmXgafv :: !(Maybe Xgafv)
     , _pzcnpsmUploadProtocol :: !(Maybe Text)
-    , _pzcnpsmPp             :: !Bool
-    , _pzcnpsmAccessToken    :: !(Maybe Text)
-    , _pzcnpsmUploadType     :: !(Maybe Text)
-    , _pzcnpsmZone           :: !Text
-    , _pzcnpsmPayload        :: !SetNodePoolManagementRequest
-    , _pzcnpsmNodePoolId     :: !Text
-    , _pzcnpsmBearerToken    :: !(Maybe Text)
-    , _pzcnpsmClusterId      :: !Text
-    , _pzcnpsmProjectId      :: !Text
-    , _pzcnpsmCallback       :: !(Maybe Text)
+    , _pzcnpsmPp :: !Bool
+    , _pzcnpsmAccessToken :: !(Maybe Text)
+    , _pzcnpsmUploadType :: !(Maybe Text)
+    , _pzcnpsmZone :: !Text
+    , _pzcnpsmPayload :: !SetNodePoolManagementRequest
+    , _pzcnpsmNodePoolId :: !Text
+    , _pzcnpsmBearerToken :: !(Maybe Text)
+    , _pzcnpsmClusterId :: !Text
+    , _pzcnpsmProjectId :: !Text
+    , _pzcnpsmFields :: !(Maybe Text)
+    , _pzcnpsmCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersNodePoolsSetManagement' with the minimum fields required to make a request.
@@ -120,6 +123,8 @@ data ProjectsZonesClustersNodePoolsSetManagement = ProjectsZonesClustersNodePool
 --
 -- * 'pzcnpsmProjectId'
 --
+-- * 'pzcnpsmFields'
+--
 -- * 'pzcnpsmCallback'
 projectsZonesClustersNodePoolsSetManagement
     :: Text -- ^ 'pzcnpsmZone'
@@ -128,7 +133,7 @@ projectsZonesClustersNodePoolsSetManagement
     -> Text -- ^ 'pzcnpsmClusterId'
     -> Text -- ^ 'pzcnpsmProjectId'
     -> ProjectsZonesClustersNodePoolsSetManagement
-projectsZonesClustersNodePoolsSetManagement pPzcnpsmZone_ pPzcnpsmPayload_ pPzcnpsmNodePoolId_ pPzcnpsmClusterId_ pPzcnpsmProjectId_ =
+projectsZonesClustersNodePoolsSetManagement pPzcnpsmZone_ pPzcnpsmPayload_ pPzcnpsmNodePoolId_ pPzcnpsmClusterId_ pPzcnpsmProjectId_ = 
     ProjectsZonesClustersNodePoolsSetManagement'
     { _pzcnpsmXgafv = Nothing
     , _pzcnpsmUploadProtocol = Nothing
@@ -141,11 +146,12 @@ projectsZonesClustersNodePoolsSetManagement pPzcnpsmZone_ pPzcnpsmPayload_ pPzcn
     , _pzcnpsmBearerToken = Nothing
     , _pzcnpsmClusterId = pPzcnpsmClusterId_
     , _pzcnpsmProjectId = pPzcnpsmProjectId_
+    , _pzcnpsmFields = Nothing
     , _pzcnpsmCallback = Nothing
     }
 
 -- | V1 error format.
-pzcnpsmXgafv :: Lens' ProjectsZonesClustersNodePoolsSetManagement (Maybe Text)
+pzcnpsmXgafv :: Lens' ProjectsZonesClustersNodePoolsSetManagement (Maybe Xgafv)
 pzcnpsmXgafv
   = lens _pzcnpsmXgafv (\ s a -> s{_pzcnpsmXgafv = a})
 
@@ -209,6 +215,12 @@ pzcnpsmProjectId
   = lens _pzcnpsmProjectId
       (\ s a -> s{_pzcnpsmProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcnpsmFields :: Lens' ProjectsZonesClustersNodePoolsSetManagement (Maybe Text)
+pzcnpsmFields
+  = lens _pzcnpsmFields
+      (\ s a -> s{_pzcnpsmFields = a})
+
 -- | JSONP
 pzcnpsmCallback :: Lens' ProjectsZonesClustersNodePoolsSetManagement (Maybe Text)
 pzcnpsmCallback
@@ -233,6 +245,7 @@ instance GoogleRequest
               _pzcnpsmUploadType
               _pzcnpsmBearerToken
               _pzcnpsmCallback
+              _pzcnpsmFields
               (Just AltJSON)
               _pzcnpsmPayload
               containerService

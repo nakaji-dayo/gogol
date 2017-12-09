@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.Variants.Create
     , vcUploadType
     , vcPayload
     , vcBearerToken
+    , vcFields
     , vcCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variants.create@ method which the
 -- 'VariantsCreate' request conforms to.
@@ -60,8 +61,9 @@ type VariantsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Variant :> Post '[JSON] Variant
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Variant :> Post '[JSON] Variant
 
 -- | Creates a new variant. For the definitions of variants and other
 -- genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type VariantsCreateResource =
 --
 -- /See:/ 'variantsCreate' smart constructor.
 data VariantsCreate = VariantsCreate'
-    { _vcXgafv          :: !(Maybe Xgafv)
+    { _vcXgafv :: !(Maybe Xgafv)
     , _vcUploadProtocol :: !(Maybe Text)
-    , _vcPp             :: !Bool
-    , _vcAccessToken    :: !(Maybe Text)
-    , _vcUploadType     :: !(Maybe Text)
-    , _vcPayload        :: !Variant
-    , _vcBearerToken    :: !(Maybe Text)
-    , _vcCallback       :: !(Maybe Text)
+    , _vcPp :: !Bool
+    , _vcAccessToken :: !(Maybe Text)
+    , _vcUploadType :: !(Maybe Text)
+    , _vcPayload :: !Variant
+    , _vcBearerToken :: !(Maybe Text)
+    , _vcFields :: !(Maybe Text)
+    , _vcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantsCreate' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data VariantsCreate = VariantsCreate'
 --
 -- * 'vcBearerToken'
 --
+-- * 'vcFields'
+--
 -- * 'vcCallback'
 variantsCreate
     :: Variant -- ^ 'vcPayload'
     -> VariantsCreate
-variantsCreate pVcPayload_ =
+variantsCreate pVcPayload_ = 
     VariantsCreate'
     { _vcXgafv = Nothing
     , _vcUploadProtocol = Nothing
@@ -110,6 +115,7 @@ variantsCreate pVcPayload_ =
     , _vcUploadType = Nothing
     , _vcPayload = pVcPayload_
     , _vcBearerToken = Nothing
+    , _vcFields = Nothing
     , _vcCallback = Nothing
     }
 
@@ -149,6 +155,10 @@ vcBearerToken
   = lens _vcBearerToken
       (\ s a -> s{_vcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vcFields :: Lens' VariantsCreate (Maybe Text)
+vcFields = lens _vcFields (\ s a -> s{_vcFields = a})
+
 -- | JSONP
 vcCallback :: Lens' VariantsCreate (Maybe Text)
 vcCallback
@@ -165,6 +175,7 @@ instance GoogleRequest VariantsCreate where
               _vcUploadType
               _vcBearerToken
               _vcCallback
+              _vcFields
               (Just AltJSON)
               _vcPayload
               genomicsService

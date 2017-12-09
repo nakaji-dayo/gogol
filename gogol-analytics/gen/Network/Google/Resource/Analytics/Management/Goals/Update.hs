@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Goals.Update
     , mguProFileId
     , mguPayload
     , mguAccountId
+    , mguFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.goals.update@ method which the
 -- 'ManagementGoalsUpdate' request conforms to.
@@ -57,18 +58,20 @@ type ManagementGoalsUpdateResource =
                      Capture "profileId" Text :>
                        "goals" :>
                          Capture "goalId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Goal :> Put '[JSON] Goal
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Goal :> Put '[JSON] Goal
 
 -- | Updates an existing goal.
 --
 -- /See:/ 'managementGoalsUpdate' smart constructor.
 data ManagementGoalsUpdate = ManagementGoalsUpdate'
     { _mguWebPropertyId :: !Text
-    , _mguGoalId        :: !Text
-    , _mguProFileId     :: !Text
-    , _mguPayload       :: !Goal
-    , _mguAccountId     :: !Text
+    , _mguGoalId :: !Text
+    , _mguProFileId :: !Text
+    , _mguPayload :: !Goal
+    , _mguAccountId :: !Text
+    , _mguFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementGoalsUpdate' with the minimum fields required to make a request.
@@ -84,6 +87,8 @@ data ManagementGoalsUpdate = ManagementGoalsUpdate'
 -- * 'mguPayload'
 --
 -- * 'mguAccountId'
+--
+-- * 'mguFields'
 managementGoalsUpdate
     :: Text -- ^ 'mguWebPropertyId'
     -> Text -- ^ 'mguGoalId'
@@ -91,13 +96,14 @@ managementGoalsUpdate
     -> Goal -- ^ 'mguPayload'
     -> Text -- ^ 'mguAccountId'
     -> ManagementGoalsUpdate
-managementGoalsUpdate pMguWebPropertyId_ pMguGoalId_ pMguProFileId_ pMguPayload_ pMguAccountId_ =
+managementGoalsUpdate pMguWebPropertyId_ pMguGoalId_ pMguProFileId_ pMguPayload_ pMguAccountId_ = 
     ManagementGoalsUpdate'
     { _mguWebPropertyId = pMguWebPropertyId_
     , _mguGoalId = pMguGoalId_
     , _mguProFileId = pMguProFileId_
     , _mguPayload = pMguPayload_
     , _mguAccountId = pMguAccountId_
+    , _mguFields = Nothing
     }
 
 -- | Web property ID to update the goal.
@@ -126,6 +132,11 @@ mguAccountId :: Lens' ManagementGoalsUpdate Text
 mguAccountId
   = lens _mguAccountId (\ s a -> s{_mguAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mguFields :: Lens' ManagementGoalsUpdate (Maybe Text)
+mguFields
+  = lens _mguFields (\ s a -> s{_mguFields = a})
+
 instance GoogleRequest ManagementGoalsUpdate where
         type Rs ManagementGoalsUpdate = Goal
         type Scopes ManagementGoalsUpdate =
@@ -133,6 +144,7 @@ instance GoogleRequest ManagementGoalsUpdate where
         requestClient ManagementGoalsUpdate'{..}
           = go _mguAccountId _mguWebPropertyId _mguProFileId
               _mguGoalId
+              _mguFields
               (Just AltJSON)
               _mguPayload
               analyticsService

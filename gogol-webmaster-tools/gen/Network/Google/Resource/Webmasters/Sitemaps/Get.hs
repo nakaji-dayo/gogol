@@ -35,10 +35,11 @@ module Network.Google.Resource.Webmasters.Sitemaps.Get
     -- * Request Lenses
     , sgFeedpath
     , sgSiteURL
+    , sgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sitemaps.get@ method which the
 -- 'SitemapsGet' request conforms to.
@@ -49,14 +50,16 @@ type SitemapsGetResource =
            Capture "siteUrl" Text :>
              "sitemaps" :>
                Capture "feedpath" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] WmxSitemap
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] WmxSitemap
 
 -- | Retrieves information about a specific sitemap.
 --
 -- /See:/ 'sitemapsGet' smart constructor.
 data SitemapsGet = SitemapsGet'
     { _sgFeedpath :: !Text
-    , _sgSiteURL  :: !Text
+    , _sgSiteURL :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitemapsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitemapsGet = SitemapsGet'
 -- * 'sgFeedpath'
 --
 -- * 'sgSiteURL'
+--
+-- * 'sgFields'
 sitemapsGet
     :: Text -- ^ 'sgFeedpath'
     -> Text -- ^ 'sgSiteURL'
     -> SitemapsGet
-sitemapsGet pSgFeedpath_ pSgSiteURL_ =
+sitemapsGet pSgFeedpath_ pSgSiteURL_ = 
     SitemapsGet'
     { _sgFeedpath = pSgFeedpath_
     , _sgSiteURL = pSgSiteURL_
+    , _sgFields = Nothing
     }
 
 -- | The URL of the actual sitemap. For example:
@@ -88,13 +94,17 @@ sgSiteURL :: Lens' SitemapsGet Text
 sgSiteURL
   = lens _sgSiteURL (\ s a -> s{_sgSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SitemapsGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SitemapsGet where
         type Rs SitemapsGet = WmxSitemap
         type Scopes SitemapsGet =
              '["https://www.googleapis.com/auth/webmasters",
                "https://www.googleapis.com/auth/webmasters.readonly"]
         requestClient SitemapsGet'{..}
-          = go _sgSiteURL _sgFeedpath (Just AltJSON)
+          = go _sgSiteURL _sgFeedpath _sgFields (Just AltJSON)
               webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitemapsGetResource)

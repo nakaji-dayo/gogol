@@ -40,10 +40,11 @@ module Network.Google.Resource.BigQuery.Tables.Patch
     , tpDataSetId
     , tpProjectId
     , tpTableId
+    , tpFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tables.patch@ method which the
 -- 'TablesPatch' request conforms to.
@@ -56,8 +57,9 @@ type TablesPatchResource =
                Capture "datasetId" Text :>
                  "tables" :>
                    Capture "tableId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Table :> Patch '[JSON] Table
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Table :> Patch '[JSON] Table
 
 -- | Updates information in an existing table. The update method replaces the
 -- entire table resource, whereas the patch method only replaces fields
@@ -66,10 +68,11 @@ type TablesPatchResource =
 --
 -- /See:/ 'tablesPatch' smart constructor.
 data TablesPatch = TablesPatch'
-    { _tpPayload   :: !Table
+    { _tpPayload :: !Table
     , _tpDataSetId :: !Text
     , _tpProjectId :: !Text
-    , _tpTableId   :: !Text
+    , _tpTableId :: !Text
+    , _tpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TablesPatch' with the minimum fields required to make a request.
@@ -83,18 +86,21 @@ data TablesPatch = TablesPatch'
 -- * 'tpProjectId'
 --
 -- * 'tpTableId'
+--
+-- * 'tpFields'
 tablesPatch
     :: Table -- ^ 'tpPayload'
     -> Text -- ^ 'tpDataSetId'
     -> Text -- ^ 'tpProjectId'
     -> Text -- ^ 'tpTableId'
     -> TablesPatch
-tablesPatch pTpPayload_ pTpDataSetId_ pTpProjectId_ pTpTableId_ =
+tablesPatch pTpPayload_ pTpDataSetId_ pTpProjectId_ pTpTableId_ = 
     TablesPatch'
     { _tpPayload = pTpPayload_
     , _tpDataSetId = pTpDataSetId_
     , _tpProjectId = pTpProjectId_
     , _tpTableId = pTpTableId_
+    , _tpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -117,13 +123,17 @@ tpTableId :: Lens' TablesPatch Text
 tpTableId
   = lens _tpTableId (\ s a -> s{_tpTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpFields :: Lens' TablesPatch (Maybe Text)
+tpFields = lens _tpFields (\ s a -> s{_tpFields = a})
+
 instance GoogleRequest TablesPatch where
         type Rs TablesPatch = Table
         type Scopes TablesPatch =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient TablesPatch'{..}
-          = go _tpProjectId _tpDataSetId _tpTableId
+          = go _tpProjectId _tpDataSetId _tpTableId _tpFields
               (Just AltJSON)
               _tpPayload
               bigQueryService

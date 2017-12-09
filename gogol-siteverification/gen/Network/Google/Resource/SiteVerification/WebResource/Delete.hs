@@ -34,10 +34,11 @@ module Network.Google.Resource.SiteVerification.WebResource.Delete
 
     -- * Request Lenses
     , wrdId
+    , wrdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types
 
 -- | A resource alias for @siteVerification.webResource.delete@ method which the
 -- 'WebResourceDelete' request conforms to.
@@ -46,13 +47,15 @@ type WebResourceDeleteResource =
        "v1" :>
          "webResource" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Relinquish ownership of a website or domain.
 --
 -- /See:/ 'webResourceDelete' smart constructor.
-newtype WebResourceDelete = WebResourceDelete'
-    { _wrdId :: Text
+data WebResourceDelete = WebResourceDelete'
+    { _wrdId :: !Text
+    , _wrdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebResourceDelete' with the minimum fields required to make a request.
@@ -60,24 +63,33 @@ newtype WebResourceDelete = WebResourceDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'wrdId'
+--
+-- * 'wrdFields'
 webResourceDelete
     :: Text -- ^ 'wrdId'
     -> WebResourceDelete
-webResourceDelete pWrdId_ =
+webResourceDelete pWrdId_ = 
     WebResourceDelete'
     { _wrdId = pWrdId_
+    , _wrdFields = Nothing
     }
 
 -- | The id of a verified site or domain.
 wrdId :: Lens' WebResourceDelete Text
 wrdId = lens _wrdId (\ s a -> s{_wrdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wrdFields :: Lens' WebResourceDelete (Maybe Text)
+wrdFields
+  = lens _wrdFields (\ s a -> s{_wrdFields = a})
+
 instance GoogleRequest WebResourceDelete where
         type Rs WebResourceDelete = ()
         type Scopes WebResourceDelete =
              '["https://www.googleapis.com/auth/siteverification"]
         requestClient WebResourceDelete'{..}
-          = go _wrdId (Just AltJSON) siteVerificationService
+          = go _wrdId _wrdFields (Just AltJSON)
+              siteVerificationService
           where go
                   = buildClient
                       (Proxy :: Proxy WebResourceDeleteResource)

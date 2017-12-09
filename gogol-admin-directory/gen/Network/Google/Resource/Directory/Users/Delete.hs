@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Users.Delete
 
     -- * Request Lenses
     , udUserKey
+    , udFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.delete@ method which the
 -- 'UsersDelete' request conforms to.
@@ -47,13 +48,15 @@ type UsersDeleteResource =
          "v1" :>
            "users" :>
              Capture "userKey" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete user
 --
 -- /See:/ 'usersDelete' smart constructor.
-newtype UsersDelete = UsersDelete'
-    { _udUserKey :: Text
+data UsersDelete = UsersDelete'
+    { _udUserKey :: !Text
+    , _udFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDelete' with the minimum fields required to make a request.
@@ -61,25 +64,33 @@ newtype UsersDelete = UsersDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'udUserKey'
+--
+-- * 'udFields'
 usersDelete
     :: Text -- ^ 'udUserKey'
     -> UsersDelete
-usersDelete pUdUserKey_ =
+usersDelete pUdUserKey_ = 
     UsersDelete'
     { _udUserKey = pUdUserKey_
+    , _udFields = Nothing
     }
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 udUserKey :: Lens' UsersDelete Text
 udUserKey
   = lens _udUserKey (\ s a -> s{_udUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+udFields :: Lens' UsersDelete (Maybe Text)
+udFields = lens _udFields (\ s a -> s{_udFields = a})
 
 instance GoogleRequest UsersDelete where
         type Rs UsersDelete = ()
         type Scopes UsersDelete =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersDelete'{..}
-          = go _udUserKey (Just AltJSON) directoryService
+          = go _udUserKey _udFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersDeleteResource)
                       mempty

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Advertisers.Insert
     -- * Request Lenses
     , aiiProFileId
     , aiiPayload
+    , aiiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertisers.insert@ method which the
 -- 'AdvertisersInsert' request conforms to.
 type AdvertisersInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertisers" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Advertiser :> Post '[JSON] Advertiser
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Advertiser :> Post '[JSON] Advertiser
 
 -- | Inserts a new advertiser.
 --
 -- /See:/ 'advertisersInsert' smart constructor.
 data AdvertisersInsert = AdvertisersInsert'
     { _aiiProFileId :: !(Textual Int64)
-    , _aiiPayload   :: !Advertiser
+    , _aiiPayload :: !Advertiser
+    , _aiiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertisersInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdvertisersInsert = AdvertisersInsert'
 -- * 'aiiProFileId'
 --
 -- * 'aiiPayload'
+--
+-- * 'aiiFields'
 advertisersInsert
     :: Int64 -- ^ 'aiiProFileId'
     -> Advertiser -- ^ 'aiiPayload'
     -> AdvertisersInsert
-advertisersInsert pAiiProFileId_ pAiiPayload_ =
+advertisersInsert pAiiProFileId_ pAiiPayload_ = 
     AdvertisersInsert'
     { _aiiProFileId = _Coerce # pAiiProFileId_
     , _aiiPayload = pAiiPayload_
+    , _aiiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ aiiPayload :: Lens' AdvertisersInsert Advertiser
 aiiPayload
   = lens _aiiPayload (\ s a -> s{_aiiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiiFields :: Lens' AdvertisersInsert (Maybe Text)
+aiiFields
+  = lens _aiiFields (\ s a -> s{_aiiFields = a})
+
 instance GoogleRequest AdvertisersInsert where
         type Rs AdvertisersInsert = Advertiser
         type Scopes AdvertisersInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertisersInsert'{..}
-          = go _aiiProFileId (Just AltJSON) _aiiPayload
+          = go _aiiProFileId _aiiFields (Just AltJSON)
+              _aiiPayload
               dFAReportingService
           where go
                   = buildClient

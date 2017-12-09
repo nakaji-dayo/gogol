@@ -17,14 +17,14 @@
 --
 module Network.Google.AppsTasks.Types.Product where
 
-import           Network.Google.AppsTasks.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types.Sum
+import Network.Google.Prelude
 
 --
 -- /See:/ 'taskLinksItem' smart constructor.
 data TaskLinksItem = TaskLinksItem'
-    { _tliLink        :: !(Maybe Text)
-    , _tliType        :: !(Maybe Text)
+    { _tliLink :: !(Maybe Text)
+    , _tliType :: !(Maybe Text)
     , _tliDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -39,7 +39,7 @@ data TaskLinksItem = TaskLinksItem'
 -- * 'tliDescription'
 taskLinksItem
     :: TaskLinksItem
-taskLinksItem =
+taskLinksItem = 
     TaskLinksItem'
     { _tliLink = Nothing
     , _tliType = Nothing
@@ -78,10 +78,10 @@ instance ToJSON TaskLinksItem where
 --
 -- /See:/ 'tasks' smart constructor.
 data Tasks = Tasks'
-    { _tEtag          :: !(Maybe Text)
+    { _tEtag :: !(Maybe Text)
     , _tNextPageToken :: !(Maybe Text)
-    , _tKind          :: !Text
-    , _tItems         :: !(Maybe [Task])
+    , _tKind :: !Text
+    , _tItems :: !(Maybe [Task])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Tasks' with the minimum fields required to make a request.
@@ -97,7 +97,7 @@ data Tasks = Tasks'
 -- * 'tItems'
 tasks
     :: Tasks
-tasks =
+tasks = 
     Tasks'
     { _tEtag = Nothing
     , _tNextPageToken = Nothing
@@ -145,10 +145,10 @@ instance ToJSON Tasks where
 --
 -- /See:/ 'taskLists' smart constructor.
 data TaskLists = TaskLists'
-    { _tlEtag          :: !(Maybe Text)
+    { _tlEtag :: !(Maybe Text)
     , _tlNextPageToken :: !(Maybe Text)
-    , _tlKind          :: !Text
-    , _tlItems         :: !(Maybe [TaskList])
+    , _tlKind :: !Text
+    , _tlItems :: !(Maybe [TaskList])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskLists' with the minimum fields required to make a request.
@@ -164,7 +164,7 @@ data TaskLists = TaskLists'
 -- * 'tlItems'
 taskLists
     :: TaskLists
-taskLists =
+taskLists = 
     TaskLists'
     { _tlEtag = Nothing
     , _tlNextPageToken = Nothing
@@ -212,12 +212,12 @@ instance ToJSON TaskLists where
 --
 -- /See:/ 'taskList' smart constructor.
 data TaskList = TaskList'
-    { _tasEtag     :: !(Maybe Text)
-    , _tasKind     :: !Text
+    { _tasEtag :: !(Maybe Text)
+    , _tasKind :: !Text
     , _tasSelfLink :: !(Maybe Text)
-    , _tasId       :: !(Maybe Text)
-    , _tasUpdated  :: !(Maybe DateTime')
-    , _tasTitle    :: !(Maybe Text)
+    , _tasId :: !(Maybe Text)
+    , _tasUpdated :: !(Maybe DateTime')
+    , _tasTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskList' with the minimum fields required to make a request.
@@ -237,7 +237,7 @@ data TaskList = TaskList'
 -- * 'tasTitle'
 taskList
     :: TaskList
-taskList =
+taskList = 
     TaskList'
     { _tasEtag = Nothing
     , _tasKind = "tasks#taskList"
@@ -299,21 +299,21 @@ instance ToJSON TaskList where
 --
 -- /See:/ 'task' smart constructor.
 data Task = Task'
-    { _ttParent    :: !(Maybe Text)
-    , _ttStatus    :: !(Maybe Text)
-    , _ttDue       :: !(Maybe DateTime')
-    , _ttEtag      :: !(Maybe Text)
-    , _ttKind      :: !Text
-    , _ttSelfLink  :: !(Maybe Text)
-    , _ttHidden    :: !(Maybe Bool)
+    { _ttParent :: !(Maybe Text)
+    , _ttStatus :: !(Maybe Text)
+    , _ttDue :: !(Maybe DateTime')
+    , _ttEtag :: !(Maybe Text)
+    , _ttKind :: !Text
+    , _ttSelfLink :: !(Maybe Text)
+    , _ttHidden :: !(Maybe Bool)
     , _ttCompleted :: !(Maybe DateTime')
-    , _ttId        :: !(Maybe Text)
-    , _ttDeleted   :: !(Maybe Bool)
-    , _ttUpdated   :: !(Maybe DateTime')
-    , _ttTitle     :: !(Maybe Text)
-    , _ttLinks     :: !(Maybe [TaskLinksItem])
-    , _ttNotes     :: !(Maybe Text)
-    , _ttPosition  :: !(Maybe Text)
+    , _ttId :: !(Maybe Text)
+    , _ttDeleted :: !(Maybe Bool)
+    , _ttUpdated :: !(Maybe DateTime')
+    , _ttTitle :: !(Maybe Text)
+    , _ttLinks :: !(Maybe [TaskLinksItem])
+    , _ttNotes :: !(Maybe Text)
+    , _ttPosition :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Task' with the minimum fields required to make a request.
@@ -351,7 +351,7 @@ data Task = Task'
 -- * 'ttPosition'
 task
     :: Task
-task =
+task = 
     Task'
     { _ttParent = Nothing
     , _ttStatus = Nothing

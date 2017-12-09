@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.OperatingSystems.Get
     -- * Request Lenses
     , osgProFileId
     , osgDartId
+    , osgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.operatingSystems.get@ method which the
 -- 'OperatingSystemsGet' request conforms to.
 type OperatingSystemsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "operatingSystems" :>
                Capture "dartId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] OperatingSystem
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] OperatingSystem
 
 -- | Gets one operating system by DART ID.
 --
 -- /See:/ 'operatingSystemsGet' smart constructor.
 data OperatingSystemsGet = OperatingSystemsGet'
     { _osgProFileId :: !(Textual Int64)
-    , _osgDartId    :: !(Textual Int64)
+    , _osgDartId :: !(Textual Int64)
+    , _osgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperatingSystemsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data OperatingSystemsGet = OperatingSystemsGet'
 -- * 'osgProFileId'
 --
 -- * 'osgDartId'
+--
+-- * 'osgFields'
 operatingSystemsGet
     :: Int64 -- ^ 'osgProFileId'
     -> Int64 -- ^ 'osgDartId'
     -> OperatingSystemsGet
-operatingSystemsGet pOsgProFileId_ pOsgDartId_ =
+operatingSystemsGet pOsgProFileId_ pOsgDartId_ = 
     OperatingSystemsGet'
     { _osgProFileId = _Coerce # pOsgProFileId_
     , _osgDartId = _Coerce # pOsgDartId_
+    , _osgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,12 +95,18 @@ osgDartId
   = lens _osgDartId (\ s a -> s{_osgDartId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+osgFields :: Lens' OperatingSystemsGet (Maybe Text)
+osgFields
+  = lens _osgFields (\ s a -> s{_osgFields = a})
+
 instance GoogleRequest OperatingSystemsGet where
         type Rs OperatingSystemsGet = OperatingSystem
         type Scopes OperatingSystemsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient OperatingSystemsGet'{..}
-          = go _osgProFileId _osgDartId (Just AltJSON)
+          = go _osgProFileId _osgDartId _osgFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

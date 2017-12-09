@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.BackupRuns.Get
     -- * Request Lenses
     , brgProject
     , brgId
+    , brgFields
     , brgInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.backupRuns.get@ method which the
 -- 'BackupRunsGet' request conforms to.
@@ -52,14 +53,16 @@ type BackupRunsGetResource =
                Capture "instance" Text :>
                  "backupRuns" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] BackupRun
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] BackupRun
 
 -- | Retrieves a resource containing information about a backup run.
 --
 -- /See:/ 'backupRunsGet' smart constructor.
 data BackupRunsGet = BackupRunsGet'
-    { _brgProject  :: !Text
-    , _brgId       :: !(Textual Int64)
+    { _brgProject :: !Text
+    , _brgId :: !(Textual Int64)
+    , _brgFields :: !(Maybe Text)
     , _brgInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -71,16 +74,19 @@ data BackupRunsGet = BackupRunsGet'
 --
 -- * 'brgId'
 --
+-- * 'brgFields'
+--
 -- * 'brgInstance'
 backupRunsGet
     :: Text -- ^ 'brgProject'
     -> Int64 -- ^ 'brgId'
     -> Text -- ^ 'brgInstance'
     -> BackupRunsGet
-backupRunsGet pBrgProject_ pBrgId_ pBrgInstance_ =
+backupRunsGet pBrgProject_ pBrgId_ pBrgInstance_ = 
     BackupRunsGet'
     { _brgProject = pBrgProject_
     , _brgId = _Coerce # pBrgId_
+    , _brgFields = Nothing
     , _brgInstance = pBrgInstance_
     }
 
@@ -94,6 +100,11 @@ brgId :: Lens' BackupRunsGet Int64
 brgId
   = lens _brgId (\ s a -> s{_brgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+brgFields :: Lens' BackupRunsGet (Maybe Text)
+brgFields
+  = lens _brgFields (\ s a -> s{_brgFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 brgInstance :: Lens' BackupRunsGet Text
 brgInstance
@@ -105,7 +116,8 @@ instance GoogleRequest BackupRunsGet where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient BackupRunsGet'{..}
-          = go _brgProject _brgInstance _brgId (Just AltJSON)
+          = go _brgProject _brgInstance _brgId _brgFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy BackupRunsGetResource)

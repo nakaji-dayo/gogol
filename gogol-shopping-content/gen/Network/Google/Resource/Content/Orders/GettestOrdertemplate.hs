@@ -21,8 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Sandbox only. Retrieves an order template that can be used to quickly
--- create a new order in sandbox. This method can only be called for
--- non-multi-client accounts.
+-- create a new order in sandbox.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.gettestordertemplate@.
 module Network.Google.Resource.Content.Orders.GettestOrdertemplate
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.GettestOrdertemplate
     -- * Request Lenses
     , ogoMerchantId
     , ogoTemplateName
+    , ogoFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.gettestordertemplate@ method which the
 -- 'OrdersGettestOrdertemplate' request conforms to.
@@ -52,17 +52,18 @@ type OrdersGettestOrdertemplateResource =
              Capture "templateName"
                OrdersGettestOrdertemplateTemplateName
                :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] OrdersGetTestOrderTemplateResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] OrdersGetTestOrderTemplateResponse
 
 -- | Sandbox only. Retrieves an order template that can be used to quickly
--- create a new order in sandbox. This method can only be called for
--- non-multi-client accounts.
+-- create a new order in sandbox.
 --
 -- /See:/ 'ordersGettestOrdertemplate' smart constructor.
 data OrdersGettestOrdertemplate = OrdersGettestOrdertemplate'
-    { _ogoMerchantId   :: !(Textual Word64)
+    { _ogoMerchantId :: !(Textual Word64)
     , _ogoTemplateName :: !OrdersGettestOrdertemplateTemplateName
+    , _ogoFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersGettestOrdertemplate' with the minimum fields required to make a request.
@@ -72,17 +73,21 @@ data OrdersGettestOrdertemplate = OrdersGettestOrdertemplate'
 -- * 'ogoMerchantId'
 --
 -- * 'ogoTemplateName'
+--
+-- * 'ogoFields'
 ordersGettestOrdertemplate
     :: Word64 -- ^ 'ogoMerchantId'
     -> OrdersGettestOrdertemplateTemplateName -- ^ 'ogoTemplateName'
     -> OrdersGettestOrdertemplate
-ordersGettestOrdertemplate pOgoMerchantId_ pOgoTemplateName_ =
+ordersGettestOrdertemplate pOgoMerchantId_ pOgoTemplateName_ = 
     OrdersGettestOrdertemplate'
     { _ogoMerchantId = _Coerce # pOgoMerchantId_
     , _ogoTemplateName = pOgoTemplateName_
+    , _ogoFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that should manage the order. This cannot be a
+-- multi-client account.
 ogoMerchantId :: Lens' OrdersGettestOrdertemplate Word64
 ogoMerchantId
   = lens _ogoMerchantId
@@ -95,6 +100,11 @@ ogoTemplateName
   = lens _ogoTemplateName
       (\ s a -> s{_ogoTemplateName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ogoFields :: Lens' OrdersGettestOrdertemplate (Maybe Text)
+ogoFields
+  = lens _ogoFields (\ s a -> s{_ogoFields = a})
+
 instance GoogleRequest OrdersGettestOrdertemplate
          where
         type Rs OrdersGettestOrdertemplate =
@@ -102,7 +112,8 @@ instance GoogleRequest OrdersGettestOrdertemplate
         type Scopes OrdersGettestOrdertemplate =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersGettestOrdertemplate'{..}
-          = go _ogoMerchantId _ogoTemplateName (Just AltJSON)
+          = go _ogoMerchantId _ogoTemplateName _ogoFields
+              (Just AltJSON)
               shoppingContentService
           where go
                   = buildClient

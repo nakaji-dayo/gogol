@@ -38,10 +38,11 @@ module Network.Google.Resource.PlusDomains.Activities.List
     , alUserId
     , alPageToken
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.activities.list@ method which the
 -- 'ActivitiesList' request conforms to.
@@ -54,7 +55,8 @@ type ActivitiesListResource =
                Capture "collection" ActivitiesListCollection :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] ActivityFeed
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] ActivityFeed
 
 -- | List all of the activities in the specified collection for a particular
 -- user.
@@ -62,9 +64,10 @@ type ActivitiesListResource =
 -- /See:/ 'activitiesList' smart constructor.
 data ActivitiesList = ActivitiesList'
     { _alCollection :: !ActivitiesListCollection
-    , _alUserId     :: !Text
-    , _alPageToken  :: !(Maybe Text)
+    , _alUserId :: !Text
+    , _alPageToken :: !(Maybe Text)
     , _alMaxResults :: !(Textual Word32)
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data ActivitiesList = ActivitiesList'
 -- * 'alPageToken'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 activitiesList
     :: ActivitiesListCollection -- ^ 'alCollection'
     -> Text -- ^ 'alUserId'
     -> ActivitiesList
-activitiesList pAlCollection_ pAlUserId_ =
+activitiesList pAlCollection_ pAlUserId_ = 
     ActivitiesList'
     { _alCollection = pAlCollection_
     , _alUserId = pAlUserId_
     , _alPageToken = Nothing
     , _alMaxResults = 20
+    , _alFields = Nothing
     }
 
 -- | The collection of activities to list.
@@ -115,6 +121,10 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ActivitiesList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ActivitiesList where
         type Rs ActivitiesList = ActivityFeed
         type Scopes ActivitiesList =
@@ -124,6 +134,7 @@ instance GoogleRequest ActivitiesList where
         requestClient ActivitiesList'{..}
           = go _alUserId _alCollection _alPageToken
               (Just _alMaxResults)
+              _alFields
               (Just AltJSON)
               plusDomainsService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdUnits.GetAdCode
     , aaugacAdClientId
     , aaugacAccountId
     , aaugacHostCustomChannelId
+    , aaugacFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adunits.getAdCode@ method which the
 -- 'AccountsAdUnitsGetAdCode' request conforms to.
@@ -56,17 +57,19 @@ type AccountsAdUnitsGetAdCodeResource =
                    Capture "adUnitId" Text :>
                      "adcode" :>
                        QueryParams "hostCustomChannelId" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] AdCode
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] AdCode
 
 -- | Get ad code for the specified ad unit, attaching the specified host
 -- custom channels.
 --
 -- /See:/ 'accountsAdUnitsGetAdCode' smart constructor.
 data AccountsAdUnitsGetAdCode = AccountsAdUnitsGetAdCode'
-    { _aaugacAdUnitId            :: !Text
-    , _aaugacAdClientId          :: !Text
-    , _aaugacAccountId           :: !Text
+    { _aaugacAdUnitId :: !Text
+    , _aaugacAdClientId :: !Text
+    , _aaugacAccountId :: !Text
     , _aaugacHostCustomChannelId :: !(Maybe [Text])
+    , _aaugacFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsGetAdCode' with the minimum fields required to make a request.
@@ -80,17 +83,20 @@ data AccountsAdUnitsGetAdCode = AccountsAdUnitsGetAdCode'
 -- * 'aaugacAccountId'
 --
 -- * 'aaugacHostCustomChannelId'
+--
+-- * 'aaugacFields'
 accountsAdUnitsGetAdCode
     :: Text -- ^ 'aaugacAdUnitId'
     -> Text -- ^ 'aaugacAdClientId'
     -> Text -- ^ 'aaugacAccountId'
     -> AccountsAdUnitsGetAdCode
-accountsAdUnitsGetAdCode pAaugacAdUnitId_ pAaugacAdClientId_ pAaugacAccountId_ =
+accountsAdUnitsGetAdCode pAaugacAdUnitId_ pAaugacAdClientId_ pAaugacAccountId_ = 
     AccountsAdUnitsGetAdCode'
     { _aaugacAdUnitId = pAaugacAdUnitId_
     , _aaugacAdClientId = pAaugacAdClientId_
     , _aaugacAccountId = pAaugacAccountId_
     , _aaugacHostCustomChannelId = Nothing
+    , _aaugacFields = Nothing
     }
 
 -- | Ad unit to get the code for.
@@ -119,6 +125,11 @@ aaugacHostCustomChannelId
       . _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aaugacFields :: Lens' AccountsAdUnitsGetAdCode (Maybe Text)
+aaugacFields
+  = lens _aaugacFields (\ s a -> s{_aaugacFields = a})
+
 instance GoogleRequest AccountsAdUnitsGetAdCode where
         type Rs AccountsAdUnitsGetAdCode = AdCode
         type Scopes AccountsAdUnitsGetAdCode =
@@ -127,6 +138,7 @@ instance GoogleRequest AccountsAdUnitsGetAdCode where
           = go _aaugacAccountId _aaugacAdClientId
               _aaugacAdUnitId
               (_aaugacHostCustomChannelId ^. _Default)
+              _aaugacFields
               (Just AltJSON)
               adSenseHostService
           where go

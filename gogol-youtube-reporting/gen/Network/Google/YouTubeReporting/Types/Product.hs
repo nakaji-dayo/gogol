@@ -17,15 +17,15 @@
 --
 module Network.Google.YouTubeReporting.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types.Sum
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types.Sum
 
 -- | Response message for ReportingService.ListReports.
 --
 -- /See:/ 'listReportsResponse' smart constructor.
 data ListReportsResponse = ListReportsResponse'
     { _lrrNextPageToken :: !(Maybe Text)
-    , _lrrReports       :: !(Maybe [Report])
+    , _lrrReports :: !(Maybe [Report])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListReportsResponse' with the minimum fields required to make a request.
@@ -37,7 +37,7 @@ data ListReportsResponse = ListReportsResponse'
 -- * 'lrrReports'
 listReportsResponse
     :: ListReportsResponse
-listReportsResponse =
+listReportsResponse = 
     ListReportsResponse'
     { _lrrNextPageToken = Nothing
     , _lrrReports = Nothing
@@ -81,7 +81,7 @@ instance ToJSON ListReportsResponse where
 --
 -- /See:/ 'empty' smart constructor.
 data Empty =
-    Empty'
+    Empty' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Empty' with the minimum fields required to make a request.
@@ -101,12 +101,12 @@ instance ToJSON Empty where
 --
 -- /See:/ 'report' smart constructor.
 data Report = Report'
-    { _rJobId         :: !(Maybe Text)
-    , _rStartTime     :: !(Maybe DateTime')
-    , _rDownloadURL   :: !(Maybe Text)
-    , _rEndTime       :: !(Maybe DateTime')
-    , _rId            :: !(Maybe Text)
-    , _rCreateTime    :: !(Maybe DateTime')
+    { _rJobId :: !(Maybe Text)
+    , _rStartTime :: !(Maybe DateTime')
+    , _rDownloadURL :: !(Maybe Text)
+    , _rEndTime :: !(Maybe DateTime')
+    , _rId :: !(Maybe Text)
+    , _rCreateTime :: !(Maybe DateTime')
     , _rJobExpireTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -129,7 +129,7 @@ data Report = Report'
 -- * 'rJobExpireTime'
 report
     :: Report
-report =
+report = 
     Report'
     { _rJobId = Nothing
     , _rStartTime = Nothing
@@ -208,7 +208,7 @@ instance ToJSON Report where
 -- /See:/ 'listReportTypesResponse' smart constructor.
 data ListReportTypesResponse = ListReportTypesResponse'
     { _lrtrNextPageToken :: !(Maybe Text)
-    , _lrtrReportTypes   :: !(Maybe [ReportType])
+    , _lrtrReportTypes :: !(Maybe [ReportType])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListReportTypesResponse' with the minimum fields required to make a request.
@@ -220,7 +220,7 @@ data ListReportTypesResponse = ListReportTypesResponse'
 -- * 'lrtrReportTypes'
 listReportTypesResponse
     :: ListReportTypesResponse
-listReportTypesResponse =
+listReportTypesResponse = 
     ListReportTypesResponse'
     { _lrtrNextPageToken = Nothing
     , _lrtrReportTypes = Nothing
@@ -271,7 +271,7 @@ newtype Media = Media'
 -- * 'mResourceName'
 media
     :: Media
-media =
+media = 
     Media'
     { _mResourceName = Nothing
     }
@@ -296,12 +296,12 @@ instance ToJSON Media where
 --
 -- /See:/ 'job' smart constructor.
 data Job = Job'
-    { _jName          :: !(Maybe Text)
-    , _jId            :: !(Maybe Text)
+    { _jName :: !(Maybe Text)
+    , _jId :: !(Maybe Text)
     , _jSystemManaged :: !(Maybe Bool)
-    , _jReportTypeId  :: !(Maybe Text)
-    , _jExpireTime    :: !(Maybe DateTime')
-    , _jCreateTime    :: !(Maybe DateTime')
+    , _jReportTypeId :: !(Maybe Text)
+    , _jExpireTime :: !(Maybe DateTime')
+    , _jCreateTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Job' with the minimum fields required to make a request.
@@ -321,7 +321,7 @@ data Job = Job'
 -- * 'jCreateTime'
 job
     :: Job
-job =
+job = 
     Job'
     { _jName = Nothing
     , _jId = Nothing
@@ -392,7 +392,7 @@ instance ToJSON Job where
 -- /See:/ 'listJobsResponse' smart constructor.
 data ListJobsResponse = ListJobsResponse'
     { _ljrNextPageToken :: !(Maybe Text)
-    , _ljrJobs          :: !(Maybe [Job])
+    , _ljrJobs :: !(Maybe [Job])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListJobsResponse' with the minimum fields required to make a request.
@@ -404,7 +404,7 @@ data ListJobsResponse = ListJobsResponse'
 -- * 'ljrJobs'
 listJobsResponse
     :: ListJobsResponse
-listJobsResponse =
+listJobsResponse = 
     ListJobsResponse'
     { _ljrNextPageToken = Nothing
     , _ljrJobs = Nothing
@@ -443,8 +443,8 @@ instance ToJSON ListJobsResponse where
 --
 -- /See:/ 'reportType' smart constructor.
 data ReportType = ReportType'
-    { _rtName          :: !(Maybe Text)
-    , _rtId            :: !(Maybe Text)
+    { _rtName :: !(Maybe Text)
+    , _rtId :: !(Maybe Text)
     , _rtDeprecateTime :: !(Maybe DateTime')
     , _rtSystemManaged :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
@@ -462,7 +462,7 @@ data ReportType = ReportType'
 -- * 'rtSystemManaged'
 reportType
     :: ReportType
-reportType =
+reportType = 
     ReportType'
     { _rtName = Nothing
     , _rtId = Nothing

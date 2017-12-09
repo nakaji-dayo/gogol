@@ -41,11 +41,12 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.Create
     , psacPayload
     , psacBearerToken
     , psacName
+    , psacFields
     , psacCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.create@ method which the
 -- 'ProjectsServiceAccountsCreate' request conforms to.
@@ -53,30 +54,32 @@ type ProjectsServiceAccountsCreateResource =
      "v1" :>
        Capture "name" Text :>
          "serviceAccounts" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CreateServiceAccountRequest :>
-                             Post '[JSON] ServiceAccount
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CreateServiceAccountRequest :>
+                               Post '[JSON] ServiceAccount
 
 -- | Creates a ServiceAccount and returns it.
 --
 -- /See:/ 'projectsServiceAccountsCreate' smart constructor.
 data ProjectsServiceAccountsCreate = ProjectsServiceAccountsCreate'
-    { _psacXgafv          :: !(Maybe Text)
+    { _psacXgafv :: !(Maybe Xgafv)
     , _psacUploadProtocol :: !(Maybe Text)
-    , _psacPp             :: !Bool
-    , _psacAccessToken    :: !(Maybe Text)
-    , _psacUploadType     :: !(Maybe Text)
-    , _psacPayload        :: !CreateServiceAccountRequest
-    , _psacBearerToken    :: !(Maybe Text)
-    , _psacName           :: !Text
-    , _psacCallback       :: !(Maybe Text)
+    , _psacPp :: !Bool
+    , _psacAccessToken :: !(Maybe Text)
+    , _psacUploadType :: !(Maybe Text)
+    , _psacPayload :: !CreateServiceAccountRequest
+    , _psacBearerToken :: !(Maybe Text)
+    , _psacName :: !Text
+    , _psacFields :: !(Maybe Text)
+    , _psacCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsCreate' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsServiceAccountsCreate = ProjectsServiceAccountsCreate'
 --
 -- * 'psacName'
 --
+-- * 'psacFields'
+--
 -- * 'psacCallback'
 projectsServiceAccountsCreate
     :: CreateServiceAccountRequest -- ^ 'psacPayload'
     -> Text -- ^ 'psacName'
     -> ProjectsServiceAccountsCreate
-projectsServiceAccountsCreate pPsacPayload_ pPsacName_ =
+projectsServiceAccountsCreate pPsacPayload_ pPsacName_ = 
     ProjectsServiceAccountsCreate'
     { _psacXgafv = Nothing
     , _psacUploadProtocol = Nothing
@@ -114,11 +119,12 @@ projectsServiceAccountsCreate pPsacPayload_ pPsacName_ =
     , _psacPayload = pPsacPayload_
     , _psacBearerToken = Nothing
     , _psacName = pPsacName_
+    , _psacFields = Nothing
     , _psacCallback = Nothing
     }
 
 -- | V1 error format.
-psacXgafv :: Lens' ProjectsServiceAccountsCreate (Maybe Text)
+psacXgafv :: Lens' ProjectsServiceAccountsCreate (Maybe Xgafv)
 psacXgafv
   = lens _psacXgafv (\ s a -> s{_psacXgafv = a})
 
@@ -160,6 +166,11 @@ psacBearerToken
 psacName :: Lens' ProjectsServiceAccountsCreate Text
 psacName = lens _psacName (\ s a -> s{_psacName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psacFields :: Lens' ProjectsServiceAccountsCreate (Maybe Text)
+psacFields
+  = lens _psacFields (\ s a -> s{_psacFields = a})
+
 -- | JSONP
 psacCallback :: Lens' ProjectsServiceAccountsCreate (Maybe Text)
 psacCallback
@@ -178,6 +189,7 @@ instance GoogleRequest ProjectsServiceAccountsCreate
               _psacUploadType
               _psacBearerToken
               _psacCallback
+              _psacFields
               (Just AltJSON)
               _psacPayload
               iAMService

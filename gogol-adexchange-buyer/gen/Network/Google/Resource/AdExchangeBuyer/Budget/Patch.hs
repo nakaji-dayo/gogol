@@ -38,10 +38,11 @@ module Network.Google.Resource.AdExchangeBuyer.Budget.Patch
     , bpPayload
     , bpAccountId
     , bpBillingId
+    , bpFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.budget.patch@ method which the
 -- 'BudgetPatch' request conforms to.
@@ -51,8 +52,9 @@ type BudgetPatchResource =
          "billinginfo" :>
            Capture "accountId" (Textual Int64) :>
              Capture "billingId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Budget :> Patch '[JSON] Budget
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Budget :> Patch '[JSON] Budget
 
 -- | Updates the budget amount for the budget of the adgroup specified by the
 -- accountId and billingId, with the budget amount in the request. This
@@ -60,9 +62,10 @@ type BudgetPatchResource =
 --
 -- /See:/ 'budgetPatch' smart constructor.
 data BudgetPatch = BudgetPatch'
-    { _bpPayload   :: !Budget
+    { _bpPayload :: !Budget
     , _bpAccountId :: !(Textual Int64)
     , _bpBillingId :: !(Textual Int64)
+    , _bpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BudgetPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data BudgetPatch = BudgetPatch'
 -- * 'bpAccountId'
 --
 -- * 'bpBillingId'
+--
+-- * 'bpFields'
 budgetPatch
     :: Budget -- ^ 'bpPayload'
     -> Int64 -- ^ 'bpAccountId'
     -> Int64 -- ^ 'bpBillingId'
     -> BudgetPatch
-budgetPatch pBpPayload_ pBpAccountId_ pBpBillingId_ =
+budgetPatch pBpPayload_ pBpAccountId_ pBpBillingId_ = 
     BudgetPatch'
     { _bpPayload = pBpPayload_
     , _bpAccountId = _Coerce # pBpAccountId_
     , _bpBillingId = _Coerce # pBpBillingId_
+    , _bpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -103,12 +109,17 @@ bpBillingId
   = lens _bpBillingId (\ s a -> s{_bpBillingId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+bpFields :: Lens' BudgetPatch (Maybe Text)
+bpFields = lens _bpFields (\ s a -> s{_bpFields = a})
+
 instance GoogleRequest BudgetPatch where
         type Rs BudgetPatch = Budget
         type Scopes BudgetPatch =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient BudgetPatch'{..}
-          = go _bpAccountId _bpBillingId (Just AltJSON)
+          = go _bpAccountId _bpBillingId _bpFields
+              (Just AltJSON)
               _bpPayload
               adExchangeBuyerService
           where go

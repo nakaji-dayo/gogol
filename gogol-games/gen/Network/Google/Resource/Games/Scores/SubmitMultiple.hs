@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.Scores.SubmitMultiple
     , ssmConsistencyToken
     , ssmPayload
     , ssmLanguage
+    , ssmFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.scores.submitMultiple@ method which the
 -- 'ScoresSubmitMultiple' request conforms to.
@@ -50,17 +51,19 @@ type ScoresSubmitMultipleResource =
            "scores" :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] PlayerScoreSubmissionList :>
-                     Post '[JSON] PlayerScoreListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] PlayerScoreSubmissionList :>
+                       Post '[JSON] PlayerScoreListResponse
 
 -- | Submits multiple scores to leaderboards.
 --
 -- /See:/ 'scoresSubmitMultiple' smart constructor.
 data ScoresSubmitMultiple = ScoresSubmitMultiple'
     { _ssmConsistencyToken :: !(Maybe (Textual Int64))
-    , _ssmPayload          :: !PlayerScoreSubmissionList
-    , _ssmLanguage         :: !(Maybe Text)
+    , _ssmPayload :: !PlayerScoreSubmissionList
+    , _ssmLanguage :: !(Maybe Text)
+    , _ssmFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresSubmitMultiple' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data ScoresSubmitMultiple = ScoresSubmitMultiple'
 -- * 'ssmPayload'
 --
 -- * 'ssmLanguage'
+--
+-- * 'ssmFields'
 scoresSubmitMultiple
     :: PlayerScoreSubmissionList -- ^ 'ssmPayload'
     -> ScoresSubmitMultiple
-scoresSubmitMultiple pSsmPayload_ =
+scoresSubmitMultiple pSsmPayload_ = 
     ScoresSubmitMultiple'
     { _ssmConsistencyToken = Nothing
     , _ssmPayload = pSsmPayload_
     , _ssmLanguage = Nothing
+    , _ssmFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -99,6 +105,11 @@ ssmLanguage :: Lens' ScoresSubmitMultiple (Maybe Text)
 ssmLanguage
   = lens _ssmLanguage (\ s a -> s{_ssmLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ssmFields :: Lens' ScoresSubmitMultiple (Maybe Text)
+ssmFields
+  = lens _ssmFields (\ s a -> s{_ssmFields = a})
+
 instance GoogleRequest ScoresSubmitMultiple where
         type Rs ScoresSubmitMultiple =
              PlayerScoreListResponse
@@ -106,7 +117,8 @@ instance GoogleRequest ScoresSubmitMultiple where
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient ScoresSubmitMultiple'{..}
-          = go _ssmConsistencyToken _ssmLanguage (Just AltJSON)
+          = go _ssmConsistencyToken _ssmLanguage _ssmFields
+              (Just AltJSON)
               _ssmPayload
               gamesService
           where go

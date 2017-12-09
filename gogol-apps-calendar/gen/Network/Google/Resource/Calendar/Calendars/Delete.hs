@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.Calendars.Delete
 
     -- * Request Lenses
     , cdCalendarId
+    , cdFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.delete@ method which the
 -- 'CalendarsDelete' request conforms to.
@@ -47,14 +48,16 @@ type CalendarsDeleteResource =
        "v3" :>
          "calendars" :>
            Capture "calendarId" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a secondary calendar. Use calendars.clear for clearing all
 -- events on primary calendars.
 --
 -- /See:/ 'calendarsDelete' smart constructor.
-newtype CalendarsDelete = CalendarsDelete'
-    { _cdCalendarId :: Text
+data CalendarsDelete = CalendarsDelete'
+    { _cdCalendarId :: !Text
+    , _cdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsDelete' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype CalendarsDelete = CalendarsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cdCalendarId'
+--
+-- * 'cdFields'
 calendarsDelete
     :: Text -- ^ 'cdCalendarId'
     -> CalendarsDelete
-calendarsDelete pCdCalendarId_ =
+calendarsDelete pCdCalendarId_ = 
     CalendarsDelete'
     { _cdCalendarId = pCdCalendarId_
+    , _cdFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -77,12 +83,17 @@ cdCalendarId :: Lens' CalendarsDelete Text
 cdCalendarId
   = lens _cdCalendarId (\ s a -> s{_cdCalendarId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' CalendarsDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 instance GoogleRequest CalendarsDelete where
         type Rs CalendarsDelete = ()
         type Scopes CalendarsDelete =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarsDelete'{..}
-          = go _cdCalendarId (Just AltJSON) appsCalendarService
+          = go _cdCalendarId _cdFields (Just AltJSON)
+              appsCalendarService
           where go
                   = buildClient
                       (Proxy :: Proxy CalendarsDeleteResource)

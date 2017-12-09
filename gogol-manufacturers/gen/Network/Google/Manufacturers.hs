@@ -29,31 +29,111 @@ module Network.Google.Manufacturers
 
     -- * Resources
 
+    -- ** manufacturers.accounts.products.delete
+    , module Network.Google.Resource.Manufacturers.Accounts.Products.Delete
+
     -- ** manufacturers.accounts.products.get
     , module Network.Google.Resource.Manufacturers.Accounts.Products.Get
 
     -- ** manufacturers.accounts.products.list
     , module Network.Google.Resource.Manufacturers.Accounts.Products.List
 
+    -- ** manufacturers.accounts.products.update
+    , module Network.Google.Resource.Manufacturers.Accounts.Products.Update
+
     -- * Types
+
+    -- ** Image
+    , Image
+    , image
+    , iStatus
+    , iImageURL
+    , iType
+
+    -- ** FeatureDescription
+    , FeatureDescription
+    , featureDescription
+    , fdImage
+    , fdText
+    , fdHeadline
+
+    -- ** ProductDetail
+    , ProductDetail
+    , productDetail
+    , pdAttributeValue
+    , pdAttributeName
+    , pdSectionName
+
+    -- ** Empty
+    , Empty
+    , empty
+
+    -- ** ImageStatus
+    , ImageStatus (..)
+
+    -- ** Count
+    , Count
+    , count
+    , cValue
+    , cUnit
+
+    -- ** Capacity
+    , Capacity
+    , capacity
+    , capValue
+    , capUnit
+
+    -- ** ImageType
+    , ImageType (..)
 
     -- ** Attributes
     , Attributes
     , attributes
     , aProductName
+    , aScent
+    , aImageLink
+    , aFeatureDescription
+    , aProductDetail
     , aProductLine
+    , aColor
+    , aSize
+    , aFlavor
+    , aPattern
+    , aSizeSystem
+    , aMaterial
+    , aFormat
     , aProductType
+    , aCount
+    , aDisclosureDate
     , aBrand
+    , aAdditionalImageLink
+    , aVideoLink
+    , aCapacity
     , aGtin
+    , aAgeGroup
+    , aGender
+    , aSuggestedRetailPrice
+    , aItemGroupId
+    , aTargetClientId
+    , aSizeType
+    , aReleaseDate
     , aTitle
     , aMpn
     , aProductPageURL
+    , aDescription
+    , aTheme
 
     -- ** Xgafv
     , Xgafv (..)
 
     -- ** IssueSeverity
     , IssueSeverity (..)
+
+    -- ** Price
+    , Price
+    , price
+    , pAmount
+    , pCurrency
 
     -- ** Product
     , Product
@@ -72,10 +152,11 @@ module Network.Google.Manufacturers
     -- ** Issue
     , Issue
     , issue
-    , iAttribute
-    , iSeverity
-    , iType
-    , iDescription
+    , issAttribute
+    , issSeverity
+    , issType
+    , issTimestamp
+    , issDescription
 
     -- ** ListProductsResponse
     , ListProductsResponse
@@ -84,10 +165,12 @@ module Network.Google.Manufacturers
     , lprProducts
     ) where
 
-import           Network.Google.Manufacturers.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Manufacturers.Accounts.Products.Get
-import           Network.Google.Resource.Manufacturers.Accounts.Products.List
+import Network.Google.Prelude
+import Network.Google.Manufacturers.Types
+import Network.Google.Resource.Manufacturers.Accounts.Products.Delete
+import Network.Google.Resource.Manufacturers.Accounts.Products.Get
+import Network.Google.Resource.Manufacturers.Accounts.Products.List
+import Network.Google.Resource.Manufacturers.Accounts.Products.Update
 
 {- $resources
 TODO
@@ -97,3 +180,5 @@ TODO
 type ManufacturersAPI =
      AccountsProductsListResource :<|>
        AccountsProductsGetResource
+       :<|> AccountsProductsDeleteResource
+       :<|> AccountsProductsUpdateResource

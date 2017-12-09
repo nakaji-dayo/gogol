@@ -42,11 +42,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.Delete
     , ptdUploadType
     , ptdBearerToken
     , ptdProjectId
+    , ptdFields
     , ptdCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.delete@ method which the
 -- 'ProjectsTriggersDelete' request conforms to.
@@ -63,22 +64,24 @@ type ProjectsTriggersDeleteResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an BuildTrigger by its project ID and trigger ID. This API is
 -- experimental.
 --
 -- /See:/ 'projectsTriggersDelete' smart constructor.
 data ProjectsTriggersDelete = ProjectsTriggersDelete'
-    { _ptdXgafv          :: !(Maybe Xgafv)
+    { _ptdXgafv :: !(Maybe Xgafv)
     , _ptdUploadProtocol :: !(Maybe Text)
-    , _ptdTriggerId      :: !Text
-    , _ptdPp             :: !Bool
-    , _ptdAccessToken    :: !(Maybe Text)
-    , _ptdUploadType     :: !(Maybe Text)
-    , _ptdBearerToken    :: !(Maybe Text)
-    , _ptdProjectId      :: !Text
-    , _ptdCallback       :: !(Maybe Text)
+    , _ptdTriggerId :: !Text
+    , _ptdPp :: !Bool
+    , _ptdAccessToken :: !(Maybe Text)
+    , _ptdUploadType :: !(Maybe Text)
+    , _ptdBearerToken :: !(Maybe Text)
+    , _ptdProjectId :: !Text
+    , _ptdFields :: !(Maybe Text)
+    , _ptdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTriggersDelete' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsTriggersDelete = ProjectsTriggersDelete'
 --
 -- * 'ptdProjectId'
 --
+-- * 'ptdFields'
+--
 -- * 'ptdCallback'
 projectsTriggersDelete
     :: Text -- ^ 'ptdTriggerId'
     -> Text -- ^ 'ptdProjectId'
     -> ProjectsTriggersDelete
-projectsTriggersDelete pPtdTriggerId_ pPtdProjectId_ =
+projectsTriggersDelete pPtdTriggerId_ pPtdProjectId_ = 
     ProjectsTriggersDelete'
     { _ptdXgafv = Nothing
     , _ptdUploadProtocol = Nothing
@@ -116,6 +121,7 @@ projectsTriggersDelete pPtdTriggerId_ pPtdProjectId_ =
     , _ptdUploadType = Nothing
     , _ptdBearerToken = Nothing
     , _ptdProjectId = pPtdProjectId_
+    , _ptdFields = Nothing
     , _ptdCallback = Nothing
     }
 
@@ -161,6 +167,11 @@ ptdProjectId :: Lens' ProjectsTriggersDelete Text
 ptdProjectId
   = lens _ptdProjectId (\ s a -> s{_ptdProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptdFields :: Lens' ProjectsTriggersDelete (Maybe Text)
+ptdFields
+  = lens _ptdFields (\ s a -> s{_ptdFields = a})
+
 -- | JSONP
 ptdCallback :: Lens' ProjectsTriggersDelete (Maybe Text)
 ptdCallback
@@ -178,6 +189,7 @@ instance GoogleRequest ProjectsTriggersDelete where
               _ptdUploadType
               _ptdBearerToken
               _ptdCallback
+              _ptdFields
               (Just AltJSON)
               containerBuilderService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.Filters.Get
     -- * Request Lenses
     , mfgFilterId
     , mfgAccountId
+    , mfgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.filters.get@ method which the
 -- 'ManagementFiltersGet' request conforms to.
@@ -50,14 +51,16 @@ type ManagementFiltersGetResource =
              Capture "accountId" Text :>
                "filters" :>
                  Capture "filterId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Filter
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Filter
 
 -- | Returns a filters to which the user has access.
 --
 -- /See:/ 'managementFiltersGet' smart constructor.
 data ManagementFiltersGet = ManagementFiltersGet'
-    { _mfgFilterId  :: !Text
+    { _mfgFilterId :: !Text
     , _mfgAccountId :: !Text
+    , _mfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementFiltersGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ManagementFiltersGet = ManagementFiltersGet'
 -- * 'mfgFilterId'
 --
 -- * 'mfgAccountId'
+--
+-- * 'mfgFields'
 managementFiltersGet
     :: Text -- ^ 'mfgFilterId'
     -> Text -- ^ 'mfgAccountId'
     -> ManagementFiltersGet
-managementFiltersGet pMfgFilterId_ pMfgAccountId_ =
+managementFiltersGet pMfgFilterId_ pMfgAccountId_ = 
     ManagementFiltersGet'
     { _mfgFilterId = pMfgFilterId_
     , _mfgAccountId = pMfgAccountId_
+    , _mfgFields = Nothing
     }
 
 -- | Filter ID to retrieve filters for.
@@ -87,13 +93,19 @@ mfgAccountId :: Lens' ManagementFiltersGet Text
 mfgAccountId
   = lens _mfgAccountId (\ s a -> s{_mfgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mfgFields :: Lens' ManagementFiltersGet (Maybe Text)
+mfgFields
+  = lens _mfgFields (\ s a -> s{_mfgFields = a})
+
 instance GoogleRequest ManagementFiltersGet where
         type Rs ManagementFiltersGet = Filter
         type Scopes ManagementFiltersGet =
              '["https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementFiltersGet'{..}
-          = go _mfgAccountId _mfgFilterId (Just AltJSON)
+          = go _mfgAccountId _mfgFilterId _mfgFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

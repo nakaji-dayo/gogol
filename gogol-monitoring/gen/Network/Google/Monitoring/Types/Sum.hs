@@ -16,7 +16,7 @@
 --
 module Network.Google.Monitoring.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Whether the measurement is an integer, a floating-point number, etc.
 -- Some combinations of metric_kind and value_type might not be supported.
@@ -121,6 +121,53 @@ instance FromJSON CollectdValueDataSourceType where
     parseJSON = parseJSONText "CollectdValueDataSourceType"
 
 instance ToJSON CollectdValueDataSourceType where
+    toJSON = toJSONText
+
+-- | A broad region category in which the IP address is located.
+data UptimeCheckIPRegion
+    = RegionUnspecified
+      -- ^ @REGION_UNSPECIFIED@
+      -- Default value if no region is specified. Will result in uptime checks
+      -- running from all regions.
+    | Usa
+      -- ^ @USA@
+      -- Allows checks to run from locations within the United States of America.
+    | Europe
+      -- ^ @EUROPE@
+      -- Allows checks to run from locations within the continent of Europe.
+    | SouthAmerica
+      -- ^ @SOUTH_AMERICA@
+      -- Allows checks to run from locations within the continent of South
+      -- America.
+    | AsiaPacific
+      -- ^ @ASIA_PACIFIC@
+      -- Allows checks to run from locations within the Asia Pacific area (ex:
+      -- Singapore).
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable UptimeCheckIPRegion
+
+instance FromHttpApiData UptimeCheckIPRegion where
+    parseQueryParam = \case
+        "REGION_UNSPECIFIED" -> Right RegionUnspecified
+        "USA" -> Right Usa
+        "EUROPE" -> Right Europe
+        "SOUTH_AMERICA" -> Right SouthAmerica
+        "ASIA_PACIFIC" -> Right AsiaPacific
+        x -> Left ("Unable to parse UptimeCheckIPRegion from: " <> x)
+
+instance ToHttpApiData UptimeCheckIPRegion where
+    toQueryParam = \case
+        RegionUnspecified -> "REGION_UNSPECIFIED"
+        Usa -> "USA"
+        Europe -> "EUROPE"
+        SouthAmerica -> "SOUTH_AMERICA"
+        AsiaPacific -> "ASIA_PACIFIC"
+
+instance FromJSON UptimeCheckIPRegion where
+    parseJSON = parseJSONText "UptimeCheckIPRegion"
+
+instance ToJSON UptimeCheckIPRegion where
     toJSON = toJSONText
 
 -- | The field type.
@@ -298,6 +345,40 @@ instance FromJSON TypeSyntax where
     parseJSON = parseJSONText "TypeSyntax"
 
 instance ToJSON TypeSyntax where
+    toJSON = toJSONText
+
+-- | The resource type of the group members.
+data ResourceGroupResourceType
+    = ResourceTypeUnspecified
+      -- ^ @RESOURCE_TYPE_UNSPECIFIED@
+      -- Default value (not valid).
+    | Instance
+      -- ^ @INSTANCE@
+      -- A group of instances (could be either GCE or AWS_EC2).
+    | AwsElbLoadBalancer
+      -- ^ @AWS_ELB_LOAD_BALANCER@
+      -- A group of AWS load balancers.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ResourceGroupResourceType
+
+instance FromHttpApiData ResourceGroupResourceType where
+    parseQueryParam = \case
+        "RESOURCE_TYPE_UNSPECIFIED" -> Right ResourceTypeUnspecified
+        "INSTANCE" -> Right Instance
+        "AWS_ELB_LOAD_BALANCER" -> Right AwsElbLoadBalancer
+        x -> Left ("Unable to parse ResourceGroupResourceType from: " <> x)
+
+instance ToHttpApiData ResourceGroupResourceType where
+    toQueryParam = \case
+        ResourceTypeUnspecified -> "RESOURCE_TYPE_UNSPECIFIED"
+        Instance -> "INSTANCE"
+        AwsElbLoadBalancer -> "AWS_ELB_LOAD_BALANCER"
+
+instance FromJSON ResourceGroupResourceType where
+    parseJSON = parseJSONText "ResourceGroupResourceType"
+
+instance ToJSON ResourceGroupResourceType where
     toJSON = toJSONText
 
 -- | V1 error format.

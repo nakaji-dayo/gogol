@@ -20,8 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the logs in projects or organizations. Only logs that have entries
--- are listed.
+-- Lists the logs in projects, organizations, folders, or billing accounts.
+-- Only logs that have entries are listed.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.billingAccounts.logs.list@.
 module Network.Google.Resource.Logging.BillingAccounts.Logs.List
@@ -43,11 +43,12 @@ module Network.Google.Resource.Logging.BillingAccounts.Logs.List
     , ballBearerToken
     , ballPageToken
     , ballPageSize
+    , ballFields
     , ballCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.billingAccounts.logs.list@ method which the
 -- 'BillingAccountsLogsList' request conforms to.
@@ -64,24 +65,26 @@ type BillingAccountsLogsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListLogsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListLogsResponse
 
--- | Lists the logs in projects or organizations. Only logs that have entries
--- are listed.
+-- | Lists the logs in projects, organizations, folders, or billing accounts.
+-- Only logs that have entries are listed.
 --
 -- /See:/ 'billingAccountsLogsList' smart constructor.
 data BillingAccountsLogsList = BillingAccountsLogsList'
-    { _ballParent         :: !Text
-    , _ballXgafv          :: !(Maybe Xgafv)
+    { _ballParent :: !Text
+    , _ballXgafv :: !(Maybe Xgafv)
     , _ballUploadProtocol :: !(Maybe Text)
-    , _ballPp             :: !Bool
-    , _ballAccessToken    :: !(Maybe Text)
-    , _ballUploadType     :: !(Maybe Text)
-    , _ballBearerToken    :: !(Maybe Text)
-    , _ballPageToken      :: !(Maybe Text)
-    , _ballPageSize       :: !(Maybe (Textual Int32))
-    , _ballCallback       :: !(Maybe Text)
+    , _ballPp :: !Bool
+    , _ballAccessToken :: !(Maybe Text)
+    , _ballUploadType :: !(Maybe Text)
+    , _ballBearerToken :: !(Maybe Text)
+    , _ballPageToken :: !(Maybe Text)
+    , _ballPageSize :: !(Maybe (Textual Int32))
+    , _ballFields :: !(Maybe Text)
+    , _ballCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsLogsList' with the minimum fields required to make a request.
@@ -106,11 +109,13 @@ data BillingAccountsLogsList = BillingAccountsLogsList'
 --
 -- * 'ballPageSize'
 --
+-- * 'ballFields'
+--
 -- * 'ballCallback'
 billingAccountsLogsList
     :: Text -- ^ 'ballParent'
     -> BillingAccountsLogsList
-billingAccountsLogsList pBallParent_ =
+billingAccountsLogsList pBallParent_ = 
     BillingAccountsLogsList'
     { _ballParent = pBallParent_
     , _ballXgafv = Nothing
@@ -121,11 +126,13 @@ billingAccountsLogsList pBallParent_ =
     , _ballBearerToken = Nothing
     , _ballPageToken = Nothing
     , _ballPageSize = Nothing
+    , _ballFields = Nothing
     , _ballCallback = Nothing
     }
 
 -- | Required. The resource name that owns the logs:
 -- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 ballParent :: Lens' BillingAccountsLogsList Text
 ballParent
   = lens _ballParent (\ s a -> s{_ballParent = a})
@@ -180,6 +187,11 @@ ballPageSize
   = lens _ballPageSize (\ s a -> s{_ballPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ballFields :: Lens' BillingAccountsLogsList (Maybe Text)
+ballFields
+  = lens _ballFields (\ s a -> s{_ballFields = a})
+
 -- | JSONP
 ballCallback :: Lens' BillingAccountsLogsList (Maybe Text)
 ballCallback
@@ -201,6 +213,7 @@ instance GoogleRequest BillingAccountsLogsList where
               _ballPageToken
               _ballPageSize
               _ballCallback
+              _ballFields
               (Just AltJSON)
               loggingService
           where go

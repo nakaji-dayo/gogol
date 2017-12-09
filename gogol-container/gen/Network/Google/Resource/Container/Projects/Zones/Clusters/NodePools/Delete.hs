@@ -43,11 +43,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Delet
     , pzcnpdBearerToken
     , pzcnpdClusterId
     , pzcnpdProjectId
+    , pzcnpdFields
     , pzcnpdCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.nodePools.delete@ method which the
 -- 'ProjectsZonesClustersNodePoolsDelete' request conforms to.
@@ -61,31 +62,33 @@ type ProjectsZonesClustersNodePoolsDeleteResource =
                  Capture "clusterId" Text :>
                    "nodePools" :>
                      Capture "nodePoolId" Text :>
-                       QueryParam "$.xgafv" Text :>
+                       QueryParam "$.xgafv" Xgafv :>
                          QueryParam "upload_protocol" Text :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Delete '[JSON] Operation
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Delete '[JSON] Operation
 
 -- | Deletes a node pool from a cluster.
 --
 -- /See:/ 'projectsZonesClustersNodePoolsDelete' smart constructor.
 data ProjectsZonesClustersNodePoolsDelete = ProjectsZonesClustersNodePoolsDelete'
-    { _pzcnpdXgafv          :: !(Maybe Text)
+    { _pzcnpdXgafv :: !(Maybe Xgafv)
     , _pzcnpdUploadProtocol :: !(Maybe Text)
-    , _pzcnpdPp             :: !Bool
-    , _pzcnpdAccessToken    :: !(Maybe Text)
-    , _pzcnpdUploadType     :: !(Maybe Text)
-    , _pzcnpdZone           :: !Text
-    , _pzcnpdNodePoolId     :: !Text
-    , _pzcnpdBearerToken    :: !(Maybe Text)
-    , _pzcnpdClusterId      :: !Text
-    , _pzcnpdProjectId      :: !Text
-    , _pzcnpdCallback       :: !(Maybe Text)
+    , _pzcnpdPp :: !Bool
+    , _pzcnpdAccessToken :: !(Maybe Text)
+    , _pzcnpdUploadType :: !(Maybe Text)
+    , _pzcnpdZone :: !Text
+    , _pzcnpdNodePoolId :: !Text
+    , _pzcnpdBearerToken :: !(Maybe Text)
+    , _pzcnpdClusterId :: !Text
+    , _pzcnpdProjectId :: !Text
+    , _pzcnpdFields :: !(Maybe Text)
+    , _pzcnpdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersNodePoolsDelete' with the minimum fields required to make a request.
@@ -112,6 +115,8 @@ data ProjectsZonesClustersNodePoolsDelete = ProjectsZonesClustersNodePoolsDelete
 --
 -- * 'pzcnpdProjectId'
 --
+-- * 'pzcnpdFields'
+--
 -- * 'pzcnpdCallback'
 projectsZonesClustersNodePoolsDelete
     :: Text -- ^ 'pzcnpdZone'
@@ -119,7 +124,7 @@ projectsZonesClustersNodePoolsDelete
     -> Text -- ^ 'pzcnpdClusterId'
     -> Text -- ^ 'pzcnpdProjectId'
     -> ProjectsZonesClustersNodePoolsDelete
-projectsZonesClustersNodePoolsDelete pPzcnpdZone_ pPzcnpdNodePoolId_ pPzcnpdClusterId_ pPzcnpdProjectId_ =
+projectsZonesClustersNodePoolsDelete pPzcnpdZone_ pPzcnpdNodePoolId_ pPzcnpdClusterId_ pPzcnpdProjectId_ = 
     ProjectsZonesClustersNodePoolsDelete'
     { _pzcnpdXgafv = Nothing
     , _pzcnpdUploadProtocol = Nothing
@@ -131,11 +136,12 @@ projectsZonesClustersNodePoolsDelete pPzcnpdZone_ pPzcnpdNodePoolId_ pPzcnpdClus
     , _pzcnpdBearerToken = Nothing
     , _pzcnpdClusterId = pPzcnpdClusterId_
     , _pzcnpdProjectId = pPzcnpdProjectId_
+    , _pzcnpdFields = Nothing
     , _pzcnpdCallback = Nothing
     }
 
 -- | V1 error format.
-pzcnpdXgafv :: Lens' ProjectsZonesClustersNodePoolsDelete (Maybe Text)
+pzcnpdXgafv :: Lens' ProjectsZonesClustersNodePoolsDelete (Maybe Xgafv)
 pzcnpdXgafv
   = lens _pzcnpdXgafv (\ s a -> s{_pzcnpdXgafv = a})
 
@@ -192,6 +198,11 @@ pzcnpdProjectId
   = lens _pzcnpdProjectId
       (\ s a -> s{_pzcnpdProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcnpdFields :: Lens' ProjectsZonesClustersNodePoolsDelete (Maybe Text)
+pzcnpdFields
+  = lens _pzcnpdFields (\ s a -> s{_pzcnpdFields = a})
+
 -- | JSONP
 pzcnpdCallback :: Lens' ProjectsZonesClustersNodePoolsDelete (Maybe Text)
 pzcnpdCallback
@@ -215,6 +226,7 @@ instance GoogleRequest
               _pzcnpdUploadType
               _pzcnpdBearerToken
               _pzcnpdCallback
+              _pzcnpdFields
               (Just AltJSON)
               containerService
           where go

@@ -39,10 +39,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Lease
     , tlNumTasks
     , tlLeaseSecs
     , tlGroupByTag
+    , tlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.lease@ method which the
 -- 'TasksLease' request conforms to.
@@ -59,18 +60,20 @@ type TasksLeaseResource =
                        QueryParam "leaseSecs" (Textual Int32) :>
                          QueryParam "tag" Text :>
                            QueryParam "groupByTag" Bool :>
-                             QueryParam "alt" AltJSON :> Post '[JSON] Tasks
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Post '[JSON] Tasks
 
 -- | Lease 1 or more tasks from a TaskQueue.
 --
 -- /See:/ 'tasksLease' smart constructor.
 data TasksLease = TasksLease'
-    { _tlTaskQueue  :: !Text
-    , _tlTag        :: !(Maybe Text)
-    , _tlProject    :: !Text
-    , _tlNumTasks   :: !(Textual Int32)
-    , _tlLeaseSecs  :: !(Textual Int32)
+    { _tlTaskQueue :: !Text
+    , _tlTag :: !(Maybe Text)
+    , _tlProject :: !Text
+    , _tlNumTasks :: !(Textual Int32)
+    , _tlLeaseSecs :: !(Textual Int32)
     , _tlGroupByTag :: !(Maybe Bool)
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksLease' with the minimum fields required to make a request.
@@ -88,13 +91,15 @@ data TasksLease = TasksLease'
 -- * 'tlLeaseSecs'
 --
 -- * 'tlGroupByTag'
+--
+-- * 'tlFields'
 tasksLease
     :: Text -- ^ 'tlTaskQueue'
     -> Text -- ^ 'tlProject'
     -> Int32 -- ^ 'tlNumTasks'
     -> Int32 -- ^ 'tlLeaseSecs'
     -> TasksLease
-tasksLease pTlTaskQueue_ pTlProject_ pTlNumTasks_ pTlLeaseSecs_ =
+tasksLease pTlTaskQueue_ pTlProject_ pTlNumTasks_ pTlLeaseSecs_ = 
     TasksLease'
     { _tlTaskQueue = pTlTaskQueue_
     , _tlTag = Nothing
@@ -102,6 +107,7 @@ tasksLease pTlTaskQueue_ pTlProject_ pTlNumTasks_ pTlLeaseSecs_ =
     , _tlNumTasks = _Coerce # pTlNumTasks_
     , _tlLeaseSecs = _Coerce # pTlLeaseSecs_
     , _tlGroupByTag = Nothing
+    , _tlFields = Nothing
     }
 
 -- | The taskqueue to lease a task from.
@@ -138,6 +144,10 @@ tlGroupByTag :: Lens' TasksLease (Maybe Bool)
 tlGroupByTag
   = lens _tlGroupByTag (\ s a -> s{_tlGroupByTag = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TasksLease (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TasksLease where
         type Rs TasksLease = Tasks
         type Scopes TasksLease =
@@ -148,6 +158,7 @@ instance GoogleRequest TasksLease where
               (Just _tlLeaseSecs)
               _tlTag
               _tlGroupByTag
+              _tlFields
               (Just AltJSON)
               taskQueueService
           where go

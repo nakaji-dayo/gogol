@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -22,6 +22,16 @@ module Network.Google.SQLAdmin.Types
     -- * OAuth Scopes
     , sqlServiceAdminScope
     , cloudPlatformScope
+
+    -- * DemoteMasterMySQLReplicaConfiguration
+    , DemoteMasterMySQLReplicaConfiguration
+    , demoteMasterMySQLReplicaConfiguration
+    , dmmsqlrcKind
+    , dmmsqlrcClientKey
+    , dmmsqlrcUsername
+    , dmmsqlrcClientCertificate
+    , dmmsqlrcCaCertificate
+    , dmmsqlrcPassword
 
     -- * SSLCert
     , SSLCert
@@ -68,6 +78,7 @@ module Network.Google.SQLAdmin.Types
     , icCSVImportOptions
     , icURI
     , icFileType
+    , icImportUser
 
     -- * Operation
     , Operation
@@ -102,12 +113,15 @@ module Network.Google.SQLAdmin.Types
     , sIPConfiguration
     , sMaintenanceWindow
     , sDatabaseReplicationEnabled
+    , sUserLabels
     , sTier
     , sDatabaseFlags
     , sDataDiskType
     , sCrashSafeReplicationEnabled
     , sLocationPreference
     , sBackupConfiguration
+    , sAvailabilityType
+    , sStorageAutoResizeLimit
 
     -- * IPMApping
     , IPMApping
@@ -229,6 +243,7 @@ module Network.Google.SQLAdmin.Types
     , datBackendType
     , datMaxDiskSize
     , datOnPremisesConfiguration
+    , datGceZone
     , datEtag
     , datState
     , datIPv6Address
@@ -340,6 +355,11 @@ module Network.Google.SQLAdmin.Types
     , instancesRestoreBackupRequest
     , irbrRestoreBackupContext
 
+    -- * InstancesDemoteMasterRequest
+    , InstancesDemoteMasterRequest
+    , instancesDemoteMasterRequest
+    , idmrDemoteMasterContext
+
     -- * BackupRunsListResponse
     , BackupRunsListResponse
     , backupRunsListResponse
@@ -393,6 +413,12 @@ module Network.Google.SQLAdmin.Types
     , ilrKind
     , ilrItems
 
+    -- * DemoteMasterConfiguration
+    , DemoteMasterConfiguration
+    , demoteMasterConfiguration
+    , dmcKind
+    , dmcMysqlReplicaConfiguration
+
     -- * BackupConfiguration
     , BackupConfiguration
     , backupConfiguration
@@ -436,11 +462,23 @@ module Network.Google.SQLAdmin.Types
     , rbcInstanceId
     , rbcBackupRunId
     , rbcKind
+
+    -- * DemoteMasterContext
+    , DemoteMasterContext
+    , demoteMasterContext
+    , demKind
+    , demMasterInstanceName
+    , demReplicaConfiguration
+
+    -- * SettingsUserLabels
+    , SettingsUserLabels
+    , settingsUserLabels
+    , sulAddtional
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types.Product
-import           Network.Google.SQLAdmin.Types.Sum
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types.Product
+import Network.Google.SQLAdmin.Types.Sum
 
 -- | Default request referring to version 'v1beta4' of the Cloud SQL Administration API. This contains the host and root path used as a starting point for constructing service requests.
 sQLAdminService :: ServiceConfig

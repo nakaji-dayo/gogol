@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.InAppProducts.List
     , iaplToken
     , iaplStartIndex
     , iaplMaxResults
+    , iaplFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.inappproducts.list@ method which the
 -- 'InAppProductsList' request conforms to.
@@ -54,8 +55,9 @@ type InAppProductsListResource =
                QueryParam "token" Text :>
                  QueryParam "startIndex" (Textual Word32) :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] InAppProductsListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] InAppProductsListResponse
 
 -- | List all the in-app products for an Android app, both subscriptions and
 -- managed in-app products..
@@ -63,9 +65,10 @@ type InAppProductsListResource =
 -- /See:/ 'inAppProductsList' smart constructor.
 data InAppProductsList = InAppProductsList'
     { _iaplPackageName :: !Text
-    , _iaplToken       :: !(Maybe Text)
-    , _iaplStartIndex  :: !(Maybe (Textual Word32))
-    , _iaplMaxResults  :: !(Maybe (Textual Word32))
+    , _iaplToken :: !(Maybe Text)
+    , _iaplStartIndex :: !(Maybe (Textual Word32))
+    , _iaplMaxResults :: !(Maybe (Textual Word32))
+    , _iaplFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InAppProductsList' with the minimum fields required to make a request.
@@ -79,15 +82,18 @@ data InAppProductsList = InAppProductsList'
 -- * 'iaplStartIndex'
 --
 -- * 'iaplMaxResults'
+--
+-- * 'iaplFields'
 inAppProductsList
     :: Text -- ^ 'iaplPackageName'
     -> InAppProductsList
-inAppProductsList pIaplPackageName_ =
+inAppProductsList pIaplPackageName_ = 
     InAppProductsList'
     { _iaplPackageName = pIaplPackageName_
     , _iaplToken = Nothing
     , _iaplStartIndex = Nothing
     , _iaplMaxResults = Nothing
+    , _iaplFields = Nothing
     }
 
 -- | Unique identifier for the Android app with in-app products; for example,
@@ -113,6 +119,11 @@ iaplMaxResults
       (\ s a -> s{_iaplMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+iaplFields :: Lens' InAppProductsList (Maybe Text)
+iaplFields
+  = lens _iaplFields (\ s a -> s{_iaplFields = a})
+
 instance GoogleRequest InAppProductsList where
         type Rs InAppProductsList = InAppProductsListResponse
         type Scopes InAppProductsList =
@@ -120,6 +131,7 @@ instance GoogleRequest InAppProductsList where
         requestClient InAppProductsList'{..}
           = go _iaplPackageName _iaplToken _iaplStartIndex
               _iaplMaxResults
+              _iaplFields
               (Just AltJSON)
               androidPublisherService
           where go

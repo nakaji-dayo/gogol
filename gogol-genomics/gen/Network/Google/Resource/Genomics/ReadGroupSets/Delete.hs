@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.Delete
     , rgsdAccessToken
     , rgsdUploadType
     , rgsdBearerToken
+    , rgsdFields
     , rgsdCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.delete@ method which the
 -- 'ReadGroupSetsDelete' request conforms to.
@@ -61,7 +62,8 @@ type ReadGroupSetsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a read group set. For the definitions of read group sets and
 -- other genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type ReadGroupSetsDeleteResource =
 --
 -- /See:/ 'readGroupSetsDelete' smart constructor.
 data ReadGroupSetsDelete = ReadGroupSetsDelete'
-    { _rgsdXgafv          :: !(Maybe Xgafv)
+    { _rgsdXgafv :: !(Maybe Xgafv)
     , _rgsdReadGroupSetId :: !Text
     , _rgsdUploadProtocol :: !(Maybe Text)
-    , _rgsdPp             :: !Bool
-    , _rgsdAccessToken    :: !(Maybe Text)
-    , _rgsdUploadType     :: !(Maybe Text)
-    , _rgsdBearerToken    :: !(Maybe Text)
-    , _rgsdCallback       :: !(Maybe Text)
+    , _rgsdPp :: !Bool
+    , _rgsdAccessToken :: !(Maybe Text)
+    , _rgsdUploadType :: !(Maybe Text)
+    , _rgsdBearerToken :: !(Maybe Text)
+    , _rgsdFields :: !(Maybe Text)
+    , _rgsdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsDelete' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data ReadGroupSetsDelete = ReadGroupSetsDelete'
 --
 -- * 'rgsdBearerToken'
 --
+-- * 'rgsdFields'
+--
 -- * 'rgsdCallback'
 readGroupSetsDelete
     :: Text -- ^ 'rgsdReadGroupSetId'
     -> ReadGroupSetsDelete
-readGroupSetsDelete pRgsdReadGroupSetId_ =
+readGroupSetsDelete pRgsdReadGroupSetId_ = 
     ReadGroupSetsDelete'
     { _rgsdXgafv = Nothing
     , _rgsdReadGroupSetId = pRgsdReadGroupSetId_
@@ -110,6 +115,7 @@ readGroupSetsDelete pRgsdReadGroupSetId_ =
     , _rgsdAccessToken = Nothing
     , _rgsdUploadType = Nothing
     , _rgsdBearerToken = Nothing
+    , _rgsdFields = Nothing
     , _rgsdCallback = Nothing
     }
 
@@ -153,6 +159,11 @@ rgsdBearerToken
   = lens _rgsdBearerToken
       (\ s a -> s{_rgsdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgsdFields :: Lens' ReadGroupSetsDelete (Maybe Text)
+rgsdFields
+  = lens _rgsdFields (\ s a -> s{_rgsdFields = a})
+
 -- | JSONP
 rgsdCallback :: Lens' ReadGroupSetsDelete (Maybe Text)
 rgsdCallback
@@ -171,6 +182,7 @@ instance GoogleRequest ReadGroupSetsDelete where
               _rgsdUploadType
               _rgsdBearerToken
               _rgsdCallback
+              _rgsdFields
               (Just AltJSON)
               genomicsService
           where go

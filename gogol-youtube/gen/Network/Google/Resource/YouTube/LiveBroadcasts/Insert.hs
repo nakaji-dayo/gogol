@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Insert
     , lbiPayload
     , lbiOnBehalfOfContentOwner
     , lbiOnBehalfOfContentOwnerChannel
+    , lbiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.insert@ method which the
 -- 'LiveBroadcastsInsert' request conforms to.
@@ -51,18 +52,20 @@ type LiveBroadcastsInsertResource =
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] LiveBroadcast :>
-                     Post '[JSON] LiveBroadcast
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] LiveBroadcast :>
+                       Post '[JSON] LiveBroadcast
 
 -- | Creates a broadcast.
 --
 -- /See:/ 'liveBroadcastsInsert' smart constructor.
 data LiveBroadcastsInsert = LiveBroadcastsInsert'
-    { _lbiPart                          :: !Text
-    , _lbiPayload                       :: !LiveBroadcast
-    , _lbiOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbiPart :: !Text
+    , _lbiPayload :: !LiveBroadcast
+    , _lbiOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbiOnBehalfOfContentOwnerChannel :: !(Maybe Text)
+    , _lbiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsInsert' with the minimum fields required to make a request.
@@ -76,16 +79,19 @@ data LiveBroadcastsInsert = LiveBroadcastsInsert'
 -- * 'lbiOnBehalfOfContentOwner'
 --
 -- * 'lbiOnBehalfOfContentOwnerChannel'
+--
+-- * 'lbiFields'
 liveBroadcastsInsert
     :: Text -- ^ 'lbiPart'
     -> LiveBroadcast -- ^ 'lbiPayload'
     -> LiveBroadcastsInsert
-liveBroadcastsInsert pLbiPart_ pLbiPayload_ =
+liveBroadcastsInsert pLbiPart_ pLbiPayload_ = 
     LiveBroadcastsInsert'
     { _lbiPart = pLbiPart_
     , _lbiPayload = pLbiPayload_
     , _lbiOnBehalfOfContentOwner = Nothing
     , _lbiOnBehalfOfContentOwnerChannel = Nothing
+    , _lbiFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -137,6 +143,11 @@ lbiOnBehalfOfContentOwnerChannel
   = lens _lbiOnBehalfOfContentOwnerChannel
       (\ s a -> s{_lbiOnBehalfOfContentOwnerChannel = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lbiFields :: Lens' LiveBroadcastsInsert (Maybe Text)
+lbiFields
+  = lens _lbiFields (\ s a -> s{_lbiFields = a})
+
 instance GoogleRequest LiveBroadcastsInsert where
         type Rs LiveBroadcastsInsert = LiveBroadcast
         type Scopes LiveBroadcastsInsert =
@@ -145,6 +156,7 @@ instance GoogleRequest LiveBroadcastsInsert where
         requestClient LiveBroadcastsInsert'{..}
           = go (Just _lbiPart) _lbiOnBehalfOfContentOwner
               _lbiOnBehalfOfContentOwnerChannel
+              _lbiFields
               (Just AltJSON)
               _lbiPayload
               youTubeService

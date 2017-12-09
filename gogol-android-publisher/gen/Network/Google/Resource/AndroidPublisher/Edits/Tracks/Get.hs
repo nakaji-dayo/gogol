@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Tracks.Get
     , etgtTrack
     , etgtPackageName
     , etgtEditId
+    , etgtFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.tracks.get@ method which the
 -- 'EditsTracksGet' request conforms to.
@@ -53,16 +54,18 @@ type EditsTracksGetResource =
                Capture "editId" Text :>
                  "tracks" :>
                    Capture "track" EditsTracksGetTrack :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Track
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Track
 
 -- | Fetches the track configuration for the specified track type. Includes
 -- the APK version codes that are in this track.
 --
 -- /See:/ 'editsTracksGet' smart constructor.
 data EditsTracksGet = EditsTracksGet'
-    { _etgtTrack       :: !EditsTracksGetTrack
+    { _etgtTrack :: !EditsTracksGetTrack
     , _etgtPackageName :: !Text
-    , _etgtEditId      :: !Text
+    , _etgtEditId :: !Text
+    , _etgtFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTracksGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data EditsTracksGet = EditsTracksGet'
 -- * 'etgtPackageName'
 --
 -- * 'etgtEditId'
+--
+-- * 'etgtFields'
 editsTracksGet
     :: EditsTracksGetTrack -- ^ 'etgtTrack'
     -> Text -- ^ 'etgtPackageName'
     -> Text -- ^ 'etgtEditId'
     -> EditsTracksGet
-editsTracksGet pEtgtTrack_ pEtgtPackageName_ pEtgtEditId_ =
+editsTracksGet pEtgtTrack_ pEtgtPackageName_ pEtgtEditId_ = 
     EditsTracksGet'
     { _etgtTrack = pEtgtTrack_
     , _etgtPackageName = pEtgtPackageName_
     , _etgtEditId = pEtgtEditId_
+    , _etgtFields = Nothing
     }
 
 -- | The track type to read or modify.
@@ -103,12 +109,18 @@ etgtEditId :: Lens' EditsTracksGet Text
 etgtEditId
   = lens _etgtEditId (\ s a -> s{_etgtEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etgtFields :: Lens' EditsTracksGet (Maybe Text)
+etgtFields
+  = lens _etgtFields (\ s a -> s{_etgtFields = a})
+
 instance GoogleRequest EditsTracksGet where
         type Rs EditsTracksGet = Track
         type Scopes EditsTracksGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTracksGet'{..}
           = go _etgtPackageName _etgtEditId _etgtTrack
+              _etgtFields
               (Just AltJSON)
               androidPublisherService
           where go

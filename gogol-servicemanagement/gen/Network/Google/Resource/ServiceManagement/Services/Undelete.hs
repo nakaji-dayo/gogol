@@ -43,11 +43,12 @@ module Network.Google.Resource.ServiceManagement.Services.Undelete
     , suUploadType
     , suBearerToken
     , suServiceName
+    , suFields
     , suCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.undelete@ method which the
 -- 'ServicesUndelete' request conforms to.
@@ -62,7 +63,8 @@ type ServicesUndeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Revives a previously deleted managed service. The method restores the
 -- service using the configuration at the time the service was deleted. The
@@ -71,14 +73,15 @@ type ServicesUndeleteResource =
 --
 -- /See:/ 'servicesUndelete' smart constructor.
 data ServicesUndelete = ServicesUndelete'
-    { _suXgafv          :: !(Maybe Xgafv)
+    { _suXgafv :: !(Maybe Xgafv)
     , _suUploadProtocol :: !(Maybe Text)
-    , _suPp             :: !Bool
-    , _suAccessToken    :: !(Maybe Text)
-    , _suUploadType     :: !(Maybe Text)
-    , _suBearerToken    :: !(Maybe Text)
-    , _suServiceName    :: !Text
-    , _suCallback       :: !(Maybe Text)
+    , _suPp :: !Bool
+    , _suAccessToken :: !(Maybe Text)
+    , _suUploadType :: !(Maybe Text)
+    , _suBearerToken :: !(Maybe Text)
+    , _suServiceName :: !Text
+    , _suFields :: !(Maybe Text)
+    , _suCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesUndelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data ServicesUndelete = ServicesUndelete'
 --
 -- * 'suServiceName'
 --
+-- * 'suFields'
+--
 -- * 'suCallback'
 servicesUndelete
     :: Text -- ^ 'suServiceName'
     -> ServicesUndelete
-servicesUndelete pSuServiceName_ =
+servicesUndelete pSuServiceName_ = 
     ServicesUndelete'
     { _suXgafv = Nothing
     , _suUploadProtocol = Nothing
@@ -112,6 +117,7 @@ servicesUndelete pSuServiceName_ =
     , _suUploadType = Nothing
     , _suBearerToken = Nothing
     , _suServiceName = pSuServiceName_
+    , _suFields = Nothing
     , _suCallback = Nothing
     }
 
@@ -154,6 +160,10 @@ suServiceName
   = lens _suServiceName
       (\ s a -> s{_suServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' ServicesUndelete (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 -- | JSONP
 suCallback :: Lens' ServicesUndelete (Maybe Text)
 suCallback
@@ -171,6 +181,7 @@ instance GoogleRequest ServicesUndelete where
               _suUploadType
               _suBearerToken
               _suCallback
+              _suFields
               (Just AltJSON)
               serviceManagementService
           where go

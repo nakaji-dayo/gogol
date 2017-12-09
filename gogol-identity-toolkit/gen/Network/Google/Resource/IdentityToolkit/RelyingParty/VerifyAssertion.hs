@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.VerifyAssertion
 
     -- * Request Lenses
     , rpvaPayload
+    , rpvaFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.verifyAssertion@ method which the
 -- 'RelyingPartyVerifyAssertion' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyVerifyAssertionResource =
        "v3" :>
          "relyingparty" :>
            "verifyAssertion" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyVerifyAssertionRequest
-                 :> Post '[JSON] VerifyAssertionResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyVerifyAssertionRequest
+                   :> Post '[JSON] VerifyAssertionResponse
 
 -- | Verifies the assertion returned by the IdP.
 --
 -- /See:/ 'relyingPartyVerifyAssertion' smart constructor.
-newtype RelyingPartyVerifyAssertion = RelyingPartyVerifyAssertion'
-    { _rpvaPayload :: IdentitytoolkitRelyingPartyVerifyAssertionRequest
+data RelyingPartyVerifyAssertion = RelyingPartyVerifyAssertion'
+    { _rpvaPayload :: !IdentitytoolkitRelyingPartyVerifyAssertionRequest
+    , _rpvaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyVerifyAssertion' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyVerifyAssertion = RelyingPartyVerifyAssertion'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpvaPayload'
+--
+-- * 'rpvaFields'
 relyingPartyVerifyAssertion
     :: IdentitytoolkitRelyingPartyVerifyAssertionRequest -- ^ 'rpvaPayload'
     -> RelyingPartyVerifyAssertion
-relyingPartyVerifyAssertion pRpvaPayload_ =
+relyingPartyVerifyAssertion pRpvaPayload_ = 
     RelyingPartyVerifyAssertion'
     { _rpvaPayload = pRpvaPayload_
+    , _rpvaFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpvaPayload :: Lens' RelyingPartyVerifyAssertion IdentitytoolkitRelyingPartyVerifyAssertionRequest
 rpvaPayload
   = lens _rpvaPayload (\ s a -> s{_rpvaPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpvaFields :: Lens' RelyingPartyVerifyAssertion (Maybe Text)
+rpvaFields
+  = lens _rpvaFields (\ s a -> s{_rpvaFields = a})
 
 instance GoogleRequest RelyingPartyVerifyAssertion
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartyVerifyAssertion
         type Scopes RelyingPartyVerifyAssertion =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyVerifyAssertion'{..}
-          = go (Just AltJSON) _rpvaPayload
+          = go _rpvaFields (Just AltJSON) _rpvaPayload
               identityToolkitService
           where go
                   = buildClient

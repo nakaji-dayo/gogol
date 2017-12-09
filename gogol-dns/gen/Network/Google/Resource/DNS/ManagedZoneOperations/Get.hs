@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.ManagedZoneOperations.Get
     , mzogOperation
     , mzogManagedZone
     , mzogClientOperationId
+    , mzogFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZoneOperations.get@ method which the
 -- 'ManagedZoneOperationsGet' request conforms to.
@@ -54,16 +55,18 @@ type ManagedZoneOperationsGetResource =
                  "operations" :>
                    Capture "operation" Text :>
                      QueryParam "clientOperationId" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Fetch the representation of an existing Operation.
 --
 -- /See:/ 'managedZoneOperationsGet' smart constructor.
 data ManagedZoneOperationsGet = ManagedZoneOperationsGet'
-    { _mzogProject           :: !Text
-    , _mzogOperation         :: !Text
-    , _mzogManagedZone       :: !Text
+    { _mzogProject :: !Text
+    , _mzogOperation :: !Text
+    , _mzogManagedZone :: !Text
     , _mzogClientOperationId :: !(Maybe Text)
+    , _mzogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZoneOperationsGet' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data ManagedZoneOperationsGet = ManagedZoneOperationsGet'
 -- * 'mzogManagedZone'
 --
 -- * 'mzogClientOperationId'
+--
+-- * 'mzogFields'
 managedZoneOperationsGet
     :: Text -- ^ 'mzogProject'
     -> Text -- ^ 'mzogOperation'
     -> Text -- ^ 'mzogManagedZone'
     -> ManagedZoneOperationsGet
-managedZoneOperationsGet pMzogProject_ pMzogOperation_ pMzogManagedZone_ =
+managedZoneOperationsGet pMzogProject_ pMzogOperation_ pMzogManagedZone_ = 
     ManagedZoneOperationsGet'
     { _mzogProject = pMzogProject_
     , _mzogOperation = pMzogOperation_
     , _mzogManagedZone = pMzogManagedZone_
     , _mzogClientOperationId = Nothing
+    , _mzogFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -115,6 +121,11 @@ mzogClientOperationId
   = lens _mzogClientOperationId
       (\ s a -> s{_mzogClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzogFields :: Lens' ManagedZoneOperationsGet (Maybe Text)
+mzogFields
+  = lens _mzogFields (\ s a -> s{_mzogFields = a})
+
 instance GoogleRequest ManagedZoneOperationsGet where
         type Rs ManagedZoneOperationsGet = Operation
         type Scopes ManagedZoneOperationsGet =
@@ -125,6 +136,7 @@ instance GoogleRequest ManagedZoneOperationsGet where
         requestClient ManagedZoneOperationsGet'{..}
           = go _mzogProject _mzogManagedZone _mzogOperation
               _mzogClientOperationId
+              _mzogFields
               (Just AltJSON)
               dNSService
           where go

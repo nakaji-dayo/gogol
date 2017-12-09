@@ -37,10 +37,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.GetService
     , zvgsResourceName
     , zvgsProject
     , zvgsZone
+    , zvgsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.getService@ method which the
 -- 'ZoneViewsGetService' request conforms to.
@@ -55,8 +56,9 @@ type ZoneViewsGetServiceResource =
                    Capture "resourceView" Text :>
                      "getService" :>
                        QueryParam "resourceName" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Post '[JSON] ZoneViewsGetServiceResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Post '[JSON] ZoneViewsGetServiceResponse
 
 -- | Get the service information of a resource view or a resource.
 --
@@ -64,8 +66,9 @@ type ZoneViewsGetServiceResource =
 data ZoneViewsGetService = ZoneViewsGetService'
     { _zvgsResourceView :: !Text
     , _zvgsResourceName :: !(Maybe Text)
-    , _zvgsProject      :: !Text
-    , _zvgsZone         :: !Text
+    , _zvgsProject :: !Text
+    , _zvgsZone :: !Text
+    , _zvgsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsGetService' with the minimum fields required to make a request.
@@ -79,17 +82,20 @@ data ZoneViewsGetService = ZoneViewsGetService'
 -- * 'zvgsProject'
 --
 -- * 'zvgsZone'
+--
+-- * 'zvgsFields'
 zoneViewsGetService
     :: Text -- ^ 'zvgsResourceView'
     -> Text -- ^ 'zvgsProject'
     -> Text -- ^ 'zvgsZone'
     -> ZoneViewsGetService
-zoneViewsGetService pZvgsResourceView_ pZvgsProject_ pZvgsZone_ =
+zoneViewsGetService pZvgsResourceView_ pZvgsProject_ pZvgsZone_ = 
     ZoneViewsGetService'
     { _zvgsResourceView = pZvgsResourceView_
     , _zvgsResourceName = Nothing
     , _zvgsProject = pZvgsProject_
     , _zvgsZone = pZvgsZone_
+    , _zvgsFields = Nothing
     }
 
 -- | The name of the resource view.
@@ -114,6 +120,11 @@ zvgsProject
 zvgsZone :: Lens' ZoneViewsGetService Text
 zvgsZone = lens _zvgsZone (\ s a -> s{_zvgsZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zvgsFields :: Lens' ZoneViewsGetService (Maybe Text)
+zvgsFields
+  = lens _zvgsFields (\ s a -> s{_zvgsFields = a})
+
 instance GoogleRequest ZoneViewsGetService where
         type Rs ZoneViewsGetService =
              ZoneViewsGetServiceResponse
@@ -124,6 +135,7 @@ instance GoogleRequest ZoneViewsGetService where
         requestClient ZoneViewsGetService'{..}
           = go _zvgsProject _zvgsZone _zvgsResourceView
               _zvgsResourceName
+              _zvgsFields
               (Just AltJSON)
               resourceViewsService
           where go

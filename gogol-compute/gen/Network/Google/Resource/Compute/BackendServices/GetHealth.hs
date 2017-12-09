@@ -35,11 +35,12 @@ module Network.Google.Resource.Compute.BackendServices.GetHealth
     -- * Request Lenses
     , bsghProject
     , bsghPayload
+    , bsghFields
     , bsghBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.backendServices.getHealth@ method which the
 -- 'BackendServicesGetHealth' request conforms to.
@@ -52,16 +53,18 @@ type BackendServicesGetHealthResource =
                "backendServices" :>
                  Capture "backendService" Text :>
                    "getHealth" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] ResourceGroupReference :>
-                         Post '[JSON] BackendServiceGroupHealth
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] ResourceGroupReference :>
+                           Post '[JSON] BackendServiceGroupHealth
 
 -- | Gets the most recent health check results for this BackendService.
 --
 -- /See:/ 'backendServicesGetHealth' smart constructor.
 data BackendServicesGetHealth = BackendServicesGetHealth'
-    { _bsghProject        :: !Text
-    , _bsghPayload        :: !ResourceGroupReference
+    { _bsghProject :: !Text
+    , _bsghPayload :: !ResourceGroupReference
+    , _bsghFields :: !(Maybe Text)
     , _bsghBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,16 +76,19 @@ data BackendServicesGetHealth = BackendServicesGetHealth'
 --
 -- * 'bsghPayload'
 --
+-- * 'bsghFields'
+--
 -- * 'bsghBackendService'
 backendServicesGetHealth
     :: Text -- ^ 'bsghProject'
     -> ResourceGroupReference -- ^ 'bsghPayload'
     -> Text -- ^ 'bsghBackendService'
     -> BackendServicesGetHealth
-backendServicesGetHealth pBsghProject_ pBsghPayload_ pBsghBackendService_ =
+backendServicesGetHealth pBsghProject_ pBsghPayload_ pBsghBackendService_ = 
     BackendServicesGetHealth'
     { _bsghProject = pBsghProject_
     , _bsghPayload = pBsghPayload_
+    , _bsghFields = Nothing
     , _bsghBackendService = pBsghBackendService_
     }
 
@@ -94,6 +100,11 @@ bsghProject
 bsghPayload :: Lens' BackendServicesGetHealth ResourceGroupReference
 bsghPayload
   = lens _bsghPayload (\ s a -> s{_bsghPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+bsghFields :: Lens' BackendServicesGetHealth (Maybe Text)
+bsghFields
+  = lens _bsghFields (\ s a -> s{_bsghFields = a})
 
 -- | Name of the BackendService resource to which the queried instance
 -- belongs.
@@ -110,7 +121,8 @@ instance GoogleRequest BackendServicesGetHealth where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient BackendServicesGetHealth'{..}
-          = go _bsghProject _bsghBackendService (Just AltJSON)
+          = go _bsghProject _bsghBackendService _bsghFields
+              (Just AltJSON)
               _bsghPayload
               computeService
           where go

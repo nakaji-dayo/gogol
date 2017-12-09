@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the orders in your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- Lists the orders in your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.list@.
 module Network.Google.Resource.Content.Orders.List
@@ -42,10 +41,11 @@ module Network.Google.Resource.Content.Orders.List
     , olPageToken
     , olPlacedDateStart
     , olMaxResults
+    , olFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.list@ method which the
 -- 'OrdersList' request conforms to.
@@ -61,22 +61,23 @@ type OrdersListResource =
                      QueryParam "pageToken" Text :>
                        QueryParam "placedDateStart" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] OrdersListResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] OrdersListResponse
 
--- | Lists the orders in your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- | Lists the orders in your Merchant Center account.
 --
 -- /See:/ 'ordersList' smart constructor.
 data OrdersList = OrdersList'
-    { _olPlacedDateEnd   :: !(Maybe Text)
-    , _olMerchantId      :: !(Textual Word64)
-    , _olOrderBy         :: !(Maybe OrdersListOrderBy)
-    , _olAcknowledged    :: !(Maybe Bool)
-    , _olStatuses        :: !(Maybe [OrdersListStatuses])
-    , _olPageToken       :: !(Maybe Text)
+    { _olPlacedDateEnd :: !(Maybe Text)
+    , _olMerchantId :: !(Textual Word64)
+    , _olOrderBy :: !(Maybe OrdersListOrderBy)
+    , _olAcknowledged :: !(Maybe Bool)
+    , _olStatuses :: !(Maybe [OrdersListStatuses])
+    , _olPageToken :: !(Maybe Text)
     , _olPlacedDateStart :: !(Maybe Text)
-    , _olMaxResults      :: !(Maybe (Textual Word32))
+    , _olMaxResults :: !(Maybe (Textual Word32))
+    , _olFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersList' with the minimum fields required to make a request.
@@ -98,10 +99,12 @@ data OrdersList = OrdersList'
 -- * 'olPlacedDateStart'
 --
 -- * 'olMaxResults'
+--
+-- * 'olFields'
 ordersList
     :: Word64 -- ^ 'olMerchantId'
     -> OrdersList
-ordersList pOlMerchantId_ =
+ordersList pOlMerchantId_ = 
     OrdersList'
     { _olPlacedDateEnd = Nothing
     , _olMerchantId = _Coerce # pOlMerchantId_
@@ -111,6 +114,7 @@ ordersList pOlMerchantId_ =
     , _olPageToken = Nothing
     , _olPlacedDateStart = Nothing
     , _olMaxResults = Nothing
+    , _olFields = Nothing
     }
 
 -- | Obtains orders placed before this date (exclusively), in ISO 8601
@@ -120,7 +124,8 @@ olPlacedDateEnd
   = lens _olPlacedDateEnd
       (\ s a -> s{_olPlacedDateEnd = a})
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 olMerchantId :: Lens' OrdersList Word64
 olMerchantId
   = lens _olMerchantId (\ s a -> s{_olMerchantId = a})
@@ -177,6 +182,10 @@ olMaxResults
   = lens _olMaxResults (\ s a -> s{_olMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+olFields :: Lens' OrdersList (Maybe Text)
+olFields = lens _olFields (\ s a -> s{_olFields = a})
+
 instance GoogleRequest OrdersList where
         type Rs OrdersList = OrdersListResponse
         type Scopes OrdersList =
@@ -188,6 +197,7 @@ instance GoogleRequest OrdersList where
               _olPageToken
               _olPlacedDateStart
               _olMaxResults
+              _olFields
               (Just AltJSON)
               shoppingContentService
           where go

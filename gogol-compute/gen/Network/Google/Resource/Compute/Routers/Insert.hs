@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.Routers.Insert
     , RoutersInsert
 
     -- * Request Lenses
+    , riRequestId
     , riProject
     , riPayload
     , riRegion
+    , riFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.insert@ method which the
 -- 'RoutersInsert' request conforms to.
@@ -52,39 +54,63 @@ type RoutersInsertResource =
              "regions" :>
                Capture "region" Text :>
                  "routers" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Router :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Router :> Post '[JSON] Operation
 
 -- | Creates a Router resource in the specified project and region using the
 -- data included in the request.
 --
 -- /See:/ 'routersInsert' smart constructor.
 data RoutersInsert = RoutersInsert'
-    { _riProject :: !Text
+    { _riRequestId :: !(Maybe Text)
+    , _riProject :: !Text
     , _riPayload :: !Router
-    , _riRegion  :: !Text
+    , _riRegion :: !Text
+    , _riFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'riRequestId'
+--
 -- * 'riProject'
 --
 -- * 'riPayload'
 --
 -- * 'riRegion'
+--
+-- * 'riFields'
 routersInsert
     :: Text -- ^ 'riProject'
     -> Router -- ^ 'riPayload'
     -> Text -- ^ 'riRegion'
     -> RoutersInsert
-routersInsert pRiProject_ pRiPayload_ pRiRegion_ =
+routersInsert pRiProject_ pRiPayload_ pRiRegion_ = 
     RoutersInsert'
-    { _riProject = pRiProject_
+    { _riRequestId = Nothing
+    , _riProject = pRiProject_
     , _riPayload = pRiPayload_
     , _riRegion = pRiRegion_
+    , _riFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+riRequestId :: Lens' RoutersInsert (Maybe Text)
+riRequestId
+  = lens _riRequestId (\ s a -> s{_riRequestId = a})
 
 -- | Project ID for this request.
 riProject :: Lens' RoutersInsert Text
@@ -100,13 +126,19 @@ riPayload
 riRegion :: Lens' RoutersInsert Text
 riRegion = lens _riRegion (\ s a -> s{_riRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+riFields :: Lens' RoutersInsert (Maybe Text)
+riFields = lens _riFields (\ s a -> s{_riFields = a})
+
 instance GoogleRequest RoutersInsert where
         type Rs RoutersInsert = Operation
         type Scopes RoutersInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient RoutersInsert'{..}
-          = go _riProject _riRegion (Just AltJSON) _riPayload
+          = go _riProject _riRegion _riRequestId _riFields
+              (Just AltJSON)
+              _riPayload
               computeService
           where go
                   = buildClient (Proxy :: Proxy RoutersInsertResource)

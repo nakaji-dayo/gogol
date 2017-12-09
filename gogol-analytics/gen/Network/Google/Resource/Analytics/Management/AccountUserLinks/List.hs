@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.AccountUserLinks.List
     , maullAccountId
     , maullStartIndex
     , maullMaxResults
+    , maullFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.accountUserLinks.list@ method which the
 -- 'ManagementAccountUserLinksList' request conforms to.
@@ -52,16 +53,18 @@ type ManagementAccountUserLinksListResource =
                "entityUserLinks" :>
                  QueryParam "start-index" (Textual Int32) :>
                    QueryParam "max-results" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] EntityUserLinks
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] EntityUserLinks
 
 -- | Lists account-user links for a given account.
 --
 -- /See:/ 'managementAccountUserLinksList' smart constructor.
 data ManagementAccountUserLinksList = ManagementAccountUserLinksList'
-    { _maullAccountId  :: !Text
+    { _maullAccountId :: !Text
     , _maullStartIndex :: !(Maybe (Textual Int32))
     , _maullMaxResults :: !(Maybe (Textual Int32))
+    , _maullFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementAccountUserLinksList' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data ManagementAccountUserLinksList = ManagementAccountUserLinksList'
 -- * 'maullStartIndex'
 --
 -- * 'maullMaxResults'
+--
+-- * 'maullFields'
 managementAccountUserLinksList
     :: Text -- ^ 'maullAccountId'
     -> ManagementAccountUserLinksList
-managementAccountUserLinksList pMaullAccountId_ =
+managementAccountUserLinksList pMaullAccountId_ = 
     ManagementAccountUserLinksList'
     { _maullAccountId = pMaullAccountId_
     , _maullStartIndex = Nothing
     , _maullMaxResults = Nothing
+    , _maullFields = Nothing
     }
 
 -- | Account ID to retrieve the user links for.
@@ -104,6 +110,11 @@ maullMaxResults
       (\ s a -> s{_maullMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+maullFields :: Lens' ManagementAccountUserLinksList (Maybe Text)
+maullFields
+  = lens _maullFields (\ s a -> s{_maullFields = a})
+
 instance GoogleRequest ManagementAccountUserLinksList
          where
         type Rs ManagementAccountUserLinksList =
@@ -114,6 +125,7 @@ instance GoogleRequest ManagementAccountUserLinksList
         requestClient ManagementAccountUserLinksList'{..}
           = go _maullAccountId _maullStartIndex
               _maullMaxResults
+              _maullFields
               (Just AltJSON)
               analyticsService
           where go

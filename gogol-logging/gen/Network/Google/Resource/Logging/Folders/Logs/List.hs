@@ -20,8 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the logs in projects or organizations. Only logs that have entries
--- are listed.
+-- Lists the logs in projects, organizations, folders, or billing accounts.
+-- Only logs that have entries are listed.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.folders.logs.list@.
 module Network.Google.Resource.Logging.Folders.Logs.List
@@ -43,11 +43,12 @@ module Network.Google.Resource.Logging.Folders.Logs.List
     , fllBearerToken
     , fllPageToken
     , fllPageSize
+    , fllFields
     , fllCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.folders.logs.list@ method which the
 -- 'FoldersLogsList' request conforms to.
@@ -64,24 +65,26 @@ type FoldersLogsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListLogsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListLogsResponse
 
--- | Lists the logs in projects or organizations. Only logs that have entries
--- are listed.
+-- | Lists the logs in projects, organizations, folders, or billing accounts.
+-- Only logs that have entries are listed.
 --
 -- /See:/ 'foldersLogsList' smart constructor.
 data FoldersLogsList = FoldersLogsList'
-    { _fllParent         :: !Text
-    , _fllXgafv          :: !(Maybe Xgafv)
+    { _fllParent :: !Text
+    , _fllXgafv :: !(Maybe Xgafv)
     , _fllUploadProtocol :: !(Maybe Text)
-    , _fllPp             :: !Bool
-    , _fllAccessToken    :: !(Maybe Text)
-    , _fllUploadType     :: !(Maybe Text)
-    , _fllBearerToken    :: !(Maybe Text)
-    , _fllPageToken      :: !(Maybe Text)
-    , _fllPageSize       :: !(Maybe (Textual Int32))
-    , _fllCallback       :: !(Maybe Text)
+    , _fllPp :: !Bool
+    , _fllAccessToken :: !(Maybe Text)
+    , _fllUploadType :: !(Maybe Text)
+    , _fllBearerToken :: !(Maybe Text)
+    , _fllPageToken :: !(Maybe Text)
+    , _fllPageSize :: !(Maybe (Textual Int32))
+    , _fllFields :: !(Maybe Text)
+    , _fllCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FoldersLogsList' with the minimum fields required to make a request.
@@ -106,11 +109,13 @@ data FoldersLogsList = FoldersLogsList'
 --
 -- * 'fllPageSize'
 --
+-- * 'fllFields'
+--
 -- * 'fllCallback'
 foldersLogsList
     :: Text -- ^ 'fllParent'
     -> FoldersLogsList
-foldersLogsList pFllParent_ =
+foldersLogsList pFllParent_ = 
     FoldersLogsList'
     { _fllParent = pFllParent_
     , _fllXgafv = Nothing
@@ -121,11 +126,13 @@ foldersLogsList pFllParent_ =
     , _fllBearerToken = Nothing
     , _fllPageToken = Nothing
     , _fllPageSize = Nothing
+    , _fllFields = Nothing
     , _fllCallback = Nothing
     }
 
 -- | Required. The resource name that owns the logs:
 -- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 fllParent :: Lens' FoldersLogsList Text
 fllParent
   = lens _fllParent (\ s a -> s{_fllParent = a})
@@ -178,6 +185,11 @@ fllPageSize
   = lens _fllPageSize (\ s a -> s{_fllPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fllFields :: Lens' FoldersLogsList (Maybe Text)
+fllFields
+  = lens _fllFields (\ s a -> s{_fllFields = a})
+
 -- | JSONP
 fllCallback :: Lens' FoldersLogsList (Maybe Text)
 fllCallback
@@ -199,6 +211,7 @@ instance GoogleRequest FoldersLogsList where
               _fllPageToken
               _fllPageSize
               _fllCallback
+              _fllFields
               (Just AltJSON)
               loggingService
           where go

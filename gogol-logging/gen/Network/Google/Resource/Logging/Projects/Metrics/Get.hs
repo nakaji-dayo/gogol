@@ -40,11 +40,12 @@ module Network.Google.Resource.Logging.Projects.Metrics.Get
     , pmgMetricName
     , pmgUploadType
     , pmgBearerToken
+    , pmgFields
     , pmgCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.metrics.get@ method which the
 -- 'ProjectsMetricsGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsMetricsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] LogMetric
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] LogMetric
 
 -- | Gets a logs-based metric.
 --
 -- /See:/ 'projectsMetricsGet' smart constructor.
 data ProjectsMetricsGet = ProjectsMetricsGet'
-    { _pmgXgafv          :: !(Maybe Xgafv)
+    { _pmgXgafv :: !(Maybe Xgafv)
     , _pmgUploadProtocol :: !(Maybe Text)
-    , _pmgPp             :: !Bool
-    , _pmgAccessToken    :: !(Maybe Text)
-    , _pmgMetricName     :: !Text
-    , _pmgUploadType     :: !(Maybe Text)
-    , _pmgBearerToken    :: !(Maybe Text)
-    , _pmgCallback       :: !(Maybe Text)
+    , _pmgPp :: !Bool
+    , _pmgAccessToken :: !(Maybe Text)
+    , _pmgMetricName :: !Text
+    , _pmgUploadType :: !(Maybe Text)
+    , _pmgBearerToken :: !(Maybe Text)
+    , _pmgFields :: !(Maybe Text)
+    , _pmgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricsGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsMetricsGet = ProjectsMetricsGet'
 --
 -- * 'pmgBearerToken'
 --
+-- * 'pmgFields'
+--
 -- * 'pmgCallback'
 projectsMetricsGet
     :: Text -- ^ 'pmgMetricName'
     -> ProjectsMetricsGet
-projectsMetricsGet pPmgMetricName_ =
+projectsMetricsGet pPmgMetricName_ = 
     ProjectsMetricsGet'
     { _pmgXgafv = Nothing
     , _pmgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsMetricsGet pPmgMetricName_ =
     , _pmgMetricName = pPmgMetricName_
     , _pmgUploadType = Nothing
     , _pmgBearerToken = Nothing
+    , _pmgFields = Nothing
     , _pmgCallback = Nothing
     }
 
@@ -147,6 +153,11 @@ pmgBearerToken
   = lens _pmgBearerToken
       (\ s a -> s{_pmgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmgFields :: Lens' ProjectsMetricsGet (Maybe Text)
+pmgFields
+  = lens _pmgFields (\ s a -> s{_pmgFields = a})
+
 -- | JSONP
 pmgCallback :: Lens' ProjectsMetricsGet (Maybe Text)
 pmgCallback
@@ -166,6 +177,7 @@ instance GoogleRequest ProjectsMetricsGet where
               _pmgUploadType
               _pmgBearerToken
               _pmgCallback
+              _pmgFields
               (Just AltJSON)
               loggingService
           where go

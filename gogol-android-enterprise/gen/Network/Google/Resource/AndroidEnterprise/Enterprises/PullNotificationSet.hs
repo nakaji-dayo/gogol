@@ -24,7 +24,7 @@
 -- the service account authenticated for the request. The notification set
 -- may be empty if no notification are pending. A notification set returned
 -- needs to be acknowledged within 20 seconds by calling
--- Enterprises​.AcknowledgeNotificationSet, unless the notification set is
+-- Enterprises.AcknowledgeNotificationSet, unless the notification set is
 -- empty. Notifications that are not acknowledged within the 20 seconds
 -- will eventually be included again in the response to another
 -- PullNotificationSet request, and those that are never acknowledged will
@@ -47,10 +47,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.PullNotificationSet
 
     -- * Request Lenses
     , epnsRequestMode
+    , epnsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.pullNotificationSet@ method which the
 -- 'EnterprisesPullNotificationSet' request conforms to.
@@ -62,14 +63,15 @@ type EnterprisesPullNotificationSetResource =
              QueryParam "requestMode"
                EnterprisesPullNotificationSetRequestMode
                :>
-               QueryParam "alt" AltJSON :>
-                 Post '[JSON] NotificationSet
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Post '[JSON] NotificationSet
 
 -- | Pulls and returns a notification set for the enterprises associated with
 -- the service account authenticated for the request. The notification set
 -- may be empty if no notification are pending. A notification set returned
 -- needs to be acknowledged within 20 seconds by calling
--- Enterprises​.AcknowledgeNotificationSet, unless the notification set is
+-- Enterprises.AcknowledgeNotificationSet, unless the notification set is
 -- empty. Notifications that are not acknowledged within the 20 seconds
 -- will eventually be included again in the response to another
 -- PullNotificationSet request, and those that are never acknowledged will
@@ -81,8 +83,9 @@ type EnterprisesPullNotificationSetResource =
 -- may return more notifications once they become available.
 --
 -- /See:/ 'enterprisesPullNotificationSet' smart constructor.
-newtype EnterprisesPullNotificationSet = EnterprisesPullNotificationSet'
-    { _epnsRequestMode :: Maybe EnterprisesPullNotificationSetRequestMode
+data EnterprisesPullNotificationSet = EnterprisesPullNotificationSet'
+    { _epnsRequestMode :: !(Maybe EnterprisesPullNotificationSetRequestMode)
+    , _epnsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesPullNotificationSet' with the minimum fields required to make a request.
@@ -90,11 +93,14 @@ newtype EnterprisesPullNotificationSet = EnterprisesPullNotificationSet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'epnsRequestMode'
+--
+-- * 'epnsFields'
 enterprisesPullNotificationSet
     :: EnterprisesPullNotificationSet
-enterprisesPullNotificationSet =
+enterprisesPullNotificationSet = 
     EnterprisesPullNotificationSet'
     { _epnsRequestMode = Nothing
+    , _epnsFields = Nothing
     }
 
 -- | The request mode for pulling notifications. Specifying
@@ -109,6 +115,11 @@ epnsRequestMode
   = lens _epnsRequestMode
       (\ s a -> s{_epnsRequestMode = a})
 
+-- | Selector specifying which fields to include in a partial response.
+epnsFields :: Lens' EnterprisesPullNotificationSet (Maybe Text)
+epnsFields
+  = lens _epnsFields (\ s a -> s{_epnsFields = a})
+
 instance GoogleRequest EnterprisesPullNotificationSet
          where
         type Rs EnterprisesPullNotificationSet =
@@ -116,7 +127,7 @@ instance GoogleRequest EnterprisesPullNotificationSet
         type Scopes EnterprisesPullNotificationSet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesPullNotificationSet'{..}
-          = go _epnsRequestMode (Just AltJSON)
+          = go _epnsRequestMode _epnsFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

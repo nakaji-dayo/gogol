@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Revoke
     , pPackageName
     , pToken
     , pSubscriptionId
+    , pFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.purchases.subscriptions.revoke@ method which the
 -- 'PurchasesSubscriptionsRevoke' request conforms to.
@@ -55,7 +56,8 @@ type PurchasesSubscriptionsRevokeResource =
                  Capture "subscriptionId" Text :>
                    "tokens" :>
                      CaptureMode "token" "revoke" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Refunds and immediately revokes a user\'s subscription purchase. Access
 -- to the subscription will be terminated immediately and it will stop
@@ -63,9 +65,10 @@ type PurchasesSubscriptionsRevokeResource =
 --
 -- /See:/ 'purchasesSubscriptionsRevoke' smart constructor.
 data PurchasesSubscriptionsRevoke = PurchasesSubscriptionsRevoke'
-    { _pPackageName    :: !Text
-    , _pToken          :: !Text
+    { _pPackageName :: !Text
+    , _pToken :: !Text
     , _pSubscriptionId :: !Text
+    , _pFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PurchasesSubscriptionsRevoke' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data PurchasesSubscriptionsRevoke = PurchasesSubscriptionsRevoke'
 -- * 'pToken'
 --
 -- * 'pSubscriptionId'
+--
+-- * 'pFields'
 purchasesSubscriptionsRevoke
     :: Text -- ^ 'pPackageName'
     -> Text -- ^ 'pToken'
     -> Text -- ^ 'pSubscriptionId'
     -> PurchasesSubscriptionsRevoke
-purchasesSubscriptionsRevoke pPPackageName_ pPToken_ pPSubscriptionId_ =
+purchasesSubscriptionsRevoke pPPackageName_ pPToken_ pPSubscriptionId_ = 
     PurchasesSubscriptionsRevoke'
     { _pPackageName = pPPackageName_
     , _pToken = pPToken_
     , _pSubscriptionId = pPSubscriptionId_
+    , _pFields = Nothing
     }
 
 -- | The package name of the application for which this subscription was
@@ -106,13 +112,17 @@ pSubscriptionId
   = lens _pSubscriptionId
       (\ s a -> s{_pSubscriptionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' PurchasesSubscriptionsRevoke (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
+
 instance GoogleRequest PurchasesSubscriptionsRevoke
          where
         type Rs PurchasesSubscriptionsRevoke = ()
         type Scopes PurchasesSubscriptionsRevoke =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient PurchasesSubscriptionsRevoke'{..}
-          = go _pPackageName _pSubscriptionId _pToken
+          = go _pPackageName _pSubscriptionId _pToken _pFields
               (Just AltJSON)
               androidPublisherService
           where go

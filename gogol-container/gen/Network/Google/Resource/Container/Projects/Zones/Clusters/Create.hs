@@ -50,11 +50,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.Create
     , pzccPayload
     , pzccBearerToken
     , pzccProjectId
+    , pzccFields
     , pzccCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.create@ method which the
 -- 'ProjectsZonesClustersCreate' request conforms to.
@@ -65,16 +66,17 @@ type ProjectsZonesClustersCreateResource =
            "zones" :>
              Capture "zone" Text :>
                "clusters" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] CreateClusterRequest :>
-                                   Post '[JSON] Operation
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON] CreateClusterRequest :>
+                                     Post '[JSON] Operation
 
 -- | Creates a cluster, consisting of the specified number and type of Google
 -- Compute Engine instances. By default, the cluster is created in the
@@ -88,16 +90,17 @@ type ProjectsZonesClustersCreateResource =
 --
 -- /See:/ 'projectsZonesClustersCreate' smart constructor.
 data ProjectsZonesClustersCreate = ProjectsZonesClustersCreate'
-    { _pzccXgafv          :: !(Maybe Text)
+    { _pzccXgafv :: !(Maybe Xgafv)
     , _pzccUploadProtocol :: !(Maybe Text)
-    , _pzccPp             :: !Bool
-    , _pzccAccessToken    :: !(Maybe Text)
-    , _pzccUploadType     :: !(Maybe Text)
-    , _pzccZone           :: !Text
-    , _pzccPayload        :: !CreateClusterRequest
-    , _pzccBearerToken    :: !(Maybe Text)
-    , _pzccProjectId      :: !Text
-    , _pzccCallback       :: !(Maybe Text)
+    , _pzccPp :: !Bool
+    , _pzccAccessToken :: !(Maybe Text)
+    , _pzccUploadType :: !(Maybe Text)
+    , _pzccZone :: !Text
+    , _pzccPayload :: !CreateClusterRequest
+    , _pzccBearerToken :: !(Maybe Text)
+    , _pzccProjectId :: !Text
+    , _pzccFields :: !(Maybe Text)
+    , _pzccCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersCreate' with the minimum fields required to make a request.
@@ -122,13 +125,15 @@ data ProjectsZonesClustersCreate = ProjectsZonesClustersCreate'
 --
 -- * 'pzccProjectId'
 --
+-- * 'pzccFields'
+--
 -- * 'pzccCallback'
 projectsZonesClustersCreate
     :: Text -- ^ 'pzccZone'
     -> CreateClusterRequest -- ^ 'pzccPayload'
     -> Text -- ^ 'pzccProjectId'
     -> ProjectsZonesClustersCreate
-projectsZonesClustersCreate pPzccZone_ pPzccPayload_ pPzccProjectId_ =
+projectsZonesClustersCreate pPzccZone_ pPzccPayload_ pPzccProjectId_ = 
     ProjectsZonesClustersCreate'
     { _pzccXgafv = Nothing
     , _pzccUploadProtocol = Nothing
@@ -139,11 +144,12 @@ projectsZonesClustersCreate pPzccZone_ pPzccPayload_ pPzccProjectId_ =
     , _pzccPayload = pPzccPayload_
     , _pzccBearerToken = Nothing
     , _pzccProjectId = pPzccProjectId_
+    , _pzccFields = Nothing
     , _pzccCallback = Nothing
     }
 
 -- | V1 error format.
-pzccXgafv :: Lens' ProjectsZonesClustersCreate (Maybe Text)
+pzccXgafv :: Lens' ProjectsZonesClustersCreate (Maybe Xgafv)
 pzccXgafv
   = lens _pzccXgafv (\ s a -> s{_pzccXgafv = a})
 
@@ -192,6 +198,11 @@ pzccProjectId
   = lens _pzccProjectId
       (\ s a -> s{_pzccProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzccFields :: Lens' ProjectsZonesClustersCreate (Maybe Text)
+pzccFields
+  = lens _pzccFields (\ s a -> s{_pzccFields = a})
+
 -- | JSONP
 pzccCallback :: Lens' ProjectsZonesClustersCreate (Maybe Text)
 pzccCallback
@@ -210,6 +221,7 @@ instance GoogleRequest ProjectsZonesClustersCreate
               _pzccUploadType
               _pzccBearerToken
               _pzccCallback
+              _pzccFields
               (Just AltJSON)
               _pzccPayload
               containerService

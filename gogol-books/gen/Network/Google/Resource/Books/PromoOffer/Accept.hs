@@ -41,10 +41,11 @@ module Network.Google.Resource.Books.PromoOffer.Accept
     , poaOfferId
     , poaProduct
     , poaAndroidId
+    , poaFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.promooffer.accept@ method which the
 -- 'PromoOfferAccept' request conforms to.
@@ -61,20 +62,22 @@ type PromoOfferAcceptResource =
                        QueryParam "offerId" Text :>
                          QueryParam "product" Text :>
                            QueryParam "androidId" Text :>
-                             QueryParam "alt" AltJSON :> Post '[JSON] ()
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- |
 --
 -- /See:/ 'promoOfferAccept' smart constructor.
 data PromoOfferAccept = PromoOfferAccept'
     { _poaManufacturer :: !(Maybe Text)
-    , _poaSerial       :: !(Maybe Text)
-    , _poaDevice       :: !(Maybe Text)
-    , _poaModel        :: !(Maybe Text)
-    , _poaVolumeId     :: !(Maybe Text)
-    , _poaOfferId      :: !(Maybe Text)
-    , _poaProduct      :: !(Maybe Text)
-    , _poaAndroidId    :: !(Maybe Text)
+    , _poaSerial :: !(Maybe Text)
+    , _poaDevice :: !(Maybe Text)
+    , _poaModel :: !(Maybe Text)
+    , _poaVolumeId :: !(Maybe Text)
+    , _poaOfferId :: !(Maybe Text)
+    , _poaProduct :: !(Maybe Text)
+    , _poaAndroidId :: !(Maybe Text)
+    , _poaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PromoOfferAccept' with the minimum fields required to make a request.
@@ -96,9 +99,11 @@ data PromoOfferAccept = PromoOfferAccept'
 -- * 'poaProduct'
 --
 -- * 'poaAndroidId'
+--
+-- * 'poaFields'
 promoOfferAccept
     :: PromoOfferAccept
-promoOfferAccept =
+promoOfferAccept = 
     PromoOfferAccept'
     { _poaManufacturer = Nothing
     , _poaSerial = Nothing
@@ -108,6 +113,7 @@ promoOfferAccept =
     , _poaOfferId = Nothing
     , _poaProduct = Nothing
     , _poaAndroidId = Nothing
+    , _poaFields = Nothing
     }
 
 -- | device manufacturer
@@ -149,6 +155,11 @@ poaAndroidId :: Lens' PromoOfferAccept (Maybe Text)
 poaAndroidId
   = lens _poaAndroidId (\ s a -> s{_poaAndroidId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+poaFields :: Lens' PromoOfferAccept (Maybe Text)
+poaFields
+  = lens _poaFields (\ s a -> s{_poaFields = a})
+
 instance GoogleRequest PromoOfferAccept where
         type Rs PromoOfferAccept = ()
         type Scopes PromoOfferAccept =
@@ -159,6 +170,7 @@ instance GoogleRequest PromoOfferAccept where
               _poaOfferId
               _poaProduct
               _poaAndroidId
+              _poaFields
               (Just AltJSON)
               booksService
           where go

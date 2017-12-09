@@ -33,14 +33,16 @@ module Network.Google.Resource.Compute.TargetPools.RemoveInstance
     , TargetPoolsRemoveInstance
 
     -- * Request Lenses
+    , tpriRequestId
     , tpriProject
     , tpriTargetPool
     , tpriPayload
     , tpriRegion
+    , tpriFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetPools.removeInstance@ method which the
 -- 'TargetPoolsRemoveInstance' request conforms to.
@@ -54,23 +56,29 @@ type TargetPoolsRemoveInstanceResource =
                  "targetPools" :>
                    Capture "targetPool" Text :>
                      "removeInstance" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TargetPoolsRemoveInstanceRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] TargetPoolsRemoveInstanceRequest :>
+                               Post '[JSON] Operation
 
 -- | Removes instance URL from a target pool.
 --
 -- /See:/ 'targetPoolsRemoveInstance' smart constructor.
 data TargetPoolsRemoveInstance = TargetPoolsRemoveInstance'
-    { _tpriProject    :: !Text
+    { _tpriRequestId :: !(Maybe Text)
+    , _tpriProject :: !Text
     , _tpriTargetPool :: !Text
-    , _tpriPayload    :: !TargetPoolsRemoveInstanceRequest
-    , _tpriRegion     :: !Text
+    , _tpriPayload :: !TargetPoolsRemoveInstanceRequest
+    , _tpriRegion :: !Text
+    , _tpriFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetPoolsRemoveInstance' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tpriRequestId'
 --
 -- * 'tpriProject'
 --
@@ -79,19 +87,38 @@ data TargetPoolsRemoveInstance = TargetPoolsRemoveInstance'
 -- * 'tpriPayload'
 --
 -- * 'tpriRegion'
+--
+-- * 'tpriFields'
 targetPoolsRemoveInstance
     :: Text -- ^ 'tpriProject'
     -> Text -- ^ 'tpriTargetPool'
     -> TargetPoolsRemoveInstanceRequest -- ^ 'tpriPayload'
     -> Text -- ^ 'tpriRegion'
     -> TargetPoolsRemoveInstance
-targetPoolsRemoveInstance pTpriProject_ pTpriTargetPool_ pTpriPayload_ pTpriRegion_ =
+targetPoolsRemoveInstance pTpriProject_ pTpriTargetPool_ pTpriPayload_ pTpriRegion_ = 
     TargetPoolsRemoveInstance'
-    { _tpriProject = pTpriProject_
+    { _tpriRequestId = Nothing
+    , _tpriProject = pTpriProject_
     , _tpriTargetPool = pTpriTargetPool_
     , _tpriPayload = pTpriPayload_
     , _tpriRegion = pTpriRegion_
+    , _tpriFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tpriRequestId :: Lens' TargetPoolsRemoveInstance (Maybe Text)
+tpriRequestId
+  = lens _tpriRequestId
+      (\ s a -> s{_tpriRequestId = a})
 
 -- | Project ID for this request.
 tpriProject :: Lens' TargetPoolsRemoveInstance Text
@@ -114,6 +141,11 @@ tpriRegion :: Lens' TargetPoolsRemoveInstance Text
 tpriRegion
   = lens _tpriRegion (\ s a -> s{_tpriRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpriFields :: Lens' TargetPoolsRemoveInstance (Maybe Text)
+tpriFields
+  = lens _tpriFields (\ s a -> s{_tpriFields = a})
+
 instance GoogleRequest TargetPoolsRemoveInstance
          where
         type Rs TargetPoolsRemoveInstance = Operation
@@ -122,6 +154,8 @@ instance GoogleRequest TargetPoolsRemoveInstance
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetPoolsRemoveInstance'{..}
           = go _tpriProject _tpriRegion _tpriTargetPool
+              _tpriRequestId
+              _tpriFields
               (Just AltJSON)
               _tpriPayload
               computeService

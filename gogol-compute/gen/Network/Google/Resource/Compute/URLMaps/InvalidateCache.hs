@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.URLMaps.InvalidateCache
     , URLMapsInvalidateCache
 
     -- * Request Lenses
+    , umicRequestId
     , umicURLMap
     , umicProject
     , umicPayload
+    , umicFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.urlMaps.invalidateCache@ method which the
 -- 'URLMapsInvalidateCache' request conforms to.
@@ -53,40 +55,65 @@ type URLMapsInvalidateCacheResource =
                "urlMaps" :>
                  Capture "urlMap" Text :>
                    "invalidateCache" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] CacheInvalidationRule :>
-                         Post '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] CacheInvalidationRule :>
+                             Post '[JSON] Operation
 
 -- | Initiates a cache invalidation operation, invalidating the specified
 -- path, scoped to the specified UrlMap.
 --
 -- /See:/ 'urlMapsInvalidateCache' smart constructor.
 data URLMapsInvalidateCache = URLMapsInvalidateCache'
-    { _umicURLMap  :: !Text
+    { _umicRequestId :: !(Maybe Text)
+    , _umicURLMap :: !Text
     , _umicProject :: !Text
     , _umicPayload :: !CacheInvalidationRule
+    , _umicFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLMapsInvalidateCache' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'umicRequestId'
+--
 -- * 'umicURLMap'
 --
 -- * 'umicProject'
 --
 -- * 'umicPayload'
+--
+-- * 'umicFields'
 urlMapsInvalidateCache
     :: Text -- ^ 'umicURLMap'
     -> Text -- ^ 'umicProject'
     -> CacheInvalidationRule -- ^ 'umicPayload'
     -> URLMapsInvalidateCache
-urlMapsInvalidateCache pUmicURLMap_ pUmicProject_ pUmicPayload_ =
+urlMapsInvalidateCache pUmicURLMap_ pUmicProject_ pUmicPayload_ = 
     URLMapsInvalidateCache'
-    { _umicURLMap = pUmicURLMap_
+    { _umicRequestId = Nothing
+    , _umicURLMap = pUmicURLMap_
     , _umicProject = pUmicProject_
     , _umicPayload = pUmicPayload_
+    , _umicFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+umicRequestId :: Lens' URLMapsInvalidateCache (Maybe Text)
+umicRequestId
+  = lens _umicRequestId
+      (\ s a -> s{_umicRequestId = a})
 
 -- | Name of the UrlMap scoping this request.
 umicURLMap :: Lens' URLMapsInvalidateCache Text
@@ -103,13 +130,20 @@ umicPayload :: Lens' URLMapsInvalidateCache CacheInvalidationRule
 umicPayload
   = lens _umicPayload (\ s a -> s{_umicPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umicFields :: Lens' URLMapsInvalidateCache (Maybe Text)
+umicFields
+  = lens _umicFields (\ s a -> s{_umicFields = a})
+
 instance GoogleRequest URLMapsInvalidateCache where
         type Rs URLMapsInvalidateCache = Operation
         type Scopes URLMapsInvalidateCache =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient URLMapsInvalidateCache'{..}
-          = go _umicProject _umicURLMap (Just AltJSON)
+          = go _umicProject _umicURLMap _umicRequestId
+              _umicFields
+              (Just AltJSON)
               _umicPayload
               computeService
           where go

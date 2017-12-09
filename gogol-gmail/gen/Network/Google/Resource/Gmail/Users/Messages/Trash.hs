@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Trash
     -- * Request Lenses
     , umtUserId
     , umtId
+    , umtFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.trash@ method which the
 -- 'UsersMessagesTrash' request conforms to.
@@ -50,14 +51,16 @@ type UsersMessagesTrashResource =
              "messages" :>
                Capture "id" Text :>
                  "trash" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Message
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Message
 
 -- | Moves the specified message to the trash.
 --
 -- /See:/ 'usersMessagesTrash' smart constructor.
 data UsersMessagesTrash = UsersMessagesTrash'
     { _umtUserId :: !Text
-    , _umtId     :: !Text
+    , _umtId :: !Text
+    , _umtFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesTrash' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersMessagesTrash = UsersMessagesTrash'
 -- * 'umtUserId'
 --
 -- * 'umtId'
+--
+-- * 'umtFields'
 usersMessagesTrash
     :: Text -- ^ 'umtId'
     -> UsersMessagesTrash
-usersMessagesTrash pUmtId_ =
+usersMessagesTrash pUmtId_ = 
     UsersMessagesTrash'
     { _umtUserId = "me"
     , _umtId = pUmtId_
+    , _umtFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -86,13 +92,19 @@ umtUserId
 umtId :: Lens' UsersMessagesTrash Text
 umtId = lens _umtId (\ s a -> s{_umtId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umtFields :: Lens' UsersMessagesTrash (Maybe Text)
+umtFields
+  = lens _umtFields (\ s a -> s{_umtFields = a})
+
 instance GoogleRequest UsersMessagesTrash where
         type Rs UsersMessagesTrash = Message
         type Scopes UsersMessagesTrash =
              '["https://mail.google.com/",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersMessagesTrash'{..}
-          = go _umtUserId _umtId (Just AltJSON) gmailService
+          = go _umtUserId _umtId _umtFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersMessagesTrashResource)

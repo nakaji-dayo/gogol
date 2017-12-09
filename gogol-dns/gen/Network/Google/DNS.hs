@@ -279,23 +279,23 @@ module Network.Google.DNS
     , mzlrManagedZones
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.DNS.Changes.Create
-import           Network.Google.Resource.DNS.Changes.Get
-import           Network.Google.Resource.DNS.Changes.List
-import           Network.Google.Resource.DNS.DNSKeys.Get
-import           Network.Google.Resource.DNS.DNSKeys.List
-import           Network.Google.Resource.DNS.ManagedZoneOperations.Get
-import           Network.Google.Resource.DNS.ManagedZoneOperations.List
-import           Network.Google.Resource.DNS.ManagedZones.Create
-import           Network.Google.Resource.DNS.ManagedZones.Delete
-import           Network.Google.Resource.DNS.ManagedZones.Get
-import           Network.Google.Resource.DNS.ManagedZones.List
-import           Network.Google.Resource.DNS.ManagedZones.Patch
-import           Network.Google.Resource.DNS.ManagedZones.Update
-import           Network.Google.Resource.DNS.Projects.Get
-import           Network.Google.Resource.DNS.ResourceRecordSets.List
+import Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Resource.DNS.Changes.Create
+import Network.Google.Resource.DNS.Changes.Get
+import Network.Google.Resource.DNS.Changes.List
+import Network.Google.Resource.DNS.DNSKeys.Get
+import Network.Google.Resource.DNS.DNSKeys.List
+import Network.Google.Resource.DNS.ManagedZoneOperations.Get
+import Network.Google.Resource.DNS.ManagedZoneOperations.List
+import Network.Google.Resource.DNS.ManagedZones.Create
+import Network.Google.Resource.DNS.ManagedZones.Delete
+import Network.Google.Resource.DNS.ManagedZones.Get
+import Network.Google.Resource.DNS.ManagedZones.List
+import Network.Google.Resource.DNS.ManagedZones.Patch
+import Network.Google.Resource.DNS.ManagedZones.Update
+import Network.Google.Resource.DNS.Projects.Get
+import Network.Google.Resource.DNS.ResourceRecordSets.List
 
 {- $resources
 TODO

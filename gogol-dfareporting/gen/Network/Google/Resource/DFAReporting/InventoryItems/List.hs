@@ -45,16 +45,17 @@ module Network.Google.Resource.DFAReporting.InventoryItems.List
     , iilOrderId
     , iilSiteId
     , iilMaxResults
+    , iilFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.inventoryItems.list@ method which the
 -- 'InventoryItemsList' request conforms to.
 type InventoryItemsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
@@ -69,25 +70,27 @@ type InventoryItemsListResource =
                                QueryParams "orderId" (Textual Int64) :>
                                  QueryParams "siteId" (Textual Int64) :>
                                    QueryParam "maxResults" (Textual Int32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] InventoryItemsListResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] InventoryItemsListResponse
 
 -- | Retrieves a list of inventory items, possibly filtered. This method
 -- supports paging.
 --
 -- /See:/ 'inventoryItemsList' smart constructor.
 data InventoryItemsList = InventoryItemsList'
-    { _iilIds        :: !(Maybe [Textual Int64])
-    , _iilProFileId  :: !(Textual Int64)
-    , _iilSortOrder  :: !(Maybe InventoryItemsListSortOrder)
-    , _iilInPlan     :: !(Maybe Bool)
-    , _iilPageToken  :: !(Maybe Text)
-    , _iilProjectId  :: !(Textual Int64)
-    , _iilSortField  :: !(Maybe InventoryItemsListSortField)
-    , _iilType       :: !(Maybe InventoryItemsListType)
-    , _iilOrderId    :: !(Maybe [Textual Int64])
-    , _iilSiteId     :: !(Maybe [Textual Int64])
-    , _iilMaxResults :: !(Maybe (Textual Int32))
+    { _iilIds :: !(Maybe [Textual Int64])
+    , _iilProFileId :: !(Textual Int64)
+    , _iilSortOrder :: !InventoryItemsListSortOrder
+    , _iilInPlan :: !(Maybe Bool)
+    , _iilPageToken :: !(Maybe Text)
+    , _iilProjectId :: !(Textual Int64)
+    , _iilSortField :: !InventoryItemsListSortField
+    , _iilType :: !(Maybe InventoryItemsListType)
+    , _iilOrderId :: !(Maybe [Textual Int64])
+    , _iilSiteId :: !(Maybe [Textual Int64])
+    , _iilMaxResults :: !(Textual Int32)
+    , _iilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InventoryItemsList' with the minimum fields required to make a request.
@@ -115,23 +118,26 @@ data InventoryItemsList = InventoryItemsList'
 -- * 'iilSiteId'
 --
 -- * 'iilMaxResults'
+--
+-- * 'iilFields'
 inventoryItemsList
     :: Int64 -- ^ 'iilProFileId'
     -> Int64 -- ^ 'iilProjectId'
     -> InventoryItemsList
-inventoryItemsList pIilProFileId_ pIilProjectId_ =
+inventoryItemsList pIilProFileId_ pIilProjectId_ = 
     InventoryItemsList'
     { _iilIds = Nothing
     , _iilProFileId = _Coerce # pIilProFileId_
-    , _iilSortOrder = Nothing
+    , _iilSortOrder = IILSOAscending
     , _iilInPlan = Nothing
     , _iilPageToken = Nothing
     , _iilProjectId = _Coerce # pIilProjectId_
-    , _iilSortField = Nothing
+    , _iilSortField = IILSFID
     , _iilType = Nothing
     , _iilOrderId = Nothing
     , _iilSiteId = Nothing
-    , _iilMaxResults = Nothing
+    , _iilMaxResults = 1000
+    , _iilFields = Nothing
     }
 
 -- | Select only inventory items with these IDs.
@@ -146,8 +152,8 @@ iilProFileId
   = lens _iilProFileId (\ s a -> s{_iilProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-iilSortOrder :: Lens' InventoryItemsList (Maybe InventoryItemsListSortOrder)
+-- | Order of sorted results.
+iilSortOrder :: Lens' InventoryItemsList InventoryItemsListSortOrder
 iilSortOrder
   = lens _iilSortOrder (\ s a -> s{_iilSortOrder = a})
 
@@ -168,7 +174,7 @@ iilProjectId
       . _Coerce
 
 -- | Field by which to sort the list.
-iilSortField :: Lens' InventoryItemsList (Maybe InventoryItemsListSortField)
+iilSortField :: Lens' InventoryItemsList InventoryItemsListSortField
 iilSortField
   = lens _iilSortField (\ s a -> s{_iilSortField = a})
 
@@ -191,11 +197,16 @@ iilSiteId
       . _Coerce
 
 -- | Maximum number of results to return.
-iilMaxResults :: Lens' InventoryItemsList (Maybe Int32)
+iilMaxResults :: Lens' InventoryItemsList Int32
 iilMaxResults
   = lens _iilMaxResults
       (\ s a -> s{_iilMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+iilFields :: Lens' InventoryItemsList (Maybe Text)
+iilFields
+  = lens _iilFields (\ s a -> s{_iilFields = a})
 
 instance GoogleRequest InventoryItemsList where
         type Rs InventoryItemsList =
@@ -205,14 +216,15 @@ instance GoogleRequest InventoryItemsList where
         requestClient InventoryItemsList'{..}
           = go _iilProFileId _iilProjectId
               (_iilIds ^. _Default)
-              _iilSortOrder
+              (Just _iilSortOrder)
               _iilInPlan
               _iilPageToken
-              _iilSortField
+              (Just _iilSortField)
               _iilType
               (_iilOrderId ^. _Default)
               (_iilSiteId ^. _Default)
-              _iilMaxResults
+              (Just _iilMaxResults)
+              _iilFields
               (Just AltJSON)
               dFAReportingService
           where go

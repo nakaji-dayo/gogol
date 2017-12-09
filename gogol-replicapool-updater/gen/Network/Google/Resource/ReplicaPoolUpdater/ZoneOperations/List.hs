@@ -39,10 +39,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.ZoneOperations.List
     , zolFilter
     , zolPageToken
     , zolMaxResults
+    , zolFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.zoneOperations.list@ method which the
 -- 'ZoneOperationsList' request conforms to.
@@ -57,18 +58,20 @@ type ZoneOperationsListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] OperationList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] OperationList
 
 -- | Retrieves the list of Operation resources contained within the specified
 -- zone.
 --
 -- /See:/ 'zoneOperationsList' smart constructor.
 data ZoneOperationsList = ZoneOperationsList'
-    { _zolProject    :: !Text
-    , _zolZone       :: !Text
-    , _zolFilter     :: !(Maybe Text)
-    , _zolPageToken  :: !(Maybe Text)
+    { _zolProject :: !Text
+    , _zolZone :: !Text
+    , _zolFilter :: !(Maybe Text)
+    , _zolPageToken :: !(Maybe Text)
     , _zolMaxResults :: !(Textual Word32)
+    , _zolFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneOperationsList' with the minimum fields required to make a request.
@@ -84,17 +87,20 @@ data ZoneOperationsList = ZoneOperationsList'
 -- * 'zolPageToken'
 --
 -- * 'zolMaxResults'
+--
+-- * 'zolFields'
 zoneOperationsList
     :: Text -- ^ 'zolProject'
     -> Text -- ^ 'zolZone'
     -> ZoneOperationsList
-zoneOperationsList pZolProject_ pZolZone_ =
+zoneOperationsList pZolProject_ pZolZone_ = 
     ZoneOperationsList'
     { _zolProject = pZolProject_
     , _zolZone = pZolZone_
     , _zolFilter = Nothing
     , _zolPageToken = Nothing
     , _zolMaxResults = 500
+    , _zolFields = Nothing
     }
 
 -- | Name of the project scoping this request.
@@ -125,6 +131,11 @@ zolMaxResults
       (\ s a -> s{_zolMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+zolFields :: Lens' ZoneOperationsList (Maybe Text)
+zolFields
+  = lens _zolFields (\ s a -> s{_zolFields = a})
+
 instance GoogleRequest ZoneOperationsList where
         type Rs ZoneOperationsList = OperationList
         type Scopes ZoneOperationsList =
@@ -133,6 +144,7 @@ instance GoogleRequest ZoneOperationsList where
         requestClient ZoneOperationsList'{..}
           = go _zolProject _zolZone _zolFilter _zolPageToken
               (Just _zolMaxResults)
+              _zolFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

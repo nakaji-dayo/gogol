@@ -35,10 +35,11 @@ module Network.Google.Resource.GroupsSettings.Groups.Update
     -- * Request Lenses
     , guPayload
     , guGroupUniqueId
+    , guFields
     ) where
 
-import           Network.Google.GroupsSettings.Types
-import           Network.Google.Prelude
+import Network.Google.GroupsSettings.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @groupsSettings.groups.update@ method which the
 -- 'GroupsUpdate' request conforms to.
@@ -47,15 +48,17 @@ type GroupsUpdateResource =
        "v1" :>
          "groups" :>
            Capture "groupUniqueId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Groups :> Put '[JSON] Groups
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Groups :> Put '[JSON] Groups
 
 -- | Updates an existing resource.
 --
 -- /See:/ 'groupsUpdate' smart constructor.
 data GroupsUpdate = GroupsUpdate'
-    { _guPayload       :: !Groups
+    { _guPayload :: !Groups
     , _guGroupUniqueId :: !Text
+    , _guFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsUpdate' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data GroupsUpdate = GroupsUpdate'
 -- * 'guPayload'
 --
 -- * 'guGroupUniqueId'
+--
+-- * 'guFields'
 groupsUpdate
     :: Groups -- ^ 'guPayload'
     -> Text -- ^ 'guGroupUniqueId'
     -> GroupsUpdate
-groupsUpdate pGuPayload_ pGuGroupUniqueId_ =
+groupsUpdate pGuPayload_ pGuGroupUniqueId_ = 
     GroupsUpdate'
     { _guPayload = pGuPayload_
     , _guGroupUniqueId = pGuGroupUniqueId_
+    , _guFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,12 +92,17 @@ guGroupUniqueId
   = lens _guGroupUniqueId
       (\ s a -> s{_guGroupUniqueId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+guFields :: Lens' GroupsUpdate (Maybe Text)
+guFields = lens _guFields (\ s a -> s{_guFields = a})
+
 instance GoogleRequest GroupsUpdate where
         type Rs GroupsUpdate = Groups
         type Scopes GroupsUpdate =
              '["https://www.googleapis.com/auth/apps.groups.settings"]
         requestClient GroupsUpdate'{..}
-          = go _guGroupUniqueId (Just AltJSON) _guPayload
+          = go _guGroupUniqueId _guFields (Just AltJSON)
+              _guPayload
               groupsSettingsService
           where go
                   = buildClient (Proxy :: Proxy GroupsUpdateResource)

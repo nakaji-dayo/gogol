@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.CommentThreads.Insert
     -- * Request Lenses
     , ctiPart
     , ctiPayload
+    , ctiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.commentThreads.insert@ method which the
 -- 'CommentThreadsInsert' request conforms to.
@@ -48,17 +49,19 @@ type CommentThreadsInsertResource =
        "v3" :>
          "commentThreads" :>
            QueryParam "part" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] CommentThread :>
-                 Post '[JSON] CommentThread
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] CommentThread :>
+                   Post '[JSON] CommentThread
 
 -- | Creates a new top-level comment. To add a reply to an existing comment,
 -- use the comments.insert method instead.
 --
 -- /See:/ 'commentThreadsInsert' smart constructor.
 data CommentThreadsInsert = CommentThreadsInsert'
-    { _ctiPart    :: !Text
+    { _ctiPart :: !Text
     , _ctiPayload :: !CommentThread
+    , _ctiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentThreadsInsert' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data CommentThreadsInsert = CommentThreadsInsert'
 -- * 'ctiPart'
 --
 -- * 'ctiPayload'
+--
+-- * 'ctiFields'
 commentThreadsInsert
     :: Text -- ^ 'ctiPart'
     -> CommentThread -- ^ 'ctiPayload'
     -> CommentThreadsInsert
-commentThreadsInsert pCtiPart_ pCtiPayload_ =
+commentThreadsInsert pCtiPart_ pCtiPayload_ = 
     CommentThreadsInsert'
     { _ctiPart = pCtiPart_
     , _ctiPayload = pCtiPayload_
+    , _ctiFields = Nothing
     }
 
 -- | The part parameter identifies the properties that the API response will
@@ -89,12 +95,18 @@ ctiPayload :: Lens' CommentThreadsInsert CommentThread
 ctiPayload
   = lens _ctiPayload (\ s a -> s{_ctiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ctiFields :: Lens' CommentThreadsInsert (Maybe Text)
+ctiFields
+  = lens _ctiFields (\ s a -> s{_ctiFields = a})
+
 instance GoogleRequest CommentThreadsInsert where
         type Rs CommentThreadsInsert = CommentThread
         type Scopes CommentThreadsInsert =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentThreadsInsert'{..}
-          = go (Just _ctiPart) (Just AltJSON) _ctiPayload
+          = go (Just _ctiPart) _ctiFields (Just AltJSON)
+              _ctiPayload
               youTubeService
           where go
                   = buildClient

@@ -34,10 +34,11 @@ module Network.Google.Resource.Books.MyLibrary.Bookshelves.List
 
     -- * Request Lenses
     , mlblSource
+    , mlblFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.bookshelves.list@ method which the
 -- 'MyLibraryBookshelvesList' request conforms to.
@@ -47,13 +48,15 @@ type MyLibraryBookshelvesListResource =
          "mylibrary" :>
            "bookshelves" :>
              QueryParam "source" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Bookshelves
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Bookshelves
 
 -- | Retrieves a list of bookshelves belonging to the authenticated user.
 --
 -- /See:/ 'myLibraryBookshelvesList' smart constructor.
-newtype MyLibraryBookshelvesList = MyLibraryBookshelvesList'
-    { _mlblSource :: Maybe Text
+data MyLibraryBookshelvesList = MyLibraryBookshelvesList'
+    { _mlblSource :: !(Maybe Text)
+    , _mlblFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryBookshelvesList' with the minimum fields required to make a request.
@@ -61,11 +64,14 @@ newtype MyLibraryBookshelvesList = MyLibraryBookshelvesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'mlblSource'
+--
+-- * 'mlblFields'
 myLibraryBookshelvesList
     :: MyLibraryBookshelvesList
-myLibraryBookshelvesList =
+myLibraryBookshelvesList = 
     MyLibraryBookshelvesList'
     { _mlblSource = Nothing
+    , _mlblFields = Nothing
     }
 
 -- | String to identify the originator of this request.
@@ -73,12 +79,18 @@ mlblSource :: Lens' MyLibraryBookshelvesList (Maybe Text)
 mlblSource
   = lens _mlblSource (\ s a -> s{_mlblSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlblFields :: Lens' MyLibraryBookshelvesList (Maybe Text)
+mlblFields
+  = lens _mlblFields (\ s a -> s{_mlblFields = a})
+
 instance GoogleRequest MyLibraryBookshelvesList where
         type Rs MyLibraryBookshelvesList = Bookshelves
         type Scopes MyLibraryBookshelvesList =
              '["https://www.googleapis.com/auth/books"]
         requestClient MyLibraryBookshelvesList'{..}
-          = go _mlblSource (Just AltJSON) booksService
+          = go _mlblSource _mlblFields (Just AltJSON)
+              booksService
           where go
                   = buildClient
                       (Proxy :: Proxy MyLibraryBookshelvesListResource)

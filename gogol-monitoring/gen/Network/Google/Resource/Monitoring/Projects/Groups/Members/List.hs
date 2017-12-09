@@ -45,11 +45,12 @@ module Network.Google.Resource.Monitoring.Projects.Groups.Members.List
     , pgmlPageToken
     , pgmlIntervalEndTime
     , pgmlPageSize
+    , pgmlFields
     , pgmlCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.groups.members.list@ method which the
 -- 'ProjectsGroupsMembersList' request conforms to.
@@ -69,26 +70,28 @@ type ProjectsGroupsMembersListResource =
                              QueryParam "interval.endTime" DateTime' :>
                                QueryParam "pageSize" (Textual Int32) :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] ListGroupMembersResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] ListGroupMembersResponse
 
 -- | Lists the monitored resources that are members of a group.
 --
 -- /See:/ 'projectsGroupsMembersList' smart constructor.
 data ProjectsGroupsMembersList = ProjectsGroupsMembersList'
     { _pgmlIntervalStartTime :: !(Maybe DateTime')
-    , _pgmlXgafv             :: !(Maybe Xgafv)
-    , _pgmlUploadProtocol    :: !(Maybe Text)
-    , _pgmlPp                :: !Bool
-    , _pgmlAccessToken       :: !(Maybe Text)
-    , _pgmlUploadType        :: !(Maybe Text)
-    , _pgmlBearerToken       :: !(Maybe Text)
-    , _pgmlName              :: !Text
-    , _pgmlFilter            :: !(Maybe Text)
-    , _pgmlPageToken         :: !(Maybe Text)
-    , _pgmlIntervalEndTime   :: !(Maybe DateTime')
-    , _pgmlPageSize          :: !(Maybe (Textual Int32))
-    , _pgmlCallback          :: !(Maybe Text)
+    , _pgmlXgafv :: !(Maybe Xgafv)
+    , _pgmlUploadProtocol :: !(Maybe Text)
+    , _pgmlPp :: !Bool
+    , _pgmlAccessToken :: !(Maybe Text)
+    , _pgmlUploadType :: !(Maybe Text)
+    , _pgmlBearerToken :: !(Maybe Text)
+    , _pgmlName :: !Text
+    , _pgmlFilter :: !(Maybe Text)
+    , _pgmlPageToken :: !(Maybe Text)
+    , _pgmlIntervalEndTime :: !(Maybe DateTime')
+    , _pgmlPageSize :: !(Maybe (Textual Int32))
+    , _pgmlFields :: !(Maybe Text)
+    , _pgmlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGroupsMembersList' with the minimum fields required to make a request.
@@ -119,11 +122,13 @@ data ProjectsGroupsMembersList = ProjectsGroupsMembersList'
 --
 -- * 'pgmlPageSize'
 --
+-- * 'pgmlFields'
+--
 -- * 'pgmlCallback'
 projectsGroupsMembersList
     :: Text -- ^ 'pgmlName'
     -> ProjectsGroupsMembersList
-projectsGroupsMembersList pPgmlName_ =
+projectsGroupsMembersList pPgmlName_ = 
     ProjectsGroupsMembersList'
     { _pgmlIntervalStartTime = Nothing
     , _pgmlXgafv = Nothing
@@ -137,6 +142,7 @@ projectsGroupsMembersList pPgmlName_ =
     , _pgmlPageToken = Nothing
     , _pgmlIntervalEndTime = Nothing
     , _pgmlPageSize = Nothing
+    , _pgmlFields = Nothing
     , _pgmlCallback = Nothing
     }
 
@@ -217,6 +223,11 @@ pgmlPageSize
   = lens _pgmlPageSize (\ s a -> s{_pgmlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pgmlFields :: Lens' ProjectsGroupsMembersList (Maybe Text)
+pgmlFields
+  = lens _pgmlFields (\ s a -> s{_pgmlFields = a})
+
 -- | JSONP
 pgmlCallback :: Lens' ProjectsGroupsMembersList (Maybe Text)
 pgmlCallback
@@ -242,6 +253,7 @@ instance GoogleRequest ProjectsGroupsMembersList
               _pgmlIntervalEndTime
               _pgmlPageSize
               _pgmlCallback
+              _pgmlFields
               (Just AltJSON)
               monitoringService
           where go

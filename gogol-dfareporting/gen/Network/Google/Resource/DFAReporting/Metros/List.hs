@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.Metros.List
 
     -- * Request Lenses
     , mlProFileId
+    , mlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.metros.list@ method which the
 -- 'MetrosList' request conforms to.
 type MetrosListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "metros" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] MetrosListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] MetrosListResponse
 
 -- | Retrieves a list of metros.
 --
 -- /See:/ 'metrosList' smart constructor.
-newtype MetrosList = MetrosList'
-    { _mlProFileId :: Textual Int64
+data MetrosList = MetrosList'
+    { _mlProFileId :: !(Textual Int64)
+    , _mlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetrosList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype MetrosList = MetrosList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'mlProFileId'
+--
+-- * 'mlFields'
 metrosList
     :: Int64 -- ^ 'mlProFileId'
     -> MetrosList
-metrosList pMlProFileId_ =
+metrosList pMlProFileId_ = 
     MetrosList'
     { _mlProFileId = _Coerce # pMlProFileId_
+    , _mlFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,17 @@ mlProFileId
   = lens _mlProFileId (\ s a -> s{_mlProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mlFields :: Lens' MetrosList (Maybe Text)
+mlFields = lens _mlFields (\ s a -> s{_mlFields = a})
+
 instance GoogleRequest MetrosList where
         type Rs MetrosList = MetrosListResponse
         type Scopes MetrosList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient MetrosList'{..}
-          = go _mlProFileId (Just AltJSON) dFAReportingService
+          = go _mlProFileId _mlFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy MetrosListResource)
                       mempty

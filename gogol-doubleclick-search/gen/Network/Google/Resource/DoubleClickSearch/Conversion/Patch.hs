@@ -42,10 +42,11 @@ module Network.Google.Resource.DoubleClickSearch.Conversion.Patch
     , cpStartDate
     , cpStartRow
     , cpRowCount
+    , cpFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.conversion.patch@ method which the
 -- 'ConversionPatch' request conforms to.
@@ -60,9 +61,10 @@ type ConversionPatchResource =
                    QueryParam "rowCount" (Textual Int32) :>
                      QueryParam "startDate" (Textual Int32) :>
                        QueryParam "startRow" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ConversionList :>
-                             Patch '[JSON] ConversionList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ConversionList :>
+                               Patch '[JSON] ConversionList
 
 -- | Updates a batch of conversions in DoubleClick Search. This method
 -- supports patch semantics.
@@ -70,13 +72,14 @@ type ConversionPatchResource =
 -- /See:/ 'conversionPatch' smart constructor.
 data ConversionPatch = ConversionPatch'
     { _cpEngineAccountId :: !(Textual Int64)
-    , _cpAgencyId        :: !(Textual Int64)
-    , _cpAdvertiserId    :: !(Textual Int64)
-    , _cpEndDate         :: !(Textual Int32)
-    , _cpPayload         :: !ConversionList
-    , _cpStartDate       :: !(Textual Int32)
-    , _cpStartRow        :: !(Textual Word32)
-    , _cpRowCount        :: !(Textual Int32)
+    , _cpAgencyId :: !(Textual Int64)
+    , _cpAdvertiserId :: !(Textual Int64)
+    , _cpEndDate :: !(Textual Int32)
+    , _cpPayload :: !ConversionList
+    , _cpStartDate :: !(Textual Int32)
+    , _cpStartRow :: !(Textual Word32)
+    , _cpRowCount :: !(Textual Int32)
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConversionPatch' with the minimum fields required to make a request.
@@ -98,6 +101,8 @@ data ConversionPatch = ConversionPatch'
 -- * 'cpStartRow'
 --
 -- * 'cpRowCount'
+--
+-- * 'cpFields'
 conversionPatch
     :: Int64 -- ^ 'cpEngineAccountId'
     -> Int64 -- ^ 'cpAgencyId'
@@ -108,7 +113,7 @@ conversionPatch
     -> Word32 -- ^ 'cpStartRow'
     -> Int32 -- ^ 'cpRowCount'
     -> ConversionPatch
-conversionPatch pCpEngineAccountId_ pCpAgencyId_ pCpAdvertiserId_ pCpEndDate_ pCpPayload_ pCpStartDate_ pCpStartRow_ pCpRowCount_ =
+conversionPatch pCpEngineAccountId_ pCpAgencyId_ pCpAdvertiserId_ pCpEndDate_ pCpPayload_ pCpStartDate_ pCpStartRow_ pCpRowCount_ = 
     ConversionPatch'
     { _cpEngineAccountId = _Coerce # pCpEngineAccountId_
     , _cpAgencyId = _Coerce # pCpAgencyId_
@@ -118,6 +123,7 @@ conversionPatch pCpEngineAccountId_ pCpAgencyId_ pCpAdvertiserId_ pCpEndDate_ pC
     , _cpStartDate = _Coerce # pCpStartDate_
     , _cpStartRow = _Coerce # pCpStartRow_
     , _cpRowCount = _Coerce # pCpRowCount_
+    , _cpFields = Nothing
     }
 
 -- | Numeric ID of the engine account.
@@ -171,6 +177,10 @@ cpRowCount
   = lens _cpRowCount (\ s a -> s{_cpRowCount = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' ConversionPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest ConversionPatch where
         type Rs ConversionPatch = ConversionList
         type Scopes ConversionPatch =
@@ -182,6 +192,7 @@ instance GoogleRequest ConversionPatch where
               (Just _cpRowCount)
               (Just _cpStartDate)
               (Just _cpStartRow)
+              _cpFields
               (Just AltJSON)
               _cpPayload
               doubleClickSearchService

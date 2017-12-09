@@ -42,11 +42,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.List
     , aslAppsId
     , aslPageToken
     , aslPageSize
+    , aslFields
     , aslCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.list@ method which the
 -- 'AppsServicesList' request conforms to.
@@ -55,7 +56,7 @@ type AppsServicesListResource =
        "apps" :>
          Capture "appsId" Text :>
            "services" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
@@ -64,23 +65,25 @@ type AppsServicesListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListServicesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListServicesResponse
 
 -- | Lists all the services in the application.
 --
 -- /See:/ 'appsServicesList' smart constructor.
 data AppsServicesList = AppsServicesList'
-    { _aslXgafv          :: !(Maybe Text)
+    { _aslXgafv :: !(Maybe Xgafv)
     , _aslUploadProtocol :: !(Maybe Text)
-    , _aslPp             :: !Bool
-    , _aslAccessToken    :: !(Maybe Text)
-    , _aslUploadType     :: !(Maybe Text)
-    , _aslBearerToken    :: !(Maybe Text)
-    , _aslAppsId         :: !Text
-    , _aslPageToken      :: !(Maybe Text)
-    , _aslPageSize       :: !(Maybe (Textual Int32))
-    , _aslCallback       :: !(Maybe Text)
+    , _aslPp :: !Bool
+    , _aslAccessToken :: !(Maybe Text)
+    , _aslUploadType :: !(Maybe Text)
+    , _aslBearerToken :: !(Maybe Text)
+    , _aslAppsId :: !Text
+    , _aslPageToken :: !(Maybe Text)
+    , _aslPageSize :: !(Maybe (Textual Int32))
+    , _aslFields :: !(Maybe Text)
+    , _aslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesList' with the minimum fields required to make a request.
@@ -105,11 +108,13 @@ data AppsServicesList = AppsServicesList'
 --
 -- * 'aslPageSize'
 --
+-- * 'aslFields'
+--
 -- * 'aslCallback'
 appsServicesList
     :: Text -- ^ 'aslAppsId'
     -> AppsServicesList
-appsServicesList pAslAppsId_ =
+appsServicesList pAslAppsId_ = 
     AppsServicesList'
     { _aslXgafv = Nothing
     , _aslUploadProtocol = Nothing
@@ -120,11 +125,12 @@ appsServicesList pAslAppsId_ =
     , _aslAppsId = pAslAppsId_
     , _aslPageToken = Nothing
     , _aslPageSize = Nothing
+    , _aslFields = Nothing
     , _aslCallback = Nothing
     }
 
 -- | V1 error format.
-aslXgafv :: Lens' AppsServicesList (Maybe Text)
+aslXgafv :: Lens' AppsServicesList (Maybe Xgafv)
 aslXgafv = lens _aslXgafv (\ s a -> s{_aslXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -172,6 +178,11 @@ aslPageSize
   = lens _aslPageSize (\ s a -> s{_aslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aslFields :: Lens' AppsServicesList (Maybe Text)
+aslFields
+  = lens _aslFields (\ s a -> s{_aslFields = a})
+
 -- | JSONP
 aslCallback :: Lens' AppsServicesList (Maybe Text)
 aslCallback
@@ -192,6 +203,7 @@ instance GoogleRequest AppsServicesList where
               _aslPageToken
               _aslPageSize
               _aslCallback
+              _aslFields
               (Just AltJSON)
               appEngineService
           where go

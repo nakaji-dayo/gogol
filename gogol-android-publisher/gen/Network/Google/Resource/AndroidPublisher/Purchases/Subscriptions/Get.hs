@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Get
     , psgPackageName
     , psgToken
     , psgSubscriptionId
+    , psgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.purchases.subscriptions.get@ method which the
 -- 'PurchasesSubscriptionsGet' request conforms to.
@@ -54,17 +55,19 @@ type PurchasesSubscriptionsGetResource =
                  Capture "subscriptionId" Text :>
                    "tokens" :>
                      Capture "token" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] SubscriptionPurchase
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] SubscriptionPurchase
 
 -- | Checks whether a user\'s subscription purchase is valid and returns its
 -- expiry time.
 --
 -- /See:/ 'purchasesSubscriptionsGet' smart constructor.
 data PurchasesSubscriptionsGet = PurchasesSubscriptionsGet'
-    { _psgPackageName    :: !Text
-    , _psgToken          :: !Text
+    { _psgPackageName :: !Text
+    , _psgToken :: !Text
     , _psgSubscriptionId :: !Text
+    , _psgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PurchasesSubscriptionsGet' with the minimum fields required to make a request.
@@ -76,16 +79,19 @@ data PurchasesSubscriptionsGet = PurchasesSubscriptionsGet'
 -- * 'psgToken'
 --
 -- * 'psgSubscriptionId'
+--
+-- * 'psgFields'
 purchasesSubscriptionsGet
     :: Text -- ^ 'psgPackageName'
     -> Text -- ^ 'psgToken'
     -> Text -- ^ 'psgSubscriptionId'
     -> PurchasesSubscriptionsGet
-purchasesSubscriptionsGet pPsgPackageName_ pPsgToken_ pPsgSubscriptionId_ =
+purchasesSubscriptionsGet pPsgPackageName_ pPsgToken_ pPsgSubscriptionId_ = 
     PurchasesSubscriptionsGet'
     { _psgPackageName = pPsgPackageName_
     , _psgToken = pPsgToken_
     , _psgSubscriptionId = pPsgSubscriptionId_
+    , _psgFields = Nothing
     }
 
 -- | The package name of the application for which this subscription was
@@ -106,6 +112,11 @@ psgSubscriptionId
   = lens _psgSubscriptionId
       (\ s a -> s{_psgSubscriptionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psgFields :: Lens' PurchasesSubscriptionsGet (Maybe Text)
+psgFields
+  = lens _psgFields (\ s a -> s{_psgFields = a})
+
 instance GoogleRequest PurchasesSubscriptionsGet
          where
         type Rs PurchasesSubscriptionsGet =
@@ -114,6 +125,7 @@ instance GoogleRequest PurchasesSubscriptionsGet
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient PurchasesSubscriptionsGet'{..}
           = go _psgPackageName _psgSubscriptionId _psgToken
+              _psgFields
               (Just AltJSON)
               androidPublisherService
           where go

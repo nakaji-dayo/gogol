@@ -44,10 +44,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.DataSets.Delete
     , udsdsdDataSetId
     , udsdsdModifiedTimeMillis
     , udsdsdCurrentTimeMillis
+    , udsdsdFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.datasets.delete@ method which the
 -- 'UsersDataSourcesDataSetsDelete' request conforms to.
@@ -62,7 +63,8 @@ type UsersDataSourcesDataSetsDeleteResource =
                    Capture "datasetId" Text :>
                      QueryParam "modifiedTimeMillis" (Textual Int64) :>
                        QueryParam "currentTimeMillis" (Textual Int64) :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Performs an inclusive delete of all data points whose start and end
 -- times have any overlap with the time range specified by the dataset ID.
@@ -74,11 +76,12 @@ type UsersDataSourcesDataSetsDeleteResource =
 --
 -- /See:/ 'usersDataSourcesDataSetsDelete' smart constructor.
 data UsersDataSourcesDataSetsDelete = UsersDataSourcesDataSetsDelete'
-    { _udsdsdDataSourceId       :: !Text
-    , _udsdsdUserId             :: !Text
-    , _udsdsdDataSetId          :: !Text
+    { _udsdsdDataSourceId :: !Text
+    , _udsdsdUserId :: !Text
+    , _udsdsdDataSetId :: !Text
     , _udsdsdModifiedTimeMillis :: !(Maybe (Textual Int64))
-    , _udsdsdCurrentTimeMillis  :: !(Maybe (Textual Int64))
+    , _udsdsdCurrentTimeMillis :: !(Maybe (Textual Int64))
+    , _udsdsdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesDataSetsDelete' with the minimum fields required to make a request.
@@ -94,18 +97,21 @@ data UsersDataSourcesDataSetsDelete = UsersDataSourcesDataSetsDelete'
 -- * 'udsdsdModifiedTimeMillis'
 --
 -- * 'udsdsdCurrentTimeMillis'
+--
+-- * 'udsdsdFields'
 usersDataSourcesDataSetsDelete
     :: Text -- ^ 'udsdsdDataSourceId'
     -> Text -- ^ 'udsdsdUserId'
     -> Text -- ^ 'udsdsdDataSetId'
     -> UsersDataSourcesDataSetsDelete
-usersDataSourcesDataSetsDelete pUdsdsdDataSourceId_ pUdsdsdUserId_ pUdsdsdDataSetId_ =
+usersDataSourcesDataSetsDelete pUdsdsdDataSourceId_ pUdsdsdUserId_ pUdsdsdDataSetId_ = 
     UsersDataSourcesDataSetsDelete'
     { _udsdsdDataSourceId = pUdsdsdDataSourceId_
     , _udsdsdUserId = pUdsdsdUserId_
     , _udsdsdDataSetId = pUdsdsdDataSetId_
     , _udsdsdModifiedTimeMillis = Nothing
     , _udsdsdCurrentTimeMillis = Nothing
+    , _udsdsdFields = Nothing
     }
 
 -- | The data stream ID of the data source that created the dataset.
@@ -143,6 +149,11 @@ udsdsdCurrentTimeMillis
       (\ s a -> s{_udsdsdCurrentTimeMillis = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+udsdsdFields :: Lens' UsersDataSourcesDataSetsDelete (Maybe Text)
+udsdsdFields
+  = lens _udsdsdFields (\ s a -> s{_udsdsdFields = a})
+
 instance GoogleRequest UsersDataSourcesDataSetsDelete
          where
         type Rs UsersDataSourcesDataSetsDelete = ()
@@ -161,6 +172,7 @@ instance GoogleRequest UsersDataSourcesDataSetsDelete
               _udsdsdDataSetId
               _udsdsdModifiedTimeMillis
               _udsdsdCurrentTimeMillis
+              _udsdsdFields
               (Just AltJSON)
               fitnessService
           where go

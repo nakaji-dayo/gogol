@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.Get
     -- * Request Lenses
     , ugEnterpriseId
     , ugUserId
+    , ugFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.get@ method which the
 -- 'UsersGet' request conforms to.
@@ -49,14 +50,16 @@ type UsersGetResource =
            Capture "enterpriseId" Text :>
              "users" :>
                Capture "userId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] User
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] User
 
 -- | Retrieves a user\'s details.
 --
 -- /See:/ 'usersGet' smart constructor.
 data UsersGet = UsersGet'
     { _ugEnterpriseId :: !Text
-    , _ugUserId       :: !Text
+    , _ugUserId :: !Text
+    , _ugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UsersGet = UsersGet'
 -- * 'ugEnterpriseId'
 --
 -- * 'ugUserId'
+--
+-- * 'ugFields'
 usersGet
     :: Text -- ^ 'ugEnterpriseId'
     -> Text -- ^ 'ugUserId'
     -> UsersGet
-usersGet pUgEnterpriseId_ pUgUserId_ =
+usersGet pUgEnterpriseId_ pUgUserId_ = 
     UsersGet'
     { _ugEnterpriseId = pUgEnterpriseId_
     , _ugUserId = pUgUserId_
+    , _ugFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -86,12 +92,17 @@ ugEnterpriseId
 ugUserId :: Lens' UsersGet Text
 ugUserId = lens _ugUserId (\ s a -> s{_ugUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugFields :: Lens' UsersGet (Maybe Text)
+ugFields = lens _ugFields (\ s a -> s{_ugFields = a})
+
 instance GoogleRequest UsersGet where
         type Rs UsersGet = User
         type Scopes UsersGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersGet'{..}
-          = go _ugEnterpriseId _ugUserId (Just AltJSON)
+          = go _ugEnterpriseId _ugUserId _ugFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy UsersGetResource)

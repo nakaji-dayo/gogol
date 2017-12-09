@@ -35,10 +35,11 @@ module Network.Google.Resource.Discovery.APIs.GetRest
     -- * Request Lenses
     , agrVersion
     , agrAPI
+    , agrFields
     ) where
 
-import           Network.Google.Discovery.Types
-import           Network.Google.Prelude
+import Network.Google.Discovery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @discovery.apis.getRest@ method which the
 -- 'APIsGetRest' request conforms to.
@@ -49,15 +50,17 @@ type APIsGetRestResource =
            Capture "api" Text :>
              Capture "version" Text :>
                "rest" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] RestDescription
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] RestDescription
 
 -- | Retrieve the description of a particular version of an api.
 --
 -- /See:/ 'apisGetRest' smart constructor.
 data APIsGetRest = APIsGetRest'
     { _agrVersion :: !Text
-    , _agrAPI     :: !Text
+    , _agrAPI :: !Text
+    , _agrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'APIsGetRest' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data APIsGetRest = APIsGetRest'
 -- * 'agrVersion'
 --
 -- * 'agrAPI'
+--
+-- * 'agrFields'
 apisGetRest
     :: Text -- ^ 'agrVersion'
     -> Text -- ^ 'agrAPI'
     -> APIsGetRest
-apisGetRest pAgrVersion_ pAgrAPI_ =
+apisGetRest pAgrVersion_ pAgrAPI_ = 
     APIsGetRest'
     { _agrVersion = pAgrVersion_
     , _agrAPI = pAgrAPI_
+    , _agrFields = Nothing
     }
 
 -- | The version of the API.
@@ -86,11 +92,16 @@ agrVersion
 agrAPI :: Lens' APIsGetRest Text
 agrAPI = lens _agrAPI (\ s a -> s{_agrAPI = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agrFields :: Lens' APIsGetRest (Maybe Text)
+agrFields
+  = lens _agrFields (\ s a -> s{_agrFields = a})
+
 instance GoogleRequest APIsGetRest where
         type Rs APIsGetRest = RestDescription
         type Scopes APIsGetRest = '[]
         requestClient APIsGetRest'{..}
-          = go _agrAPI _agrVersion (Just AltJSON)
+          = go _agrAPI _agrVersion _agrFields (Just AltJSON)
               discoveryService
           where go
                   = buildClient (Proxy :: Proxy APIsGetRestResource)

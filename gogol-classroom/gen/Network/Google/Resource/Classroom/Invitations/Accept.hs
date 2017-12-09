@@ -48,11 +48,12 @@ module Network.Google.Resource.Classroom.Invitations.Accept
     , iaUploadType
     , iaBearerToken
     , iaId
+    , iaFields
     , iaCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.invitations.accept@ method which the
 -- 'InvitationsAccept' request conforms to.
@@ -60,14 +61,15 @@ type InvitationsAcceptResource =
      "v1" :>
        "invitations" :>
          CaptureMode "id" "accept" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Empty
 
 -- | Accepts an invitation, removing it and adding the invited user to the
 -- teachers or students (as appropriate) of the specified course. Only the
@@ -81,14 +83,15 @@ type InvitationsAcceptResource =
 --
 -- /See:/ 'invitationsAccept' smart constructor.
 data InvitationsAccept = InvitationsAccept'
-    { _iaXgafv          :: !(Maybe Text)
+    { _iaXgafv :: !(Maybe Xgafv)
     , _iaUploadProtocol :: !(Maybe Text)
-    , _iaPp             :: !Bool
-    , _iaAccessToken    :: !(Maybe Text)
-    , _iaUploadType     :: !(Maybe Text)
-    , _iaBearerToken    :: !(Maybe Text)
-    , _iaId             :: !Text
-    , _iaCallback       :: !(Maybe Text)
+    , _iaPp :: !Bool
+    , _iaAccessToken :: !(Maybe Text)
+    , _iaUploadType :: !(Maybe Text)
+    , _iaBearerToken :: !(Maybe Text)
+    , _iaId :: !Text
+    , _iaFields :: !(Maybe Text)
+    , _iaCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InvitationsAccept' with the minimum fields required to make a request.
@@ -109,11 +112,13 @@ data InvitationsAccept = InvitationsAccept'
 --
 -- * 'iaId'
 --
+-- * 'iaFields'
+--
 -- * 'iaCallback'
 invitationsAccept
     :: Text -- ^ 'iaId'
     -> InvitationsAccept
-invitationsAccept pIaId_ =
+invitationsAccept pIaId_ = 
     InvitationsAccept'
     { _iaXgafv = Nothing
     , _iaUploadProtocol = Nothing
@@ -122,11 +127,12 @@ invitationsAccept pIaId_ =
     , _iaUploadType = Nothing
     , _iaBearerToken = Nothing
     , _iaId = pIaId_
+    , _iaFields = Nothing
     , _iaCallback = Nothing
     }
 
 -- | V1 error format.
-iaXgafv :: Lens' InvitationsAccept (Maybe Text)
+iaXgafv :: Lens' InvitationsAccept (Maybe Xgafv)
 iaXgafv = lens _iaXgafv (\ s a -> s{_iaXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -160,6 +166,10 @@ iaBearerToken
 iaId :: Lens' InvitationsAccept Text
 iaId = lens _iaId (\ s a -> s{_iaId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iaFields :: Lens' InvitationsAccept (Maybe Text)
+iaFields = lens _iaFields (\ s a -> s{_iaFields = a})
+
 -- | JSONP
 iaCallback :: Lens' InvitationsAccept (Maybe Text)
 iaCallback
@@ -175,6 +185,7 @@ instance GoogleRequest InvitationsAccept where
               _iaUploadType
               _iaBearerToken
               _iaCallback
+              _iaFields
               (Just AltJSON)
               classroomService
           where go

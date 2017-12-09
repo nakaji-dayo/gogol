@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.List
     , ptlBearerToken
     , ptlPageToken
     , ptlPageSize
+    , ptlFields
     , ptlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.list@ method which the
 -- 'ProjectsTopicsList' request conforms to.
@@ -63,23 +64,25 @@ type ProjectsTopicsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListTopicsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListTopicsResponse
 
 -- | Lists matching topics.
 --
 -- /See:/ 'projectsTopicsList' smart constructor.
 data ProjectsTopicsList = ProjectsTopicsList'
-    { _ptlXgafv          :: !(Maybe Xgafv)
+    { _ptlXgafv :: !(Maybe Xgafv)
     , _ptlUploadProtocol :: !(Maybe Text)
-    , _ptlProject        :: !Text
-    , _ptlPp             :: !Bool
-    , _ptlAccessToken    :: !(Maybe Text)
-    , _ptlUploadType     :: !(Maybe Text)
-    , _ptlBearerToken    :: !(Maybe Text)
-    , _ptlPageToken      :: !(Maybe Text)
-    , _ptlPageSize       :: !(Maybe (Textual Int32))
-    , _ptlCallback       :: !(Maybe Text)
+    , _ptlProject :: !Text
+    , _ptlPp :: !Bool
+    , _ptlAccessToken :: !(Maybe Text)
+    , _ptlUploadType :: !(Maybe Text)
+    , _ptlBearerToken :: !(Maybe Text)
+    , _ptlPageToken :: !(Maybe Text)
+    , _ptlPageSize :: !(Maybe (Textual Int32))
+    , _ptlFields :: !(Maybe Text)
+    , _ptlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ProjectsTopicsList = ProjectsTopicsList'
 --
 -- * 'ptlPageSize'
 --
+-- * 'ptlFields'
+--
 -- * 'ptlCallback'
 projectsTopicsList
     :: Text -- ^ 'ptlProject'
     -> ProjectsTopicsList
-projectsTopicsList pPtlProject_ =
+projectsTopicsList pPtlProject_ = 
     ProjectsTopicsList'
     { _ptlXgafv = Nothing
     , _ptlUploadProtocol = Nothing
@@ -119,6 +124,7 @@ projectsTopicsList pPtlProject_ =
     , _ptlBearerToken = Nothing
     , _ptlPageToken = Nothing
     , _ptlPageSize = Nothing
+    , _ptlFields = Nothing
     , _ptlCallback = Nothing
     }
 
@@ -173,6 +179,11 @@ ptlPageSize
   = lens _ptlPageSize (\ s a -> s{_ptlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ptlFields :: Lens' ProjectsTopicsList (Maybe Text)
+ptlFields
+  = lens _ptlFields (\ s a -> s{_ptlFields = a})
+
 -- | JSONP
 ptlCallback :: Lens' ProjectsTopicsList (Maybe Text)
 ptlCallback
@@ -192,6 +203,7 @@ instance GoogleRequest ProjectsTopicsList where
               _ptlPageToken
               _ptlPageSize
               _ptlCallback
+              _ptlFields
               (Just AltJSON)
               pubSubService
           where go

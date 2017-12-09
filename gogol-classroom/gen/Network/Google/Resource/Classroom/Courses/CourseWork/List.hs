@@ -50,11 +50,12 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.List
     , ccwlBearerToken
     , ccwlPageToken
     , ccwlPageSize
+    , ccwlFields
     , ccwlCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.list@ method which the
 -- 'CoursesCourseWorkList' request conforms to.
@@ -63,7 +64,7 @@ type CoursesCourseWorkListResource =
        "courses" :>
          Capture "courseId" Text :>
            "courseWork" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "orderBy" Text :>
                    QueryParam "pp" Bool :>
@@ -74,8 +75,9 @@ type CoursesCourseWorkListResource =
                              QueryParam "pageToken" Text :>
                                QueryParam "pageSize" (Textual Int32) :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] ListCourseWorkResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] ListCourseWorkResponse
 
 -- | Returns a list of course work that the requester is permitted to view.
 -- Course students may only view \`PUBLISHED\` course work. Course teachers
@@ -87,18 +89,19 @@ type CoursesCourseWorkListResource =
 --
 -- /See:/ 'coursesCourseWorkList' smart constructor.
 data CoursesCourseWorkList = CoursesCourseWorkList'
-    { _ccwlXgafv            :: !(Maybe Text)
-    , _ccwlUploadProtocol   :: !(Maybe Text)
-    , _ccwlOrderBy          :: !(Maybe Text)
-    , _ccwlPp               :: !Bool
-    , _ccwlCourseId         :: !Text
-    , _ccwlAccessToken      :: !(Maybe Text)
+    { _ccwlXgafv :: !(Maybe Xgafv)
+    , _ccwlUploadProtocol :: !(Maybe Text)
+    , _ccwlOrderBy :: !(Maybe Text)
+    , _ccwlPp :: !Bool
+    , _ccwlCourseId :: !Text
+    , _ccwlAccessToken :: !(Maybe Text)
     , _ccwlCourseWorkStates :: !(Maybe [Text])
-    , _ccwlUploadType       :: !(Maybe Text)
-    , _ccwlBearerToken      :: !(Maybe Text)
-    , _ccwlPageToken        :: !(Maybe Text)
-    , _ccwlPageSize         :: !(Maybe (Textual Int32))
-    , _ccwlCallback         :: !(Maybe Text)
+    , _ccwlUploadType :: !(Maybe Text)
+    , _ccwlBearerToken :: !(Maybe Text)
+    , _ccwlPageToken :: !(Maybe Text)
+    , _ccwlPageSize :: !(Maybe (Textual Int32))
+    , _ccwlFields :: !(Maybe Text)
+    , _ccwlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkList' with the minimum fields required to make a request.
@@ -127,11 +130,13 @@ data CoursesCourseWorkList = CoursesCourseWorkList'
 --
 -- * 'ccwlPageSize'
 --
+-- * 'ccwlFields'
+--
 -- * 'ccwlCallback'
 coursesCourseWorkList
     :: Text -- ^ 'ccwlCourseId'
     -> CoursesCourseWorkList
-coursesCourseWorkList pCcwlCourseId_ =
+coursesCourseWorkList pCcwlCourseId_ = 
     CoursesCourseWorkList'
     { _ccwlXgafv = Nothing
     , _ccwlUploadProtocol = Nothing
@@ -144,11 +149,12 @@ coursesCourseWorkList pCcwlCourseId_ =
     , _ccwlBearerToken = Nothing
     , _ccwlPageToken = Nothing
     , _ccwlPageSize = Nothing
+    , _ccwlFields = Nothing
     , _ccwlCallback = Nothing
     }
 
 -- | V1 error format.
-ccwlXgafv :: Lens' CoursesCourseWorkList (Maybe Text)
+ccwlXgafv :: Lens' CoursesCourseWorkList (Maybe Xgafv)
 ccwlXgafv
   = lens _ccwlXgafv (\ s a -> s{_ccwlXgafv = a})
 
@@ -222,6 +228,11 @@ ccwlPageSize
   = lens _ccwlPageSize (\ s a -> s{_ccwlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ccwlFields :: Lens' CoursesCourseWorkList (Maybe Text)
+ccwlFields
+  = lens _ccwlFields (\ s a -> s{_ccwlFields = a})
+
 -- | JSONP
 ccwlCallback :: Lens' CoursesCourseWorkList (Maybe Text)
 ccwlCallback
@@ -231,8 +242,7 @@ instance GoogleRequest CoursesCourseWorkList where
         type Rs CoursesCourseWorkList =
              ListCourseWorkResponse
         type Scopes CoursesCourseWorkList =
-             '["https://www.googleapis.com/auth/classroom.course-work.readonly",
-               "https://www.googleapis.com/auth/classroom.coursework.me",
+             '["https://www.googleapis.com/auth/classroom.coursework.me",
                "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
                "https://www.googleapis.com/auth/classroom.coursework.students",
                "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]
@@ -247,6 +257,7 @@ instance GoogleRequest CoursesCourseWorkList where
               _ccwlPageToken
               _ccwlPageSize
               _ccwlCallback
+              _ccwlFields
               (Just AltJSON)
               classroomService
           where go

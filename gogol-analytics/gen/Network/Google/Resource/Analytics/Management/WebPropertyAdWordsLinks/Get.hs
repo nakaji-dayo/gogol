@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyAdWordsLinks.Get
     , mwpawlgWebPropertyId
     , mwpawlgAccountId
     , mwpawlgWebPropertyAdWordsLinkId
+    , mwpawlgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webPropertyAdWordsLinks.get@ method which the
 -- 'ManagementWebPropertyAdWordsLinksGet' request conforms to.
@@ -53,16 +54,18 @@ type ManagementWebPropertyAdWordsLinksGetResource =
                  Capture "webPropertyId" Text :>
                    "entityAdWordsLinks" :>
                      Capture "webPropertyAdWordsLinkId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] EntityAdWordsLink
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] EntityAdWordsLink
 
 -- | Returns a web property-AdWords link to which the user has access.
 --
 -- /See:/ 'managementWebPropertyAdWordsLinksGet' smart constructor.
 data ManagementWebPropertyAdWordsLinksGet = ManagementWebPropertyAdWordsLinksGet'
-    { _mwpawlgWebPropertyId            :: !Text
-    , _mwpawlgAccountId                :: !Text
+    { _mwpawlgWebPropertyId :: !Text
+    , _mwpawlgAccountId :: !Text
     , _mwpawlgWebPropertyAdWordsLinkId :: !Text
+    , _mwpawlgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyAdWordsLinksGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementWebPropertyAdWordsLinksGet = ManagementWebPropertyAdWordsLinksGet
 -- * 'mwpawlgAccountId'
 --
 -- * 'mwpawlgWebPropertyAdWordsLinkId'
+--
+-- * 'mwpawlgFields'
 managementWebPropertyAdWordsLinksGet
     :: Text -- ^ 'mwpawlgWebPropertyId'
     -> Text -- ^ 'mwpawlgAccountId'
     -> Text -- ^ 'mwpawlgWebPropertyAdWordsLinkId'
     -> ManagementWebPropertyAdWordsLinksGet
-managementWebPropertyAdWordsLinksGet pMwpawlgWebPropertyId_ pMwpawlgAccountId_ pMwpawlgWebPropertyAdWordsLinkId_ =
+managementWebPropertyAdWordsLinksGet pMwpawlgWebPropertyId_ pMwpawlgAccountId_ pMwpawlgWebPropertyAdWordsLinkId_ = 
     ManagementWebPropertyAdWordsLinksGet'
     { _mwpawlgWebPropertyId = pMwpawlgWebPropertyId_
     , _mwpawlgAccountId = pMwpawlgAccountId_
     , _mwpawlgWebPropertyAdWordsLinkId = pMwpawlgWebPropertyAdWordsLinkId_
+    , _mwpawlgFields = Nothing
     }
 
 -- | Web property ID to retrieve the AdWords link for.
@@ -104,6 +110,12 @@ mwpawlgWebPropertyAdWordsLinkId
   = lens _mwpawlgWebPropertyAdWordsLinkId
       (\ s a -> s{_mwpawlgWebPropertyAdWordsLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwpawlgFields :: Lens' ManagementWebPropertyAdWordsLinksGet (Maybe Text)
+mwpawlgFields
+  = lens _mwpawlgFields
+      (\ s a -> s{_mwpawlgFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyAdWordsLinksGet where
         type Rs ManagementWebPropertyAdWordsLinksGet =
@@ -115,6 +127,7 @@ instance GoogleRequest
           ManagementWebPropertyAdWordsLinksGet'{..}
           = go _mwpawlgAccountId _mwpawlgWebPropertyId
               _mwpawlgWebPropertyAdWordsLinkId
+              _mwpawlgFields
               (Just AltJSON)
               analyticsService
           where go

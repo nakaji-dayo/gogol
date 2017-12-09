@@ -40,38 +40,41 @@ module Network.Google.Resource.StorageTransfer.TransferOperations.Delete
     , todUploadType
     , todBearerToken
     , todName
+    , todFields
     , todCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferOperations.delete@ method which the
 -- 'TransferOperationsDelete' request conforms to.
 type TransferOperationsDeleteResource =
      "v1" :>
        Capture "name" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | This method is not supported and the server returns \`UNIMPLEMENTED\`.
 --
 -- /See:/ 'transferOperationsDelete' smart constructor.
 data TransferOperationsDelete = TransferOperationsDelete'
-    { _todXgafv          :: !(Maybe Text)
+    { _todXgafv :: !(Maybe Xgafv)
     , _todUploadProtocol :: !(Maybe Text)
-    , _todPp             :: !Bool
-    , _todAccessToken    :: !(Maybe Text)
-    , _todUploadType     :: !(Maybe Text)
-    , _todBearerToken    :: !(Maybe Text)
-    , _todName           :: !Text
-    , _todCallback       :: !(Maybe Text)
+    , _todPp :: !Bool
+    , _todAccessToken :: !(Maybe Text)
+    , _todUploadType :: !(Maybe Text)
+    , _todBearerToken :: !(Maybe Text)
+    , _todName :: !Text
+    , _todFields :: !(Maybe Text)
+    , _todCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferOperationsDelete' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data TransferOperationsDelete = TransferOperationsDelete'
 --
 -- * 'todName'
 --
+-- * 'todFields'
+--
 -- * 'todCallback'
 transferOperationsDelete
     :: Text -- ^ 'todName'
     -> TransferOperationsDelete
-transferOperationsDelete pTodName_ =
+transferOperationsDelete pTodName_ = 
     TransferOperationsDelete'
     { _todXgafv = Nothing
     , _todUploadProtocol = Nothing
@@ -105,11 +110,12 @@ transferOperationsDelete pTodName_ =
     , _todUploadType = Nothing
     , _todBearerToken = Nothing
     , _todName = pTodName_
+    , _todFields = Nothing
     , _todCallback = Nothing
     }
 
 -- | V1 error format.
-todXgafv :: Lens' TransferOperationsDelete (Maybe Text)
+todXgafv :: Lens' TransferOperationsDelete (Maybe Xgafv)
 todXgafv = lens _todXgafv (\ s a -> s{_todXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -144,6 +150,11 @@ todBearerToken
 todName :: Lens' TransferOperationsDelete Text
 todName = lens _todName (\ s a -> s{_todName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+todFields :: Lens' TransferOperationsDelete (Maybe Text)
+todFields
+  = lens _todFields (\ s a -> s{_todFields = a})
+
 -- | JSONP
 todCallback :: Lens' TransferOperationsDelete (Maybe Text)
 todCallback
@@ -160,6 +171,7 @@ instance GoogleRequest TransferOperationsDelete where
               _todUploadType
               _todBearerToken
               _todCallback
+              _todFields
               (Just AltJSON)
               storageTransferService
           where go

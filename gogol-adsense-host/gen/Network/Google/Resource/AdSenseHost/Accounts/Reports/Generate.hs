@@ -45,10 +45,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.Reports.Generate
     , argFilter
     , argStartIndex
     , argMaxResults
+    , argFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.reports.generate@ method which the
 -- 'AccountsReportsGenerate' request conforms to.
@@ -67,7 +68,9 @@ type AccountsReportsGenerateResource =
                            QueryParams "filter" Text :>
                              QueryParam "startIndex" (Textual Word32) :>
                                QueryParam "maxResults" (Textual Word32) :>
-                                 QueryParam "alt" AltJSON :> Get '[JSON] Report
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] Report
 
 -- | Generate an AdSense report based on the report request sent in the query
 -- parameters. Returns the result as JSON; to retrieve output in CSV format
@@ -75,16 +78,17 @@ type AccountsReportsGenerateResource =
 --
 -- /See:/ 'accountsReportsGenerate' smart constructor.
 data AccountsReportsGenerate = AccountsReportsGenerate'
-    { _argDimension  :: !(Maybe [Text])
-    , _argLocale     :: !(Maybe Text)
-    , _argEndDate    :: !Text
-    , _argStartDate  :: !Text
-    , _argAccountId  :: !Text
-    , _argMetric     :: !(Maybe [Text])
-    , _argSort       :: !(Maybe [Text])
-    , _argFilter     :: !(Maybe [Text])
+    { _argDimension :: !(Maybe [Text])
+    , _argLocale :: !(Maybe Text)
+    , _argEndDate :: !Text
+    , _argStartDate :: !Text
+    , _argAccountId :: !Text
+    , _argMetric :: !(Maybe [Text])
+    , _argSort :: !(Maybe [Text])
+    , _argFilter :: !(Maybe [Text])
     , _argStartIndex :: !(Maybe (Textual Word32))
     , _argMaxResults :: !(Maybe (Textual Word32))
+    , _argFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsReportsGenerate' with the minimum fields required to make a request.
@@ -110,12 +114,14 @@ data AccountsReportsGenerate = AccountsReportsGenerate'
 -- * 'argStartIndex'
 --
 -- * 'argMaxResults'
+--
+-- * 'argFields'
 accountsReportsGenerate
     :: Text -- ^ 'argEndDate'
     -> Text -- ^ 'argStartDate'
     -> Text -- ^ 'argAccountId'
     -> AccountsReportsGenerate
-accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ =
+accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ = 
     AccountsReportsGenerate'
     { _argDimension = Nothing
     , _argLocale = Nothing
@@ -127,6 +133,7 @@ accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ =
     , _argFilter = Nothing
     , _argStartIndex = Nothing
     , _argMaxResults = Nothing
+    , _argFields = Nothing
     }
 
 -- | Dimensions to base the report on.
@@ -194,6 +201,11 @@ argMaxResults
       (\ s a -> s{_argMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+argFields :: Lens' AccountsReportsGenerate (Maybe Text)
+argFields
+  = lens _argFields (\ s a -> s{_argFields = a})
+
 instance GoogleRequest AccountsReportsGenerate where
         type Rs AccountsReportsGenerate = Report
         type Scopes AccountsReportsGenerate =
@@ -208,6 +220,7 @@ instance GoogleRequest AccountsReportsGenerate where
               (_argFilter ^. _Default)
               _argStartIndex
               _argMaxResults
+              _argFields
               (Just AltJSON)
               adSenseHostService
           where go

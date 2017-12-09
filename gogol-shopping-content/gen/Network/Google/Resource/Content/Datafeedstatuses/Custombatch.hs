@@ -32,10 +32,11 @@ module Network.Google.Resource.Content.Datafeedstatuses.Custombatch
 
     -- * Request Lenses
     , dcPayload
+    , dcFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.datafeedstatuses.custombatch@ method which the
 -- 'DatafeedstatusesCustombatch' request conforms to.
@@ -44,14 +45,16 @@ type DatafeedstatusesCustombatchResource =
        "v2" :>
          "datafeedstatuses" :>
            "batch" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] DatafeedstatusesCustomBatchRequest :>
-                 Post '[JSON] DatafeedstatusesCustomBatchResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] DatafeedstatusesCustomBatchRequest :>
+                   Post '[JSON] DatafeedstatusesCustomBatchResponse
 
 --
 -- /See:/ 'datafeedstatusesCustombatch' smart constructor.
-newtype DatafeedstatusesCustombatch = DatafeedstatusesCustombatch'
-    { _dcPayload :: DatafeedstatusesCustomBatchRequest
+data DatafeedstatusesCustombatch = DatafeedstatusesCustombatch'
+    { _dcPayload :: !DatafeedstatusesCustomBatchRequest
+    , _dcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DatafeedstatusesCustombatch' with the minimum fields required to make a request.
@@ -59,18 +62,25 @@ newtype DatafeedstatusesCustombatch = DatafeedstatusesCustombatch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'dcPayload'
+--
+-- * 'dcFields'
 datafeedstatusesCustombatch
     :: DatafeedstatusesCustomBatchRequest -- ^ 'dcPayload'
     -> DatafeedstatusesCustombatch
-datafeedstatusesCustombatch pDcPayload_ =
+datafeedstatusesCustombatch pDcPayload_ = 
     DatafeedstatusesCustombatch'
     { _dcPayload = pDcPayload_
+    , _dcFields = Nothing
     }
 
 -- | Multipart request metadata.
 dcPayload :: Lens' DatafeedstatusesCustombatch DatafeedstatusesCustomBatchRequest
 dcPayload
   = lens _dcPayload (\ s a -> s{_dcPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dcFields :: Lens' DatafeedstatusesCustombatch (Maybe Text)
+dcFields = lens _dcFields (\ s a -> s{_dcFields = a})
 
 instance GoogleRequest DatafeedstatusesCustombatch
          where
@@ -79,7 +89,8 @@ instance GoogleRequest DatafeedstatusesCustombatch
         type Scopes DatafeedstatusesCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient DatafeedstatusesCustombatch'{..}
-          = go (Just AltJSON) _dcPayload shoppingContentService
+          = go _dcFields (Just AltJSON) _dcPayload
+              shoppingContentService
           where go
                   = buildClient
                       (Proxy :: Proxy DatafeedstatusesCustombatchResource)

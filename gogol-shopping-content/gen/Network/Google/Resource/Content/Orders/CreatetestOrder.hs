@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Sandbox only. Creates a test order. This method can only be called for
--- non-multi-client accounts.
+-- Sandbox only. Creates a test order.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.createtestorder@.
 module Network.Google.Resource.Content.Orders.CreatetestOrder
@@ -36,10 +35,11 @@ module Network.Google.Resource.Content.Orders.CreatetestOrder
     -- * Request Lenses
     , ocoMerchantId
     , ocoPayload
+    , ocoFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.createtestorder@ method which the
 -- 'OrdersCreatetestOrder' request conforms to.
@@ -48,17 +48,18 @@ type OrdersCreatetestOrderResource =
        "v2" :>
          Capture "merchantId" (Textual Word64) :>
            "testorders" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] OrdersCreateTestOrderRequest :>
-                 Post '[JSON] OrdersCreateTestOrderResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] OrdersCreateTestOrderRequest :>
+                   Post '[JSON] OrdersCreateTestOrderResponse
 
--- | Sandbox only. Creates a test order. This method can only be called for
--- non-multi-client accounts.
+-- | Sandbox only. Creates a test order.
 --
 -- /See:/ 'ordersCreatetestOrder' smart constructor.
 data OrdersCreatetestOrder = OrdersCreatetestOrder'
     { _ocoMerchantId :: !(Textual Word64)
-    , _ocoPayload    :: !OrdersCreateTestOrderRequest
+    , _ocoPayload :: !OrdersCreateTestOrderRequest
+    , _ocoFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersCreatetestOrder' with the minimum fields required to make a request.
@@ -68,17 +69,21 @@ data OrdersCreatetestOrder = OrdersCreatetestOrder'
 -- * 'ocoMerchantId'
 --
 -- * 'ocoPayload'
+--
+-- * 'ocoFields'
 ordersCreatetestOrder
     :: Word64 -- ^ 'ocoMerchantId'
     -> OrdersCreateTestOrderRequest -- ^ 'ocoPayload'
     -> OrdersCreatetestOrder
-ordersCreatetestOrder pOcoMerchantId_ pOcoPayload_ =
+ordersCreatetestOrder pOcoMerchantId_ pOcoPayload_ = 
     OrdersCreatetestOrder'
     { _ocoMerchantId = _Coerce # pOcoMerchantId_
     , _ocoPayload = pOcoPayload_
+    , _ocoFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that should manage the order. This cannot be a
+-- multi-client account.
 ocoMerchantId :: Lens' OrdersCreatetestOrder Word64
 ocoMerchantId
   = lens _ocoMerchantId
@@ -90,13 +95,19 @@ ocoPayload :: Lens' OrdersCreatetestOrder OrdersCreateTestOrderRequest
 ocoPayload
   = lens _ocoPayload (\ s a -> s{_ocoPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ocoFields :: Lens' OrdersCreatetestOrder (Maybe Text)
+ocoFields
+  = lens _ocoFields (\ s a -> s{_ocoFields = a})
+
 instance GoogleRequest OrdersCreatetestOrder where
         type Rs OrdersCreatetestOrder =
              OrdersCreateTestOrderResponse
         type Scopes OrdersCreatetestOrder =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersCreatetestOrder'{..}
-          = go _ocoMerchantId (Just AltJSON) _ocoPayload
+          = go _ocoMerchantId _ocoFields (Just AltJSON)
+              _ocoPayload
               shoppingContentService
           where go
                   = buildClient

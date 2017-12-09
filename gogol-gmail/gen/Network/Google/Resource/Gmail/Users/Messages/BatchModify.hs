@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Messages.BatchModify
     -- * Request Lenses
     , umbmPayload
     , umbmUserId
+    , umbmFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.batchModify@ method which the
 -- 'UsersMessagesBatchModify' request conforms to.
@@ -49,16 +50,18 @@ type UsersMessagesBatchModifyResource =
            Capture "userId" Text :>
              "messages" :>
                "batchModify" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] BatchModifyMessagesRequest :>
-                     Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] BatchModifyMessagesRequest :>
+                       Post '[JSON] ()
 
 -- | Modifies the labels on the specified messages.
 --
 -- /See:/ 'usersMessagesBatchModify' smart constructor.
 data UsersMessagesBatchModify = UsersMessagesBatchModify'
     { _umbmPayload :: !BatchModifyMessagesRequest
-    , _umbmUserId  :: !Text
+    , _umbmUserId :: !Text
+    , _umbmFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesBatchModify' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersMessagesBatchModify = UsersMessagesBatchModify'
 -- * 'umbmPayload'
 --
 -- * 'umbmUserId'
+--
+-- * 'umbmFields'
 usersMessagesBatchModify
     :: BatchModifyMessagesRequest -- ^ 'umbmPayload'
     -> UsersMessagesBatchModify
-usersMessagesBatchModify pUmbmPayload_ =
+usersMessagesBatchModify pUmbmPayload_ = 
     UsersMessagesBatchModify'
     { _umbmPayload = pUmbmPayload_
     , _umbmUserId = "me"
+    , _umbmFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,13 +94,19 @@ umbmUserId :: Lens' UsersMessagesBatchModify Text
 umbmUserId
   = lens _umbmUserId (\ s a -> s{_umbmUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umbmFields :: Lens' UsersMessagesBatchModify (Maybe Text)
+umbmFields
+  = lens _umbmFields (\ s a -> s{_umbmFields = a})
+
 instance GoogleRequest UsersMessagesBatchModify where
         type Rs UsersMessagesBatchModify = ()
         type Scopes UsersMessagesBatchModify =
              '["https://mail.google.com/",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersMessagesBatchModify'{..}
-          = go _umbmUserId (Just AltJSON) _umbmPayload
+          = go _umbmUserId _umbmFields (Just AltJSON)
+              _umbmPayload
               gmailService
           where go
                   = buildClient

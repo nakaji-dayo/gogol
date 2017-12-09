@@ -39,10 +39,11 @@ module Network.Google.Resource.Gmail.Users.Threads.List
     , utlLabelIds
     , utlPageToken
     , utlMaxResults
+    , utlFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.threads.list@ method which the
 -- 'UsersThreadsList' request conforms to.
@@ -57,19 +58,21 @@ type UsersThreadsListResource =
                    QueryParams "labelIds" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ListThreadsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ListThreadsResponse
 
 -- | Lists the threads in the user\'s mailbox.
 --
 -- /See:/ 'usersThreadsList' smart constructor.
 data UsersThreadsList = UsersThreadsList'
-    { _utlQ                :: !(Maybe Text)
-    , _utlUserId           :: !Text
+    { _utlQ :: !(Maybe Text)
+    , _utlUserId :: !Text
     , _utlIncludeSpamTrash :: !Bool
-    , _utlLabelIds         :: !(Maybe [Text])
-    , _utlPageToken        :: !(Maybe Text)
-    , _utlMaxResults       :: !(Textual Word32)
+    , _utlLabelIds :: !(Maybe [Text])
+    , _utlPageToken :: !(Maybe Text)
+    , _utlMaxResults :: !(Textual Word32)
+    , _utlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersThreadsList' with the minimum fields required to make a request.
@@ -87,9 +90,11 @@ data UsersThreadsList = UsersThreadsList'
 -- * 'utlPageToken'
 --
 -- * 'utlMaxResults'
+--
+-- * 'utlFields'
 usersThreadsList
     :: UsersThreadsList
-usersThreadsList =
+usersThreadsList = 
     UsersThreadsList'
     { _utlQ = Nothing
     , _utlUserId = "me"
@@ -97,6 +102,7 @@ usersThreadsList =
     , _utlLabelIds = Nothing
     , _utlPageToken = Nothing
     , _utlMaxResults = 100
+    , _utlFields = Nothing
     }
 
 -- | Only return threads matching the specified query. Supports the same
@@ -138,6 +144,11 @@ utlMaxResults
       (\ s a -> s{_utlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+utlFields :: Lens' UsersThreadsList (Maybe Text)
+utlFields
+  = lens _utlFields (\ s a -> s{_utlFields = a})
+
 instance GoogleRequest UsersThreadsList where
         type Rs UsersThreadsList = ListThreadsResponse
         type Scopes UsersThreadsList =
@@ -150,6 +161,7 @@ instance GoogleRequest UsersThreadsList where
               (_utlLabelIds ^. _Default)
               _utlPageToken
               (Just _utlMaxResults)
+              _utlFields
               (Just AltJSON)
               gmailService
           where go

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.CreativeGroups.Insert
     -- * Request Lenses
     , cgiProFileId
     , cgiPayload
+    , cgiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeGroups.insert@ method which the
 -- 'CreativeGroupsInsert' request conforms to.
 type CreativeGroupsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CreativeGroup :>
-                   Post '[JSON] CreativeGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CreativeGroup :>
+                     Post '[JSON] CreativeGroup
 
 -- | Inserts a new creative group.
 --
 -- /See:/ 'creativeGroupsInsert' smart constructor.
 data CreativeGroupsInsert = CreativeGroupsInsert'
     { _cgiProFileId :: !(Textual Int64)
-    , _cgiPayload   :: !CreativeGroup
+    , _cgiPayload :: !CreativeGroup
+    , _cgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativeGroupsInsert = CreativeGroupsInsert'
 -- * 'cgiProFileId'
 --
 -- * 'cgiPayload'
+--
+-- * 'cgiFields'
 creativeGroupsInsert
     :: Int64 -- ^ 'cgiProFileId'
     -> CreativeGroup -- ^ 'cgiPayload'
     -> CreativeGroupsInsert
-creativeGroupsInsert pCgiProFileId_ pCgiPayload_ =
+creativeGroupsInsert pCgiProFileId_ pCgiPayload_ = 
     CreativeGroupsInsert'
     { _cgiProFileId = _Coerce # pCgiProFileId_
     , _cgiPayload = pCgiPayload_
+    , _cgiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cgiPayload :: Lens' CreativeGroupsInsert CreativeGroup
 cgiPayload
   = lens _cgiPayload (\ s a -> s{_cgiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgiFields :: Lens' CreativeGroupsInsert (Maybe Text)
+cgiFields
+  = lens _cgiFields (\ s a -> s{_cgiFields = a})
+
 instance GoogleRequest CreativeGroupsInsert where
         type Rs CreativeGroupsInsert = CreativeGroup
         type Scopes CreativeGroupsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeGroupsInsert'{..}
-          = go _cgiProFileId (Just AltJSON) _cgiPayload
+          = go _cgiProFileId _cgiFields (Just AltJSON)
+              _cgiPayload
               dFAReportingService
           where go
                   = buildClient

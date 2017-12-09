@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates a HttpHealthCheck resource in the specified project using the
--- data included in the request. This method supports patch semantics.
+-- data included in the request. This method supports PATCH semantics and
+-- uses the JSON merge patch format and processing rules.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.httpHealthChecks.patch@.
 module Network.Google.Resource.Compute.HTTPHealthChecks.Patch
@@ -34,13 +35,15 @@ module Network.Google.Resource.Compute.HTTPHealthChecks.Patch
     , HTTPHealthChecksPatch
 
     -- * Request Lenses
+    , httphcpRequestId
     , httphcpProject
     , httphcpPayload
     , httphcpHTTPHealthCheck
+    , httphcpFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.httpHealthChecks.patch@ method which the
 -- 'HTTPHealthChecksPatch' request conforms to.
@@ -52,40 +55,66 @@ type HTTPHealthChecksPatchResource =
              "global" :>
                "httpHealthChecks" :>
                  Capture "httpHealthCheck" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] HTTPHealthCheck :>
-                       Patch '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] HTTPHealthCheck :>
+                           Patch '[JSON] Operation
 
 -- | Updates a HttpHealthCheck resource in the specified project using the
--- data included in the request. This method supports patch semantics.
+-- data included in the request. This method supports PATCH semantics and
+-- uses the JSON merge patch format and processing rules.
 --
 -- /See:/ 'hTTPHealthChecksPatch' smart constructor.
 data HTTPHealthChecksPatch = HTTPHealthChecksPatch'
-    { _httphcpProject         :: !Text
-    , _httphcpPayload         :: !HTTPHealthCheck
+    { _httphcpRequestId :: !(Maybe Text)
+    , _httphcpProject :: !Text
+    , _httphcpPayload :: !HTTPHealthCheck
     , _httphcpHTTPHealthCheck :: !Text
+    , _httphcpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HTTPHealthChecksPatch' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'httphcpRequestId'
+--
 -- * 'httphcpProject'
 --
 -- * 'httphcpPayload'
 --
 -- * 'httphcpHTTPHealthCheck'
+--
+-- * 'httphcpFields'
 hTTPHealthChecksPatch
     :: Text -- ^ 'httphcpProject'
     -> HTTPHealthCheck -- ^ 'httphcpPayload'
     -> Text -- ^ 'httphcpHTTPHealthCheck'
     -> HTTPHealthChecksPatch
-hTTPHealthChecksPatch pHttphcpProject_ pHttphcpPayload_ pHttphcpHTTPHealthCheck_ =
+hTTPHealthChecksPatch pHttphcpProject_ pHttphcpPayload_ pHttphcpHTTPHealthCheck_ = 
     HTTPHealthChecksPatch'
-    { _httphcpProject = pHttphcpProject_
+    { _httphcpRequestId = Nothing
+    , _httphcpProject = pHttphcpProject_
     , _httphcpPayload = pHttphcpPayload_
     , _httphcpHTTPHealthCheck = pHttphcpHTTPHealthCheck_
+    , _httphcpFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+httphcpRequestId :: Lens' HTTPHealthChecksPatch (Maybe Text)
+httphcpRequestId
+  = lens _httphcpRequestId
+      (\ s a -> s{_httphcpRequestId = a})
 
 -- | Project ID for this request.
 httphcpProject :: Lens' HTTPHealthChecksPatch Text
@@ -99,11 +128,17 @@ httphcpPayload
   = lens _httphcpPayload
       (\ s a -> s{_httphcpPayload = a})
 
--- | Name of the HttpHealthCheck resource to update.
+-- | Name of the HttpHealthCheck resource to patch.
 httphcpHTTPHealthCheck :: Lens' HTTPHealthChecksPatch Text
 httphcpHTTPHealthCheck
   = lens _httphcpHTTPHealthCheck
       (\ s a -> s{_httphcpHTTPHealthCheck = a})
+
+-- | Selector specifying which fields to include in a partial response.
+httphcpFields :: Lens' HTTPHealthChecksPatch (Maybe Text)
+httphcpFields
+  = lens _httphcpFields
+      (\ s a -> s{_httphcpFields = a})
 
 instance GoogleRequest HTTPHealthChecksPatch where
         type Rs HTTPHealthChecksPatch = Operation
@@ -112,6 +147,8 @@ instance GoogleRequest HTTPHealthChecksPatch where
                "https://www.googleapis.com/auth/compute"]
         requestClient HTTPHealthChecksPatch'{..}
           = go _httphcpProject _httphcpHTTPHealthCheck
+              _httphcpRequestId
+              _httphcpFields
               (Just AltJSON)
               _httphcpPayload
               computeService

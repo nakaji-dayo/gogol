@@ -45,10 +45,11 @@ module Network.Google.Resource.Directory.Users.List
     , ulProjection
     , ulPageToken
     , ulMaxResults
+    , ulFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.list@ method which the
 -- 'UsersList' request conforms to.
@@ -69,25 +70,27 @@ type UsersListResource =
                                QueryParam "projection" UsersListProjection :>
                                  QueryParam "pageToken" Text :>
                                    QueryParam "maxResults" (Textual Int32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] Users
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] Users
 
 -- | Retrieve either deleted users or all users in a domain (paginated)
 --
 -- /See:/ 'usersList' smart constructor.
 data UsersList = UsersList'
-    { _ulEvent           :: !(Maybe UsersListEvent)
-    , _ulOrderBy         :: !(Maybe UsersListOrderBy)
-    , _ulViewType        :: !UsersListViewType
+    { _ulEvent :: !(Maybe UsersListEvent)
+    , _ulOrderBy :: !(Maybe UsersListOrderBy)
+    , _ulViewType :: !UsersListViewType
     , _ulCustomFieldMask :: !(Maybe Text)
-    , _ulDomain          :: !(Maybe Text)
-    , _ulShowDeleted     :: !(Maybe Text)
-    , _ulSortOrder       :: !(Maybe UsersListSortOrder)
-    , _ulCustomer        :: !(Maybe Text)
-    , _ulQuery           :: !(Maybe Text)
-    , _ulProjection      :: !UsersListProjection
-    , _ulPageToken       :: !(Maybe Text)
-    , _ulMaxResults      :: !(Maybe (Textual Int32))
+    , _ulDomain :: !(Maybe Text)
+    , _ulShowDeleted :: !(Maybe Text)
+    , _ulSortOrder :: !(Maybe UsersListSortOrder)
+    , _ulCustomer :: !(Maybe Text)
+    , _ulQuery :: !(Maybe Text)
+    , _ulProjection :: !UsersListProjection
+    , _ulPageToken :: !(Maybe Text)
+    , _ulMaxResults :: !(Maybe (Textual Int32))
+    , _ulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersList' with the minimum fields required to make a request.
@@ -117,9 +120,11 @@ data UsersList = UsersList'
 -- * 'ulPageToken'
 --
 -- * 'ulMaxResults'
+--
+-- * 'ulFields'
 usersList
     :: UsersList
-usersList =
+usersList = 
     UsersList'
     { _ulEvent = Nothing
     , _ulOrderBy = Nothing
@@ -133,6 +138,7 @@ usersList =
     , _ulProjection = ULPBasic
     , _ulPageToken = Nothing
     , _ulMaxResults = Nothing
+    , _ulFields = Nothing
     }
 
 -- | Event on which subscription is intended (if subscribing)
@@ -172,8 +178,8 @@ ulSortOrder :: Lens' UsersList (Maybe UsersListSortOrder)
 ulSortOrder
   = lens _ulSortOrder (\ s a -> s{_ulSortOrder = a})
 
--- | Immutable id of the Google Apps account. In case of multi-domain, to
--- fetch all users for a customer, fill this field instead of domain.
+-- | Immutable ID of the G Suite account. In case of multi-domain, to fetch
+-- all users for a customer, fill this field instead of domain.
 ulCustomer :: Lens' UsersList (Maybe Text)
 ulCustomer
   = lens _ulCustomer (\ s a -> s{_ulCustomer = a})
@@ -200,6 +206,10 @@ ulMaxResults
   = lens _ulMaxResults (\ s a -> s{_ulMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ulFields :: Lens' UsersList (Maybe Text)
+ulFields = lens _ulFields (\ s a -> s{_ulFields = a})
+
 instance GoogleRequest UsersList where
         type Rs UsersList = Users
         type Scopes UsersList =
@@ -216,6 +226,7 @@ instance GoogleRequest UsersList where
               (Just _ulProjection)
               _ulPageToken
               _ulMaxResults
+              _ulFields
               (Just AltJSON)
               directoryService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.Metadata.Dimensions.Lis
 
     -- * Request Lenses
     , amdlAccountId
+    , amdlFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.metadata.dimensions.list@ method which the
 -- 'AccountsMetadataDimensionsList' request conforms to.
@@ -49,14 +50,16 @@ type AccountsMetadataDimensionsListResource =
            Capture "accountId" Text :>
              "metadata" :>
                "dimensions" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Metadata
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Metadata
 
 -- | List the metadata for the dimensions available to this AdExchange
 -- account.
 --
 -- /See:/ 'accountsMetadataDimensionsList' smart constructor.
-newtype AccountsMetadataDimensionsList = AccountsMetadataDimensionsList'
-    { _amdlAccountId :: Text
+data AccountsMetadataDimensionsList = AccountsMetadataDimensionsList'
+    { _amdlAccountId :: !Text
+    , _amdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsMetadataDimensionsList' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype AccountsMetadataDimensionsList = AccountsMetadataDimensionsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'amdlAccountId'
+--
+-- * 'amdlFields'
 accountsMetadataDimensionsList
     :: Text -- ^ 'amdlAccountId'
     -> AccountsMetadataDimensionsList
-accountsMetadataDimensionsList pAmdlAccountId_ =
+accountsMetadataDimensionsList pAmdlAccountId_ = 
     AccountsMetadataDimensionsList'
     { _amdlAccountId = pAmdlAccountId_
+    , _amdlFields = Nothing
     }
 
 -- | Account with visibility to the dimensions.
@@ -78,6 +84,11 @@ amdlAccountId
   = lens _amdlAccountId
       (\ s a -> s{_amdlAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+amdlFields :: Lens' AccountsMetadataDimensionsList (Maybe Text)
+amdlFields
+  = lens _amdlFields (\ s a -> s{_amdlFields = a})
+
 instance GoogleRequest AccountsMetadataDimensionsList
          where
         type Rs AccountsMetadataDimensionsList = Metadata
@@ -85,7 +96,7 @@ instance GoogleRequest AccountsMetadataDimensionsList
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsMetadataDimensionsList'{..}
-          = go _amdlAccountId (Just AltJSON)
+          = go _amdlAccountId _amdlFields (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient

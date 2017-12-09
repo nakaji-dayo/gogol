@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.Routers.List
     , rlRegion
     , rlPageToken
     , rlMaxResults
+    , rlFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.list@ method which the
 -- 'RoutersList' request conforms to.
@@ -58,18 +59,20 @@ type RoutersListResource =
                      QueryParam "filter" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] RouterList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] RouterList
 
 -- | Retrieves a list of Router resources available to the specified project.
 --
 -- /See:/ 'routersList' smart constructor.
 data RoutersList = RoutersList'
-    { _rlOrderBy    :: !(Maybe Text)
-    , _rlProject    :: !Text
-    , _rlFilter     :: !(Maybe Text)
-    , _rlRegion     :: !Text
-    , _rlPageToken  :: !(Maybe Text)
+    { _rlOrderBy :: !(Maybe Text)
+    , _rlProject :: !Text
+    , _rlFilter :: !(Maybe Text)
+    , _rlRegion :: !Text
+    , _rlPageToken :: !(Maybe Text)
     , _rlMaxResults :: !(Textual Word32)
+    , _rlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersList' with the minimum fields required to make a request.
@@ -87,11 +90,13 @@ data RoutersList = RoutersList'
 -- * 'rlPageToken'
 --
 -- * 'rlMaxResults'
+--
+-- * 'rlFields'
 routersList
     :: Text -- ^ 'rlProject'
     -> Text -- ^ 'rlRegion'
     -> RoutersList
-routersList pRlProject_ pRlRegion_ =
+routersList pRlProject_ pRlRegion_ = 
     RoutersList'
     { _rlOrderBy = Nothing
     , _rlProject = pRlProject_
@@ -99,6 +104,7 @@ routersList pRlProject_ pRlRegion_ =
     , _rlRegion = pRlRegion_
     , _rlPageToken = Nothing
     , _rlMaxResults = 500
+    , _rlFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -118,26 +124,25 @@ rlProject :: Lens' RoutersList Text
 rlProject
   = lens _rlProject (\ s a -> s{_rlProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 rlFilter :: Lens' RoutersList (Maybe Text)
 rlFilter = lens _rlFilter (\ s a -> s{_rlFilter = a})
 
@@ -154,11 +159,16 @@ rlPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 rlMaxResults :: Lens' RoutersList Word32
 rlMaxResults
   = lens _rlMaxResults (\ s a -> s{_rlMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+rlFields :: Lens' RoutersList (Maybe Text)
+rlFields = lens _rlFields (\ s a -> s{_rlFields = a})
 
 instance GoogleRequest RoutersList where
         type Rs RoutersList = RouterList
@@ -170,6 +180,7 @@ instance GoogleRequest RoutersList where
           = go _rlProject _rlRegion _rlOrderBy _rlFilter
               _rlPageToken
               (Just _rlMaxResults)
+              _rlFields
               (Just AltJSON)
               computeService
           where go

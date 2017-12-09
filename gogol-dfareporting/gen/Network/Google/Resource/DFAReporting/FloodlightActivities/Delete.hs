@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.FloodlightActivities.Delete
     -- * Request Lenses
     , fadProFileId
     , fadId
+    , fadFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightActivities.delete@ method which the
 -- 'FloodlightActivitiesDelete' request conforms to.
 type FloodlightActivitiesDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightActivities" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing floodlight activity.
 --
 -- /See:/ 'floodlightActivitiesDelete' smart constructor.
 data FloodlightActivitiesDelete = FloodlightActivitiesDelete'
     { _fadProFileId :: !(Textual Int64)
-    , _fadId        :: !(Textual Int64)
+    , _fadId :: !(Textual Int64)
+    , _fadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivitiesDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data FloodlightActivitiesDelete = FloodlightActivitiesDelete'
 -- * 'fadProFileId'
 --
 -- * 'fadId'
+--
+-- * 'fadFields'
 floodlightActivitiesDelete
     :: Int64 -- ^ 'fadProFileId'
     -> Int64 -- ^ 'fadId'
     -> FloodlightActivitiesDelete
-floodlightActivitiesDelete pFadProFileId_ pFadId_ =
+floodlightActivitiesDelete pFadProFileId_ pFadId_ = 
     FloodlightActivitiesDelete'
     { _fadProFileId = _Coerce # pFadProFileId_
     , _fadId = _Coerce # pFadId_
+    , _fadFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,13 +93,18 @@ fadId :: Lens' FloodlightActivitiesDelete Int64
 fadId
   = lens _fadId (\ s a -> s{_fadId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fadFields :: Lens' FloodlightActivitiesDelete (Maybe Text)
+fadFields
+  = lens _fadFields (\ s a -> s{_fadFields = a})
+
 instance GoogleRequest FloodlightActivitiesDelete
          where
         type Rs FloodlightActivitiesDelete = ()
         type Scopes FloodlightActivitiesDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightActivitiesDelete'{..}
-          = go _fadProFileId _fadId (Just AltJSON)
+          = go _fadProFileId _fadId _fadFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

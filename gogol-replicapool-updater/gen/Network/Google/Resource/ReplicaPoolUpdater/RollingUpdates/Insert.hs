@@ -36,10 +36,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Insert
     , ruiProject
     , ruiZone
     , ruiPayload
+    , ruiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.insert@ method which the
 -- 'RollingUpdatesInsert' request conforms to.
@@ -51,17 +52,19 @@ type RollingUpdatesInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "rollingUpdates" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] RollingUpdate :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] RollingUpdate :>
+                         Post '[JSON] Operation
 
 -- | Inserts and starts a new update.
 --
 -- /See:/ 'rollingUpdatesInsert' smart constructor.
 data RollingUpdatesInsert = RollingUpdatesInsert'
     { _ruiProject :: !Text
-    , _ruiZone    :: !Text
+    , _ruiZone :: !Text
     , _ruiPayload :: !RollingUpdate
+    , _ruiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesInsert' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data RollingUpdatesInsert = RollingUpdatesInsert'
 -- * 'ruiZone'
 --
 -- * 'ruiPayload'
+--
+-- * 'ruiFields'
 rollingUpdatesInsert
     :: Text -- ^ 'ruiProject'
     -> Text -- ^ 'ruiZone'
     -> RollingUpdate -- ^ 'ruiPayload'
     -> RollingUpdatesInsert
-rollingUpdatesInsert pRuiProject_ pRuiZone_ pRuiPayload_ =
+rollingUpdatesInsert pRuiProject_ pRuiZone_ pRuiPayload_ = 
     RollingUpdatesInsert'
     { _ruiProject = pRuiProject_
     , _ruiZone = pRuiZone_
     , _ruiPayload = pRuiPayload_
+    , _ruiFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -99,13 +105,19 @@ ruiPayload :: Lens' RollingUpdatesInsert RollingUpdate
 ruiPayload
   = lens _ruiPayload (\ s a -> s{_ruiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ruiFields :: Lens' RollingUpdatesInsert (Maybe Text)
+ruiFields
+  = lens _ruiFields (\ s a -> s{_ruiFields = a})
+
 instance GoogleRequest RollingUpdatesInsert where
         type Rs RollingUpdatesInsert = Operation
         type Scopes RollingUpdatesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/replicapool"]
         requestClient RollingUpdatesInsert'{..}
-          = go _ruiProject _ruiZone (Just AltJSON) _ruiPayload
+          = go _ruiProject _ruiZone _ruiFields (Just AltJSON)
+              _ruiPayload
               replicaPoolUpdaterService
           where go
                   = buildClient

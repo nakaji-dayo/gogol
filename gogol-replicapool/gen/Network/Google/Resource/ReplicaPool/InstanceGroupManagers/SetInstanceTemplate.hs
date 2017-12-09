@@ -38,10 +38,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetInstanceTemp
     , igmsitInstanceGroupManager
     , igmsitZone
     , igmsitPayload
+    , igmsitFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.setInstanceTemplate@ method which the
 -- 'InstanceGroupManagersSetInstanceTemplate' request conforms to.
@@ -56,20 +57,22 @@ type InstanceGroupManagersSetInstanceTemplateResource
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "setInstanceTemplate" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           InstanceGroupManagersSetInstanceTemplateRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             InstanceGroupManagersSetInstanceTemplateRequest
+                             :> Post '[JSON] Operation
 
 -- | Sets the instance template to use when creating new instances in this
 -- group. Existing instances are not affected.
 --
 -- /See:/ 'instanceGroupManagersSetInstanceTemplate' smart constructor.
 data InstanceGroupManagersSetInstanceTemplate = InstanceGroupManagersSetInstanceTemplate'
-    { _igmsitProject              :: !Text
+    { _igmsitProject :: !Text
     , _igmsitInstanceGroupManager :: !Text
-    , _igmsitZone                 :: !Text
-    , _igmsitPayload              :: !InstanceGroupManagersSetInstanceTemplateRequest
+    , _igmsitZone :: !Text
+    , _igmsitPayload :: !InstanceGroupManagersSetInstanceTemplateRequest
+    , _igmsitFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersSetInstanceTemplate' with the minimum fields required to make a request.
@@ -83,18 +86,21 @@ data InstanceGroupManagersSetInstanceTemplate = InstanceGroupManagersSetInstance
 -- * 'igmsitZone'
 --
 -- * 'igmsitPayload'
+--
+-- * 'igmsitFields'
 instanceGroupManagersSetInstanceTemplate
     :: Text -- ^ 'igmsitProject'
     -> Text -- ^ 'igmsitInstanceGroupManager'
     -> Text -- ^ 'igmsitZone'
     -> InstanceGroupManagersSetInstanceTemplateRequest -- ^ 'igmsitPayload'
     -> InstanceGroupManagersSetInstanceTemplate
-instanceGroupManagersSetInstanceTemplate pIgmsitProject_ pIgmsitInstanceGroupManager_ pIgmsitZone_ pIgmsitPayload_ =
+instanceGroupManagersSetInstanceTemplate pIgmsitProject_ pIgmsitInstanceGroupManager_ pIgmsitZone_ pIgmsitPayload_ = 
     InstanceGroupManagersSetInstanceTemplate'
     { _igmsitProject = pIgmsitProject_
     , _igmsitInstanceGroupManager = pIgmsitInstanceGroupManager_
     , _igmsitZone = pIgmsitZone_
     , _igmsitPayload = pIgmsitPayload_
+    , _igmsitFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -120,6 +126,11 @@ igmsitPayload
   = lens _igmsitPayload
       (\ s a -> s{_igmsitPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmsitFields :: Lens' InstanceGroupManagersSetInstanceTemplate (Maybe Text)
+igmsitFields
+  = lens _igmsitFields (\ s a -> s{_igmsitFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersSetInstanceTemplate where
         type Rs InstanceGroupManagersSetInstanceTemplate =
@@ -132,6 +143,7 @@ instance GoogleRequest
           InstanceGroupManagersSetInstanceTemplate'{..}
           = go _igmsitProject _igmsitZone
               _igmsitInstanceGroupManager
+              _igmsitFields
               (Just AltJSON)
               _igmsitPayload
               replicaPoolService

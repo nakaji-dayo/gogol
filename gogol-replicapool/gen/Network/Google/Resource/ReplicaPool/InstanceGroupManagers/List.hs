@@ -39,10 +39,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.List
     , igmlFilter
     , igmlPageToken
     , igmlMaxResults
+    , igmlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.list@ method which the
 -- 'InstanceGroupManagersList' request conforms to.
@@ -57,19 +58,21 @@ type InstanceGroupManagersListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] InstanceGroupManagerList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] InstanceGroupManagerList
 
 -- | Retrieves the list of Instance Group Manager resources contained within
 -- the specified zone.
 --
 -- /See:/ 'instanceGroupManagersList' smart constructor.
 data InstanceGroupManagersList = InstanceGroupManagersList'
-    { _igmlProject    :: !Text
-    , _igmlZone       :: !Text
-    , _igmlFilter     :: !(Maybe Text)
-    , _igmlPageToken  :: !(Maybe Text)
+    { _igmlProject :: !Text
+    , _igmlZone :: !Text
+    , _igmlFilter :: !(Maybe Text)
+    , _igmlPageToken :: !(Maybe Text)
     , _igmlMaxResults :: !(Textual Word32)
+    , _igmlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersList' with the minimum fields required to make a request.
@@ -85,17 +88,20 @@ data InstanceGroupManagersList = InstanceGroupManagersList'
 -- * 'igmlPageToken'
 --
 -- * 'igmlMaxResults'
+--
+-- * 'igmlFields'
 instanceGroupManagersList
     :: Text -- ^ 'igmlProject'
     -> Text -- ^ 'igmlZone'
     -> InstanceGroupManagersList
-instanceGroupManagersList pIgmlProject_ pIgmlZone_ =
+instanceGroupManagersList pIgmlProject_ pIgmlZone_ = 
     InstanceGroupManagersList'
     { _igmlProject = pIgmlProject_
     , _igmlZone = pIgmlZone_
     , _igmlFilter = Nothing
     , _igmlPageToken = Nothing
     , _igmlMaxResults = 500
+    , _igmlFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -127,6 +133,11 @@ igmlMaxResults
       (\ s a -> s{_igmlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+igmlFields :: Lens' InstanceGroupManagersList (Maybe Text)
+igmlFields
+  = lens _igmlFields (\ s a -> s{_igmlFields = a})
+
 instance GoogleRequest InstanceGroupManagersList
          where
         type Rs InstanceGroupManagersList =
@@ -140,6 +151,7 @@ instance GoogleRequest InstanceGroupManagersList
           = go _igmlProject _igmlZone _igmlFilter
               _igmlPageToken
               (Just _igmlMaxResults)
+              _igmlFields
               (Just AltJSON)
               replicaPoolService
           where go

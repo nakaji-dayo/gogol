@@ -38,10 +38,11 @@ module Network.Google.Resource.Books.Layers.VolumeAnnotations.Get
     , lvagVolumeId
     , lvagSource
     , lvagLayerId
+    , lvagFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.layers.volumeAnnotations.get@ method which the
 -- 'LayersVolumeAnnotationsGet' request conforms to.
@@ -56,18 +57,20 @@ type LayersVolumeAnnotationsGetResource =
                    Capture "annotationId" Text :>
                      QueryParam "locale" Text :>
                        QueryParam "source" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] Volumeannotation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] Volumeannotation
 
 -- | Gets the volume annotation.
 --
 -- /See:/ 'layersVolumeAnnotationsGet' smart constructor.
 data LayersVolumeAnnotationsGet = LayersVolumeAnnotationsGet'
-    { _lvagLocale       :: !(Maybe Text)
+    { _lvagLocale :: !(Maybe Text)
     , _lvagAnnotationId :: !Text
-    , _lvagVolumeId     :: !Text
-    , _lvagSource       :: !(Maybe Text)
-    , _lvagLayerId      :: !Text
+    , _lvagVolumeId :: !Text
+    , _lvagSource :: !(Maybe Text)
+    , _lvagLayerId :: !Text
+    , _lvagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LayersVolumeAnnotationsGet' with the minimum fields required to make a request.
@@ -83,18 +86,21 @@ data LayersVolumeAnnotationsGet = LayersVolumeAnnotationsGet'
 -- * 'lvagSource'
 --
 -- * 'lvagLayerId'
+--
+-- * 'lvagFields'
 layersVolumeAnnotationsGet
     :: Text -- ^ 'lvagAnnotationId'
     -> Text -- ^ 'lvagVolumeId'
     -> Text -- ^ 'lvagLayerId'
     -> LayersVolumeAnnotationsGet
-layersVolumeAnnotationsGet pLvagAnnotationId_ pLvagVolumeId_ pLvagLayerId_ =
+layersVolumeAnnotationsGet pLvagAnnotationId_ pLvagVolumeId_ pLvagLayerId_ = 
     LayersVolumeAnnotationsGet'
     { _lvagLocale = Nothing
     , _lvagAnnotationId = pLvagAnnotationId_
     , _lvagVolumeId = pLvagVolumeId_
     , _lvagSource = Nothing
     , _lvagLayerId = pLvagLayerId_
+    , _lvagFields = Nothing
     }
 
 -- | The locale information for the data. ISO-639-1 language and ISO-3166-1
@@ -124,6 +130,11 @@ lvagLayerId :: Lens' LayersVolumeAnnotationsGet Text
 lvagLayerId
   = lens _lvagLayerId (\ s a -> s{_lvagLayerId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lvagFields :: Lens' LayersVolumeAnnotationsGet (Maybe Text)
+lvagFields
+  = lens _lvagFields (\ s a -> s{_lvagFields = a})
+
 instance GoogleRequest LayersVolumeAnnotationsGet
          where
         type Rs LayersVolumeAnnotationsGet = Volumeannotation
@@ -133,6 +144,7 @@ instance GoogleRequest LayersVolumeAnnotationsGet
           = go _lvagVolumeId _lvagLayerId _lvagAnnotationId
               _lvagLocale
               _lvagSource
+              _lvagFields
               (Just AltJSON)
               booksService
           where go

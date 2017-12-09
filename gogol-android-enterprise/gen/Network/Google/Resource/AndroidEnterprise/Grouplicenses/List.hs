@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Grouplicenses.List
 
     -- * Request Lenses
     , glEnterpriseId
+    , glFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.grouplicenses.list@ method which the
 -- 'GrouplicensesList' request conforms to.
@@ -48,15 +49,17 @@ type GrouplicensesListResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "groupLicenses" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] GroupLicensesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] GroupLicensesListResponse
 
 -- | Retrieves IDs of all products for which the enterprise has a group
 -- license.
 --
 -- /See:/ 'grouplicensesList' smart constructor.
-newtype GrouplicensesList = GrouplicensesList'
-    { _glEnterpriseId :: Text
+data GrouplicensesList = GrouplicensesList'
+    { _glEnterpriseId :: !Text
+    , _glFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GrouplicensesList' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype GrouplicensesList = GrouplicensesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'glEnterpriseId'
+--
+-- * 'glFields'
 grouplicensesList
     :: Text -- ^ 'glEnterpriseId'
     -> GrouplicensesList
-grouplicensesList pGlEnterpriseId_ =
+grouplicensesList pGlEnterpriseId_ = 
     GrouplicensesList'
     { _glEnterpriseId = pGlEnterpriseId_
+    , _glFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -78,12 +84,16 @@ glEnterpriseId
   = lens _glEnterpriseId
       (\ s a -> s{_glEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+glFields :: Lens' GrouplicensesList (Maybe Text)
+glFields = lens _glFields (\ s a -> s{_glFields = a})
+
 instance GoogleRequest GrouplicensesList where
         type Rs GrouplicensesList = GroupLicensesListResponse
         type Scopes GrouplicensesList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient GrouplicensesList'{..}
-          = go _glEnterpriseId (Just AltJSON)
+          = go _glEnterpriseId _glFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

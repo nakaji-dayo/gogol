@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.DataSets.Create
     , dscUploadType
     , dscPayload
     , dscBearerToken
+    , dscFields
     , dscCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.create@ method which the
 -- 'DataSetsCreate' request conforms to.
@@ -60,8 +61,9 @@ type DataSetsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] DataSet :> Post '[JSON] DataSet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] DataSet :> Post '[JSON] DataSet
 
 -- | Creates a new dataset. For the definitions of datasets and other
 -- genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type DataSetsCreateResource =
 --
 -- /See:/ 'dataSetsCreate' smart constructor.
 data DataSetsCreate = DataSetsCreate'
-    { _dscXgafv          :: !(Maybe Xgafv)
+    { _dscXgafv :: !(Maybe Xgafv)
     , _dscUploadProtocol :: !(Maybe Text)
-    , _dscPp             :: !Bool
-    , _dscAccessToken    :: !(Maybe Text)
-    , _dscUploadType     :: !(Maybe Text)
-    , _dscPayload        :: !DataSet
-    , _dscBearerToken    :: !(Maybe Text)
-    , _dscCallback       :: !(Maybe Text)
+    , _dscPp :: !Bool
+    , _dscAccessToken :: !(Maybe Text)
+    , _dscUploadType :: !(Maybe Text)
+    , _dscPayload :: !DataSet
+    , _dscBearerToken :: !(Maybe Text)
+    , _dscFields :: !(Maybe Text)
+    , _dscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsCreate' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data DataSetsCreate = DataSetsCreate'
 --
 -- * 'dscBearerToken'
 --
+-- * 'dscFields'
+--
 -- * 'dscCallback'
 dataSetsCreate
     :: DataSet -- ^ 'dscPayload'
     -> DataSetsCreate
-dataSetsCreate pDscPayload_ =
+dataSetsCreate pDscPayload_ = 
     DataSetsCreate'
     { _dscXgafv = Nothing
     , _dscUploadProtocol = Nothing
@@ -110,6 +115,7 @@ dataSetsCreate pDscPayload_ =
     , _dscUploadType = Nothing
     , _dscPayload = pDscPayload_
     , _dscBearerToken = Nothing
+    , _dscFields = Nothing
     , _dscCallback = Nothing
     }
 
@@ -150,6 +156,11 @@ dscBearerToken
   = lens _dscBearerToken
       (\ s a -> s{_dscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dscFields :: Lens' DataSetsCreate (Maybe Text)
+dscFields
+  = lens _dscFields (\ s a -> s{_dscFields = a})
+
 -- | JSONP
 dscCallback :: Lens' DataSetsCreate (Maybe Text)
 dscCallback
@@ -166,6 +177,7 @@ instance GoogleRequest DataSetsCreate where
               _dscUploadType
               _dscBearerToken
               _dscCallback
+              _dscFields
               (Just AltJSON)
               _dscPayload
               genomicsService

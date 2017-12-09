@@ -16,7 +16,7 @@
 --
 module Network.Google.AppsActivity.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | The main type of event that occurred.
 data EventPrimaryEventType

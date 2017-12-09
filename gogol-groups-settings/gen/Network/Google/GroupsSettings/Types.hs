@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -58,9 +58,9 @@ module Network.Google.GroupsSettings.Types
     , gAllowWebPosting
     ) where
 
-import           Network.Google.GroupsSettings.Types.Product
-import           Network.Google.GroupsSettings.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.GroupsSettings.Types.Product
+import Network.Google.GroupsSettings.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Groups Settings API. This contains the host and root path used as a starting point for constructing service requests.
 groupsSettingsService :: ServiceConfig
@@ -68,6 +68,6 @@ groupsSettingsService
   = defaultService (ServiceId "groupssettings:v1")
       "www.googleapis.com"
 
--- | View and manage the settings of a Google Apps Group
+-- | View and manage the settings of a G Suite group
 appsGroupsSettingsScope :: Proxy '["https://www.googleapis.com/auth/apps.groups.settings"]
 appsGroupsSettingsScope = Proxy;

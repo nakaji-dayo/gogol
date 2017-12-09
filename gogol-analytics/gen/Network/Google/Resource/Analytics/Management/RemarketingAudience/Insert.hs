@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.RemarketingAudience.Insert
     , mraiWebPropertyId
     , mraiPayload
     , mraiAccountId
+    , mraiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.remarketingAudience.insert@ method which the
 -- 'ManagementRemarketingAudienceInsert' request conforms to.
@@ -52,17 +53,19 @@ type ManagementRemarketingAudienceInsertResource =
                "webproperties" :>
                  Capture "webPropertyId" Text :>
                    "remarketingAudiences" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] RemarketingAudience :>
-                         Post '[JSON] RemarketingAudience
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] RemarketingAudience :>
+                           Post '[JSON] RemarketingAudience
 
 -- | Creates a new remarketing audience.
 --
 -- /See:/ 'managementRemarketingAudienceInsert' smart constructor.
 data ManagementRemarketingAudienceInsert = ManagementRemarketingAudienceInsert'
     { _mraiWebPropertyId :: !Text
-    , _mraiPayload       :: !RemarketingAudience
-    , _mraiAccountId     :: !Text
+    , _mraiPayload :: !RemarketingAudience
+    , _mraiAccountId :: !Text
+    , _mraiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementRemarketingAudienceInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementRemarketingAudienceInsert = ManagementRemarketingAudienceInsert'
 -- * 'mraiPayload'
 --
 -- * 'mraiAccountId'
+--
+-- * 'mraiFields'
 managementRemarketingAudienceInsert
     :: Text -- ^ 'mraiWebPropertyId'
     -> RemarketingAudience -- ^ 'mraiPayload'
     -> Text -- ^ 'mraiAccountId'
     -> ManagementRemarketingAudienceInsert
-managementRemarketingAudienceInsert pMraiWebPropertyId_ pMraiPayload_ pMraiAccountId_ =
+managementRemarketingAudienceInsert pMraiWebPropertyId_ pMraiPayload_ pMraiAccountId_ = 
     ManagementRemarketingAudienceInsert'
     { _mraiWebPropertyId = pMraiWebPropertyId_
     , _mraiPayload = pMraiPayload_
     , _mraiAccountId = pMraiAccountId_
+    , _mraiFields = Nothing
     }
 
 -- | Web property ID for which to create the remarketing audience.
@@ -103,6 +109,11 @@ mraiAccountId
   = lens _mraiAccountId
       (\ s a -> s{_mraiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mraiFields :: Lens' ManagementRemarketingAudienceInsert (Maybe Text)
+mraiFields
+  = lens _mraiFields (\ s a -> s{_mraiFields = a})
+
 instance GoogleRequest
          ManagementRemarketingAudienceInsert where
         type Rs ManagementRemarketingAudienceInsert =
@@ -111,7 +122,8 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient
           ManagementRemarketingAudienceInsert'{..}
-          = go _mraiAccountId _mraiWebPropertyId (Just AltJSON)
+          = go _mraiAccountId _mraiWebPropertyId _mraiFields
+              (Just AltJSON)
               _mraiPayload
               analyticsService
           where go

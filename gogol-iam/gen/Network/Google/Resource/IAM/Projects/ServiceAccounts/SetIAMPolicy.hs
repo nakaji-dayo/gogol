@@ -41,41 +41,44 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.SetIAMPolicy
     , psasipPayload
     , psasipBearerToken
     , psasipResource
+    , psasipFields
     , psasipCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.setIamPolicy@ method which the
 -- 'ProjectsServiceAccountsSetIAMPolicy' request conforms to.
 type ProjectsServiceAccountsSetIAMPolicyResource =
      "v1" :>
        CaptureMode "resource" "setIamPolicy" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Sets the IAM access control policy for a ServiceAccount.
 --
 -- /See:/ 'projectsServiceAccountsSetIAMPolicy' smart constructor.
 data ProjectsServiceAccountsSetIAMPolicy = ProjectsServiceAccountsSetIAMPolicy'
-    { _psasipXgafv          :: !(Maybe Text)
+    { _psasipXgafv :: !(Maybe Xgafv)
     , _psasipUploadProtocol :: !(Maybe Text)
-    , _psasipPp             :: !Bool
-    , _psasipAccessToken    :: !(Maybe Text)
-    , _psasipUploadType     :: !(Maybe Text)
-    , _psasipPayload        :: !SetIAMPolicyRequest
-    , _psasipBearerToken    :: !(Maybe Text)
-    , _psasipResource       :: !Text
-    , _psasipCallback       :: !(Maybe Text)
+    , _psasipPp :: !Bool
+    , _psasipAccessToken :: !(Maybe Text)
+    , _psasipUploadType :: !(Maybe Text)
+    , _psasipPayload :: !SetIAMPolicyRequest
+    , _psasipBearerToken :: !(Maybe Text)
+    , _psasipResource :: !Text
+    , _psasipFields :: !(Maybe Text)
+    , _psasipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsSetIAMPolicy' with the minimum fields required to make a request.
@@ -98,12 +101,14 @@ data ProjectsServiceAccountsSetIAMPolicy = ProjectsServiceAccountsSetIAMPolicy'
 --
 -- * 'psasipResource'
 --
+-- * 'psasipFields'
+--
 -- * 'psasipCallback'
 projectsServiceAccountsSetIAMPolicy
     :: SetIAMPolicyRequest -- ^ 'psasipPayload'
     -> Text -- ^ 'psasipResource'
     -> ProjectsServiceAccountsSetIAMPolicy
-projectsServiceAccountsSetIAMPolicy pPsasipPayload_ pPsasipResource_ =
+projectsServiceAccountsSetIAMPolicy pPsasipPayload_ pPsasipResource_ = 
     ProjectsServiceAccountsSetIAMPolicy'
     { _psasipXgafv = Nothing
     , _psasipUploadProtocol = Nothing
@@ -113,11 +118,12 @@ projectsServiceAccountsSetIAMPolicy pPsasipPayload_ pPsasipResource_ =
     , _psasipPayload = pPsasipPayload_
     , _psasipBearerToken = Nothing
     , _psasipResource = pPsasipResource_
+    , _psasipFields = Nothing
     , _psasipCallback = Nothing
     }
 
 -- | V1 error format.
-psasipXgafv :: Lens' ProjectsServiceAccountsSetIAMPolicy (Maybe Text)
+psasipXgafv :: Lens' ProjectsServiceAccountsSetIAMPolicy (Maybe Xgafv)
 psasipXgafv
   = lens _psasipXgafv (\ s a -> s{_psasipXgafv = a})
 
@@ -155,13 +161,17 @@ psasipBearerToken
   = lens _psasipBearerToken
       (\ s a -> s{_psasipBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being specified.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being specified. See the
+-- operation documentation for the appropriate value for this field.
 psasipResource :: Lens' ProjectsServiceAccountsSetIAMPolicy Text
 psasipResource
   = lens _psasipResource
       (\ s a -> s{_psasipResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psasipFields :: Lens' ProjectsServiceAccountsSetIAMPolicy (Maybe Text)
+psasipFields
+  = lens _psasipFields (\ s a -> s{_psasipFields = a})
 
 -- | JSONP
 psasipCallback :: Lens' ProjectsServiceAccountsSetIAMPolicy (Maybe Text)
@@ -183,6 +193,7 @@ instance GoogleRequest
               _psasipUploadType
               _psasipBearerToken
               _psasipCallback
+              _psasipFields
               (Just AltJSON)
               _psasipPayload
               iAMService

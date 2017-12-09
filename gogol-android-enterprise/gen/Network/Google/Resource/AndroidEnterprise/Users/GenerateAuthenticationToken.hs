@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.GenerateAuthenticationTok
     -- * Request Lenses
     , ugatEnterpriseId
     , ugatUserId
+    , ugatFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.generateAuthenticationToken@ method which the
 -- 'UsersGenerateAuthenticationToken' request conforms to.
@@ -53,8 +54,9 @@ type UsersGenerateAuthenticationTokenResource =
              "users" :>
                Capture "userId" Text :>
                  "authenticationToken" :>
-                   QueryParam "alt" AltJSON :>
-                     Post '[JSON] AuthenticationToken
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Post '[JSON] AuthenticationToken
 
 -- | Generates an authentication token which the device policy client can use
 -- to provision the given EMM-managed user account on a device. The
@@ -64,7 +66,8 @@ type UsersGenerateAuthenticationTokenResource =
 -- /See:/ 'usersGenerateAuthenticationToken' smart constructor.
 data UsersGenerateAuthenticationToken = UsersGenerateAuthenticationToken'
     { _ugatEnterpriseId :: !Text
-    , _ugatUserId       :: !Text
+    , _ugatUserId :: !Text
+    , _ugatFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGenerateAuthenticationToken' with the minimum fields required to make a request.
@@ -74,14 +77,17 @@ data UsersGenerateAuthenticationToken = UsersGenerateAuthenticationToken'
 -- * 'ugatEnterpriseId'
 --
 -- * 'ugatUserId'
+--
+-- * 'ugatFields'
 usersGenerateAuthenticationToken
     :: Text -- ^ 'ugatEnterpriseId'
     -> Text -- ^ 'ugatUserId'
     -> UsersGenerateAuthenticationToken
-usersGenerateAuthenticationToken pUgatEnterpriseId_ pUgatUserId_ =
+usersGenerateAuthenticationToken pUgatEnterpriseId_ pUgatUserId_ = 
     UsersGenerateAuthenticationToken'
     { _ugatEnterpriseId = pUgatEnterpriseId_
     , _ugatUserId = pUgatUserId_
+    , _ugatFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -95,6 +101,11 @@ ugatUserId :: Lens' UsersGenerateAuthenticationToken Text
 ugatUserId
   = lens _ugatUserId (\ s a -> s{_ugatUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugatFields :: Lens' UsersGenerateAuthenticationToken (Maybe Text)
+ugatFields
+  = lens _ugatFields (\ s a -> s{_ugatFields = a})
+
 instance GoogleRequest
          UsersGenerateAuthenticationToken where
         type Rs UsersGenerateAuthenticationToken =
@@ -102,7 +113,8 @@ instance GoogleRequest
         type Scopes UsersGenerateAuthenticationToken =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersGenerateAuthenticationToken'{..}
-          = go _ugatEnterpriseId _ugatUserId (Just AltJSON)
+          = go _ugatEnterpriseId _ugatUserId _ugatFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

@@ -40,10 +40,11 @@ module Network.Google.Resource.YouTube.Videos.Insert
     , viOnBehalfOfContentOwnerChannel
     , viNotifySubscribers
     , viAutoLevels
+    , viFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.insert@ method which the
 -- 'VideosInsert' request conforms to.
@@ -57,8 +58,9 @@ type VideosInsertResource =
                  QueryParam "onBehalfOfContentOwnerChannel" Text :>
                    QueryParam "notifySubscribers" Bool :>
                      QueryParam "autoLevels" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Video :> Post '[JSON] Video
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Video :> Post '[JSON] Video
        :<|>
        "upload" :>
          "youtube" :>
@@ -70,22 +72,24 @@ type VideosInsertResource =
                      QueryParam "onBehalfOfContentOwnerChannel" Text :>
                        QueryParam "notifySubscribers" Bool :>
                          QueryParam "autoLevels" Bool :>
-                           QueryParam "alt" AltJSON :>
-                             QueryParam "uploadType" Multipart :>
-                               MultipartRelated '[JSON] Video :>
-                                 Post '[JSON] Video
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               QueryParam "uploadType" Multipart :>
+                                 MultipartRelated '[JSON] Video :>
+                                   Post '[JSON] Video
 
 -- | Uploads a video to YouTube and optionally sets the video\'s metadata.
 --
 -- /See:/ 'videosInsert' smart constructor.
 data VideosInsert = VideosInsert'
-    { _viPart                          :: !Text
-    , _viStabilize                     :: !(Maybe Bool)
-    , _viPayload                       :: !Video
-    , _viOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _viPart :: !Text
+    , _viStabilize :: !(Maybe Bool)
+    , _viPayload :: !Video
+    , _viOnBehalfOfContentOwner :: !(Maybe Text)
     , _viOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _viNotifySubscribers             :: !Bool
-    , _viAutoLevels                    :: !(Maybe Bool)
+    , _viNotifySubscribers :: !Bool
+    , _viAutoLevels :: !(Maybe Bool)
+    , _viFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosInsert' with the minimum fields required to make a request.
@@ -105,11 +109,13 @@ data VideosInsert = VideosInsert'
 -- * 'viNotifySubscribers'
 --
 -- * 'viAutoLevels'
+--
+-- * 'viFields'
 videosInsert
     :: Text -- ^ 'viPart'
     -> Video -- ^ 'viPayload'
     -> VideosInsert
-videosInsert pViPart_ pViPayload_ =
+videosInsert pViPart_ pViPayload_ = 
     VideosInsert'
     { _viPart = pViPart_
     , _viStabilize = Nothing
@@ -118,6 +124,7 @@ videosInsert pViPart_ pViPayload_ =
     , _viOnBehalfOfContentOwnerChannel = Nothing
     , _viNotifySubscribers = True
     , _viAutoLevels = Nothing
+    , _viFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -196,6 +203,10 @@ viAutoLevels :: Lens' VideosInsert (Maybe Bool)
 viAutoLevels
   = lens _viAutoLevels (\ s a -> s{_viAutoLevels = a})
 
+-- | Selector specifying which fields to include in a partial response.
+viFields :: Lens' VideosInsert (Maybe Text)
+viFields = lens _viFields (\ s a -> s{_viFields = a})
+
 instance GoogleRequest VideosInsert where
         type Rs VideosInsert = Video
         type Scopes VideosInsert =
@@ -209,6 +220,7 @@ instance GoogleRequest VideosInsert where
               _viOnBehalfOfContentOwnerChannel
               (Just _viNotifySubscribers)
               _viAutoLevels
+              _viFields
               (Just AltJSON)
               _viPayload
               youTubeService
@@ -227,6 +239,7 @@ instance GoogleRequest (MediaUpload VideosInsert)
               _viOnBehalfOfContentOwnerChannel
               (Just _viNotifySubscribers)
               _viAutoLevels
+              _viFields
               (Just AltJSON)
               (Just Multipart)
               _viPayload

@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Domains.List
 
     -- * Request Lenses
     , dlCustomer
+    , dlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domains.list@ method which the
 -- 'DomainsList' request conforms to.
@@ -48,13 +49,15 @@ type DomainsListResource =
            "customer" :>
              Capture "customer" Text :>
                "domains" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Domains2
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Domains2
 
 -- | Lists the domains of the customer.
 --
 -- /See:/ 'domainsList' smart constructor.
-newtype DomainsList = DomainsList'
-    { _dlCustomer :: Text
+data DomainsList = DomainsList'
+    { _dlCustomer :: !Text
+    , _dlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainsList' with the minimum fields required to make a request.
@@ -62,18 +65,25 @@ newtype DomainsList = DomainsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'dlCustomer'
+--
+-- * 'dlFields'
 domainsList
     :: Text -- ^ 'dlCustomer'
     -> DomainsList
-domainsList pDlCustomer_ =
+domainsList pDlCustomer_ = 
     DomainsList'
     { _dlCustomer = pDlCustomer_
+    , _dlFields = Nothing
     }
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 dlCustomer :: Lens' DomainsList Text
 dlCustomer
   = lens _dlCustomer (\ s a -> s{_dlCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dlFields :: Lens' DomainsList (Maybe Text)
+dlFields = lens _dlFields (\ s a -> s{_dlFields = a})
 
 instance GoogleRequest DomainsList where
         type Rs DomainsList = Domains2
@@ -81,7 +91,8 @@ instance GoogleRequest DomainsList where
              '["https://www.googleapis.com/auth/admin.directory.domain",
                "https://www.googleapis.com/auth/admin.directory.domain.readonly"]
         requestClient DomainsList'{..}
-          = go _dlCustomer (Just AltJSON) directoryService
+          = go _dlCustomer _dlFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy DomainsListResource)
                       mempty

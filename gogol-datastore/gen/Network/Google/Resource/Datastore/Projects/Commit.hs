@@ -42,11 +42,12 @@ module Network.Google.Resource.Datastore.Projects.Commit
     , pcPayload
     , pcBearerToken
     , pcProjectId
+    , pcFields
     , pcCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.commit@ method which the
 -- 'ProjectsCommit' request conforms to.
@@ -61,24 +62,26 @@ type ProjectsCommitResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CommitRequest :>
-                             Post '[JSON] CommitResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CommitRequest :>
+                               Post '[JSON] CommitResponse
 
 -- | Commits a transaction, optionally creating, deleting or modifying some
 -- entities.
 --
 -- /See:/ 'projectsCommit' smart constructor.
 data ProjectsCommit = ProjectsCommit'
-    { _pcXgafv          :: !(Maybe Xgafv)
+    { _pcXgafv :: !(Maybe Xgafv)
     , _pcUploadProtocol :: !(Maybe Text)
-    , _pcPp             :: !Bool
-    , _pcAccessToken    :: !(Maybe Text)
-    , _pcUploadType     :: !(Maybe Text)
-    , _pcPayload        :: !CommitRequest
-    , _pcBearerToken    :: !(Maybe Text)
-    , _pcProjectId      :: !Text
-    , _pcCallback       :: !(Maybe Text)
+    , _pcPp :: !Bool
+    , _pcAccessToken :: !(Maybe Text)
+    , _pcUploadType :: !(Maybe Text)
+    , _pcPayload :: !CommitRequest
+    , _pcBearerToken :: !(Maybe Text)
+    , _pcProjectId :: !Text
+    , _pcFields :: !(Maybe Text)
+    , _pcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsCommit' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsCommit = ProjectsCommit'
 --
 -- * 'pcProjectId'
 --
+-- * 'pcFields'
+--
 -- * 'pcCallback'
 projectsCommit
     :: CommitRequest -- ^ 'pcPayload'
     -> Text -- ^ 'pcProjectId'
     -> ProjectsCommit
-projectsCommit pPcPayload_ pPcProjectId_ =
+projectsCommit pPcPayload_ pPcProjectId_ = 
     ProjectsCommit'
     { _pcXgafv = Nothing
     , _pcUploadProtocol = Nothing
@@ -116,6 +121,7 @@ projectsCommit pPcPayload_ pPcProjectId_ =
     , _pcPayload = pPcPayload_
     , _pcBearerToken = Nothing
     , _pcProjectId = pPcProjectId_
+    , _pcFields = Nothing
     , _pcCallback = Nothing
     }
 
@@ -160,6 +166,10 @@ pcProjectId :: Lens' ProjectsCommit Text
 pcProjectId
   = lens _pcProjectId (\ s a -> s{_pcProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pcFields :: Lens' ProjectsCommit (Maybe Text)
+pcFields = lens _pcFields (\ s a -> s{_pcFields = a})
+
 -- | JSONP
 pcCallback :: Lens' ProjectsCommit (Maybe Text)
 pcCallback
@@ -177,6 +187,7 @@ instance GoogleRequest ProjectsCommit where
               _pcUploadType
               _pcBearerToken
               _pcCallback
+              _pcFields
               (Just AltJSON)
               _pcPayload
               datastoreService

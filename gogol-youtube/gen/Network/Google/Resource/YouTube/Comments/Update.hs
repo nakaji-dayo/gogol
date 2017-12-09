@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Comments.Update
     -- * Request Lenses
     , cuPart
     , cuPayload
+    , cuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.update@ method which the
 -- 'CommentsUpdate' request conforms to.
@@ -47,15 +48,17 @@ type CommentsUpdateResource =
        "v3" :>
          "comments" :>
            QueryParam "part" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Comment :> Put '[JSON] Comment
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Comment :> Put '[JSON] Comment
 
 -- | Modifies a comment.
 --
 -- /See:/ 'commentsUpdate' smart constructor.
 data CommentsUpdate = CommentsUpdate'
-    { _cuPart    :: !Text
+    { _cuPart :: !Text
     , _cuPayload :: !Comment
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsUpdate' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data CommentsUpdate = CommentsUpdate'
 -- * 'cuPart'
 --
 -- * 'cuPayload'
+--
+-- * 'cuFields'
 commentsUpdate
     :: Text -- ^ 'cuPart'
     -> Comment -- ^ 'cuPayload'
     -> CommentsUpdate
-commentsUpdate pCuPart_ pCuPayload_ =
+commentsUpdate pCuPart_ pCuPayload_ = 
     CommentsUpdate'
     { _cuPart = pCuPart_
     , _cuPayload = pCuPayload_
+    , _cuFields = Nothing
     }
 
 -- | The part parameter identifies the properties that the API response will
@@ -87,12 +93,17 @@ cuPayload :: Lens' CommentsUpdate Comment
 cuPayload
   = lens _cuPayload (\ s a -> s{_cuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' CommentsUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest CommentsUpdate where
         type Rs CommentsUpdate = Comment
         type Scopes CommentsUpdate =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentsUpdate'{..}
-          = go (Just _cuPart) (Just AltJSON) _cuPayload
+          = go (Just _cuPart) _cuFields (Just AltJSON)
+              _cuPayload
               youTubeService
           where go
                   = buildClient (Proxy :: Proxy CommentsUpdateResource)

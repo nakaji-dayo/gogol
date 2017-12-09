@@ -42,11 +42,12 @@ module Network.Google.Resource.Dataflow.Projects.Jobs.Debug.SendCapture
     , pjdscPayload
     , pjdscBearerToken
     , pjdscProjectId
+    , pjdscFields
     , pjdscCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.jobs.debug.sendCapture@ method which the
 -- 'ProjectsJobsDebugSendCapture' request conforms to.
@@ -58,31 +59,33 @@ type ProjectsJobsDebugSendCaptureResource =
              Capture "jobId" Text :>
                "debug" :>
                  "sendCapture" :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] SendDebugCaptureRequest :>
-                                     Post '[JSON] SendDebugCaptureResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] SendDebugCaptureRequest :>
+                                       Post '[JSON] SendDebugCaptureResponse
 
 -- | Send encoded debug capture data for component.
 --
 -- /See:/ 'projectsJobsDebugSendCapture' smart constructor.
 data ProjectsJobsDebugSendCapture = ProjectsJobsDebugSendCapture'
-    { _pjdscXgafv          :: !(Maybe Text)
-    , _pjdscJobId          :: !Text
+    { _pjdscXgafv :: !(Maybe Xgafv)
+    , _pjdscJobId :: !Text
     , _pjdscUploadProtocol :: !(Maybe Text)
-    , _pjdscPp             :: !Bool
-    , _pjdscAccessToken    :: !(Maybe Text)
-    , _pjdscUploadType     :: !(Maybe Text)
-    , _pjdscPayload        :: !SendDebugCaptureRequest
-    , _pjdscBearerToken    :: !(Maybe Text)
-    , _pjdscProjectId      :: !Text
-    , _pjdscCallback       :: !(Maybe Text)
+    , _pjdscPp :: !Bool
+    , _pjdscAccessToken :: !(Maybe Text)
+    , _pjdscUploadType :: !(Maybe Text)
+    , _pjdscPayload :: !SendDebugCaptureRequest
+    , _pjdscBearerToken :: !(Maybe Text)
+    , _pjdscProjectId :: !Text
+    , _pjdscFields :: !(Maybe Text)
+    , _pjdscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsJobsDebugSendCapture' with the minimum fields required to make a request.
@@ -107,13 +110,15 @@ data ProjectsJobsDebugSendCapture = ProjectsJobsDebugSendCapture'
 --
 -- * 'pjdscProjectId'
 --
+-- * 'pjdscFields'
+--
 -- * 'pjdscCallback'
 projectsJobsDebugSendCapture
     :: Text -- ^ 'pjdscJobId'
     -> SendDebugCaptureRequest -- ^ 'pjdscPayload'
     -> Text -- ^ 'pjdscProjectId'
     -> ProjectsJobsDebugSendCapture
-projectsJobsDebugSendCapture pPjdscJobId_ pPjdscPayload_ pPjdscProjectId_ =
+projectsJobsDebugSendCapture pPjdscJobId_ pPjdscPayload_ pPjdscProjectId_ = 
     ProjectsJobsDebugSendCapture'
     { _pjdscXgafv = Nothing
     , _pjdscJobId = pPjdscJobId_
@@ -124,11 +129,12 @@ projectsJobsDebugSendCapture pPjdscJobId_ pPjdscPayload_ pPjdscProjectId_ =
     , _pjdscPayload = pPjdscPayload_
     , _pjdscBearerToken = Nothing
     , _pjdscProjectId = pPjdscProjectId_
+    , _pjdscFields = Nothing
     , _pjdscCallback = Nothing
     }
 
 -- | V1 error format.
-pjdscXgafv :: Lens' ProjectsJobsDebugSendCapture (Maybe Text)
+pjdscXgafv :: Lens' ProjectsJobsDebugSendCapture (Maybe Xgafv)
 pjdscXgafv
   = lens _pjdscXgafv (\ s a -> s{_pjdscXgafv = a})
 
@@ -176,6 +182,11 @@ pjdscProjectId
   = lens _pjdscProjectId
       (\ s a -> s{_pjdscProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pjdscFields :: Lens' ProjectsJobsDebugSendCapture (Maybe Text)
+pjdscFields
+  = lens _pjdscFields (\ s a -> s{_pjdscFields = a})
+
 -- | JSONP
 pjdscCallback :: Lens' ProjectsJobsDebugSendCapture (Maybe Text)
 pjdscCallback
@@ -188,6 +199,8 @@ instance GoogleRequest ProjectsJobsDebugSendCapture
              SendDebugCaptureResponse
         type Scopes ProjectsJobsDebugSendCapture =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsJobsDebugSendCapture'{..}
           = go _pjdscProjectId _pjdscJobId _pjdscXgafv
@@ -197,6 +210,7 @@ instance GoogleRequest ProjectsJobsDebugSendCapture
               _pjdscUploadType
               _pjdscBearerToken
               _pjdscCallback
+              _pjdscFields
               (Just AltJSON)
               _pjdscPayload
               dataflowService

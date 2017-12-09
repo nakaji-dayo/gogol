@@ -38,10 +38,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.CustomChannels.List
     , acclAccountId
     , acclPageToken
     , acclMaxResults
+    , acclFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.customchannels.list@ method which the
 -- 'AccountsCustomChannelsList' request conforms to.
@@ -55,8 +56,9 @@ type AccountsCustomChannelsListResource =
                  "customchannels" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CustomChannels
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CustomChannels
 
 -- | List all custom channels in the specified ad client for this Ad Exchange
 -- account.
@@ -64,9 +66,10 @@ type AccountsCustomChannelsListResource =
 -- /See:/ 'accountsCustomChannelsList' smart constructor.
 data AccountsCustomChannelsList = AccountsCustomChannelsList'
     { _acclAdClientId :: !Text
-    , _acclAccountId  :: !Text
-    , _acclPageToken  :: !(Maybe Text)
+    , _acclAccountId :: !Text
+    , _acclPageToken :: !(Maybe Text)
     , _acclMaxResults :: !(Maybe (Textual Word32))
+    , _acclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsCustomChannelsList' with the minimum fields required to make a request.
@@ -80,16 +83,19 @@ data AccountsCustomChannelsList = AccountsCustomChannelsList'
 -- * 'acclPageToken'
 --
 -- * 'acclMaxResults'
+--
+-- * 'acclFields'
 accountsCustomChannelsList
     :: Text -- ^ 'acclAdClientId'
     -> Text -- ^ 'acclAccountId'
     -> AccountsCustomChannelsList
-accountsCustomChannelsList pAcclAdClientId_ pAcclAccountId_ =
+accountsCustomChannelsList pAcclAdClientId_ pAcclAccountId_ = 
     AccountsCustomChannelsList'
     { _acclAdClientId = pAcclAdClientId_
     , _acclAccountId = pAcclAccountId_
     , _acclPageToken = Nothing
     , _acclMaxResults = Nothing
+    , _acclFields = Nothing
     }
 
 -- | Ad client for which to list custom channels.
@@ -120,6 +126,11 @@ acclMaxResults
       (\ s a -> s{_acclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+acclFields :: Lens' AccountsCustomChannelsList (Maybe Text)
+acclFields
+  = lens _acclFields (\ s a -> s{_acclFields = a})
+
 instance GoogleRequest AccountsCustomChannelsList
          where
         type Rs AccountsCustomChannelsList = CustomChannels
@@ -129,6 +140,7 @@ instance GoogleRequest AccountsCustomChannelsList
         requestClient AccountsCustomChannelsList'{..}
           = go _acclAccountId _acclAdClientId _acclPageToken
               _acclMaxResults
+              _acclFields
               (Just AltJSON)
               adExchangeSellerService
           where go

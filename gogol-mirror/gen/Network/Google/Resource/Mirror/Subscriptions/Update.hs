@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Subscriptions.Update
     -- * Request Lenses
     , suPayload
     , suId
+    , suFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.subscriptions.update@ method which the
 -- 'SubscriptionsUpdate' request conforms to.
@@ -47,16 +48,18 @@ type SubscriptionsUpdateResource =
        "v1" :>
          "subscriptions" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Subscription :>
-                 Put '[JSON] Subscription
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Subscription :>
+                   Put '[JSON] Subscription
 
 -- | Updates an existing subscription in place.
 --
 -- /See:/ 'subscriptionsUpdate' smart constructor.
 data SubscriptionsUpdate = SubscriptionsUpdate'
     { _suPayload :: !Subscription
-    , _suId      :: !Text
+    , _suId :: !Text
+    , _suFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SubscriptionsUpdate = SubscriptionsUpdate'
 -- * 'suPayload'
 --
 -- * 'suId'
+--
+-- * 'suFields'
 subscriptionsUpdate
     :: Subscription -- ^ 'suPayload'
     -> Text -- ^ 'suId'
     -> SubscriptionsUpdate
-subscriptionsUpdate pSuPayload_ pSuId_ =
+subscriptionsUpdate pSuPayload_ pSuId_ = 
     SubscriptionsUpdate'
     { _suPayload = pSuPayload_
     , _suId = pSuId_
+    , _suFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -85,12 +91,17 @@ suPayload
 suId :: Lens' SubscriptionsUpdate Text
 suId = lens _suId (\ s a -> s{_suId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' SubscriptionsUpdate (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 instance GoogleRequest SubscriptionsUpdate where
         type Rs SubscriptionsUpdate = Subscription
         type Scopes SubscriptionsUpdate =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient SubscriptionsUpdate'{..}
-          = go _suId (Just AltJSON) _suPayload mirrorService
+          = go _suId _suFields (Just AltJSON) _suPayload
+              mirrorService
           where go
                   = buildClient
                       (Proxy :: Proxy SubscriptionsUpdateResource)

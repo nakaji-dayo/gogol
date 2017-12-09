@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.UnSampledReports.Get
     , musrgProFileId
     , musrgAccountId
     , musrgUnSampledReportId
+    , musrgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.unsampledReports.get@ method which the
 -- 'ManagementUnSampledReportsGet' request conforms to.
@@ -56,17 +57,19 @@ type ManagementUnSampledReportsGetResource =
                      Capture "profileId" Text :>
                        "unsampledReports" :>
                          Capture "unsampledReportId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] UnSampledReport
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] UnSampledReport
 
 -- | Returns a single unsampled report.
 --
 -- /See:/ 'managementUnSampledReportsGet' smart constructor.
 data ManagementUnSampledReportsGet = ManagementUnSampledReportsGet'
-    { _musrgWebPropertyId     :: !Text
-    , _musrgProFileId         :: !Text
-    , _musrgAccountId         :: !Text
+    { _musrgWebPropertyId :: !Text
+    , _musrgProFileId :: !Text
+    , _musrgAccountId :: !Text
     , _musrgUnSampledReportId :: !Text
+    , _musrgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUnSampledReportsGet' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementUnSampledReportsGet = ManagementUnSampledReportsGet'
 -- * 'musrgAccountId'
 --
 -- * 'musrgUnSampledReportId'
+--
+-- * 'musrgFields'
 managementUnSampledReportsGet
     :: Text -- ^ 'musrgWebPropertyId'
     -> Text -- ^ 'musrgProFileId'
     -> Text -- ^ 'musrgAccountId'
     -> Text -- ^ 'musrgUnSampledReportId'
     -> ManagementUnSampledReportsGet
-managementUnSampledReportsGet pMusrgWebPropertyId_ pMusrgProFileId_ pMusrgAccountId_ pMusrgUnSampledReportId_ =
+managementUnSampledReportsGet pMusrgWebPropertyId_ pMusrgProFileId_ pMusrgAccountId_ pMusrgUnSampledReportId_ = 
     ManagementUnSampledReportsGet'
     { _musrgWebPropertyId = pMusrgWebPropertyId_
     , _musrgProFileId = pMusrgProFileId_
     , _musrgAccountId = pMusrgAccountId_
     , _musrgUnSampledReportId = pMusrgUnSampledReportId_
+    , _musrgFields = Nothing
     }
 
 -- | Web property ID to retrieve unsampled reports for.
@@ -118,6 +124,11 @@ musrgUnSampledReportId
   = lens _musrgUnSampledReportId
       (\ s a -> s{_musrgUnSampledReportId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+musrgFields :: Lens' ManagementUnSampledReportsGet (Maybe Text)
+musrgFields
+  = lens _musrgFields (\ s a -> s{_musrgFields = a})
+
 instance GoogleRequest ManagementUnSampledReportsGet
          where
         type Rs ManagementUnSampledReportsGet =
@@ -130,6 +141,7 @@ instance GoogleRequest ManagementUnSampledReportsGet
           = go _musrgAccountId _musrgWebPropertyId
               _musrgProFileId
               _musrgUnSampledReportId
+              _musrgFields
               (Just AltJSON)
               analyticsService
           where go

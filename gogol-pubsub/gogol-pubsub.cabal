@@ -36,7 +36,11 @@ library
     exposed-modules:
           Network.Google.PubSub
         , Network.Google.PubSub.Types
+        , Network.Google.Resource.PubSub.Projects.Snapshots.Create
+        , Network.Google.Resource.PubSub.Projects.Snapshots.Delete
         , Network.Google.Resource.PubSub.Projects.Snapshots.GetIAMPolicy
+        , Network.Google.Resource.PubSub.Projects.Snapshots.List
+        , Network.Google.Resource.PubSub.Projects.Snapshots.Patch
         , Network.Google.Resource.PubSub.Projects.Snapshots.SetIAMPolicy
         , Network.Google.Resource.PubSub.Projects.Snapshots.TestIAMPermissions
         , Network.Google.Resource.PubSub.Projects.Subscriptions.Acknowledge
@@ -47,7 +51,9 @@ library
         , Network.Google.Resource.PubSub.Projects.Subscriptions.List
         , Network.Google.Resource.PubSub.Projects.Subscriptions.ModifyAckDeadline
         , Network.Google.Resource.PubSub.Projects.Subscriptions.ModifyPushConfig
+        , Network.Google.Resource.PubSub.Projects.Subscriptions.Patch
         , Network.Google.Resource.PubSub.Projects.Subscriptions.Pull
+        , Network.Google.Resource.PubSub.Projects.Subscriptions.Seek
         , Network.Google.Resource.PubSub.Projects.Subscriptions.SetIAMPolicy
         , Network.Google.Resource.PubSub.Projects.Subscriptions.TestIAMPermissions
         , Network.Google.Resource.PubSub.Projects.Topics.Create
@@ -57,6 +63,7 @@ library
         , Network.Google.Resource.PubSub.Projects.Topics.List
         , Network.Google.Resource.PubSub.Projects.Topics.Publish
         , Network.Google.Resource.PubSub.Projects.Topics.SetIAMPolicy
+        , Network.Google.Resource.PubSub.Projects.Topics.Snapshots.List
         , Network.Google.Resource.PubSub.Projects.Topics.Subscriptions.List
         , Network.Google.Resource.PubSub.Projects.Topics.TestIAMPermissions
 

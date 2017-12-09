@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Settings.Get
 
     -- * Request Lenses
     , sgId
+    , sgFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.settings.get@ method which the
 -- 'SettingsGet' request conforms to.
@@ -46,13 +47,15 @@ type SettingsGetResource =
        "v1" :>
          "settings" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Setting
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Setting
 
 -- | Gets a single setting by ID.
 --
 -- /See:/ 'settingsGet' smart constructor.
-newtype SettingsGet = SettingsGet'
-    { _sgId :: Text
+data SettingsGet = SettingsGet'
+    { _sgId :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SettingsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype SettingsGet = SettingsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sgId'
+--
+-- * 'sgFields'
 settingsGet
     :: Text -- ^ 'sgId'
     -> SettingsGet
-settingsGet pSgId_ =
+settingsGet pSgId_ = 
     SettingsGet'
     { _sgId = pSgId_
+    , _sgFields = Nothing
     }
 
 -- | The ID of the setting. The following IDs are valid: - locale - The key
@@ -76,12 +82,16 @@ settingsGet pSgId_ =
 sgId :: Lens' SettingsGet Text
 sgId = lens _sgId (\ s a -> s{_sgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SettingsGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SettingsGet where
         type Rs SettingsGet = Setting
         type Scopes SettingsGet =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient SettingsGet'{..}
-          = go _sgId (Just AltJSON) mirrorService
+          = go _sgId _sgFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy SettingsGetResource)
                       mempty

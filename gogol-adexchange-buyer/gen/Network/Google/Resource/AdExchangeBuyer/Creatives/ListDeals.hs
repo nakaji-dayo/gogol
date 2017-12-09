@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.ListDeals
     -- * Request Lenses
     , cldBuyerCreativeId
     , cldAccountId
+    , cldFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.listDeals@ method which the
 -- 'CreativesListDeals' request conforms to.
@@ -49,15 +50,17 @@ type CreativesListDealsResource =
            Capture "accountId" (Textual Int32) :>
              Capture "buyerCreativeId" Text :>
                "listDeals" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] CreativeDealIds
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] CreativeDealIds
 
 -- | Lists the external deal ids associated with the creative.
 --
 -- /See:/ 'creativesListDeals' smart constructor.
 data CreativesListDeals = CreativesListDeals'
     { _cldBuyerCreativeId :: !Text
-    , _cldAccountId       :: !(Textual Int32)
+    , _cldAccountId :: !(Textual Int32)
+    , _cldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesListDeals' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativesListDeals = CreativesListDeals'
 -- * 'cldBuyerCreativeId'
 --
 -- * 'cldAccountId'
+--
+-- * 'cldFields'
 creativesListDeals
     :: Text -- ^ 'cldBuyerCreativeId'
     -> Int32 -- ^ 'cldAccountId'
     -> CreativesListDeals
-creativesListDeals pCldBuyerCreativeId_ pCldAccountId_ =
+creativesListDeals pCldBuyerCreativeId_ pCldAccountId_ = 
     CreativesListDeals'
     { _cldBuyerCreativeId = pCldBuyerCreativeId_
     , _cldAccountId = _Coerce # pCldAccountId_
+    , _cldFields = Nothing
     }
 
 -- | The buyer-specific id for this creative.
@@ -89,12 +95,18 @@ cldAccountId
   = lens _cldAccountId (\ s a -> s{_cldAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cldFields :: Lens' CreativesListDeals (Maybe Text)
+cldFields
+  = lens _cldFields (\ s a -> s{_cldFields = a})
+
 instance GoogleRequest CreativesListDeals where
         type Rs CreativesListDeals = CreativeDealIds
         type Scopes CreativesListDeals =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient CreativesListDeals'{..}
-          = go _cldAccountId _cldBuyerCreativeId (Just AltJSON)
+          = go _cldAccountId _cldBuyerCreativeId _cldFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

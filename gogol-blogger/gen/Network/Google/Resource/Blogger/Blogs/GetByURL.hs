@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Blogs.GetByURL
     -- * Request Lenses
     , bgbuURL
     , bgbuView
+    , bgbuFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.blogs.getByUrl@ method which the
 -- 'BlogsGetByURL' request conforms to.
@@ -49,14 +50,16 @@ type BlogsGetByURLResource =
            "byurl" :>
              QueryParam "url" Text :>
                QueryParam "view" BlogsGetByURLView :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Blog
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Blog
 
 -- | Retrieve a Blog by URL.
 --
 -- /See:/ 'blogsGetByURL' smart constructor.
 data BlogsGetByURL = BlogsGetByURL'
-    { _bgbuURL  :: !Text
+    { _bgbuURL :: !Text
     , _bgbuView :: !(Maybe BlogsGetByURLView)
+    , _bgbuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BlogsGetByURL' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data BlogsGetByURL = BlogsGetByURL'
 -- * 'bgbuURL'
 --
 -- * 'bgbuView'
+--
+-- * 'bgbuFields'
 blogsGetByURL
     :: Text -- ^ 'bgbuURL'
     -> BlogsGetByURL
-blogsGetByURL pBgbuURL_ =
+blogsGetByURL pBgbuURL_ = 
     BlogsGetByURL'
     { _bgbuURL = pBgbuURL_
     , _bgbuView = Nothing
+    , _bgbuFields = Nothing
     }
 
 -- | The URL of the blog to retrieve.
@@ -84,13 +90,19 @@ bgbuURL = lens _bgbuURL (\ s a -> s{_bgbuURL = a})
 bgbuView :: Lens' BlogsGetByURL (Maybe BlogsGetByURLView)
 bgbuView = lens _bgbuView (\ s a -> s{_bgbuView = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bgbuFields :: Lens' BlogsGetByURL (Maybe Text)
+bgbuFields
+  = lens _bgbuFields (\ s a -> s{_bgbuFields = a})
+
 instance GoogleRequest BlogsGetByURL where
         type Rs BlogsGetByURL = Blog
         type Scopes BlogsGetByURL =
              '["https://www.googleapis.com/auth/blogger",
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient BlogsGetByURL'{..}
-          = go (Just _bgbuURL) _bgbuView (Just AltJSON)
+          = go (Just _bgbuURL) _bgbuView _bgbuFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy BlogsGetByURLResource)

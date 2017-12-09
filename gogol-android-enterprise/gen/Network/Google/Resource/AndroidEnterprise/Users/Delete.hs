@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.Delete
     -- * Request Lenses
     , udEnterpriseId
     , udUserId
+    , udFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.delete@ method which the
 -- 'UsersDelete' request conforms to.
@@ -49,14 +50,16 @@ type UsersDeleteResource =
            Capture "enterpriseId" Text :>
              "users" :>
                Capture "userId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deleted an EMM-managed user.
 --
 -- /See:/ 'usersDelete' smart constructor.
 data UsersDelete = UsersDelete'
     { _udEnterpriseId :: !Text
-    , _udUserId       :: !Text
+    , _udUserId :: !Text
+    , _udFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UsersDelete = UsersDelete'
 -- * 'udEnterpriseId'
 --
 -- * 'udUserId'
+--
+-- * 'udFields'
 usersDelete
     :: Text -- ^ 'udEnterpriseId'
     -> Text -- ^ 'udUserId'
     -> UsersDelete
-usersDelete pUdEnterpriseId_ pUdUserId_ =
+usersDelete pUdEnterpriseId_ pUdUserId_ = 
     UsersDelete'
     { _udEnterpriseId = pUdEnterpriseId_
     , _udUserId = pUdUserId_
+    , _udFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -86,12 +92,17 @@ udEnterpriseId
 udUserId :: Lens' UsersDelete Text
 udUserId = lens _udUserId (\ s a -> s{_udUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udFields :: Lens' UsersDelete (Maybe Text)
+udFields = lens _udFields (\ s a -> s{_udFields = a})
+
 instance GoogleRequest UsersDelete where
         type Rs UsersDelete = ()
         type Scopes UsersDelete =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersDelete'{..}
-          = go _udEnterpriseId _udUserId (Just AltJSON)
+          = go _udEnterpriseId _udUserId _udFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy UsersDeleteResource)

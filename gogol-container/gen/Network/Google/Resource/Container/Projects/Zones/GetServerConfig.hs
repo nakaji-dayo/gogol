@@ -41,11 +41,12 @@ module Network.Google.Resource.Container.Projects.Zones.GetServerConfig
     , pzgscZone
     , pzgscBearerToken
     , pzgscProjectId
+    , pzgscFields
     , pzgscCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.getServerconfig@ method which the
 -- 'ProjectsZonesGetServerConfig' request conforms to.
@@ -56,29 +57,31 @@ type ProjectsZonesGetServerConfigResource =
            "zones" :>
              Capture "zone" Text :>
                "serverconfig" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ServerConfig
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ServerConfig
 
 -- | Returns configuration info about the Container Engine service.
 --
 -- /See:/ 'projectsZonesGetServerConfig' smart constructor.
 data ProjectsZonesGetServerConfig = ProjectsZonesGetServerConfig'
-    { _pzgscXgafv          :: !(Maybe Text)
+    { _pzgscXgafv :: !(Maybe Xgafv)
     , _pzgscUploadProtocol :: !(Maybe Text)
-    , _pzgscPp             :: !Bool
-    , _pzgscAccessToken    :: !(Maybe Text)
-    , _pzgscUploadType     :: !(Maybe Text)
-    , _pzgscZone           :: !Text
-    , _pzgscBearerToken    :: !(Maybe Text)
-    , _pzgscProjectId      :: !Text
-    , _pzgscCallback       :: !(Maybe Text)
+    , _pzgscPp :: !Bool
+    , _pzgscAccessToken :: !(Maybe Text)
+    , _pzgscUploadType :: !(Maybe Text)
+    , _pzgscZone :: !Text
+    , _pzgscBearerToken :: !(Maybe Text)
+    , _pzgscProjectId :: !Text
+    , _pzgscFields :: !(Maybe Text)
+    , _pzgscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesGetServerConfig' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsZonesGetServerConfig = ProjectsZonesGetServerConfig'
 --
 -- * 'pzgscProjectId'
 --
+-- * 'pzgscFields'
+--
 -- * 'pzgscCallback'
 projectsZonesGetServerConfig
     :: Text -- ^ 'pzgscZone'
     -> Text -- ^ 'pzgscProjectId'
     -> ProjectsZonesGetServerConfig
-projectsZonesGetServerConfig pPzgscZone_ pPzgscProjectId_ =
+projectsZonesGetServerConfig pPzgscZone_ pPzgscProjectId_ = 
     ProjectsZonesGetServerConfig'
     { _pzgscXgafv = Nothing
     , _pzgscUploadProtocol = Nothing
@@ -116,11 +121,12 @@ projectsZonesGetServerConfig pPzgscZone_ pPzgscProjectId_ =
     , _pzgscZone = pPzgscZone_
     , _pzgscBearerToken = Nothing
     , _pzgscProjectId = pPzgscProjectId_
+    , _pzgscFields = Nothing
     , _pzgscCallback = Nothing
     }
 
 -- | V1 error format.
-pzgscXgafv :: Lens' ProjectsZonesGetServerConfig (Maybe Text)
+pzgscXgafv :: Lens' ProjectsZonesGetServerConfig (Maybe Xgafv)
 pzgscXgafv
   = lens _pzgscXgafv (\ s a -> s{_pzgscXgafv = a})
 
@@ -165,6 +171,11 @@ pzgscProjectId
   = lens _pzgscProjectId
       (\ s a -> s{_pzgscProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzgscFields :: Lens' ProjectsZonesGetServerConfig (Maybe Text)
+pzgscFields
+  = lens _pzgscFields (\ s a -> s{_pzgscFields = a})
+
 -- | JSONP
 pzgscCallback :: Lens' ProjectsZonesGetServerConfig (Maybe Text)
 pzgscCallback
@@ -184,6 +195,7 @@ instance GoogleRequest ProjectsZonesGetServerConfig
               _pzgscUploadType
               _pzgscBearerToken
               _pzgscCallback
+              _pzgscFields
               (Just AltJSON)
               containerService
           where go

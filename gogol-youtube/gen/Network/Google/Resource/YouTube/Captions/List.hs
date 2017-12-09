@@ -41,10 +41,11 @@ module Network.Google.Resource.YouTube.Captions.List
     , clOnBehalfOfContentOwner
     , clVideoId
     , clId
+    , clFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.captions.list@ method which the
 -- 'CaptionsList' request conforms to.
@@ -57,8 +58,9 @@ type CaptionsListResource =
                QueryParam "onBehalfOf" Text :>
                  QueryParam "onBehalfOfContentOwner" Text :>
                    QueryParam "id" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] CaptionListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] CaptionListResponse
 
 -- | Returns a list of caption tracks that are associated with a specified
 -- video. Note that the API response does not contain the actual captions
@@ -67,11 +69,12 @@ type CaptionsListResource =
 --
 -- /See:/ 'captionsList' smart constructor.
 data CaptionsList = CaptionsList'
-    { _clOnBehalfOf             :: !(Maybe Text)
-    , _clPart                   :: !Text
+    { _clOnBehalfOf :: !(Maybe Text)
+    , _clPart :: !Text
     , _clOnBehalfOfContentOwner :: !(Maybe Text)
-    , _clVideoId                :: !Text
-    , _clId                     :: !(Maybe Text)
+    , _clVideoId :: !Text
+    , _clId :: !(Maybe Text)
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CaptionsList' with the minimum fields required to make a request.
@@ -87,17 +90,20 @@ data CaptionsList = CaptionsList'
 -- * 'clVideoId'
 --
 -- * 'clId'
+--
+-- * 'clFields'
 captionsList
     :: Text -- ^ 'clPart'
     -> Text -- ^ 'clVideoId'
     -> CaptionsList
-captionsList pClPart_ pClVideoId_ =
+captionsList pClPart_ pClVideoId_ = 
     CaptionsList'
     { _clOnBehalfOf = Nothing
     , _clPart = pClPart_
     , _clOnBehalfOfContentOwner = Nothing
     , _clVideoId = pClVideoId_
     , _clId = Nothing
+    , _clFields = Nothing
     }
 
 -- | ID of the Google+ Page for the channel that the request is on behalf of.
@@ -138,6 +144,10 @@ clVideoId
 clId :: Lens' CaptionsList (Maybe Text)
 clId = lens _clId (\ s a -> s{_clId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' CaptionsList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 instance GoogleRequest CaptionsList where
         type Rs CaptionsList = CaptionListResponse
         type Scopes CaptionsList =
@@ -147,6 +157,7 @@ instance GoogleRequest CaptionsList where
           = go (Just _clPart) (Just _clVideoId) _clOnBehalfOf
               _clOnBehalfOfContentOwner
               _clId
+              _clFields
               (Just AltJSON)
               youTubeService
           where go

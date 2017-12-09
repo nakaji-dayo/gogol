@@ -42,11 +42,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Builds.Cancel
     , pbcBearerToken
     , pbcId
     , pbcProjectId
+    , pbcFields
     , pbcCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.builds.cancel@ method which the
 -- 'ProjectsBuildsCancel' request conforms to.
@@ -63,24 +64,26 @@ type ProjectsBuildsCancelResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               ReqBody '[JSON] CancelBuildRequest :>
-                                 Post '[JSON] Build
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON] CancelBuildRequest :>
+                                   Post '[JSON] Build
 
 -- | Cancels a requested build in progress.
 --
 -- /See:/ 'projectsBuildsCancel' smart constructor.
 data ProjectsBuildsCancel = ProjectsBuildsCancel'
-    { _pbcXgafv          :: !(Maybe Xgafv)
+    { _pbcXgafv :: !(Maybe Xgafv)
     , _pbcUploadProtocol :: !(Maybe Text)
-    , _pbcPp             :: !Bool
-    , _pbcAccessToken    :: !(Maybe Text)
-    , _pbcUploadType     :: !(Maybe Text)
-    , _pbcPayload        :: !CancelBuildRequest
-    , _pbcBearerToken    :: !(Maybe Text)
-    , _pbcId             :: !Text
-    , _pbcProjectId      :: !Text
-    , _pbcCallback       :: !(Maybe Text)
+    , _pbcPp :: !Bool
+    , _pbcAccessToken :: !(Maybe Text)
+    , _pbcUploadType :: !(Maybe Text)
+    , _pbcPayload :: !CancelBuildRequest
+    , _pbcBearerToken :: !(Maybe Text)
+    , _pbcId :: !Text
+    , _pbcProjectId :: !Text
+    , _pbcFields :: !(Maybe Text)
+    , _pbcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsBuildsCancel' with the minimum fields required to make a request.
@@ -105,13 +108,15 @@ data ProjectsBuildsCancel = ProjectsBuildsCancel'
 --
 -- * 'pbcProjectId'
 --
+-- * 'pbcFields'
+--
 -- * 'pbcCallback'
 projectsBuildsCancel
     :: CancelBuildRequest -- ^ 'pbcPayload'
     -> Text -- ^ 'pbcId'
     -> Text -- ^ 'pbcProjectId'
     -> ProjectsBuildsCancel
-projectsBuildsCancel pPbcPayload_ pPbcId_ pPbcProjectId_ =
+projectsBuildsCancel pPbcPayload_ pPbcId_ pPbcProjectId_ = 
     ProjectsBuildsCancel'
     { _pbcXgafv = Nothing
     , _pbcUploadProtocol = Nothing
@@ -122,6 +127,7 @@ projectsBuildsCancel pPbcPayload_ pPbcId_ pPbcProjectId_ =
     , _pbcBearerToken = Nothing
     , _pbcId = pPbcId_
     , _pbcProjectId = pPbcProjectId_
+    , _pbcFields = Nothing
     , _pbcCallback = Nothing
     }
 
@@ -171,6 +177,11 @@ pbcProjectId :: Lens' ProjectsBuildsCancel Text
 pbcProjectId
   = lens _pbcProjectId (\ s a -> s{_pbcProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pbcFields :: Lens' ProjectsBuildsCancel (Maybe Text)
+pbcFields
+  = lens _pbcFields (\ s a -> s{_pbcFields = a})
+
 -- | JSONP
 pbcCallback :: Lens' ProjectsBuildsCancel (Maybe Text)
 pbcCallback
@@ -188,6 +199,7 @@ instance GoogleRequest ProjectsBuildsCancel where
               _pbcUploadType
               _pbcBearerToken
               _pbcCallback
+              _pbcFields
               (Just AltJSON)
               _pbcPayload
               containerBuilderService

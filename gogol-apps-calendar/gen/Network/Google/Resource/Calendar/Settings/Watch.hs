@@ -37,10 +37,11 @@ module Network.Google.Resource.Calendar.Settings.Watch
     , swPayload
     , swPageToken
     , swMaxResults
+    , swFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.settings.watch@ method which the
 -- 'SettingsWatch' request conforms to.
@@ -54,17 +55,19 @@ type SettingsWatchResource =
                  QueryParam "syncToken" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Channel :> Post '[JSON] Channel
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Channel :> Post '[JSON] Channel
 
 -- | Watch for changes to Settings resources.
 --
 -- /See:/ 'settingsWatch' smart constructor.
 data SettingsWatch = SettingsWatch'
-    { _swSyncToken  :: !(Maybe Text)
-    , _swPayload    :: !Channel
-    , _swPageToken  :: !(Maybe Text)
+    { _swSyncToken :: !(Maybe Text)
+    , _swPayload :: !Channel
+    , _swPageToken :: !(Maybe Text)
     , _swMaxResults :: !(Maybe (Textual Int32))
+    , _swFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SettingsWatch' with the minimum fields required to make a request.
@@ -78,15 +81,18 @@ data SettingsWatch = SettingsWatch'
 -- * 'swPageToken'
 --
 -- * 'swMaxResults'
+--
+-- * 'swFields'
 settingsWatch
     :: Channel -- ^ 'swPayload'
     -> SettingsWatch
-settingsWatch pSwPayload_ =
+settingsWatch pSwPayload_ = 
     SettingsWatch'
     { _swSyncToken = Nothing
     , _swPayload = pSwPayload_
     , _swPageToken = Nothing
     , _swMaxResults = Nothing
+    , _swFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -118,6 +124,10 @@ swMaxResults
   = lens _swMaxResults (\ s a -> s{_swMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+swFields :: Lens' SettingsWatch (Maybe Text)
+swFields = lens _swFields (\ s a -> s{_swFields = a})
+
 instance GoogleRequest SettingsWatch where
         type Rs SettingsWatch = Channel
         type Scopes SettingsWatch =
@@ -125,6 +135,7 @@ instance GoogleRequest SettingsWatch where
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient SettingsWatch'{..}
           = go _swSyncToken _swPageToken _swMaxResults
+              _swFields
               (Just AltJSON)
               _swPayload
               appsCalendarService

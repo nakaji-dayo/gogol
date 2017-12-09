@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.Changes.Create
     , ccPayload
     , ccManagedZone
     , ccClientOperationId
+    , ccFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.changes.create@ method which the
 -- 'ChangesCreate' request conforms to.
@@ -53,17 +54,19 @@ type ChangesCreateResource =
                Capture "managedZone" Text :>
                  "changes" :>
                    QueryParam "clientOperationId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Change :> Post '[JSON] Change
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Change :> Post '[JSON] Change
 
 -- | Atomically update the ResourceRecordSet collection.
 --
 -- /See:/ 'changesCreate' smart constructor.
 data ChangesCreate = ChangesCreate'
-    { _ccProject           :: !Text
-    , _ccPayload           :: !Change
-    , _ccManagedZone       :: !Text
+    { _ccProject :: !Text
+    , _ccPayload :: !Change
+    , _ccManagedZone :: !Text
     , _ccClientOperationId :: !(Maybe Text)
+    , _ccFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesCreate' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data ChangesCreate = ChangesCreate'
 -- * 'ccManagedZone'
 --
 -- * 'ccClientOperationId'
+--
+-- * 'ccFields'
 changesCreate
     :: Text -- ^ 'ccProject'
     -> Change -- ^ 'ccPayload'
     -> Text -- ^ 'ccManagedZone'
     -> ChangesCreate
-changesCreate pCcProject_ pCcPayload_ pCcManagedZone_ =
+changesCreate pCcProject_ pCcPayload_ pCcManagedZone_ = 
     ChangesCreate'
     { _ccProject = pCcProject_
     , _ccPayload = pCcPayload_
     , _ccManagedZone = pCcManagedZone_
     , _ccClientOperationId = Nothing
+    , _ccFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -115,6 +121,10 @@ ccClientOperationId
   = lens _ccClientOperationId
       (\ s a -> s{_ccClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccFields :: Lens' ChangesCreate (Maybe Text)
+ccFields = lens _ccFields (\ s a -> s{_ccFields = a})
+
 instance GoogleRequest ChangesCreate where
         type Rs ChangesCreate = Change
         type Scopes ChangesCreate =
@@ -122,6 +132,7 @@ instance GoogleRequest ChangesCreate where
                "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]
         requestClient ChangesCreate'{..}
           = go _ccProject _ccManagedZone _ccClientOperationId
+              _ccFields
               (Just AltJSON)
               _ccPayload
               dNSService

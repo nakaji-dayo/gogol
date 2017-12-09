@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.I18nRegions.List
     -- * Request Lenses
     , irlPart
     , irlHl
+    , irlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.i18nRegions.list@ method which the
 -- 'I18nRegionsList' request conforms to.
@@ -48,15 +49,17 @@ type I18nRegionsListResource =
          "i18nRegions" :>
            QueryParam "part" Text :>
              QueryParam "hl" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] I18nRegionListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] I18nRegionListResponse
 
 -- | Returns a list of content regions that the YouTube website supports.
 --
 -- /See:/ 'i18nRegionsList' smart constructor.
 data I18nRegionsList = I18nRegionsList'
     { _irlPart :: !Text
-    , _irlHl   :: !Text
+    , _irlHl :: !Text
+    , _irlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'I18nRegionsList' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data I18nRegionsList = I18nRegionsList'
 -- * 'irlPart'
 --
 -- * 'irlHl'
+--
+-- * 'irlFields'
 i18nRegionsList
     :: Text -- ^ 'irlPart'
     -> I18nRegionsList
-i18nRegionsList pIrlPart_ =
+i18nRegionsList pIrlPart_ = 
     I18nRegionsList'
     { _irlPart = pIrlPart_
     , _irlHl = "en_US"
+    , _irlFields = Nothing
     }
 
 -- | The part parameter specifies the i18nRegion resource properties that the
@@ -85,6 +91,11 @@ irlPart = lens _irlPart (\ s a -> s{_irlPart = a})
 irlHl :: Lens' I18nRegionsList Text
 irlHl = lens _irlHl (\ s a -> s{_irlHl = a})
 
+-- | Selector specifying which fields to include in a partial response.
+irlFields :: Lens' I18nRegionsList (Maybe Text)
+irlFields
+  = lens _irlFields (\ s a -> s{_irlFields = a})
+
 instance GoogleRequest I18nRegionsList where
         type Rs I18nRegionsList = I18nRegionListResponse
         type Scopes I18nRegionsList =
@@ -93,7 +104,8 @@ instance GoogleRequest I18nRegionsList where
                "https://www.googleapis.com/auth/youtube.readonly",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient I18nRegionsList'{..}
-          = go (Just _irlPart) (Just _irlHl) (Just AltJSON)
+          = go (Just _irlPart) (Just _irlHl) _irlFields
+              (Just AltJSON)
               youTubeService
           where go
                   = buildClient

@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Pages.Revert
     -- * Request Lenses
     , pagBlogId
     , pagPageId
+    , pagFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.revert@ method which the
 -- 'PagesRevert' request conforms to.
@@ -50,7 +51,8 @@ type PagesRevertResource =
              "pages" :>
                Capture "pageId" Text :>
                  "revert" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Page
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Page
 
 -- | Revert a published or scheduled page to draft state.
 --
@@ -58,6 +60,7 @@ type PagesRevertResource =
 data PagesRevert = PagesRevert'
     { _pagBlogId :: !Text
     , _pagPageId :: !Text
+    , _pagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesRevert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PagesRevert = PagesRevert'
 -- * 'pagBlogId'
 --
 -- * 'pagPageId'
+--
+-- * 'pagFields'
 pagesRevert
     :: Text -- ^ 'pagBlogId'
     -> Text -- ^ 'pagPageId'
     -> PagesRevert
-pagesRevert pPagBlogId_ pPagPageId_ =
+pagesRevert pPagBlogId_ pPagPageId_ = 
     PagesRevert'
     { _pagBlogId = pPagBlogId_
     , _pagPageId = pPagPageId_
+    , _pagFields = Nothing
     }
 
 -- | The ID of the blog.
@@ -87,12 +93,17 @@ pagPageId :: Lens' PagesRevert Text
 pagPageId
   = lens _pagPageId (\ s a -> s{_pagPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pagFields :: Lens' PagesRevert (Maybe Text)
+pagFields
+  = lens _pagFields (\ s a -> s{_pagFields = a})
+
 instance GoogleRequest PagesRevert where
         type Rs PagesRevert = Page
         type Scopes PagesRevert =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesRevert'{..}
-          = go _pagBlogId _pagPageId (Just AltJSON)
+          = go _pagBlogId _pagPageId _pagFields (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PagesRevertResource)

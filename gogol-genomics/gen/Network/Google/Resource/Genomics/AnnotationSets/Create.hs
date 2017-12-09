@@ -43,11 +43,12 @@ module Network.Google.Resource.Genomics.AnnotationSets.Create
     , ascUploadType
     , ascPayload
     , ascBearerToken
+    , ascFields
     , ascCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotationsets.create@ method which the
 -- 'AnnotationSetsCreate' request conforms to.
@@ -61,9 +62,10 @@ type AnnotationSetsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AnnotationSet :>
-                           Post '[JSON] AnnotationSet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AnnotationSet :>
+                             Post '[JSON] AnnotationSet
 
 -- | Creates a new annotation set. Caller must have WRITE permission for the
 -- associated dataset. The following fields are required: * datasetId *
@@ -72,14 +74,15 @@ type AnnotationSetsCreateResource =
 --
 -- /See:/ 'annotationSetsCreate' smart constructor.
 data AnnotationSetsCreate = AnnotationSetsCreate'
-    { _ascXgafv          :: !(Maybe Xgafv)
+    { _ascXgafv :: !(Maybe Xgafv)
     , _ascUploadProtocol :: !(Maybe Text)
-    , _ascPp             :: !Bool
-    , _ascAccessToken    :: !(Maybe Text)
-    , _ascUploadType     :: !(Maybe Text)
-    , _ascPayload        :: !AnnotationSet
-    , _ascBearerToken    :: !(Maybe Text)
-    , _ascCallback       :: !(Maybe Text)
+    , _ascPp :: !Bool
+    , _ascAccessToken :: !(Maybe Text)
+    , _ascUploadType :: !(Maybe Text)
+    , _ascPayload :: !AnnotationSet
+    , _ascBearerToken :: !(Maybe Text)
+    , _ascFields :: !(Maybe Text)
+    , _ascCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationSetsCreate' with the minimum fields required to make a request.
@@ -100,11 +103,13 @@ data AnnotationSetsCreate = AnnotationSetsCreate'
 --
 -- * 'ascBearerToken'
 --
+-- * 'ascFields'
+--
 -- * 'ascCallback'
 annotationSetsCreate
     :: AnnotationSet -- ^ 'ascPayload'
     -> AnnotationSetsCreate
-annotationSetsCreate pAscPayload_ =
+annotationSetsCreate pAscPayload_ = 
     AnnotationSetsCreate'
     { _ascXgafv = Nothing
     , _ascUploadProtocol = Nothing
@@ -113,6 +118,7 @@ annotationSetsCreate pAscPayload_ =
     , _ascUploadType = Nothing
     , _ascPayload = pAscPayload_
     , _ascBearerToken = Nothing
+    , _ascFields = Nothing
     , _ascCallback = Nothing
     }
 
@@ -153,6 +159,11 @@ ascBearerToken
   = lens _ascBearerToken
       (\ s a -> s{_ascBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ascFields :: Lens' AnnotationSetsCreate (Maybe Text)
+ascFields
+  = lens _ascFields (\ s a -> s{_ascFields = a})
+
 -- | JSONP
 ascCallback :: Lens' AnnotationSetsCreate (Maybe Text)
 ascCallback
@@ -169,6 +180,7 @@ instance GoogleRequest AnnotationSetsCreate where
               _ascUploadType
               _ascBearerToken
               _ascCallback
+              _ascFields
               (Just AltJSON)
               _ascPayload
               genomicsService

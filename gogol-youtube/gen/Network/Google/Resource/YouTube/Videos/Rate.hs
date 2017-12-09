@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Videos.Rate
     -- * Request Lenses
     , vrRating
     , vrId
+    , vrFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.rate@ method which the
 -- 'VideosRate' request conforms to.
@@ -49,14 +50,16 @@ type VideosRateResource =
            "rate" :>
              QueryParam "id" Text :>
                QueryParam "rating" VideosRateRating :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Add a like or dislike rating to a video or remove a rating from a video.
 --
 -- /See:/ 'videosRate' smart constructor.
 data VideosRate = VideosRate'
     { _vrRating :: !VideosRateRating
-    , _vrId     :: !Text
+    , _vrId :: !Text
+    , _vrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosRate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data VideosRate = VideosRate'
 -- * 'vrRating'
 --
 -- * 'vrId'
+--
+-- * 'vrFields'
 videosRate
     :: VideosRateRating -- ^ 'vrRating'
     -> Text -- ^ 'vrId'
     -> VideosRate
-videosRate pVrRating_ pVrId_ =
+videosRate pVrRating_ pVrId_ = 
     VideosRate'
     { _vrRating = pVrRating_
     , _vrId = pVrId_
+    , _vrFields = Nothing
     }
 
 -- | Specifies the rating to record.
@@ -85,6 +91,10 @@ vrRating = lens _vrRating (\ s a -> s{_vrRating = a})
 vrId :: Lens' VideosRate Text
 vrId = lens _vrId (\ s a -> s{_vrId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vrFields :: Lens' VideosRate (Maybe Text)
+vrFields = lens _vrFields (\ s a -> s{_vrFields = a})
+
 instance GoogleRequest VideosRate where
         type Rs VideosRate = ()
         type Scopes VideosRate =
@@ -92,7 +102,8 @@ instance GoogleRequest VideosRate where
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient VideosRate'{..}
-          = go (Just _vrId) (Just _vrRating) (Just AltJSON)
+          = go (Just _vrId) (Just _vrRating) _vrFields
+              (Just AltJSON)
               youTubeService
           where go
                   = buildClient (Proxy :: Proxy VideosRateResource)

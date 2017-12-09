@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Groups.Insert
 
     -- * Request Lenses
     , giPayload
+    , giFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.insert@ method which the
 -- 'GroupsInsert' request conforms to.
@@ -46,14 +47,16 @@ type GroupsInsertResource =
        "directory" :>
          "v1" :>
            "groups" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Group :> Post '[JSON] Group
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Group :> Post '[JSON] Group
 
 -- | Create Group
 --
 -- /See:/ 'groupsInsert' smart constructor.
-newtype GroupsInsert = GroupsInsert'
-    { _giPayload :: Group
+data GroupsInsert = GroupsInsert'
+    { _giPayload :: !Group
+    , _giFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsInsert' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype GroupsInsert = GroupsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'giPayload'
+--
+-- * 'giFields'
 groupsInsert
     :: Group -- ^ 'giPayload'
     -> GroupsInsert
-groupsInsert pGiPayload_ =
+groupsInsert pGiPayload_ = 
     GroupsInsert'
     { _giPayload = pGiPayload_
+    , _giFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -74,12 +80,17 @@ giPayload :: Lens' GroupsInsert Group
 giPayload
   = lens _giPayload (\ s a -> s{_giPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+giFields :: Lens' GroupsInsert (Maybe Text)
+giFields = lens _giFields (\ s a -> s{_giFields = a})
+
 instance GoogleRequest GroupsInsert where
         type Rs GroupsInsert = Group
         type Scopes GroupsInsert =
              '["https://www.googleapis.com/auth/admin.directory.group"]
         requestClient GroupsInsert'{..}
-          = go (Just AltJSON) _giPayload directoryService
+          = go _giFields (Just AltJSON) _giPayload
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy GroupsInsertResource)
                       mempty

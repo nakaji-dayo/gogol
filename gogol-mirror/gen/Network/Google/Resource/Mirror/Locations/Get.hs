@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Locations.Get
 
     -- * Request Lenses
     , lgId
+    , lgFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.locations.get@ method which the
 -- 'LocationsGet' request conforms to.
@@ -46,13 +47,15 @@ type LocationsGetResource =
        "v1" :>
          "locations" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Location
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Location
 
 -- | Gets a single location by ID.
 --
 -- /See:/ 'locationsGet' smart constructor.
-newtype LocationsGet = LocationsGet'
-    { _lgId :: Text
+data LocationsGet = LocationsGet'
+    { _lgId :: !Text
+    , _lgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LocationsGet' with the minimum fields required to make a request.
@@ -60,17 +63,24 @@ newtype LocationsGet = LocationsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'lgId'
+--
+-- * 'lgFields'
 locationsGet
     :: Text -- ^ 'lgId'
     -> LocationsGet
-locationsGet pLgId_ =
+locationsGet pLgId_ = 
     LocationsGet'
     { _lgId = pLgId_
+    , _lgFields = Nothing
     }
 
 -- | The ID of the location or latest for the last known location.
 lgId :: Lens' LocationsGet Text
 lgId = lens _lgId (\ s a -> s{_lgId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+lgFields :: Lens' LocationsGet (Maybe Text)
+lgFields = lens _lgFields (\ s a -> s{_lgFields = a})
 
 instance GoogleRequest LocationsGet where
         type Rs LocationsGet = Location
@@ -78,7 +88,7 @@ instance GoogleRequest LocationsGet where
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
         requestClient LocationsGet'{..}
-          = go _lgId (Just AltJSON) mirrorService
+          = go _lgId _lgFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy LocationsGetResource)
                       mempty

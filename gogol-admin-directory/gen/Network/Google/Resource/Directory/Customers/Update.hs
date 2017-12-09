@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Customers.Update
     -- * Request Lenses
     , cuCustomerKey
     , cuPayload
+    , cuFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.customers.update@ method which the
 -- 'CustomersUpdate' request conforms to.
@@ -48,15 +49,17 @@ type CustomersUpdateResource =
          "v1" :>
            "customers" :>
              Capture "customerKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Customer :> Put '[JSON] Customer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Customer :> Put '[JSON] Customer
 
 -- | Updates a customer.
 --
 -- /See:/ 'customersUpdate' smart constructor.
 data CustomersUpdate = CustomersUpdate'
     { _cuCustomerKey :: !Text
-    , _cuPayload     :: !Customer
+    , _cuPayload :: !Customer
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomersUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CustomersUpdate = CustomersUpdate'
 -- * 'cuCustomerKey'
 --
 -- * 'cuPayload'
+--
+-- * 'cuFields'
 customersUpdate
     :: Text -- ^ 'cuCustomerKey'
     -> Customer -- ^ 'cuPayload'
     -> CustomersUpdate
-customersUpdate pCuCustomerKey_ pCuPayload_ =
+customersUpdate pCuCustomerKey_ pCuPayload_ = 
     CustomersUpdate'
     { _cuCustomerKey = pCuCustomerKey_
     , _cuPayload = pCuPayload_
+    , _cuFields = Nothing
     }
 
 -- | Id of the customer to be updated
@@ -87,12 +93,17 @@ cuPayload :: Lens' CustomersUpdate Customer
 cuPayload
   = lens _cuPayload (\ s a -> s{_cuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' CustomersUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest CustomersUpdate where
         type Rs CustomersUpdate = Customer
         type Scopes CustomersUpdate =
              '["https://www.googleapis.com/auth/admin.directory.customer"]
         requestClient CustomersUpdate'{..}
-          = go _cuCustomerKey (Just AltJSON) _cuPayload
+          = go _cuCustomerKey _cuFields (Just AltJSON)
+              _cuPayload
               directoryService
           where go
                   = buildClient

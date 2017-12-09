@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSenseHost.AssociationSessions.Start
     , assUserLocale
     , assWebsiteURL
     , assProductCode
+    , assFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.associationsessions.start@ method which the
 -- 'AssociationSessionsStart' request conforms to.
@@ -56,8 +57,9 @@ type AssociationSessionsStartResource =
                QueryParam "websiteUrl" Text :>
                  QueryParam "websiteLocale" Text :>
                    QueryParam "userLocale" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] AssociationSession
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] AssociationSession
 
 -- | Create an association session for initiating an association with an
 -- AdSense user.
@@ -65,9 +67,10 @@ type AssociationSessionsStartResource =
 -- /See:/ 'associationSessionsStart' smart constructor.
 data AssociationSessionsStart = AssociationSessionsStart'
     { _assWebsiteLocale :: !(Maybe Text)
-    , _assUserLocale    :: !(Maybe Text)
-    , _assWebsiteURL    :: !Text
-    , _assProductCode   :: ![AssociationSessionsStartProductCode]
+    , _assUserLocale :: !(Maybe Text)
+    , _assWebsiteURL :: !Text
+    , _assProductCode :: ![AssociationSessionsStartProductCode]
+    , _assFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AssociationSessionsStart' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data AssociationSessionsStart = AssociationSessionsStart'
 -- * 'assWebsiteURL'
 --
 -- * 'assProductCode'
+--
+-- * 'assFields'
 associationSessionsStart
     :: Text -- ^ 'assWebsiteURL'
     -> [AssociationSessionsStartProductCode] -- ^ 'assProductCode'
     -> AssociationSessionsStart
-associationSessionsStart pAssWebsiteURL_ pAssProductCode_ =
+associationSessionsStart pAssWebsiteURL_ pAssProductCode_ = 
     AssociationSessionsStart'
     { _assWebsiteLocale = Nothing
     , _assUserLocale = Nothing
     , _assWebsiteURL = pAssWebsiteURL_
     , _assProductCode = _Coerce # pAssProductCode_
+    , _assFields = Nothing
     }
 
 -- | The locale of the user\'s hosted website.
@@ -118,6 +124,11 @@ assProductCode
       (\ s a -> s{_assProductCode = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+assFields :: Lens' AssociationSessionsStart (Maybe Text)
+assFields
+  = lens _assFields (\ s a -> s{_assFields = a})
+
 instance GoogleRequest AssociationSessionsStart where
         type Rs AssociationSessionsStart = AssociationSession
         type Scopes AssociationSessionsStart =
@@ -126,6 +137,7 @@ instance GoogleRequest AssociationSessionsStart where
           = go _assProductCode (Just _assWebsiteURL)
               _assWebsiteLocale
               _assUserLocale
+              _assFields
               (Just AltJSON)
               adSenseHostService
           where go

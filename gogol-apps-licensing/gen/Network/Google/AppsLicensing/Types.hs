@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -38,7 +38,9 @@ module Network.Google.AppsLicensing.Types
     -- * LicenseAssignment
     , LicenseAssignment
     , licenseAssignment
+    , laProductName
     , laEtags
+    , laSKUName
     , laKind
     , laSKUId
     , laUserId
@@ -46,9 +48,9 @@ module Network.Google.AppsLicensing.Types
     , laProductId
     ) where
 
-import           Network.Google.AppsLicensing.Types.Product
-import           Network.Google.AppsLicensing.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types.Product
+import Network.Google.AppsLicensing.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Enterprise License Manager API. This contains the host and root path used as a starting point for constructing service requests.
 appsLicensingService :: ServiceConfig
@@ -56,6 +58,6 @@ appsLicensingService
   = defaultService (ServiceId "licensing:v1")
       "www.googleapis.com"
 
--- | View and manage Google Apps licenses for your domain
+-- | View and manage G Suite licenses for your domain
 appsLicensingScope :: Proxy '["https://www.googleapis.com/auth/apps.licensing"]
 appsLicensingScope = Proxy;

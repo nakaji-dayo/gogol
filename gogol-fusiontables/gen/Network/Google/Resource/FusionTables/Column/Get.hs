@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Column.Get
     -- * Request Lenses
     , cgTableId
     , cgColumnId
+    , cgFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.column.get@ method which the
 -- 'ColumnGet' request conforms to.
@@ -49,14 +50,16 @@ type ColumnGetResource =
            Capture "tableId" Text :>
              "columns" :>
                Capture "columnId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Column
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Column
 
 -- | Retrieves a specific column by its ID.
 --
 -- /See:/ 'columnGet' smart constructor.
 data ColumnGet = ColumnGet'
-    { _cgTableId  :: !Text
+    { _cgTableId :: !Text
     , _cgColumnId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColumnGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ColumnGet = ColumnGet'
 -- * 'cgTableId'
 --
 -- * 'cgColumnId'
+--
+-- * 'cgFields'
 columnGet
     :: Text -- ^ 'cgTableId'
     -> Text -- ^ 'cgColumnId'
     -> ColumnGet
-columnGet pCgTableId_ pCgColumnId_ =
+columnGet pCgTableId_ pCgColumnId_ = 
     ColumnGet'
     { _cgTableId = pCgTableId_
     , _cgColumnId = pCgColumnId_
+    , _cgFields = Nothing
     }
 
 -- | Table to which the column belongs.
@@ -86,13 +92,17 @@ cgColumnId :: Lens' ColumnGet Text
 cgColumnId
   = lens _cgColumnId (\ s a -> s{_cgColumnId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' ColumnGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest ColumnGet where
         type Rs ColumnGet = Column
         type Scopes ColumnGet =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient ColumnGet'{..}
-          = go _cgTableId _cgColumnId (Just AltJSON)
+          = go _cgTableId _cgColumnId _cgFields (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy ColumnGetResource)

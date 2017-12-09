@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Inse
     -- * Request Lenses
     , aciPayload
     , aciApplicationId
+    , aciFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.achievementConfigurations.insert@ method which the
 -- 'AchievementConfigurationsInsert' request conforms to.
@@ -48,16 +49,18 @@ type AchievementConfigurationsInsertResource =
          "applications" :>
            Capture "applicationId" Text :>
              "achievements" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AchievementConfiguration :>
-                   Post '[JSON] AchievementConfiguration
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AchievementConfiguration :>
+                     Post '[JSON] AchievementConfiguration
 
 -- | Insert a new achievement configuration in this application.
 --
 -- /See:/ 'achievementConfigurationsInsert' smart constructor.
 data AchievementConfigurationsInsert = AchievementConfigurationsInsert'
-    { _aciPayload       :: !AchievementConfiguration
+    { _aciPayload :: !AchievementConfiguration
     , _aciApplicationId :: !Text
+    , _aciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AchievementConfigurationsInsert = AchievementConfigurationsInsert'
 -- * 'aciPayload'
 --
 -- * 'aciApplicationId'
+--
+-- * 'aciFields'
 achievementConfigurationsInsert
     :: AchievementConfiguration -- ^ 'aciPayload'
     -> Text -- ^ 'aciApplicationId'
     -> AchievementConfigurationsInsert
-achievementConfigurationsInsert pAciPayload_ pAciApplicationId_ =
+achievementConfigurationsInsert pAciPayload_ pAciApplicationId_ = 
     AchievementConfigurationsInsert'
     { _aciPayload = pAciPayload_
     , _aciApplicationId = pAciApplicationId_
+    , _aciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,6 +94,11 @@ aciApplicationId
   = lens _aciApplicationId
       (\ s a -> s{_aciApplicationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aciFields :: Lens' AchievementConfigurationsInsert (Maybe Text)
+aciFields
+  = lens _aciFields (\ s a -> s{_aciFields = a})
+
 instance GoogleRequest
          AchievementConfigurationsInsert where
         type Rs AchievementConfigurationsInsert =
@@ -95,7 +106,8 @@ instance GoogleRequest
         type Scopes AchievementConfigurationsInsert =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient AchievementConfigurationsInsert'{..}
-          = go _aciApplicationId (Just AltJSON) _aciPayload
+          = go _aciApplicationId _aciFields (Just AltJSON)
+              _aciPayload
               gamesConfigurationService
           where go
                   = buildClient

@@ -37,10 +37,11 @@ module Network.Google.Resource.Blogger.Posts.GetByPath
     , pgbpBlogId
     , pgbpMaxComments
     , pgbpView
+    , pgbpFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.getByPath@ method which the
 -- 'PostsGetByPath' request conforms to.
@@ -54,16 +55,18 @@ type PostsGetByPathResource =
                  QueryParam "path" Text :>
                    QueryParam "maxComments" (Textual Word32) :>
                      QueryParam "view" PostsGetByPathView :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Post'
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Post'
 
 -- | Retrieve a Post by Path.
 --
 -- /See:/ 'postsGetByPath' smart constructor.
 data PostsGetByPath = PostsGetByPath'
-    { _pgbpPath        :: !Text
-    , _pgbpBlogId      :: !Text
+    { _pgbpPath :: !Text
+    , _pgbpBlogId :: !Text
     , _pgbpMaxComments :: !(Maybe (Textual Word32))
-    , _pgbpView        :: !(Maybe PostsGetByPathView)
+    , _pgbpView :: !(Maybe PostsGetByPathView)
+    , _pgbpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsGetByPath' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data PostsGetByPath = PostsGetByPath'
 -- * 'pgbpMaxComments'
 --
 -- * 'pgbpView'
+--
+-- * 'pgbpFields'
 postsGetByPath
     :: Text -- ^ 'pgbpPath'
     -> Text -- ^ 'pgbpBlogId'
     -> PostsGetByPath
-postsGetByPath pPgbpPath_ pPgbpBlogId_ =
+postsGetByPath pPgbpPath_ pPgbpBlogId_ = 
     PostsGetByPath'
     { _pgbpPath = pPgbpPath_
     , _pgbpBlogId = pPgbpBlogId_
     , _pgbpMaxComments = Nothing
     , _pgbpView = Nothing
+    , _pgbpFields = Nothing
     }
 
 -- | Path of the Post to retrieve.
@@ -110,6 +116,11 @@ pgbpMaxComments
 pgbpView :: Lens' PostsGetByPath (Maybe PostsGetByPathView)
 pgbpView = lens _pgbpView (\ s a -> s{_pgbpView = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgbpFields :: Lens' PostsGetByPath (Maybe Text)
+pgbpFields
+  = lens _pgbpFields (\ s a -> s{_pgbpFields = a})
+
 instance GoogleRequest PostsGetByPath where
         type Rs PostsGetByPath = Post'
         type Scopes PostsGetByPath =
@@ -118,6 +129,7 @@ instance GoogleRequest PostsGetByPath where
         requestClient PostsGetByPath'{..}
           = go _pgbpBlogId (Just _pgbpPath) _pgbpMaxComments
               _pgbpView
+              _pgbpFields
               (Just AltJSON)
               bloggerService
           where go

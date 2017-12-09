@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickSearch.Conversion.Insert
 
     -- * Request Lenses
     , ciPayload
+    , ciFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.conversion.insert@ method which the
 -- 'ConversionInsert' request conforms to.
@@ -45,15 +46,17 @@ type ConversionInsertResource =
      "doubleclicksearch" :>
        "v2" :>
          "conversion" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] ConversionList :>
-               Post '[JSON] ConversionList
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] ConversionList :>
+                 Post '[JSON] ConversionList
 
 -- | Inserts a batch of new conversions into DoubleClick Search.
 --
 -- /See:/ 'conversionInsert' smart constructor.
-newtype ConversionInsert = ConversionInsert'
-    { _ciPayload :: ConversionList
+data ConversionInsert = ConversionInsert'
+    { _ciPayload :: !ConversionList
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConversionInsert' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype ConversionInsert = ConversionInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ciPayload'
+--
+-- * 'ciFields'
 conversionInsert
     :: ConversionList -- ^ 'ciPayload'
     -> ConversionInsert
-conversionInsert pCiPayload_ =
+conversionInsert pCiPayload_ = 
     ConversionInsert'
     { _ciPayload = pCiPayload_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -74,12 +80,16 @@ ciPayload :: Lens' ConversionInsert ConversionList
 ciPayload
   = lens _ciPayload (\ s a -> s{_ciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' ConversionInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest ConversionInsert where
         type Rs ConversionInsert = ConversionList
         type Scopes ConversionInsert =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient ConversionInsert'{..}
-          = go (Just AltJSON) _ciPayload
+          = go _ciFields (Just AltJSON) _ciPayload
               doubleClickSearchService
           where go
                   = buildClient

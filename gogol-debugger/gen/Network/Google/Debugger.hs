@@ -278,16 +278,16 @@ module Network.Google.Debugger
     , cwiName
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.List
-import           Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.Update
-import           Network.Google.Resource.CloudDebugger.Controller.Debuggees.Register
-import           Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Delete
-import           Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Get
-import           Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.List
-import           Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Set
-import           Network.Google.Resource.CloudDebugger.Debugger.Debuggees.List
+import Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.List
+import Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.Update
+import Network.Google.Resource.CloudDebugger.Controller.Debuggees.Register
+import Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Delete
+import Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Get
+import Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.List
+import Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Set
+import Network.Google.Resource.CloudDebugger.Debugger.Debuggees.List
 
 {- $resources
 TODO

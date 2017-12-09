@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.LiveChatModerators.List
     , livLiveChatId
     , livPageToken
     , livMaxResults
+    , livFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatModerators.list@ method which the
 -- 'LiveChatModeratorsList' request conforms to.
@@ -53,17 +54,19 @@ type LiveChatModeratorsListResource =
                QueryParam "part" Text :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] LiveChatModeratorListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] LiveChatModeratorListResponse
 
 -- | Lists moderators for a live chat.
 --
 -- /See:/ 'liveChatModeratorsList' smart constructor.
 data LiveChatModeratorsList = LiveChatModeratorsList'
-    { _livPart       :: !Text
+    { _livPart :: !Text
     , _livLiveChatId :: !Text
-    , _livPageToken  :: !(Maybe Text)
+    , _livPageToken :: !(Maybe Text)
     , _livMaxResults :: !(Textual Word32)
+    , _livFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatModeratorsList' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data LiveChatModeratorsList = LiveChatModeratorsList'
 -- * 'livPageToken'
 --
 -- * 'livMaxResults'
+--
+-- * 'livFields'
 liveChatModeratorsList
     :: Text -- ^ 'livPart'
     -> Text -- ^ 'livLiveChatId'
     -> LiveChatModeratorsList
-liveChatModeratorsList pLivPart_ pLivLiveChatId_ =
+liveChatModeratorsList pLivPart_ pLivLiveChatId_ = 
     LiveChatModeratorsList'
     { _livPart = pLivPart_
     , _livLiveChatId = pLivLiveChatId_
     , _livPageToken = Nothing
     , _livMaxResults = 5
+    , _livFields = Nothing
     }
 
 -- | The part parameter specifies the liveChatModerator resource parts that
@@ -116,6 +122,11 @@ livMaxResults
       (\ s a -> s{_livMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+livFields :: Lens' LiveChatModeratorsList (Maybe Text)
+livFields
+  = lens _livFields (\ s a -> s{_livFields = a})
+
 instance GoogleRequest LiveChatModeratorsList where
         type Rs LiveChatModeratorsList =
              LiveChatModeratorListResponse
@@ -127,6 +138,7 @@ instance GoogleRequest LiveChatModeratorsList where
           = go (Just _livLiveChatId) (Just _livPart)
               _livPageToken
               (Just _livMaxResults)
+              _livFields
               (Just AltJSON)
               youTubeService
           where go

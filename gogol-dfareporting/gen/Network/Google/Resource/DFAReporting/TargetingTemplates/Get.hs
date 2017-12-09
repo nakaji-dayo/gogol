@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.TargetingTemplates.Get
     -- * Request Lenses
     , ttgProFileId
     , ttgId
+    , ttgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.targetingTemplates.get@ method which the
 -- 'TargetingTemplatesGet' request conforms to.
 type TargetingTemplatesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "targetingTemplates" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] TargetingTemplate
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] TargetingTemplate
 
 -- | Gets one targeting template by ID.
 --
 -- /See:/ 'targetingTemplatesGet' smart constructor.
 data TargetingTemplatesGet = TargetingTemplatesGet'
     { _ttgProFileId :: !(Textual Int64)
-    , _ttgId        :: !(Textual Int64)
+    , _ttgId :: !(Textual Int64)
+    , _ttgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingTemplatesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TargetingTemplatesGet = TargetingTemplatesGet'
 -- * 'ttgProFileId'
 --
 -- * 'ttgId'
+--
+-- * 'ttgFields'
 targetingTemplatesGet
     :: Int64 -- ^ 'ttgProFileId'
     -> Int64 -- ^ 'ttgId'
     -> TargetingTemplatesGet
-targetingTemplatesGet pTtgProFileId_ pTtgId_ =
+targetingTemplatesGet pTtgProFileId_ pTtgId_ = 
     TargetingTemplatesGet'
     { _ttgProFileId = _Coerce # pTtgProFileId_
     , _ttgId = _Coerce # pTtgId_
+    , _ttgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ ttgId :: Lens' TargetingTemplatesGet Int64
 ttgId
   = lens _ttgId (\ s a -> s{_ttgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ttgFields :: Lens' TargetingTemplatesGet (Maybe Text)
+ttgFields
+  = lens _ttgFields (\ s a -> s{_ttgFields = a})
+
 instance GoogleRequest TargetingTemplatesGet where
         type Rs TargetingTemplatesGet = TargetingTemplate
         type Scopes TargetingTemplatesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient TargetingTemplatesGet'{..}
-          = go _ttgProFileId _ttgId (Just AltJSON)
+          = go _ttgProFileId _ttgId _ttgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

@@ -38,10 +38,11 @@ module Network.Google.Resource.AppState.States.Delete
 
     -- * Request Lenses
     , sdStateKey
+    , sdFields
     ) where
 
-import           Network.Google.AppState.Types
-import           Network.Google.Prelude
+import Network.Google.AppState.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appstate.states.delete@ method which the
 -- 'StatesDelete' request conforms to.
@@ -50,7 +51,8 @@ type StatesDeleteResource =
        "v1" :>
          "states" :>
            Capture "stateKey" (Textual Int32) :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a key and the data associated with it. The key is removed and no
 -- longer counts against the key quota. Note that since this method is not
@@ -59,8 +61,9 @@ type StatesDeleteResource =
 -- can result in data loss and data corruption.
 --
 -- /See:/ 'statesDelete' smart constructor.
-newtype StatesDelete = StatesDelete'
-    { _sdStateKey :: Textual Int32
+data StatesDelete = StatesDelete'
+    { _sdStateKey :: !(Textual Int32)
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StatesDelete' with the minimum fields required to make a request.
@@ -68,12 +71,15 @@ newtype StatesDelete = StatesDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sdStateKey'
+--
+-- * 'sdFields'
 statesDelete
     :: Int32 -- ^ 'sdStateKey'
     -> StatesDelete
-statesDelete pSdStateKey_ =
+statesDelete pSdStateKey_ = 
     StatesDelete'
     { _sdStateKey = _Coerce # pSdStateKey_
+    , _sdFields = Nothing
     }
 
 -- | The key for the data to be retrieved.
@@ -82,12 +88,17 @@ sdStateKey
   = lens _sdStateKey (\ s a -> s{_sdStateKey = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' StatesDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest StatesDelete where
         type Rs StatesDelete = ()
         type Scopes StatesDelete =
              '["https://www.googleapis.com/auth/appstate"]
         requestClient StatesDelete'{..}
-          = go _sdStateKey (Just AltJSON) appStateService
+          = go _sdStateKey _sdFields (Just AltJSON)
+              appStateService
           where go
                   = buildClient (Proxy :: Proxy StatesDeleteResource)
                       mempty

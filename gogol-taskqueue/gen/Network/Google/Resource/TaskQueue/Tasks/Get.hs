@@ -36,10 +36,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Get
     , tgTaskQueue
     , tgProject
     , tgTask
+    , tgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.get@ method which the
 -- 'TasksGet' request conforms to.
@@ -52,15 +53,17 @@ type TasksGetResource =
                Capture "taskqueue" Text :>
                  "tasks" :>
                    Capture "task" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Task
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Task
 
 -- | Get a particular task from a TaskQueue.
 --
 -- /See:/ 'tasksGet' smart constructor.
 data TasksGet = TasksGet'
     { _tgTaskQueue :: !Text
-    , _tgProject   :: !Text
-    , _tgTask      :: !Text
+    , _tgProject :: !Text
+    , _tgTask :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data TasksGet = TasksGet'
 -- * 'tgProject'
 --
 -- * 'tgTask'
+--
+-- * 'tgFields'
 tasksGet
     :: Text -- ^ 'tgTaskQueue'
     -> Text -- ^ 'tgProject'
     -> Text -- ^ 'tgTask'
     -> TasksGet
-tasksGet pTgTaskQueue_ pTgProject_ pTgTask_ =
+tasksGet pTgTaskQueue_ pTgProject_ pTgTask_ = 
     TasksGet'
     { _tgTaskQueue = pTgTaskQueue_
     , _tgProject = pTgProject_
     , _tgTask = pTgTask_
+    , _tgFields = Nothing
     }
 
 -- | The taskqueue in which the task belongs.
@@ -98,13 +104,18 @@ tgProject
 tgTask :: Lens' TasksGet Text
 tgTask = lens _tgTask (\ s a -> s{_tgTask = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TasksGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
+
 instance GoogleRequest TasksGet where
         type Rs TasksGet = Task
         type Scopes TasksGet =
              '["https://www.googleapis.com/auth/taskqueue",
                "https://www.googleapis.com/auth/taskqueue.consumer"]
         requestClient TasksGet'{..}
-          = go _tgProject _tgTaskQueue _tgTask (Just AltJSON)
+          = go _tgProject _tgTaskQueue _tgTask _tgFields
+              (Just AltJSON)
               taskQueueService
           where go
                   = buildClient (Proxy :: Proxy TasksGetResource)

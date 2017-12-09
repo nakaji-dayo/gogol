@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.Autoscalers.List
     , aFilter
     , aPageToken
     , aMaxResults
+    , aFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.autoscalers.list@ method which the
 -- 'AutoscalersList' request conforms to.
@@ -58,19 +59,21 @@ type AutoscalersListResource =
                      QueryParam "filter" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] AutoscalerList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] AutoscalerList
 
 -- | Retrieves a list of autoscalers contained within the specified zone.
 --
 -- /See:/ 'autoscalersList' smart constructor.
 data AutoscalersList = AutoscalersList'
-    { _aOrderBy    :: !(Maybe Text)
-    , _aProject    :: !Text
-    , _aZone       :: !Text
-    , _aFilter     :: !(Maybe Text)
-    , _aPageToken  :: !(Maybe Text)
+    { _aOrderBy :: !(Maybe Text)
+    , _aProject :: !Text
+    , _aZone :: !Text
+    , _aFilter :: !(Maybe Text)
+    , _aPageToken :: !(Maybe Text)
     , _aMaxResults :: !(Textual Word32)
+    , _aFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalersList' with the minimum fields required to make a request.
@@ -88,11 +91,13 @@ data AutoscalersList = AutoscalersList'
 -- * 'aPageToken'
 --
 -- * 'aMaxResults'
+--
+-- * 'aFields'
 autoscalersList
     :: Text -- ^ 'aProject'
     -> Text -- ^ 'aZone'
     -> AutoscalersList
-autoscalersList pAProject_ pAZone_ =
+autoscalersList pAProject_ pAZone_ = 
     AutoscalersList'
     { _aOrderBy = Nothing
     , _aProject = pAProject_
@@ -100,6 +105,7 @@ autoscalersList pAProject_ pAZone_ =
     , _aFilter = Nothing
     , _aPageToken = Nothing
     , _aMaxResults = 500
+    , _aFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -121,26 +127,25 @@ aProject = lens _aProject (\ s a -> s{_aProject = a})
 aZone :: Lens' AutoscalersList Text
 aZone = lens _aZone (\ s a -> s{_aZone = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 aFilter :: Lens' AutoscalersList (Maybe Text)
 aFilter = lens _aFilter (\ s a -> s{_aFilter = a})
 
@@ -153,11 +158,16 @@ aPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 aMaxResults :: Lens' AutoscalersList Word32
 aMaxResults
   = lens _aMaxResults (\ s a -> s{_aMaxResults = a}) .
       _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+aFields :: Lens' AutoscalersList (Maybe Text)
+aFields = lens _aFields (\ s a -> s{_aFields = a})
 
 instance GoogleRequest AutoscalersList where
         type Rs AutoscalersList = AutoscalerList
@@ -168,6 +178,7 @@ instance GoogleRequest AutoscalersList where
         requestClient AutoscalersList'{..}
           = go _aProject _aZone _aOrderBy _aFilter _aPageToken
               (Just _aMaxResults)
+              _aFields
               (Just AltJSON)
               computeService
           where go

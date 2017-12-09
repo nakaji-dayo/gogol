@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Members.Delete
     -- * Request Lenses
     , mdMemberKey
     , mdGroupKey
+    , mdFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.members.delete@ method which the
 -- 'MembersDelete' request conforms to.
@@ -50,14 +51,16 @@ type MembersDeleteResource =
              Capture "groupKey" Text :>
                "members" :>
                  Capture "memberKey" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Remove membership.
 --
 -- /See:/ 'membersDelete' smart constructor.
 data MembersDelete = MembersDelete'
     { _mdMemberKey :: !Text
-    , _mdGroupKey  :: !Text
+    , _mdGroupKey :: !Text
+    , _mdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MembersDelete' with the minimum fields required to make a request.
@@ -67,25 +70,32 @@ data MembersDelete = MembersDelete'
 -- * 'mdMemberKey'
 --
 -- * 'mdGroupKey'
+--
+-- * 'mdFields'
 membersDelete
     :: Text -- ^ 'mdMemberKey'
     -> Text -- ^ 'mdGroupKey'
     -> MembersDelete
-membersDelete pMdMemberKey_ pMdGroupKey_ =
+membersDelete pMdMemberKey_ pMdGroupKey_ = 
     MembersDelete'
     { _mdMemberKey = pMdMemberKey_
     , _mdGroupKey = pMdGroupKey_
+    , _mdFields = Nothing
     }
 
--- | Email or immutable Id of the member
+-- | Email or immutable ID of the member
 mdMemberKey :: Lens' MembersDelete Text
 mdMemberKey
   = lens _mdMemberKey (\ s a -> s{_mdMemberKey = a})
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 mdGroupKey :: Lens' MembersDelete Text
 mdGroupKey
   = lens _mdGroupKey (\ s a -> s{_mdGroupKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+mdFields :: Lens' MembersDelete (Maybe Text)
+mdFields = lens _mdFields (\ s a -> s{_mdFields = a})
 
 instance GoogleRequest MembersDelete where
         type Rs MembersDelete = ()
@@ -93,7 +103,8 @@ instance GoogleRequest MembersDelete where
              '["https://www.googleapis.com/auth/admin.directory.group",
                "https://www.googleapis.com/auth/admin.directory.group.member"]
         requestClient MembersDelete'{..}
-          = go _mdGroupKey _mdMemberKey (Just AltJSON)
+          = go _mdGroupKey _mdMemberKey _mdFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy MembersDeleteResource)

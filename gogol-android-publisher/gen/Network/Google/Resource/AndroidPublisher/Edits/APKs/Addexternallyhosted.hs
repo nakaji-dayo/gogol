@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.APKs.Addexternallyhosted
     , eapkaPackageName
     , eapkaPayload
     , eapkaEditId
+    , eapkaFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.apks.addexternallyhosted@ method which the
 -- 'EditsAPKsAddexternallyhosted' request conforms to.
@@ -55,9 +56,10 @@ type EditsAPKsAddexternallyhostedResource =
                Capture "editId" Text :>
                  "apks" :>
                    "externallyHosted" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] APKsAddExternallyHostedRequest :>
-                         Post '[JSON] APKsAddExternallyHostedResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] APKsAddExternallyHostedRequest :>
+                           Post '[JSON] APKsAddExternallyHostedResponse
 
 -- | Creates a new APK without uploading the APK itself to Google Play,
 -- instead hosting the APK at a specified URL. This function is only
@@ -67,8 +69,9 @@ type EditsAPKsAddexternallyhostedResource =
 -- /See:/ 'editsAPKsAddexternallyhosted' smart constructor.
 data EditsAPKsAddexternallyhosted = EditsAPKsAddexternallyhosted'
     { _eapkaPackageName :: !Text
-    , _eapkaPayload     :: !APKsAddExternallyHostedRequest
-    , _eapkaEditId      :: !Text
+    , _eapkaPayload :: !APKsAddExternallyHostedRequest
+    , _eapkaEditId :: !Text
+    , _eapkaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsAPKsAddexternallyhosted' with the minimum fields required to make a request.
@@ -80,16 +83,19 @@ data EditsAPKsAddexternallyhosted = EditsAPKsAddexternallyhosted'
 -- * 'eapkaPayload'
 --
 -- * 'eapkaEditId'
+--
+-- * 'eapkaFields'
 editsAPKsAddexternallyhosted
     :: Text -- ^ 'eapkaPackageName'
     -> APKsAddExternallyHostedRequest -- ^ 'eapkaPayload'
     -> Text -- ^ 'eapkaEditId'
     -> EditsAPKsAddexternallyhosted
-editsAPKsAddexternallyhosted pEapkaPackageName_ pEapkaPayload_ pEapkaEditId_ =
+editsAPKsAddexternallyhosted pEapkaPackageName_ pEapkaPayload_ pEapkaEditId_ = 
     EditsAPKsAddexternallyhosted'
     { _eapkaPackageName = pEapkaPackageName_
     , _eapkaPayload = pEapkaPayload_
     , _eapkaEditId = pEapkaEditId_
+    , _eapkaFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -109,6 +115,11 @@ eapkaEditId :: Lens' EditsAPKsAddexternallyhosted Text
 eapkaEditId
   = lens _eapkaEditId (\ s a -> s{_eapkaEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eapkaFields :: Lens' EditsAPKsAddexternallyhosted (Maybe Text)
+eapkaFields
+  = lens _eapkaFields (\ s a -> s{_eapkaFields = a})
+
 instance GoogleRequest EditsAPKsAddexternallyhosted
          where
         type Rs EditsAPKsAddexternallyhosted =
@@ -116,7 +127,8 @@ instance GoogleRequest EditsAPKsAddexternallyhosted
         type Scopes EditsAPKsAddexternallyhosted =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsAPKsAddexternallyhosted'{..}
-          = go _eapkaPackageName _eapkaEditId (Just AltJSON)
+          = go _eapkaPackageName _eapkaEditId _eapkaFields
+              (Just AltJSON)
               _eapkaPayload
               androidPublisherService
           where go

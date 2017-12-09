@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.MobileDevices.Action
     , mdaResourceId
     , mdaPayload
     , mdaCustomerId
+    , mdaFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.mobiledevices.action@ method which the
 -- 'MobileDevicesAction' request conforms to.
@@ -53,16 +54,18 @@ type MobileDevicesActionResource =
                  "mobile" :>
                    Capture "resourceId" Text :>
                      "action" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] MobileDeviceAction :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] MobileDeviceAction :> Post '[JSON] ()
 
 -- | Take action on Mobile Device
 --
 -- /See:/ 'mobileDevicesAction' smart constructor.
 data MobileDevicesAction = MobileDevicesAction'
     { _mdaResourceId :: !Text
-    , _mdaPayload    :: !MobileDeviceAction
+    , _mdaPayload :: !MobileDeviceAction
     , _mdaCustomerId :: !Text
+    , _mdaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDevicesAction' with the minimum fields required to make a request.
@@ -74,19 +77,22 @@ data MobileDevicesAction = MobileDevicesAction'
 -- * 'mdaPayload'
 --
 -- * 'mdaCustomerId'
+--
+-- * 'mdaFields'
 mobileDevicesAction
     :: Text -- ^ 'mdaResourceId'
     -> MobileDeviceAction -- ^ 'mdaPayload'
     -> Text -- ^ 'mdaCustomerId'
     -> MobileDevicesAction
-mobileDevicesAction pMdaResourceId_ pMdaPayload_ pMdaCustomerId_ =
+mobileDevicesAction pMdaResourceId_ pMdaPayload_ pMdaCustomerId_ = 
     MobileDevicesAction'
     { _mdaResourceId = pMdaResourceId_
     , _mdaPayload = pMdaPayload_
     , _mdaCustomerId = pMdaCustomerId_
+    , _mdaFields = Nothing
     }
 
--- | Immutable id of Mobile Device
+-- | Immutable ID of Mobile Device
 mdaResourceId :: Lens' MobileDevicesAction Text
 mdaResourceId
   = lens _mdaResourceId
@@ -97,11 +103,16 @@ mdaPayload :: Lens' MobileDevicesAction MobileDeviceAction
 mdaPayload
   = lens _mdaPayload (\ s a -> s{_mdaPayload = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 mdaCustomerId :: Lens' MobileDevicesAction Text
 mdaCustomerId
   = lens _mdaCustomerId
       (\ s a -> s{_mdaCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+mdaFields :: Lens' MobileDevicesAction (Maybe Text)
+mdaFields
+  = lens _mdaFields (\ s a -> s{_mdaFields = a})
 
 instance GoogleRequest MobileDevicesAction where
         type Rs MobileDevicesAction = ()
@@ -109,7 +120,8 @@ instance GoogleRequest MobileDevicesAction where
              '["https://www.googleapis.com/auth/admin.directory.device.mobile",
                "https://www.googleapis.com/auth/admin.directory.device.mobile.action"]
         requestClient MobileDevicesAction'{..}
-          = go _mdaCustomerId _mdaResourceId (Just AltJSON)
+          = go _mdaCustomerId _mdaResourceId _mdaFields
+              (Just AltJSON)
               _mdaPayload
               directoryService
           where go

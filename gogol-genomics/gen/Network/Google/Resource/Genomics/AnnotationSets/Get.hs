@@ -41,11 +41,12 @@ module Network.Google.Resource.Genomics.AnnotationSets.Get
     , asgAccessToken
     , asgUploadType
     , asgBearerToken
+    , asgFields
     , asgCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotationsets.get@ method which the
 -- 'AnnotationSetsGet' request conforms to.
@@ -60,21 +61,23 @@ type AnnotationSetsGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] AnnotationSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] AnnotationSet
 
 -- | Gets an annotation set. Caller must have READ permission for the
 -- associated dataset.
 --
 -- /See:/ 'annotationSetsGet' smart constructor.
 data AnnotationSetsGet = AnnotationSetsGet'
-    { _asgXgafv           :: !(Maybe Xgafv)
-    , _asgUploadProtocol  :: !(Maybe Text)
+    { _asgXgafv :: !(Maybe Xgafv)
+    , _asgUploadProtocol :: !(Maybe Text)
     , _asgAnnotationSetId :: !Text
-    , _asgPp              :: !Bool
-    , _asgAccessToken     :: !(Maybe Text)
-    , _asgUploadType      :: !(Maybe Text)
-    , _asgBearerToken     :: !(Maybe Text)
-    , _asgCallback        :: !(Maybe Text)
+    , _asgPp :: !Bool
+    , _asgAccessToken :: !(Maybe Text)
+    , _asgUploadType :: !(Maybe Text)
+    , _asgBearerToken :: !(Maybe Text)
+    , _asgFields :: !(Maybe Text)
+    , _asgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationSetsGet' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data AnnotationSetsGet = AnnotationSetsGet'
 --
 -- * 'asgBearerToken'
 --
+-- * 'asgFields'
+--
 -- * 'asgCallback'
 annotationSetsGet
     :: Text -- ^ 'asgAnnotationSetId'
     -> AnnotationSetsGet
-annotationSetsGet pAsgAnnotationSetId_ =
+annotationSetsGet pAsgAnnotationSetId_ = 
     AnnotationSetsGet'
     { _asgXgafv = Nothing
     , _asgUploadProtocol = Nothing
@@ -108,6 +113,7 @@ annotationSetsGet pAsgAnnotationSetId_ =
     , _asgAccessToken = Nothing
     , _asgUploadType = Nothing
     , _asgBearerToken = Nothing
+    , _asgFields = Nothing
     , _asgCallback = Nothing
     }
 
@@ -149,6 +155,11 @@ asgBearerToken
   = lens _asgBearerToken
       (\ s a -> s{_asgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asgFields :: Lens' AnnotationSetsGet (Maybe Text)
+asgFields
+  = lens _asgFields (\ s a -> s{_asgFields = a})
+
 -- | JSONP
 asgCallback :: Lens' AnnotationSetsGet (Maybe Text)
 asgCallback
@@ -167,6 +178,7 @@ instance GoogleRequest AnnotationSetsGet where
               _asgUploadType
               _asgBearerToken
               _asgCallback
+              _asgFields
               (Just AltJSON)
               genomicsService
           where go

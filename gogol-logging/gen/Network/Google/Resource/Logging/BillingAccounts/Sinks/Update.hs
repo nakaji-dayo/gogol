@@ -20,12 +20,10 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates a sink. If the named sink doesn\'t exist, then this method is
--- identical to sinks.create. If the named sink does exist, then this
--- method replaces the following fields in the existing sink with values
--- from the new sink: destination, filter, output_version_format,
--- start_time, and end_time. The updated filter might also have a new
--- writer_identity; see the unique_writer_identity field.
+-- Updates a sink. This method replaces the following fields in the
+-- existing sink with values from the new sink: destination, and filter.
+-- The updated sink might also have a new writer_identity; see the
+-- unique_writer_identity field.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.billingAccounts.sinks.update@.
 module Network.Google.Resource.Logging.BillingAccounts.Sinks.Update
@@ -41,17 +39,19 @@ module Network.Google.Resource.Logging.BillingAccounts.Sinks.Update
     , basuXgafv
     , basuUniqueWriterIdentity
     , basuUploadProtocol
+    , basuUpdateMask
     , basuPp
     , basuAccessToken
     , basuUploadType
     , basuPayload
     , basuBearerToken
     , basuSinkName
+    , basuFields
     , basuCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.billingAccounts.sinks.update@ method which the
 -- 'BillingAccountsSinksUpdate' request conforms to.
@@ -61,33 +61,35 @@ type BillingAccountsSinksUpdateResource =
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "uniqueWriterIdentity" Bool :>
              QueryParam "upload_protocol" Text :>
-               QueryParam "pp" Bool :>
-                 QueryParam "access_token" Text :>
-                   QueryParam "uploadType" Text :>
-                     QueryParam "bearer_token" Text :>
-                       QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] LogSink :> Put '[JSON] LogSink
+               QueryParam "updateMask" FieldMask :>
+                 QueryParam "pp" Bool :>
+                   QueryParam "access_token" Text :>
+                     QueryParam "uploadType" Text :>
+                       QueryParam "bearer_token" Text :>
+                         QueryParam "callback" Text :>
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] LogSink :> Put '[JSON] LogSink
 
--- | Updates a sink. If the named sink doesn\'t exist, then this method is
--- identical to sinks.create. If the named sink does exist, then this
--- method replaces the following fields in the existing sink with values
--- from the new sink: destination, filter, output_version_format,
--- start_time, and end_time. The updated filter might also have a new
--- writer_identity; see the unique_writer_identity field.
+-- | Updates a sink. This method replaces the following fields in the
+-- existing sink with values from the new sink: destination, and filter.
+-- The updated sink might also have a new writer_identity; see the
+-- unique_writer_identity field.
 --
 -- /See:/ 'billingAccountsSinksUpdate' smart constructor.
 data BillingAccountsSinksUpdate = BillingAccountsSinksUpdate'
-    { _basuXgafv                :: !(Maybe Xgafv)
+    { _basuXgafv :: !(Maybe Xgafv)
     , _basuUniqueWriterIdentity :: !(Maybe Bool)
-    , _basuUploadProtocol       :: !(Maybe Text)
-    , _basuPp                   :: !Bool
-    , _basuAccessToken          :: !(Maybe Text)
-    , _basuUploadType           :: !(Maybe Text)
-    , _basuPayload              :: !LogSink
-    , _basuBearerToken          :: !(Maybe Text)
-    , _basuSinkName             :: !Text
-    , _basuCallback             :: !(Maybe Text)
+    , _basuUploadProtocol :: !(Maybe Text)
+    , _basuUpdateMask :: !(Maybe FieldMask)
+    , _basuPp :: !Bool
+    , _basuAccessToken :: !(Maybe Text)
+    , _basuUploadType :: !(Maybe Text)
+    , _basuPayload :: !LogSink
+    , _basuBearerToken :: !(Maybe Text)
+    , _basuSinkName :: !Text
+    , _basuFields :: !(Maybe Text)
+    , _basuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsSinksUpdate' with the minimum fields required to make a request.
@@ -99,6 +101,8 @@ data BillingAccountsSinksUpdate = BillingAccountsSinksUpdate'
 -- * 'basuUniqueWriterIdentity'
 --
 -- * 'basuUploadProtocol'
+--
+-- * 'basuUpdateMask'
 --
 -- * 'basuPp'
 --
@@ -112,22 +116,26 @@ data BillingAccountsSinksUpdate = BillingAccountsSinksUpdate'
 --
 -- * 'basuSinkName'
 --
+-- * 'basuFields'
+--
 -- * 'basuCallback'
 billingAccountsSinksUpdate
     :: LogSink -- ^ 'basuPayload'
     -> Text -- ^ 'basuSinkName'
     -> BillingAccountsSinksUpdate
-billingAccountsSinksUpdate pBasuPayload_ pBasuSinkName_ =
+billingAccountsSinksUpdate pBasuPayload_ pBasuSinkName_ = 
     BillingAccountsSinksUpdate'
     { _basuXgafv = Nothing
     , _basuUniqueWriterIdentity = Nothing
     , _basuUploadProtocol = Nothing
+    , _basuUpdateMask = Nothing
     , _basuPp = True
     , _basuAccessToken = Nothing
     , _basuUploadType = Nothing
     , _basuPayload = pBasuPayload_
     , _basuBearerToken = Nothing
     , _basuSinkName = pBasuSinkName_
+    , _basuFields = Nothing
     , _basuCallback = Nothing
     }
 
@@ -141,9 +149,10 @@ basuXgafv
 -- writer_identity in the updated sink depends on both the old and new
 -- values of this field: If the old and new values of this field are both
 -- false or both true, then there is no change to the sink\'s
--- writer_identity. If the old value was false and the new value is true,
+-- writer_identity. If the old value is false and the new value is true,
 -- then writer_identity is changed to a unique service account. It is an
--- error if the old value was true and the new value is false.
+-- error if the old value is true and the new value is set to false or
+-- defaulted to false.
 basuUniqueWriterIdentity :: Lens' BillingAccountsSinksUpdate (Maybe Bool)
 basuUniqueWriterIdentity
   = lens _basuUniqueWriterIdentity
@@ -154,6 +163,21 @@ basuUploadProtocol :: Lens' BillingAccountsSinksUpdate (Maybe Text)
 basuUploadProtocol
   = lens _basuUploadProtocol
       (\ s a -> s{_basuUploadProtocol = a})
+
+-- | Optional. Field mask that specifies the fields in sink that need an
+-- update. A sink field will be overwritten if, and only if, it is in the
+-- update mask. name and output only fields cannot be updated.An empty
+-- updateMask is temporarily treated as using the following mask for
+-- backwards compatibility purposes: destination,filter,includeChildren At
+-- some point in the future, behavior will be removed and specifying an
+-- empty updateMask will be an error.For a detailed FieldMask definition,
+-- see
+-- https:\/\/developers.google.com\/protocol-buffers\/docs\/reference\/google.protobuf#fieldmaskExample:
+-- updateMask=filter.
+basuUpdateMask :: Lens' BillingAccountsSinksUpdate (Maybe FieldMask)
+basuUpdateMask
+  = lens _basuUpdateMask
+      (\ s a -> s{_basuUpdateMask = a})
 
 -- | Pretty-print response.
 basuPp :: Lens' BillingAccountsSinksUpdate Bool
@@ -185,11 +209,18 @@ basuBearerToken
 -- | Required. The full resource name of the sink to update, including the
 -- parent resource and the sink identifier:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
 -- \"projects\/my-project-id\/sinks\/my-sink-id\".
 basuSinkName :: Lens' BillingAccountsSinksUpdate Text
 basuSinkName
   = lens _basuSinkName (\ s a -> s{_basuSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+basuFields :: Lens' BillingAccountsSinksUpdate (Maybe Text)
+basuFields
+  = lens _basuFields (\ s a -> s{_basuFields = a})
 
 -- | JSONP
 basuCallback :: Lens' BillingAccountsSinksUpdate (Maybe Text)
@@ -206,11 +237,13 @@ instance GoogleRequest BillingAccountsSinksUpdate
           = go _basuSinkName _basuXgafv
               _basuUniqueWriterIdentity
               _basuUploadProtocol
+              _basuUpdateMask
               (Just _basuPp)
               _basuAccessToken
               _basuUploadType
               _basuBearerToken
               _basuCallback
+              _basuFields
               (Just AltJSON)
               _basuPayload
               loggingService

@@ -50,11 +50,12 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Attachments.List
     , balBearerToken
     , balNamespacedType
     , balProjectId
+    , balFields
     , balCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.attachments.list@ method which the
 -- 'BeaconsAttachmentsList' request conforms to.
@@ -62,7 +63,7 @@ type BeaconsAttachmentsListResource =
      "v1beta1" :>
        Capture "beaconName" Text :>
          "attachments" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -71,8 +72,9 @@ type BeaconsAttachmentsListResource =
                        QueryParam "namespacedType" Text :>
                          QueryParam "projectId" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListBeaconAttachmentsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListBeaconAttachmentsResponse
 
 -- | Returns the attachments for the specified beacon that match the
 -- specified namespaced-type pattern. To control which namespaced types are
@@ -86,16 +88,17 @@ type BeaconsAttachmentsListResource =
 --
 -- /See:/ 'beaconsAttachmentsList' smart constructor.
 data BeaconsAttachmentsList = BeaconsAttachmentsList'
-    { _balXgafv          :: !(Maybe Text)
+    { _balXgafv :: !(Maybe Xgafv)
     , _balUploadProtocol :: !(Maybe Text)
-    , _balPp             :: !Bool
-    , _balAccessToken    :: !(Maybe Text)
-    , _balBeaconName     :: !Text
-    , _balUploadType     :: !(Maybe Text)
-    , _balBearerToken    :: !(Maybe Text)
+    , _balPp :: !Bool
+    , _balAccessToken :: !(Maybe Text)
+    , _balBeaconName :: !Text
+    , _balUploadType :: !(Maybe Text)
+    , _balBearerToken :: !(Maybe Text)
     , _balNamespacedType :: !(Maybe Text)
-    , _balProjectId      :: !(Maybe Text)
-    , _balCallback       :: !(Maybe Text)
+    , _balProjectId :: !(Maybe Text)
+    , _balFields :: !(Maybe Text)
+    , _balCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsAttachmentsList' with the minimum fields required to make a request.
@@ -120,11 +123,13 @@ data BeaconsAttachmentsList = BeaconsAttachmentsList'
 --
 -- * 'balProjectId'
 --
+-- * 'balFields'
+--
 -- * 'balCallback'
 beaconsAttachmentsList
     :: Text -- ^ 'balBeaconName'
     -> BeaconsAttachmentsList
-beaconsAttachmentsList pBalBeaconName_ =
+beaconsAttachmentsList pBalBeaconName_ = 
     BeaconsAttachmentsList'
     { _balXgafv = Nothing
     , _balUploadProtocol = Nothing
@@ -135,11 +140,12 @@ beaconsAttachmentsList pBalBeaconName_ =
     , _balBearerToken = Nothing
     , _balNamespacedType = Nothing
     , _balProjectId = Nothing
+    , _balFields = Nothing
     , _balCallback = Nothing
     }
 
 -- | V1 error format.
-balXgafv :: Lens' BeaconsAttachmentsList (Maybe Text)
+balXgafv :: Lens' BeaconsAttachmentsList (Maybe Xgafv)
 balXgafv = lens _balXgafv (\ s a -> s{_balXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -198,6 +204,11 @@ balProjectId :: Lens' BeaconsAttachmentsList (Maybe Text)
 balProjectId
   = lens _balProjectId (\ s a -> s{_balProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+balFields :: Lens' BeaconsAttachmentsList (Maybe Text)
+balFields
+  = lens _balFields (\ s a -> s{_balFields = a})
+
 -- | JSONP
 balCallback :: Lens' BeaconsAttachmentsList (Maybe Text)
 balCallback
@@ -217,6 +228,7 @@ instance GoogleRequest BeaconsAttachmentsList where
               _balNamespacedType
               _balProjectId
               _balCallback
+              _balFields
               (Just AltJSON)
               proximityBeaconService
           where go

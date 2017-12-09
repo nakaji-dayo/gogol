@@ -98,13 +98,13 @@ module Network.Google.DataTransfer
     , adtApplicationTransferStatus
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.DataTransfer.Applications.Get
-import           Network.Google.Resource.DataTransfer.Applications.List
-import           Network.Google.Resource.DataTransfer.Transfers.Get
-import           Network.Google.Resource.DataTransfer.Transfers.Insert
-import           Network.Google.Resource.DataTransfer.Transfers.List
+import Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Resource.DataTransfer.Applications.Get
+import Network.Google.Resource.DataTransfer.Applications.List
+import Network.Google.Resource.DataTransfer.Transfers.Get
+import Network.Google.Resource.DataTransfer.Transfers.Insert
+import Network.Google.Resource.DataTransfer.Transfers.List
 
 {- $resources
 TODO

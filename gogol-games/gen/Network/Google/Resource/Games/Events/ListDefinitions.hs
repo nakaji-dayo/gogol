@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Events.ListDefinitions
     , eldLanguage
     , eldPageToken
     , eldMaxResults
+    , eldFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.events.listDefinitions@ method which the
 -- 'EventsListDefinitions' request conforms to.
@@ -52,17 +53,19 @@ type EventsListDefinitionsResource =
              QueryParam "language" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] EventDefinitionListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] EventDefinitionListResponse
 
 -- | Returns a list of the event definitions in this application.
 --
 -- /See:/ 'eventsListDefinitions' smart constructor.
 data EventsListDefinitions = EventsListDefinitions'
     { _eldConsistencyToken :: !(Maybe (Textual Int64))
-    , _eldLanguage         :: !(Maybe Text)
-    , _eldPageToken        :: !(Maybe Text)
-    , _eldMaxResults       :: !(Maybe (Textual Int32))
+    , _eldLanguage :: !(Maybe Text)
+    , _eldPageToken :: !(Maybe Text)
+    , _eldMaxResults :: !(Maybe (Textual Int32))
+    , _eldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsListDefinitions' with the minimum fields required to make a request.
@@ -76,14 +79,17 @@ data EventsListDefinitions = EventsListDefinitions'
 -- * 'eldPageToken'
 --
 -- * 'eldMaxResults'
+--
+-- * 'eldFields'
 eventsListDefinitions
     :: EventsListDefinitions
-eventsListDefinitions =
+eventsListDefinitions = 
     EventsListDefinitions'
     { _eldConsistencyToken = Nothing
     , _eldLanguage = Nothing
     , _eldPageToken = Nothing
     , _eldMaxResults = Nothing
+    , _eldFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -112,6 +118,11 @@ eldMaxResults
       (\ s a -> s{_eldMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+eldFields :: Lens' EventsListDefinitions (Maybe Text)
+eldFields
+  = lens _eldFields (\ s a -> s{_eldFields = a})
+
 instance GoogleRequest EventsListDefinitions where
         type Rs EventsListDefinitions =
              EventDefinitionListResponse
@@ -121,6 +132,7 @@ instance GoogleRequest EventsListDefinitions where
         requestClient EventsListDefinitions'{..}
           = go _eldConsistencyToken _eldLanguage _eldPageToken
               _eldMaxResults
+              _eldFields
               (Just AltJSON)
               gamesService
           where go

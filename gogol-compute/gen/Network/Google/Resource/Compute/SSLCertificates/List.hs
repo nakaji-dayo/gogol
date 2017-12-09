@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.SSLCertificates.List
     , sclFilter
     , sclPageToken
     , sclMaxResults
+    , sclFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.sslCertificates.list@ method which the
 -- 'SSLCertificatesList' request conforms to.
@@ -57,19 +58,21 @@ type SSLCertificatesListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] SSLCertificateList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] SSLCertificateList
 
 -- | Retrieves the list of SslCertificate resources available to the
 -- specified project.
 --
 -- /See:/ 'sslCertificatesList' smart constructor.
 data SSLCertificatesList = SSLCertificatesList'
-    { _sclOrderBy    :: !(Maybe Text)
-    , _sclProject    :: !Text
-    , _sclFilter     :: !(Maybe Text)
-    , _sclPageToken  :: !(Maybe Text)
+    { _sclOrderBy :: !(Maybe Text)
+    , _sclProject :: !Text
+    , _sclFilter :: !(Maybe Text)
+    , _sclPageToken :: !(Maybe Text)
     , _sclMaxResults :: !(Textual Word32)
+    , _sclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SSLCertificatesList' with the minimum fields required to make a request.
@@ -85,16 +88,19 @@ data SSLCertificatesList = SSLCertificatesList'
 -- * 'sclPageToken'
 --
 -- * 'sclMaxResults'
+--
+-- * 'sclFields'
 sslCertificatesList
     :: Text -- ^ 'sclProject'
     -> SSLCertificatesList
-sslCertificatesList pSclProject_ =
+sslCertificatesList pSclProject_ = 
     SSLCertificatesList'
     { _sclOrderBy = Nothing
     , _sclProject = pSclProject_
     , _sclFilter = Nothing
     , _sclPageToken = Nothing
     , _sclMaxResults = 500
+    , _sclFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -114,26 +120,25 @@ sclProject :: Lens' SSLCertificatesList Text
 sclProject
   = lens _sclProject (\ s a -> s{_sclProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 sclFilter :: Lens' SSLCertificatesList (Maybe Text)
 sclFilter
   = lens _sclFilter (\ s a -> s{_sclFilter = a})
@@ -147,12 +152,18 @@ sclPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 sclMaxResults :: Lens' SSLCertificatesList Word32
 sclMaxResults
   = lens _sclMaxResults
       (\ s a -> s{_sclMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+sclFields :: Lens' SSLCertificatesList (Maybe Text)
+sclFields
+  = lens _sclFields (\ s a -> s{_sclFields = a})
 
 instance GoogleRequest SSLCertificatesList where
         type Rs SSLCertificatesList = SSLCertificateList
@@ -163,6 +174,7 @@ instance GoogleRequest SSLCertificatesList where
         requestClient SSLCertificatesList'{..}
           = go _sclProject _sclOrderBy _sclFilter _sclPageToken
               (Just _sclMaxResults)
+              _sclFields
               (Just AltJSON)
               computeService
           where go

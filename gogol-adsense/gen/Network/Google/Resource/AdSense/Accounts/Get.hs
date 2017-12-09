@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.Accounts.Get
     -- * Request Lenses
     , agTree
     , agAccountId
+    , agFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
@@ -48,14 +49,16 @@ type AccountsGetResource =
          "accounts" :>
            Capture "accountId" Text :>
              QueryParam "tree" Bool :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Account
 
 -- | Get information about the selected AdSense account.
 --
 -- /See:/ 'accountsGet' smart constructor.
 data AccountsGet = AccountsGet'
-    { _agTree      :: !(Maybe Bool)
+    { _agTree :: !(Maybe Bool)
     , _agAccountId :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data AccountsGet = AccountsGet'
 -- * 'agTree'
 --
 -- * 'agAccountId'
+--
+-- * 'agFields'
 accountsGet
     :: Text -- ^ 'agAccountId'
     -> AccountsGet
-accountsGet pAgAccountId_ =
+accountsGet pAgAccountId_ = 
     AccountsGet'
     { _agTree = Nothing
     , _agAccountId = pAgAccountId_
+    , _agFields = Nothing
     }
 
 -- | Whether the tree of sub accounts should be returned.
@@ -83,13 +89,17 @@ agAccountId :: Lens' AccountsGet Text
 agAccountId
   = lens _agAccountId (\ s a -> s{_agAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AccountsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
         type Scopes AccountsGet =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsGet'{..}
-          = go _agAccountId _agTree (Just AltJSON)
+          = go _agAccountId _agTree _agFields (Just AltJSON)
               adSenseService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)

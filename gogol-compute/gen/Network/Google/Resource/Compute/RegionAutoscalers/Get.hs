@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.RegionAutoscalers.Get
     , ragProject
     , ragAutoscaler
     , ragRegion
+    , ragFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionAutoscalers.get@ method which the
 -- 'RegionAutoscalersGet' request conforms to.
@@ -52,15 +53,17 @@ type RegionAutoscalersGetResource =
                Capture "region" Text :>
                  "autoscalers" :>
                    Capture "autoscaler" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Autoscaler
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Autoscaler
 
 -- | Returns the specified autoscaler.
 --
 -- /See:/ 'regionAutoscalersGet' smart constructor.
 data RegionAutoscalersGet = RegionAutoscalersGet'
-    { _ragProject    :: !Text
+    { _ragProject :: !Text
     , _ragAutoscaler :: !Text
-    , _ragRegion     :: !Text
+    , _ragRegion :: !Text
+    , _ragFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionAutoscalersGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RegionAutoscalersGet = RegionAutoscalersGet'
 -- * 'ragAutoscaler'
 --
 -- * 'ragRegion'
+--
+-- * 'ragFields'
 regionAutoscalersGet
     :: Text -- ^ 'ragProject'
     -> Text -- ^ 'ragAutoscaler'
     -> Text -- ^ 'ragRegion'
     -> RegionAutoscalersGet
-regionAutoscalersGet pRagProject_ pRagAutoscaler_ pRagRegion_ =
+regionAutoscalersGet pRagProject_ pRagAutoscaler_ pRagRegion_ = 
     RegionAutoscalersGet'
     { _ragProject = pRagProject_
     , _ragAutoscaler = pRagAutoscaler_
     , _ragRegion = pRagRegion_
+    , _ragFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -100,6 +106,11 @@ ragRegion :: Lens' RegionAutoscalersGet Text
 ragRegion
   = lens _ragRegion (\ s a -> s{_ragRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ragFields :: Lens' RegionAutoscalersGet (Maybe Text)
+ragFields
+  = lens _ragFields (\ s a -> s{_ragFields = a})
+
 instance GoogleRequest RegionAutoscalersGet where
         type Rs RegionAutoscalersGet = Autoscaler
         type Scopes RegionAutoscalersGet =
@@ -107,7 +118,7 @@ instance GoogleRequest RegionAutoscalersGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionAutoscalersGet'{..}
-          = go _ragProject _ragRegion _ragAutoscaler
+          = go _ragProject _ragRegion _ragAutoscaler _ragFields
               (Just AltJSON)
               computeService
           where go

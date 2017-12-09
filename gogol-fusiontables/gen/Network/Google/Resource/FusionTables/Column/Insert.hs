@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Column.Insert
     -- * Request Lenses
     , ciPayload
     , ciTableId
+    , ciFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.column.insert@ method which the
 -- 'ColumnInsert' request conforms to.
@@ -48,8 +49,9 @@ type ColumnInsertResource =
          "tables" :>
            Capture "tableId" Text :>
              "columns" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Column :> Post '[JSON] Column
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Column :> Post '[JSON] Column
 
 -- | Adds a new column to the table.
 --
@@ -57,6 +59,7 @@ type ColumnInsertResource =
 data ColumnInsert = ColumnInsert'
     { _ciPayload :: !Column
     , _ciTableId :: !Text
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColumnInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ColumnInsert = ColumnInsert'
 -- * 'ciPayload'
 --
 -- * 'ciTableId'
+--
+-- * 'ciFields'
 columnInsert
     :: Column -- ^ 'ciPayload'
     -> Text -- ^ 'ciTableId'
     -> ColumnInsert
-columnInsert pCiPayload_ pCiTableId_ =
+columnInsert pCiPayload_ pCiTableId_ = 
     ColumnInsert'
     { _ciPayload = pCiPayload_
     , _ciTableId = pCiTableId_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,12 +92,16 @@ ciTableId :: Lens' ColumnInsert Text
 ciTableId
   = lens _ciTableId (\ s a -> s{_ciTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' ColumnInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest ColumnInsert where
         type Rs ColumnInsert = Column
         type Scopes ColumnInsert =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient ColumnInsert'{..}
-          = go _ciTableId (Just AltJSON) _ciPayload
+          = go _ciTableId _ciFields (Just AltJSON) _ciPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy ColumnInsertResource)

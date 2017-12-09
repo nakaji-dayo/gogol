@@ -49,11 +49,12 @@ module Network.Google.Resource.Genomics.Annotations.BatchCreate
     , abcUploadType
     , abcPayload
     , abcBearerToken
+    , abcFields
     , abcCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotations.batchCreate@ method which the
 -- 'AnnotationsBatchCreate' request conforms to.
@@ -67,9 +68,10 @@ type AnnotationsBatchCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] BatchCreateAnnotationsRequest :>
-                           Post '[JSON] BatchCreateAnnotationsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] BatchCreateAnnotationsRequest :>
+                             Post '[JSON] BatchCreateAnnotationsResponse
 
 -- | Creates one or more new annotations atomically. All annotations must
 -- belong to the same annotation set. Caller must have WRITE permission for
@@ -84,14 +86,15 @@ type AnnotationsBatchCreateResource =
 --
 -- /See:/ 'annotationsBatchCreate' smart constructor.
 data AnnotationsBatchCreate = AnnotationsBatchCreate'
-    { _abcXgafv          :: !(Maybe Xgafv)
+    { _abcXgafv :: !(Maybe Xgafv)
     , _abcUploadProtocol :: !(Maybe Text)
-    , _abcPp             :: !Bool
-    , _abcAccessToken    :: !(Maybe Text)
-    , _abcUploadType     :: !(Maybe Text)
-    , _abcPayload        :: !BatchCreateAnnotationsRequest
-    , _abcBearerToken    :: !(Maybe Text)
-    , _abcCallback       :: !(Maybe Text)
+    , _abcPp :: !Bool
+    , _abcAccessToken :: !(Maybe Text)
+    , _abcUploadType :: !(Maybe Text)
+    , _abcPayload :: !BatchCreateAnnotationsRequest
+    , _abcBearerToken :: !(Maybe Text)
+    , _abcFields :: !(Maybe Text)
+    , _abcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsBatchCreate' with the minimum fields required to make a request.
@@ -112,11 +115,13 @@ data AnnotationsBatchCreate = AnnotationsBatchCreate'
 --
 -- * 'abcBearerToken'
 --
+-- * 'abcFields'
+--
 -- * 'abcCallback'
 annotationsBatchCreate
     :: BatchCreateAnnotationsRequest -- ^ 'abcPayload'
     -> AnnotationsBatchCreate
-annotationsBatchCreate pAbcPayload_ =
+annotationsBatchCreate pAbcPayload_ = 
     AnnotationsBatchCreate'
     { _abcXgafv = Nothing
     , _abcUploadProtocol = Nothing
@@ -125,6 +130,7 @@ annotationsBatchCreate pAbcPayload_ =
     , _abcUploadType = Nothing
     , _abcPayload = pAbcPayload_
     , _abcBearerToken = Nothing
+    , _abcFields = Nothing
     , _abcCallback = Nothing
     }
 
@@ -165,6 +171,11 @@ abcBearerToken
   = lens _abcBearerToken
       (\ s a -> s{_abcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+abcFields :: Lens' AnnotationsBatchCreate (Maybe Text)
+abcFields
+  = lens _abcFields (\ s a -> s{_abcFields = a})
+
 -- | JSONP
 abcCallback :: Lens' AnnotationsBatchCreate (Maybe Text)
 abcCallback
@@ -182,6 +193,7 @@ instance GoogleRequest AnnotationsBatchCreate where
               _abcUploadType
               _abcBearerToken
               _abcCallback
+              _abcFields
               (Just AltJSON)
               _abcPayload
               genomicsService

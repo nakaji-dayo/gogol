@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Revisions.Delete
     -- * Request Lenses
     , rFileId
     , rRevisionId
+    , rFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.revisions.delete@ method which the
 -- 'RevisionsDelete' request conforms to.
@@ -50,15 +51,17 @@ type RevisionsDeleteResource =
            Capture "fileId" Text :>
              "revisions" :>
                Capture "revisionId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Permanently deletes a revision. This method is only applicable to files
 -- with binary content in Drive.
 --
 -- /See:/ 'revisionsDelete' smart constructor.
 data RevisionsDelete = RevisionsDelete'
-    { _rFileId     :: !Text
+    { _rFileId :: !Text
     , _rRevisionId :: !Text
+    , _rFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionsDelete' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data RevisionsDelete = RevisionsDelete'
 -- * 'rFileId'
 --
 -- * 'rRevisionId'
+--
+-- * 'rFields'
 revisionsDelete
     :: Text -- ^ 'rFileId'
     -> Text -- ^ 'rRevisionId'
     -> RevisionsDelete
-revisionsDelete pRFileId_ pRRevisionId_ =
+revisionsDelete pRFileId_ pRRevisionId_ = 
     RevisionsDelete'
     { _rFileId = pRFileId_
     , _rRevisionId = pRRevisionId_
+    , _rFields = Nothing
     }
 
 -- | The ID of the file.
@@ -87,6 +93,10 @@ rRevisionId :: Lens' RevisionsDelete Text
 rRevisionId
   = lens _rRevisionId (\ s a -> s{_rRevisionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rFields :: Lens' RevisionsDelete (Maybe Text)
+rFields = lens _rFields (\ s a -> s{_rFields = a})
+
 instance GoogleRequest RevisionsDelete where
         type Rs RevisionsDelete = ()
         type Scopes RevisionsDelete =
@@ -94,7 +104,7 @@ instance GoogleRequest RevisionsDelete where
                "https://www.googleapis.com/auth/drive.appdata",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient RevisionsDelete'{..}
-          = go _rFileId _rRevisionId (Just AltJSON)
+          = go _rFileId _rRevisionId _rFields (Just AltJSON)
               driveService
           where go
                   = buildClient

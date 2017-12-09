@@ -35,10 +35,11 @@ module Network.Google.Resource.Books.MyLibrary.Annotations.Delete
     -- * Request Lenses
     , mladAnnotationId
     , mladSource
+    , mladFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.annotations.delete@ method which the
 -- 'MyLibraryAnnotationsDelete' request conforms to.
@@ -49,14 +50,16 @@ type MyLibraryAnnotationsDeleteResource =
            "annotations" :>
              Capture "annotationId" Text :>
                QueryParam "source" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an annotation.
 --
 -- /See:/ 'myLibraryAnnotationsDelete' smart constructor.
 data MyLibraryAnnotationsDelete = MyLibraryAnnotationsDelete'
     { _mladAnnotationId :: !Text
-    , _mladSource       :: !(Maybe Text)
+    , _mladSource :: !(Maybe Text)
+    , _mladFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryAnnotationsDelete' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data MyLibraryAnnotationsDelete = MyLibraryAnnotationsDelete'
 -- * 'mladAnnotationId'
 --
 -- * 'mladSource'
+--
+-- * 'mladFields'
 myLibraryAnnotationsDelete
     :: Text -- ^ 'mladAnnotationId'
     -> MyLibraryAnnotationsDelete
-myLibraryAnnotationsDelete pMladAnnotationId_ =
+myLibraryAnnotationsDelete pMladAnnotationId_ = 
     MyLibraryAnnotationsDelete'
     { _mladAnnotationId = pMladAnnotationId_
     , _mladSource = Nothing
+    , _mladFields = Nothing
     }
 
 -- | The ID for the annotation to delete.
@@ -86,13 +92,19 @@ mladSource :: Lens' MyLibraryAnnotationsDelete (Maybe Text)
 mladSource
   = lens _mladSource (\ s a -> s{_mladSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mladFields :: Lens' MyLibraryAnnotationsDelete (Maybe Text)
+mladFields
+  = lens _mladFields (\ s a -> s{_mladFields = a})
+
 instance GoogleRequest MyLibraryAnnotationsDelete
          where
         type Rs MyLibraryAnnotationsDelete = ()
         type Scopes MyLibraryAnnotationsDelete =
              '["https://www.googleapis.com/auth/books"]
         requestClient MyLibraryAnnotationsDelete'{..}
-          = go _mladAnnotationId _mladSource (Just AltJSON)
+          = go _mladAnnotationId _mladSource _mladFields
+              (Just AltJSON)
               booksService
           where go
                   = buildClient

@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Placements.Patch
     , ppProFileId
     , ppPayload
     , ppId
+    , ppFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placements.patch@ method which the
 -- 'PlacementsPatch' request conforms to.
 type PlacementsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placements" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Placement :> Patch '[JSON] Placement
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Placement :> Patch '[JSON] Placement
 
 -- | Updates an existing placement. This method supports patch semantics.
 --
 -- /See:/ 'placementsPatch' smart constructor.
 data PlacementsPatch = PlacementsPatch'
     { _ppProFileId :: !(Textual Int64)
-    , _ppPayload   :: !Placement
-    , _ppId        :: !(Textual Int64)
+    , _ppPayload :: !Placement
+    , _ppId :: !(Textual Int64)
+    , _ppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data PlacementsPatch = PlacementsPatch'
 -- * 'ppPayload'
 --
 -- * 'ppId'
+--
+-- * 'ppFields'
 placementsPatch
     :: Int64 -- ^ 'ppProFileId'
     -> Placement -- ^ 'ppPayload'
     -> Int64 -- ^ 'ppId'
     -> PlacementsPatch
-placementsPatch pPpProFileId_ pPpPayload_ pPpId_ =
+placementsPatch pPpProFileId_ pPpPayload_ pPpId_ = 
     PlacementsPatch'
     { _ppProFileId = _Coerce # pPpProFileId_
     , _ppPayload = pPpPayload_
     , _ppId = _Coerce # pPpId_
+    , _ppFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -98,12 +104,17 @@ ppPayload
 ppId :: Lens' PlacementsPatch Int64
 ppId = lens _ppId (\ s a -> s{_ppId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ppFields :: Lens' PlacementsPatch (Maybe Text)
+ppFields = lens _ppFields (\ s a -> s{_ppFields = a})
+
 instance GoogleRequest PlacementsPatch where
         type Rs PlacementsPatch = Placement
         type Scopes PlacementsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementsPatch'{..}
-          = go _ppProFileId (Just _ppId) (Just AltJSON)
+          = go _ppProFileId (Just _ppId) _ppFields
+              (Just AltJSON)
               _ppPayload
               dFAReportingService
           where go

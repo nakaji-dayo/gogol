@@ -43,11 +43,12 @@ module Network.Google.Resource.Classroom.Courses.Delete
     , cdUploadType
     , cdBearerToken
     , cdId
+    , cdFields
     , cdCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.delete@ method which the
 -- 'CoursesDelete' request conforms to.
@@ -55,14 +56,15 @@ type CoursesDeleteResource =
      "v1" :>
        "courses" :>
          Capture "id" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a course. This method returns the following error codes: *
 -- \`PERMISSION_DENIED\` if the requesting user is not permitted to delete
@@ -71,14 +73,15 @@ type CoursesDeleteResource =
 --
 -- /See:/ 'coursesDelete' smart constructor.
 data CoursesDelete = CoursesDelete'
-    { _cdXgafv          :: !(Maybe Text)
+    { _cdXgafv :: !(Maybe Xgafv)
     , _cdUploadProtocol :: !(Maybe Text)
-    , _cdPp             :: !Bool
-    , _cdAccessToken    :: !(Maybe Text)
-    , _cdUploadType     :: !(Maybe Text)
-    , _cdBearerToken    :: !(Maybe Text)
-    , _cdId             :: !Text
-    , _cdCallback       :: !(Maybe Text)
+    , _cdPp :: !Bool
+    , _cdAccessToken :: !(Maybe Text)
+    , _cdUploadType :: !(Maybe Text)
+    , _cdBearerToken :: !(Maybe Text)
+    , _cdId :: !Text
+    , _cdFields :: !(Maybe Text)
+    , _cdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesDelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data CoursesDelete = CoursesDelete'
 --
 -- * 'cdId'
 --
+-- * 'cdFields'
+--
 -- * 'cdCallback'
 coursesDelete
     :: Text -- ^ 'cdId'
     -> CoursesDelete
-coursesDelete pCdId_ =
+coursesDelete pCdId_ = 
     CoursesDelete'
     { _cdXgafv = Nothing
     , _cdUploadProtocol = Nothing
@@ -112,11 +117,12 @@ coursesDelete pCdId_ =
     , _cdUploadType = Nothing
     , _cdBearerToken = Nothing
     , _cdId = pCdId_
+    , _cdFields = Nothing
     , _cdCallback = Nothing
     }
 
 -- | V1 error format.
-cdXgafv :: Lens' CoursesDelete (Maybe Text)
+cdXgafv :: Lens' CoursesDelete (Maybe Xgafv)
 cdXgafv = lens _cdXgafv (\ s a -> s{_cdXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -151,6 +157,10 @@ cdBearerToken
 cdId :: Lens' CoursesDelete Text
 cdId = lens _cdId (\ s a -> s{_cdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' CoursesDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 -- | JSONP
 cdCallback :: Lens' CoursesDelete (Maybe Text)
 cdCallback
@@ -166,6 +176,7 @@ instance GoogleRequest CoursesDelete where
               _cdUploadType
               _cdBearerToken
               _cdCallback
+              _cdFields
               (Just AltJSON)
               classroomService
           where go

@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Users.Update
     , uuPayload
     , uuName
     , uuHost
+    , uuFields
     , uuInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.users.update@ method which the
 -- 'UsersUpdate' request conforms to.
@@ -55,17 +56,19 @@ type UsersUpdateResource =
                  "users" :>
                    QueryParam "host" Text :>
                      QueryParam "name" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] User :> Put '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] User :> Put '[JSON] Operation
 
 -- | Updates an existing user in a Cloud SQL instance.
 --
 -- /See:/ 'usersUpdate' smart constructor.
 data UsersUpdate = UsersUpdate'
-    { _uuProject  :: !Text
-    , _uuPayload  :: !User
-    , _uuName     :: !Text
-    , _uuHost     :: !Text
+    { _uuProject :: !Text
+    , _uuPayload :: !User
+    , _uuName :: !Text
+    , _uuHost :: !Text
+    , _uuFields :: !(Maybe Text)
     , _uuInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -81,6 +84,8 @@ data UsersUpdate = UsersUpdate'
 --
 -- * 'uuHost'
 --
+-- * 'uuFields'
+--
 -- * 'uuInstance'
 usersUpdate
     :: Text -- ^ 'uuProject'
@@ -89,12 +94,13 @@ usersUpdate
     -> Text -- ^ 'uuHost'
     -> Text -- ^ 'uuInstance'
     -> UsersUpdate
-usersUpdate pUuProject_ pUuPayload_ pUuName_ pUuHost_ pUuInstance_ =
+usersUpdate pUuProject_ pUuPayload_ pUuName_ pUuHost_ pUuInstance_ = 
     UsersUpdate'
     { _uuProject = pUuProject_
     , _uuPayload = pUuPayload_
     , _uuName = pUuName_
     , _uuHost = pUuHost_
+    , _uuFields = Nothing
     , _uuInstance = pUuInstance_
     }
 
@@ -116,6 +122,10 @@ uuName = lens _uuName (\ s a -> s{_uuName = a})
 uuHost :: Lens' UsersUpdate Text
 uuHost = lens _uuHost (\ s a -> s{_uuHost = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uuFields :: Lens' UsersUpdate (Maybe Text)
+uuFields = lens _uuFields (\ s a -> s{_uuFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 uuInstance :: Lens' UsersUpdate Text
 uuInstance
@@ -129,6 +139,7 @@ instance GoogleRequest UsersUpdate where
         requestClient UsersUpdate'{..}
           = go _uuProject _uuInstance (Just _uuHost)
               (Just _uuName)
+              _uuFields
               (Just AltJSON)
               _uuPayload
               sQLAdminService

@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -26,6 +26,9 @@ module Network.Google.Logging.Types
     , cloudPlatformReadOnlyScope
     , cloudPlatformScope
 
+    -- * MetricDescriptorValueType
+    , MetricDescriptorValueType (..)
+
     -- * MonitoredResourceDescriptor
     , MonitoredResourceDescriptor
     , monitoredResourceDescriptor
@@ -40,6 +43,18 @@ module Network.Google.Logging.Types
     , listLogEntriesResponse
     , llerNextPageToken
     , llerEntries
+
+    -- * MetricDescriptor
+    , MetricDescriptor
+    , metricDescriptor
+    , mdMetricKind
+    , mdName
+    , mdDisplayName
+    , mdLabels
+    , mdType
+    , mdValueType
+    , mdDescription
+    , mdUnit
 
     -- * MonitoredResourceLabels
     , MonitoredResourceLabels
@@ -63,6 +78,11 @@ module Network.Google.Logging.Types
     , wlerResource
     , wlerLabels
     , wlerLogName
+
+    -- * LogMetricLabelExtractors
+    , LogMetricLabelExtractors
+    , logMetricLabelExtractors
+    , lmleAddtional
 
     -- * LogSinkOutputVersionFormat
     , LogSinkOutputVersionFormat (..)
@@ -130,6 +150,14 @@ module Network.Google.Logging.Types
     , leslLine
     , leslFile
 
+    -- * LogExclusion
+    , LogExclusion
+    , logExclusion
+    , leDisabled
+    , leName
+    , leFilter
+    , leDescription
+
     -- * WriteLogEntriesResponse
     , WriteLogEntriesResponse
     , writeLogEntriesResponse
@@ -138,12 +166,19 @@ module Network.Google.Logging.Types
     , LogSink
     , logSink
     , lsDestination
+    , lsIncludeChildren
     , lsStartTime
     , lsOutputVersionFormat
     , lsWriterIdentity
     , lsName
     , lsEndTime
     , lsFilter
+
+    -- * ListExclusionsResponse
+    , ListExclusionsResponse
+    , listExclusionsResponse
+    , lerNextPageToken
+    , lerExclusions
 
     -- * ListLogsResponse
     , ListLogsResponse
@@ -160,6 +195,11 @@ module Network.Google.Logging.Types
     -- * LabelDescriptorValueType
     , LabelDescriptorValueType (..)
 
+    -- * Explicit
+    , Explicit
+    , explicit
+    , eBounds
+
     -- * HTTPRequest
     , HTTPRequest
     , hTTPRequest
@@ -168,6 +208,7 @@ module Network.Google.Logging.Types
     , httprCacheFillBytes
     , httprRemoteIP
     , httprLatency
+    , httprProtocol
     , httprServerIP
     , httprRequestSize
     , httprCacheValidatedWithOriginServer
@@ -177,6 +218,13 @@ module Network.Google.Logging.Types
     , httprRequestMethod
     , httprCacheHit
     , httprReferer
+
+    -- * Exponential
+    , Exponential
+    , exponential
+    , eGrowthFactor
+    , eScale
+    , eNumFiniteBuckets
 
     -- * WriteLogEntriesRequestLabels
     , WriteLogEntriesRequestLabels
@@ -207,6 +255,13 @@ module Network.Google.Logging.Types
     , ldValueType
     , ldDescription
 
+    -- * Linear
+    , Linear
+    , linear
+    , lOffSet
+    , lWidth
+    , lNumFiniteBuckets
+
     -- * ListLogEntriesRequest
     , ListLogEntriesRequest
     , listLogEntriesRequest
@@ -228,9 +283,13 @@ module Network.Google.Logging.Types
     -- * LogMetric
     , LogMetric
     , logMetric
+    , lmMetricDescriptor
     , lmName
     , lmVersion
+    , lmLabelExtractors
     , lmFilter
+    , lmValueExtractor
+    , lmBucketOptions
     , lmDescription
 
     -- * LogEntry
@@ -243,12 +302,14 @@ module Network.Google.Logging.Types
     , leHTTPRequest
     , leResource
     , leInsertId
+    , leReceiveTimestamp
     , leLabels
     , leProtoPayload
     , leSourceLocation
     , leLogName
     , leTimestamp
     , leTrace
+    , leSpanId
 
     -- * SourceLocation
     , SourceLocation
@@ -257,8 +318,18 @@ module Network.Google.Logging.Types
     , slFunctionName
     , slFile
 
+    -- * MetricDescriptorMetricKind
+    , MetricDescriptorMetricKind (..)
+
     -- * LogEntrySeverity
     , LogEntrySeverity (..)
+
+    -- * BucketOptions
+    , BucketOptions
+    , bucketOptions
+    , boExponentialBuckets
+    , boLinearBuckets
+    , boExplicitBuckets
 
     -- * SourceReference
     , SourceReference
@@ -275,9 +346,9 @@ module Network.Google.Logging.Types
     , LogLineSeverity (..)
     ) where
 
-import           Network.Google.Logging.Types.Product
-import           Network.Google.Logging.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Logging.Types.Product
+import Network.Google.Logging.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v2' of the Stackdriver Logging API. This contains the host and root path used as a starting point for constructing service requests.
 loggingService :: ServiceConfig

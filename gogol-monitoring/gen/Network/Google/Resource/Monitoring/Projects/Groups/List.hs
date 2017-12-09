@@ -45,11 +45,12 @@ module Network.Google.Resource.Monitoring.Projects.Groups.List
     , pglPageToken
     , pglPageSize
     , pglAncestorsOfGroup
+    , pglFields
     , pglCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.groups.list@ method which the
 -- 'ProjectsGroupsList' request conforms to.
@@ -69,26 +70,28 @@ type ProjectsGroupsListResource =
                              QueryParam "pageSize" (Textual Int32) :>
                                QueryParam "ancestorsOfGroup" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] ListGroupsResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] ListGroupsResponse
 
 -- | Lists the existing groups.
 --
 -- /See:/ 'projectsGroupsList' smart constructor.
 data ProjectsGroupsList = ProjectsGroupsList'
-    { _pglXgafv              :: !(Maybe Xgafv)
-    , _pglUploadProtocol     :: !(Maybe Text)
-    , _pglChildrenOfGroup    :: !(Maybe Text)
-    , _pglPp                 :: !Bool
+    { _pglXgafv :: !(Maybe Xgafv)
+    , _pglUploadProtocol :: !(Maybe Text)
+    , _pglChildrenOfGroup :: !(Maybe Text)
+    , _pglPp :: !Bool
     , _pglDescendantsOfGroup :: !(Maybe Text)
-    , _pglAccessToken        :: !(Maybe Text)
-    , _pglUploadType         :: !(Maybe Text)
-    , _pglBearerToken        :: !(Maybe Text)
-    , _pglName               :: !Text
-    , _pglPageToken          :: !(Maybe Text)
-    , _pglPageSize           :: !(Maybe (Textual Int32))
-    , _pglAncestorsOfGroup   :: !(Maybe Text)
-    , _pglCallback           :: !(Maybe Text)
+    , _pglAccessToken :: !(Maybe Text)
+    , _pglUploadType :: !(Maybe Text)
+    , _pglBearerToken :: !(Maybe Text)
+    , _pglName :: !Text
+    , _pglPageToken :: !(Maybe Text)
+    , _pglPageSize :: !(Maybe (Textual Int32))
+    , _pglAncestorsOfGroup :: !(Maybe Text)
+    , _pglFields :: !(Maybe Text)
+    , _pglCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGroupsList' with the minimum fields required to make a request.
@@ -119,11 +122,13 @@ data ProjectsGroupsList = ProjectsGroupsList'
 --
 -- * 'pglAncestorsOfGroup'
 --
+-- * 'pglFields'
+--
 -- * 'pglCallback'
 projectsGroupsList
     :: Text -- ^ 'pglName'
     -> ProjectsGroupsList
-projectsGroupsList pPglName_ =
+projectsGroupsList pPglName_ = 
     ProjectsGroupsList'
     { _pglXgafv = Nothing
     , _pglUploadProtocol = Nothing
@@ -137,6 +142,7 @@ projectsGroupsList pPglName_ =
     , _pglPageToken = Nothing
     , _pglPageSize = Nothing
     , _pglAncestorsOfGroup = Nothing
+    , _pglFields = Nothing
     , _pglCallback = Nothing
     }
 
@@ -217,6 +223,11 @@ pglAncestorsOfGroup
   = lens _pglAncestorsOfGroup
       (\ s a -> s{_pglAncestorsOfGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pglFields :: Lens' ProjectsGroupsList (Maybe Text)
+pglFields
+  = lens _pglFields (\ s a -> s{_pglFields = a})
+
 -- | JSONP
 pglCallback :: Lens' ProjectsGroupsList (Maybe Text)
 pglCallback
@@ -240,6 +251,7 @@ instance GoogleRequest ProjectsGroupsList where
               _pglPageSize
               _pglAncestorsOfGroup
               _pglCallback
+              _pglFields
               (Just AltJSON)
               monitoringService
           where go

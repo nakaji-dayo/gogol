@@ -38,10 +38,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.ListForProductAndSKU
     , lalfpaskuPageToken
     , lalfpaskuProductId
     , lalfpaskuMaxResults
+    , lalfpaskuFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.listForProductAndSku@ method which the
 -- 'LicenseAssignmentsListForProductAndSKU' request conforms to.
@@ -57,18 +58,20 @@ type LicenseAssignmentsListForProductAndSKUResource =
                      QueryParam "customerId" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] LicenseAssignmentList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] LicenseAssignmentList
 
 -- | List license assignments for given product and sku of the customer.
 --
 -- /See:/ 'licenseAssignmentsListForProductAndSKU' smart constructor.
 data LicenseAssignmentsListForProductAndSKU = LicenseAssignmentsListForProductAndSKU'
-    { _lalfpaskuSKUId      :: !Text
+    { _lalfpaskuSKUId :: !Text
     , _lalfpaskuCustomerId :: !Text
-    , _lalfpaskuPageToken  :: !Text
-    , _lalfpaskuProductId  :: !Text
+    , _lalfpaskuPageToken :: !Text
+    , _lalfpaskuProductId :: !Text
     , _lalfpaskuMaxResults :: !(Textual Word32)
+    , _lalfpaskuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsListForProductAndSKU' with the minimum fields required to make a request.
@@ -84,18 +87,21 @@ data LicenseAssignmentsListForProductAndSKU = LicenseAssignmentsListForProductAn
 -- * 'lalfpaskuProductId'
 --
 -- * 'lalfpaskuMaxResults'
+--
+-- * 'lalfpaskuFields'
 licenseAssignmentsListForProductAndSKU
     :: Text -- ^ 'lalfpaskuSKUId'
     -> Text -- ^ 'lalfpaskuCustomerId'
     -> Text -- ^ 'lalfpaskuProductId'
     -> LicenseAssignmentsListForProductAndSKU
-licenseAssignmentsListForProductAndSKU pLalfpaskuSKUId_ pLalfpaskuCustomerId_ pLalfpaskuProductId_ =
+licenseAssignmentsListForProductAndSKU pLalfpaskuSKUId_ pLalfpaskuCustomerId_ pLalfpaskuProductId_ = 
     LicenseAssignmentsListForProductAndSKU'
     { _lalfpaskuSKUId = pLalfpaskuSKUId_
     , _lalfpaskuCustomerId = pLalfpaskuCustomerId_
     , _lalfpaskuPageToken = ""
     , _lalfpaskuProductId = pLalfpaskuProductId_
     , _lalfpaskuMaxResults = 100
+    , _lalfpaskuFields = Nothing
     }
 
 -- | Name for sku
@@ -132,6 +138,12 @@ lalfpaskuMaxResults
       (\ s a -> s{_lalfpaskuMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lalfpaskuFields :: Lens' LicenseAssignmentsListForProductAndSKU (Maybe Text)
+lalfpaskuFields
+  = lens _lalfpaskuFields
+      (\ s a -> s{_lalfpaskuFields = a})
+
 instance GoogleRequest
          LicenseAssignmentsListForProductAndSKU where
         type Rs LicenseAssignmentsListForProductAndSKU =
@@ -144,6 +156,7 @@ instance GoogleRequest
               (Just _lalfpaskuCustomerId)
               (Just _lalfpaskuPageToken)
               (Just _lalfpaskuMaxResults)
+              _lalfpaskuFields
               (Just AltJSON)
               appsLicensingService
           where go

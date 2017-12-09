@@ -21,7 +21,6 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Retrieves, inserts, and deletes multiple products in a single request.
--- This method can only be called for non-multi-client accounts.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.products.custombatch@.
 module Network.Google.Resource.Content.Products.Custombatch
@@ -36,10 +35,11 @@ module Network.Google.Resource.Content.Products.Custombatch
     -- * Request Lenses
     , pcPayload
     , pcDryRun
+    , pcFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.products.custombatch@ method which the
 -- 'ProductsCustombatch' request conforms to.
@@ -49,17 +49,18 @@ type ProductsCustombatchResource =
          "products" :>
            "batch" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ProductsCustomBatchRequest :>
-                   Post '[JSON] ProductsCustomBatchResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ProductsCustomBatchRequest :>
+                     Post '[JSON] ProductsCustomBatchResponse
 
 -- | Retrieves, inserts, and deletes multiple products in a single request.
--- This method can only be called for non-multi-client accounts.
 --
 -- /See:/ 'productsCustombatch' smart constructor.
 data ProductsCustombatch = ProductsCustombatch'
     { _pcPayload :: !ProductsCustomBatchRequest
-    , _pcDryRun  :: !(Maybe Bool)
+    , _pcDryRun :: !(Maybe Bool)
+    , _pcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsCustombatch' with the minimum fields required to make a request.
@@ -69,13 +70,16 @@ data ProductsCustombatch = ProductsCustombatch'
 -- * 'pcPayload'
 --
 -- * 'pcDryRun'
+--
+-- * 'pcFields'
 productsCustombatch
     :: ProductsCustomBatchRequest -- ^ 'pcPayload'
     -> ProductsCustombatch
-productsCustombatch pPcPayload_ =
+productsCustombatch pPcPayload_ = 
     ProductsCustombatch'
     { _pcPayload = pPcPayload_
     , _pcDryRun = Nothing
+    , _pcFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,13 +91,17 @@ pcPayload
 pcDryRun :: Lens' ProductsCustombatch (Maybe Bool)
 pcDryRun = lens _pcDryRun (\ s a -> s{_pcDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pcFields :: Lens' ProductsCustombatch (Maybe Text)
+pcFields = lens _pcFields (\ s a -> s{_pcFields = a})
+
 instance GoogleRequest ProductsCustombatch where
         type Rs ProductsCustombatch =
              ProductsCustomBatchResponse
         type Scopes ProductsCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient ProductsCustombatch'{..}
-          = go _pcDryRun (Just AltJSON) _pcPayload
+          = go _pcDryRun _pcFields (Just AltJSON) _pcPayload
               shoppingContentService
           where go
                   = buildClient

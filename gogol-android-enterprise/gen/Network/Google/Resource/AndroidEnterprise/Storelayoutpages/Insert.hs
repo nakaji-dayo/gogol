@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Insert
     -- * Request Lenses
     , siEnterpriseId
     , siPayload
+    , siFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutpages.insert@ method which the
 -- 'StorelayoutpagesInsert' request conforms to.
@@ -49,15 +50,17 @@ type StorelayoutpagesInsertResource =
            Capture "enterpriseId" Text :>
              "storeLayout" :>
                "pages" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] StorePage :> Post '[JSON] StorePage
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] StorePage :> Post '[JSON] StorePage
 
 -- | Inserts a new store page.
 --
 -- /See:/ 'storelayoutpagesInsert' smart constructor.
 data StorelayoutpagesInsert = StorelayoutpagesInsert'
     { _siEnterpriseId :: !Text
-    , _siPayload      :: !StorePage
+    , _siPayload :: !StorePage
+    , _siFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutpagesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data StorelayoutpagesInsert = StorelayoutpagesInsert'
 -- * 'siEnterpriseId'
 --
 -- * 'siPayload'
+--
+-- * 'siFields'
 storelayoutpagesInsert
     :: Text -- ^ 'siEnterpriseId'
     -> StorePage -- ^ 'siPayload'
     -> StorelayoutpagesInsert
-storelayoutpagesInsert pSiEnterpriseId_ pSiPayload_ =
+storelayoutpagesInsert pSiEnterpriseId_ pSiPayload_ = 
     StorelayoutpagesInsert'
     { _siEnterpriseId = pSiEnterpriseId_
     , _siPayload = pSiPayload_
+    , _siFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -88,12 +94,17 @@ siPayload :: Lens' StorelayoutpagesInsert StorePage
 siPayload
   = lens _siPayload (\ s a -> s{_siPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+siFields :: Lens' StorelayoutpagesInsert (Maybe Text)
+siFields = lens _siFields (\ s a -> s{_siFields = a})
+
 instance GoogleRequest StorelayoutpagesInsert where
         type Rs StorelayoutpagesInsert = StorePage
         type Scopes StorelayoutpagesInsert =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutpagesInsert'{..}
-          = go _siEnterpriseId (Just AltJSON) _siPayload
+          = go _siEnterpriseId _siFields (Just AltJSON)
+              _siPayload
               androidEnterpriseService
           where go
                   = buildClient

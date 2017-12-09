@@ -20,8 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Finds named entities (currently finds proper names) in the text, entity
--- types, salience, mentions for each entity, and other properties.
+-- Finds named entities (currently proper names and common nouns) in the
+-- text along with entity types, salience, mentions for each entity, and
+-- other properties.
 --
 -- /See:/ <https://cloud.google.com/natural-language/ Google Cloud Natural Language API Reference> for @language.documents.analyzeEntities@.
 module Network.Google.Resource.Language.Documents.AnalyzeEntities
@@ -41,11 +42,12 @@ module Network.Google.Resource.Language.Documents.AnalyzeEntities
     , daeUploadType
     , daePayload
     , daeBearerToken
+    , daeFields
     , daeCallback
     ) where
 
-import           Network.Google.Language.Types
-import           Network.Google.Prelude
+import Network.Google.Language.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @language.documents.analyzeEntities@ method which the
 -- 'DocumentsAnalyzeEntities' request conforms to.
@@ -59,23 +61,26 @@ type DocumentsAnalyzeEntitiesResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AnalyzeEntitiesRequest :>
-                           Post '[JSON] AnalyzeEntitiesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AnalyzeEntitiesRequest :>
+                             Post '[JSON] AnalyzeEntitiesResponse
 
--- | Finds named entities (currently finds proper names) in the text, entity
--- types, salience, mentions for each entity, and other properties.
+-- | Finds named entities (currently proper names and common nouns) in the
+-- text along with entity types, salience, mentions for each entity, and
+-- other properties.
 --
 -- /See:/ 'documentsAnalyzeEntities' smart constructor.
 data DocumentsAnalyzeEntities = DocumentsAnalyzeEntities'
-    { _daeXgafv          :: !(Maybe Xgafv)
+    { _daeXgafv :: !(Maybe Xgafv)
     , _daeUploadProtocol :: !(Maybe Text)
-    , _daePp             :: !Bool
-    , _daeAccessToken    :: !(Maybe Text)
-    , _daeUploadType     :: !(Maybe Text)
-    , _daePayload        :: !AnalyzeEntitiesRequest
-    , _daeBearerToken    :: !(Maybe Text)
-    , _daeCallback       :: !(Maybe Text)
+    , _daePp :: !Bool
+    , _daeAccessToken :: !(Maybe Text)
+    , _daeUploadType :: !(Maybe Text)
+    , _daePayload :: !AnalyzeEntitiesRequest
+    , _daeBearerToken :: !(Maybe Text)
+    , _daeFields :: !(Maybe Text)
+    , _daeCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DocumentsAnalyzeEntities' with the minimum fields required to make a request.
@@ -96,11 +101,13 @@ data DocumentsAnalyzeEntities = DocumentsAnalyzeEntities'
 --
 -- * 'daeBearerToken'
 --
+-- * 'daeFields'
+--
 -- * 'daeCallback'
 documentsAnalyzeEntities
     :: AnalyzeEntitiesRequest -- ^ 'daePayload'
     -> DocumentsAnalyzeEntities
-documentsAnalyzeEntities pDaePayload_ =
+documentsAnalyzeEntities pDaePayload_ = 
     DocumentsAnalyzeEntities'
     { _daeXgafv = Nothing
     , _daeUploadProtocol = Nothing
@@ -109,6 +116,7 @@ documentsAnalyzeEntities pDaePayload_ =
     , _daeUploadType = Nothing
     , _daePayload = pDaePayload_
     , _daeBearerToken = Nothing
+    , _daeFields = Nothing
     , _daeCallback = Nothing
     }
 
@@ -149,6 +157,11 @@ daeBearerToken
   = lens _daeBearerToken
       (\ s a -> s{_daeBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+daeFields :: Lens' DocumentsAnalyzeEntities (Maybe Text)
+daeFields
+  = lens _daeFields (\ s a -> s{_daeFields = a})
+
 -- | JSONP
 daeCallback :: Lens' DocumentsAnalyzeEntities (Maybe Text)
 daeCallback
@@ -158,13 +171,15 @@ instance GoogleRequest DocumentsAnalyzeEntities where
         type Rs DocumentsAnalyzeEntities =
              AnalyzeEntitiesResponse
         type Scopes DocumentsAnalyzeEntities =
-             '["https://www.googleapis.com/auth/cloud-platform"]
+             '["https://www.googleapis.com/auth/cloud-language",
+               "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DocumentsAnalyzeEntities'{..}
           = go _daeXgafv _daeUploadProtocol (Just _daePp)
               _daeAccessToken
               _daeUploadType
               _daeBearerToken
               _daeCallback
+              _daeFields
               (Just AltJSON)
               _daePayload
               languageService

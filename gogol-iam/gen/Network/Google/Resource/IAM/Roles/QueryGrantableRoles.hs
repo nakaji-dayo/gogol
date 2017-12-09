@@ -42,27 +42,29 @@ module Network.Google.Resource.IAM.Roles.QueryGrantableRoles
     , rqgrUploadType
     , rqgrPayload
     , rqgrBearerToken
+    , rqgrFields
     , rqgrCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.roles.queryGrantableRoles@ method which the
 -- 'RolesQueryGrantableRoles' request conforms to.
 type RolesQueryGrantableRolesResource =
      "v1" :>
        "roles:queryGrantableRoles" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] QueryGrantableRolesRequest :>
-                           Post '[JSON] QueryGrantableRolesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] QueryGrantableRolesRequest :>
+                             Post '[JSON] QueryGrantableRolesResponse
 
 -- | Queries roles that can be granted on a particular resource. A role is
 -- grantable if it can be used as the role in a binding for a policy for
@@ -70,14 +72,15 @@ type RolesQueryGrantableRolesResource =
 --
 -- /See:/ 'rolesQueryGrantableRoles' smart constructor.
 data RolesQueryGrantableRoles = RolesQueryGrantableRoles'
-    { _rqgrXgafv          :: !(Maybe Text)
+    { _rqgrXgafv :: !(Maybe Xgafv)
     , _rqgrUploadProtocol :: !(Maybe Text)
-    , _rqgrPp             :: !Bool
-    , _rqgrAccessToken    :: !(Maybe Text)
-    , _rqgrUploadType     :: !(Maybe Text)
-    , _rqgrPayload        :: !QueryGrantableRolesRequest
-    , _rqgrBearerToken    :: !(Maybe Text)
-    , _rqgrCallback       :: !(Maybe Text)
+    , _rqgrPp :: !Bool
+    , _rqgrAccessToken :: !(Maybe Text)
+    , _rqgrUploadType :: !(Maybe Text)
+    , _rqgrPayload :: !QueryGrantableRolesRequest
+    , _rqgrBearerToken :: !(Maybe Text)
+    , _rqgrFields :: !(Maybe Text)
+    , _rqgrCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesQueryGrantableRoles' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data RolesQueryGrantableRoles = RolesQueryGrantableRoles'
 --
 -- * 'rqgrBearerToken'
 --
+-- * 'rqgrFields'
+--
 -- * 'rqgrCallback'
 rolesQueryGrantableRoles
     :: QueryGrantableRolesRequest -- ^ 'rqgrPayload'
     -> RolesQueryGrantableRoles
-rolesQueryGrantableRoles pRqgrPayload_ =
+rolesQueryGrantableRoles pRqgrPayload_ = 
     RolesQueryGrantableRoles'
     { _rqgrXgafv = Nothing
     , _rqgrUploadProtocol = Nothing
@@ -111,11 +116,12 @@ rolesQueryGrantableRoles pRqgrPayload_ =
     , _rqgrUploadType = Nothing
     , _rqgrPayload = pRqgrPayload_
     , _rqgrBearerToken = Nothing
+    , _rqgrFields = Nothing
     , _rqgrCallback = Nothing
     }
 
 -- | V1 error format.
-rqgrXgafv :: Lens' RolesQueryGrantableRoles (Maybe Text)
+rqgrXgafv :: Lens' RolesQueryGrantableRoles (Maybe Xgafv)
 rqgrXgafv
   = lens _rqgrXgafv (\ s a -> s{_rqgrXgafv = a})
 
@@ -152,6 +158,11 @@ rqgrBearerToken
   = lens _rqgrBearerToken
       (\ s a -> s{_rqgrBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rqgrFields :: Lens' RolesQueryGrantableRoles (Maybe Text)
+rqgrFields
+  = lens _rqgrFields (\ s a -> s{_rqgrFields = a})
+
 -- | JSONP
 rqgrCallback :: Lens' RolesQueryGrantableRoles (Maybe Text)
 rqgrCallback
@@ -168,6 +179,7 @@ instance GoogleRequest RolesQueryGrantableRoles where
               _rqgrUploadType
               _rqgrBearerToken
               _rqgrCallback
+              _rqgrFields
               (Just AltJSON)
               _rqgrPayload
               iAMService

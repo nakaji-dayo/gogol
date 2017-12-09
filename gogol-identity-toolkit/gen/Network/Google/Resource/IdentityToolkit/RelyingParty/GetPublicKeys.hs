@@ -32,10 +32,12 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.GetPublicKeys
     , relyingPartyGetPublicKeys
     , RelyingPartyGetPublicKeys
 
+    -- * Request Lenses
+    , rpgpkFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.getPublicKeys@ method which the
 -- 'RelyingPartyGetPublicKeys' request conforms to.
@@ -44,22 +46,34 @@ type RelyingPartyGetPublicKeysResource =
        "v3" :>
          "relyingparty" :>
            "publicKeys" :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON]
-                 IdentitytoolkitRelyingPartyGetPublicKeysResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON]
+                   IdentitytoolkitRelyingPartyGetPublicKeysResponse
 
 -- | Get token signing public key.
 --
 -- /See:/ 'relyingPartyGetPublicKeys' smart constructor.
-data RelyingPartyGetPublicKeys =
-    RelyingPartyGetPublicKeys'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype RelyingPartyGetPublicKeys = RelyingPartyGetPublicKeys'
+    { _rpgpkFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyGetPublicKeys' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rpgpkFields'
 relyingPartyGetPublicKeys
     :: RelyingPartyGetPublicKeys
-relyingPartyGetPublicKeys = RelyingPartyGetPublicKeys'
+relyingPartyGetPublicKeys = 
+    RelyingPartyGetPublicKeys'
+    { _rpgpkFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+rpgpkFields :: Lens' RelyingPartyGetPublicKeys (Maybe Text)
+rpgpkFields
+  = lens _rpgpkFields (\ s a -> s{_rpgpkFields = a})
 
 instance GoogleRequest RelyingPartyGetPublicKeys
          where
@@ -67,8 +81,9 @@ instance GoogleRequest RelyingPartyGetPublicKeys
              IdentitytoolkitRelyingPartyGetPublicKeysResponse
         type Scopes RelyingPartyGetPublicKeys =
              '["https://www.googleapis.com/auth/cloud-platform"]
-        requestClient RelyingPartyGetPublicKeys'{}
-          = go (Just AltJSON) identityToolkitService
+        requestClient RelyingPartyGetPublicKeys'{..}
+          = go _rpgpkFields (Just AltJSON)
+              identityToolkitService
           where go
                   = buildClient
                       (Proxy :: Proxy RelyingPartyGetPublicKeysResource)

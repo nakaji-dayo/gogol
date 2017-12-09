@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Accounts.Get
 
     -- * Request Lenses
     , agId
+    , agFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
@@ -46,13 +47,15 @@ type AccountsGetResource =
        "v1.4" :>
          "accounts" :>
            Capture "id" (Textual Int32) :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Account
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Account
 
 -- | Gets one account by ID.
 --
 -- /See:/ 'accountsGet' smart constructor.
-newtype AccountsGet = AccountsGet'
-    { _agId :: Textual Int32
+data AccountsGet = AccountsGet'
+    { _agId :: !(Textual Int32)
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
@@ -60,24 +63,32 @@ newtype AccountsGet = AccountsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'agId'
+--
+-- * 'agFields'
 accountsGet
     :: Int32 -- ^ 'agId'
     -> AccountsGet
-accountsGet pAgId_ =
+accountsGet pAgId_ = 
     AccountsGet'
     { _agId = _Coerce # pAgId_
+    , _agFields = Nothing
     }
 
 -- | The account id
 agId :: Lens' AccountsGet Int32
 agId = lens _agId (\ s a -> s{_agId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AccountsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
         type Scopes AccountsGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient AccountsGet'{..}
-          = go _agId (Just AltJSON) adExchangeBuyerService
+          = go _agId _agFields (Just AltJSON)
+              adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)
                       mempty

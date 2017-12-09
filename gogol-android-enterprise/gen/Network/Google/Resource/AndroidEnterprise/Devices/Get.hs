@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Devices.Get
     , dgEnterpriseId
     , dgUserId
     , dgDeviceId
+    , dgFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.devices.get@ method which the
 -- 'DevicesGet' request conforms to.
@@ -52,15 +53,17 @@ type DevicesGetResource =
                Capture "userId" Text :>
                  "devices" :>
                    Capture "deviceId" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Device
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Device
 
 -- | Retrieves the details of a device.
 --
 -- /See:/ 'devicesGet' smart constructor.
 data DevicesGet = DevicesGet'
     { _dgEnterpriseId :: !Text
-    , _dgUserId       :: !Text
-    , _dgDeviceId     :: !Text
+    , _dgUserId :: !Text
+    , _dgDeviceId :: !Text
+    , _dgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DevicesGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data DevicesGet = DevicesGet'
 -- * 'dgUserId'
 --
 -- * 'dgDeviceId'
+--
+-- * 'dgFields'
 devicesGet
     :: Text -- ^ 'dgEnterpriseId'
     -> Text -- ^ 'dgUserId'
     -> Text -- ^ 'dgDeviceId'
     -> DevicesGet
-devicesGet pDgEnterpriseId_ pDgUserId_ pDgDeviceId_ =
+devicesGet pDgEnterpriseId_ pDgUserId_ pDgDeviceId_ = 
     DevicesGet'
     { _dgEnterpriseId = pDgEnterpriseId_
     , _dgUserId = pDgUserId_
     , _dgDeviceId = pDgDeviceId_
+    , _dgFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -99,12 +105,16 @@ dgDeviceId :: Lens' DevicesGet Text
 dgDeviceId
   = lens _dgDeviceId (\ s a -> s{_dgDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgFields :: Lens' DevicesGet (Maybe Text)
+dgFields = lens _dgFields (\ s a -> s{_dgFields = a})
+
 instance GoogleRequest DevicesGet where
         type Rs DevicesGet = Device
         type Scopes DevicesGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient DevicesGet'{..}
-          = go _dgEnterpriseId _dgUserId _dgDeviceId
+          = go _dgEnterpriseId _dgUserId _dgDeviceId _dgFields
               (Just AltJSON)
               androidEnterpriseService
           where go

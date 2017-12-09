@@ -40,10 +40,12 @@ module Network.Google.Resource.Drive.Files.Update
     , fuKeepRevisionForever
     , fuFileId
     , fuAddParents
+    , fuSupportsTeamDrives
+    , fuFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.update@ method which the
 -- 'FilesUpdate' request conforms to.
@@ -57,8 +59,10 @@ type FilesUpdateResource =
                  QueryParam "ocrLanguage" Text :>
                    QueryParam "keepRevisionForever" Bool :>
                      QueryParam "addParents" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] File :> Patch '[JSON] File
+                       QueryParam "supportsTeamDrives" Bool :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] File :> Patch '[JSON] File
        :<|>
        "upload" :>
          "drive" :>
@@ -70,22 +74,26 @@ type FilesUpdateResource =
                      QueryParam "ocrLanguage" Text :>
                        QueryParam "keepRevisionForever" Bool :>
                          QueryParam "addParents" Text :>
-                           QueryParam "alt" AltJSON :>
-                             QueryParam "uploadType" Multipart :>
-                               MultipartRelated '[JSON] File :>
-                                 Patch '[JSON] File
+                           QueryParam "supportsTeamDrives" Bool :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" Multipart :>
+                                   MultipartRelated '[JSON] File :>
+                                     Patch '[JSON] File
 
 -- | Updates a file\'s metadata and\/or content with patch semantics.
 --
 -- /See:/ 'filesUpdate' smart constructor.
 data FilesUpdate = FilesUpdate'
-    { _fuPayload                   :: !File
-    , _fuRemoveParents             :: !(Maybe Text)
+    { _fuPayload :: !File
+    , _fuRemoveParents :: !(Maybe Text)
     , _fuUseContentAsIndexableText :: !Bool
-    , _fuOCRLanguage               :: !(Maybe Text)
-    , _fuKeepRevisionForever       :: !Bool
-    , _fuFileId                    :: !Text
-    , _fuAddParents                :: !(Maybe Text)
+    , _fuOCRLanguage :: !(Maybe Text)
+    , _fuKeepRevisionForever :: !Bool
+    , _fuFileId :: !Text
+    , _fuAddParents :: !(Maybe Text)
+    , _fuSupportsTeamDrives :: !Bool
+    , _fuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesUpdate' with the minimum fields required to make a request.
@@ -105,11 +113,15 @@ data FilesUpdate = FilesUpdate'
 -- * 'fuFileId'
 --
 -- * 'fuAddParents'
+--
+-- * 'fuSupportsTeamDrives'
+--
+-- * 'fuFields'
 filesUpdate
     :: File -- ^ 'fuPayload'
     -> Text -- ^ 'fuFileId'
     -> FilesUpdate
-filesUpdate pFuPayload_ pFuFileId_ =
+filesUpdate pFuPayload_ pFuFileId_ = 
     FilesUpdate'
     { _fuPayload = pFuPayload_
     , _fuRemoveParents = Nothing
@@ -118,6 +130,8 @@ filesUpdate pFuPayload_ pFuFileId_ =
     , _fuKeepRevisionForever = False
     , _fuFileId = pFuFileId_
     , _fuAddParents = Nothing
+    , _fuSupportsTeamDrives = False
+    , _fuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -159,6 +173,16 @@ fuAddParents :: Lens' FilesUpdate (Maybe Text)
 fuAddParents
   = lens _fuAddParents (\ s a -> s{_fuAddParents = a})
 
+-- | Whether the requesting application supports Team Drives.
+fuSupportsTeamDrives :: Lens' FilesUpdate Bool
+fuSupportsTeamDrives
+  = lens _fuSupportsTeamDrives
+      (\ s a -> s{_fuSupportsTeamDrives = a})
+
+-- | Selector specifying which fields to include in a partial response.
+fuFields :: Lens' FilesUpdate (Maybe Text)
+fuFields = lens _fuFields (\ s a -> s{_fuFields = a})
+
 instance GoogleRequest FilesUpdate where
         type Rs FilesUpdate = File
         type Scopes FilesUpdate =
@@ -173,6 +197,8 @@ instance GoogleRequest FilesUpdate where
               _fuOCRLanguage
               (Just _fuKeepRevisionForever)
               _fuAddParents
+              (Just _fuSupportsTeamDrives)
+              _fuFields
               (Just AltJSON)
               _fuPayload
               driveService
@@ -191,6 +217,8 @@ instance GoogleRequest (MediaUpload FilesUpdate)
               _fuOCRLanguage
               (Just _fuKeepRevisionForever)
               _fuAddParents
+              (Just _fuSupportsTeamDrives)
+              _fuFields
               (Just AltJSON)
               (Just Multipart)
               _fuPayload

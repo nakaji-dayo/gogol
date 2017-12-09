@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Creatives.Insert
     -- * Request Lenses
     , ciProFileId
     , ciPayload
+    , ciFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creatives.insert@ method which the
 -- 'CreativesInsert' request conforms to.
 type CreativesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creatives" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Creative :> Post '[JSON] Creative
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Creative :> Post '[JSON] Creative
 
 -- | Inserts a new creative.
 --
 -- /See:/ 'creativesInsert' smart constructor.
 data CreativesInsert = CreativesInsert'
     { _ciProFileId :: !(Textual Int64)
-    , _ciPayload   :: !Creative
+    , _ciPayload :: !Creative
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativesInsert = CreativesInsert'
 -- * 'ciProFileId'
 --
 -- * 'ciPayload'
+--
+-- * 'ciFields'
 creativesInsert
     :: Int64 -- ^ 'ciProFileId'
     -> Creative -- ^ 'ciPayload'
     -> CreativesInsert
-creativesInsert pCiProFileId_ pCiPayload_ =
+creativesInsert pCiProFileId_ pCiPayload_ = 
     CreativesInsert'
     { _ciProFileId = _Coerce # pCiProFileId_
     , _ciPayload = pCiPayload_
+    , _ciFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ ciPayload :: Lens' CreativesInsert Creative
 ciPayload
   = lens _ciPayload (\ s a -> s{_ciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' CreativesInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest CreativesInsert where
         type Rs CreativesInsert = Creative
         type Scopes CreativesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativesInsert'{..}
-          = go _ciProFileId (Just AltJSON) _ciPayload
+          = go _ciProFileId _ciFields (Just AltJSON) _ciPayload
               dFAReportingService
           where go
                   = buildClient

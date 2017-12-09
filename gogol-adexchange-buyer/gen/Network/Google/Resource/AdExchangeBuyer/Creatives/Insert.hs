@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.Insert
 
     -- * Request Lenses
     , ciPayload
+    , ciFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.insert@ method which the
 -- 'CreativesInsert' request conforms to.
@@ -45,14 +46,16 @@ type CreativesInsertResource =
      "adexchangebuyer" :>
        "v1.4" :>
          "creatives" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] Creative :> Post '[JSON] Creative
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] Creative :> Post '[JSON] Creative
 
 -- | Submit a new creative.
 --
 -- /See:/ 'creativesInsert' smart constructor.
-newtype CreativesInsert = CreativesInsert'
-    { _ciPayload :: Creative
+data CreativesInsert = CreativesInsert'
+    { _ciPayload :: !Creative
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesInsert' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CreativesInsert = CreativesInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ciPayload'
+--
+-- * 'ciFields'
 creativesInsert
     :: Creative -- ^ 'ciPayload'
     -> CreativesInsert
-creativesInsert pCiPayload_ =
+creativesInsert pCiPayload_ = 
     CreativesInsert'
     { _ciPayload = pCiPayload_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,17 @@ ciPayload :: Lens' CreativesInsert Creative
 ciPayload
   = lens _ciPayload (\ s a -> s{_ciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' CreativesInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest CreativesInsert where
         type Rs CreativesInsert = Creative
         type Scopes CreativesInsert =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient CreativesInsert'{..}
-          = go (Just AltJSON) _ciPayload adExchangeBuyerService
+          = go _ciFields (Just AltJSON) _ciPayload
+              adExchangeBuyerService
           where go
                   = buildClient
                       (Proxy :: Proxy CreativesInsertResource)

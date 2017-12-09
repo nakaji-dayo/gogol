@@ -46,10 +46,11 @@ module Network.Google.Resource.Blogger.PostUserInfos.List
     , puilLabels
     , puilPageToken
     , puilMaxResults
+    , puilFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.postUserInfos.list@ method which the
 -- 'PostUserInfosList'' request conforms to.
@@ -70,8 +71,9 @@ type PostUserInfosListResource =
                                QueryParam "labels" Text :>
                                  QueryParam "pageToken" Text :>
                                    QueryParam "maxResults" (Textual Word32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] PostUserInfosList
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] PostUserInfosList
 
 -- | Retrieves a list of post and post user info pairs, possibly filtered.
 -- The post user info contains per-user information about the post, such as
@@ -79,17 +81,18 @@ type PostUserInfosListResource =
 --
 -- /See:/ 'postUserInfosList'' smart constructor.
 data PostUserInfosList' = PostUserInfosList''
-    { _puilStatus      :: !(Maybe [PostUserInfosListStatus])
-    , _puilOrderBy     :: !PostUserInfosListOrderBy
-    , _puilEndDate     :: !(Maybe DateTime')
-    , _puilBlogId      :: !Text
-    , _puilUserId      :: !Text
-    , _puilStartDate   :: !(Maybe DateTime')
+    { _puilStatus :: !(Maybe [PostUserInfosListStatus])
+    , _puilOrderBy :: !PostUserInfosListOrderBy
+    , _puilEndDate :: !(Maybe DateTime')
+    , _puilBlogId :: !Text
+    , _puilUserId :: !Text
+    , _puilStartDate :: !(Maybe DateTime')
     , _puilFetchBodies :: !Bool
-    , _puilView        :: !(Maybe PostUserInfosListView)
-    , _puilLabels      :: !(Maybe Text)
-    , _puilPageToken   :: !(Maybe Text)
-    , _puilMaxResults  :: !(Maybe (Textual Word32))
+    , _puilView :: !(Maybe PostUserInfosListView)
+    , _puilLabels :: !(Maybe Text)
+    , _puilPageToken :: !(Maybe Text)
+    , _puilMaxResults :: !(Maybe (Textual Word32))
+    , _puilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostUserInfosList'' with the minimum fields required to make a request.
@@ -117,11 +120,13 @@ data PostUserInfosList' = PostUserInfosList''
 -- * 'puilPageToken'
 --
 -- * 'puilMaxResults'
+--
+-- * 'puilFields'
 postUserInfosList'
     :: Text -- ^ 'puilBlogId'
     -> Text -- ^ 'puilUserId'
     -> PostUserInfosList'
-postUserInfosList' pPuilBlogId_ pPuilUserId_ =
+postUserInfosList' pPuilBlogId_ pPuilUserId_ = 
     PostUserInfosList''
     { _puilStatus = Nothing
     , _puilOrderBy = PUILOBPublished
@@ -134,6 +139,7 @@ postUserInfosList' pPuilBlogId_ pPuilUserId_ =
     , _puilLabels = Nothing
     , _puilPageToken = Nothing
     , _puilMaxResults = Nothing
+    , _puilFields = Nothing
     }
 
 puilStatus :: Lens' PostUserInfosList' [PostUserInfosListStatus]
@@ -200,6 +206,11 @@ puilMaxResults
       (\ s a -> s{_puilMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+puilFields :: Lens' PostUserInfosList' (Maybe Text)
+puilFields
+  = lens _puilFields (\ s a -> s{_puilFields = a})
+
 instance GoogleRequest PostUserInfosList' where
         type Rs PostUserInfosList' = PostUserInfosList
         type Scopes PostUserInfosList' =
@@ -216,6 +227,7 @@ instance GoogleRequest PostUserInfosList' where
               _puilLabels
               _puilPageToken
               _puilMaxResults
+              _puilFields
               (Just AltJSON)
               bloggerService
           where go

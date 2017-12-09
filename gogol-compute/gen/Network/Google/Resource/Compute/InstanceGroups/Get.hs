@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.InstanceGroups.Get
     , iggProject
     , iggZone
     , iggInstanceGroup
+    , iggFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroups.get@ method which the
 -- 'InstanceGroupsGet' request conforms to.
@@ -53,16 +54,18 @@ type InstanceGroupsGetResource =
                Capture "zone" Text :>
                  "instanceGroups" :>
                    Capture "instanceGroup" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] InstanceGroup
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] InstanceGroup
 
 -- | Returns the specified instance group. Get a list of available instance
 -- groups by making a list() request.
 --
 -- /See:/ 'instanceGroupsGet' smart constructor.
 data InstanceGroupsGet = InstanceGroupsGet'
-    { _iggProject       :: !Text
-    , _iggZone          :: !Text
+    { _iggProject :: !Text
+    , _iggZone :: !Text
     , _iggInstanceGroup :: !Text
+    , _iggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupsGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data InstanceGroupsGet = InstanceGroupsGet'
 -- * 'iggZone'
 --
 -- * 'iggInstanceGroup'
+--
+-- * 'iggFields'
 instanceGroupsGet
     :: Text -- ^ 'iggProject'
     -> Text -- ^ 'iggZone'
     -> Text -- ^ 'iggInstanceGroup'
     -> InstanceGroupsGet
-instanceGroupsGet pIggProject_ pIggZone_ pIggInstanceGroup_ =
+instanceGroupsGet pIggProject_ pIggZone_ pIggInstanceGroup_ = 
     InstanceGroupsGet'
     { _iggProject = pIggProject_
     , _iggZone = pIggZone_
     , _iggInstanceGroup = pIggInstanceGroup_
+    , _iggFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ iggInstanceGroup
   = lens _iggInstanceGroup
       (\ s a -> s{_iggInstanceGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iggFields :: Lens' InstanceGroupsGet (Maybe Text)
+iggFields
+  = lens _iggFields (\ s a -> s{_iggFields = a})
+
 instance GoogleRequest InstanceGroupsGet where
         type Rs InstanceGroupsGet = InstanceGroup
         type Scopes InstanceGroupsGet =
@@ -109,6 +120,7 @@ instance GoogleRequest InstanceGroupsGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient InstanceGroupsGet'{..}
           = go _iggProject _iggZone _iggInstanceGroup
+              _iggFields
               (Just AltJSON)
               computeService
           where go

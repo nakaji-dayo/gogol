@@ -33,11 +33,12 @@ module Network.Google.Resource.AdExchangeBuyer.Products.Get
     , ProductsGet
 
     -- * Request Lenses
-    , pgProductId
+    , pggProductId
+    , pggFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.products.get@ method which the
 -- 'ProductsGet' request conforms to.
@@ -46,39 +47,49 @@ type ProductsGetResource =
        "v1.4" :>
          "products" :>
            Capture "productId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Product
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Product
 
 -- | Gets the requested product by id.
 --
 -- /See:/ 'productsGet' smart constructor.
-newtype ProductsGet = ProductsGet'
-    { _pgProductId :: Text
+data ProductsGet = ProductsGet'
+    { _pggProductId :: !Text
+    , _pggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'pgProductId'
+-- * 'pggProductId'
+--
+-- * 'pggFields'
 productsGet
-    :: Text -- ^ 'pgProductId'
+    :: Text -- ^ 'pggProductId'
     -> ProductsGet
-productsGet pPgProductId_ =
+productsGet pPggProductId_ = 
     ProductsGet'
-    { _pgProductId = pPgProductId_
+    { _pggProductId = pPggProductId_
+    , _pggFields = Nothing
     }
 
 -- | The id for the product to get the head revision for.
-pgProductId :: Lens' ProductsGet Text
-pgProductId
-  = lens _pgProductId (\ s a -> s{_pgProductId = a})
+pggProductId :: Lens' ProductsGet Text
+pggProductId
+  = lens _pggProductId (\ s a -> s{_pggProductId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pggFields :: Lens' ProductsGet (Maybe Text)
+pggFields
+  = lens _pggFields (\ s a -> s{_pggFields = a})
 
 instance GoogleRequest ProductsGet where
         type Rs ProductsGet = Product
         type Scopes ProductsGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProductsGet'{..}
-          = go _pgProductId (Just AltJSON)
+          = go _pggProductId _pggFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy ProductsGetResource)

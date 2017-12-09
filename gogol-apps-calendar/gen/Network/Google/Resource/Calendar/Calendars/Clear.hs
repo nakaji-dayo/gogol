@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.Calendars.Clear
 
     -- * Request Lenses
     , ccCalendarId
+    , ccFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.clear@ method which the
 -- 'CalendarsClear' request conforms to.
@@ -48,14 +49,16 @@ type CalendarsClearResource =
          "calendars" :>
            Capture "calendarId" Text :>
              "clear" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Clears a primary calendar. This operation deletes all events associated
 -- with the primary calendar of an account.
 --
 -- /See:/ 'calendarsClear' smart constructor.
-newtype CalendarsClear = CalendarsClear'
-    { _ccCalendarId :: Text
+data CalendarsClear = CalendarsClear'
+    { _ccCalendarId :: !Text
+    , _ccFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsClear' with the minimum fields required to make a request.
@@ -63,12 +66,15 @@ newtype CalendarsClear = CalendarsClear'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ccCalendarId'
+--
+-- * 'ccFields'
 calendarsClear
     :: Text -- ^ 'ccCalendarId'
     -> CalendarsClear
-calendarsClear pCcCalendarId_ =
+calendarsClear pCcCalendarId_ = 
     CalendarsClear'
     { _ccCalendarId = pCcCalendarId_
+    , _ccFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -78,12 +84,17 @@ ccCalendarId :: Lens' CalendarsClear Text
 ccCalendarId
   = lens _ccCalendarId (\ s a -> s{_ccCalendarId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccFields :: Lens' CalendarsClear (Maybe Text)
+ccFields = lens _ccFields (\ s a -> s{_ccFields = a})
+
 instance GoogleRequest CalendarsClear where
         type Rs CalendarsClear = ()
         type Scopes CalendarsClear =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarsClear'{..}
-          = go _ccCalendarId (Just AltJSON) appsCalendarService
+          = go _ccCalendarId _ccFields (Just AltJSON)
+              appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy CalendarsClearResource)
                       mempty

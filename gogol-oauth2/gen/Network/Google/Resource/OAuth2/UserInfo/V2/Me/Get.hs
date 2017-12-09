@@ -30,10 +30,12 @@ module Network.Google.Resource.OAuth2.UserInfo.V2.Me.Get
     , userInfoV2MeGet
     , UserInfoV2MeGet
 
+    -- * Request Lenses
+    , uivmgFields
     ) where
 
-import           Network.Google.OAuth2.Types
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @oauth2.userinfo.v2.me.get@ method which the
 -- 'UserInfoV2MeGet' request conforms to.
@@ -41,19 +43,31 @@ type UserInfoV2MeGetResource =
      "userinfo" :>
        "v2" :>
          "me" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] UserInfoplus
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] UserInfoplus
 
 --
 -- /See:/ 'userInfoV2MeGet' smart constructor.
-data UserInfoV2MeGet =
-    UserInfoV2MeGet'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype UserInfoV2MeGet = UserInfoV2MeGet'
+    { _uivmgFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserInfoV2MeGet' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uivmgFields'
 userInfoV2MeGet
     :: UserInfoV2MeGet
-userInfoV2MeGet = UserInfoV2MeGet'
+userInfoV2MeGet = 
+    UserInfoV2MeGet'
+    { _uivmgFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+uivmgFields :: Lens' UserInfoV2MeGet (Maybe Text)
+uivmgFields
+  = lens _uivmgFields (\ s a -> s{_uivmgFields = a})
 
 instance GoogleRequest UserInfoV2MeGet where
         type Rs UserInfoV2MeGet = UserInfoplus
@@ -62,8 +76,8 @@ instance GoogleRequest UserInfoV2MeGet where
                "https://www.googleapis.com/auth/plus.me",
                "https://www.googleapis.com/auth/userinfo.email",
                "https://www.googleapis.com/auth/userinfo.profile"]
-        requestClient UserInfoV2MeGet'{}
-          = go (Just AltJSON) oAuth2Service
+        requestClient UserInfoV2MeGet'{..}
+          = go _uivmgFields (Just AltJSON) oAuth2Service
           where go
                   = buildClient
                       (Proxy :: Proxy UserInfoV2MeGetResource)

@@ -41,12 +41,14 @@ module Network.Google.Resource.YouTube.ChannelBanners.Insert
     , ChannelBannersInsert
 
     -- * Request Lenses
+    , cbiChannelId
     , cbiPayload
     , cbiOnBehalfOfContentOwner
+    , cbiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channelBanners.insert@ method which the
 -- 'ChannelBannersInsert' request conforms to.
@@ -55,21 +57,25 @@ type ChannelBannersInsertResource =
        "v3" :>
          "channelBanners" :>
            "insert" :>
-             QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ChannelBannerResource :>
-                   Post '[JSON] ChannelBannerResource
+             QueryParam "channelId" Text :>
+               QueryParam "onBehalfOfContentOwner" Text :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ChannelBannerResource :>
+                       Post '[JSON] ChannelBannerResource
        :<|>
        "upload" :>
          "youtube" :>
            "v3" :>
              "channelBanners" :>
                "insert" :>
-                 QueryParam "onBehalfOfContentOwner" Text :>
-                   QueryParam "alt" AltJSON :>
-                     QueryParam "uploadType" Multipart :>
-                       MultipartRelated '[JSON] ChannelBannerResource :>
-                         Post '[JSON] ChannelBannerResource
+                 QueryParam "channelId" Text :>
+                   QueryParam "onBehalfOfContentOwner" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" Multipart :>
+                           MultipartRelated '[JSON] ChannelBannerResource :>
+                             Post '[JSON] ChannelBannerResource
 
 -- | Uploads a channel banner image to YouTube. This method represents the
 -- first two steps in a three-step process to update the banner image for a
@@ -83,25 +89,45 @@ type ChannelBannersInsertResource =
 --
 -- /See:/ 'channelBannersInsert' smart constructor.
 data ChannelBannersInsert = ChannelBannersInsert'
-    { _cbiPayload                :: !ChannelBannerResource
+    { _cbiChannelId :: !(Maybe Text)
+    , _cbiPayload :: !ChannelBannerResource
     , _cbiOnBehalfOfContentOwner :: !(Maybe Text)
+    , _cbiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelBannersInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'cbiChannelId'
+--
 -- * 'cbiPayload'
 --
 -- * 'cbiOnBehalfOfContentOwner'
+--
+-- * 'cbiFields'
 channelBannersInsert
     :: ChannelBannerResource -- ^ 'cbiPayload'
     -> ChannelBannersInsert
-channelBannersInsert pCbiPayload_ =
+channelBannersInsert pCbiPayload_ = 
     ChannelBannersInsert'
-    { _cbiPayload = pCbiPayload_
+    { _cbiChannelId = Nothing
+    , _cbiPayload = pCbiPayload_
     , _cbiOnBehalfOfContentOwner = Nothing
+    , _cbiFields = Nothing
     }
+
+-- | The channelId parameter identifies the YouTube channel to which the
+-- banner is uploaded. The channelId parameter was introduced as a required
+-- parameter in May 2017. As this was a backward-incompatible change,
+-- channelBanners.insert requests that do not specify this parameter will
+-- not return an error until six months have passed from the time that the
+-- parameter was introduced. Please see the API Terms of Service for the
+-- official policy regarding backward incompatible changes and the API
+-- revision history for the exact date that the parameter was introduced.
+cbiChannelId :: Lens' ChannelBannersInsert (Maybe Text)
+cbiChannelId
+  = lens _cbiChannelId (\ s a -> s{_cbiChannelId = a})
 
 -- | Multipart request metadata.
 cbiPayload :: Lens' ChannelBannersInsert ChannelBannerResource
@@ -123,6 +149,11 @@ cbiOnBehalfOfContentOwner
   = lens _cbiOnBehalfOfContentOwner
       (\ s a -> s{_cbiOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cbiFields :: Lens' ChannelBannersInsert (Maybe Text)
+cbiFields
+  = lens _cbiFields (\ s a -> s{_cbiFields = a})
+
 instance GoogleRequest ChannelBannersInsert where
         type Rs ChannelBannersInsert = ChannelBannerResource
         type Scopes ChannelBannersInsert =
@@ -130,7 +161,9 @@ instance GoogleRequest ChannelBannersInsert where
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtube.upload"]
         requestClient ChannelBannersInsert'{..}
-          = go _cbiOnBehalfOfContentOwner (Just AltJSON)
+          = go _cbiChannelId _cbiOnBehalfOfContentOwner
+              _cbiFields
+              (Just AltJSON)
               _cbiPayload
               youTubeService
           where go :<|> _
@@ -146,7 +179,9 @@ instance GoogleRequest
              Scopes ChannelBannersInsert
         requestClient
           (MediaUpload ChannelBannersInsert'{..} body)
-          = go _cbiOnBehalfOfContentOwner (Just AltJSON)
+          = go _cbiChannelId _cbiOnBehalfOfContentOwner
+              _cbiFields
+              (Just AltJSON)
               (Just Multipart)
               _cbiPayload
               body

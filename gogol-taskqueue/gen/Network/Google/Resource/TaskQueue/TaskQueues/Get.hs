@@ -36,10 +36,11 @@ module Network.Google.Resource.TaskQueue.TaskQueues.Get
     , tqgTaskQueue
     , tqgProject
     , tqgGetStats
+    , tqgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.taskqueues.get@ method which the
 -- 'TaskQueuesGet' request conforms to.
@@ -51,15 +52,17 @@ type TaskQueuesGetResource =
              "taskqueues" :>
                Capture "taskqueue" Text :>
                  QueryParam "getStats" Bool :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] TaskQueue
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] TaskQueue
 
 -- | Get detailed information about a TaskQueue.
 --
 -- /See:/ 'taskQueuesGet' smart constructor.
 data TaskQueuesGet = TaskQueuesGet'
     { _tqgTaskQueue :: !Text
-    , _tqgProject   :: !Text
-    , _tqgGetStats  :: !(Maybe Bool)
+    , _tqgProject :: !Text
+    , _tqgGetStats :: !(Maybe Bool)
+    , _tqgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskQueuesGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data TaskQueuesGet = TaskQueuesGet'
 -- * 'tqgProject'
 --
 -- * 'tqgGetStats'
+--
+-- * 'tqgFields'
 taskQueuesGet
     :: Text -- ^ 'tqgTaskQueue'
     -> Text -- ^ 'tqgProject'
     -> TaskQueuesGet
-taskQueuesGet pTqgTaskQueue_ pTqgProject_ =
+taskQueuesGet pTqgTaskQueue_ pTqgProject_ = 
     TaskQueuesGet'
     { _tqgTaskQueue = pTqgTaskQueue_
     , _tqgProject = pTqgProject_
     , _tqgGetStats = Nothing
+    , _tqgFields = Nothing
     }
 
 -- | The id of the taskqueue to get the properties of.
@@ -97,6 +103,11 @@ tqgGetStats :: Lens' TaskQueuesGet (Maybe Bool)
 tqgGetStats
   = lens _tqgGetStats (\ s a -> s{_tqgGetStats = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tqgFields :: Lens' TaskQueuesGet (Maybe Text)
+tqgFields
+  = lens _tqgFields (\ s a -> s{_tqgFields = a})
+
 instance GoogleRequest TaskQueuesGet where
         type Rs TaskQueuesGet = TaskQueue
         type Scopes TaskQueuesGet =
@@ -104,6 +115,7 @@ instance GoogleRequest TaskQueuesGet where
                "https://www.googleapis.com/auth/taskqueue.consumer"]
         requestClient TaskQueuesGet'{..}
           = go _tqgProject _tqgTaskQueue _tqgGetStats
+              _tqgFields
               (Just AltJSON)
               taskQueueService
           where go

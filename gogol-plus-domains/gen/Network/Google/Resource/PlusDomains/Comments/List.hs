@@ -37,10 +37,11 @@ module Network.Google.Resource.PlusDomains.Comments.List
     , clSortOrder
     , clPageToken
     , clMaxResults
+    , clFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.comments.list@ method which the
 -- 'CommentsList' request conforms to.
@@ -53,16 +54,18 @@ type CommentsListResource =
                QueryParam "sortOrder" CommentsListSortOrder :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] CommentFeed
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] CommentFeed
 
 -- | List all of the comments for an activity.
 --
 -- /See:/ 'commentsList' smart constructor.
 data CommentsList = CommentsList'
     { _clActivityId :: !Text
-    , _clSortOrder  :: !CommentsListSortOrder
-    , _clPageToken  :: !(Maybe Text)
+    , _clSortOrder :: !CommentsListSortOrder
+    , _clPageToken :: !(Maybe Text)
     , _clMaxResults :: !(Textual Word32)
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsList' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data CommentsList = CommentsList'
 -- * 'clPageToken'
 --
 -- * 'clMaxResults'
+--
+-- * 'clFields'
 commentsList
     :: Text -- ^ 'clActivityId'
     -> CommentsList
-commentsList pClActivityId_ =
+commentsList pClActivityId_ = 
     CommentsList'
     { _clActivityId = pClActivityId_
     , _clSortOrder = Ascending
     , _clPageToken = Nothing
     , _clMaxResults = 20
+    , _clFields = Nothing
     }
 
 -- | The ID of the activity to get comments for.
@@ -112,6 +118,10 @@ clMaxResults
   = lens _clMaxResults (\ s a -> s{_clMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' CommentsList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 instance GoogleRequest CommentsList where
         type Rs CommentsList = CommentFeed
         type Scopes CommentsList =
@@ -120,6 +130,7 @@ instance GoogleRequest CommentsList where
         requestClient CommentsList'{..}
           = go _clActivityId (Just _clSortOrder) _clPageToken
               (Just _clMaxResults)
+              _clFields
               (Just AltJSON)
               plusDomainsService
           where go

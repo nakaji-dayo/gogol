@@ -38,10 +38,11 @@ module Network.Google.Resource.Calendar.Events.Insert
     , eveMaxAttendees
     , eveSendNotifications
     , eveSupportsAttachments
+    , eveFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.insert@ method which the
 -- 'EventsInsert' request conforms to.
@@ -54,18 +55,20 @@ type EventsInsertResource =
                QueryParam "maxAttendees" (Textual Int32) :>
                  QueryParam "sendNotifications" Bool :>
                    QueryParam "supportsAttachments" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Event :> Post '[JSON] Event
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Event :> Post '[JSON] Event
 
 -- | Creates an event.
 --
 -- /See:/ 'eventsInsert' smart constructor.
 data EventsInsert = EventsInsert'
-    { _eveCalendarId          :: !Text
-    , _evePayload             :: !Event
-    , _eveMaxAttendees        :: !(Maybe (Textual Int32))
-    , _eveSendNotifications   :: !(Maybe Bool)
+    { _eveCalendarId :: !Text
+    , _evePayload :: !Event
+    , _eveMaxAttendees :: !(Maybe (Textual Int32))
+    , _eveSendNotifications :: !(Maybe Bool)
     , _eveSupportsAttachments :: !(Maybe Bool)
+    , _eveFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsInsert' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data EventsInsert = EventsInsert'
 -- * 'eveSendNotifications'
 --
 -- * 'eveSupportsAttachments'
+--
+-- * 'eveFields'
 eventsInsert
     :: Text -- ^ 'eveCalendarId'
     -> Event -- ^ 'evePayload'
     -> EventsInsert
-eventsInsert pEveCalendarId_ pEvePayload_ =
+eventsInsert pEveCalendarId_ pEvePayload_ = 
     EventsInsert'
     { _eveCalendarId = pEveCalendarId_
     , _evePayload = pEvePayload_
     , _eveMaxAttendees = Nothing
     , _eveSendNotifications = Nothing
     , _eveSupportsAttachments = Nothing
+    , _eveFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -130,6 +136,11 @@ eveSupportsAttachments
   = lens _eveSupportsAttachments
       (\ s a -> s{_eveSupportsAttachments = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eveFields :: Lens' EventsInsert (Maybe Text)
+eveFields
+  = lens _eveFields (\ s a -> s{_eveFields = a})
+
 instance GoogleRequest EventsInsert where
         type Rs EventsInsert = Event
         type Scopes EventsInsert =
@@ -138,6 +149,7 @@ instance GoogleRequest EventsInsert where
           = go _eveCalendarId _eveMaxAttendees
               _eveSendNotifications
               _eveSupportsAttachments
+              _eveFields
               (Just AltJSON)
               _evePayload
               appsCalendarService

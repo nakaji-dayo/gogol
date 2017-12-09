@@ -13,8 +13,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Fetches reports for the administrators of Google Apps customers about
--- the usage, collaboration, security, and risk for their users.
+-- Fetches reports for the administrators of G Suite customers about the
+-- usage, collaboration, security, and risk for their users.
 --
 -- /See:/ <https://developers.google.com/admin-sdk/reports/ Admin Reports API Reference>
 module Network.Google.Reports
@@ -42,6 +42,9 @@ module Network.Google.Reports
 
     -- ** reports.customerUsageReports.get
     , module Network.Google.Resource.Reports.CustomerUsageReports.Get
+
+    -- ** reports.entityUsageReports.get
+    , module Network.Google.Resource.Reports.EntityUsageReports.Get
 
     -- ** reports.userUsageReport.get
     , module Network.Google.Resource.Reports.UserUsageReport.Get
@@ -154,6 +157,7 @@ module Network.Google.Reports
     , ureCustomerId
     , ureUserEmail
     , ureType
+    , ureEntityId
 
     -- ** ActivityEventsItemParametersItem
     , ActivityEventsItemParametersItem
@@ -174,13 +178,14 @@ module Network.Google.Reports
     , aaKey
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Reports.Types
-import           Network.Google.Resource.Admin.Channels.Stop
-import           Network.Google.Resource.Reports.Activities.List
-import           Network.Google.Resource.Reports.Activities.Watch
-import           Network.Google.Resource.Reports.CustomerUsageReports.Get
-import           Network.Google.Resource.Reports.UserUsageReport.Get
+import Network.Google.Prelude
+import Network.Google.Reports.Types
+import Network.Google.Resource.Admin.Channels.Stop
+import Network.Google.Resource.Reports.Activities.List
+import Network.Google.Resource.Reports.Activities.Watch
+import Network.Google.Resource.Reports.CustomerUsageReports.Get
+import Network.Google.Resource.Reports.EntityUsageReports.Get
+import Network.Google.Resource.Reports.UserUsageReport.Get
 
 {- $resources
 TODO
@@ -192,3 +197,4 @@ type ReportsAPI =
        ActivitiesWatchResource
        :<|> CustomerUsageReportsGetResource
        :<|> UserUsageReportGetResource
+       :<|> EntityUsageReportsGetResource

@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.TargetPools.Get
     , tpgProject
     , tpgTargetPool
     , tpgRegion
+    , tpgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetPools.get@ method which the
 -- 'TargetPoolsGet' request conforms to.
@@ -53,16 +54,18 @@ type TargetPoolsGetResource =
                Capture "region" Text :>
                  "targetPools" :>
                    Capture "targetPool" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] TargetPool
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] TargetPool
 
 -- | Returns the specified target pool. Get a list of available target pools
 -- by making a list() request.
 --
 -- /See:/ 'targetPoolsGet' smart constructor.
 data TargetPoolsGet = TargetPoolsGet'
-    { _tpgProject    :: !Text
+    { _tpgProject :: !Text
     , _tpgTargetPool :: !Text
-    , _tpgRegion     :: !Text
+    , _tpgRegion :: !Text
+    , _tpgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetPoolsGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data TargetPoolsGet = TargetPoolsGet'
 -- * 'tpgTargetPool'
 --
 -- * 'tpgRegion'
+--
+-- * 'tpgFields'
 targetPoolsGet
     :: Text -- ^ 'tpgProject'
     -> Text -- ^ 'tpgTargetPool'
     -> Text -- ^ 'tpgRegion'
     -> TargetPoolsGet
-targetPoolsGet pTpgProject_ pTpgTargetPool_ pTpgRegion_ =
+targetPoolsGet pTpgProject_ pTpgTargetPool_ pTpgRegion_ = 
     TargetPoolsGet'
     { _tpgProject = pTpgProject_
     , _tpgTargetPool = pTpgTargetPool_
     , _tpgRegion = pTpgRegion_
+    , _tpgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -102,6 +108,11 @@ tpgRegion :: Lens' TargetPoolsGet Text
 tpgRegion
   = lens _tpgRegion (\ s a -> s{_tpgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpgFields :: Lens' TargetPoolsGet (Maybe Text)
+tpgFields
+  = lens _tpgFields (\ s a -> s{_tpgFields = a})
+
 instance GoogleRequest TargetPoolsGet where
         type Rs TargetPoolsGet = TargetPool
         type Scopes TargetPoolsGet =
@@ -109,7 +120,7 @@ instance GoogleRequest TargetPoolsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient TargetPoolsGet'{..}
-          = go _tpgProject _tpgRegion _tpgTargetPool
+          = go _tpgProject _tpgRegion _tpgTargetPool _tpgFields
               (Just AltJSON)
               computeService
           where go

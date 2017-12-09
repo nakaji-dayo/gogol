@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Proposals.Search
 
     -- * Request Lenses
     , pPqlQuery
+    , pFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.proposals.search@ method which the
 -- 'ProposalsSearch' request conforms to.
@@ -47,14 +48,16 @@ type ProposalsSearchResource =
          "proposals" :>
            "search" :>
              QueryParam "pqlQuery" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] GetOrdersResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] GetOrdersResponse
 
 -- | Search for proposals using pql query
 --
 -- /See:/ 'proposalsSearch' smart constructor.
-newtype ProposalsSearch = ProposalsSearch'
-    { _pPqlQuery :: Maybe Text
+data ProposalsSearch = ProposalsSearch'
+    { _pPqlQuery :: !(Maybe Text)
+    , _pFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProposalsSearch' with the minimum fields required to make a request.
@@ -62,11 +65,14 @@ newtype ProposalsSearch = ProposalsSearch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pPqlQuery'
+--
+-- * 'pFields'
 proposalsSearch
     :: ProposalsSearch
-proposalsSearch =
+proposalsSearch = 
     ProposalsSearch'
     { _pPqlQuery = Nothing
+    , _pFields = Nothing
     }
 
 -- | Query string to retrieve specific proposals.
@@ -74,12 +80,17 @@ pPqlQuery :: Lens' ProposalsSearch (Maybe Text)
 pPqlQuery
   = lens _pPqlQuery (\ s a -> s{_pPqlQuery = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' ProposalsSearch (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
+
 instance GoogleRequest ProposalsSearch where
         type Rs ProposalsSearch = GetOrdersResponse
         type Scopes ProposalsSearch =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProposalsSearch'{..}
-          = go _pPqlQuery (Just AltJSON) adExchangeBuyerService
+          = go _pPqlQuery _pFields (Just AltJSON)
+              adExchangeBuyerService
           where go
                   = buildClient
                       (Proxy :: Proxy ProposalsSearchResource)

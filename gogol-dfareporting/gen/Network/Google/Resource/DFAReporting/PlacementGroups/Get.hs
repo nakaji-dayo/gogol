@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.PlacementGroups.Get
     -- * Request Lenses
     , pggProFileId
     , pggId
+    , pggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementGroups.get@ method which the
 -- 'PlacementGroupsGet' request conforms to.
 type PlacementGroupsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementGroups" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] PlacementGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] PlacementGroup
 
 -- | Gets one placement group by ID.
 --
 -- /See:/ 'placementGroupsGet' smart constructor.
 data PlacementGroupsGet = PlacementGroupsGet'
     { _pggProFileId :: !(Textual Int64)
-    , _pggId        :: !(Textual Int64)
+    , _pggId :: !(Textual Int64)
+    , _pggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroupsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PlacementGroupsGet = PlacementGroupsGet'
 -- * 'pggProFileId'
 --
 -- * 'pggId'
+--
+-- * 'pggFields'
 placementGroupsGet
     :: Int64 -- ^ 'pggProFileId'
     -> Int64 -- ^ 'pggId'
     -> PlacementGroupsGet
-placementGroupsGet pPggProFileId_ pPggId_ =
+placementGroupsGet pPggProFileId_ pPggId_ = 
     PlacementGroupsGet'
     { _pggProFileId = _Coerce # pPggProFileId_
     , _pggId = _Coerce # pPggId_
+    , _pggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ pggId :: Lens' PlacementGroupsGet Int64
 pggId
   = lens _pggId (\ s a -> s{_pggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pggFields :: Lens' PlacementGroupsGet (Maybe Text)
+pggFields
+  = lens _pggFields (\ s a -> s{_pggFields = a})
+
 instance GoogleRequest PlacementGroupsGet where
         type Rs PlacementGroupsGet = PlacementGroup
         type Scopes PlacementGroupsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementGroupsGet'{..}
-          = go _pggProFileId _pggId (Just AltJSON)
+          = go _pggProFileId _pggId _pggFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

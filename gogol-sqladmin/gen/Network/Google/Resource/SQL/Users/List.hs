@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Users.List
 
     -- * Request Lenses
     , ulProject
+    , ulFields
     , ulInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.users.list@ method which the
 -- 'UsersList' request conforms to.
@@ -50,14 +51,16 @@ type UsersListResource =
              "instances" :>
                Capture "instance" Text :>
                  "users" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] UsersListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] UsersListResponse
 
 -- | Lists users in the specified Cloud SQL instance.
 --
 -- /See:/ 'usersList' smart constructor.
 data UsersList = UsersList'
-    { _ulProject  :: !Text
+    { _ulProject :: !Text
+    , _ulFields :: !(Maybe Text)
     , _ulInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -67,14 +70,17 @@ data UsersList = UsersList'
 --
 -- * 'ulProject'
 --
+-- * 'ulFields'
+--
 -- * 'ulInstance'
 usersList
     :: Text -- ^ 'ulProject'
     -> Text -- ^ 'ulInstance'
     -> UsersList
-usersList pUlProject_ pUlInstance_ =
+usersList pUlProject_ pUlInstance_ = 
     UsersList'
     { _ulProject = pUlProject_
+    , _ulFields = Nothing
     , _ulInstance = pUlInstance_
     }
 
@@ -82,6 +88,10 @@ usersList pUlProject_ pUlInstance_ =
 ulProject :: Lens' UsersList Text
 ulProject
   = lens _ulProject (\ s a -> s{_ulProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ulFields :: Lens' UsersList (Maybe Text)
+ulFields = lens _ulFields (\ s a -> s{_ulFields = a})
 
 -- | Database instance ID. This does not include the project ID.
 ulInstance :: Lens' UsersList Text
@@ -94,7 +104,7 @@ instance GoogleRequest UsersList where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient UsersList'{..}
-          = go _ulProject _ulInstance (Just AltJSON)
+          = go _ulProject _ulInstance _ulFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy UsersListResource)

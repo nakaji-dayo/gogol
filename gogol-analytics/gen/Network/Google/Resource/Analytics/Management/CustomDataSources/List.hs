@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.CustomDataSources.List
     , mcdslAccountId
     , mcdslStartIndex
     , mcdslMaxResults
+    , mcdslFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDataSources.list@ method which the
 -- 'ManagementCustomDataSourcesList' request conforms to.
@@ -55,17 +56,19 @@ type ManagementCustomDataSourcesListResource =
                    "customDataSources" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] CustomDataSources
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] CustomDataSources
 
 -- | List custom data sources to which the user has access.
 --
 -- /See:/ 'managementCustomDataSourcesList' smart constructor.
 data ManagementCustomDataSourcesList = ManagementCustomDataSourcesList'
     { _mcdslWebPropertyId :: !Text
-    , _mcdslAccountId     :: !Text
-    , _mcdslStartIndex    :: !(Maybe (Textual Int32))
-    , _mcdslMaxResults    :: !(Maybe (Textual Int32))
+    , _mcdslAccountId :: !Text
+    , _mcdslStartIndex :: !(Maybe (Textual Int32))
+    , _mcdslMaxResults :: !(Maybe (Textual Int32))
+    , _mcdslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDataSourcesList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data ManagementCustomDataSourcesList = ManagementCustomDataSourcesList'
 -- * 'mcdslStartIndex'
 --
 -- * 'mcdslMaxResults'
+--
+-- * 'mcdslFields'
 managementCustomDataSourcesList
     :: Text -- ^ 'mcdslWebPropertyId'
     -> Text -- ^ 'mcdslAccountId'
     -> ManagementCustomDataSourcesList
-managementCustomDataSourcesList pMcdslWebPropertyId_ pMcdslAccountId_ =
+managementCustomDataSourcesList pMcdslWebPropertyId_ pMcdslAccountId_ = 
     ManagementCustomDataSourcesList'
     { _mcdslWebPropertyId = pMcdslWebPropertyId_
     , _mcdslAccountId = pMcdslAccountId_
     , _mcdslStartIndex = Nothing
     , _mcdslMaxResults = Nothing
+    , _mcdslFields = Nothing
     }
 
 -- | Web property Id for the custom data sources to retrieve.
@@ -119,6 +125,11 @@ mcdslMaxResults
       (\ s a -> s{_mcdslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mcdslFields :: Lens' ManagementCustomDataSourcesList (Maybe Text)
+mcdslFields
+  = lens _mcdslFields (\ s a -> s{_mcdslFields = a})
+
 instance GoogleRequest
          ManagementCustomDataSourcesList where
         type Rs ManagementCustomDataSourcesList =
@@ -131,6 +142,7 @@ instance GoogleRequest
           = go _mcdslAccountId _mcdslWebPropertyId
               _mcdslStartIndex
               _mcdslMaxResults
+              _mcdslFields
               (Just AltJSON)
               analyticsService
           where go

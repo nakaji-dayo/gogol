@@ -32,10 +32,12 @@ module Network.Google.Resource.SiteVerification.WebResource.List
     , webResourceList
     , WebResourceList
 
+    -- * Request Lenses
+    , wrlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types
 
 -- | A resource alias for @siteVerification.webResource.list@ method which the
 -- 'WebResourceList' request conforms to.
@@ -43,29 +45,42 @@ type WebResourceListResource =
      "siteVerification" :>
        "v1" :>
          "webResource" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] SiteVerificationWebResourceListResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] SiteVerificationWebResourceListResponse
 
 -- | Get the list of your verified websites and domains.
 --
 -- /See:/ 'webResourceList' smart constructor.
-data WebResourceList =
-    WebResourceList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype WebResourceList = WebResourceList'
+    { _wrlFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebResourceList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'wrlFields'
 webResourceList
     :: WebResourceList
-webResourceList = WebResourceList'
+webResourceList = 
+    WebResourceList'
+    { _wrlFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+wrlFields :: Lens' WebResourceList (Maybe Text)
+wrlFields
+  = lens _wrlFields (\ s a -> s{_wrlFields = a})
 
 instance GoogleRequest WebResourceList where
         type Rs WebResourceList =
              SiteVerificationWebResourceListResponse
         type Scopes WebResourceList =
              '["https://www.googleapis.com/auth/siteverification"]
-        requestClient WebResourceList'{}
-          = go (Just AltJSON) siteVerificationService
+        requestClient WebResourceList'{..}
+          = go _wrlFields (Just AltJSON)
+              siteVerificationService
           where go
                   = buildClient
                       (Proxy :: Proxy WebResourceListResource)

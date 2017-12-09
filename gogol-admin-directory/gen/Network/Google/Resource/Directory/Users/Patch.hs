@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Patch
     -- * Request Lenses
     , upPayload
     , upUserKey
+    , upFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.patch@ method which the
 -- 'UsersPatch' request conforms to.
@@ -48,8 +49,9 @@ type UsersPatchResource =
          "v1" :>
            "users" :>
              Capture "userKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] User :> Patch '[JSON] User
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] User :> Patch '[JSON] User
 
 -- | update user. This method supports patch semantics.
 --
@@ -57,6 +59,7 @@ type UsersPatchResource =
 data UsersPatch = UsersPatch'
     { _upPayload :: !User
     , _upUserKey :: !Text
+    , _upFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersPatch' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UsersPatch = UsersPatch'
 -- * 'upPayload'
 --
 -- * 'upUserKey'
+--
+-- * 'upFields'
 usersPatch
     :: User -- ^ 'upPayload'
     -> Text -- ^ 'upUserKey'
     -> UsersPatch
-usersPatch pUpPayload_ pUpUserKey_ =
+usersPatch pUpPayload_ pUpUserKey_ = 
     UsersPatch'
     { _upPayload = pUpPayload_
     , _upUserKey = pUpUserKey_
+    , _upFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -81,18 +87,22 @@ upPayload :: Lens' UsersPatch User
 upPayload
   = lens _upPayload (\ s a -> s{_upPayload = a})
 
--- | Email or immutable Id of the user. If Id, it should match with id of
+-- | Email or immutable ID of the user. If ID, it should match with id of
 -- user object
 upUserKey :: Lens' UsersPatch Text
 upUserKey
   = lens _upUserKey (\ s a -> s{_upUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+upFields :: Lens' UsersPatch (Maybe Text)
+upFields = lens _upFields (\ s a -> s{_upFields = a})
 
 instance GoogleRequest UsersPatch where
         type Rs UsersPatch = User
         type Scopes UsersPatch =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersPatch'{..}
-          = go _upUserKey (Just AltJSON) _upPayload
+          = go _upUserKey _upFields (Just AltJSON) _upPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersPatchResource)

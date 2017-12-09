@@ -33,14 +33,16 @@ module Network.Google.Resource.Compute.InstanceGroups.SetNamedPorts
     , InstanceGroupsSetNamedPorts
 
     -- * Request Lenses
+    , igsnpRequestId
     , igsnpProject
     , igsnpZone
     , igsnpPayload
     , igsnpInstanceGroup
+    , igsnpFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroups.setNamedPorts@ method which the
 -- 'InstanceGroupsSetNamedPorts' request conforms to.
@@ -54,23 +56,29 @@ type InstanceGroupsSetNamedPortsResource =
                  "instanceGroups" :>
                    Capture "instanceGroup" Text :>
                      "setNamedPorts" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] InstanceGroupsSetNamedPortsRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] InstanceGroupsSetNamedPortsRequest
+                               :> Post '[JSON] Operation
 
 -- | Sets the named ports for the specified instance group.
 --
 -- /See:/ 'instanceGroupsSetNamedPorts' smart constructor.
 data InstanceGroupsSetNamedPorts = InstanceGroupsSetNamedPorts'
-    { _igsnpProject       :: !Text
-    , _igsnpZone          :: !Text
-    , _igsnpPayload       :: !InstanceGroupsSetNamedPortsRequest
+    { _igsnpRequestId :: !(Maybe Text)
+    , _igsnpProject :: !Text
+    , _igsnpZone :: !Text
+    , _igsnpPayload :: !InstanceGroupsSetNamedPortsRequest
     , _igsnpInstanceGroup :: !Text
+    , _igsnpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupsSetNamedPorts' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'igsnpRequestId'
 --
 -- * 'igsnpProject'
 --
@@ -79,19 +87,38 @@ data InstanceGroupsSetNamedPorts = InstanceGroupsSetNamedPorts'
 -- * 'igsnpPayload'
 --
 -- * 'igsnpInstanceGroup'
+--
+-- * 'igsnpFields'
 instanceGroupsSetNamedPorts
     :: Text -- ^ 'igsnpProject'
     -> Text -- ^ 'igsnpZone'
     -> InstanceGroupsSetNamedPortsRequest -- ^ 'igsnpPayload'
     -> Text -- ^ 'igsnpInstanceGroup'
     -> InstanceGroupsSetNamedPorts
-instanceGroupsSetNamedPorts pIgsnpProject_ pIgsnpZone_ pIgsnpPayload_ pIgsnpInstanceGroup_ =
+instanceGroupsSetNamedPorts pIgsnpProject_ pIgsnpZone_ pIgsnpPayload_ pIgsnpInstanceGroup_ = 
     InstanceGroupsSetNamedPorts'
-    { _igsnpProject = pIgsnpProject_
+    { _igsnpRequestId = Nothing
+    , _igsnpProject = pIgsnpProject_
     , _igsnpZone = pIgsnpZone_
     , _igsnpPayload = pIgsnpPayload_
     , _igsnpInstanceGroup = pIgsnpInstanceGroup_
+    , _igsnpFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igsnpRequestId :: Lens' InstanceGroupsSetNamedPorts (Maybe Text)
+igsnpRequestId
+  = lens _igsnpRequestId
+      (\ s a -> s{_igsnpRequestId = a})
 
 -- | Project ID for this request.
 igsnpProject :: Lens' InstanceGroupsSetNamedPorts Text
@@ -114,6 +141,11 @@ igsnpInstanceGroup
   = lens _igsnpInstanceGroup
       (\ s a -> s{_igsnpInstanceGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igsnpFields :: Lens' InstanceGroupsSetNamedPorts (Maybe Text)
+igsnpFields
+  = lens _igsnpFields (\ s a -> s{_igsnpFields = a})
+
 instance GoogleRequest InstanceGroupsSetNamedPorts
          where
         type Rs InstanceGroupsSetNamedPorts = Operation
@@ -122,6 +154,8 @@ instance GoogleRequest InstanceGroupsSetNamedPorts
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupsSetNamedPorts'{..}
           = go _igsnpProject _igsnpZone _igsnpInstanceGroup
+              _igsnpRequestId
+              _igsnpFields
               (Just AltJSON)
               _igsnpPayload
               computeService

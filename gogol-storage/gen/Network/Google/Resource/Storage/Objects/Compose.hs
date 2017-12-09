@@ -38,12 +38,15 @@ module Network.Google.Resource.Storage.Objects.Compose
     , oIfMetagenerationMatch
     , oIfGenerationMatch
     , oPayload
+    , oUserProject
     , oDestinationBucket
+    , oKmsKeyName
+    , oFields
     , oDestinationObject
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.objects.compose@ method which the
 -- 'ObjectsCompose' request conforms to.
@@ -60,23 +63,12 @@ type ObjectsComposeResource =
                      :>
                      QueryParam "ifMetagenerationMatch" (Textual Int64) :>
                        QueryParam "ifGenerationMatch" (Textual Int64) :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ComposeRequest :> Post '[JSON] Object
-       :<|>
-       "storage" :>
-         "v1" :>
-           "b" :>
-             Capture "destinationBucket" Text :>
-               "o" :>
-                 Capture "destinationObject" Text :>
-                   "compose" :>
-                     QueryParam "destinationPredefinedAcl"
-                       ObjectsComposeDestinationPredefinedACL
-                       :>
-                       QueryParam "ifMetagenerationMatch" (Textual Int64) :>
-                         QueryParam "ifGenerationMatch" (Textual Int64) :>
-                           QueryParam "alt" AltMedia :>
-                             Post '[OctetStream] Stream
+                         QueryParam "userProject" Text :>
+                           QueryParam "kmsKeyName" Text :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON] ComposeRequest :>
+                                   Post '[JSON] Object
 
 -- | Concatenates a list of existing objects into a new object in the same
 -- bucket.
@@ -84,11 +76,14 @@ type ObjectsComposeResource =
 -- /See:/ 'objectsCompose' smart constructor.
 data ObjectsCompose = ObjectsCompose'
     { _oDestinationPredefinedACL :: !(Maybe ObjectsComposeDestinationPredefinedACL)
-    , _oIfMetagenerationMatch    :: !(Maybe (Textual Int64))
-    , _oIfGenerationMatch        :: !(Maybe (Textual Int64))
-    , _oPayload                  :: !ComposeRequest
-    , _oDestinationBucket        :: !Text
-    , _oDestinationObject        :: !Text
+    , _oIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _oIfGenerationMatch :: !(Maybe (Textual Int64))
+    , _oPayload :: !ComposeRequest
+    , _oUserProject :: !(Maybe Text)
+    , _oDestinationBucket :: !Text
+    , _oKmsKeyName :: !(Maybe Text)
+    , _oFields :: !(Maybe Text)
+    , _oDestinationObject :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ObjectsCompose' with the minimum fields required to make a request.
@@ -103,7 +98,13 @@ data ObjectsCompose = ObjectsCompose'
 --
 -- * 'oPayload'
 --
+-- * 'oUserProject'
+--
 -- * 'oDestinationBucket'
+--
+-- * 'oKmsKeyName'
+--
+-- * 'oFields'
 --
 -- * 'oDestinationObject'
 objectsCompose
@@ -111,13 +112,16 @@ objectsCompose
     -> Text -- ^ 'oDestinationBucket'
     -> Text -- ^ 'oDestinationObject'
     -> ObjectsCompose
-objectsCompose pOPayload_ pODestinationBucket_ pODestinationObject_ =
+objectsCompose pOPayload_ pODestinationBucket_ pODestinationObject_ = 
     ObjectsCompose'
     { _oDestinationPredefinedACL = Nothing
     , _oIfMetagenerationMatch = Nothing
     , _oIfGenerationMatch = Nothing
     , _oPayload = pOPayload_
+    , _oUserProject = Nothing
     , _oDestinationBucket = pODestinationBucket_
+    , _oKmsKeyName = Nothing
+    , _oFields = Nothing
     , _oDestinationObject = pODestinationObject_
     }
 
@@ -136,7 +140,8 @@ oIfMetagenerationMatch
       . mapping _Coerce
 
 -- | Makes the operation conditional on whether the object\'s current
--- generation matches the given value.
+-- generation matches the given value. Setting to 0 makes the operation
+-- succeed only if there are no live versions of the object.
 oIfGenerationMatch :: Lens' ObjectsCompose (Maybe Int64)
 oIfGenerationMatch
   = lens _oIfGenerationMatch
@@ -147,11 +152,29 @@ oIfGenerationMatch
 oPayload :: Lens' ObjectsCompose ComposeRequest
 oPayload = lens _oPayload (\ s a -> s{_oPayload = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+oUserProject :: Lens' ObjectsCompose (Maybe Text)
+oUserProject
+  = lens _oUserProject (\ s a -> s{_oUserProject = a})
+
 -- | Name of the bucket in which to store the new object.
 oDestinationBucket :: Lens' ObjectsCompose Text
 oDestinationBucket
   = lens _oDestinationBucket
       (\ s a -> s{_oDestinationBucket = a})
+
+-- | Resource name of the Cloud KMS key, of the form
+-- projects\/my-project\/locations\/global\/keyRings\/my-kr\/cryptoKeys\/my-key,
+-- that will be used to encrypt the object. Overrides the object
+-- metadata\'s kms_key_name value, if any.
+oKmsKeyName :: Lens' ObjectsCompose (Maybe Text)
+oKmsKeyName
+  = lens _oKmsKeyName (\ s a -> s{_oKmsKeyName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+oFields :: Lens' ObjectsCompose (Maybe Text)
+oFields = lens _oFields (\ s a -> s{_oFields = a})
 
 -- | Name of the new object. For information about how to URL encode object
 -- names to be path safe, see Encoding URI Path Parts.
@@ -171,25 +194,12 @@ instance GoogleRequest ObjectsCompose where
               _oDestinationPredefinedACL
               _oIfMetagenerationMatch
               _oIfGenerationMatch
+              _oUserProject
+              _oKmsKeyName
+              _oFields
               (Just AltJSON)
               _oPayload
               storageService
-          where go :<|> _
-                  = buildClient (Proxy :: Proxy ObjectsComposeResource)
-                      mempty
-
-instance GoogleRequest (MediaDownload ObjectsCompose)
-         where
-        type Rs (MediaDownload ObjectsCompose) = Stream
-        type Scopes (MediaDownload ObjectsCompose) =
-             Scopes ObjectsCompose
-        requestClient (MediaDownload ObjectsCompose'{..})
-          = go _oDestinationBucket _oDestinationObject
-              _oDestinationPredefinedACL
-              _oIfMetagenerationMatch
-              _oIfGenerationMatch
-              (Just AltMedia)
-              storageService
-          where _ :<|> go
+          where go
                   = buildClient (Proxy :: Proxy ObjectsComposeResource)
                       mempty

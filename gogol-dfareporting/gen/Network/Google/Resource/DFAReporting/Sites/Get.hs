@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Sites.Get
     -- * Request Lenses
     , sggProFileId
     , sggId
+    , sggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sites.get@ method which the
 -- 'SitesGet' request conforms to.
 type SitesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sites" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Site
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Site
 
 -- | Gets one site by ID.
 --
 -- /See:/ 'sitesGet' smart constructor.
 data SitesGet = SitesGet'
     { _sggProFileId :: !(Textual Int64)
-    , _sggId        :: !(Textual Int64)
+    , _sggId :: !(Textual Int64)
+    , _sggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitesGet = SitesGet'
 -- * 'sggProFileId'
 --
 -- * 'sggId'
+--
+-- * 'sggFields'
 sitesGet
     :: Int64 -- ^ 'sggProFileId'
     -> Int64 -- ^ 'sggId'
     -> SitesGet
-sitesGet pSggProFileId_ pSggId_ =
+sitesGet pSggProFileId_ pSggId_ = 
     SitesGet'
     { _sggProFileId = _Coerce # pSggProFileId_
     , _sggId = _Coerce # pSggId_
+    , _sggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ sggId :: Lens' SitesGet Int64
 sggId
   = lens _sggId (\ s a -> s{_sggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sggFields :: Lens' SitesGet (Maybe Text)
+sggFields
+  = lens _sggFields (\ s a -> s{_sggFields = a})
+
 instance GoogleRequest SitesGet where
         type Rs SitesGet = Site
         type Scopes SitesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SitesGet'{..}
-          = go _sggProFileId _sggId (Just AltJSON)
+          = go _sggProFileId _sggId _sggFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy SitesGetResource)

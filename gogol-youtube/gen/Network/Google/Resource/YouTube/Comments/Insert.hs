@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.Comments.Insert
     -- * Request Lenses
     , comPart
     , comPayload
+    , comFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.insert@ method which the
 -- 'CommentsInsert' request conforms to.
@@ -48,16 +49,18 @@ type CommentsInsertResource =
        "v3" :>
          "comments" :>
            QueryParam "part" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Comment :> Post '[JSON] Comment
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Comment :> Post '[JSON] Comment
 
 -- | Creates a reply to an existing comment. Note: To create a top-level
 -- comment, use the commentThreads.insert method.
 --
 -- /See:/ 'commentsInsert' smart constructor.
 data CommentsInsert = CommentsInsert'
-    { _comPart    :: !Text
+    { _comPart :: !Text
     , _comPayload :: !Comment
+    , _comFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CommentsInsert = CommentsInsert'
 -- * 'comPart'
 --
 -- * 'comPayload'
+--
+-- * 'comFields'
 commentsInsert
     :: Text -- ^ 'comPart'
     -> Comment -- ^ 'comPayload'
     -> CommentsInsert
-commentsInsert pComPart_ pComPayload_ =
+commentsInsert pComPart_ pComPayload_ = 
     CommentsInsert'
     { _comPart = pComPart_
     , _comPayload = pComPayload_
+    , _comFields = Nothing
     }
 
 -- | The part parameter identifies the properties that the API response will
@@ -88,12 +94,18 @@ comPayload :: Lens' CommentsInsert Comment
 comPayload
   = lens _comPayload (\ s a -> s{_comPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+comFields :: Lens' CommentsInsert (Maybe Text)
+comFields
+  = lens _comFields (\ s a -> s{_comFields = a})
+
 instance GoogleRequest CommentsInsert where
         type Rs CommentsInsert = Comment
         type Scopes CommentsInsert =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentsInsert'{..}
-          = go (Just _comPart) (Just AltJSON) _comPayload
+          = go (Just _comPart) _comFields (Just AltJSON)
+              _comPayload
               youTubeService
           where go
                   = buildClient (Proxy :: Proxy CommentsInsertResource)

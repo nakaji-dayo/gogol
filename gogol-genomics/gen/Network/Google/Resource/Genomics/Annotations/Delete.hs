@@ -41,11 +41,12 @@ module Network.Google.Resource.Genomics.Annotations.Delete
     , adUploadType
     , adBearerToken
     , adAnnotationId
+    , adFields
     , adCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotations.delete@ method which the
 -- 'AnnotationsDelete' request conforms to.
@@ -60,21 +61,23 @@ type AnnotationsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an annotation. Caller must have WRITE permission for the
 -- associated annotation set.
 --
 -- /See:/ 'annotationsDelete' smart constructor.
 data AnnotationsDelete = AnnotationsDelete'
-    { _adXgafv          :: !(Maybe Xgafv)
+    { _adXgafv :: !(Maybe Xgafv)
     , _adUploadProtocol :: !(Maybe Text)
-    , _adPp             :: !Bool
-    , _adAccessToken    :: !(Maybe Text)
-    , _adUploadType     :: !(Maybe Text)
-    , _adBearerToken    :: !(Maybe Text)
-    , _adAnnotationId   :: !Text
-    , _adCallback       :: !(Maybe Text)
+    , _adPp :: !Bool
+    , _adAccessToken :: !(Maybe Text)
+    , _adUploadType :: !(Maybe Text)
+    , _adBearerToken :: !(Maybe Text)
+    , _adAnnotationId :: !Text
+    , _adFields :: !(Maybe Text)
+    , _adCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsDelete' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data AnnotationsDelete = AnnotationsDelete'
 --
 -- * 'adAnnotationId'
 --
+-- * 'adFields'
+--
 -- * 'adCallback'
 annotationsDelete
     :: Text -- ^ 'adAnnotationId'
     -> AnnotationsDelete
-annotationsDelete pAdAnnotationId_ =
+annotationsDelete pAdAnnotationId_ = 
     AnnotationsDelete'
     { _adXgafv = Nothing
     , _adUploadProtocol = Nothing
@@ -108,6 +113,7 @@ annotationsDelete pAdAnnotationId_ =
     , _adUploadType = Nothing
     , _adBearerToken = Nothing
     , _adAnnotationId = pAdAnnotationId_
+    , _adFields = Nothing
     , _adCallback = Nothing
     }
 
@@ -148,6 +154,10 @@ adAnnotationId
   = lens _adAnnotationId
       (\ s a -> s{_adAnnotationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+adFields :: Lens' AnnotationsDelete (Maybe Text)
+adFields = lens _adFields (\ s a -> s{_adFields = a})
+
 -- | JSONP
 adCallback :: Lens' AnnotationsDelete (Maybe Text)
 adCallback
@@ -165,6 +175,7 @@ instance GoogleRequest AnnotationsDelete where
               _adUploadType
               _adBearerToken
               _adCallback
+              _adFields
               (Just AltJSON)
               genomicsService
           where go

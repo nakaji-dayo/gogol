@@ -33,11 +33,12 @@ module Network.Google.Resource.Books.Series.Get
     , SeriesGet
 
     -- * Request Lenses
+    , sgFields
     , sgSeriesId
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.series.get@ method which the
 -- 'SeriesGet' request conforms to.
@@ -47,27 +48,36 @@ type SeriesGetResource =
          "series" :>
            "get" :>
              QueryParams "series_id" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Series
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Series
 
 -- | Returns Series metadata for the given series ids.
 --
 -- /See:/ 'seriesGet' smart constructor.
-newtype SeriesGet = SeriesGet'
-    { _sgSeriesId :: [Text]
+data SeriesGet = SeriesGet'
+    { _sgFields :: !(Maybe Text)
+    , _sgSeriesId :: ![Text]
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SeriesGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'sgFields'
+--
 -- * 'sgSeriesId'
 seriesGet
     :: [Text] -- ^ 'sgSeriesId'
     -> SeriesGet
-seriesGet pSgSeriesId_ =
+seriesGet pSgSeriesId_ = 
     SeriesGet'
-    { _sgSeriesId = _Coerce # pSgSeriesId_
+    { _sgFields = Nothing
+    , _sgSeriesId = _Coerce # pSgSeriesId_
     }
+
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SeriesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
 
 -- | String that identifies the series
 sgSeriesId :: Lens' SeriesGet [Text]
@@ -80,7 +90,8 @@ instance GoogleRequest SeriesGet where
         type Scopes SeriesGet =
              '["https://www.googleapis.com/auth/books"]
         requestClient SeriesGet'{..}
-          = go _sgSeriesId (Just AltJSON) booksService
+          = go _sgSeriesId _sgFields (Just AltJSON)
+              booksService
           where go
                   = buildClient (Proxy :: Proxy SeriesGetResource)
                       mempty

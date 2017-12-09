@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Contacts.Insert
 
     -- * Request Lenses
     , ciPayload
+    , ciFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.contacts.insert@ method which the
 -- 'ContactsInsert' request conforms to.
@@ -45,14 +46,16 @@ type ContactsInsertResource =
      "mirror" :>
        "v1" :>
          "contacts" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] Contact :> Post '[JSON] Contact
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] Contact :> Post '[JSON] Contact
 
 -- | Inserts a new contact.
 --
 -- /See:/ 'contactsInsert' smart constructor.
-newtype ContactsInsert = ContactsInsert'
-    { _ciPayload :: Contact
+data ContactsInsert = ContactsInsert'
+    { _ciPayload :: !Contact
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactsInsert' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype ContactsInsert = ContactsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ciPayload'
+--
+-- * 'ciFields'
 contactsInsert
     :: Contact -- ^ 'ciPayload'
     -> ContactsInsert
-contactsInsert pCiPayload_ =
+contactsInsert pCiPayload_ = 
     ContactsInsert'
     { _ciPayload = pCiPayload_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,17 @@ ciPayload :: Lens' ContactsInsert Contact
 ciPayload
   = lens _ciPayload (\ s a -> s{_ciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' ContactsInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest ContactsInsert where
         type Rs ContactsInsert = Contact
         type Scopes ContactsInsert =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient ContactsInsert'{..}
-          = go (Just AltJSON) _ciPayload mirrorService
+          = go _ciFields (Just AltJSON) _ciPayload
+              mirrorService
           where go
                   = buildClient (Proxy :: Proxy ContactsInsertResource)
                       mempty

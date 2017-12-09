@@ -20,8 +20,11 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Writes log entries to Stackdriver Logging. All log entries are written
--- by this method.
+-- Log entry resourcesWrites log entries to Stackdriver Logging. This API
+-- method is the only way to send log entries to Stackdriver Logging. This
+-- method is used, directly or indirectly, by the Stackdriver Logging agent
+-- (fluentd) and all logging libraries configured to use Stackdriver
+-- Logging.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.entries.write@.
 module Network.Google.Resource.Logging.Entries.Write
@@ -41,11 +44,12 @@ module Network.Google.Resource.Logging.Entries.Write
     , ewUploadType
     , ewPayload
     , ewBearerToken
+    , ewFields
     , ewCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.entries.write@ method which the
 -- 'EntriesWrite' request conforms to.
@@ -59,23 +63,28 @@ type EntriesWriteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] WriteLogEntriesRequest :>
-                           Post '[JSON] WriteLogEntriesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] WriteLogEntriesRequest :>
+                             Post '[JSON] WriteLogEntriesResponse
 
--- | Writes log entries to Stackdriver Logging. All log entries are written
--- by this method.
+-- | Log entry resourcesWrites log entries to Stackdriver Logging. This API
+-- method is the only way to send log entries to Stackdriver Logging. This
+-- method is used, directly or indirectly, by the Stackdriver Logging agent
+-- (fluentd) and all logging libraries configured to use Stackdriver
+-- Logging.
 --
 -- /See:/ 'entriesWrite' smart constructor.
 data EntriesWrite = EntriesWrite'
-    { _ewXgafv          :: !(Maybe Xgafv)
+    { _ewXgafv :: !(Maybe Xgafv)
     , _ewUploadProtocol :: !(Maybe Text)
-    , _ewPp             :: !Bool
-    , _ewAccessToken    :: !(Maybe Text)
-    , _ewUploadType     :: !(Maybe Text)
-    , _ewPayload        :: !WriteLogEntriesRequest
-    , _ewBearerToken    :: !(Maybe Text)
-    , _ewCallback       :: !(Maybe Text)
+    , _ewPp :: !Bool
+    , _ewAccessToken :: !(Maybe Text)
+    , _ewUploadType :: !(Maybe Text)
+    , _ewPayload :: !WriteLogEntriesRequest
+    , _ewBearerToken :: !(Maybe Text)
+    , _ewFields :: !(Maybe Text)
+    , _ewCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntriesWrite' with the minimum fields required to make a request.
@@ -96,11 +105,13 @@ data EntriesWrite = EntriesWrite'
 --
 -- * 'ewBearerToken'
 --
+-- * 'ewFields'
+--
 -- * 'ewCallback'
 entriesWrite
     :: WriteLogEntriesRequest -- ^ 'ewPayload'
     -> EntriesWrite
-entriesWrite pEwPayload_ =
+entriesWrite pEwPayload_ = 
     EntriesWrite'
     { _ewXgafv = Nothing
     , _ewUploadProtocol = Nothing
@@ -109,6 +120,7 @@ entriesWrite pEwPayload_ =
     , _ewUploadType = Nothing
     , _ewPayload = pEwPayload_
     , _ewBearerToken = Nothing
+    , _ewFields = Nothing
     , _ewCallback = Nothing
     }
 
@@ -148,6 +160,10 @@ ewBearerToken
   = lens _ewBearerToken
       (\ s a -> s{_ewBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ewFields :: Lens' EntriesWrite (Maybe Text)
+ewFields = lens _ewFields (\ s a -> s{_ewFields = a})
+
 -- | JSONP
 ewCallback :: Lens' EntriesWrite (Maybe Text)
 ewCallback
@@ -165,6 +181,7 @@ instance GoogleRequest EntriesWrite where
               _ewUploadType
               _ewBearerToken
               _ewCallback
+              _ewFields
               (Just AltJSON)
               _ewPayload
               loggingService

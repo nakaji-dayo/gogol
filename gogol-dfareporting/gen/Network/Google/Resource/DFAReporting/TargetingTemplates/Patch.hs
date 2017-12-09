@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.TargetingTemplates.Patch
     , ttpProFileId
     , ttpPayload
     , ttpId
+    , ttpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.targetingTemplates.patch@ method which the
 -- 'TargetingTemplatesPatch' request conforms to.
 type TargetingTemplatesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "targetingTemplates" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] TargetingTemplate :>
-                     Patch '[JSON] TargetingTemplate
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] TargetingTemplate :>
+                       Patch '[JSON] TargetingTemplate
 
 -- | Updates an existing targeting template. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type TargetingTemplatesPatchResource =
 -- /See:/ 'targetingTemplatesPatch' smart constructor.
 data TargetingTemplatesPatch = TargetingTemplatesPatch'
     { _ttpProFileId :: !(Textual Int64)
-    , _ttpPayload   :: !TargetingTemplate
-    , _ttpId        :: !(Textual Int64)
+    , _ttpPayload :: !TargetingTemplate
+    , _ttpId :: !(Textual Int64)
+    , _ttpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingTemplatesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data TargetingTemplatesPatch = TargetingTemplatesPatch'
 -- * 'ttpPayload'
 --
 -- * 'ttpId'
+--
+-- * 'ttpFields'
 targetingTemplatesPatch
     :: Int64 -- ^ 'ttpProFileId'
     -> TargetingTemplate -- ^ 'ttpPayload'
     -> Int64 -- ^ 'ttpId'
     -> TargetingTemplatesPatch
-targetingTemplatesPatch pTtpProFileId_ pTtpPayload_ pTtpId_ =
+targetingTemplatesPatch pTtpProFileId_ pTtpPayload_ pTtpId_ = 
     TargetingTemplatesPatch'
     { _ttpProFileId = _Coerce # pTtpProFileId_
     , _ttpPayload = pTtpPayload_
     , _ttpId = _Coerce # pTtpId_
+    , _ttpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ ttpId :: Lens' TargetingTemplatesPatch Int64
 ttpId
   = lens _ttpId (\ s a -> s{_ttpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ttpFields :: Lens' TargetingTemplatesPatch (Maybe Text)
+ttpFields
+  = lens _ttpFields (\ s a -> s{_ttpFields = a})
+
 instance GoogleRequest TargetingTemplatesPatch where
         type Rs TargetingTemplatesPatch = TargetingTemplate
         type Scopes TargetingTemplatesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient TargetingTemplatesPatch'{..}
-          = go _ttpProFileId (Just _ttpId) (Just AltJSON)
+          = go _ttpProFileId (Just _ttpId) _ttpFields
+              (Just AltJSON)
               _ttpPayload
               dFAReportingService
           where go

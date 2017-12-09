@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.TargetInstances.Insert
     , TargetInstancesInsert
 
     -- * Request Lenses
+    , tiiRequestId
     , tiiProject
     , tiiZone
     , tiiPayload
+    , tiiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetInstances.insert@ method which the
 -- 'TargetInstancesInsert' request conforms to.
@@ -52,40 +54,64 @@ type TargetInstancesInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "targetInstances" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] TargetInstance :>
-                       Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] TargetInstance :>
+                           Post '[JSON] Operation
 
 -- | Creates a TargetInstance resource in the specified project and zone
 -- using the data included in the request.
 --
 -- /See:/ 'targetInstancesInsert' smart constructor.
 data TargetInstancesInsert = TargetInstancesInsert'
-    { _tiiProject :: !Text
-    , _tiiZone    :: !Text
+    { _tiiRequestId :: !(Maybe Text)
+    , _tiiProject :: !Text
+    , _tiiZone :: !Text
     , _tiiPayload :: !TargetInstance
+    , _tiiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetInstancesInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'tiiRequestId'
+--
 -- * 'tiiProject'
 --
 -- * 'tiiZone'
 --
 -- * 'tiiPayload'
+--
+-- * 'tiiFields'
 targetInstancesInsert
     :: Text -- ^ 'tiiProject'
     -> Text -- ^ 'tiiZone'
     -> TargetInstance -- ^ 'tiiPayload'
     -> TargetInstancesInsert
-targetInstancesInsert pTiiProject_ pTiiZone_ pTiiPayload_ =
+targetInstancesInsert pTiiProject_ pTiiZone_ pTiiPayload_ = 
     TargetInstancesInsert'
-    { _tiiProject = pTiiProject_
+    { _tiiRequestId = Nothing
+    , _tiiProject = pTiiProject_
     , _tiiZone = pTiiZone_
     , _tiiPayload = pTiiPayload_
+    , _tiiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tiiRequestId :: Lens' TargetInstancesInsert (Maybe Text)
+tiiRequestId
+  = lens _tiiRequestId (\ s a -> s{_tiiRequestId = a})
 
 -- | Project ID for this request.
 tiiProject :: Lens' TargetInstancesInsert Text
@@ -101,13 +127,20 @@ tiiPayload :: Lens' TargetInstancesInsert TargetInstance
 tiiPayload
   = lens _tiiPayload (\ s a -> s{_tiiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiiFields :: Lens' TargetInstancesInsert (Maybe Text)
+tiiFields
+  = lens _tiiFields (\ s a -> s{_tiiFields = a})
+
 instance GoogleRequest TargetInstancesInsert where
         type Rs TargetInstancesInsert = Operation
         type Scopes TargetInstancesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetInstancesInsert'{..}
-          = go _tiiProject _tiiZone (Just AltJSON) _tiiPayload
+          = go _tiiProject _tiiZone _tiiRequestId _tiiFields
+              (Just AltJSON)
+              _tiiPayload
               computeService
           where go
                   = buildClient

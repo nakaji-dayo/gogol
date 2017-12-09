@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.LiveChatMessages.Insert
     -- * Request Lenses
     , lcmiPart
     , lcmiPayload
+    , lcmiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatMessages.insert@ method which the
 -- 'LiveChatMessagesInsert' request conforms to.
@@ -48,16 +49,18 @@ type LiveChatMessagesInsertResource =
          "liveChat" :>
            "messages" :>
              QueryParam "part" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] LiveChatMessage :>
-                   Post '[JSON] LiveChatMessage
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] LiveChatMessage :>
+                     Post '[JSON] LiveChatMessage
 
 -- | Adds a message to a live chat.
 --
 -- /See:/ 'liveChatMessagesInsert' smart constructor.
 data LiveChatMessagesInsert = LiveChatMessagesInsert'
-    { _lcmiPart    :: !Text
+    { _lcmiPart :: !Text
     , _lcmiPayload :: !LiveChatMessage
+    , _lcmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatMessagesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data LiveChatMessagesInsert = LiveChatMessagesInsert'
 -- * 'lcmiPart'
 --
 -- * 'lcmiPayload'
+--
+-- * 'lcmiFields'
 liveChatMessagesInsert
     :: Text -- ^ 'lcmiPart'
     -> LiveChatMessage -- ^ 'lcmiPayload'
     -> LiveChatMessagesInsert
-liveChatMessagesInsert pLcmiPart_ pLcmiPayload_ =
+liveChatMessagesInsert pLcmiPart_ pLcmiPayload_ = 
     LiveChatMessagesInsert'
     { _lcmiPart = pLcmiPart_
     , _lcmiPayload = pLcmiPayload_
+    , _lcmiFields = Nothing
     }
 
 -- | The part parameter serves two purposes. It identifies the properties
@@ -88,13 +94,19 @@ lcmiPayload :: Lens' LiveChatMessagesInsert LiveChatMessage
 lcmiPayload
   = lens _lcmiPayload (\ s a -> s{_lcmiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcmiFields :: Lens' LiveChatMessagesInsert (Maybe Text)
+lcmiFields
+  = lens _lcmiFields (\ s a -> s{_lcmiFields = a})
+
 instance GoogleRequest LiveChatMessagesInsert where
         type Rs LiveChatMessagesInsert = LiveChatMessage
         type Scopes LiveChatMessagesInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatMessagesInsert'{..}
-          = go (Just _lcmiPart) (Just AltJSON) _lcmiPayload
+          = go (Just _lcmiPart) _lcmiFields (Just AltJSON)
+              _lcmiPayload
               youTubeService
           where go
                   = buildClient

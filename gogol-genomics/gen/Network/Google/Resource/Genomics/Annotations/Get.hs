@@ -41,11 +41,12 @@ module Network.Google.Resource.Genomics.Annotations.Get
     , agUploadType
     , agBearerToken
     , agAnnotationId
+    , agFields
     , agCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotations.get@ method which the
 -- 'AnnotationsGet' request conforms to.
@@ -60,21 +61,23 @@ type AnnotationsGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Annotation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Annotation
 
 -- | Gets an annotation. Caller must have READ permission for the associated
 -- annotation set.
 --
 -- /See:/ 'annotationsGet' smart constructor.
 data AnnotationsGet = AnnotationsGet'
-    { _agXgafv          :: !(Maybe Xgafv)
+    { _agXgafv :: !(Maybe Xgafv)
     , _agUploadProtocol :: !(Maybe Text)
-    , _agPp             :: !Bool
-    , _agAccessToken    :: !(Maybe Text)
-    , _agUploadType     :: !(Maybe Text)
-    , _agBearerToken    :: !(Maybe Text)
-    , _agAnnotationId   :: !Text
-    , _agCallback       :: !(Maybe Text)
+    , _agPp :: !Bool
+    , _agAccessToken :: !(Maybe Text)
+    , _agUploadType :: !(Maybe Text)
+    , _agBearerToken :: !(Maybe Text)
+    , _agAnnotationId :: !Text
+    , _agFields :: !(Maybe Text)
+    , _agCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsGet' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data AnnotationsGet = AnnotationsGet'
 --
 -- * 'agAnnotationId'
 --
+-- * 'agFields'
+--
 -- * 'agCallback'
 annotationsGet
     :: Text -- ^ 'agAnnotationId'
     -> AnnotationsGet
-annotationsGet pAgAnnotationId_ =
+annotationsGet pAgAnnotationId_ = 
     AnnotationsGet'
     { _agXgafv = Nothing
     , _agUploadProtocol = Nothing
@@ -108,6 +113,7 @@ annotationsGet pAgAnnotationId_ =
     , _agUploadType = Nothing
     , _agBearerToken = Nothing
     , _agAnnotationId = pAgAnnotationId_
+    , _agFields = Nothing
     , _agCallback = Nothing
     }
 
@@ -148,6 +154,10 @@ agAnnotationId
   = lens _agAnnotationId
       (\ s a -> s{_agAnnotationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AnnotationsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 -- | JSONP
 agCallback :: Lens' AnnotationsGet (Maybe Text)
 agCallback
@@ -166,6 +176,7 @@ instance GoogleRequest AnnotationsGet where
               _agUploadType
               _agBearerToken
               _agCallback
+              _agFields
               (Just AltJSON)
               genomicsService
           where go

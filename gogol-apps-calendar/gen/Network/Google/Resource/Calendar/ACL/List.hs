@@ -38,10 +38,11 @@ module Network.Google.Resource.Calendar.ACL.List
     , alShowDeleted
     , alPageToken
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.list@ method which the
 -- 'ACLList' request conforms to.
@@ -55,17 +56,19 @@ type ACLListResource =
                  QueryParam "showDeleted" Bool :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] ACL
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] ACL
 
 -- | Returns the rules in the access control list for the calendar.
 --
 -- /See:/ 'aclList' smart constructor.
 data ACLList = ACLList'
-    { _alSyncToken   :: !(Maybe Text)
-    , _alCalendarId  :: !Text
+    { _alSyncToken :: !(Maybe Text)
+    , _alCalendarId :: !Text
     , _alShowDeleted :: !(Maybe Bool)
-    , _alPageToken   :: !(Maybe Text)
-    , _alMaxResults  :: !(Maybe (Textual Int32))
+    , _alPageToken :: !(Maybe Text)
+    , _alMaxResults :: !(Maybe (Textual Int32))
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLList' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data ACLList = ACLList'
 -- * 'alPageToken'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 aclList
     :: Text -- ^ 'alCalendarId'
     -> ACLList
-aclList pAlCalendarId_ =
+aclList pAlCalendarId_ = 
     ACLList'
     { _alSyncToken = Nothing
     , _alCalendarId = pAlCalendarId_
     , _alShowDeleted = Nothing
     , _alPageToken = Nothing
     , _alMaxResults = Nothing
+    , _alFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -134,6 +140,10 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ACLList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ACLList where
         type Rs ACLList = ACL
         type Scopes ACLList =
@@ -142,6 +152,7 @@ instance GoogleRequest ACLList where
           = go _alCalendarId _alSyncToken _alShowDeleted
               _alPageToken
               _alMaxResults
+              _alFields
               (Just AltJSON)
               appsCalendarService
           where go

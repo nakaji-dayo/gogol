@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Template.Update
     , tuTemplateId
     , tuPayload
     , tuTableId
+    , tuFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.template.update@ method which the
 -- 'TemplateUpdate' request conforms to.
@@ -50,16 +51,18 @@ type TemplateUpdateResource =
            Capture "tableId" Text :>
              "templates" :>
                Capture "templateId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Template :> Put '[JSON] Template
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Template :> Put '[JSON] Template
 
 -- | Updates an existing template
 --
 -- /See:/ 'templateUpdate' smart constructor.
 data TemplateUpdate = TemplateUpdate'
     { _tuTemplateId :: !(Textual Int32)
-    , _tuPayload    :: !Template
-    , _tuTableId    :: !Text
+    , _tuPayload :: !Template
+    , _tuTableId :: !Text
+    , _tuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TemplateUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data TemplateUpdate = TemplateUpdate'
 -- * 'tuPayload'
 --
 -- * 'tuTableId'
+--
+-- * 'tuFields'
 templateUpdate
     :: Int32 -- ^ 'tuTemplateId'
     -> Template -- ^ 'tuPayload'
     -> Text -- ^ 'tuTableId'
     -> TemplateUpdate
-templateUpdate pTuTemplateId_ pTuPayload_ pTuTableId_ =
+templateUpdate pTuTemplateId_ pTuPayload_ pTuTableId_ = 
     TemplateUpdate'
     { _tuTemplateId = _Coerce # pTuTemplateId_
     , _tuPayload = pTuPayload_
     , _tuTableId = pTuTableId_
+    , _tuFields = Nothing
     }
 
 -- | Identifier for the template that is being updated
@@ -99,12 +105,17 @@ tuTableId :: Lens' TemplateUpdate Text
 tuTableId
   = lens _tuTableId (\ s a -> s{_tuTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tuFields :: Lens' TemplateUpdate (Maybe Text)
+tuFields = lens _tuFields (\ s a -> s{_tuFields = a})
+
 instance GoogleRequest TemplateUpdate where
         type Rs TemplateUpdate = Template
         type Scopes TemplateUpdate =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TemplateUpdate'{..}
-          = go _tuTableId _tuTemplateId (Just AltJSON)
+          = go _tuTableId _tuTemplateId _tuFields
+              (Just AltJSON)
               _tuPayload
               fusionTablesService
           where go

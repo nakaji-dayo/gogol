@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Remove Organization Unit
+-- Remove organizational unit
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.orgunits.delete@.
 module Network.Google.Resource.Directory.OrgUnits.Delete
@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.OrgUnits.Delete
     -- * Request Lenses
     , oudOrgUnitPath
     , oudCustomerId
+    , oudFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.orgunits.delete@ method which the
 -- 'OrgUnitsDelete' request conforms to.
@@ -50,14 +51,16 @@ type OrgUnitsDeleteResource =
              Capture "customerId" Text :>
                "orgunits" :>
                  Captures "orgUnitPath" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
--- | Remove Organization Unit
+-- | Remove organizational unit
 --
 -- /See:/ 'orgUnitsDelete' smart constructor.
 data OrgUnitsDelete = OrgUnitsDelete'
     { _oudOrgUnitPath :: ![Text]
-    , _oudCustomerId  :: !Text
+    , _oudCustomerId :: !Text
+    , _oudFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnitsDelete' with the minimum fields required to make a request.
@@ -67,35 +70,44 @@ data OrgUnitsDelete = OrgUnitsDelete'
 -- * 'oudOrgUnitPath'
 --
 -- * 'oudCustomerId'
+--
+-- * 'oudFields'
 orgUnitsDelete
     :: [Text] -- ^ 'oudOrgUnitPath'
     -> Text -- ^ 'oudCustomerId'
     -> OrgUnitsDelete
-orgUnitsDelete pOudOrgUnitPath_ pOudCustomerId_ =
+orgUnitsDelete pOudOrgUnitPath_ pOudCustomerId_ = 
     OrgUnitsDelete'
     { _oudOrgUnitPath = _Coerce # pOudOrgUnitPath_
     , _oudCustomerId = pOudCustomerId_
+    , _oudFields = Nothing
     }
 
--- | Full path of the organization unit or its Id
+-- | Full path of the organizational unit or its ID
 oudOrgUnitPath :: Lens' OrgUnitsDelete [Text]
 oudOrgUnitPath
   = lens _oudOrgUnitPath
       (\ s a -> s{_oudOrgUnitPath = a})
       . _Coerce
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 oudCustomerId :: Lens' OrgUnitsDelete Text
 oudCustomerId
   = lens _oudCustomerId
       (\ s a -> s{_oudCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+oudFields :: Lens' OrgUnitsDelete (Maybe Text)
+oudFields
+  = lens _oudFields (\ s a -> s{_oudFields = a})
 
 instance GoogleRequest OrgUnitsDelete where
         type Rs OrgUnitsDelete = ()
         type Scopes OrgUnitsDelete =
              '["https://www.googleapis.com/auth/admin.directory.orgunit"]
         requestClient OrgUnitsDelete'{..}
-          = go _oudCustomerId _oudOrgUnitPath (Just AltJSON)
+          = go _oudCustomerId _oudOrgUnitPath _oudFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy OrgUnitsDeleteResource)

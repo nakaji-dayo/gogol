@@ -75,7 +75,6 @@ library
         , Network.Google.Resource.AndroidPublisher.Edits.Tracks.Update
         , Network.Google.Resource.AndroidPublisher.Edits.Validate
         , Network.Google.Resource.AndroidPublisher.Entitlements.List
-        , Network.Google.Resource.AndroidPublisher.InAppProducts.Batch
         , Network.Google.Resource.AndroidPublisher.InAppProducts.Delete
         , Network.Google.Resource.AndroidPublisher.InAppProducts.Get
         , Network.Google.Resource.AndroidPublisher.InAppProducts.Insert

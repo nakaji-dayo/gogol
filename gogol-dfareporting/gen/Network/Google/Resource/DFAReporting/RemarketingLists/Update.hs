@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.RemarketingLists.Update
     -- * Request Lenses
     , rluProFileId
     , rluPayload
+    , rluFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingLists.update@ method which the
 -- 'RemarketingListsUpdate' request conforms to.
 type RemarketingListsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingLists" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] RemarketingList :>
-                   Put '[JSON] RemarketingList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] RemarketingList :>
+                     Put '[JSON] RemarketingList
 
 -- | Updates an existing remarketing list.
 --
 -- /See:/ 'remarketingListsUpdate' smart constructor.
 data RemarketingListsUpdate = RemarketingListsUpdate'
     { _rluProFileId :: !(Textual Int64)
-    , _rluPayload   :: !RemarketingList
+    , _rluPayload :: !RemarketingList
+    , _rluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data RemarketingListsUpdate = RemarketingListsUpdate'
 -- * 'rluProFileId'
 --
 -- * 'rluPayload'
+--
+-- * 'rluFields'
 remarketingListsUpdate
     :: Int64 -- ^ 'rluProFileId'
     -> RemarketingList -- ^ 'rluPayload'
     -> RemarketingListsUpdate
-remarketingListsUpdate pRluProFileId_ pRluPayload_ =
+remarketingListsUpdate pRluProFileId_ pRluPayload_ = 
     RemarketingListsUpdate'
     { _rluProFileId = _Coerce # pRluProFileId_
     , _rluPayload = pRluPayload_
+    , _rluFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ rluPayload :: Lens' RemarketingListsUpdate RemarketingList
 rluPayload
   = lens _rluPayload (\ s a -> s{_rluPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rluFields :: Lens' RemarketingListsUpdate (Maybe Text)
+rluFields
+  = lens _rluFields (\ s a -> s{_rluFields = a})
+
 instance GoogleRequest RemarketingListsUpdate where
         type Rs RemarketingListsUpdate = RemarketingList
         type Scopes RemarketingListsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListsUpdate'{..}
-          = go _rluProFileId (Just AltJSON) _rluPayload
+          = go _rluProFileId _rluFields (Just AltJSON)
+              _rluPayload
               dFAReportingService
           where go
                   = buildClient

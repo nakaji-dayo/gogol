@@ -34,11 +34,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.Get
 
     -- * Request Lenses
     , dgProject
+    , dgFields
     , dgDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.get@ method which the
 -- 'DeploymentsGet' request conforms to.
@@ -50,13 +51,15 @@ type DeploymentsGetResource =
              "global" :>
                "deployments" :>
                  Capture "deployment" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Deployment
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Deployment
 
 -- | Gets information about a specific deployment.
 --
 -- /See:/ 'deploymentsGet' smart constructor.
 data DeploymentsGet = DeploymentsGet'
-    { _dgProject    :: !Text
+    { _dgProject :: !Text
+    , _dgFields :: !(Maybe Text)
     , _dgDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -66,14 +69,17 @@ data DeploymentsGet = DeploymentsGet'
 --
 -- * 'dgProject'
 --
+-- * 'dgFields'
+--
 -- * 'dgDeployment'
 deploymentsGet
     :: Text -- ^ 'dgProject'
     -> Text -- ^ 'dgDeployment'
     -> DeploymentsGet
-deploymentsGet pDgProject_ pDgDeployment_ =
+deploymentsGet pDgProject_ pDgDeployment_ = 
     DeploymentsGet'
     { _dgProject = pDgProject_
+    , _dgFields = Nothing
     , _dgDeployment = pDgDeployment_
     }
 
@@ -81,6 +87,10 @@ deploymentsGet pDgProject_ pDgDeployment_ =
 dgProject :: Lens' DeploymentsGet Text
 dgProject
   = lens _dgProject (\ s a -> s{_dgProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dgFields :: Lens' DeploymentsGet (Maybe Text)
+dgFields = lens _dgFields (\ s a -> s{_dgFields = a})
 
 -- | The name of the deployment for this request.
 dgDeployment :: Lens' DeploymentsGet Text
@@ -95,7 +105,8 @@ instance GoogleRequest DeploymentsGet where
                "https://www.googleapis.com/auth/ndev.cloudman",
                "https://www.googleapis.com/auth/ndev.cloudman.readonly"]
         requestClient DeploymentsGet'{..}
-          = go _dgProject _dgDeployment (Just AltJSON)
+          = go _dgProject _dgDeployment _dgFields
+              (Just AltJSON)
               deploymentManagerService
           where go
                   = buildClient (Proxy :: Proxy DeploymentsGetResource)

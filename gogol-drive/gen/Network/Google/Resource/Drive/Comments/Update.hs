@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Comments.Update
     , cuPayload
     , cuFileId
     , cuCommentId
+    , cuFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.comments.update@ method which the
 -- 'CommentsUpdate' request conforms to.
@@ -50,16 +51,18 @@ type CommentsUpdateResource =
            Capture "fileId" Text :>
              "comments" :>
                Capture "commentId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Comment :> Patch '[JSON] Comment
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Comment :> Patch '[JSON] Comment
 
 -- | Updates a comment with patch semantics.
 --
 -- /See:/ 'commentsUpdate' smart constructor.
 data CommentsUpdate = CommentsUpdate'
-    { _cuPayload   :: !Comment
-    , _cuFileId    :: !Text
+    { _cuPayload :: !Comment
+    , _cuFileId :: !Text
     , _cuCommentId :: !Text
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data CommentsUpdate = CommentsUpdate'
 -- * 'cuFileId'
 --
 -- * 'cuCommentId'
+--
+-- * 'cuFields'
 commentsUpdate
     :: Comment -- ^ 'cuPayload'
     -> Text -- ^ 'cuFileId'
     -> Text -- ^ 'cuCommentId'
     -> CommentsUpdate
-commentsUpdate pCuPayload_ pCuFileId_ pCuCommentId_ =
+commentsUpdate pCuPayload_ pCuFileId_ pCuCommentId_ = 
     CommentsUpdate'
     { _cuPayload = pCuPayload_
     , _cuFileId = pCuFileId_
     , _cuCommentId = pCuCommentId_
+    , _cuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -97,13 +103,18 @@ cuCommentId :: Lens' CommentsUpdate Text
 cuCommentId
   = lens _cuCommentId (\ s a -> s{_cuCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' CommentsUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest CommentsUpdate where
         type Rs CommentsUpdate = Comment
         type Scopes CommentsUpdate =
              '["https://www.googleapis.com/auth/drive",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient CommentsUpdate'{..}
-          = go _cuFileId _cuCommentId (Just AltJSON) _cuPayload
+          = go _cuFileId _cuCommentId _cuFields (Just AltJSON)
+              _cuPayload
               driveService
           where go
                   = buildClient (Proxy :: Proxy CommentsUpdateResource)

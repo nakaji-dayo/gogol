@@ -37,24 +37,26 @@ module Network.Google.Resource.DFAReporting.Reports.CompatibleFields.Query
     -- * Request Lenses
     , rcfqProFileId
     , rcfqPayload
+    , rcfqFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.compatibleFields.query@ method which the
 -- 'ReportsCompatibleFieldsQuery' request conforms to.
 type ReportsCompatibleFieldsQueryResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                "compatiblefields" :>
                  "query" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Report :>
-                       Post '[JSON] CompatibleFields
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Report :>
+                         Post '[JSON] CompatibleFields
 
 -- | Returns the fields that are compatible to be selected in the respective
 -- sections of a report criteria, given the fields already selected in the
@@ -63,7 +65,8 @@ type ReportsCompatibleFieldsQueryResource =
 -- /See:/ 'reportsCompatibleFieldsQuery' smart constructor.
 data ReportsCompatibleFieldsQuery = ReportsCompatibleFieldsQuery'
     { _rcfqProFileId :: !(Textual Int64)
-    , _rcfqPayload   :: !Report
+    , _rcfqPayload :: !Report
+    , _rcfqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsCompatibleFieldsQuery' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data ReportsCompatibleFieldsQuery = ReportsCompatibleFieldsQuery'
 -- * 'rcfqProFileId'
 --
 -- * 'rcfqPayload'
+--
+-- * 'rcfqFields'
 reportsCompatibleFieldsQuery
     :: Int64 -- ^ 'rcfqProFileId'
     -> Report -- ^ 'rcfqPayload'
     -> ReportsCompatibleFieldsQuery
-reportsCompatibleFieldsQuery pRcfqProFileId_ pRcfqPayload_ =
+reportsCompatibleFieldsQuery pRcfqProFileId_ pRcfqPayload_ = 
     ReportsCompatibleFieldsQuery'
     { _rcfqProFileId = _Coerce # pRcfqProFileId_
     , _rcfqPayload = pRcfqPayload_
+    , _rcfqFields = Nothing
     }
 
 -- | The DFA user profile ID.
@@ -95,6 +101,11 @@ rcfqPayload :: Lens' ReportsCompatibleFieldsQuery Report
 rcfqPayload
   = lens _rcfqPayload (\ s a -> s{_rcfqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rcfqFields :: Lens' ReportsCompatibleFieldsQuery (Maybe Text)
+rcfqFields
+  = lens _rcfqFields (\ s a -> s{_rcfqFields = a})
+
 instance GoogleRequest ReportsCompatibleFieldsQuery
          where
         type Rs ReportsCompatibleFieldsQuery =
@@ -102,7 +113,8 @@ instance GoogleRequest ReportsCompatibleFieldsQuery
         type Scopes ReportsCompatibleFieldsQuery =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsCompatibleFieldsQuery'{..}
-          = go _rcfqProFileId (Just AltJSON) _rcfqPayload
+          = go _rcfqProFileId _rcfqFields (Just AltJSON)
+              _rcfqPayload
               dFAReportingService
           where go
                   = buildClient

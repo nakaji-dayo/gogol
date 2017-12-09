@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.Databases.Get
     -- * Request Lenses
     , dgProject
     , dgDatabase
+    , dgFields
     , dgInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.get@ method which the
 -- 'DatabasesGet' request conforms to.
@@ -53,15 +54,17 @@ type DatabasesGetResource =
                Capture "instance" Text :>
                  "databases" :>
                    Capture "database" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Database
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Database
 
 -- | Retrieves a resource containing information about a database inside a
 -- Cloud SQL instance.
 --
 -- /See:/ 'databasesGet' smart constructor.
 data DatabasesGet = DatabasesGet'
-    { _dgProject  :: !Text
+    { _dgProject :: !Text
     , _dgDatabase :: !Text
+    , _dgFields :: !(Maybe Text)
     , _dgInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,16 +76,19 @@ data DatabasesGet = DatabasesGet'
 --
 -- * 'dgDatabase'
 --
+-- * 'dgFields'
+--
 -- * 'dgInstance'
 databasesGet
     :: Text -- ^ 'dgProject'
     -> Text -- ^ 'dgDatabase'
     -> Text -- ^ 'dgInstance'
     -> DatabasesGet
-databasesGet pDgProject_ pDgDatabase_ pDgInstance_ =
+databasesGet pDgProject_ pDgDatabase_ pDgInstance_ = 
     DatabasesGet'
     { _dgProject = pDgProject_
     , _dgDatabase = pDgDatabase_
+    , _dgFields = Nothing
     , _dgInstance = pDgInstance_
     }
 
@@ -96,6 +102,10 @@ dgDatabase :: Lens' DatabasesGet Text
 dgDatabase
   = lens _dgDatabase (\ s a -> s{_dgDatabase = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgFields :: Lens' DatabasesGet (Maybe Text)
+dgFields = lens _dgFields (\ s a -> s{_dgFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 dgInstance :: Lens' DatabasesGet Text
 dgInstance
@@ -107,7 +117,7 @@ instance GoogleRequest DatabasesGet where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesGet'{..}
-          = go _dgProject _dgInstance _dgDatabase
+          = go _dgProject _dgInstance _dgDatabase _dgFields
               (Just AltJSON)
               sQLAdminService
           where go

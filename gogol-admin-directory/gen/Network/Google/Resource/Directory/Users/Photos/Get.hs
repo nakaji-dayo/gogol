@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Users.Photos.Get
 
     -- * Request Lenses
     , upgUserKey
+    , upgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.photos.get@ method which the
 -- 'UsersPhotosGet' request conforms to.
@@ -49,13 +50,15 @@ type UsersPhotosGetResource =
              Capture "userKey" Text :>
                "photos" :>
                  "thumbnail" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] UserPhoto
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] UserPhoto
 
 -- | Retrieve photo of a user
 --
 -- /See:/ 'usersPhotosGet' smart constructor.
-newtype UsersPhotosGet = UsersPhotosGet'
-    { _upgUserKey :: Text
+data UsersPhotosGet = UsersPhotosGet'
+    { _upgUserKey :: !Text
+    , _upgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersPhotosGet' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype UsersPhotosGet = UsersPhotosGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'upgUserKey'
+--
+-- * 'upgFields'
 usersPhotosGet
     :: Text -- ^ 'upgUserKey'
     -> UsersPhotosGet
-usersPhotosGet pUpgUserKey_ =
+usersPhotosGet pUpgUserKey_ = 
     UsersPhotosGet'
     { _upgUserKey = pUpgUserKey_
+    , _upgFields = Nothing
     }
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 upgUserKey :: Lens' UsersPhotosGet Text
 upgUserKey
   = lens _upgUserKey (\ s a -> s{_upgUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+upgFields :: Lens' UsersPhotosGet (Maybe Text)
+upgFields
+  = lens _upgFields (\ s a -> s{_upgFields = a})
 
 instance GoogleRequest UsersPhotosGet where
         type Rs UsersPhotosGet = UserPhoto
@@ -82,7 +93,8 @@ instance GoogleRequest UsersPhotosGet where
              '["https://www.googleapis.com/auth/admin.directory.user",
                "https://www.googleapis.com/auth/admin.directory.user.readonly"]
         requestClient UsersPhotosGet'{..}
-          = go _upgUserKey (Just AltJSON) directoryService
+          = go _upgUserKey _upgFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersPhotosGetResource)
                       mempty

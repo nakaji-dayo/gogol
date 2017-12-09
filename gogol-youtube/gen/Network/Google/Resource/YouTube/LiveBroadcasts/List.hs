@@ -43,10 +43,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.List
     , lblId
     , lblPageToken
     , lblMaxResults
+    , lblFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.list@ method which the
 -- 'LiveBroadcastsList' request conforms to.
@@ -67,23 +68,25 @@ type LiveBroadcastsListResource =
                        QueryParam "id" Text :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] LiveBroadcastListResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] LiveBroadcastListResponse
 
 -- | Returns a list of YouTube broadcasts that match the API request
 -- parameters.
 --
 -- /See:/ 'liveBroadcastsList' smart constructor.
 data LiveBroadcastsList = LiveBroadcastsList'
-    { _lblPart                          :: !Text
-    , _lblMine                          :: !(Maybe Bool)
-    , _lblBroadcastStatus               :: !(Maybe LiveBroadcastsListBroadcastStatus)
-    , _lblOnBehalfOfContentOwner        :: !(Maybe Text)
-    , _lblBroadcastType                 :: !LiveBroadcastsListBroadcastType
+    { _lblPart :: !Text
+    , _lblMine :: !(Maybe Bool)
+    , _lblBroadcastStatus :: !(Maybe LiveBroadcastsListBroadcastStatus)
+    , _lblOnBehalfOfContentOwner :: !(Maybe Text)
+    , _lblBroadcastType :: !LiveBroadcastsListBroadcastType
     , _lblOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lblId                            :: !(Maybe Text)
-    , _lblPageToken                     :: !(Maybe Text)
-    , _lblMaxResults                    :: !(Textual Word32)
+    , _lblId :: !(Maybe Text)
+    , _lblPageToken :: !(Maybe Text)
+    , _lblMaxResults :: !(Textual Word32)
+    , _lblFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsList' with the minimum fields required to make a request.
@@ -107,10 +110,12 @@ data LiveBroadcastsList = LiveBroadcastsList'
 -- * 'lblPageToken'
 --
 -- * 'lblMaxResults'
+--
+-- * 'lblFields'
 liveBroadcastsList
     :: Text -- ^ 'lblPart'
     -> LiveBroadcastsList
-liveBroadcastsList pLblPart_ =
+liveBroadcastsList pLblPart_ = 
     LiveBroadcastsList'
     { _lblPart = pLblPart_
     , _lblMine = Nothing
@@ -121,6 +126,7 @@ liveBroadcastsList pLblPart_ =
     , _lblId = Nothing
     , _lblPageToken = Nothing
     , _lblMaxResults = 5
+    , _lblFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -208,6 +214,11 @@ lblMaxResults
       (\ s a -> s{_lblMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lblFields :: Lens' LiveBroadcastsList (Maybe Text)
+lblFields
+  = lens _lblFields (\ s a -> s{_lblFields = a})
+
 instance GoogleRequest LiveBroadcastsList where
         type Rs LiveBroadcastsList =
              LiveBroadcastListResponse
@@ -223,6 +234,7 @@ instance GoogleRequest LiveBroadcastsList where
               _lblId
               _lblPageToken
               (Just _lblMaxResults)
+              _lblFields
               (Just AltJSON)
               youTubeService
           where go

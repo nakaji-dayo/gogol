@@ -39,10 +39,11 @@ module Network.Google.Resource.Calendar.CalendarList.List
     , cllShowHidden
     , cllPageToken
     , cllMaxResults
+    , cllFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendarList.list@ method which the
 -- 'CalendarListList' request conforms to.
@@ -60,18 +61,21 @@ type CalendarListListResource =
                      QueryParam "showHidden" Bool :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] CalendarList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] CalendarList
 
 -- | Returns entries on the user\'s calendar list.
 --
 -- /See:/ 'calendarListList' smart constructor.
 data CalendarListList = CalendarListList'
-    { _cllSyncToken     :: !(Maybe Text)
+    { _cllSyncToken :: !(Maybe Text)
     , _cllMinAccessRole :: !(Maybe CalendarListListMinAccessRole)
-    , _cllShowDeleted   :: !(Maybe Bool)
-    , _cllShowHidden    :: !(Maybe Bool)
-    , _cllPageToken     :: !(Maybe Text)
-    , _cllMaxResults    :: !(Maybe (Textual Int32))
+    , _cllShowDeleted :: !(Maybe Bool)
+    , _cllShowHidden :: !(Maybe Bool)
+    , _cllPageToken :: !(Maybe Text)
+    , _cllMaxResults :: !(Maybe (Textual Int32))
+    , _cllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarListList' with the minimum fields required to make a request.
@@ -89,9 +93,11 @@ data CalendarListList = CalendarListList'
 -- * 'cllPageToken'
 --
 -- * 'cllMaxResults'
+--
+-- * 'cllFields'
 calendarListList
     :: CalendarListList
-calendarListList =
+calendarListList = 
     CalendarListList'
     { _cllSyncToken = Nothing
     , _cllMinAccessRole = Nothing
@@ -99,6 +105,7 @@ calendarListList =
     , _cllShowHidden = Nothing
     , _cllPageToken = Nothing
     , _cllMaxResults = Nothing
+    , _cllFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -152,6 +159,11 @@ cllMaxResults
       (\ s a -> s{_cllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cllFields :: Lens' CalendarListList (Maybe Text)
+cllFields
+  = lens _cllFields (\ s a -> s{_cllFields = a})
+
 instance GoogleRequest CalendarListList where
         type Rs CalendarListList = CalendarList
         type Scopes CalendarListList =
@@ -162,6 +174,7 @@ instance GoogleRequest CalendarListList where
               _cllShowHidden
               _cllPageToken
               _cllMaxResults
+              _cllFields
               (Just AltJSON)
               appsCalendarService
           where go

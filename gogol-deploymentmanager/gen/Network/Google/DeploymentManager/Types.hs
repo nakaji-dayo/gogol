@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -45,6 +45,14 @@ module Network.Google.DeploymentManager.Types
 
     -- * DeploymentsUpdateCreatePolicy
     , DeploymentsUpdateCreatePolicy (..)
+
+    -- * Expr
+    , Expr
+    , expr
+    , eLocation
+    , eExpression
+    , eTitle
+    , eDescription
 
     -- * OperationsListResponse
     , OperationsListResponse
@@ -125,6 +133,7 @@ module Network.Google.DeploymentManager.Types
     , deploymentUpdate
     , duManifest
     , duLabels
+    , duDescription
 
     -- * ResourceUpdate
     , ResourceUpdate
@@ -184,6 +193,12 @@ module Network.Google.DeploymentManager.Types
     , deploymentsCancelPreviewRequest
     , dcprFingerprint
 
+    -- * LogConfigCloudAuditOptions
+    , LogConfigCloudAuditOptions
+    , logConfigCloudAuditOptions
+    , lccaoAuthorizationLoggingOptions
+    , lccaoLogName
+
     -- * Resource
     , Resource
     , resource
@@ -199,6 +214,11 @@ module Network.Google.DeploymentManager.Types
     , rType
     , rUpdate
     , rProperties
+
+    -- * LogConfigDataAccessOptions
+    , LogConfigDataAccessOptions
+    , logConfigDataAccessOptions
+    , lcdaoLogMode
 
     -- * DeploymentUpdateLabelEntry
     , DeploymentUpdateLabelEntry
@@ -223,6 +243,11 @@ module Network.Google.DeploymentManager.Types
     , OperationError
     , operationError
     , oeErrors
+
+    -- * AuthorizationLoggingOptions
+    , AuthorizationLoggingOptions
+    , authorizationLoggingOptions
+    , aloPermissionType
 
     -- * Policy
     , Policy
@@ -304,6 +329,8 @@ module Network.Google.DeploymentManager.Types
     -- * LogConfig
     , LogConfig
     , logConfig
+    , lcCloudAudit
+    , lcDataAccess
     , lcCounter
 
     -- * ResourceAccessControl
@@ -329,6 +356,7 @@ module Network.Google.DeploymentManager.Types
     , binding
     , bMembers
     , bRole
+    , bCondition
 
     -- * Deployment
     , Deployment
@@ -346,9 +374,9 @@ module Network.Google.DeploymentManager.Types
     , dTarget
     ) where
 
-import           Network.Google.DeploymentManager.Types.Product
-import           Network.Google.DeploymentManager.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types.Product
+import Network.Google.DeploymentManager.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v2' of the Google Cloud Deployment Manager API. This contains the host and root path used as a starting point for constructing service requests.
 deploymentManagerService :: ServiceConfig

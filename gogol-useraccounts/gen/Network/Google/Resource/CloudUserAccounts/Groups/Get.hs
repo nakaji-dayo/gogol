@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.Get
     -- * Request Lenses
     , ggProject
     , ggGroupName
+    , ggFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.get@ method which the
 -- 'GroupsGet' request conforms to.
@@ -50,14 +51,16 @@ type GroupsGetResource =
              "global" :>
                "groups" :>
                  Capture "groupName" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Group
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Group
 
 -- | Returns the specified Group resource.
 --
 -- /See:/ 'groupsGet' smart constructor.
 data GroupsGet = GroupsGet'
-    { _ggProject   :: !Text
+    { _ggProject :: !Text
     , _ggGroupName :: !Text
+    , _ggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data GroupsGet = GroupsGet'
 -- * 'ggProject'
 --
 -- * 'ggGroupName'
+--
+-- * 'ggFields'
 groupsGet
     :: Text -- ^ 'ggProject'
     -> Text -- ^ 'ggGroupName'
     -> GroupsGet
-groupsGet pGgProject_ pGgGroupName_ =
+groupsGet pGgProject_ pGgGroupName_ = 
     GroupsGet'
     { _ggProject = pGgProject_
     , _ggGroupName = pGgGroupName_
+    , _ggFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,6 +93,10 @@ ggGroupName :: Lens' GroupsGet Text
 ggGroupName
   = lens _ggGroupName (\ s a -> s{_ggGroupName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ggFields :: Lens' GroupsGet (Maybe Text)
+ggFields = lens _ggFields (\ s a -> s{_ggFields = a})
+
 instance GoogleRequest GroupsGet where
         type Rs GroupsGet = Group
         type Scopes GroupsGet =
@@ -95,7 +105,7 @@ instance GoogleRequest GroupsGet where
                "https://www.googleapis.com/auth/cloud.useraccounts",
                "https://www.googleapis.com/auth/cloud.useraccounts.readonly"]
         requestClient GroupsGet'{..}
-          = go _ggProject _ggGroupName (Just AltJSON)
+          = go _ggProject _ggGroupName _ggFields (Just AltJSON)
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy GroupsGetResource)

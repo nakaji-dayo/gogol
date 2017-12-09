@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -29,6 +29,7 @@ module Network.Google.AndroidEnterprise.Types
     , glNumProvisioned
     , glNumPurchased
     , glApproval
+    , glPermissions
     , glProductId
     , glAcquisitionKind
 
@@ -77,6 +78,12 @@ module Network.Google.AndroidEnterprise.Types
     , auiApprovalURL
     , auiKind
 
+    -- * ManagedConfigurationsSettingsListResponse
+    , ManagedConfigurationsSettingsListResponse
+    , managedConfigurationsSettingsListResponse
+    , mcslrKind
+    , mcslrManagedConfigurationsSettings
+
     -- * ManagedProperty
     , ManagedProperty
     , managedProperty
@@ -99,6 +106,7 @@ module Network.Google.AndroidEnterprise.Types
     , managedConfiguration
     , mcManagedProperty
     , mcKind
+    , mcConfigurationVariables
     , mcProductId
 
     -- * StoreCluster
@@ -117,6 +125,12 @@ module Network.Google.AndroidEnterprise.Types
     , awtsKind
     , awtsPermission
 
+    -- * ProductVisibility
+    , ProductVisibility
+    , productVisibility
+    , pvTracks
+    , pvProductId
+
     -- * Notification
     , Notification
     , notification
@@ -126,6 +140,7 @@ module Network.Google.AndroidEnterprise.Types
     , nProductAvailabilityChangeEvent
     , nAppUpdateEvent
     , nInstallFailureEvent
+    , nNotificationType
     , nAppRestrictionsSchemaChangeEvent
     , nNewDeviceEvent
     , nTimestampMillis
@@ -166,6 +181,7 @@ module Network.Google.AndroidEnterprise.Types
     , Device
     , device
     , dKind
+    , dPolicy
     , dManagementType
     , dAndroidId
 
@@ -196,6 +212,12 @@ module Network.Google.AndroidEnterprise.Types
     , arsrDescription
     , arsrNestedRestriction
 
+    -- * ProductPolicy
+    , ProductPolicy
+    , productPolicy
+    , ppTracks
+    , ppProductId
+
     -- * Administrator
     , Administrator
     , administrator
@@ -213,9 +235,18 @@ module Network.Google.AndroidEnterprise.Types
     , atKind
     , atToken
 
+    -- * ManagedConfigurationsSettings
+    , ManagedConfigurationsSettings
+    , managedConfigurationsSettings
+    , mcsManagedProperty
+    , mcsKind
+    , mcsMcmId
+    , mcsName
+
     -- * AppVersion
     , AppVersion
     , appVersion
+    , avTrack
     , avVersionCode
     , avVersionString
 
@@ -233,9 +264,16 @@ module Network.Google.AndroidEnterprise.Types
     , gllrGroupLicense
     , gllrKind
 
+    -- * AndroidDevicePolicyConfig
+    , AndroidDevicePolicyConfig
+    , androidDevicePolicyConfig
+    , adpcState
+    , adpcKind
+
     -- * ProductSet
     , ProductSet
     , productSet
+    , psProductVisibility
     , psKind
     , psProductSetBehavior
     , psProductId
@@ -296,6 +334,13 @@ module Network.Google.AndroidEnterprise.Types
     , saKey
     , saName
 
+    -- * VariableSet
+    , VariableSet
+    , variableSet
+    , vsKind
+    , vsUserValue
+    , vsPlaceholder
+
     -- * AppUpdateEvent
     , AppUpdateEvent
     , appUpdateEvent
@@ -339,6 +384,12 @@ module Network.Google.AndroidEnterprise.Types
     , dlrKind
     , dlrDevice
 
+    -- * ProductSigningCertificate
+    , ProductSigningCertificate
+    , productSigningCertificate
+    , pscCertificateHashSha256
+    , pscCertificateHashSha1
+
     -- * Enterprise
     , Enterprise
     , enterprise
@@ -363,6 +414,13 @@ module Network.Google.AndroidEnterprise.Types
     , mcfulrManagedConfigurationForUser
     , mcfulrKind
 
+    -- * ConfigurationVariables
+    , ConfigurationVariables
+    , configurationVariables
+    , cvKind
+    , cvMcmId
+    , cvVariableSet
+
     -- * StoreLayout
     , StoreLayout
     , storeLayout
@@ -382,6 +440,12 @@ module Network.Google.AndroidEnterprise.Types
     , ndeDeviceId
     , ndeManagementType
 
+    -- * Policy
+    , Policy
+    , policy
+    , pProductAvailabilityPolicy
+    , pProductPolicy
+
     -- * AdministratorWebToken
     , AdministratorWebToken
     , administratorWebToken
@@ -398,17 +462,28 @@ module Network.Google.AndroidEnterprise.Types
     -- * Product
     , Product
     , product
+    , pScreenshotURLs
+    , pLastUpdatedTimestampMillis
     , pSmallIconURL
     , pAuthorName
     , pKind
     , pWorkDetailsURL
     , pRequiresContainerApp
+    , pCategory
     , pAppVersion
     , pProductPricing
     , pDistributionChannel
+    , pMinAndroidSdkVersion
+    , pAvailableCountries
+    , pAvailableTracks
     , pIconURL
+    , pPermissions
     , pTitle
+    , pSigningCertificate
+    , pContentRating
     , pProductId
+    , pRecentChanges
+    , pDescription
     , pDetailsURL
 
     -- * EntitlementsListResponse
@@ -423,9 +498,9 @@ module Network.Google.AndroidEnterprise.Types
     -- * ProductPermissions
     , ProductPermissions
     , productPermissions
-    , ppKind
-    , ppPermission
-    , ppProductId
+    , ppsKind
+    , ppsPermission
+    , ppsProductId
 
     -- * Permission
     , Permission
@@ -439,6 +514,7 @@ module Network.Google.AndroidEnterprise.Types
     , ProductsApproveRequest
     , productsApproveRequest
     , parApprovalURLInfo
+    , parApprovedPermissions
 
     -- * Entitlement
     , Entitlement
@@ -456,9 +532,9 @@ module Network.Google.AndroidEnterprise.Types
     , plrProduct
     ) where
 
-import           Network.Google.AndroidEnterprise.Types.Product
-import           Network.Google.AndroidEnterprise.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types.Product
+import Network.Google.AndroidEnterprise.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Google Play EMM API. This contains the host and root path used as a starting point for constructing service requests.
 androidEnterpriseService :: ServiceConfig

@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Budget.Get
     -- * Request Lenses
     , bgAccountId
     , bgBillingId
+    , bgFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.budget.get@ method which the
 -- 'BudgetGet' request conforms to.
@@ -49,7 +50,8 @@ type BudgetGetResource =
          "billinginfo" :>
            Capture "accountId" (Textual Int64) :>
              Capture "billingId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Budget
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Budget
 
 -- | Returns the budget information for the adgroup specified by the
 -- accountId and billingId.
@@ -58,6 +60,7 @@ type BudgetGetResource =
 data BudgetGet = BudgetGet'
     { _bgAccountId :: !(Textual Int64)
     , _bgBillingId :: !(Textual Int64)
+    , _bgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BudgetGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data BudgetGet = BudgetGet'
 -- * 'bgAccountId'
 --
 -- * 'bgBillingId'
+--
+-- * 'bgFields'
 budgetGet
     :: Int64 -- ^ 'bgAccountId'
     -> Int64 -- ^ 'bgBillingId'
     -> BudgetGet
-budgetGet pBgAccountId_ pBgBillingId_ =
+budgetGet pBgAccountId_ pBgBillingId_ = 
     BudgetGet'
     { _bgAccountId = _Coerce # pBgAccountId_
     , _bgBillingId = _Coerce # pBgBillingId_
+    , _bgFields = Nothing
     }
 
 -- | The account id to get the budget information for.
@@ -89,12 +95,17 @@ bgBillingId
   = lens _bgBillingId (\ s a -> s{_bgBillingId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+bgFields :: Lens' BudgetGet (Maybe Text)
+bgFields = lens _bgFields (\ s a -> s{_bgFields = a})
+
 instance GoogleRequest BudgetGet where
         type Rs BudgetGet = Budget
         type Scopes BudgetGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient BudgetGet'{..}
-          = go _bgAccountId _bgBillingId (Just AltJSON)
+          = go _bgAccountId _bgBillingId _bgFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy BudgetGetResource)

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.Alerts.Delete
 
     -- * Request Lenses
     , adAlertId
+    , adFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.alerts.delete@ method which the
 -- 'AlertsDelete' request conforms to.
@@ -47,14 +48,16 @@ type AlertsDeleteResource =
        "v1.4" :>
          "alerts" :>
            Capture "alertId" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Dismiss (delete) the specified alert from the publisher\'s AdSense
 -- account.
 --
 -- /See:/ 'alertsDelete' smart constructor.
-newtype AlertsDelete = AlertsDelete'
-    { _adAlertId :: Text
+data AlertsDelete = AlertsDelete'
+    { _adAlertId :: !Text
+    , _adFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AlertsDelete' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype AlertsDelete = AlertsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'adAlertId'
+--
+-- * 'adFields'
 alertsDelete
     :: Text -- ^ 'adAlertId'
     -> AlertsDelete
-alertsDelete pAdAlertId_ =
+alertsDelete pAdAlertId_ = 
     AlertsDelete'
     { _adAlertId = pAdAlertId_
+    , _adFields = Nothing
     }
 
 -- | Alert to delete.
@@ -75,12 +81,17 @@ adAlertId :: Lens' AlertsDelete Text
 adAlertId
   = lens _adAlertId (\ s a -> s{_adAlertId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+adFields :: Lens' AlertsDelete (Maybe Text)
+adFields = lens _adFields (\ s a -> s{_adFields = a})
+
 instance GoogleRequest AlertsDelete where
         type Rs AlertsDelete = ()
         type Scopes AlertsDelete =
              '["https://www.googleapis.com/auth/adsense"]
         requestClient AlertsDelete'{..}
-          = go _adAlertId (Just AltJSON) adSenseService
+          = go _adAlertId _adFields (Just AltJSON)
+              adSenseService
           where go
                   = buildClient (Proxy :: Proxy AlertsDeleteResource)
                       mempty

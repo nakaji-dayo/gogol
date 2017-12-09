@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.SetAccountInfo
 
     -- * Request Lenses
     , rpsaiPayload
+    , rpsaiFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.setAccountInfo@ method which the
 -- 'RelyingPartySetAccountInfo' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartySetAccountInfoResource =
        "v3" :>
          "relyingparty" :>
            "setAccountInfo" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartySetAccountInfoRequest
-                 :> Post '[JSON] SetAccountInfoResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartySetAccountInfoRequest
+                   :> Post '[JSON] SetAccountInfoResponse
 
 -- | Set account info for a user.
 --
 -- /See:/ 'relyingPartySetAccountInfo' smart constructor.
-newtype RelyingPartySetAccountInfo = RelyingPartySetAccountInfo'
-    { _rpsaiPayload :: IdentitytoolkitRelyingPartySetAccountInfoRequest
+data RelyingPartySetAccountInfo = RelyingPartySetAccountInfo'
+    { _rpsaiPayload :: !IdentitytoolkitRelyingPartySetAccountInfoRequest
+    , _rpsaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartySetAccountInfo' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartySetAccountInfo = RelyingPartySetAccountInfo'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpsaiPayload'
+--
+-- * 'rpsaiFields'
 relyingPartySetAccountInfo
     :: IdentitytoolkitRelyingPartySetAccountInfoRequest -- ^ 'rpsaiPayload'
     -> RelyingPartySetAccountInfo
-relyingPartySetAccountInfo pRpsaiPayload_ =
+relyingPartySetAccountInfo pRpsaiPayload_ = 
     RelyingPartySetAccountInfo'
     { _rpsaiPayload = pRpsaiPayload_
+    , _rpsaiFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpsaiPayload :: Lens' RelyingPartySetAccountInfo IdentitytoolkitRelyingPartySetAccountInfoRequest
 rpsaiPayload
   = lens _rpsaiPayload (\ s a -> s{_rpsaiPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpsaiFields :: Lens' RelyingPartySetAccountInfo (Maybe Text)
+rpsaiFields
+  = lens _rpsaiFields (\ s a -> s{_rpsaiFields = a})
 
 instance GoogleRequest RelyingPartySetAccountInfo
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartySetAccountInfo
         type Scopes RelyingPartySetAccountInfo =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartySetAccountInfo'{..}
-          = go (Just AltJSON) _rpsaiPayload
+          = go _rpsaiFields (Just AltJSON) _rpsaiPayload
               identityToolkitService
           where go
                   = buildClient

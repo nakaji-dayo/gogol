@@ -44,11 +44,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.BatchClear
     , svbcUploadType
     , svbcPayload
     , svbcBearerToken
+    , svbcFields
     , svbcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.batchClear@ method which the
 -- 'SpreadsheetsValuesBatchClear' request conforms to.
@@ -64,9 +65,10 @@ type SpreadsheetsValuesBatchClearResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] BatchClearValuesRequest :>
-                               Post '[JSON] BatchClearValuesResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] BatchClearValuesRequest :>
+                                 Post '[JSON] BatchClearValuesResponse
 
 -- | Clears one or more ranges of values from a spreadsheet. The caller must
 -- specify the spreadsheet ID and one or more ranges. Only values are
@@ -75,15 +77,16 @@ type SpreadsheetsValuesBatchClearResource =
 --
 -- /See:/ 'spreadsheetsValuesBatchClear' smart constructor.
 data SpreadsheetsValuesBatchClear = SpreadsheetsValuesBatchClear'
-    { _svbcXgafv          :: !(Maybe Xgafv)
+    { _svbcXgafv :: !(Maybe Xgafv)
     , _svbcUploadProtocol :: !(Maybe Text)
-    , _svbcPp             :: !Bool
-    , _svbcAccessToken    :: !(Maybe Text)
-    , _svbcSpreadsheetId  :: !Text
-    , _svbcUploadType     :: !(Maybe Text)
-    , _svbcPayload        :: !BatchClearValuesRequest
-    , _svbcBearerToken    :: !(Maybe Text)
-    , _svbcCallback       :: !(Maybe Text)
+    , _svbcPp :: !Bool
+    , _svbcAccessToken :: !(Maybe Text)
+    , _svbcSpreadsheetId :: !Text
+    , _svbcUploadType :: !(Maybe Text)
+    , _svbcPayload :: !BatchClearValuesRequest
+    , _svbcBearerToken :: !(Maybe Text)
+    , _svbcFields :: !(Maybe Text)
+    , _svbcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesBatchClear' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data SpreadsheetsValuesBatchClear = SpreadsheetsValuesBatchClear'
 --
 -- * 'svbcBearerToken'
 --
+-- * 'svbcFields'
+--
 -- * 'svbcCallback'
 spreadsheetsValuesBatchClear
     :: Text -- ^ 'svbcSpreadsheetId'
     -> BatchClearValuesRequest -- ^ 'svbcPayload'
     -> SpreadsheetsValuesBatchClear
-spreadsheetsValuesBatchClear pSvbcSpreadsheetId_ pSvbcPayload_ =
+spreadsheetsValuesBatchClear pSvbcSpreadsheetId_ pSvbcPayload_ = 
     SpreadsheetsValuesBatchClear'
     { _svbcXgafv = Nothing
     , _svbcUploadProtocol = Nothing
@@ -121,6 +126,7 @@ spreadsheetsValuesBatchClear pSvbcSpreadsheetId_ pSvbcPayload_ =
     , _svbcUploadType = Nothing
     , _svbcPayload = pSvbcPayload_
     , _svbcBearerToken = Nothing
+    , _svbcFields = Nothing
     , _svbcCallback = Nothing
     }
 
@@ -168,6 +174,11 @@ svbcBearerToken
   = lens _svbcBearerToken
       (\ s a -> s{_svbcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svbcFields :: Lens' SpreadsheetsValuesBatchClear (Maybe Text)
+svbcFields
+  = lens _svbcFields (\ s a -> s{_svbcFields = a})
+
 -- | JSONP
 svbcCallback :: Lens' SpreadsheetsValuesBatchClear (Maybe Text)
 svbcCallback
@@ -179,6 +190,7 @@ instance GoogleRequest SpreadsheetsValuesBatchClear
              BatchClearValuesResponse
         type Scopes SpreadsheetsValuesBatchClear =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsValuesBatchClear'{..}
           = go _svbcSpreadsheetId _svbcXgafv
@@ -188,6 +200,7 @@ instance GoogleRequest SpreadsheetsValuesBatchClear
               _svbcUploadType
               _svbcBearerToken
               _svbcCallback
+              _svbcFields
               (Just AltJSON)
               _svbcPayload
               sheetsService

@@ -35,10 +35,11 @@ module Network.Google.Resource.SiteVerification.WebResource.Update
     -- * Request Lenses
     , wruPayload
     , wruId
+    , wruFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types
 
 -- | A resource alias for @siteVerification.webResource.update@ method which the
 -- 'WebResourceUpdate' request conforms to.
@@ -47,16 +48,18 @@ type WebResourceUpdateResource =
        "v1" :>
          "webResource" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] SiteVerificationWebResourceResource
-                 :> Put '[JSON] SiteVerificationWebResourceResource
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] SiteVerificationWebResourceResource
+                   :> Put '[JSON] SiteVerificationWebResourceResource
 
 -- | Modify the list of owners for your website or domain.
 --
 -- /See:/ 'webResourceUpdate' smart constructor.
 data WebResourceUpdate = WebResourceUpdate'
     { _wruPayload :: !SiteVerificationWebResourceResource
-    , _wruId      :: !Text
+    , _wruId :: !Text
+    , _wruFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebResourceUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data WebResourceUpdate = WebResourceUpdate'
 -- * 'wruPayload'
 --
 -- * 'wruId'
+--
+-- * 'wruFields'
 webResourceUpdate
     :: SiteVerificationWebResourceResource -- ^ 'wruPayload'
     -> Text -- ^ 'wruId'
     -> WebResourceUpdate
-webResourceUpdate pWruPayload_ pWruId_ =
+webResourceUpdate pWruPayload_ pWruId_ = 
     WebResourceUpdate'
     { _wruPayload = pWruPayload_
     , _wruId = pWruId_
+    , _wruFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -85,13 +91,18 @@ wruPayload
 wruId :: Lens' WebResourceUpdate Text
 wruId = lens _wruId (\ s a -> s{_wruId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wruFields :: Lens' WebResourceUpdate (Maybe Text)
+wruFields
+  = lens _wruFields (\ s a -> s{_wruFields = a})
+
 instance GoogleRequest WebResourceUpdate where
         type Rs WebResourceUpdate =
              SiteVerificationWebResourceResource
         type Scopes WebResourceUpdate =
              '["https://www.googleapis.com/auth/siteverification"]
         requestClient WebResourceUpdate'{..}
-          = go _wruId (Just AltJSON) _wruPayload
+          = go _wruId _wruFields (Just AltJSON) _wruPayload
               siteVerificationService
           where go
                   = buildClient

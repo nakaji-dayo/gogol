@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Images.List
     , eilImageType
     , eilLanguage
     , eilEditId
+    , eilFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.images.list@ method which the
 -- 'EditsImagesList' request conforms to.
@@ -54,17 +55,19 @@ type EditsImagesListResource =
                  "listings" :>
                    Capture "language" Text :>
                      Capture "imageType" EditsImagesListImageType :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] ImagesListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ImagesListResponse
 
 -- | Lists all images for the specified language and image type.
 --
 -- /See:/ 'editsImagesList' smart constructor.
 data EditsImagesList = EditsImagesList'
     { _eilPackageName :: !Text
-    , _eilImageType   :: !EditsImagesListImageType
-    , _eilLanguage    :: !Text
-    , _eilEditId      :: !Text
+    , _eilImageType :: !EditsImagesListImageType
+    , _eilLanguage :: !Text
+    , _eilEditId :: !Text
+    , _eilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsImagesList' with the minimum fields required to make a request.
@@ -78,18 +81,21 @@ data EditsImagesList = EditsImagesList'
 -- * 'eilLanguage'
 --
 -- * 'eilEditId'
+--
+-- * 'eilFields'
 editsImagesList
     :: Text -- ^ 'eilPackageName'
     -> EditsImagesListImageType -- ^ 'eilImageType'
     -> Text -- ^ 'eilLanguage'
     -> Text -- ^ 'eilEditId'
     -> EditsImagesList
-editsImagesList pEilPackageName_ pEilImageType_ pEilLanguage_ pEilEditId_ =
+editsImagesList pEilPackageName_ pEilImageType_ pEilLanguage_ pEilEditId_ = 
     EditsImagesList'
     { _eilPackageName = pEilPackageName_
     , _eilImageType = pEilImageType_
     , _eilLanguage = pEilLanguage_
     , _eilEditId = pEilEditId_
+    , _eilFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -115,6 +121,11 @@ eilEditId :: Lens' EditsImagesList Text
 eilEditId
   = lens _eilEditId (\ s a -> s{_eilEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eilFields :: Lens' EditsImagesList (Maybe Text)
+eilFields
+  = lens _eilFields (\ s a -> s{_eilFields = a})
+
 instance GoogleRequest EditsImagesList where
         type Rs EditsImagesList = ImagesListResponse
         type Scopes EditsImagesList =
@@ -122,6 +133,7 @@ instance GoogleRequest EditsImagesList where
         requestClient EditsImagesList'{..}
           = go _eilPackageName _eilEditId _eilLanguage
               _eilImageType
+              _eilFields
               (Just AltJSON)
               androidPublisherService
           where go

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.Insert
     -- * Request Lenses
     , agiProFileId
     , agiPayload
+    , agiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.insert@ method which the
 -- 'AdvertiserGroupsInsert' request conforms to.
 type AdvertiserGroupsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AdvertiserGroup :>
-                   Post '[JSON] AdvertiserGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AdvertiserGroup :>
+                     Post '[JSON] AdvertiserGroup
 
 -- | Inserts a new advertiser group.
 --
 -- /See:/ 'advertiserGroupsInsert' smart constructor.
 data AdvertiserGroupsInsert = AdvertiserGroupsInsert'
     { _agiProFileId :: !(Textual Int64)
-    , _agiPayload   :: !AdvertiserGroup
+    , _agiPayload :: !AdvertiserGroup
+    , _agiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AdvertiserGroupsInsert = AdvertiserGroupsInsert'
 -- * 'agiProFileId'
 --
 -- * 'agiPayload'
+--
+-- * 'agiFields'
 advertiserGroupsInsert
     :: Int64 -- ^ 'agiProFileId'
     -> AdvertiserGroup -- ^ 'agiPayload'
     -> AdvertiserGroupsInsert
-advertiserGroupsInsert pAgiProFileId_ pAgiPayload_ =
+advertiserGroupsInsert pAgiProFileId_ pAgiPayload_ = 
     AdvertiserGroupsInsert'
     { _agiProFileId = _Coerce # pAgiProFileId_
     , _agiPayload = pAgiPayload_
+    , _agiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ agiPayload :: Lens' AdvertiserGroupsInsert AdvertiserGroup
 agiPayload
   = lens _agiPayload (\ s a -> s{_agiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agiFields :: Lens' AdvertiserGroupsInsert (Maybe Text)
+agiFields
+  = lens _agiFields (\ s a -> s{_agiFields = a})
+
 instance GoogleRequest AdvertiserGroupsInsert where
         type Rs AdvertiserGroupsInsert = AdvertiserGroup
         type Scopes AdvertiserGroupsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertiserGroupsInsert'{..}
-          = go _agiProFileId (Just AltJSON) _agiPayload
+          = go _agiProFileId _agiFields (Just AltJSON)
+              _agiPayload
               dFAReportingService
           where go
                   = buildClient

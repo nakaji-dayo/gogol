@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -33,6 +33,7 @@ module Network.Google.People.Types
     -- * Photo
     , Photo
     , photo
+    , pDefault
     , pURL
     , pMetadata
 
@@ -47,9 +48,47 @@ module Network.Google.People.Types
     -- * ListConnectionsResponse
     , ListConnectionsResponse
     , listConnectionsResponse
+    , lcrTotalItems
     , lcrNextPageToken
     , lcrConnections
     , lcrNextSyncToken
+    , lcrTotalPeople
+
+    -- * Status
+    , Status
+    , status
+    , sDetails
+    , sCode
+    , sMessage
+
+    -- * ContactGroupResponse
+    , ContactGroupResponse
+    , contactGroupResponse
+    , cgrStatus
+    , cgrContactGroup
+    , cgrRequestedResourceName
+
+    -- * ContactGroup
+    , ContactGroup
+    , contactGroup
+    , cgEtag
+    , cgResourceName
+    , cgMemberResourceNames
+    , cgFormattedName
+    , cgName
+    , cgGroupType
+    , cgMetadata
+    , cgMemberCount
+
+    -- * ModifyContactGroupMembersResponse
+    , ModifyContactGroupMembersResponse
+    , modifyContactGroupMembersResponse
+    , mcgmrNotFoundResourceNames
+
+    -- * UpdateContactGroupRequest
+    , UpdateContactGroupRequest
+    , updateContactGroupRequest
+    , ucgrContactGroup
 
     -- * DomainMembership
     , DomainMembership
@@ -91,6 +130,7 @@ module Network.Google.People.Types
     , perRelations
     , perURLs
     , perAddresses
+    , perUserDefined
     , perNicknames
     , perRelationshipStatuses
     , perImClients
@@ -99,6 +139,7 @@ module Network.Google.People.Types
     , perNames
     , perGenders
     , perPhotos
+    , perAgeRanges
     , perEvents
     , perCoverPhotos
     , perSkills
@@ -109,10 +150,38 @@ module Network.Google.People.Types
     , perMemberships
     , perRelationshipInterests
 
+    -- * Empty
+    , Empty
+    , empty
+
+    -- * SourceType
+    , SourceType (..)
+
+    -- * ListContactGroupsResponse
+    , ListContactGroupsResponse
+    , listContactGroupsResponse
+    , lcgrContactGroups
+    , lcgrTotalItems
+    , lcgrNextPageToken
+    , lcgrNextSyncToken
+
     -- * ContactGroupMembership
     , ContactGroupMembership
     , contactGroupMembership
     , cgmContactGroupId
+
+    -- * ContactGroupGroupType
+    , ContactGroupGroupType (..)
+
+    -- * UserDefined
+    , UserDefined
+    , userDefined
+    , udValue
+    , udKey
+    , udMetadata
+
+    -- * NicknameType
+    , NicknameType (..)
 
     -- * Locale
     , Locale
@@ -135,6 +204,11 @@ module Network.Google.People.Types
     , uType
     , uFormattedType
 
+    -- * StatusDetailsItem
+    , StatusDetailsItem
+    , statusDetailsItem
+    , sdiAddtional
+
     -- * Address
     , Address
     , address
@@ -150,6 +224,12 @@ module Network.Google.People.Types
     , aRegion
     , aType
     , aFormattedType
+
+    -- * ProFileMetadata
+    , ProFileMetadata
+    , proFileMetadata
+    , pfmObjectType
+    , pfmUserTypes
 
     -- * Relation
     , Relation
@@ -171,6 +251,9 @@ module Network.Google.People.Types
     , bDate
     , bMetadata
 
+    -- * PersonAgeRange
+    , PersonAgeRange (..)
+
     -- * Date
     , Date
     , date
@@ -190,6 +273,12 @@ module Network.Google.People.Types
     , resValue
     , resCurrent
     , resMetadata
+
+    -- * AgeRangeType
+    , AgeRangeType
+    , ageRangeType
+    , artAgeRange
+    , artMetadata
 
     -- * Gender
     , Gender
@@ -211,8 +300,10 @@ module Network.Google.People.Types
     , nFamilyName
     , nMetadata
     , nDisplayName
+    , nDisplayNameLastFirst
     , nPhoneticGivenName
     , nHonorificSuffix
+    , nPhoneticFullName
 
     -- * FieldMetadata
     , FieldMetadata
@@ -236,17 +327,44 @@ module Network.Google.People.Types
     , oValue
     , oMetadata
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * EmailAddress
     , EmailAddress
     , emailAddress
     , eaValue
     , eaMetadata
+    , eaDisplayName
     , eaType
     , eaFormattedType
+
+    -- * CreateContactGroupRequest
+    , CreateContactGroupRequest
+    , createContactGroupRequest
+    , ccgrContactGroup
+
+    -- * ContactGroupMetadata
+    , ContactGroupMetadata
+    , contactGroupMetadata
+    , cgmUpdateTime
+    , cgmDeleted
+
+    -- * ModifyContactGroupMembersRequest
+    , ModifyContactGroupMembersRequest
+    , modifyContactGroupMembersRequest
+    , mcgmrResourceNamesToAdd
+    , mcgmrResourceNamesToRemove
+
+    -- * PersonMetadataObjectType
+    , PersonMetadataObjectType (..)
 
     -- * Source
     , Source
     , source
+    , sEtag
+    , sProFileMetadata
+    , sUpdateTime
     , sId
     , sType
 
@@ -260,13 +378,25 @@ module Network.Google.People.Types
     , icType
     , icFormattedType
 
+    -- * BatchGetContactGroupsResponse
+    , BatchGetContactGroupsResponse
+    , batchGetContactGroupsResponse
+    , bgcgrResponses
+
+    -- * BiographyContentType
+    , BiographyContentType (..)
+
     -- * PersonMetadata
     , PersonMetadata
     , personMetadata
     , pmPreviousResourceNames
     , pmObjectType
     , pmSources
+    , pmLinkedPeopleResourceNames
     , pmDeleted
+
+    -- * AgeRangeTypeAgeRange
+    , AgeRangeTypeAgeRange (..)
 
     -- * Nickname
     , Nickname
@@ -274,6 +404,9 @@ module Network.Google.People.Types
     , nicValue
     , nicMetadata
     , nicType
+
+    -- * ProFileMetadataObjectType
+    , ProFileMetadataObjectType (..)
 
     -- * Organization
     , Organization
@@ -302,6 +435,7 @@ module Network.Google.People.Types
     -- * PersonResponse
     , PersonResponse
     , personResponse
+    , prStatus
     , prRequestedResourceName
     , prPerson
     , prHTTPStatusCode
@@ -317,6 +451,7 @@ module Network.Google.People.Types
     , biography
     , bioValue
     , bioMetadata
+    , bioContentType
 
     -- * CoverPhoto
     , CoverPhoto
@@ -326,9 +461,9 @@ module Network.Google.People.Types
     , cpMetadata
     ) where
 
-import           Network.Google.People.Types.Product
-import           Network.Google.People.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.People.Types.Product
+import Network.Google.People.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Google People API. This contains the host and root path used as a starting point for constructing service requests.
 peopleService :: ServiceConfig
@@ -344,7 +479,7 @@ userBirthdayReadScope = Proxy;
 userInfoProFileScope :: Proxy '["https://www.googleapis.com/auth/userinfo.profile"]
 userInfoProFileScope = Proxy;
 
--- | Know your basic profile info and list of people in your circles.
+-- | Know the list of people in your circles, your age range, and language
 plusLoginScope :: Proxy '["https://www.googleapis.com/auth/plus.login"]
 plusLoginScope = Proxy;
 

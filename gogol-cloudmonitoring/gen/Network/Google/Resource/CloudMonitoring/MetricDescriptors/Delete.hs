@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudMonitoring.MetricDescriptors.Delete
     -- * Request Lenses
     , mddProject
     , mddMetric
+    , mddFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.metricDescriptors.delete@ method which the
 -- 'MetricDescriptorsDelete' request conforms to.
@@ -49,15 +50,17 @@ type MetricDescriptorsDeleteResource =
            Capture "project" Text :>
              "metricDescriptors" :>
                Capture "metric" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Delete '[JSON] DeleteMetricDescriptorResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Delete '[JSON] DeleteMetricDescriptorResponse
 
 -- | Delete an existing metric.
 --
 -- /See:/ 'metricDescriptorsDelete' smart constructor.
 data MetricDescriptorsDelete = MetricDescriptorsDelete'
     { _mddProject :: !Text
-    , _mddMetric  :: !Text
+    , _mddMetric :: !Text
+    , _mddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptorsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data MetricDescriptorsDelete = MetricDescriptorsDelete'
 -- * 'mddProject'
 --
 -- * 'mddMetric'
+--
+-- * 'mddFields'
 metricDescriptorsDelete
     :: Text -- ^ 'mddProject'
     -> Text -- ^ 'mddMetric'
     -> MetricDescriptorsDelete
-metricDescriptorsDelete pMddProject_ pMddMetric_ =
+metricDescriptorsDelete pMddProject_ pMddMetric_ = 
     MetricDescriptorsDelete'
     { _mddProject = pMddProject_
     , _mddMetric = pMddMetric_
+    , _mddFields = Nothing
     }
 
 -- | The project ID to which the metric belongs.
@@ -87,6 +93,11 @@ mddMetric :: Lens' MetricDescriptorsDelete Text
 mddMetric
   = lens _mddMetric (\ s a -> s{_mddMetric = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mddFields :: Lens' MetricDescriptorsDelete (Maybe Text)
+mddFields
+  = lens _mddFields (\ s a -> s{_mddFields = a})
+
 instance GoogleRequest MetricDescriptorsDelete where
         type Rs MetricDescriptorsDelete =
              DeleteMetricDescriptorResponse
@@ -94,7 +105,7 @@ instance GoogleRequest MetricDescriptorsDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/monitoring"]
         requestClient MetricDescriptorsDelete'{..}
-          = go _mddProject _mddMetric (Just AltJSON)
+          = go _mddProject _mddMetric _mddFields (Just AltJSON)
               cloudMonitoringService
           where go
                   = buildClient

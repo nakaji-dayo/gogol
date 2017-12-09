@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.Watermarks.Set
     , wsChannelId
     , wsPayload
     , wsOnBehalfOfContentOwner
+    , wsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.watermarks.set@ method which the
 -- 'WatermarksSet' request conforms to.
@@ -50,8 +51,9 @@ type WatermarksSetResource =
            "set" :>
              QueryParam "channelId" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] InvideoBranding :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] InvideoBranding :> Post '[JSON] ()
        :<|>
        "upload" :>
          "youtube" :>
@@ -60,18 +62,20 @@ type WatermarksSetResource =
                "set" :>
                  QueryParam "channelId" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
-                     QueryParam "alt" AltJSON :>
-                       QueryParam "uploadType" Multipart :>
-                         MultipartRelated '[JSON] InvideoBranding :>
-                           Post '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" Multipart :>
+                           MultipartRelated '[JSON] InvideoBranding :>
+                             Post '[JSON] ()
 
 -- | Uploads a watermark image to YouTube and sets it for a channel.
 --
 -- /See:/ 'watermarksSet' smart constructor.
 data WatermarksSet = WatermarksSet'
-    { _wsChannelId              :: !Text
-    , _wsPayload                :: !InvideoBranding
+    { _wsChannelId :: !Text
+    , _wsPayload :: !InvideoBranding
     , _wsOnBehalfOfContentOwner :: !(Maybe Text)
+    , _wsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WatermarksSet' with the minimum fields required to make a request.
@@ -83,15 +87,18 @@ data WatermarksSet = WatermarksSet'
 -- * 'wsPayload'
 --
 -- * 'wsOnBehalfOfContentOwner'
+--
+-- * 'wsFields'
 watermarksSet
     :: Text -- ^ 'wsChannelId'
     -> InvideoBranding -- ^ 'wsPayload'
     -> WatermarksSet
-watermarksSet pWsChannelId_ pWsPayload_ =
+watermarksSet pWsChannelId_ pWsPayload_ = 
     WatermarksSet'
     { _wsChannelId = pWsChannelId_
     , _wsPayload = pWsPayload_
     , _wsOnBehalfOfContentOwner = Nothing
+    , _wsFields = Nothing
     }
 
 -- | The channelId parameter specifies the YouTube channel ID for which the
@@ -120,6 +127,10 @@ wsOnBehalfOfContentOwner
   = lens _wsOnBehalfOfContentOwner
       (\ s a -> s{_wsOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wsFields :: Lens' WatermarksSet (Maybe Text)
+wsFields = lens _wsFields (\ s a -> s{_wsFields = a})
+
 instance GoogleRequest WatermarksSet where
         type Rs WatermarksSet = ()
         type Scopes WatermarksSet =
@@ -129,6 +140,7 @@ instance GoogleRequest WatermarksSet where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient WatermarksSet'{..}
           = go (Just _wsChannelId) _wsOnBehalfOfContentOwner
+              _wsFields
               (Just AltJSON)
               _wsPayload
               youTubeService
@@ -143,6 +155,7 @@ instance GoogleRequest (MediaUpload WatermarksSet)
              Scopes WatermarksSet
         requestClient (MediaUpload WatermarksSet'{..} body)
           = go (Just _wsChannelId) _wsOnBehalfOfContentOwner
+              _wsFields
               (Just AltJSON)
               (Just Multipart)
               _wsPayload

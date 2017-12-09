@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Achievements.Reset
 
     -- * Request Lenses
     , arAchievementId
+    , arFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.achievements.reset@ method which the
 -- 'AchievementsReset' request conforms to.
@@ -49,16 +50,18 @@ type AchievementsResetResource =
          "achievements" :>
            Capture "achievementId" Text :>
              "reset" :>
-               QueryParam "alt" AltJSON :>
-                 Post '[JSON] AchievementResetResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Post '[JSON] AchievementResetResponse
 
 -- | Resets the achievement with the given ID for the currently authenticated
 -- player. This method is only accessible to whitelisted tester accounts
 -- for your application.
 --
 -- /See:/ 'achievementsReset' smart constructor.
-newtype AchievementsReset = AchievementsReset'
-    { _arAchievementId :: Text
+data AchievementsReset = AchievementsReset'
+    { _arAchievementId :: !Text
+    , _arFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsReset' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype AchievementsReset = AchievementsReset'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'arAchievementId'
+--
+-- * 'arFields'
 achievementsReset
     :: Text -- ^ 'arAchievementId'
     -> AchievementsReset
-achievementsReset pArAchievementId_ =
+achievementsReset pArAchievementId_ = 
     AchievementsReset'
     { _arAchievementId = pArAchievementId_
+    , _arFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -80,13 +86,17 @@ arAchievementId
   = lens _arAchievementId
       (\ s a -> s{_arAchievementId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+arFields :: Lens' AchievementsReset (Maybe Text)
+arFields = lens _arFields (\ s a -> s{_arFields = a})
+
 instance GoogleRequest AchievementsReset where
         type Rs AchievementsReset = AchievementResetResponse
         type Scopes AchievementsReset =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient AchievementsReset'{..}
-          = go _arAchievementId (Just AltJSON)
+          = go _arAchievementId _arFields (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient

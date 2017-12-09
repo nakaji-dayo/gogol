@@ -35,10 +35,11 @@ module Network.Google.Resource.Webmasters.Sitemaps.Submit
     -- * Request Lenses
     , ssFeedpath
     , ssSiteURL
+    , ssFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sitemaps.submit@ method which the
 -- 'SitemapsSubmit' request conforms to.
@@ -49,14 +50,16 @@ type SitemapsSubmitResource =
            Capture "siteUrl" Text :>
              "sitemaps" :>
                Capture "feedpath" Text :>
-                 QueryParam "alt" AltJSON :> Put '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Put '[JSON] ()
 
 -- | Submits a sitemap for a site.
 --
 -- /See:/ 'sitemapsSubmit' smart constructor.
 data SitemapsSubmit = SitemapsSubmit'
     { _ssFeedpath :: !Text
-    , _ssSiteURL  :: !Text
+    , _ssSiteURL :: !Text
+    , _ssFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitemapsSubmit' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitemapsSubmit = SitemapsSubmit'
 -- * 'ssFeedpath'
 --
 -- * 'ssSiteURL'
+--
+-- * 'ssFields'
 sitemapsSubmit
     :: Text -- ^ 'ssFeedpath'
     -> Text -- ^ 'ssSiteURL'
     -> SitemapsSubmit
-sitemapsSubmit pSsFeedpath_ pSsSiteURL_ =
+sitemapsSubmit pSsFeedpath_ pSsSiteURL_ = 
     SitemapsSubmit'
     { _ssFeedpath = pSsFeedpath_
     , _ssSiteURL = pSsSiteURL_
+    , _ssFields = Nothing
     }
 
 -- | The URL of the sitemap to add. For example:
@@ -88,12 +94,16 @@ ssSiteURL :: Lens' SitemapsSubmit Text
 ssSiteURL
   = lens _ssSiteURL (\ s a -> s{_ssSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ssFields :: Lens' SitemapsSubmit (Maybe Text)
+ssFields = lens _ssFields (\ s a -> s{_ssFields = a})
+
 instance GoogleRequest SitemapsSubmit where
         type Rs SitemapsSubmit = ()
         type Scopes SitemapsSubmit =
              '["https://www.googleapis.com/auth/webmasters"]
         requestClient SitemapsSubmit'{..}
-          = go _ssSiteURL _ssFeedpath (Just AltJSON)
+          = go _ssSiteURL _ssFeedpath _ssFields (Just AltJSON)
               webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitemapsSubmitResource)

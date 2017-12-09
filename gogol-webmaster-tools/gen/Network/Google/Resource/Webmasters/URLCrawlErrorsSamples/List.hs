@@ -37,10 +37,11 @@ module Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.List
     , uceslPlatform
     , uceslCategory
     , uceslSiteURL
+    , uceslFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.urlcrawlerrorssamples.list@ method which the
 -- 'URLCrawlErrorsSamplesList' request conforms to.
@@ -56,8 +57,9 @@ type URLCrawlErrorsSamplesListResource =
                  QueryParam "platform"
                    URLCrawlErrorsSamplesListPlatform
                    :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] URLCrawlErrorsSamplesListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] URLCrawlErrorsSamplesListResponse
 
 -- | Lists a site\'s sample URLs for the specified crawl error category and
 -- platform.
@@ -66,7 +68,8 @@ type URLCrawlErrorsSamplesListResource =
 data URLCrawlErrorsSamplesList = URLCrawlErrorsSamplesList'
     { _uceslPlatform :: !URLCrawlErrorsSamplesListPlatform
     , _uceslCategory :: !URLCrawlErrorsSamplesListCategory
-    , _uceslSiteURL  :: !Text
+    , _uceslSiteURL :: !Text
+    , _uceslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLCrawlErrorsSamplesList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data URLCrawlErrorsSamplesList = URLCrawlErrorsSamplesList'
 -- * 'uceslCategory'
 --
 -- * 'uceslSiteURL'
+--
+-- * 'uceslFields'
 urlCrawlErrorsSamplesList
     :: URLCrawlErrorsSamplesListPlatform -- ^ 'uceslPlatform'
     -> URLCrawlErrorsSamplesListCategory -- ^ 'uceslCategory'
     -> Text -- ^ 'uceslSiteURL'
     -> URLCrawlErrorsSamplesList
-urlCrawlErrorsSamplesList pUceslPlatform_ pUceslCategory_ pUceslSiteURL_ =
+urlCrawlErrorsSamplesList pUceslPlatform_ pUceslCategory_ pUceslSiteURL_ = 
     URLCrawlErrorsSamplesList'
     { _uceslPlatform = pUceslPlatform_
     , _uceslCategory = pUceslCategory_
     , _uceslSiteURL = pUceslSiteURL_
+    , _uceslFields = Nothing
     }
 
 -- | The user agent type (platform) that made the request. For example: web
@@ -108,6 +114,11 @@ uceslSiteURL :: Lens' URLCrawlErrorsSamplesList Text
 uceslSiteURL
   = lens _uceslSiteURL (\ s a -> s{_uceslSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uceslFields :: Lens' URLCrawlErrorsSamplesList (Maybe Text)
+uceslFields
+  = lens _uceslFields (\ s a -> s{_uceslFields = a})
+
 instance GoogleRequest URLCrawlErrorsSamplesList
          where
         type Rs URLCrawlErrorsSamplesList =
@@ -118,6 +129,7 @@ instance GoogleRequest URLCrawlErrorsSamplesList
         requestClient URLCrawlErrorsSamplesList'{..}
           = go _uceslSiteURL (Just _uceslCategory)
               (Just _uceslPlatform)
+              _uceslFields
               (Just AltJSON)
               webmasterToolsService
           where go

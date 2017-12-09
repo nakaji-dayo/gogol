@@ -34,10 +34,11 @@ module Network.Google.Resource.CivicInfo.Elections.ElectionQuery
 
     -- * Request Lenses
     , eeqPayload
+    , eeqFields
     ) where
 
-import           Network.Google.CivicInfo.Types
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @civicinfo.elections.electionQuery@ method which the
 -- 'ElectionsElectionQuery' request conforms to.
@@ -45,15 +46,17 @@ type ElectionsElectionQueryResource =
      "civicinfo" :>
        "v2" :>
          "elections" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] ElectionsQueryRequest :>
-               Get '[JSON] ElectionsQueryResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] ElectionsQueryRequest :>
+                 Get '[JSON] ElectionsQueryResponse
 
 -- | List of available elections to query.
 --
 -- /See:/ 'electionsElectionQuery' smart constructor.
-newtype ElectionsElectionQuery = ElectionsElectionQuery'
-    { _eeqPayload :: ElectionsQueryRequest
+data ElectionsElectionQuery = ElectionsElectionQuery'
+    { _eeqPayload :: !ElectionsQueryRequest
+    , _eeqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ElectionsElectionQuery' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype ElectionsElectionQuery = ElectionsElectionQuery'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'eeqPayload'
+--
+-- * 'eeqFields'
 electionsElectionQuery
     :: ElectionsQueryRequest -- ^ 'eeqPayload'
     -> ElectionsElectionQuery
-electionsElectionQuery pEeqPayload_ =
+electionsElectionQuery pEeqPayload_ = 
     ElectionsElectionQuery'
     { _eeqPayload = pEeqPayload_
+    , _eeqFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -74,12 +80,18 @@ eeqPayload :: Lens' ElectionsElectionQuery ElectionsQueryRequest
 eeqPayload
   = lens _eeqPayload (\ s a -> s{_eeqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eeqFields :: Lens' ElectionsElectionQuery (Maybe Text)
+eeqFields
+  = lens _eeqFields (\ s a -> s{_eeqFields = a})
+
 instance GoogleRequest ElectionsElectionQuery where
         type Rs ElectionsElectionQuery =
              ElectionsQueryResponse
         type Scopes ElectionsElectionQuery = '[]
         requestClient ElectionsElectionQuery'{..}
-          = go (Just AltJSON) _eeqPayload civicInfoService
+          = go _eeqFields (Just AltJSON) _eeqPayload
+              civicInfoService
           where go
                   = buildClient
                       (Proxy :: Proxy ElectionsElectionQueryResource)

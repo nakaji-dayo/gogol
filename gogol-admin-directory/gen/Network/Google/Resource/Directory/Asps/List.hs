@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Asps.List
 
     -- * Request Lenses
     , alUserKey
+    , alFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.asps.list@ method which the
 -- 'AspsList' request conforms to.
@@ -48,13 +49,15 @@ type AspsListResource =
            "users" :>
              Capture "userKey" Text :>
                "asps" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Asps
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Asps
 
 -- | List the ASPs issued by a user.
 --
 -- /See:/ 'aspsList' smart constructor.
-newtype AspsList = AspsList'
-    { _alUserKey :: Text
+data AspsList = AspsList'
+    { _alUserKey :: !Text
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AspsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype AspsList = AspsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'alUserKey'
+--
+-- * 'alFields'
 aspsList
     :: Text -- ^ 'alUserKey'
     -> AspsList
-aspsList pAlUserKey_ =
+aspsList pAlUserKey_ = 
     AspsList'
     { _alUserKey = pAlUserKey_
+    , _alFields = Nothing
     }
 
 -- | Identifies the user in the API request. The value can be the user\'s
@@ -76,12 +82,17 @@ alUserKey :: Lens' AspsList Text
 alUserKey
   = lens _alUserKey (\ s a -> s{_alUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' AspsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest AspsList where
         type Rs AspsList = Asps
         type Scopes AspsList =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient AspsList'{..}
-          = go _alUserKey (Just AltJSON) directoryService
+          = go _alUserKey _alFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy AspsListResource)
                       mempty

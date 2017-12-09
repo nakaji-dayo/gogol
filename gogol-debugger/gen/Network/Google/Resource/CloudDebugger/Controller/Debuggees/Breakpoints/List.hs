@@ -21,15 +21,15 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Returns the list of all active breakpoints for the debuggee. The
--- breakpoint specification (location, condition, and expression fields) is
--- semantically immutable, although the field values may change. For
--- example, an agent may update the location line number to reflect the
--- actual line where the breakpoint was set, but this doesn\'t change the
--- breakpoint semantics. This means that an agent does not need to check if
--- a breakpoint has changed when it encounters the same breakpoint on a
--- successive call. Moreover, an agent should remember the breakpoints that
--- are completed until the controller removes them from the active list to
--- avoid setting those breakpoints again.
+-- breakpoint specification (\`location\`, \`condition\`, and
+-- \`expressions\` fields) is semantically immutable, although the field
+-- values may change. For example, an agent may update the location line
+-- number to reflect the actual line where the breakpoint was set, but this
+-- doesn\'t change the breakpoint semantics. This means that an agent does
+-- not need to check if a breakpoint has changed when it encounters the
+-- same breakpoint on a successive call. Moreover, an agent should remember
+-- the breakpoints that are completed until the controller removes them
+-- from the active list to avoid setting those breakpoints again.
 --
 -- /See:/ <http://cloud.google.com/debugger Stackdriver Debugger API Reference> for @clouddebugger.controller.debuggees.breakpoints.list@.
 module Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.List
@@ -51,11 +51,12 @@ module Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.Li
     , cdblBearerToken
     , cdblWaitToken
     , cdblDebuggeeId
+    , cdblFields
     , cdblCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.controller.debuggees.breakpoints.list@ method which the
 -- 'ControllerDebuggeesBreakpointsList' request conforms to.
@@ -74,32 +75,34 @@ type ControllerDebuggeesBreakpointsListResource =
                            QueryParam "bearer_token" Text :>
                              QueryParam "waitToken" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ListActiveBreakpointsResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ListActiveBreakpointsResponse
 
 -- | Returns the list of all active breakpoints for the debuggee. The
--- breakpoint specification (location, condition, and expression fields) is
--- semantically immutable, although the field values may change. For
--- example, an agent may update the location line number to reflect the
--- actual line where the breakpoint was set, but this doesn\'t change the
--- breakpoint semantics. This means that an agent does not need to check if
--- a breakpoint has changed when it encounters the same breakpoint on a
--- successive call. Moreover, an agent should remember the breakpoints that
--- are completed until the controller removes them from the active list to
--- avoid setting those breakpoints again.
+-- breakpoint specification (\`location\`, \`condition\`, and
+-- \`expressions\` fields) is semantically immutable, although the field
+-- values may change. For example, an agent may update the location line
+-- number to reflect the actual line where the breakpoint was set, but this
+-- doesn\'t change the breakpoint semantics. This means that an agent does
+-- not need to check if a breakpoint has changed when it encounters the
+-- same breakpoint on a successive call. Moreover, an agent should remember
+-- the breakpoints that are completed until the controller removes them
+-- from the active list to avoid setting those breakpoints again.
 --
 -- /See:/ 'controllerDebuggeesBreakpointsList' smart constructor.
 data ControllerDebuggeesBreakpointsList = ControllerDebuggeesBreakpointsList'
-    { _cdblXgafv            :: !(Maybe Xgafv)
-    , _cdblUploadProtocol   :: !(Maybe Text)
-    , _cdblPp               :: !Bool
-    , _cdblAccessToken      :: !(Maybe Text)
-    , _cdblUploadType       :: !(Maybe Text)
+    { _cdblXgafv :: !(Maybe Xgafv)
+    , _cdblUploadProtocol :: !(Maybe Text)
+    , _cdblPp :: !Bool
+    , _cdblAccessToken :: !(Maybe Text)
+    , _cdblUploadType :: !(Maybe Text)
     , _cdblSuccessOnTimeout :: !(Maybe Bool)
-    , _cdblBearerToken      :: !(Maybe Text)
-    , _cdblWaitToken        :: !(Maybe Text)
-    , _cdblDebuggeeId       :: !Text
-    , _cdblCallback         :: !(Maybe Text)
+    , _cdblBearerToken :: !(Maybe Text)
+    , _cdblWaitToken :: !(Maybe Text)
+    , _cdblDebuggeeId :: !Text
+    , _cdblFields :: !(Maybe Text)
+    , _cdblCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ControllerDebuggeesBreakpointsList' with the minimum fields required to make a request.
@@ -124,11 +127,13 @@ data ControllerDebuggeesBreakpointsList = ControllerDebuggeesBreakpointsList'
 --
 -- * 'cdblDebuggeeId'
 --
+-- * 'cdblFields'
+--
 -- * 'cdblCallback'
 controllerDebuggeesBreakpointsList
     :: Text -- ^ 'cdblDebuggeeId'
     -> ControllerDebuggeesBreakpointsList
-controllerDebuggeesBreakpointsList pCdblDebuggeeId_ =
+controllerDebuggeesBreakpointsList pCdblDebuggeeId_ = 
     ControllerDebuggeesBreakpointsList'
     { _cdblXgafv = Nothing
     , _cdblUploadProtocol = Nothing
@@ -139,6 +144,7 @@ controllerDebuggeesBreakpointsList pCdblDebuggeeId_ =
     , _cdblBearerToken = Nothing
     , _cdblWaitToken = Nothing
     , _cdblDebuggeeId = pCdblDebuggeeId_
+    , _cdblFields = Nothing
     , _cdblCallback = Nothing
     }
 
@@ -169,11 +175,11 @@ cdblUploadType
   = lens _cdblUploadType
       (\ s a -> s{_cdblUploadType = a})
 
--- | If set to \`true\`, returns \`google.rpc.Code.OK\` status and sets the
--- \`wait_expired\` response field to \`true\` when the server-selected
--- timeout has expired (recommended). If set to \`false\`, returns
--- \`google.rpc.Code.ABORTED\` status when the server-selected timeout has
--- expired (deprecated).
+-- | If set to \`true\` (recommended), returns \`google.rpc.Code.OK\` status
+-- and sets the \`wait_expired\` response field to \`true\` when the
+-- server-selected timeout has expired. If set to \`false\` (deprecated),
+-- returns \`google.rpc.Code.ABORTED\` status when the server-selected
+-- timeout has expired.
 cdblSuccessOnTimeout :: Lens' ControllerDebuggeesBreakpointsList (Maybe Bool)
 cdblSuccessOnTimeout
   = lens _cdblSuccessOnTimeout
@@ -185,9 +191,10 @@ cdblBearerToken
   = lens _cdblBearerToken
       (\ s a -> s{_cdblBearerToken = a})
 
--- | A wait token that, if specified, blocks the method call until the list
--- of active breakpoints has changed, or a server selected timeout has
--- expired. The value should be set from the last returned response.
+-- | A token that, if specified, blocks the method call until the list of
+-- active breakpoints has changed, or a server-selected timeout has
+-- expired. The value should be set from the \`next_wait_token\` field in
+-- the last response. The initial value should be set to \`\"init\"\`.
 cdblWaitToken :: Lens' ControllerDebuggeesBreakpointsList (Maybe Text)
 cdblWaitToken
   = lens _cdblWaitToken
@@ -198,6 +205,11 @@ cdblDebuggeeId :: Lens' ControllerDebuggeesBreakpointsList Text
 cdblDebuggeeId
   = lens _cdblDebuggeeId
       (\ s a -> s{_cdblDebuggeeId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+cdblFields :: Lens' ControllerDebuggeesBreakpointsList (Maybe Text)
+cdblFields
+  = lens _cdblFields (\ s a -> s{_cdblFields = a})
 
 -- | JSONP
 cdblCallback :: Lens' ControllerDebuggeesBreakpointsList (Maybe Text)
@@ -220,6 +232,7 @@ instance GoogleRequest
               _cdblBearerToken
               _cdblWaitToken
               _cdblCallback
+              _cdblFields
               (Just AltJSON)
               debuggerService
           where go

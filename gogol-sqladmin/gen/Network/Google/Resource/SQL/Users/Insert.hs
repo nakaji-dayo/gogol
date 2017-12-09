@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Users.Insert
     -- * Request Lenses
     , uiProject
     , uiPayload
+    , uiFields
     , uiInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.users.insert@ method which the
 -- 'UsersInsert' request conforms to.
@@ -51,15 +52,17 @@ type UsersInsertResource =
              "instances" :>
                Capture "instance" Text :>
                  "users" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] User :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] User :> Post '[JSON] Operation
 
 -- | Creates a new user in a Cloud SQL instance.
 --
 -- /See:/ 'usersInsert' smart constructor.
 data UsersInsert = UsersInsert'
-    { _uiProject  :: !Text
-    , _uiPayload  :: !User
+    { _uiProject :: !Text
+    , _uiPayload :: !User
+    , _uiFields :: !(Maybe Text)
     , _uiInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -71,16 +74,19 @@ data UsersInsert = UsersInsert'
 --
 -- * 'uiPayload'
 --
+-- * 'uiFields'
+--
 -- * 'uiInstance'
 usersInsert
     :: Text -- ^ 'uiProject'
     -> User -- ^ 'uiPayload'
     -> Text -- ^ 'uiInstance'
     -> UsersInsert
-usersInsert pUiProject_ pUiPayload_ pUiInstance_ =
+usersInsert pUiProject_ pUiPayload_ pUiInstance_ = 
     UsersInsert'
     { _uiProject = pUiProject_
     , _uiPayload = pUiPayload_
+    , _uiFields = Nothing
     , _uiInstance = pUiInstance_
     }
 
@@ -94,6 +100,10 @@ uiPayload :: Lens' UsersInsert User
 uiPayload
   = lens _uiPayload (\ s a -> s{_uiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uiFields :: Lens' UsersInsert (Maybe Text)
+uiFields = lens _uiFields (\ s a -> s{_uiFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 uiInstance :: Lens' UsersInsert Text
 uiInstance
@@ -105,7 +115,8 @@ instance GoogleRequest UsersInsert where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient UsersInsert'{..}
-          = go _uiProject _uiInstance (Just AltJSON) _uiPayload
+          = go _uiProject _uiInstance _uiFields (Just AltJSON)
+              _uiPayload
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy UsersInsertResource)

@@ -40,11 +40,12 @@ module Network.Google.Resource.Logging.Folders.Sinks.Get
     , fsgUploadType
     , fsgBearerToken
     , fsgSinkName
+    , fsgFields
     , fsgCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.folders.sinks.get@ method which the
 -- 'FoldersSinksGet' request conforms to.
@@ -58,20 +59,22 @@ type FoldersSinksGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] LogSink
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] LogSink
 
 -- | Gets a sink.
 --
 -- /See:/ 'foldersSinksGet' smart constructor.
 data FoldersSinksGet = FoldersSinksGet'
-    { _fsgXgafv          :: !(Maybe Xgafv)
+    { _fsgXgafv :: !(Maybe Xgafv)
     , _fsgUploadProtocol :: !(Maybe Text)
-    , _fsgPp             :: !Bool
-    , _fsgAccessToken    :: !(Maybe Text)
-    , _fsgUploadType     :: !(Maybe Text)
-    , _fsgBearerToken    :: !(Maybe Text)
-    , _fsgSinkName       :: !Text
-    , _fsgCallback       :: !(Maybe Text)
+    , _fsgPp :: !Bool
+    , _fsgAccessToken :: !(Maybe Text)
+    , _fsgUploadType :: !(Maybe Text)
+    , _fsgBearerToken :: !(Maybe Text)
+    , _fsgSinkName :: !Text
+    , _fsgFields :: !(Maybe Text)
+    , _fsgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FoldersSinksGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data FoldersSinksGet = FoldersSinksGet'
 --
 -- * 'fsgSinkName'
 --
+-- * 'fsgFields'
+--
 -- * 'fsgCallback'
 foldersSinksGet
     :: Text -- ^ 'fsgSinkName'
     -> FoldersSinksGet
-foldersSinksGet pFsgSinkName_ =
+foldersSinksGet pFsgSinkName_ = 
     FoldersSinksGet'
     { _fsgXgafv = Nothing
     , _fsgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ foldersSinksGet pFsgSinkName_ =
     , _fsgUploadType = Nothing
     , _fsgBearerToken = Nothing
     , _fsgSinkName = pFsgSinkName_
+    , _fsgFields = Nothing
     , _fsgCallback = Nothing
     }
 
@@ -140,13 +146,20 @@ fsgBearerToken
   = lens _fsgBearerToken
       (\ s a -> s{_fsgBearerToken = a})
 
--- | Required. The parent resource name of the sink:
+-- | Required. The resource name of the sink:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
 -- \"projects\/my-project-id\/sinks\/my-sink-id\".
 fsgSinkName :: Lens' FoldersSinksGet Text
 fsgSinkName
   = lens _fsgSinkName (\ s a -> s{_fsgSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+fsgFields :: Lens' FoldersSinksGet (Maybe Text)
+fsgFields
+  = lens _fsgFields (\ s a -> s{_fsgFields = a})
 
 -- | JSONP
 fsgCallback :: Lens' FoldersSinksGet (Maybe Text)
@@ -167,6 +180,7 @@ instance GoogleRequest FoldersSinksGet where
               _fsgUploadType
               _fsgBearerToken
               _fsgCallback
+              _fsgFields
               (Just AltJSON)
               loggingService
           where go

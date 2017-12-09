@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.URLMaps.Delete
     , URLMapsDelete
 
     -- * Request Lenses
+    , umdRequestId
     , umdURLMap
     , umdProject
+    , umdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.urlMaps.delete@ method which the
 -- 'URLMapsDelete' request conforms to.
@@ -50,32 +52,56 @@ type URLMapsDeleteResource =
              "global" :>
                "urlMaps" :>
                  Capture "urlMap" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified UrlMap resource.
 --
 -- /See:/ 'urlMapsDelete' smart constructor.
 data URLMapsDelete = URLMapsDelete'
-    { _umdURLMap  :: !Text
+    { _umdRequestId :: !(Maybe Text)
+    , _umdURLMap :: !Text
     , _umdProject :: !Text
+    , _umdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLMapsDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'umdRequestId'
+--
 -- * 'umdURLMap'
 --
 -- * 'umdProject'
+--
+-- * 'umdFields'
 urlMapsDelete
     :: Text -- ^ 'umdURLMap'
     -> Text -- ^ 'umdProject'
     -> URLMapsDelete
-urlMapsDelete pUmdURLMap_ pUmdProject_ =
+urlMapsDelete pUmdURLMap_ pUmdProject_ = 
     URLMapsDelete'
-    { _umdURLMap = pUmdURLMap_
+    { _umdRequestId = Nothing
+    , _umdURLMap = pUmdURLMap_
     , _umdProject = pUmdProject_
+    , _umdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+umdRequestId :: Lens' URLMapsDelete (Maybe Text)
+umdRequestId
+  = lens _umdRequestId (\ s a -> s{_umdRequestId = a})
 
 -- | Name of the UrlMap resource to delete.
 umdURLMap :: Lens' URLMapsDelete Text
@@ -87,13 +113,19 @@ umdProject :: Lens' URLMapsDelete Text
 umdProject
   = lens _umdProject (\ s a -> s{_umdProject = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umdFields :: Lens' URLMapsDelete (Maybe Text)
+umdFields
+  = lens _umdFields (\ s a -> s{_umdFields = a})
+
 instance GoogleRequest URLMapsDelete where
         type Rs URLMapsDelete = Operation
         type Scopes URLMapsDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient URLMapsDelete'{..}
-          = go _umdProject _umdURLMap (Just AltJSON)
+          = go _umdProject _umdURLMap _umdRequestId _umdFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy URLMapsDeleteResource)

@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Get
 
     -- * Request Lenses
     , acgAchievementId
+    , acgFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.achievementConfigurations.get@ method which the
 -- 'AchievementConfigurationsGet' request conforms to.
@@ -47,15 +48,17 @@ type AchievementConfigurationsGetResource =
        "v1configuration" :>
          "achievements" :>
            Capture "achievementId" Text :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] AchievementConfiguration
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] AchievementConfiguration
 
 -- | Retrieves the metadata of the achievement configuration with the given
 -- ID.
 --
 -- /See:/ 'achievementConfigurationsGet' smart constructor.
-newtype AchievementConfigurationsGet = AchievementConfigurationsGet'
-    { _acgAchievementId :: Text
+data AchievementConfigurationsGet = AchievementConfigurationsGet'
+    { _acgAchievementId :: !Text
+    , _acgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationsGet' with the minimum fields required to make a request.
@@ -63,12 +66,15 @@ newtype AchievementConfigurationsGet = AchievementConfigurationsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'acgAchievementId'
+--
+-- * 'acgFields'
 achievementConfigurationsGet
     :: Text -- ^ 'acgAchievementId'
     -> AchievementConfigurationsGet
-achievementConfigurationsGet pAcgAchievementId_ =
+achievementConfigurationsGet pAcgAchievementId_ = 
     AchievementConfigurationsGet'
     { _acgAchievementId = pAcgAchievementId_
+    , _acgFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -77,6 +83,11 @@ acgAchievementId
   = lens _acgAchievementId
       (\ s a -> s{_acgAchievementId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acgFields :: Lens' AchievementConfigurationsGet (Maybe Text)
+acgFields
+  = lens _acgFields (\ s a -> s{_acgFields = a})
+
 instance GoogleRequest AchievementConfigurationsGet
          where
         type Rs AchievementConfigurationsGet =
@@ -84,7 +95,7 @@ instance GoogleRequest AchievementConfigurationsGet
         type Scopes AchievementConfigurationsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient AchievementConfigurationsGet'{..}
-          = go _acgAchievementId (Just AltJSON)
+          = go _acgAchievementId _acgFields (Just AltJSON)
               gamesConfigurationService
           where go
                   = buildClient

@@ -25,7 +25,7 @@
 -- operation. If the server doesn\'t support this method, it returns
 -- \`google.rpc.Code.UNIMPLEMENTED\`.
 --
--- /See:/ <https://cloud.google.com/deployment-manager/runtime-configurator/ Google Cloud RuntimeConfig API Reference> for @runtimeconfig.operations.delete@.
+-- /See:/ <https://cloud.google.com/deployment-manager/runtime-configurator/ Google Cloud Runtime Configuration API Reference> for @runtimeconfig.operations.delete@.
 module Network.Google.Resource.RuntimeConfig.Operations.Delete
     (
     -- * REST Resource
@@ -43,11 +43,12 @@ module Network.Google.Resource.RuntimeConfig.Operations.Delete
     , odUploadType
     , odBearerToken
     , odName
+    , odFields
     , odCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.RuntimeConfig.Types
+import Network.Google.Prelude
+import Network.Google.RuntimeConfig.Types
 
 -- | A resource alias for @runtimeconfig.operations.delete@ method which the
 -- 'OperationsDelete' request conforms to.
@@ -61,7 +62,8 @@ type OperationsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a long-running operation. This method indicates that the client
 -- is no longer interested in the operation result. It does not cancel the
@@ -70,14 +72,15 @@ type OperationsDeleteResource =
 --
 -- /See:/ 'operationsDelete' smart constructor.
 data OperationsDelete = OperationsDelete'
-    { _odXgafv          :: !(Maybe Xgafv)
+    { _odXgafv :: !(Maybe Xgafv)
     , _odUploadProtocol :: !(Maybe Text)
-    , _odPp             :: !Bool
-    , _odAccessToken    :: !(Maybe Text)
-    , _odUploadType     :: !(Maybe Text)
-    , _odBearerToken    :: !(Maybe Text)
-    , _odName           :: !Text
-    , _odCallback       :: !(Maybe Text)
+    , _odPp :: !Bool
+    , _odAccessToken :: !(Maybe Text)
+    , _odUploadType :: !(Maybe Text)
+    , _odBearerToken :: !(Maybe Text)
+    , _odName :: !Text
+    , _odFields :: !(Maybe Text)
+    , _odCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationsDelete' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data OperationsDelete = OperationsDelete'
 --
 -- * 'odName'
 --
+-- * 'odFields'
+--
 -- * 'odCallback'
 operationsDelete
     :: Text -- ^ 'odName'
     -> OperationsDelete
-operationsDelete pOdName_ =
+operationsDelete pOdName_ = 
     OperationsDelete'
     { _odXgafv = Nothing
     , _odUploadProtocol = Nothing
@@ -111,6 +116,7 @@ operationsDelete pOdName_ =
     , _odUploadType = Nothing
     , _odBearerToken = Nothing
     , _odName = pOdName_
+    , _odFields = Nothing
     , _odCallback = Nothing
     }
 
@@ -149,6 +155,10 @@ odBearerToken
 odName :: Lens' OperationsDelete Text
 odName = lens _odName (\ s a -> s{_odName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+odFields :: Lens' OperationsDelete (Maybe Text)
+odFields = lens _odFields (\ s a -> s{_odFields = a})
+
 -- | JSONP
 odCallback :: Lens' OperationsDelete (Maybe Text)
 odCallback
@@ -165,6 +175,7 @@ instance GoogleRequest OperationsDelete where
               _odUploadType
               _odBearerToken
               _odCallback
+              _odFields
               (Just AltJSON)
               runtimeConfigService
           where go

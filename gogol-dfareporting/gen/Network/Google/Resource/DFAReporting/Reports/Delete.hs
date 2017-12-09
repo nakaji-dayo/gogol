@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Reports.Delete
     -- * Request Lenses
     , rdReportId
     , rdProFileId
+    , rdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.delete@ method which the
 -- 'ReportsDelete' request conforms to.
 type ReportsDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                Capture "reportId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a report by its ID.
 --
 -- /See:/ 'reportsDelete' smart constructor.
 data ReportsDelete = ReportsDelete'
-    { _rdReportId  :: !(Textual Int64)
+    { _rdReportId :: !(Textual Int64)
     , _rdProFileId :: !(Textual Int64)
+    , _rdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ReportsDelete = ReportsDelete'
 -- * 'rdReportId'
 --
 -- * 'rdProFileId'
+--
+-- * 'rdFields'
 reportsDelete
     :: Int64 -- ^ 'rdReportId'
     -> Int64 -- ^ 'rdProFileId'
     -> ReportsDelete
-reportsDelete pRdReportId_ pRdProFileId_ =
+reportsDelete pRdReportId_ pRdProFileId_ = 
     ReportsDelete'
     { _rdReportId = _Coerce # pRdReportId_
     , _rdProFileId = _Coerce # pRdProFileId_
+    , _rdFields = Nothing
     }
 
 -- | The ID of the report.
@@ -88,12 +94,17 @@ rdProFileId
   = lens _rdProFileId (\ s a -> s{_rdProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rdFields :: Lens' ReportsDelete (Maybe Text)
+rdFields = lens _rdFields (\ s a -> s{_rdFields = a})
+
 instance GoogleRequest ReportsDelete where
         type Rs ReportsDelete = ()
         type Scopes ReportsDelete =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsDelete'{..}
-          = go _rdProFileId _rdReportId (Just AltJSON)
+          = go _rdProFileId _rdReportId _rdFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy ReportsDeleteResource)

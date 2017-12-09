@@ -36,10 +36,11 @@ module Network.Google.Resource.PlusDomains.Circles.RemovePeople
     , crpEmail
     , crpUserId
     , crpCircleId
+    , crpFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.circles.removePeople@ method which the
 -- 'CirclesRemovePeople' request conforms to.
@@ -51,15 +52,17 @@ type CirclesRemovePeopleResource =
              "people" :>
                QueryParams "email" Text :>
                  QueryParams "userId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Remove a person from a circle.
 --
 -- /See:/ 'circlesRemovePeople' smart constructor.
 data CirclesRemovePeople = CirclesRemovePeople'
-    { _crpEmail    :: !(Maybe [Text])
-    , _crpUserId   :: !(Maybe [Text])
+    { _crpEmail :: !(Maybe [Text])
+    , _crpUserId :: !(Maybe [Text])
     , _crpCircleId :: !Text
+    , _crpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CirclesRemovePeople' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data CirclesRemovePeople = CirclesRemovePeople'
 -- * 'crpUserId'
 --
 -- * 'crpCircleId'
+--
+-- * 'crpFields'
 circlesRemovePeople
     :: Text -- ^ 'crpCircleId'
     -> CirclesRemovePeople
-circlesRemovePeople pCrpCircleId_ =
+circlesRemovePeople pCrpCircleId_ = 
     CirclesRemovePeople'
     { _crpEmail = Nothing
     , _crpUserId = Nothing
     , _crpCircleId = pCrpCircleId_
+    , _crpFields = Nothing
     }
 
 -- | Email of the people to add to the circle. Optional, can be repeated.
@@ -100,6 +106,11 @@ crpCircleId :: Lens' CirclesRemovePeople Text
 crpCircleId
   = lens _crpCircleId (\ s a -> s{_crpCircleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+crpFields :: Lens' CirclesRemovePeople (Maybe Text)
+crpFields
+  = lens _crpFields (\ s a -> s{_crpFields = a})
+
 instance GoogleRequest CirclesRemovePeople where
         type Rs CirclesRemovePeople = ()
         type Scopes CirclesRemovePeople =
@@ -108,6 +119,7 @@ instance GoogleRequest CirclesRemovePeople where
         requestClient CirclesRemovePeople'{..}
           = go _crpCircleId (_crpEmail ^. _Default)
               (_crpUserId ^. _Default)
+              _crpFields
               (Just AltJSON)
               plusDomainsService
           where go

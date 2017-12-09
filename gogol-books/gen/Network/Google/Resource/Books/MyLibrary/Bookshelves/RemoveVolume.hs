@@ -37,10 +37,11 @@ module Network.Google.Resource.Books.MyLibrary.Bookshelves.RemoveVolume
     , mlbrvShelf
     , mlbrvVolumeId
     , mlbrvSource
+    , mlbrvFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.bookshelves.removeVolume@ method which the
 -- 'MyLibraryBookshelvesRemoveVolume' request conforms to.
@@ -56,16 +57,18 @@ type MyLibraryBookshelvesRemoveVolumeResource =
                      MyLibraryBookshelvesRemoveVolumeReason
                      :>
                      QueryParam "source" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Removes a volume from a bookshelf.
 --
 -- /See:/ 'myLibraryBookshelvesRemoveVolume' smart constructor.
 data MyLibraryBookshelvesRemoveVolume = MyLibraryBookshelvesRemoveVolume'
-    { _mlbrvReason   :: !(Maybe MyLibraryBookshelvesRemoveVolumeReason)
-    , _mlbrvShelf    :: !Text
+    { _mlbrvReason :: !(Maybe MyLibraryBookshelvesRemoveVolumeReason)
+    , _mlbrvShelf :: !Text
     , _mlbrvVolumeId :: !Text
-    , _mlbrvSource   :: !(Maybe Text)
+    , _mlbrvSource :: !(Maybe Text)
+    , _mlbrvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryBookshelvesRemoveVolume' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data MyLibraryBookshelvesRemoveVolume = MyLibraryBookshelvesRemoveVolume'
 -- * 'mlbrvVolumeId'
 --
 -- * 'mlbrvSource'
+--
+-- * 'mlbrvFields'
 myLibraryBookshelvesRemoveVolume
     :: Text -- ^ 'mlbrvShelf'
     -> Text -- ^ 'mlbrvVolumeId'
     -> MyLibraryBookshelvesRemoveVolume
-myLibraryBookshelvesRemoveVolume pMlbrvShelf_ pMlbrvVolumeId_ =
+myLibraryBookshelvesRemoveVolume pMlbrvShelf_ pMlbrvVolumeId_ = 
     MyLibraryBookshelvesRemoveVolume'
     { _mlbrvReason = Nothing
     , _mlbrvShelf = pMlbrvShelf_
     , _mlbrvVolumeId = pMlbrvVolumeId_
     , _mlbrvSource = Nothing
+    , _mlbrvFields = Nothing
     }
 
 -- | The reason for which the book is removed from the library.
@@ -112,6 +118,11 @@ mlbrvSource :: Lens' MyLibraryBookshelvesRemoveVolume (Maybe Text)
 mlbrvSource
   = lens _mlbrvSource (\ s a -> s{_mlbrvSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlbrvFields :: Lens' MyLibraryBookshelvesRemoveVolume (Maybe Text)
+mlbrvFields
+  = lens _mlbrvFields (\ s a -> s{_mlbrvFields = a})
+
 instance GoogleRequest
          MyLibraryBookshelvesRemoveVolume where
         type Rs MyLibraryBookshelvesRemoveVolume = ()
@@ -120,6 +131,7 @@ instance GoogleRequest
         requestClient MyLibraryBookshelvesRemoveVolume'{..}
           = go _mlbrvShelf (Just _mlbrvVolumeId) _mlbrvReason
               _mlbrvSource
+              _mlbrvFields
               (Just AltJSON)
               booksService
           where go

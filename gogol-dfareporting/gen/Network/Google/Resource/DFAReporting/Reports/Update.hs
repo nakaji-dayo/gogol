@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Reports.Update
     , ruReportId
     , ruProFileId
     , ruPayload
+    , ruFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.update@ method which the
 -- 'ReportsUpdate' request conforms to.
 type ReportsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                Capture "reportId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Report :> Put '[JSON] Report
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Report :> Put '[JSON] Report
 
 -- | Updates a report.
 --
 -- /See:/ 'reportsUpdate' smart constructor.
 data ReportsUpdate = ReportsUpdate'
-    { _ruReportId  :: !(Textual Int64)
+    { _ruReportId :: !(Textual Int64)
     , _ruProFileId :: !(Textual Int64)
-    , _ruPayload   :: !Report
+    , _ruPayload :: !Report
+    , _ruFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data ReportsUpdate = ReportsUpdate'
 -- * 'ruProFileId'
 --
 -- * 'ruPayload'
+--
+-- * 'ruFields'
 reportsUpdate
     :: Int64 -- ^ 'ruReportId'
     -> Int64 -- ^ 'ruProFileId'
     -> Report -- ^ 'ruPayload'
     -> ReportsUpdate
-reportsUpdate pRuReportId_ pRuProFileId_ pRuPayload_ =
+reportsUpdate pRuReportId_ pRuProFileId_ pRuPayload_ = 
     ReportsUpdate'
     { _ruReportId = _Coerce # pRuReportId_
     , _ruProFileId = _Coerce # pRuProFileId_
     , _ruPayload = pRuPayload_
+    , _ruFields = Nothing
     }
 
 -- | The ID of the report.
@@ -100,12 +106,17 @@ ruPayload :: Lens' ReportsUpdate Report
 ruPayload
   = lens _ruPayload (\ s a -> s{_ruPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ruFields :: Lens' ReportsUpdate (Maybe Text)
+ruFields = lens _ruFields (\ s a -> s{_ruFields = a})
+
 instance GoogleRequest ReportsUpdate where
         type Rs ReportsUpdate = Report
         type Scopes ReportsUpdate =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsUpdate'{..}
-          = go _ruProFileId _ruReportId (Just AltJSON)
+          = go _ruProFileId _ruReportId _ruFields
+              (Just AltJSON)
               _ruPayload
               dFAReportingService
           where go

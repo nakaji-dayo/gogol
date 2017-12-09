@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.List
     , plLanguage
     , plApproved
     , plMaxResults
+    , plFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.list@ method which the
 -- 'ProductsList' request conforms to.
@@ -58,8 +59,9 @@ type ProductsListResource =
                    QueryParam "language" Text :>
                      QueryParam "approved" Bool :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ProductsListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ProductsListResponse
 
 -- | Finds approved products that match a query, or all approved products if
 -- there is no query.
@@ -67,11 +69,12 @@ type ProductsListResource =
 -- /See:/ 'productsList' smart constructor.
 data ProductsList = ProductsList'
     { _plEnterpriseId :: !Text
-    , _plToken        :: !(Maybe Text)
-    , _plQuery        :: !(Maybe Text)
-    , _plLanguage     :: !(Maybe Text)
-    , _plApproved     :: !(Maybe Bool)
-    , _plMaxResults   :: !(Maybe (Textual Word32))
+    , _plToken :: !(Maybe Text)
+    , _plQuery :: !(Maybe Text)
+    , _plLanguage :: !(Maybe Text)
+    , _plApproved :: !(Maybe Bool)
+    , _plMaxResults :: !(Maybe (Textual Word32))
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsList' with the minimum fields required to make a request.
@@ -89,10 +92,12 @@ data ProductsList = ProductsList'
 -- * 'plApproved'
 --
 -- * 'plMaxResults'
+--
+-- * 'plFields'
 productsList
     :: Text -- ^ 'plEnterpriseId'
     -> ProductsList
-productsList pPlEnterpriseId_ =
+productsList pPlEnterpriseId_ = 
     ProductsList'
     { _plEnterpriseId = pPlEnterpriseId_
     , _plToken = Nothing
@@ -100,6 +105,7 @@ productsList pPlEnterpriseId_ =
     , _plLanguage = Nothing
     , _plApproved = Nothing
     , _plMaxResults = Nothing
+    , _plFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -108,9 +114,9 @@ plEnterpriseId
   = lens _plEnterpriseId
       (\ s a -> s{_plEnterpriseId = a})
 
--- | A pagination token is contained in a request’s response when there are
--- more products. The token can be used in a subsequent request to obtain
--- more products, and so forth. This parameter cannot be used in the
+-- | A pagination token is contained in a request\'\'s response when there
+-- are more products. The token can be used in a subsequent request to
+-- obtain more products, and so forth. This parameter cannot be used in the
 -- initial request.
 plToken :: Lens' ProductsList (Maybe Text)
 plToken = lens _plToken (\ s a -> s{_plToken = a})
@@ -144,6 +150,10 @@ plMaxResults
   = lens _plMaxResults (\ s a -> s{_plMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' ProductsList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 instance GoogleRequest ProductsList where
         type Rs ProductsList = ProductsListResponse
         type Scopes ProductsList =
@@ -152,6 +162,7 @@ instance GoogleRequest ProductsList where
           = go _plEnterpriseId _plToken _plQuery _plLanguage
               _plApproved
               _plMaxResults
+              _plFields
               (Just AltJSON)
               androidEnterpriseService
           where go

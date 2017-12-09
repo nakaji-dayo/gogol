@@ -34,8 +34,12 @@ library
     ghc-options:       -Wall
 
     exposed-modules:
-          Network.Google.Resource.ServiceControl.Services.Check
+          Network.Google.Resource.ServiceControl.Services.AllocateQuota
+        , Network.Google.Resource.ServiceControl.Services.Check
+        , Network.Google.Resource.ServiceControl.Services.EndReconciliation
+        , Network.Google.Resource.ServiceControl.Services.ReleaseQuota
         , Network.Google.Resource.ServiceControl.Services.Report
+        , Network.Google.Resource.ServiceControl.Services.StartReconciliation
         , Network.Google.ServiceControl
         , Network.Google.ServiceControl.Types
 

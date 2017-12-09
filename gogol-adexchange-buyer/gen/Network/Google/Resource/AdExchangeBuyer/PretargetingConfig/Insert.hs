@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.PretargetingConfig.Insert
     -- * Request Lenses
     , pciPayload
     , pciAccountId
+    , pciFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.pretargetingConfig.insert@ method which the
 -- 'PretargetingConfigInsert' request conforms to.
@@ -47,16 +48,18 @@ type PretargetingConfigInsertResource =
        "v1.4" :>
          "pretargetingconfigs" :>
            Capture "accountId" (Textual Int64) :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] PretargetingConfig :>
-                 Post '[JSON] PretargetingConfig
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] PretargetingConfig :>
+                   Post '[JSON] PretargetingConfig
 
 -- | Inserts a new pretargeting configuration.
 --
 -- /See:/ 'pretargetingConfigInsert' smart constructor.
 data PretargetingConfigInsert = PretargetingConfigInsert'
-    { _pciPayload   :: !PretargetingConfig
+    { _pciPayload :: !PretargetingConfig
     , _pciAccountId :: !(Textual Int64)
+    , _pciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PretargetingConfigInsert = PretargetingConfigInsert'
 -- * 'pciPayload'
 --
 -- * 'pciAccountId'
+--
+-- * 'pciFields'
 pretargetingConfigInsert
     :: PretargetingConfig -- ^ 'pciPayload'
     -> Int64 -- ^ 'pciAccountId'
     -> PretargetingConfigInsert
-pretargetingConfigInsert pPciPayload_ pPciAccountId_ =
+pretargetingConfigInsert pPciPayload_ pPciAccountId_ = 
     PretargetingConfigInsert'
     { _pciPayload = pPciPayload_
     , _pciAccountId = _Coerce # pPciAccountId_
+    , _pciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,12 +93,18 @@ pciAccountId
   = lens _pciAccountId (\ s a -> s{_pciAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pciFields :: Lens' PretargetingConfigInsert (Maybe Text)
+pciFields
+  = lens _pciFields (\ s a -> s{_pciFields = a})
+
 instance GoogleRequest PretargetingConfigInsert where
         type Rs PretargetingConfigInsert = PretargetingConfig
         type Scopes PretargetingConfigInsert =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient PretargetingConfigInsert'{..}
-          = go _pciAccountId (Just AltJSON) _pciPayload
+          = go _pciAccountId _pciFields (Just AltJSON)
+              _pciPayload
               adExchangeBuyerService
           where go
                   = buildClient

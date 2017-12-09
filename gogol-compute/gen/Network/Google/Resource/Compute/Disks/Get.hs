@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.Disks.Get
     , dgProject
     , dgDisk
     , dgZone
+    , dgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.disks.get@ method which the
 -- 'DisksGet' request conforms to.
@@ -53,7 +54,8 @@ type DisksGetResource =
                Capture "zone" Text :>
                  "disks" :>
                    Capture "disk" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Disk
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Disk
 
 -- | Returns a specified persistent disk. Get a list of available persistent
 -- disks by making a list() request.
@@ -61,8 +63,9 @@ type DisksGetResource =
 -- /See:/ 'disksGet' smart constructor.
 data DisksGet = DisksGet'
     { _dgProject :: !Text
-    , _dgDisk    :: !Text
-    , _dgZone    :: !Text
+    , _dgDisk :: !Text
+    , _dgZone :: !Text
+    , _dgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DisksGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data DisksGet = DisksGet'
 -- * 'dgDisk'
 --
 -- * 'dgZone'
+--
+-- * 'dgFields'
 disksGet
     :: Text -- ^ 'dgProject'
     -> Text -- ^ 'dgDisk'
     -> Text -- ^ 'dgZone'
     -> DisksGet
-disksGet pDgProject_ pDgDisk_ pDgZone_ =
+disksGet pDgProject_ pDgDisk_ pDgZone_ = 
     DisksGet'
     { _dgProject = pDgProject_
     , _dgDisk = pDgDisk_
     , _dgZone = pDgZone_
+    , _dgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -99,6 +105,10 @@ dgDisk = lens _dgDisk (\ s a -> s{_dgDisk = a})
 dgZone :: Lens' DisksGet Text
 dgZone = lens _dgZone (\ s a -> s{_dgZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgFields :: Lens' DisksGet (Maybe Text)
+dgFields = lens _dgFields (\ s a -> s{_dgFields = a})
+
 instance GoogleRequest DisksGet where
         type Rs DisksGet = Disk
         type Scopes DisksGet =
@@ -106,7 +116,8 @@ instance GoogleRequest DisksGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient DisksGet'{..}
-          = go _dgProject _dgZone _dgDisk (Just AltJSON)
+          = go _dgProject _dgZone _dgDisk _dgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy DisksGetResource)

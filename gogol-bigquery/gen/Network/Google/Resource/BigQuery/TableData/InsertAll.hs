@@ -38,10 +38,11 @@ module Network.Google.Resource.BigQuery.TableData.InsertAll
     , tdiaDataSetId
     , tdiaProjectId
     , tdiaTableId
+    , tdiaFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tabledata.insertAll@ method which the
 -- 'TableDataInsertAll' request conforms to.
@@ -55,19 +56,21 @@ type TableDataInsertAllResource =
                  "tables" :>
                    Capture "tableId" Text :>
                      "insertAll" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TableDataInsertAllRequest :>
-                           Post '[JSON] TableDataInsertAllResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] TableDataInsertAllRequest :>
+                             Post '[JSON] TableDataInsertAllResponse
 
 -- | Streams data into BigQuery one record at a time without needing to run a
 -- load job. Requires the WRITER dataset role.
 --
 -- /See:/ 'tableDataInsertAll' smart constructor.
 data TableDataInsertAll = TableDataInsertAll'
-    { _tdiaPayload   :: !TableDataInsertAllRequest
+    { _tdiaPayload :: !TableDataInsertAllRequest
     , _tdiaDataSetId :: !Text
     , _tdiaProjectId :: !Text
-    , _tdiaTableId   :: !Text
+    , _tdiaTableId :: !Text
+    , _tdiaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableDataInsertAll' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data TableDataInsertAll = TableDataInsertAll'
 -- * 'tdiaProjectId'
 --
 -- * 'tdiaTableId'
+--
+-- * 'tdiaFields'
 tableDataInsertAll
     :: TableDataInsertAllRequest -- ^ 'tdiaPayload'
     -> Text -- ^ 'tdiaDataSetId'
     -> Text -- ^ 'tdiaProjectId'
     -> Text -- ^ 'tdiaTableId'
     -> TableDataInsertAll
-tableDataInsertAll pTdiaPayload_ pTdiaDataSetId_ pTdiaProjectId_ pTdiaTableId_ =
+tableDataInsertAll pTdiaPayload_ pTdiaDataSetId_ pTdiaProjectId_ pTdiaTableId_ = 
     TableDataInsertAll'
     { _tdiaPayload = pTdiaPayload_
     , _tdiaDataSetId = pTdiaDataSetId_
     , _tdiaProjectId = pTdiaProjectId_
     , _tdiaTableId = pTdiaTableId_
+    , _tdiaFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -117,6 +123,11 @@ tdiaTableId :: Lens' TableDataInsertAll Text
 tdiaTableId
   = lens _tdiaTableId (\ s a -> s{_tdiaTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdiaFields :: Lens' TableDataInsertAll (Maybe Text)
+tdiaFields
+  = lens _tdiaFields (\ s a -> s{_tdiaFields = a})
+
 instance GoogleRequest TableDataInsertAll where
         type Rs TableDataInsertAll =
              TableDataInsertAllResponse
@@ -126,6 +137,7 @@ instance GoogleRequest TableDataInsertAll where
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient TableDataInsertAll'{..}
           = go _tdiaProjectId _tdiaDataSetId _tdiaTableId
+              _tdiaFields
               (Just AltJSON)
               _tdiaPayload
               bigQueryService

@@ -39,10 +39,11 @@ module Network.Google.Resource.Gmail.Users.Messages.List
     , umlLabelIds
     , umlPageToken
     , umlMaxResults
+    , umlFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.list@ method which the
 -- 'UsersMessagesList' request conforms to.
@@ -57,19 +58,21 @@ type UsersMessagesListResource =
                    QueryParams "labelIds" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ListMessagesResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ListMessagesResponse
 
 -- | Lists the messages in the user\'s mailbox.
 --
 -- /See:/ 'usersMessagesList' smart constructor.
 data UsersMessagesList = UsersMessagesList'
-    { _umlQ                :: !(Maybe Text)
-    , _umlUserId           :: !Text
+    { _umlQ :: !(Maybe Text)
+    , _umlUserId :: !Text
     , _umlIncludeSpamTrash :: !Bool
-    , _umlLabelIds         :: !(Maybe [Text])
-    , _umlPageToken        :: !(Maybe Text)
-    , _umlMaxResults       :: !(Textual Word32)
+    , _umlLabelIds :: !(Maybe [Text])
+    , _umlPageToken :: !(Maybe Text)
+    , _umlMaxResults :: !(Textual Word32)
+    , _umlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesList' with the minimum fields required to make a request.
@@ -87,9 +90,11 @@ data UsersMessagesList = UsersMessagesList'
 -- * 'umlPageToken'
 --
 -- * 'umlMaxResults'
+--
+-- * 'umlFields'
 usersMessagesList
     :: UsersMessagesList
-usersMessagesList =
+usersMessagesList = 
     UsersMessagesList'
     { _umlQ = Nothing
     , _umlUserId = "me"
@@ -97,6 +102,7 @@ usersMessagesList =
     , _umlLabelIds = Nothing
     , _umlPageToken = Nothing
     , _umlMaxResults = 100
+    , _umlFields = Nothing
     }
 
 -- | Only return messages matching the specified query. Supports the same
@@ -138,6 +144,11 @@ umlMaxResults
       (\ s a -> s{_umlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+umlFields :: Lens' UsersMessagesList (Maybe Text)
+umlFields
+  = lens _umlFields (\ s a -> s{_umlFields = a})
+
 instance GoogleRequest UsersMessagesList where
         type Rs UsersMessagesList = ListMessagesResponse
         type Scopes UsersMessagesList =
@@ -150,6 +161,7 @@ instance GoogleRequest UsersMessagesList where
               (_umlLabelIds ^. _Default)
               _umlPageToken
               (Just _umlMaxResults)
+              _umlFields
               (Just AltJSON)
               gmailService
           where go

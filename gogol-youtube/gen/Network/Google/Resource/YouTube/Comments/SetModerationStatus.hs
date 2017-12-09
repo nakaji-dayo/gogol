@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.Comments.SetModerationStatus
     , csmsBanAuthor
     , csmsModerationStatus
     , csmsId
+    , csmsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.setModerationStatus@ method which the
 -- 'CommentsSetModerationStatus' request conforms to.
@@ -55,7 +56,8 @@ type CommentsSetModerationStatusResource =
                  CommentsSetModerationStatusModerationStatus
                  :>
                  QueryParam "banAuthor" Bool :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Sets the moderation status of one or more comments. The API request must
 -- be authorized by the owner of the channel or video associated with the
@@ -63,9 +65,10 @@ type CommentsSetModerationStatusResource =
 --
 -- /See:/ 'commentsSetModerationStatus' smart constructor.
 data CommentsSetModerationStatus = CommentsSetModerationStatus'
-    { _csmsBanAuthor        :: !Bool
+    { _csmsBanAuthor :: !Bool
     , _csmsModerationStatus :: !CommentsSetModerationStatusModerationStatus
-    , _csmsId               :: !Text
+    , _csmsId :: !Text
+    , _csmsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsSetModerationStatus' with the minimum fields required to make a request.
@@ -77,15 +80,18 @@ data CommentsSetModerationStatus = CommentsSetModerationStatus'
 -- * 'csmsModerationStatus'
 --
 -- * 'csmsId'
+--
+-- * 'csmsFields'
 commentsSetModerationStatus
     :: CommentsSetModerationStatusModerationStatus -- ^ 'csmsModerationStatus'
     -> Text -- ^ 'csmsId'
     -> CommentsSetModerationStatus
-commentsSetModerationStatus pCsmsModerationStatus_ pCsmsId_ =
+commentsSetModerationStatus pCsmsModerationStatus_ pCsmsId_ = 
     CommentsSetModerationStatus'
     { _csmsBanAuthor = False
     , _csmsModerationStatus = pCsmsModerationStatus_
     , _csmsId = pCsmsId_
+    , _csmsFields = Nothing
     }
 
 -- | The banAuthor parameter lets you indicate that you want to automatically
@@ -108,6 +114,11 @@ csmsModerationStatus
 csmsId :: Lens' CommentsSetModerationStatus Text
 csmsId = lens _csmsId (\ s a -> s{_csmsId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csmsFields :: Lens' CommentsSetModerationStatus (Maybe Text)
+csmsFields
+  = lens _csmsFields (\ s a -> s{_csmsFields = a})
+
 instance GoogleRequest CommentsSetModerationStatus
          where
         type Rs CommentsSetModerationStatus = ()
@@ -116,6 +127,7 @@ instance GoogleRequest CommentsSetModerationStatus
         requestClient CommentsSetModerationStatus'{..}
           = go (Just _csmsId) (Just _csmsModerationStatus)
               (Just _csmsBanAuthor)
+              _csmsFields
               (Just AltJSON)
               youTubeService
           where go

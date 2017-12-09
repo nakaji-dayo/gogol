@@ -17,8 +17,8 @@
 --
 module Network.Google.Debugger.Types.Product where
 
-import           Network.Google.Debugger.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types.Sum
+import Network.Google.Prelude
 
 -- | Response for registering a debuggee.
 --
@@ -34,13 +34,16 @@ newtype RegisterDebuggeeResponse = RegisterDebuggeeResponse'
 -- * 'rdrDebuggee'
 registerDebuggeeResponse
     :: RegisterDebuggeeResponse
-registerDebuggeeResponse =
+registerDebuggeeResponse = 
     RegisterDebuggeeResponse'
     { _rdrDebuggee = Nothing
     }
 
 -- | Debuggee resource. The field \`id\` is guranteed to be set (in addition
--- to the echoed fields).
+-- to the echoed fields). If the field \`is_disabled\` is set to \`true\`,
+-- the agent should disable itself by removing all breakpoints and
+-- detaching from the application. It should however continue to poll
+-- \`RegisterDebuggee\` until reenabled.
 rdrDebuggee :: Lens' RegisterDebuggeeResponse (Maybe Debuggee)
 rdrDebuggee
   = lens _rdrDebuggee (\ s a -> s{_rdrDebuggee = a})
@@ -63,9 +66,9 @@ instance ToJSON RegisterDebuggeeResponse where
 -- /See:/ 'sourceContext' smart constructor.
 data SourceContext = SourceContext'
     { _scCloudWorkspace :: !(Maybe CloudWorkspaceSourceContext)
-    , _scCloudRepo      :: !(Maybe CloudRepoSourceContext)
-    , _scGerrit         :: !(Maybe GerritSourceContext)
-    , _scGit            :: !(Maybe GitSourceContext)
+    , _scCloudRepo :: !(Maybe CloudRepoSourceContext)
+    , _scGerrit :: !(Maybe GerritSourceContext)
+    , _scGit :: !(Maybe GitSourceContext)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SourceContext' with the minimum fields required to make a request.
@@ -81,7 +84,7 @@ data SourceContext = SourceContext'
 -- * 'scGit'
 sourceContext
     :: SourceContext
-sourceContext =
+sourceContext = 
     SourceContext'
     { _scCloudWorkspace = Nothing
     , _scCloudRepo = Nothing
@@ -139,7 +142,7 @@ newtype SetBreakpointResponse = SetBreakpointResponse'
 -- * 'sbrBreakpoint'
 setBreakpointResponse
     :: SetBreakpointResponse
-setBreakpointResponse =
+setBreakpointResponse = 
     SetBreakpointResponse'
     { _sbrBreakpoint = Nothing
     }
@@ -170,7 +173,7 @@ instance ToJSON SetBreakpointResponse where
 --
 -- /See:/ 'empty' smart constructor.
 data Empty =
-    Empty'
+    Empty' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Empty' with the minimum fields required to make a request.
@@ -190,7 +193,7 @@ instance ToJSON Empty where
 --
 -- /See:/ 'updateActiveBreakpointResponse' smart constructor.
 data UpdateActiveBreakpointResponse =
-    UpdateActiveBreakpointResponse'
+    UpdateActiveBreakpointResponse' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateActiveBreakpointResponse' with the minimum fields required to make a request.
@@ -213,10 +216,10 @@ instance ToJSON UpdateActiveBreakpointResponse where
 -- /See:/ 'gerritSourceContext' smart constructor.
 data GerritSourceContext = GerritSourceContext'
     { _gscGerritProject :: !(Maybe Text)
-    , _gscAliasName     :: !(Maybe Text)
-    , _gscRevisionId    :: !(Maybe Text)
-    , _gscHostURI       :: !(Maybe Text)
-    , _gscAliasContext  :: !(Maybe AliasContext)
+    , _gscAliasName :: !(Maybe Text)
+    , _gscRevisionId :: !(Maybe Text)
+    , _gscHostURI :: !(Maybe Text)
+    , _gscAliasContext :: !(Maybe AliasContext)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GerritSourceContext' with the minimum fields required to make a request.
@@ -234,7 +237,7 @@ data GerritSourceContext = GerritSourceContext'
 -- * 'gscAliasContext'
 gerritSourceContext
     :: GerritSourceContext
-gerritSourceContext =
+gerritSourceContext = 
     GerritSourceContext'
     { _gscGerritProject = Nothing
     , _gscAliasName = Nothing
@@ -297,7 +300,7 @@ instance ToJSON GerritSourceContext where
 --
 -- /See:/ 'repoId' smart constructor.
 data RepoId = RepoId'
-    { _riUid           :: !(Maybe Text)
+    { _riUid :: !(Maybe Text)
     , _riProjectRepoId :: !(Maybe ProjectRepoId)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -310,7 +313,7 @@ data RepoId = RepoId'
 -- * 'riProjectRepoId'
 repoId
     :: RepoId
-repoId =
+repoId = 
     RepoId'
     { _riUid = Nothing
     , _riProjectRepoId = Nothing
@@ -355,7 +358,7 @@ newtype ExtendedSourceContextLabels = ExtendedSourceContextLabels'
 extendedSourceContextLabels
     :: HashMap Text Text -- ^ 'esclAddtional'
     -> ExtendedSourceContextLabels
-extendedSourceContextLabels pEsclAddtional_ =
+extendedSourceContextLabels pEsclAddtional_ = 
     ExtendedSourceContextLabels'
     { _esclAddtional = _Coerce # pEsclAddtional_
     }
@@ -380,7 +383,7 @@ instance ToJSON ExtendedSourceContextLabels where
 --
 -- /See:/ 'projectRepoId' smart constructor.
 data ProjectRepoId = ProjectRepoId'
-    { _priRepoName  :: !(Maybe Text)
+    { _priRepoName :: !(Maybe Text)
     , _priProjectId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -393,7 +396,7 @@ data ProjectRepoId = ProjectRepoId'
 -- * 'priProjectId'
 projectRepoId
     :: ProjectRepoId
-projectRepoId =
+projectRepoId = 
     ProjectRepoId'
     { _priRepoName = Nothing
     , _priProjectId = Nothing
@@ -427,7 +430,7 @@ instance ToJSON ProjectRepoId where
 --
 -- /See:/ 'formatMessage' smart constructor.
 data FormatMessage = FormatMessage'
-    { _fmFormat     :: !(Maybe Text)
+    { _fmFormat :: !(Maybe Text)
     , _fmParameters :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -440,7 +443,7 @@ data FormatMessage = FormatMessage'
 -- * 'fmParameters'
 formatMessage
     :: FormatMessage
-formatMessage =
+formatMessage = 
     FormatMessage'
     { _fmFormat = Nothing
     , _fmParameters = Nothing
@@ -480,22 +483,22 @@ instance ToJSON FormatMessage where
 --
 -- /See:/ 'breakpoint' smart constructor.
 data Breakpoint = Breakpoint'
-    { _bStatus               :: !(Maybe StatusMessage)
-    , _bLogLevel             :: !(Maybe BreakpointLogLevel)
-    , _bLocation             :: !(Maybe SourceLocation)
-    , _bAction               :: !(Maybe BreakpointAction)
-    , _bFinalTime            :: !(Maybe DateTime')
-    , _bExpressions          :: !(Maybe [Text])
-    , _bLogMessageFormat     :: !(Maybe Text)
-    , _bId                   :: !(Maybe Text)
-    , _bLabels               :: !(Maybe BreakpointLabels)
-    , _bUserEmail            :: !(Maybe Text)
-    , _bVariableTable        :: !(Maybe [Variable])
-    , _bStackFrames          :: !(Maybe [StackFrame])
-    , _bCondition            :: !(Maybe Text)
+    { _bStatus :: !(Maybe StatusMessage)
+    , _bLogLevel :: !(Maybe BreakpointLogLevel)
+    , _bLocation :: !(Maybe SourceLocation)
+    , _bAction :: !(Maybe BreakpointAction)
+    , _bFinalTime :: !(Maybe DateTime')
+    , _bExpressions :: !(Maybe [Text])
+    , _bLogMessageFormat :: !(Maybe Text)
+    , _bId :: !(Maybe Text)
+    , _bLabels :: !(Maybe BreakpointLabels)
+    , _bUserEmail :: !(Maybe Text)
+    , _bVariableTable :: !(Maybe [Variable])
+    , _bStackFrames :: !(Maybe [StackFrame])
+    , _bCondition :: !(Maybe Text)
     , _bEvaluatedExpressions :: !(Maybe [Variable])
-    , _bCreateTime           :: !(Maybe DateTime')
-    , _bIsFinalState         :: !(Maybe Bool)
+    , _bCreateTime :: !(Maybe DateTime')
+    , _bIsFinalState :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Breakpoint' with the minimum fields required to make a request.
@@ -535,7 +538,7 @@ data Breakpoint = Breakpoint'
 -- * 'bIsFinalState'
 breakpoint
     :: Breakpoint
-breakpoint =
+breakpoint = 
     Breakpoint'
     { _bStatus = Nothing
     , _bLogLevel = Nothing
@@ -740,7 +743,7 @@ newtype BreakpointLabels = BreakpointLabels'
 breakpointLabels
     :: HashMap Text Text -- ^ 'blAddtional'
     -> BreakpointLabels
-breakpointLabels pBlAddtional_ =
+breakpointLabels pBlAddtional_ = 
     BreakpointLabels'
     { _blAddtional = _Coerce # pBlAddtional_
     }
@@ -772,7 +775,7 @@ newtype GetBreakpointResponse = GetBreakpointResponse'
 -- * 'gbrBreakpoint'
 getBreakpointResponse
     :: GetBreakpointResponse
-getBreakpointResponse =
+getBreakpointResponse = 
     GetBreakpointResponse'
     { _gbrBreakpoint = Nothing
     }
@@ -836,12 +839,12 @@ instance ToJSON GetBreakpointResponse where
 --
 -- /See:/ 'variable' smart constructor.
 data Variable = Variable'
-    { _vStatus        :: !(Maybe StatusMessage)
+    { _vStatus :: !(Maybe StatusMessage)
     , _vVarTableIndex :: !(Maybe (Textual Int32))
-    , _vMembers       :: !(Maybe [Variable])
-    , _vValue         :: !(Maybe Text)
-    , _vName          :: !(Maybe Text)
-    , _vType          :: !(Maybe Text)
+    , _vMembers :: !(Maybe [Variable])
+    , _vValue :: !(Maybe Text)
+    , _vName :: !(Maybe Text)
+    , _vType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Variable' with the minimum fields required to make a request.
@@ -861,7 +864,7 @@ data Variable = Variable'
 -- * 'vType'
 variable
     :: Variable
-variable =
+variable = 
     Variable'
     { _vStatus = Nothing
     , _vVarTableIndex = Nothing
@@ -944,7 +947,7 @@ instance ToJSON Variable where
 -- /See:/ 'listBreakpointsResponse' smart constructor.
 data ListBreakpointsResponse = ListBreakpointsResponse'
     { _lbrNextWaitToken :: !(Maybe Text)
-    , _lbrBreakpoints   :: !(Maybe [Breakpoint])
+    , _lbrBreakpoints :: !(Maybe [Breakpoint])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListBreakpointsResponse' with the minimum fields required to make a request.
@@ -956,7 +959,7 @@ data ListBreakpointsResponse = ListBreakpointsResponse'
 -- * 'lbrBreakpoints'
 listBreakpointsResponse
     :: ListBreakpointsResponse
-listBreakpointsResponse =
+listBreakpointsResponse = 
     ListBreakpointsResponse'
     { _lbrNextWaitToken = Nothing
     , _lbrBreakpoints = Nothing
@@ -973,7 +976,7 @@ lbrNextWaitToken
 -- | List of breakpoints matching the request. The fields \`id\` and
 -- \`location\` are guaranteed to be set on each breakpoint. The fields:
 -- \`stack_frames\`, \`evaluated_expressions\` and \`variable_table\` are
--- cleared on each breakpoint regardless of it\'s status.
+-- cleared on each breakpoint regardless of its status.
 lbrBreakpoints :: Lens' ListBreakpointsResponse [Breakpoint]
 lbrBreakpoints
   = lens _lbrBreakpoints
@@ -1010,15 +1013,15 @@ newtype ListDebuggeesResponse = ListDebuggeesResponse'
 -- * 'ldrDebuggees'
 listDebuggeesResponse
     :: ListDebuggeesResponse
-listDebuggeesResponse =
+listDebuggeesResponse = 
     ListDebuggeesResponse'
     { _ldrDebuggees = Nothing
     }
 
--- | List of debuggees accessible to the calling user. Note that the
--- \`description\` field is the only human readable field that should be
--- displayed to the user. The fields \`debuggee.id\` and \`description\`
--- fields are guaranteed to be set on each debuggee.
+-- | List of debuggees accessible to the calling user. The fields
+-- \`debuggee.id\` and \`description\` are guaranteed to be set. The
+-- \`description\` field is a human readable field provided by agents and
+-- can be displayed to users.
 ldrDebuggees :: Lens' ListDebuggeesResponse [Debuggee]
 ldrDebuggees
   = lens _ldrDebuggees (\ s a -> s{_ldrDebuggees = a})
@@ -1051,12 +1054,13 @@ newtype UpdateActiveBreakpointRequest = UpdateActiveBreakpointRequest'
 -- * 'uabrBreakpoint'
 updateActiveBreakpointRequest
     :: UpdateActiveBreakpointRequest
-updateActiveBreakpointRequest =
+updateActiveBreakpointRequest = 
     UpdateActiveBreakpointRequest'
     { _uabrBreakpoint = Nothing
     }
 
--- | Updated breakpoint information. The field \'id\' must be set.
+-- | Updated breakpoint information. The field \`id\` must be set. The agent
+-- must echo all Breakpoint specification fields in the update.
 uabrBreakpoint :: Lens' UpdateActiveBreakpointRequest (Maybe Breakpoint)
 uabrBreakpoint
   = lens _uabrBreakpoint
@@ -1082,8 +1086,8 @@ instance ToJSON UpdateActiveBreakpointRequest where
 --
 -- /See:/ 'statusMessage' smart constructor.
 data StatusMessage = StatusMessage'
-    { _smRefersTo    :: !(Maybe StatusMessageRefersTo)
-    , _smIsError     :: !(Maybe Bool)
+    { _smRefersTo :: !(Maybe StatusMessageRefersTo)
+    , _smIsError :: !(Maybe Bool)
     , _smDescription :: !(Maybe FormatMessage)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1098,7 +1102,7 @@ data StatusMessage = StatusMessage'
 -- * 'smDescription'
 statusMessage
     :: StatusMessage
-statusMessage =
+statusMessage = 
     StatusMessage'
     { _smRefersTo = Nothing
     , _smIsError = Nothing
@@ -1142,8 +1146,8 @@ instance ToJSON StatusMessage where
 -- /See:/ 'listActiveBreakpointsResponse' smart constructor.
 data ListActiveBreakpointsResponse = ListActiveBreakpointsResponse'
     { _labrNextWaitToken :: !(Maybe Text)
-    , _labrBreakpoints   :: !(Maybe [Breakpoint])
-    , _labrWaitExpired   :: !(Maybe Bool)
+    , _labrBreakpoints :: !(Maybe [Breakpoint])
+    , _labrWaitExpired :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListActiveBreakpointsResponse' with the minimum fields required to make a request.
@@ -1157,15 +1161,15 @@ data ListActiveBreakpointsResponse = ListActiveBreakpointsResponse'
 -- * 'labrWaitExpired'
 listActiveBreakpointsResponse
     :: ListActiveBreakpointsResponse
-listActiveBreakpointsResponse =
+listActiveBreakpointsResponse = 
     ListActiveBreakpointsResponse'
     { _labrNextWaitToken = Nothing
     , _labrBreakpoints = Nothing
     , _labrWaitExpired = Nothing
     }
 
--- | A wait token that can be used in the next method call to block until the
--- list of breakpoints changes.
+-- | A token that can be used in the next method call to block until the list
+-- of breakpoints changes.
 labrNextWaitToken :: Lens' ListActiveBreakpointsResponse (Maybe Text)
 labrNextWaitToken
   = lens _labrNextWaitToken
@@ -1180,8 +1184,9 @@ labrBreakpoints
       . _Default
       . _Coerce
 
--- | The \`wait_expired\` field is set to true by the server when the request
--- times out and the field \`success_on_timeout\` is set to true.
+-- | If set to \`true\`, indicates that there is no change to the list of
+-- active breakpoints and the server-selected timeout has expired. The
+-- \`breakpoints\` field would be empty and should be ignored.
 labrWaitExpired :: Lens' ListActiveBreakpointsResponse (Maybe Bool)
 labrWaitExpired
   = lens _labrWaitExpired
@@ -1210,7 +1215,7 @@ instance ToJSON ListActiveBreakpointsResponse where
 -- /See:/ 'extendedSourceContext' smart constructor.
 data ExtendedSourceContext = ExtendedSourceContext'
     { _escContext :: !(Maybe SourceContext)
-    , _escLabels  :: !(Maybe ExtendedSourceContextLabels)
+    , _escLabels :: !(Maybe ExtendedSourceContextLabels)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ExtendedSourceContext' with the minimum fields required to make a request.
@@ -1222,7 +1227,7 @@ data ExtendedSourceContext = ExtendedSourceContext'
 -- * 'escLabels'
 extendedSourceContext
     :: ExtendedSourceContext
-extendedSourceContext =
+extendedSourceContext = 
     ExtendedSourceContext'
     { _escContext = Nothing
     , _escLabels = Nothing
@@ -1257,7 +1262,7 @@ instance ToJSON ExtendedSourceContext where
 --
 -- /See:/ 'gitSourceContext' smart constructor.
 data GitSourceContext = GitSourceContext'
-    { _gURL        :: !(Maybe Text)
+    { _gURL :: !(Maybe Text)
     , _gRevisionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1270,7 +1275,7 @@ data GitSourceContext = GitSourceContext'
 -- * 'gRevisionId'
 gitSourceContext
     :: GitSourceContext
-gitSourceContext =
+gitSourceContext = 
     GitSourceContext'
     { _gURL = Nothing
     , _gRevisionId = Nothing
@@ -1316,7 +1321,7 @@ data SourceLocation = SourceLocation'
 -- * 'slLine'
 sourceLocation
     :: SourceLocation
-sourceLocation =
+sourceLocation = 
     SourceLocation'
     { _slPath = Nothing
     , _slLine = Nothing
@@ -1349,10 +1354,10 @@ instance ToJSON SourceLocation where
 --
 -- /See:/ 'stackFrame' smart constructor.
 data StackFrame = StackFrame'
-    { _sfFunction  :: !(Maybe Text)
-    , _sfLocation  :: !(Maybe SourceLocation)
+    { _sfFunction :: !(Maybe Text)
+    , _sfLocation :: !(Maybe SourceLocation)
     , _sfArguments :: !(Maybe [Variable])
-    , _sfLocals    :: !(Maybe [Variable])
+    , _sfLocals :: !(Maybe [Variable])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StackFrame' with the minimum fields required to make a request.
@@ -1368,7 +1373,7 @@ data StackFrame = StackFrame'
 -- * 'sfLocals'
 stackFrame
     :: StackFrame
-stackFrame =
+stackFrame = 
     StackFrame'
     { _sfFunction = Nothing
     , _sfLocation = Nothing
@@ -1425,9 +1430,9 @@ instance ToJSON StackFrame where
 --
 -- /See:/ 'cloudRepoSourceContext' smart constructor.
 data CloudRepoSourceContext = CloudRepoSourceContext'
-    { _crscRepoId       :: !(Maybe RepoId)
-    , _crscAliasName    :: !(Maybe Text)
-    , _crscRevisionId   :: !(Maybe Text)
+    { _crscRepoId :: !(Maybe RepoId)
+    , _crscAliasName :: !(Maybe Text)
+    , _crscRevisionId :: !(Maybe Text)
     , _crscAliasContext :: !(Maybe AliasContext)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1444,7 +1449,7 @@ data CloudRepoSourceContext = CloudRepoSourceContext'
 -- * 'crscAliasContext'
 cloudRepoSourceContext
     :: CloudRepoSourceContext
-cloudRepoSourceContext =
+cloudRepoSourceContext = 
     CloudRepoSourceContext'
     { _crscRepoId = Nothing
     , _crscAliasName = Nothing
@@ -1509,7 +1514,7 @@ newtype DebuggeeLabels = DebuggeeLabels'
 debuggeeLabels
     :: HashMap Text Text -- ^ 'dlAddtional'
     -> DebuggeeLabels
-debuggeeLabels pDlAddtional_ =
+debuggeeLabels pDlAddtional_ = 
     DebuggeeLabels'
     { _dlAddtional = _Coerce # pDlAddtional_
     }
@@ -1527,25 +1532,25 @@ instance FromJSON DebuggeeLabels where
 instance ToJSON DebuggeeLabels where
         toJSON = toJSON . _dlAddtional
 
--- | Represents the application to debug. The application may include one or
+-- | Represents the debugged application. The application may include one or
 -- more replicated processes executing the same code. Each of these
 -- processes is attached with a debugger agent, carrying out the debugging
--- commands. The agents attached to the same debuggee are identified by
--- using exactly the same field values when registering.
+-- commands. Agents attached to the same debuggee identify themselves as
+-- such by using exactly the same Debuggee message value when registering.
 --
 -- /See:/ 'debuggee' smart constructor.
 data Debuggee = Debuggee'
-    { _dStatus            :: !(Maybe StatusMessage)
-    , _dUniquifier        :: !(Maybe Text)
-    , _dProject           :: !(Maybe Text)
+    { _dStatus :: !(Maybe StatusMessage)
+    , _dUniquifier :: !(Maybe Text)
+    , _dProject :: !(Maybe Text)
     , _dExtSourceContexts :: !(Maybe [ExtendedSourceContext])
-    , _dAgentVersion      :: !(Maybe Text)
-    , _dIsDisabled        :: !(Maybe Bool)
-    , _dId                :: !(Maybe Text)
-    , _dLabels            :: !(Maybe DebuggeeLabels)
-    , _dDescription       :: !(Maybe Text)
-    , _dIsInactive        :: !(Maybe Bool)
-    , _dSourceContexts    :: !(Maybe [SourceContext])
+    , _dAgentVersion :: !(Maybe Text)
+    , _dIsDisabled :: !(Maybe Bool)
+    , _dId :: !(Maybe Text)
+    , _dLabels :: !(Maybe DebuggeeLabels)
+    , _dDescription :: !(Maybe Text)
+    , _dIsInactive :: !(Maybe Bool)
+    , _dSourceContexts :: !(Maybe [SourceContext])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Debuggee' with the minimum fields required to make a request.
@@ -1575,7 +1580,7 @@ data Debuggee = Debuggee'
 -- * 'dSourceContexts'
 debuggee
     :: Debuggee
-debuggee =
+debuggee = 
     Debuggee'
     { _dStatus = Nothing
     , _dUniquifier = Nothing
@@ -1596,22 +1601,24 @@ debuggee =
 dStatus :: Lens' Debuggee (Maybe StatusMessage)
 dStatus = lens _dStatus (\ s a -> s{_dStatus = a})
 
--- | Debuggee uniquifier within the project. Any string that identifies the
--- application within the project can be used. Including environment and
--- version or build IDs is recommended.
+-- | Uniquifier to further distiguish the application. It is possible that
+-- different applications might have identical values in the debuggee
+-- message, thus, incorrectly identified as a single application by the
+-- Controller service. This field adds salt to further distiguish the
+-- application. Agents should consider seeding this field with value that
+-- identifies the code, binary, configuration and environment.
 dUniquifier :: Lens' Debuggee (Maybe Text)
 dUniquifier
   = lens _dUniquifier (\ s a -> s{_dUniquifier = a})
 
--- | Project the debuggee is associated with. Use the project number when
+-- | Project the debuggee is associated with. Use project number or id when
 -- registering a Google Cloud Platform project.
 dProject :: Lens' Debuggee (Maybe Text)
 dProject = lens _dProject (\ s a -> s{_dProject = a})
 
 -- | References to the locations and revisions of the source code used in the
--- deployed application. Contexts describing a remote repo related to the
--- source code have a \`category\` label of \`remote_repo\`. Source
--- snapshot source contexts have a \`category\` of \`snapshot\`.
+-- deployed application. NOTE: this field is experimental and can be
+-- ignored.
 dExtSourceContexts :: Lens' Debuggee [ExtendedSourceContext]
 dExtSourceContexts
   = lens _dExtSourceContexts
@@ -1619,9 +1626,9 @@ dExtSourceContexts
       . _Default
       . _Coerce
 
--- | Version ID of the agent release. The version ID is structured as
--- following: \`domain\/type\/vmajor.minor\` (for example
--- \`google.com\/gcp-java\/v1.1\`).
+-- | Version ID of the agent. Schema:
+-- \`domain\/language-platform\/vmajor.minor\` (for example
+-- \`google.com\/java-gcp\/v1.1\`).
 dAgentVersion :: Lens' Debuggee (Maybe Text)
 dAgentVersion
   = lens _dAgentVersion
@@ -1648,16 +1655,15 @@ dDescription :: Lens' Debuggee (Maybe Text)
 dDescription
   = lens _dDescription (\ s a -> s{_dDescription = a})
 
--- | If set to \`true\`, indicates that the debuggee is considered as
--- inactive by the Controller service.
+-- | If set to \`true\`, indicates that Controller service does not detect
+-- any activity from the debuggee agents and the application is possibly
+-- stopped.
 dIsInactive :: Lens' Debuggee (Maybe Bool)
 dIsInactive
   = lens _dIsInactive (\ s a -> s{_dIsInactive = a})
 
 -- | References to the locations and revisions of the source code used in the
--- deployed application. NOTE: This field is deprecated. Consumers should
--- use \`ext_source_contexts\` if it is not empty. Debug agents should
--- populate both this field and \`ext_source_contexts\`.
+-- deployed application.
 dSourceContexts :: Lens' Debuggee [SourceContext]
 dSourceContexts
   = lens _dSourceContexts
@@ -1702,7 +1708,7 @@ instance ToJSON Debuggee where
 -- /See:/ 'cloudWorkspaceSourceContext' smart constructor.
 data CloudWorkspaceSourceContext = CloudWorkspaceSourceContext'
     { _cwscWorkspaceId :: !(Maybe CloudWorkspaceId)
-    , _cwscSnapshotId  :: !(Maybe Text)
+    , _cwscSnapshotId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CloudWorkspaceSourceContext' with the minimum fields required to make a request.
@@ -1714,7 +1720,7 @@ data CloudWorkspaceSourceContext = CloudWorkspaceSourceContext'
 -- * 'cwscSnapshotId'
 cloudWorkspaceSourceContext
     :: CloudWorkspaceSourceContext
-cloudWorkspaceSourceContext =
+cloudWorkspaceSourceContext = 
     CloudWorkspaceSourceContext'
     { _cwscWorkspaceId = Nothing
     , _cwscSnapshotId = Nothing
@@ -1761,7 +1767,7 @@ newtype RegisterDebuggeeRequest = RegisterDebuggeeRequest'
 -- * 'rDebuggee'
 registerDebuggeeRequest
     :: RegisterDebuggeeRequest
-registerDebuggeeRequest =
+registerDebuggeeRequest = 
     RegisterDebuggeeRequest'
     { _rDebuggee = Nothing
     }
@@ -1800,7 +1806,7 @@ data AliasContext = AliasContext'
 -- * 'acName'
 aliasContext
     :: AliasContext
-aliasContext =
+aliasContext = 
     AliasContext'
     { _acKind = Nothing
     , _acName = Nothing
@@ -1833,7 +1839,7 @@ instance ToJSON AliasContext where
 -- /See:/ 'cloudWorkspaceId' smart constructor.
 data CloudWorkspaceId = CloudWorkspaceId'
     { _cwiRepoId :: !(Maybe RepoId)
-    , _cwiName   :: !(Maybe Text)
+    , _cwiName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CloudWorkspaceId' with the minimum fields required to make a request.
@@ -1845,7 +1851,7 @@ data CloudWorkspaceId = CloudWorkspaceId'
 -- * 'cwiName'
 cloudWorkspaceId
     :: CloudWorkspaceId
-cloudWorkspaceId =
+cloudWorkspaceId = 
     CloudWorkspaceId'
     { _cwiRepoId = Nothing
     , _cwiName = Nothing

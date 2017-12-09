@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Events.ResetAllForAllPlayers
     , eventsResetAllForAllPlayers
     , EventsResetAllForAllPlayers
 
+    -- * Request Lenses
+    , erafapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.events.resetAllForAllPlayers@ method which the
 -- 'EventsResetAllForAllPlayers' request conforms to.
@@ -46,22 +48,34 @@ type EventsResetAllForAllPlayersResource =
        "v1management" :>
          "events" :>
            "resetAllForAllPlayers" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets all draft events for all players. This method is only available
 -- to user accounts for your developer console. All quests that use any of
 -- these events will also be reset.
 --
 -- /See:/ 'eventsResetAllForAllPlayers' smart constructor.
-data EventsResetAllForAllPlayers =
-    EventsResetAllForAllPlayers'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype EventsResetAllForAllPlayers = EventsResetAllForAllPlayers'
+    { _erafapFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsResetAllForAllPlayers' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'erafapFields'
 eventsResetAllForAllPlayers
     :: EventsResetAllForAllPlayers
-eventsResetAllForAllPlayers = EventsResetAllForAllPlayers'
+eventsResetAllForAllPlayers = 
+    EventsResetAllForAllPlayers'
+    { _erafapFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+erafapFields :: Lens' EventsResetAllForAllPlayers (Maybe Text)
+erafapFields
+  = lens _erafapFields (\ s a -> s{_erafapFields = a})
 
 instance GoogleRequest EventsResetAllForAllPlayers
          where
@@ -69,8 +83,9 @@ instance GoogleRequest EventsResetAllForAllPlayers
         type Scopes EventsResetAllForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient EventsResetAllForAllPlayers'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient EventsResetAllForAllPlayers'{..}
+          = go _erafapFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy EventsResetAllForAllPlayersResource)

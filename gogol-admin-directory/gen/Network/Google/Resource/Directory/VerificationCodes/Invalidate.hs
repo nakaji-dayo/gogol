@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.VerificationCodes.Invalidate
 
     -- * Request Lenses
     , vciUserKey
+    , vciFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.verificationCodes.invalidate@ method which the
 -- 'VerificationCodesInvalidate' request conforms to.
@@ -49,13 +50,15 @@ type VerificationCodesInvalidateResource =
              Capture "userKey" Text :>
                "verificationCodes" :>
                  "invalidate" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Invalidate the current backup verification codes for the user.
 --
 -- /See:/ 'verificationCodesInvalidate' smart constructor.
-newtype VerificationCodesInvalidate = VerificationCodesInvalidate'
-    { _vciUserKey :: Text
+data VerificationCodesInvalidate = VerificationCodesInvalidate'
+    { _vciUserKey :: !Text
+    , _vciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VerificationCodesInvalidate' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype VerificationCodesInvalidate = VerificationCodesInvalidate'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'vciUserKey'
+--
+-- * 'vciFields'
 verificationCodesInvalidate
     :: Text -- ^ 'vciUserKey'
     -> VerificationCodesInvalidate
-verificationCodesInvalidate pVciUserKey_ =
+verificationCodesInvalidate pVciUserKey_ = 
     VerificationCodesInvalidate'
     { _vciUserKey = pVciUserKey_
+    , _vciFields = Nothing
     }
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 vciUserKey :: Lens' VerificationCodesInvalidate Text
 vciUserKey
   = lens _vciUserKey (\ s a -> s{_vciUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+vciFields :: Lens' VerificationCodesInvalidate (Maybe Text)
+vciFields
+  = lens _vciFields (\ s a -> s{_vciFields = a})
 
 instance GoogleRequest VerificationCodesInvalidate
          where
@@ -82,7 +93,8 @@ instance GoogleRequest VerificationCodesInvalidate
         type Scopes VerificationCodesInvalidate =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient VerificationCodesInvalidate'{..}
-          = go _vciUserKey (Just AltJSON) directoryService
+          = go _vciUserKey _vciFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient
                       (Proxy :: Proxy VerificationCodesInvalidateResource)

@@ -92,12 +92,12 @@ module Network.Google.OAuth2
     , uiId
     ) where
 
-import           Network.Google.Method.OAuth2.GetCertForOpenIdConnect
-import           Network.Google.Method.OAuth2.TokenInfo
-import           Network.Google.OAuth2.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.OAuth2.UserInfo.Get
-import           Network.Google.Resource.OAuth2.UserInfo.V2.Me.Get
+import Network.Google.Prelude
+import Network.Google.Method.OAuth2.GetCertForOpenIdConnect
+import Network.Google.Method.OAuth2.TokenInfo
+import Network.Google.OAuth2.Types
+import Network.Google.Resource.OAuth2.UserInfo.Get
+import Network.Google.Resource.OAuth2.UserInfo.V2.Me.Get
 
 {- $resources
 TODO

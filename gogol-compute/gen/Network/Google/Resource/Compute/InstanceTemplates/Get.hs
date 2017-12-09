@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.InstanceTemplates.Get
     -- * Request Lenses
     , itgProject
     , itgInstanceTemplate
+    , itgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceTemplates.get@ method which the
 -- 'InstanceTemplatesGet' request conforms to.
@@ -51,16 +52,18 @@ type InstanceTemplatesGetResource =
              "global" :>
                "instanceTemplates" :>
                  Capture "instanceTemplate" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] InstanceTemplate
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] InstanceTemplate
 
 -- | Returns the specified instance template. Get a list of available
 -- instance templates by making a list() request.
 --
 -- /See:/ 'instanceTemplatesGet' smart constructor.
 data InstanceTemplatesGet = InstanceTemplatesGet'
-    { _itgProject          :: !Text
+    { _itgProject :: !Text
     , _itgInstanceTemplate :: !Text
+    , _itgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceTemplatesGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data InstanceTemplatesGet = InstanceTemplatesGet'
 -- * 'itgProject'
 --
 -- * 'itgInstanceTemplate'
+--
+-- * 'itgFields'
 instanceTemplatesGet
     :: Text -- ^ 'itgProject'
     -> Text -- ^ 'itgInstanceTemplate'
     -> InstanceTemplatesGet
-instanceTemplatesGet pItgProject_ pItgInstanceTemplate_ =
+instanceTemplatesGet pItgProject_ pItgInstanceTemplate_ = 
     InstanceTemplatesGet'
     { _itgProject = pItgProject_
     , _itgInstanceTemplate = pItgInstanceTemplate_
+    , _itgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -91,6 +97,11 @@ itgInstanceTemplate
   = lens _itgInstanceTemplate
       (\ s a -> s{_itgInstanceTemplate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+itgFields :: Lens' InstanceTemplatesGet (Maybe Text)
+itgFields
+  = lens _itgFields (\ s a -> s{_itgFields = a})
+
 instance GoogleRequest InstanceTemplatesGet where
         type Rs InstanceTemplatesGet = InstanceTemplate
         type Scopes InstanceTemplatesGet =
@@ -98,7 +109,8 @@ instance GoogleRequest InstanceTemplatesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient InstanceTemplatesGet'{..}
-          = go _itgProject _itgInstanceTemplate (Just AltJSON)
+          = go _itgProject _itgInstanceTemplate _itgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

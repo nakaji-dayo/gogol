@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTubeAnalytics.Groups.Delete
     -- * Request Lenses
     , gdOnBehalfOfContentOwner
     , gdId
+    , gdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groups.delete@ method which the
 -- 'GroupsDelete' request conforms to.
@@ -49,14 +50,16 @@ type GroupsDeleteResource =
            "groups" :>
              QueryParam "id" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a group.
 --
 -- /See:/ 'groupsDelete' smart constructor.
 data GroupsDelete = GroupsDelete'
     { _gdOnBehalfOfContentOwner :: !(Maybe Text)
-    , _gdId                     :: !Text
+    , _gdId :: !Text
+    , _gdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsDelete' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data GroupsDelete = GroupsDelete'
 -- * 'gdOnBehalfOfContentOwner'
 --
 -- * 'gdId'
+--
+-- * 'gdFields'
 groupsDelete
     :: Text -- ^ 'gdId'
     -> GroupsDelete
-groupsDelete pGdId_ =
+groupsDelete pGdId_ = 
     GroupsDelete'
     { _gdOnBehalfOfContentOwner = Nothing
     , _gdId = pGdId_
+    , _gdFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -95,13 +101,17 @@ gdOnBehalfOfContentOwner
 gdId :: Lens' GroupsDelete Text
 gdId = lens _gdId (\ s a -> s{_gdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gdFields :: Lens' GroupsDelete (Maybe Text)
+gdFields = lens _gdFields (\ s a -> s{_gdFields = a})
+
 instance GoogleRequest GroupsDelete where
         type Rs GroupsDelete = ()
         type Scopes GroupsDelete =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient GroupsDelete'{..}
-          = go (Just _gdId) _gdOnBehalfOfContentOwner
+          = go (Just _gdId) _gdOnBehalfOfContentOwner _gdFields
               (Just AltJSON)
               youTubeAnalyticsService
           where go

@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFileUserLinks.Delete
     , mpfuldProFileId
     , mpfuldAccountId
     , mpfuldLinkId
+    , mpfuldFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileUserLinks.delete@ method which the
 -- 'ManagementProFileUserLinksDelete' request conforms to.
@@ -56,16 +57,18 @@ type ManagementProFileUserLinksDeleteResource =
                      Capture "profileId" Text :>
                        "entityUserLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a user from the given view (profile).
 --
 -- /See:/ 'managementProFileUserLinksDelete' smart constructor.
 data ManagementProFileUserLinksDelete = ManagementProFileUserLinksDelete'
     { _mpfuldWebPropertyId :: !Text
-    , _mpfuldProFileId     :: !Text
-    , _mpfuldAccountId     :: !Text
-    , _mpfuldLinkId        :: !Text
+    , _mpfuldProFileId :: !Text
+    , _mpfuldAccountId :: !Text
+    , _mpfuldLinkId :: !Text
+    , _mpfuldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileUserLinksDelete' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementProFileUserLinksDelete = ManagementProFileUserLinksDelete'
 -- * 'mpfuldAccountId'
 --
 -- * 'mpfuldLinkId'
+--
+-- * 'mpfuldFields'
 managementProFileUserLinksDelete
     :: Text -- ^ 'mpfuldWebPropertyId'
     -> Text -- ^ 'mpfuldProFileId'
     -> Text -- ^ 'mpfuldAccountId'
     -> Text -- ^ 'mpfuldLinkId'
     -> ManagementProFileUserLinksDelete
-managementProFileUserLinksDelete pMpfuldWebPropertyId_ pMpfuldProFileId_ pMpfuldAccountId_ pMpfuldLinkId_ =
+managementProFileUserLinksDelete pMpfuldWebPropertyId_ pMpfuldProFileId_ pMpfuldAccountId_ pMpfuldLinkId_ = 
     ManagementProFileUserLinksDelete'
     { _mpfuldWebPropertyId = pMpfuldWebPropertyId_
     , _mpfuldProFileId = pMpfuldProFileId_
     , _mpfuldAccountId = pMpfuldAccountId_
     , _mpfuldLinkId = pMpfuldLinkId_
+    , _mpfuldFields = Nothing
     }
 
 -- | Web Property ID to delete the user link for.
@@ -116,6 +122,11 @@ mpfuldLinkId :: Lens' ManagementProFileUserLinksDelete Text
 mpfuldLinkId
   = lens _mpfuldLinkId (\ s a -> s{_mpfuldLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfuldFields :: Lens' ManagementProFileUserLinksDelete (Maybe Text)
+mpfuldFields
+  = lens _mpfuldFields (\ s a -> s{_mpfuldFields = a})
+
 instance GoogleRequest
          ManagementProFileUserLinksDelete where
         type Rs ManagementProFileUserLinksDelete = ()
@@ -125,6 +136,7 @@ instance GoogleRequest
           = go _mpfuldAccountId _mpfuldWebPropertyId
               _mpfuldProFileId
               _mpfuldLinkId
+              _mpfuldFields
               (Just AltJSON)
               analyticsService
           where go

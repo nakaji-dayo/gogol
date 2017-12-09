@@ -43,11 +43,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.WorkItems.Lease
     , pljwilPayload
     , pljwilBearerToken
     , pljwilProjectId
+    , pljwilFields
     , pljwilCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.workItems.lease@ method which the
 -- 'ProjectsLocationsJobsWorkItemsLease' request conforms to.
@@ -60,32 +61,34 @@ type ProjectsLocationsJobsWorkItemsLeaseResource =
                "jobs" :>
                  Capture "jobId" Text :>
                    "workItems:lease" :>
-                     QueryParam "$.xgafv" Text :>
+                     QueryParam "$.xgafv" Xgafv :>
                        QueryParam "upload_protocol" Text :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] LeaseWorkItemRequest :>
-                                       Post '[JSON] LeaseWorkItemResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       ReqBody '[JSON] LeaseWorkItemRequest :>
+                                         Post '[JSON] LeaseWorkItemResponse
 
 -- | Leases a dataflow WorkItem to run.
 --
 -- /See:/ 'projectsLocationsJobsWorkItemsLease' smart constructor.
 data ProjectsLocationsJobsWorkItemsLease = ProjectsLocationsJobsWorkItemsLease'
-    { _pljwilXgafv          :: !(Maybe Text)
-    , _pljwilJobId          :: !Text
+    { _pljwilXgafv :: !(Maybe Xgafv)
+    , _pljwilJobId :: !Text
     , _pljwilUploadProtocol :: !(Maybe Text)
-    , _pljwilLocation       :: !Text
-    , _pljwilPp             :: !Bool
-    , _pljwilAccessToken    :: !(Maybe Text)
-    , _pljwilUploadType     :: !(Maybe Text)
-    , _pljwilPayload        :: !LeaseWorkItemRequest
-    , _pljwilBearerToken    :: !(Maybe Text)
-    , _pljwilProjectId      :: !Text
-    , _pljwilCallback       :: !(Maybe Text)
+    , _pljwilLocation :: !Text
+    , _pljwilPp :: !Bool
+    , _pljwilAccessToken :: !(Maybe Text)
+    , _pljwilUploadType :: !(Maybe Text)
+    , _pljwilPayload :: !LeaseWorkItemRequest
+    , _pljwilBearerToken :: !(Maybe Text)
+    , _pljwilProjectId :: !Text
+    , _pljwilFields :: !(Maybe Text)
+    , _pljwilCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsWorkItemsLease' with the minimum fields required to make a request.
@@ -112,6 +115,8 @@ data ProjectsLocationsJobsWorkItemsLease = ProjectsLocationsJobsWorkItemsLease'
 --
 -- * 'pljwilProjectId'
 --
+-- * 'pljwilFields'
+--
 -- * 'pljwilCallback'
 projectsLocationsJobsWorkItemsLease
     :: Text -- ^ 'pljwilJobId'
@@ -119,7 +124,7 @@ projectsLocationsJobsWorkItemsLease
     -> LeaseWorkItemRequest -- ^ 'pljwilPayload'
     -> Text -- ^ 'pljwilProjectId'
     -> ProjectsLocationsJobsWorkItemsLease
-projectsLocationsJobsWorkItemsLease pPljwilJobId_ pPljwilLocation_ pPljwilPayload_ pPljwilProjectId_ =
+projectsLocationsJobsWorkItemsLease pPljwilJobId_ pPljwilLocation_ pPljwilPayload_ pPljwilProjectId_ = 
     ProjectsLocationsJobsWorkItemsLease'
     { _pljwilXgafv = Nothing
     , _pljwilJobId = pPljwilJobId_
@@ -131,11 +136,12 @@ projectsLocationsJobsWorkItemsLease pPljwilJobId_ pPljwilLocation_ pPljwilPayloa
     , _pljwilPayload = pPljwilPayload_
     , _pljwilBearerToken = Nothing
     , _pljwilProjectId = pPljwilProjectId_
+    , _pljwilFields = Nothing
     , _pljwilCallback = Nothing
     }
 
 -- | V1 error format.
-pljwilXgafv :: Lens' ProjectsLocationsJobsWorkItemsLease (Maybe Text)
+pljwilXgafv :: Lens' ProjectsLocationsJobsWorkItemsLease (Maybe Xgafv)
 pljwilXgafv
   = lens _pljwilXgafv (\ s a -> s{_pljwilXgafv = a})
 
@@ -190,6 +196,11 @@ pljwilProjectId
   = lens _pljwilProjectId
       (\ s a -> s{_pljwilProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pljwilFields :: Lens' ProjectsLocationsJobsWorkItemsLease (Maybe Text)
+pljwilFields
+  = lens _pljwilFields (\ s a -> s{_pljwilFields = a})
+
 -- | JSONP
 pljwilCallback :: Lens' ProjectsLocationsJobsWorkItemsLease (Maybe Text)
 pljwilCallback
@@ -202,6 +213,8 @@ instance GoogleRequest
              LeaseWorkItemResponse
         type Scopes ProjectsLocationsJobsWorkItemsLease =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient
           ProjectsLocationsJobsWorkItemsLease'{..}
@@ -213,6 +226,7 @@ instance GoogleRequest
               _pljwilUploadType
               _pljwilBearerToken
               _pljwilCallback
+              _pljwilFields
               (Just AltJSON)
               _pljwilPayload
               dataflowService

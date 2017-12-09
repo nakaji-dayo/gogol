@@ -22,7 +22,7 @@
 --
 -- Deletes a GTM Environment.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.delete@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.delete@.
 module Network.Google.Resource.TagManager.Accounts.Containers.Environments.Delete
     (
     -- * REST Resource
@@ -33,74 +33,55 @@ module Network.Google.Resource.TagManager.Accounts.Containers.Environments.Delet
     , AccountsContainersEnvironmentsDelete
 
     -- * Request Lenses
-    , acedContainerId
-    , acedAccountId
-    , acedEnvironmentId
+    , acedPath
+    , acedFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.environments.delete@ method which the
 -- 'AccountsContainersEnvironmentsDelete' request conforms to.
 type AccountsContainersEnvironmentsDeleteResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               Capture "containerId" Text :>
-                 "environments" :>
-                   Capture "environmentId" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+       "v2" :>
+         Capture "path" Text :>
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a GTM Environment.
 --
 -- /See:/ 'accountsContainersEnvironmentsDelete' smart constructor.
 data AccountsContainersEnvironmentsDelete = AccountsContainersEnvironmentsDelete'
-    { _acedContainerId   :: !Text
-    , _acedAccountId     :: !Text
-    , _acedEnvironmentId :: !Text
+    { _acedPath :: !Text
+    , _acedFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersEnvironmentsDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acedContainerId'
+-- * 'acedPath'
 --
--- * 'acedAccountId'
---
--- * 'acedEnvironmentId'
+-- * 'acedFields'
 accountsContainersEnvironmentsDelete
-    :: Text -- ^ 'acedContainerId'
-    -> Text -- ^ 'acedAccountId'
-    -> Text -- ^ 'acedEnvironmentId'
+    :: Text -- ^ 'acedPath'
     -> AccountsContainersEnvironmentsDelete
-accountsContainersEnvironmentsDelete pAcedContainerId_ pAcedAccountId_ pAcedEnvironmentId_ =
+accountsContainersEnvironmentsDelete pAcedPath_ = 
     AccountsContainersEnvironmentsDelete'
-    { _acedContainerId = pAcedContainerId_
-    , _acedAccountId = pAcedAccountId_
-    , _acedEnvironmentId = pAcedEnvironmentId_
+    { _acedPath = pAcedPath_
+    , _acedFields = Nothing
     }
 
--- | The GTM Container ID.
-acedContainerId :: Lens' AccountsContainersEnvironmentsDelete Text
-acedContainerId
-  = lens _acedContainerId
-      (\ s a -> s{_acedContainerId = a})
+-- | GTM Environment\'s API relative path. Example:
+-- accounts\/{account_id}\/containers\/{container_id}\/environments\/{environment_id}
+acedPath :: Lens' AccountsContainersEnvironmentsDelete Text
+acedPath = lens _acedPath (\ s a -> s{_acedPath = a})
 
--- | The GTM Account ID.
-acedAccountId :: Lens' AccountsContainersEnvironmentsDelete Text
-acedAccountId
-  = lens _acedAccountId
-      (\ s a -> s{_acedAccountId = a})
-
--- | The GTM Environment ID.
-acedEnvironmentId :: Lens' AccountsContainersEnvironmentsDelete Text
-acedEnvironmentId
-  = lens _acedEnvironmentId
-      (\ s a -> s{_acedEnvironmentId = a})
+-- | Selector specifying which fields to include in a partial response.
+acedFields :: Lens' AccountsContainersEnvironmentsDelete (Maybe Text)
+acedFields
+  = lens _acedFields (\ s a -> s{_acedFields = a})
 
 instance GoogleRequest
          AccountsContainersEnvironmentsDelete where
@@ -109,9 +90,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/tagmanager.edit.containers"]
         requestClient
           AccountsContainersEnvironmentsDelete'{..}
-          = go _acedAccountId _acedContainerId
-              _acedEnvironmentId
-              (Just AltJSON)
+          = go _acedPath _acedFields (Just AltJSON)
               tagManagerService
           where go
                   = buildClient

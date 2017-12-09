@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.DirectorySites.Get
     -- * Request Lenses
     , dsgProFileId
     , dsgId
+    , dsgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.directorySites.get@ method which the
 -- 'DirectorySitesGet' request conforms to.
 type DirectorySitesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "directorySites" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] DirectorySite
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] DirectorySite
 
 -- | Gets one directory site by ID.
 --
 -- /See:/ 'directorySitesGet' smart constructor.
 data DirectorySitesGet = DirectorySitesGet'
     { _dsgProFileId :: !(Textual Int64)
-    , _dsgId        :: !(Textual Int64)
+    , _dsgId :: !(Textual Int64)
+    , _dsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySitesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data DirectorySitesGet = DirectorySitesGet'
 -- * 'dsgProFileId'
 --
 -- * 'dsgId'
+--
+-- * 'dsgFields'
 directorySitesGet
     :: Int64 -- ^ 'dsgProFileId'
     -> Int64 -- ^ 'dsgId'
     -> DirectorySitesGet
-directorySitesGet pDsgProFileId_ pDsgId_ =
+directorySitesGet pDsgProFileId_ pDsgId_ = 
     DirectorySitesGet'
     { _dsgProFileId = _Coerce # pDsgProFileId_
     , _dsgId = _Coerce # pDsgId_
+    , _dsgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ dsgId :: Lens' DirectorySitesGet Int64
 dsgId
   = lens _dsgId (\ s a -> s{_dsgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dsgFields :: Lens' DirectorySitesGet (Maybe Text)
+dsgFields
+  = lens _dsgFields (\ s a -> s{_dsgFields = a})
+
 instance GoogleRequest DirectorySitesGet where
         type Rs DirectorySitesGet = DirectorySite
         type Scopes DirectorySitesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient DirectorySitesGet'{..}
-          = go _dsgProFileId _dsgId (Just AltJSON)
+          = go _dsgProFileId _dsgId _dsgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

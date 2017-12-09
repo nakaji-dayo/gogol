@@ -44,11 +44,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Builds.Create
     , pPayload
     , pBearerToken
     , pProjectId
+    , pFields
     , pCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.builds.create@ method which the
 -- 'ProjectsBuildsCreate' request conforms to.
@@ -64,8 +65,9 @@ type ProjectsBuildsCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Build :> Post '[JSON] Operation
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Build :> Post '[JSON] Operation
 
 -- | Starts a build with the specified configuration. The long-running
 -- Operation returned by this method will include the ID of the build,
@@ -74,15 +76,16 @@ type ProjectsBuildsCreateResource =
 --
 -- /See:/ 'projectsBuildsCreate' smart constructor.
 data ProjectsBuildsCreate = ProjectsBuildsCreate'
-    { _pXgafv          :: !(Maybe Xgafv)
+    { _pXgafv :: !(Maybe Xgafv)
     , _pUploadProtocol :: !(Maybe Text)
-    , _pPp             :: !Bool
-    , _pAccessToken    :: !(Maybe Text)
-    , _pUploadType     :: !(Maybe Text)
-    , _pPayload        :: !Build
-    , _pBearerToken    :: !(Maybe Text)
-    , _pProjectId      :: !Text
-    , _pCallback       :: !(Maybe Text)
+    , _pPp :: !Bool
+    , _pAccessToken :: !(Maybe Text)
+    , _pUploadType :: !(Maybe Text)
+    , _pPayload :: !Build
+    , _pBearerToken :: !(Maybe Text)
+    , _pProjectId :: !Text
+    , _pFields :: !(Maybe Text)
+    , _pCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsBuildsCreate' with the minimum fields required to make a request.
@@ -105,12 +108,14 @@ data ProjectsBuildsCreate = ProjectsBuildsCreate'
 --
 -- * 'pProjectId'
 --
+-- * 'pFields'
+--
 -- * 'pCallback'
 projectsBuildsCreate
     :: Build -- ^ 'pPayload'
     -> Text -- ^ 'pProjectId'
     -> ProjectsBuildsCreate
-projectsBuildsCreate pPPayload_ pPProjectId_ =
+projectsBuildsCreate pPPayload_ pPProjectId_ = 
     ProjectsBuildsCreate'
     { _pXgafv = Nothing
     , _pUploadProtocol = Nothing
@@ -120,6 +125,7 @@ projectsBuildsCreate pPPayload_ pPProjectId_ =
     , _pPayload = pPPayload_
     , _pBearerToken = Nothing
     , _pProjectId = pPProjectId_
+    , _pFields = Nothing
     , _pCallback = Nothing
     }
 
@@ -161,6 +167,10 @@ pProjectId :: Lens' ProjectsBuildsCreate Text
 pProjectId
   = lens _pProjectId (\ s a -> s{_pProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' ProjectsBuildsCreate (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
+
 -- | JSONP
 pCallback :: Lens' ProjectsBuildsCreate (Maybe Text)
 pCallback
@@ -176,6 +186,7 @@ instance GoogleRequest ProjectsBuildsCreate where
               _pUploadType
               _pBearerToken
               _pCallback
+              _pFields
               (Just AltJSON)
               _pPayload
               containerBuilderService

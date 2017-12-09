@@ -34,12 +34,14 @@ module Network.Google.Resource.Storage.ObjectAccessControls.List
 
     -- * Request Lenses
     , oaclBucket
+    , oaclUserProject
     , oaclObject
     , oaclGeneration
+    , oaclFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.objectAccessControls.list@ method which the
 -- 'ObjectAccessControlsList' request conforms to.
@@ -51,17 +53,21 @@ type ObjectAccessControlsListResource =
              "o" :>
                Capture "object" Text :>
                  "acl" :>
-                   QueryParam "generation" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] ObjectAccessControls
+                   QueryParam "userProject" Text :>
+                     QueryParam "generation" (Textual Int64) :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ObjectAccessControls
 
 -- | Retrieves ACL entries on the specified object.
 --
 -- /See:/ 'objectAccessControlsList' smart constructor.
 data ObjectAccessControlsList = ObjectAccessControlsList'
-    { _oaclBucket     :: !Text
-    , _oaclObject     :: !Text
+    { _oaclBucket :: !Text
+    , _oaclUserProject :: !(Maybe Text)
+    , _oaclObject :: !Text
     , _oaclGeneration :: !(Maybe (Textual Int64))
+    , _oaclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ObjectAccessControlsList' with the minimum fields required to make a request.
@@ -70,24 +76,37 @@ data ObjectAccessControlsList = ObjectAccessControlsList'
 --
 -- * 'oaclBucket'
 --
+-- * 'oaclUserProject'
+--
 -- * 'oaclObject'
 --
 -- * 'oaclGeneration'
+--
+-- * 'oaclFields'
 objectAccessControlsList
     :: Text -- ^ 'oaclBucket'
     -> Text -- ^ 'oaclObject'
     -> ObjectAccessControlsList
-objectAccessControlsList pOaclBucket_ pOaclObject_ =
+objectAccessControlsList pOaclBucket_ pOaclObject_ = 
     ObjectAccessControlsList'
     { _oaclBucket = pOaclBucket_
+    , _oaclUserProject = Nothing
     , _oaclObject = pOaclObject_
     , _oaclGeneration = Nothing
+    , _oaclFields = Nothing
     }
 
 -- | Name of a bucket.
 oaclBucket :: Lens' ObjectAccessControlsList Text
 oaclBucket
   = lens _oaclBucket (\ s a -> s{_oaclBucket = a})
+
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+oaclUserProject :: Lens' ObjectAccessControlsList (Maybe Text)
+oaclUserProject
+  = lens _oaclUserProject
+      (\ s a -> s{_oaclUserProject = a})
 
 -- | Name of the object. For information about how to URL encode object names
 -- to be path safe, see Encoding URI Path Parts.
@@ -103,6 +122,11 @@ oaclGeneration
       (\ s a -> s{_oaclGeneration = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+oaclFields :: Lens' ObjectAccessControlsList (Maybe Text)
+oaclFields
+  = lens _oaclFields (\ s a -> s{_oaclFields = a})
+
 instance GoogleRequest ObjectAccessControlsList where
         type Rs ObjectAccessControlsList =
              ObjectAccessControls
@@ -110,7 +134,9 @@ instance GoogleRequest ObjectAccessControlsList where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/devstorage.full_control"]
         requestClient ObjectAccessControlsList'{..}
-          = go _oaclBucket _oaclObject _oaclGeneration
+          = go _oaclBucket _oaclObject _oaclUserProject
+              _oaclGeneration
+              _oaclFields
               (Just AltJSON)
               storageService
           where go

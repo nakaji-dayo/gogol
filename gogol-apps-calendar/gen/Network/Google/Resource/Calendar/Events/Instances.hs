@@ -44,10 +44,11 @@ module Network.Google.Resource.Calendar.Events.Instances
     , eAlwaysIncludeEmail
     , eTimeMax
     , eEventId
+    , eFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.instances@ method which the
 -- 'EventsInstances' request conforms to.
@@ -68,24 +69,26 @@ type EventsInstancesResource =
                                QueryParam "maxResults" (Textual Int32) :>
                                  QueryParam "alwaysIncludeEmail" Bool :>
                                    QueryParam "timeMax" DateTime' :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] Events
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] Events
 
 -- | Returns instances of the specified recurring event.
 --
 -- /See:/ 'eventsInstances' smart constructor.
 data EventsInstances = EventsInstances'
-    { _eCalendarId         :: !Text
-    , _eTimeMin            :: !(Maybe DateTime')
-    , _eShowDeleted        :: !(Maybe Bool)
-    , _eOriginalStart      :: !(Maybe Text)
-    , _eMaxAttendees       :: !(Maybe (Textual Int32))
-    , _ePageToken          :: !(Maybe Text)
-    , _eTimeZone           :: !(Maybe Text)
-    , _eMaxResults         :: !(Maybe (Textual Int32))
+    { _eCalendarId :: !Text
+    , _eTimeMin :: !(Maybe DateTime')
+    , _eShowDeleted :: !(Maybe Bool)
+    , _eOriginalStart :: !(Maybe Text)
+    , _eMaxAttendees :: !(Maybe (Textual Int32))
+    , _ePageToken :: !(Maybe Text)
+    , _eTimeZone :: !(Maybe Text)
+    , _eMaxResults :: !(Maybe (Textual Int32))
     , _eAlwaysIncludeEmail :: !(Maybe Bool)
-    , _eTimeMax            :: !(Maybe DateTime')
-    , _eEventId            :: !Text
+    , _eTimeMax :: !(Maybe DateTime')
+    , _eEventId :: !Text
+    , _eFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsInstances' with the minimum fields required to make a request.
@@ -113,11 +116,13 @@ data EventsInstances = EventsInstances'
 -- * 'eTimeMax'
 --
 -- * 'eEventId'
+--
+-- * 'eFields'
 eventsInstances
     :: Text -- ^ 'eCalendarId'
     -> Text -- ^ 'eEventId'
     -> EventsInstances
-eventsInstances pECalendarId_ pEEventId_ =
+eventsInstances pECalendarId_ pEEventId_ = 
     EventsInstances'
     { _eCalendarId = pECalendarId_
     , _eTimeMin = Nothing
@@ -130,6 +135,7 @@ eventsInstances pECalendarId_ pEEventId_ =
     , _eAlwaysIncludeEmail = Nothing
     , _eTimeMax = Nothing
     , _eEventId = pEEventId_
+    , _eFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -211,6 +217,10 @@ eTimeMax
 eEventId :: Lens' EventsInstances Text
 eEventId = lens _eEventId (\ s a -> s{_eEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eFields :: Lens' EventsInstances (Maybe Text)
+eFields = lens _eFields (\ s a -> s{_eFields = a})
+
 instance GoogleRequest EventsInstances where
         type Rs EventsInstances = Events
         type Scopes EventsInstances =
@@ -225,6 +235,7 @@ instance GoogleRequest EventsInstances where
               _eMaxResults
               _eAlwaysIncludeEmail
               _eTimeMax
+              _eFields
               (Just AltJSON)
               appsCalendarService
           where go

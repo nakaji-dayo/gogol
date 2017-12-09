@@ -44,10 +44,11 @@ module Network.Google.Resource.YouTube.CommentThreads.List
     , ctlOrder
     , ctlTextFormat
     , ctlMaxResults
+    , ctlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.commentThreads.list@ method which the
 -- 'CommentThreadsList' request conforms to.
@@ -70,24 +71,26 @@ type CommentThreadsListResource =
                                CommentThreadsListTextFormat
                                :>
                                QueryParam "maxResults" (Textual Word32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] CommentThreadListResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] CommentThreadListResponse
 
 -- | Returns a list of comment threads that match the API request parameters.
 --
 -- /See:/ 'commentThreadsList' smart constructor.
 data CommentThreadsList = CommentThreadsList'
-    { _ctlPart                         :: !Text
-    , _ctlModerationStatus             :: !CommentThreadsListModerationStatus
-    , _ctlSearchTerms                  :: !(Maybe Text)
-    , _ctlChannelId                    :: !(Maybe Text)
+    { _ctlPart :: !Text
+    , _ctlModerationStatus :: !CommentThreadsListModerationStatus
+    , _ctlSearchTerms :: !(Maybe Text)
+    , _ctlChannelId :: !(Maybe Text)
     , _ctlAllThreadsRelatedToChannelId :: !(Maybe Text)
-    , _ctlVideoId                      :: !(Maybe Text)
-    , _ctlId                           :: !(Maybe Text)
-    , _ctlPageToken                    :: !(Maybe Text)
-    , _ctlOrder                        :: !CommentThreadsListOrder
-    , _ctlTextFormat                   :: !CommentThreadsListTextFormat
-    , _ctlMaxResults                   :: !(Textual Word32)
+    , _ctlVideoId :: !(Maybe Text)
+    , _ctlId :: !(Maybe Text)
+    , _ctlPageToken :: !(Maybe Text)
+    , _ctlOrder :: !CommentThreadsListOrder
+    , _ctlTextFormat :: !CommentThreadsListTextFormat
+    , _ctlMaxResults :: !(Textual Word32)
+    , _ctlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentThreadsList' with the minimum fields required to make a request.
@@ -115,10 +118,12 @@ data CommentThreadsList = CommentThreadsList'
 -- * 'ctlTextFormat'
 --
 -- * 'ctlMaxResults'
+--
+-- * 'ctlFields'
 commentThreadsList
     :: Text -- ^ 'ctlPart'
     -> CommentThreadsList
-commentThreadsList pCtlPart_ =
+commentThreadsList pCtlPart_ = 
     CommentThreadsList'
     { _ctlPart = pCtlPart_
     , _ctlModerationStatus = Published
@@ -131,6 +136,7 @@ commentThreadsList pCtlPart_ =
     , _ctlOrder = CTLOTime
     , _ctlTextFormat = CTLTFHTML
     , _ctlMaxResults = 20
+    , _ctlFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -213,6 +219,11 @@ ctlMaxResults
       (\ s a -> s{_ctlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ctlFields :: Lens' CommentThreadsList (Maybe Text)
+ctlFields
+  = lens _ctlFields (\ s a -> s{_ctlFields = a})
+
 instance GoogleRequest CommentThreadsList where
         type Rs CommentThreadsList =
              CommentThreadListResponse
@@ -229,6 +240,7 @@ instance GoogleRequest CommentThreadsList where
               (Just _ctlOrder)
               (Just _ctlTextFormat)
               (Just _ctlMaxResults)
+              _ctlFields
               (Just AltJSON)
               youTubeService
           where go

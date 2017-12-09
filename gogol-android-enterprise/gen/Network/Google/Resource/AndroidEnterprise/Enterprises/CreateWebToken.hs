@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.CreateWebToken
     -- * Request Lenses
     , ecwtEnterpriseId
     , ecwtPayload
+    , ecwtFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.createWebToken@ method which the
 -- 'EnterprisesCreateWebToken' request conforms to.
@@ -51,9 +52,10 @@ type EnterprisesCreateWebTokenResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "createWebToken" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AdministratorWebTokenSpec :>
-                   Post '[JSON] AdministratorWebToken
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AdministratorWebTokenSpec :>
+                     Post '[JSON] AdministratorWebToken
 
 -- | Returns a unique token to access an embeddable UI. To generate a web UI,
 -- pass the generated token into the managed Google Play javascript API.
@@ -63,7 +65,8 @@ type EnterprisesCreateWebTokenResource =
 -- /See:/ 'enterprisesCreateWebToken' smart constructor.
 data EnterprisesCreateWebToken = EnterprisesCreateWebToken'
     { _ecwtEnterpriseId :: !Text
-    , _ecwtPayload      :: !AdministratorWebTokenSpec
+    , _ecwtPayload :: !AdministratorWebTokenSpec
+    , _ecwtFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesCreateWebToken' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data EnterprisesCreateWebToken = EnterprisesCreateWebToken'
 -- * 'ecwtEnterpriseId'
 --
 -- * 'ecwtPayload'
+--
+-- * 'ecwtFields'
 enterprisesCreateWebToken
     :: Text -- ^ 'ecwtEnterpriseId'
     -> AdministratorWebTokenSpec -- ^ 'ecwtPayload'
     -> EnterprisesCreateWebToken
-enterprisesCreateWebToken pEcwtEnterpriseId_ pEcwtPayload_ =
+enterprisesCreateWebToken pEcwtEnterpriseId_ pEcwtPayload_ = 
     EnterprisesCreateWebToken'
     { _ecwtEnterpriseId = pEcwtEnterpriseId_
     , _ecwtPayload = pEcwtPayload_
+    , _ecwtFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -94,6 +100,11 @@ ecwtPayload :: Lens' EnterprisesCreateWebToken AdministratorWebTokenSpec
 ecwtPayload
   = lens _ecwtPayload (\ s a -> s{_ecwtPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ecwtFields :: Lens' EnterprisesCreateWebToken (Maybe Text)
+ecwtFields
+  = lens _ecwtFields (\ s a -> s{_ecwtFields = a})
+
 instance GoogleRequest EnterprisesCreateWebToken
          where
         type Rs EnterprisesCreateWebToken =
@@ -101,7 +112,8 @@ instance GoogleRequest EnterprisesCreateWebToken
         type Scopes EnterprisesCreateWebToken =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesCreateWebToken'{..}
-          = go _ecwtEnterpriseId (Just AltJSON) _ecwtPayload
+          = go _ecwtEnterpriseId _ecwtFields (Just AltJSON)
+              _ecwtPayload
               androidEnterpriseService
           where go
                   = buildClient

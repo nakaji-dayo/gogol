@@ -43,11 +43,12 @@ module Network.Google.Resource.AppEngine.Apps.Operations.Get
     , aogBearerToken
     , aogAppsId
     , aogOperationsId
+    , aogFields
     , aogCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.operations.get@ method which the
 -- 'AppsOperationsGet' request conforms to.
@@ -57,14 +58,15 @@ type AppsOperationsGetResource =
          Capture "appsId" Text :>
            "operations" :>
              Capture "operationsId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Gets the latest state of a long-running operation. Clients can use this
 -- method to poll the operation result at intervals as recommended by the
@@ -72,15 +74,16 @@ type AppsOperationsGetResource =
 --
 -- /See:/ 'appsOperationsGet' smart constructor.
 data AppsOperationsGet = AppsOperationsGet'
-    { _aogXgafv          :: !(Maybe Text)
+    { _aogXgafv :: !(Maybe Xgafv)
     , _aogUploadProtocol :: !(Maybe Text)
-    , _aogPp             :: !Bool
-    , _aogAccessToken    :: !(Maybe Text)
-    , _aogUploadType     :: !(Maybe Text)
-    , _aogBearerToken    :: !(Maybe Text)
-    , _aogAppsId         :: !Text
-    , _aogOperationsId   :: !Text
-    , _aogCallback       :: !(Maybe Text)
+    , _aogPp :: !Bool
+    , _aogAccessToken :: !(Maybe Text)
+    , _aogUploadType :: !(Maybe Text)
+    , _aogBearerToken :: !(Maybe Text)
+    , _aogAppsId :: !Text
+    , _aogOperationsId :: !Text
+    , _aogFields :: !(Maybe Text)
+    , _aogCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsOperationsGet' with the minimum fields required to make a request.
@@ -103,12 +106,14 @@ data AppsOperationsGet = AppsOperationsGet'
 --
 -- * 'aogOperationsId'
 --
+-- * 'aogFields'
+--
 -- * 'aogCallback'
 appsOperationsGet
     :: Text -- ^ 'aogAppsId'
     -> Text -- ^ 'aogOperationsId'
     -> AppsOperationsGet
-appsOperationsGet pAogAppsId_ pAogOperationsId_ =
+appsOperationsGet pAogAppsId_ pAogOperationsId_ = 
     AppsOperationsGet'
     { _aogXgafv = Nothing
     , _aogUploadProtocol = Nothing
@@ -118,11 +123,12 @@ appsOperationsGet pAogAppsId_ pAogOperationsId_ =
     , _aogBearerToken = Nothing
     , _aogAppsId = pAogAppsId_
     , _aogOperationsId = pAogOperationsId_
+    , _aogFields = Nothing
     , _aogCallback = Nothing
     }
 
 -- | V1 error format.
-aogXgafv :: Lens' AppsOperationsGet (Maybe Text)
+aogXgafv :: Lens' AppsOperationsGet (Maybe Xgafv)
 aogXgafv = lens _aogXgafv (\ s a -> s{_aogXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -164,6 +170,11 @@ aogOperationsId
   = lens _aogOperationsId
       (\ s a -> s{_aogOperationsId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aogFields :: Lens' AppsOperationsGet (Maybe Text)
+aogFields
+  = lens _aogFields (\ s a -> s{_aogFields = a})
+
 -- | JSONP
 aogCallback :: Lens' AppsOperationsGet (Maybe Text)
 aogCallback
@@ -183,6 +194,7 @@ instance GoogleRequest AppsOperationsGet where
               _aogUploadType
               _aogBearerToken
               _aogCallback
+              _aogFields
               (Just AltJSON)
               appEngineService
           where go

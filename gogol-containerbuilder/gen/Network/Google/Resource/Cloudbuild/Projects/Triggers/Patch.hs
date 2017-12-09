@@ -43,11 +43,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.Patch
     , ptpPayload
     , ptpBearerToken
     , ptpProjectId
+    , ptpFields
     , ptpCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.patch@ method which the
 -- 'ProjectsTriggersPatch' request conforms to.
@@ -64,25 +65,27 @@ type ProjectsTriggersPatchResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               ReqBody '[JSON] BuildTrigger :>
-                                 Patch '[JSON] BuildTrigger
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON] BuildTrigger :>
+                                   Patch '[JSON] BuildTrigger
 
 -- | Updates an BuildTrigger by its project ID and trigger ID. This API is
 -- experimental.
 --
 -- /See:/ 'projectsTriggersPatch' smart constructor.
 data ProjectsTriggersPatch = ProjectsTriggersPatch'
-    { _ptpXgafv          :: !(Maybe Xgafv)
+    { _ptpXgafv :: !(Maybe Xgafv)
     , _ptpUploadProtocol :: !(Maybe Text)
-    , _ptpTriggerId      :: !Text
-    , _ptpPp             :: !Bool
-    , _ptpAccessToken    :: !(Maybe Text)
-    , _ptpUploadType     :: !(Maybe Text)
-    , _ptpPayload        :: !BuildTrigger
-    , _ptpBearerToken    :: !(Maybe Text)
-    , _ptpProjectId      :: !Text
-    , _ptpCallback       :: !(Maybe Text)
+    , _ptpTriggerId :: !Text
+    , _ptpPp :: !Bool
+    , _ptpAccessToken :: !(Maybe Text)
+    , _ptpUploadType :: !(Maybe Text)
+    , _ptpPayload :: !BuildTrigger
+    , _ptpBearerToken :: !(Maybe Text)
+    , _ptpProjectId :: !Text
+    , _ptpFields :: !(Maybe Text)
+    , _ptpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTriggersPatch' with the minimum fields required to make a request.
@@ -107,13 +110,15 @@ data ProjectsTriggersPatch = ProjectsTriggersPatch'
 --
 -- * 'ptpProjectId'
 --
+-- * 'ptpFields'
+--
 -- * 'ptpCallback'
 projectsTriggersPatch
     :: Text -- ^ 'ptpTriggerId'
     -> BuildTrigger -- ^ 'ptpPayload'
     -> Text -- ^ 'ptpProjectId'
     -> ProjectsTriggersPatch
-projectsTriggersPatch pPtpTriggerId_ pPtpPayload_ pPtpProjectId_ =
+projectsTriggersPatch pPtpTriggerId_ pPtpPayload_ pPtpProjectId_ = 
     ProjectsTriggersPatch'
     { _ptpXgafv = Nothing
     , _ptpUploadProtocol = Nothing
@@ -124,6 +129,7 @@ projectsTriggersPatch pPtpTriggerId_ pPtpPayload_ pPtpProjectId_ =
     , _ptpPayload = pPtpPayload_
     , _ptpBearerToken = Nothing
     , _ptpProjectId = pPtpProjectId_
+    , _ptpFields = Nothing
     , _ptpCallback = Nothing
     }
 
@@ -174,6 +180,11 @@ ptpProjectId :: Lens' ProjectsTriggersPatch Text
 ptpProjectId
   = lens _ptpProjectId (\ s a -> s{_ptpProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptpFields :: Lens' ProjectsTriggersPatch (Maybe Text)
+ptpFields
+  = lens _ptpFields (\ s a -> s{_ptpFields = a})
+
 -- | JSONP
 ptpCallback :: Lens' ProjectsTriggersPatch (Maybe Text)
 ptpCallback
@@ -191,6 +202,7 @@ instance GoogleRequest ProjectsTriggersPatch where
               _ptpUploadType
               _ptpBearerToken
               _ptpCallback
+              _ptpFields
               (Just AltJSON)
               _ptpPayload
               containerBuilderService

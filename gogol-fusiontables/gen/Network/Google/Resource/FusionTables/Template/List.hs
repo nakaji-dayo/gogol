@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Template.List
     , tllPageToken
     , tllTableId
     , tllMaxResults
+    , tllFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.template.list@ method which the
 -- 'TemplateList'' request conforms to.
@@ -51,15 +52,17 @@ type TemplateListResource =
              "templates" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] TemplateList
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] TemplateList
 
 -- | Retrieves a list of templates.
 --
 -- /See:/ 'templateList'' smart constructor.
 data TemplateList' = TemplateList''
-    { _tllPageToken  :: !(Maybe Text)
-    , _tllTableId    :: !Text
+    { _tllPageToken :: !(Maybe Text)
+    , _tllTableId :: !Text
     , _tllMaxResults :: !(Maybe (Textual Word32))
+    , _tllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TemplateList'' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data TemplateList' = TemplateList''
 -- * 'tllTableId'
 --
 -- * 'tllMaxResults'
+--
+-- * 'tllFields'
 templateList'
     :: Text -- ^ 'tllTableId'
     -> TemplateList'
-templateList' pTllTableId_ =
+templateList' pTllTableId_ = 
     TemplateList''
     { _tllPageToken = Nothing
     , _tllTableId = pTllTableId_
     , _tllMaxResults = Nothing
+    , _tllFields = Nothing
     }
 
 -- | Continuation token specifying which results page to return. Optional.
@@ -98,6 +104,11 @@ tllMaxResults
       (\ s a -> s{_tllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tllFields :: Lens' TemplateList' (Maybe Text)
+tllFields
+  = lens _tllFields (\ s a -> s{_tllFields = a})
+
 instance GoogleRequest TemplateList' where
         type Rs TemplateList' = TemplateList
         type Scopes TemplateList' =
@@ -105,6 +116,7 @@ instance GoogleRequest TemplateList' where
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient TemplateList''{..}
           = go _tllTableId _tllPageToken _tllMaxResults
+              _tllFields
               (Just AltJSON)
               fusionTablesService
           where go

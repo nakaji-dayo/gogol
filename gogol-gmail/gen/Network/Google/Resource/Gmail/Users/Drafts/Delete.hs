@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Drafts.Delete
     -- * Request Lenses
     , uddUserId
     , uddId
+    , uddFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.drafts.delete@ method which the
 -- 'UsersDraftsDelete' request conforms to.
@@ -50,7 +51,8 @@ type UsersDraftsDeleteResource =
            Capture "userId" Text :>
              "drafts" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Immediately and permanently deletes the specified draft. Does not simply
 -- trash it.
@@ -58,7 +60,8 @@ type UsersDraftsDeleteResource =
 -- /See:/ 'usersDraftsDelete' smart constructor.
 data UsersDraftsDelete = UsersDraftsDelete'
     { _uddUserId :: !Text
-    , _uddId     :: !Text
+    , _uddId :: !Text
+    , _uddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDraftsDelete' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersDraftsDelete = UsersDraftsDelete'
 -- * 'uddUserId'
 --
 -- * 'uddId'
+--
+-- * 'uddFields'
 usersDraftsDelete
     :: Text -- ^ 'uddId'
     -> UsersDraftsDelete
-usersDraftsDelete pUddId_ =
+usersDraftsDelete pUddId_ = 
     UsersDraftsDelete'
     { _uddUserId = "me"
     , _uddId = pUddId_
+    , _uddFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -87,6 +93,11 @@ uddUserId
 uddId :: Lens' UsersDraftsDelete Text
 uddId = lens _uddId (\ s a -> s{_uddId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uddFields :: Lens' UsersDraftsDelete (Maybe Text)
+uddFields
+  = lens _uddFields (\ s a -> s{_uddFields = a})
+
 instance GoogleRequest UsersDraftsDelete where
         type Rs UsersDraftsDelete = ()
         type Scopes UsersDraftsDelete =
@@ -94,7 +105,8 @@ instance GoogleRequest UsersDraftsDelete where
                "https://www.googleapis.com/auth/gmail.compose",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersDraftsDelete'{..}
-          = go _uddUserId _uddId (Just AltJSON) gmailService
+          = go _uddUserId _uddId _uddFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersDraftsDeleteResource)

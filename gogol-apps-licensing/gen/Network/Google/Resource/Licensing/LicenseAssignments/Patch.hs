@@ -37,10 +37,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.Patch
     , lapPayload
     , lapUserId
     , lapProductId
+    , lapFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.patch@ method which the
 -- 'LicenseAssignmentsPatch' request conforms to.
@@ -54,18 +55,20 @@ type LicenseAssignmentsPatchResource =
                  Capture "skuId" Text :>
                    "user" :>
                      Capture "userId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] LicenseAssignment :>
-                           Patch '[JSON] LicenseAssignment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] LicenseAssignment :>
+                             Patch '[JSON] LicenseAssignment
 
 -- | Assign License. This method supports patch semantics.
 --
 -- /See:/ 'licenseAssignmentsPatch' smart constructor.
 data LicenseAssignmentsPatch = LicenseAssignmentsPatch'
-    { _lapSKUId     :: !Text
-    , _lapPayload   :: !LicenseAssignment
-    , _lapUserId    :: !Text
+    { _lapSKUId :: !Text
+    , _lapPayload :: !LicenseAssignment
+    , _lapUserId :: !Text
     , _lapProductId :: !Text
+    , _lapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsPatch' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data LicenseAssignmentsPatch = LicenseAssignmentsPatch'
 -- * 'lapUserId'
 --
 -- * 'lapProductId'
+--
+-- * 'lapFields'
 licenseAssignmentsPatch
     :: Text -- ^ 'lapSKUId'
     -> LicenseAssignment -- ^ 'lapPayload'
     -> Text -- ^ 'lapUserId'
     -> Text -- ^ 'lapProductId'
     -> LicenseAssignmentsPatch
-licenseAssignmentsPatch pLapSKUId_ pLapPayload_ pLapUserId_ pLapProductId_ =
+licenseAssignmentsPatch pLapSKUId_ pLapPayload_ pLapUserId_ pLapProductId_ = 
     LicenseAssignmentsPatch'
     { _lapSKUId = pLapSKUId_
     , _lapPayload = pLapPayload_
     , _lapUserId = pLapUserId_
     , _lapProductId = pLapProductId_
+    , _lapFields = Nothing
     }
 
 -- | Name for sku for which license would be revoked
@@ -112,12 +118,17 @@ lapProductId :: Lens' LicenseAssignmentsPatch Text
 lapProductId
   = lens _lapProductId (\ s a -> s{_lapProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lapFields :: Lens' LicenseAssignmentsPatch (Maybe Text)
+lapFields
+  = lens _lapFields (\ s a -> s{_lapFields = a})
+
 instance GoogleRequest LicenseAssignmentsPatch where
         type Rs LicenseAssignmentsPatch = LicenseAssignment
         type Scopes LicenseAssignmentsPatch =
              '["https://www.googleapis.com/auth/apps.licensing"]
         requestClient LicenseAssignmentsPatch'{..}
-          = go _lapProductId _lapSKUId _lapUserId
+          = go _lapProductId _lapSKUId _lapUserId _lapFields
               (Just AltJSON)
               _lapPayload
               appsLicensingService

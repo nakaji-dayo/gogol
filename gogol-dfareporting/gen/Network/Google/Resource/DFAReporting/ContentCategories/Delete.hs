@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.ContentCategories.Delete
     -- * Request Lenses
     , ccdProFileId
     , ccdId
+    , ccdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.contentCategories.delete@ method which the
 -- 'ContentCategoriesDelete' request conforms to.
 type ContentCategoriesDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "contentCategories" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing content category.
 --
 -- /See:/ 'contentCategoriesDelete' smart constructor.
 data ContentCategoriesDelete = ContentCategoriesDelete'
     { _ccdProFileId :: !(Textual Int64)
-    , _ccdId        :: !(Textual Int64)
+    , _ccdId :: !(Textual Int64)
+    , _ccdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategoriesDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ContentCategoriesDelete = ContentCategoriesDelete'
 -- * 'ccdProFileId'
 --
 -- * 'ccdId'
+--
+-- * 'ccdFields'
 contentCategoriesDelete
     :: Int64 -- ^ 'ccdProFileId'
     -> Int64 -- ^ 'ccdId'
     -> ContentCategoriesDelete
-contentCategoriesDelete pCcdProFileId_ pCcdId_ =
+contentCategoriesDelete pCcdProFileId_ pCcdId_ = 
     ContentCategoriesDelete'
     { _ccdProFileId = _Coerce # pCcdProFileId_
     , _ccdId = _Coerce # pCcdId_
+    , _ccdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ ccdId :: Lens' ContentCategoriesDelete Int64
 ccdId
   = lens _ccdId (\ s a -> s{_ccdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ccdFields :: Lens' ContentCategoriesDelete (Maybe Text)
+ccdFields
+  = lens _ccdFields (\ s a -> s{_ccdFields = a})
+
 instance GoogleRequest ContentCategoriesDelete where
         type Rs ContentCategoriesDelete = ()
         type Scopes ContentCategoriesDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ContentCategoriesDelete'{..}
-          = go _ccdProFileId _ccdId (Just AltJSON)
+          = go _ccdProFileId _ccdId _ccdFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

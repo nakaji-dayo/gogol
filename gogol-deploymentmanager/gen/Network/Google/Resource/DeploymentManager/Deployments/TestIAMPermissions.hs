@@ -36,10 +36,11 @@ module Network.Google.Resource.DeploymentManager.Deployments.TestIAMPermissions
     , dtipProject
     , dtipPayload
     , dtipResource
+    , dtipFields
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.testIamPermissions@ method which the
 -- 'DeploymentsTestIAMPermissions' request conforms to.
@@ -52,17 +53,19 @@ type DeploymentsTestIAMPermissionsResource =
                "deployments" :>
                  Capture "resource" Text :>
                    "testIamPermissions" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] TestPermissionsRequest :>
-                         Post '[JSON] TestPermissionsResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] TestPermissionsRequest :>
+                           Post '[JSON] TestPermissionsResponse
 
 -- | Returns permissions that a caller has on the specified resource.
 --
 -- /See:/ 'deploymentsTestIAMPermissions' smart constructor.
 data DeploymentsTestIAMPermissions = DeploymentsTestIAMPermissions'
-    { _dtipProject  :: !Text
-    , _dtipPayload  :: !TestPermissionsRequest
+    { _dtipProject :: !Text
+    , _dtipPayload :: !TestPermissionsRequest
     , _dtipResource :: !Text
+    , _dtipFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsTestIAMPermissions' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data DeploymentsTestIAMPermissions = DeploymentsTestIAMPermissions'
 -- * 'dtipPayload'
 --
 -- * 'dtipResource'
+--
+-- * 'dtipFields'
 deploymentsTestIAMPermissions
     :: Text -- ^ 'dtipProject'
     -> TestPermissionsRequest -- ^ 'dtipPayload'
     -> Text -- ^ 'dtipResource'
     -> DeploymentsTestIAMPermissions
-deploymentsTestIAMPermissions pDtipProject_ pDtipPayload_ pDtipResource_ =
+deploymentsTestIAMPermissions pDtipProject_ pDtipPayload_ pDtipResource_ = 
     DeploymentsTestIAMPermissions'
     { _dtipProject = pDtipProject_
     , _dtipPayload = pDtipPayload_
     , _dtipResource = pDtipResource_
+    , _dtipFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ dtipResource :: Lens' DeploymentsTestIAMPermissions Text
 dtipResource
   = lens _dtipResource (\ s a -> s{_dtipResource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dtipFields :: Lens' DeploymentsTestIAMPermissions (Maybe Text)
+dtipFields
+  = lens _dtipFields (\ s a -> s{_dtipFields = a})
+
 instance GoogleRequest DeploymentsTestIAMPermissions
          where
         type Rs DeploymentsTestIAMPermissions =
@@ -109,7 +120,8 @@ instance GoogleRequest DeploymentsTestIAMPermissions
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsTestIAMPermissions'{..}
-          = go _dtipProject _dtipResource (Just AltJSON)
+          = go _dtipProject _dtipResource _dtipFields
+              (Just AltJSON)
               _dtipPayload
               deploymentManagerService
           where go

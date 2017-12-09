@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Ads.Insert
     -- * Request Lenses
     , aiProFileId
     , aiPayload
+    , aiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.ads.insert@ method which the
 -- 'AdsInsert' request conforms to.
 type AdsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "ads" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Ad :> Post '[JSON] Ad
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Ad :> Post '[JSON] Ad
 
 -- | Inserts a new ad.
 --
 -- /See:/ 'adsInsert' smart constructor.
 data AdsInsert = AdsInsert'
     { _aiProFileId :: !(Textual Int64)
-    , _aiPayload   :: !Ad
+    , _aiPayload :: !Ad
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdsInsert = AdsInsert'
 -- * 'aiProFileId'
 --
 -- * 'aiPayload'
+--
+-- * 'aiFields'
 adsInsert
     :: Int64 -- ^ 'aiProFileId'
     -> Ad -- ^ 'aiPayload'
     -> AdsInsert
-adsInsert pAiProFileId_ pAiPayload_ =
+adsInsert pAiProFileId_ pAiPayload_ = 
     AdsInsert'
     { _aiProFileId = _Coerce # pAiProFileId_
     , _aiPayload = pAiPayload_
+    , _aiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ aiPayload :: Lens' AdsInsert Ad
 aiPayload
   = lens _aiPayload (\ s a -> s{_aiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' AdsInsert (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest AdsInsert where
         type Rs AdsInsert = Ad
         type Scopes AdsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdsInsert'{..}
-          = go _aiProFileId (Just AltJSON) _aiPayload
+          = go _aiProFileId _aiFields (Just AltJSON) _aiPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy AdsInsertResource)

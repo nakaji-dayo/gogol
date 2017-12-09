@@ -41,11 +41,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Get
     , asgBearerToken
     , asgAppsId
     , asgServicesId
+    , asgFields
     , asgCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.get@ method which the
 -- 'AppsServicesGet' request conforms to.
@@ -55,28 +56,30 @@ type AppsServicesGetResource =
          Capture "appsId" Text :>
            "services" :>
              Capture "servicesId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Service
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Service
 
 -- | Gets the current configuration of the specified service.
 --
 -- /See:/ 'appsServicesGet' smart constructor.
 data AppsServicesGet = AppsServicesGet'
-    { _asgXgafv          :: !(Maybe Text)
+    { _asgXgafv :: !(Maybe Xgafv)
     , _asgUploadProtocol :: !(Maybe Text)
-    , _asgPp             :: !Bool
-    , _asgAccessToken    :: !(Maybe Text)
-    , _asgUploadType     :: !(Maybe Text)
-    , _asgBearerToken    :: !(Maybe Text)
-    , _asgAppsId         :: !Text
-    , _asgServicesId     :: !Text
-    , _asgCallback       :: !(Maybe Text)
+    , _asgPp :: !Bool
+    , _asgAccessToken :: !(Maybe Text)
+    , _asgUploadType :: !(Maybe Text)
+    , _asgBearerToken :: !(Maybe Text)
+    , _asgAppsId :: !Text
+    , _asgServicesId :: !Text
+    , _asgFields :: !(Maybe Text)
+    , _asgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesGet' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data AppsServicesGet = AppsServicesGet'
 --
 -- * 'asgServicesId'
 --
+-- * 'asgFields'
+--
 -- * 'asgCallback'
 appsServicesGet
     :: Text -- ^ 'asgAppsId'
     -> Text -- ^ 'asgServicesId'
     -> AppsServicesGet
-appsServicesGet pAsgAppsId_ pAsgServicesId_ =
+appsServicesGet pAsgAppsId_ pAsgServicesId_ = 
     AppsServicesGet'
     { _asgXgafv = Nothing
     , _asgUploadProtocol = Nothing
@@ -114,11 +119,12 @@ appsServicesGet pAsgAppsId_ pAsgServicesId_ =
     , _asgBearerToken = Nothing
     , _asgAppsId = pAsgAppsId_
     , _asgServicesId = pAsgServicesId_
+    , _asgFields = Nothing
     , _asgCallback = Nothing
     }
 
 -- | V1 error format.
-asgXgafv :: Lens' AppsServicesGet (Maybe Text)
+asgXgafv :: Lens' AppsServicesGet (Maybe Xgafv)
 asgXgafv = lens _asgXgafv (\ s a -> s{_asgXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -161,6 +167,11 @@ asgServicesId
   = lens _asgServicesId
       (\ s a -> s{_asgServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asgFields :: Lens' AppsServicesGet (Maybe Text)
+asgFields
+  = lens _asgFields (\ s a -> s{_asgFields = a})
+
 -- | JSONP
 asgCallback :: Lens' AppsServicesGet (Maybe Text)
 asgCallback
@@ -180,6 +191,7 @@ instance GoogleRequest AppsServicesGet where
               _asgUploadType
               _asgBearerToken
               _asgCallback
+              _asgFields
               (Just AltJSON)
               appEngineService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Resources.Calendars.List
     , rclCustomer
     , rclPageToken
     , rclMaxResults
+    , rclFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.resources.calendars.list@ method which the
 -- 'ResourcesCalendarsList' request conforms to.
@@ -53,16 +54,18 @@ type ResourcesCalendarsListResource =
                  "calendars" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CalendarResources
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CalendarResources
 
 -- | Retrieves a list of calendar resources for an account.
 --
 -- /See:/ 'resourcesCalendarsList' smart constructor.
 data ResourcesCalendarsList = ResourcesCalendarsList'
-    { _rclCustomer   :: !Text
-    , _rclPageToken  :: !(Maybe Text)
+    { _rclCustomer :: !Text
+    , _rclPageToken :: !(Maybe Text)
     , _rclMaxResults :: !(Maybe (Textual Int32))
+    , _rclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourcesCalendarsList' with the minimum fields required to make a request.
@@ -74,17 +77,20 @@ data ResourcesCalendarsList = ResourcesCalendarsList'
 -- * 'rclPageToken'
 --
 -- * 'rclMaxResults'
+--
+-- * 'rclFields'
 resourcesCalendarsList
     :: Text -- ^ 'rclCustomer'
     -> ResourcesCalendarsList
-resourcesCalendarsList pRclCustomer_ =
+resourcesCalendarsList pRclCustomer_ = 
     ResourcesCalendarsList'
     { _rclCustomer = pRclCustomer_
     , _rclPageToken = Nothing
     , _rclMaxResults = Nothing
+    , _rclFields = Nothing
     }
 
--- | The unique ID for the customer\'s Google account. As an account
+-- | The unique ID for the customer\'s G Suite account. As an account
 -- administrator, you can also use the my_customer alias to represent your
 -- account\'s customer ID.
 rclCustomer :: Lens' ResourcesCalendarsList Text
@@ -103,6 +109,11 @@ rclMaxResults
       (\ s a -> s{_rclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rclFields :: Lens' ResourcesCalendarsList (Maybe Text)
+rclFields
+  = lens _rclFields (\ s a -> s{_rclFields = a})
+
 instance GoogleRequest ResourcesCalendarsList where
         type Rs ResourcesCalendarsList = CalendarResources
         type Scopes ResourcesCalendarsList =
@@ -110,6 +121,7 @@ instance GoogleRequest ResourcesCalendarsList where
                "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"]
         requestClient ResourcesCalendarsList'{..}
           = go _rclCustomer _rclPageToken _rclMaxResults
+              _rclFields
               (Just AltJSON)
               directoryService
           where go

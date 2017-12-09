@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.RegionOperations.Delete
     , rodProject
     , rodOperation
     , rodRegion
+    , rodFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionOperations.delete@ method which the
 -- 'RegionOperationsDelete' request conforms to.
@@ -52,15 +53,17 @@ type RegionOperationsDeleteResource =
                Capture "region" Text :>
                  "operations" :>
                    Capture "operation" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified region-specific Operations resource.
 --
 -- /See:/ 'regionOperationsDelete' smart constructor.
 data RegionOperationsDelete = RegionOperationsDelete'
-    { _rodProject   :: !Text
+    { _rodProject :: !Text
     , _rodOperation :: !Text
-    , _rodRegion    :: !Text
+    , _rodRegion :: !Text
+    , _rodFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionOperationsDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RegionOperationsDelete = RegionOperationsDelete'
 -- * 'rodOperation'
 --
 -- * 'rodRegion'
+--
+-- * 'rodFields'
 regionOperationsDelete
     :: Text -- ^ 'rodProject'
     -> Text -- ^ 'rodOperation'
     -> Text -- ^ 'rodRegion'
     -> RegionOperationsDelete
-regionOperationsDelete pRodProject_ pRodOperation_ pRodRegion_ =
+regionOperationsDelete pRodProject_ pRodOperation_ pRodRegion_ = 
     RegionOperationsDelete'
     { _rodProject = pRodProject_
     , _rodOperation = pRodOperation_
     , _rodRegion = pRodRegion_
+    , _rodFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -99,13 +105,18 @@ rodRegion :: Lens' RegionOperationsDelete Text
 rodRegion
   = lens _rodRegion (\ s a -> s{_rodRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rodFields :: Lens' RegionOperationsDelete (Maybe Text)
+rodFields
+  = lens _rodFields (\ s a -> s{_rodFields = a})
+
 instance GoogleRequest RegionOperationsDelete where
         type Rs RegionOperationsDelete = ()
         type Scopes RegionOperationsDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient RegionOperationsDelete'{..}
-          = go _rodProject _rodRegion _rodOperation
+          = go _rodProject _rodRegion _rodOperation _rodFields
               (Just AltJSON)
               computeService
           where go

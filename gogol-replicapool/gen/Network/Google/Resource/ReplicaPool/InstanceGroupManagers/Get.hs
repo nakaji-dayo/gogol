@@ -36,10 +36,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Get
     , igmgProject
     , igmgInstanceGroupManager
     , igmgZone
+    , igmgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.get@ method which the
 -- 'InstanceGroupManagersGet' request conforms to.
@@ -52,16 +53,18 @@ type InstanceGroupManagersGetResource =
                Capture "zone" Text :>
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] InstanceGroupManager
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] InstanceGroupManager
 
 -- | Returns the specified Instance Group Manager resource.
 --
 -- /See:/ 'instanceGroupManagersGet' smart constructor.
 data InstanceGroupManagersGet = InstanceGroupManagersGet'
-    { _igmgProject              :: !Text
+    { _igmgProject :: !Text
     , _igmgInstanceGroupManager :: !Text
-    , _igmgZone                 :: !Text
+    , _igmgZone :: !Text
+    , _igmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data InstanceGroupManagersGet = InstanceGroupManagersGet'
 -- * 'igmgInstanceGroupManager'
 --
 -- * 'igmgZone'
+--
+-- * 'igmgFields'
 instanceGroupManagersGet
     :: Text -- ^ 'igmgProject'
     -> Text -- ^ 'igmgInstanceGroupManager'
     -> Text -- ^ 'igmgZone'
     -> InstanceGroupManagersGet
-instanceGroupManagersGet pIgmgProject_ pIgmgInstanceGroupManager_ pIgmgZone_ =
+instanceGroupManagersGet pIgmgProject_ pIgmgInstanceGroupManager_ pIgmgZone_ = 
     InstanceGroupManagersGet'
     { _igmgProject = pIgmgProject_
     , _igmgInstanceGroupManager = pIgmgInstanceGroupManager_
     , _igmgZone = pIgmgZone_
+    , _igmgFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -100,6 +106,11 @@ igmgInstanceGroupManager
 igmgZone :: Lens' InstanceGroupManagersGet Text
 igmgZone = lens _igmgZone (\ s a -> s{_igmgZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmgFields :: Lens' InstanceGroupManagersGet (Maybe Text)
+igmgFields
+  = lens _igmgFields (\ s a -> s{_igmgFields = a})
+
 instance GoogleRequest InstanceGroupManagersGet where
         type Rs InstanceGroupManagersGet =
              InstanceGroupManager
@@ -110,6 +121,7 @@ instance GoogleRequest InstanceGroupManagersGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient InstanceGroupManagersGet'{..}
           = go _igmgProject _igmgZone _igmgInstanceGroupManager
+              _igmgFields
               (Just AltJSON)
               replicaPoolService
           where go

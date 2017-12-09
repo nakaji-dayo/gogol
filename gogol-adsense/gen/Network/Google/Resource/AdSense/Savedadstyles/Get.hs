@@ -34,10 +34,11 @@ module Network.Google.Resource.AdSense.Savedadstyles.Get
 
     -- * Request Lenses
     , sgSavedAdStyleId
+    , sgFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.savedadstyles.get@ method which the
 -- 'SavedadstylesGet' request conforms to.
@@ -46,13 +47,15 @@ type SavedadstylesGetResource =
        "v1.4" :>
          "savedadstyles" :>
            Capture "savedAdStyleId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyle
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyle
 
 -- | Get a specific saved ad style from the user\'s account.
 --
 -- /See:/ 'savedadstylesGet' smart constructor.
-newtype SavedadstylesGet = SavedadstylesGet'
-    { _sgSavedAdStyleId :: Text
+data SavedadstylesGet = SavedadstylesGet'
+    { _sgSavedAdStyleId :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SavedadstylesGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype SavedadstylesGet = SavedadstylesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sgSavedAdStyleId'
+--
+-- * 'sgFields'
 savedadstylesGet
     :: Text -- ^ 'sgSavedAdStyleId'
     -> SavedadstylesGet
-savedadstylesGet pSgSavedAdStyleId_ =
+savedadstylesGet pSgSavedAdStyleId_ = 
     SavedadstylesGet'
     { _sgSavedAdStyleId = pSgSavedAdStyleId_
+    , _sgFields = Nothing
     }
 
 -- | Saved ad style to retrieve.
@@ -74,13 +80,18 @@ sgSavedAdStyleId
   = lens _sgSavedAdStyleId
       (\ s a -> s{_sgSavedAdStyleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SavedadstylesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SavedadstylesGet where
         type Rs SavedadstylesGet = SavedAdStyle
         type Scopes SavedadstylesGet =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient SavedadstylesGet'{..}
-          = go _sgSavedAdStyleId (Just AltJSON) adSenseService
+          = go _sgSavedAdStyleId _sgFields (Just AltJSON)
+              adSenseService
           where go
                   = buildClient
                       (Proxy :: Proxy SavedadstylesGetResource)

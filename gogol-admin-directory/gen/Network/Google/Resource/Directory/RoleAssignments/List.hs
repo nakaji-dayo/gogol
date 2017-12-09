@@ -38,10 +38,11 @@ module Network.Google.Resource.Directory.RoleAssignments.List
     , ralPageToken
     , ralUserKey
     , ralMaxResults
+    , ralFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roleAssignments.list@ method which the
 -- 'RoleAssignmentsList' request conforms to.
@@ -56,18 +57,20 @@ type RoleAssignmentsListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "userKey" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] RoleAssignments
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] RoleAssignments
 
 -- | Retrieves a paginated list of all roleAssignments.
 --
 -- /See:/ 'roleAssignmentsList' smart constructor.
 data RoleAssignmentsList = RoleAssignmentsList'
-    { _ralRoleId     :: !(Maybe Text)
-    , _ralCustomer   :: !Text
-    , _ralPageToken  :: !(Maybe Text)
-    , _ralUserKey    :: !(Maybe Text)
+    { _ralRoleId :: !(Maybe Text)
+    , _ralCustomer :: !Text
+    , _ralPageToken :: !(Maybe Text)
+    , _ralUserKey :: !(Maybe Text)
     , _ralMaxResults :: !(Maybe (Textual Int32))
+    , _ralFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignmentsList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data RoleAssignmentsList = RoleAssignmentsList'
 -- * 'ralUserKey'
 --
 -- * 'ralMaxResults'
+--
+-- * 'ralFields'
 roleAssignmentsList
     :: Text -- ^ 'ralCustomer'
     -> RoleAssignmentsList
-roleAssignmentsList pRalCustomer_ =
+roleAssignmentsList pRalCustomer_ = 
     RoleAssignmentsList'
     { _ralRoleId = Nothing
     , _ralCustomer = pRalCustomer_
     , _ralPageToken = Nothing
     , _ralUserKey = Nothing
     , _ralMaxResults = Nothing
+    , _ralFields = Nothing
     }
 
 -- | Immutable ID of a role. If included in the request, returns only role
@@ -101,7 +107,7 @@ ralRoleId :: Lens' RoleAssignmentsList (Maybe Text)
 ralRoleId
   = lens _ralRoleId (\ s a -> s{_ralRoleId = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 ralCustomer :: Lens' RoleAssignmentsList Text
 ralCustomer
   = lens _ralCustomer (\ s a -> s{_ralCustomer = a})
@@ -125,6 +131,11 @@ ralMaxResults
       (\ s a -> s{_ralMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ralFields :: Lens' RoleAssignmentsList (Maybe Text)
+ralFields
+  = lens _ralFields (\ s a -> s{_ralFields = a})
+
 instance GoogleRequest RoleAssignmentsList where
         type Rs RoleAssignmentsList = RoleAssignments
         type Scopes RoleAssignmentsList =
@@ -134,6 +145,7 @@ instance GoogleRequest RoleAssignmentsList where
           = go _ralCustomer _ralRoleId _ralPageToken
               _ralUserKey
               _ralMaxResults
+              _ralFields
               (Just AltJSON)
               directoryService
           where go

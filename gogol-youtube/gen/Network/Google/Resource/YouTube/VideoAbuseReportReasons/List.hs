@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.VideoAbuseReportReasons.List
     -- * Request Lenses
     , varrlPart
     , varrlHl
+    , varrlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videoAbuseReportReasons.list@ method which the
 -- 'VideoAbuseReportReasonsList' request conforms to.
@@ -49,8 +50,9 @@ type VideoAbuseReportReasonsListResource =
          "videoAbuseReportReasons" :>
            QueryParam "part" Text :>
              QueryParam "hl" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] VideoAbuseReportReasonListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] VideoAbuseReportReasonListResponse
 
 -- | Returns a list of abuse reasons that can be used for reporting abusive
 -- videos.
@@ -58,7 +60,8 @@ type VideoAbuseReportReasonsListResource =
 -- /See:/ 'videoAbuseReportReasonsList' smart constructor.
 data VideoAbuseReportReasonsList = VideoAbuseReportReasonsList'
     { _varrlPart :: !Text
-    , _varrlHl   :: !Text
+    , _varrlHl :: !Text
+    , _varrlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoAbuseReportReasonsList' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data VideoAbuseReportReasonsList = VideoAbuseReportReasonsList'
 -- * 'varrlPart'
 --
 -- * 'varrlHl'
+--
+-- * 'varrlFields'
 videoAbuseReportReasonsList
     :: Text -- ^ 'varrlPart'
     -> VideoAbuseReportReasonsList
-videoAbuseReportReasonsList pVarrlPart_ =
+videoAbuseReportReasonsList pVarrlPart_ = 
     VideoAbuseReportReasonsList'
     { _varrlPart = pVarrlPart_
     , _varrlHl = "en_US"
+    , _varrlFields = Nothing
     }
 
 -- | The part parameter specifies the videoCategory resource parts that the
@@ -88,6 +94,11 @@ varrlPart
 varrlHl :: Lens' VideoAbuseReportReasonsList Text
 varrlHl = lens _varrlHl (\ s a -> s{_varrlHl = a})
 
+-- | Selector specifying which fields to include in a partial response.
+varrlFields :: Lens' VideoAbuseReportReasonsList (Maybe Text)
+varrlFields
+  = lens _varrlFields (\ s a -> s{_varrlFields = a})
+
 instance GoogleRequest VideoAbuseReportReasonsList
          where
         type Rs VideoAbuseReportReasonsList =
@@ -97,7 +108,8 @@ instance GoogleRequest VideoAbuseReportReasonsList
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtube.readonly"]
         requestClient VideoAbuseReportReasonsList'{..}
-          = go (Just _varrlPart) (Just _varrlHl) (Just AltJSON)
+          = go (Just _varrlPart) (Just _varrlHl) _varrlFields
+              (Just AltJSON)
               youTubeService
           where go
                   = buildClient

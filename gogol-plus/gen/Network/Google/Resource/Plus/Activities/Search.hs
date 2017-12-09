@@ -38,10 +38,11 @@ module Network.Google.Resource.Plus.Activities.Search
     , asLanguage
     , asPageToken
     , asMaxResults
+    , asFields
     ) where
 
-import           Network.Google.Plus.Types
-import           Network.Google.Prelude
+import Network.Google.Plus.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plus.activities.search@ method which the
 -- 'ActivitiesSearch' request conforms to.
@@ -54,17 +55,19 @@ type ActivitiesSearchResource =
                QueryParam "language" Text :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] ActivityFeed
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] ActivityFeed
 
 -- | Search public activities.
 --
 -- /See:/ 'activitiesSearch' smart constructor.
 data ActivitiesSearch = ActivitiesSearch'
-    { _asOrderBy    :: !ActivitiesSearchOrderBy
-    , _asQuery      :: !Text
-    , _asLanguage   :: !Text
-    , _asPageToken  :: !(Maybe Text)
+    { _asOrderBy :: !ActivitiesSearchOrderBy
+    , _asQuery :: !Text
+    , _asLanguage :: !Text
+    , _asPageToken :: !(Maybe Text)
     , _asMaxResults :: !(Textual Word32)
+    , _asFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesSearch' with the minimum fields required to make a request.
@@ -80,16 +83,19 @@ data ActivitiesSearch = ActivitiesSearch'
 -- * 'asPageToken'
 --
 -- * 'asMaxResults'
+--
+-- * 'asFields'
 activitiesSearch
     :: Text -- ^ 'asQuery'
     -> ActivitiesSearch
-activitiesSearch pAsQuery_ =
+activitiesSearch pAsQuery_ = 
     ActivitiesSearch'
     { _asOrderBy = ASOBRecent
     , _asQuery = pAsQuery_
     , _asLanguage = "en-US"
     , _asPageToken = Nothing
     , _asMaxResults = 10
+    , _asFields = Nothing
     }
 
 -- | Specifies how to order search results.
@@ -123,6 +129,10 @@ asMaxResults
   = lens _asMaxResults (\ s a -> s{_asMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+asFields :: Lens' ActivitiesSearch (Maybe Text)
+asFields = lens _asFields (\ s a -> s{_asFields = a})
+
 instance GoogleRequest ActivitiesSearch where
         type Rs ActivitiesSearch = ActivityFeed
         type Scopes ActivitiesSearch =
@@ -133,6 +143,7 @@ instance GoogleRequest ActivitiesSearch where
               (Just _asLanguage)
               _asPageToken
               (Just _asMaxResults)
+              _asFields
               (Just AltJSON)
               plusService
           where go

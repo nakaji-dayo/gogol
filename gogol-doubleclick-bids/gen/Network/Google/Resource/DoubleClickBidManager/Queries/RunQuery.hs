@@ -35,10 +35,11 @@ module Network.Google.Resource.DoubleClickBidManager.Queries.RunQuery
     -- * Request Lenses
     , qrqQueryId
     , qrqPayload
+    , qrqFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.queries.runquery@ method which the
 -- 'QueriesRunQuery' request conforms to.
@@ -47,8 +48,9 @@ type QueriesRunQueryResource =
        "v1" :>
          "query" :>
            Capture "queryId" (Textual Int64) :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] RunQueryRequest :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] RunQueryRequest :> Post '[JSON] ()
 
 -- | Runs a stored query to generate a report.
 --
@@ -56,6 +58,7 @@ type QueriesRunQueryResource =
 data QueriesRunQuery = QueriesRunQuery'
     { _qrqQueryId :: !(Textual Int64)
     , _qrqPayload :: !RunQueryRequest
+    , _qrqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueriesRunQuery' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data QueriesRunQuery = QueriesRunQuery'
 -- * 'qrqQueryId'
 --
 -- * 'qrqPayload'
+--
+-- * 'qrqFields'
 queriesRunQuery
     :: Int64 -- ^ 'qrqQueryId'
     -> RunQueryRequest -- ^ 'qrqPayload'
     -> QueriesRunQuery
-queriesRunQuery pQrqQueryId_ pQrqPayload_ =
+queriesRunQuery pQrqQueryId_ pQrqPayload_ = 
     QueriesRunQuery'
     { _qrqQueryId = _Coerce # pQrqQueryId_
     , _qrqPayload = pQrqPayload_
+    , _qrqFields = Nothing
     }
 
 -- | Query ID to run.
@@ -86,11 +92,18 @@ qrqPayload :: Lens' QueriesRunQuery RunQueryRequest
 qrqPayload
   = lens _qrqPayload (\ s a -> s{_qrqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qrqFields :: Lens' QueriesRunQuery (Maybe Text)
+qrqFields
+  = lens _qrqFields (\ s a -> s{_qrqFields = a})
+
 instance GoogleRequest QueriesRunQuery where
         type Rs QueriesRunQuery = ()
-        type Scopes QueriesRunQuery = '[]
+        type Scopes QueriesRunQuery =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient QueriesRunQuery'{..}
-          = go _qrqQueryId (Just AltJSON) _qrqPayload
+          = go _qrqQueryId _qrqFields (Just AltJSON)
+              _qrqPayload
               doubleClickBidsService
           where go
                   = buildClient

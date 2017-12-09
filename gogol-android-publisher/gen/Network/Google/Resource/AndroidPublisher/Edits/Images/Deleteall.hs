@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Images.Deleteall
     , ediImageType
     , ediLanguage
     , ediEditId
+    , ediFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.images.deleteall@ method which the
 -- 'EditsImagesDeleteall' request conforms to.
@@ -54,17 +55,19 @@ type EditsImagesDeleteallResource =
                  "listings" :>
                    Capture "language" Text :>
                      Capture "imageType" EditsImagesDeleteallImageType :>
-                       QueryParam "alt" AltJSON :>
-                         Delete '[JSON] ImagesDeleteAllResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Delete '[JSON] ImagesDeleteAllResponse
 
 -- | Deletes all images for the specified language and image type.
 --
 -- /See:/ 'editsImagesDeleteall' smart constructor.
 data EditsImagesDeleteall = EditsImagesDeleteall'
     { _ediPackageName :: !Text
-    , _ediImageType   :: !EditsImagesDeleteallImageType
-    , _ediLanguage    :: !Text
-    , _ediEditId      :: !Text
+    , _ediImageType :: !EditsImagesDeleteallImageType
+    , _ediLanguage :: !Text
+    , _ediEditId :: !Text
+    , _ediFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsImagesDeleteall' with the minimum fields required to make a request.
@@ -78,18 +81,21 @@ data EditsImagesDeleteall = EditsImagesDeleteall'
 -- * 'ediLanguage'
 --
 -- * 'ediEditId'
+--
+-- * 'ediFields'
 editsImagesDeleteall
     :: Text -- ^ 'ediPackageName'
     -> EditsImagesDeleteallImageType -- ^ 'ediImageType'
     -> Text -- ^ 'ediLanguage'
     -> Text -- ^ 'ediEditId'
     -> EditsImagesDeleteall
-editsImagesDeleteall pEdiPackageName_ pEdiImageType_ pEdiLanguage_ pEdiEditId_ =
+editsImagesDeleteall pEdiPackageName_ pEdiImageType_ pEdiLanguage_ pEdiEditId_ = 
     EditsImagesDeleteall'
     { _ediPackageName = pEdiPackageName_
     , _ediImageType = pEdiImageType_
     , _ediLanguage = pEdiLanguage_
     , _ediEditId = pEdiEditId_
+    , _ediFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -115,6 +121,11 @@ ediEditId :: Lens' EditsImagesDeleteall Text
 ediEditId
   = lens _ediEditId (\ s a -> s{_ediEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ediFields :: Lens' EditsImagesDeleteall (Maybe Text)
+ediFields
+  = lens _ediFields (\ s a -> s{_ediFields = a})
+
 instance GoogleRequest EditsImagesDeleteall where
         type Rs EditsImagesDeleteall =
              ImagesDeleteAllResponse
@@ -123,6 +134,7 @@ instance GoogleRequest EditsImagesDeleteall where
         requestClient EditsImagesDeleteall'{..}
           = go _ediPackageName _ediEditId _ediLanguage
               _ediImageType
+              _ediFields
               (Just AltJSON)
               androidPublisherService
           where go

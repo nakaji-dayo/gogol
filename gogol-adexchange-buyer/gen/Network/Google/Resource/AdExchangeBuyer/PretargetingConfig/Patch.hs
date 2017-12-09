@@ -37,10 +37,11 @@ module Network.Google.Resource.AdExchangeBuyer.PretargetingConfig.Patch
     , pcpPayload
     , pcpAccountId
     , pcpConfigId
+    , pcpFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.pretargetingConfig.patch@ method which the
 -- 'PretargetingConfigPatch' request conforms to.
@@ -50,18 +51,20 @@ type PretargetingConfigPatchResource =
          "pretargetingconfigs" :>
            Capture "accountId" (Textual Int64) :>
              Capture "configId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PretargetingConfig :>
-                   Patch '[JSON] PretargetingConfig
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PretargetingConfig :>
+                     Patch '[JSON] PretargetingConfig
 
 -- | Updates an existing pretargeting config. This method supports patch
 -- semantics.
 --
 -- /See:/ 'pretargetingConfigPatch' smart constructor.
 data PretargetingConfigPatch = PretargetingConfigPatch'
-    { _pcpPayload   :: !PretargetingConfig
+    { _pcpPayload :: !PretargetingConfig
     , _pcpAccountId :: !(Textual Int64)
-    , _pcpConfigId  :: !(Textual Int64)
+    , _pcpConfigId :: !(Textual Int64)
+    , _pcpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigPatch' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data PretargetingConfigPatch = PretargetingConfigPatch'
 -- * 'pcpAccountId'
 --
 -- * 'pcpConfigId'
+--
+-- * 'pcpFields'
 pretargetingConfigPatch
     :: PretargetingConfig -- ^ 'pcpPayload'
     -> Int64 -- ^ 'pcpAccountId'
     -> Int64 -- ^ 'pcpConfigId'
     -> PretargetingConfigPatch
-pretargetingConfigPatch pPcpPayload_ pPcpAccountId_ pPcpConfigId_ =
+pretargetingConfigPatch pPcpPayload_ pPcpAccountId_ pPcpConfigId_ = 
     PretargetingConfigPatch'
     { _pcpPayload = pPcpPayload_
     , _pcpAccountId = _Coerce # pPcpAccountId_
     , _pcpConfigId = _Coerce # pPcpConfigId_
+    , _pcpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -102,12 +108,18 @@ pcpConfigId
   = lens _pcpConfigId (\ s a -> s{_pcpConfigId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pcpFields :: Lens' PretargetingConfigPatch (Maybe Text)
+pcpFields
+  = lens _pcpFields (\ s a -> s{_pcpFields = a})
+
 instance GoogleRequest PretargetingConfigPatch where
         type Rs PretargetingConfigPatch = PretargetingConfig
         type Scopes PretargetingConfigPatch =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient PretargetingConfigPatch'{..}
-          = go _pcpAccountId _pcpConfigId (Just AltJSON)
+          = go _pcpAccountId _pcpConfigId _pcpFields
+              (Just AltJSON)
               _pcpPayload
               adExchangeBuyerService
           where go

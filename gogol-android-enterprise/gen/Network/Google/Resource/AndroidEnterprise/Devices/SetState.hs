@@ -41,10 +41,11 @@ module Network.Google.Resource.AndroidEnterprise.Devices.SetState
     , dssPayload
     , dssUserId
     , dssDeviceId
+    , dssFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.devices.setState@ method which the
 -- 'DevicesSetState' request conforms to.
@@ -58,9 +59,10 @@ type DevicesSetStateResource =
                  "devices" :>
                    Capture "deviceId" Text :>
                      "state" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] DeviceState :>
-                           Put '[JSON] DeviceState
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] DeviceState :>
+                             Put '[JSON] DeviceState
 
 -- | Sets whether a device\'s access to Google services is enabled or
 -- disabled. The device state takes effect only if enforcing EMM policies
@@ -71,9 +73,10 @@ type DevicesSetStateResource =
 -- /See:/ 'devicesSetState' smart constructor.
 data DevicesSetState = DevicesSetState'
     { _dssEnterpriseId :: !Text
-    , _dssPayload      :: !DeviceState
-    , _dssUserId       :: !Text
-    , _dssDeviceId     :: !Text
+    , _dssPayload :: !DeviceState
+    , _dssUserId :: !Text
+    , _dssDeviceId :: !Text
+    , _dssFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DevicesSetState' with the minimum fields required to make a request.
@@ -87,18 +90,21 @@ data DevicesSetState = DevicesSetState'
 -- * 'dssUserId'
 --
 -- * 'dssDeviceId'
+--
+-- * 'dssFields'
 devicesSetState
     :: Text -- ^ 'dssEnterpriseId'
     -> DeviceState -- ^ 'dssPayload'
     -> Text -- ^ 'dssUserId'
     -> Text -- ^ 'dssDeviceId'
     -> DevicesSetState
-devicesSetState pDssEnterpriseId_ pDssPayload_ pDssUserId_ pDssDeviceId_ =
+devicesSetState pDssEnterpriseId_ pDssPayload_ pDssUserId_ pDssDeviceId_ = 
     DevicesSetState'
     { _dssEnterpriseId = pDssEnterpriseId_
     , _dssPayload = pDssPayload_
     , _dssUserId = pDssUserId_
     , _dssDeviceId = pDssDeviceId_
+    , _dssFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -122,12 +128,18 @@ dssDeviceId :: Lens' DevicesSetState Text
 dssDeviceId
   = lens _dssDeviceId (\ s a -> s{_dssDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dssFields :: Lens' DevicesSetState (Maybe Text)
+dssFields
+  = lens _dssFields (\ s a -> s{_dssFields = a})
+
 instance GoogleRequest DevicesSetState where
         type Rs DevicesSetState = DeviceState
         type Scopes DevicesSetState =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient DevicesSetState'{..}
           = go _dssEnterpriseId _dssUserId _dssDeviceId
+              _dssFields
               (Just AltJSON)
               _dssPayload
               androidEnterpriseService

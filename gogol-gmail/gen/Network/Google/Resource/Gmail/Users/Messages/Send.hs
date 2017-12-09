@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Send
     -- * Request Lenses
     , umsPayload
     , umsUserId
+    , umsFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.send@ method which the
 -- 'UsersMessagesSend' request conforms to.
@@ -50,8 +51,9 @@ type UsersMessagesSendResource =
            Capture "userId" Text :>
              "messages" :>
                "send" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Message :> Post '[JSON] Message
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Message :> Post '[JSON] Message
        :<|>
        "upload" :>
          "gmail" :>
@@ -60,10 +62,11 @@ type UsersMessagesSendResource =
                Capture "userId" Text :>
                  "messages" :>
                    "send" :>
-                     QueryParam "alt" AltJSON :>
-                       QueryParam "uploadType" Multipart :>
-                         MultipartRelated '[JSON] Message :>
-                           Post '[JSON] Message
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" Multipart :>
+                           MultipartRelated '[JSON] Message :>
+                             Post '[JSON] Message
 
 -- | Sends the specified message to the recipients in the To, Cc, and Bcc
 -- headers.
@@ -71,7 +74,8 @@ type UsersMessagesSendResource =
 -- /See:/ 'usersMessagesSend' smart constructor.
 data UsersMessagesSend = UsersMessagesSend'
     { _umsPayload :: !Message
-    , _umsUserId  :: !Text
+    , _umsUserId :: !Text
+    , _umsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesSend' with the minimum fields required to make a request.
@@ -81,13 +85,16 @@ data UsersMessagesSend = UsersMessagesSend'
 -- * 'umsPayload'
 --
 -- * 'umsUserId'
+--
+-- * 'umsFields'
 usersMessagesSend
     :: Message -- ^ 'umsPayload'
     -> UsersMessagesSend
-usersMessagesSend pUmsPayload_ =
+usersMessagesSend pUmsPayload_ = 
     UsersMessagesSend'
     { _umsPayload = pUmsPayload_
     , _umsUserId = "me"
+    , _umsFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -101,6 +108,11 @@ umsUserId :: Lens' UsersMessagesSend Text
 umsUserId
   = lens _umsUserId (\ s a -> s{_umsUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umsFields :: Lens' UsersMessagesSend (Maybe Text)
+umsFields
+  = lens _umsFields (\ s a -> s{_umsFields = a})
+
 instance GoogleRequest UsersMessagesSend where
         type Rs UsersMessagesSend = Message
         type Scopes UsersMessagesSend =
@@ -109,7 +121,7 @@ instance GoogleRequest UsersMessagesSend where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.send"]
         requestClient UsersMessagesSend'{..}
-          = go _umsUserId (Just AltJSON) _umsPayload
+          = go _umsUserId _umsFields (Just AltJSON) _umsPayload
               gmailService
           where go :<|> _
                   = buildClient
@@ -123,7 +135,8 @@ instance GoogleRequest
              Scopes UsersMessagesSend
         requestClient
           (MediaUpload UsersMessagesSend'{..} body)
-          = go _umsUserId (Just AltJSON) (Just Multipart)
+          = go _umsUserId _umsFields (Just AltJSON)
+              (Just Multipart)
               _umsPayload
               body
               gmailService

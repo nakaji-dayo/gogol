@@ -35,11 +35,12 @@ module Network.Google.Resource.Compute.BackendServices.Get
 
     -- * Request Lenses
     , bsgProject
+    , bsgFields
     , bsgBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.backendServices.get@ method which the
 -- 'BackendServicesGet' request conforms to.
@@ -51,15 +52,17 @@ type BackendServicesGetResource =
              "global" :>
                "backendServices" :>
                  Capture "backendService" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] BackendService
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] BackendService
 
 -- | Returns the specified BackendService resource. Get a list of available
 -- backend services by making a list() request.
 --
 -- /See:/ 'backendServicesGet' smart constructor.
 data BackendServicesGet = BackendServicesGet'
-    { _bsgProject        :: !Text
+    { _bsgProject :: !Text
+    , _bsgFields :: !(Maybe Text)
     , _bsgBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -69,14 +72,17 @@ data BackendServicesGet = BackendServicesGet'
 --
 -- * 'bsgProject'
 --
+-- * 'bsgFields'
+--
 -- * 'bsgBackendService'
 backendServicesGet
     :: Text -- ^ 'bsgProject'
     -> Text -- ^ 'bsgBackendService'
     -> BackendServicesGet
-backendServicesGet pBsgProject_ pBsgBackendService_ =
+backendServicesGet pBsgProject_ pBsgBackendService_ = 
     BackendServicesGet'
     { _bsgProject = pBsgProject_
+    , _bsgFields = Nothing
     , _bsgBackendService = pBsgBackendService_
     }
 
@@ -84,6 +90,11 @@ backendServicesGet pBsgProject_ pBsgBackendService_ =
 bsgProject :: Lens' BackendServicesGet Text
 bsgProject
   = lens _bsgProject (\ s a -> s{_bsgProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+bsgFields :: Lens' BackendServicesGet (Maybe Text)
+bsgFields
+  = lens _bsgFields (\ s a -> s{_bsgFields = a})
 
 -- | Name of the BackendService resource to return.
 bsgBackendService :: Lens' BackendServicesGet Text
@@ -98,7 +109,8 @@ instance GoogleRequest BackendServicesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient BackendServicesGet'{..}
-          = go _bsgProject _bsgBackendService (Just AltJSON)
+          = go _bsgProject _bsgBackendService _bsgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.ACL.Delete
     -- * Request Lenses
     , adCalendarId
     , adRuleId
+    , adFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.delete@ method which the
 -- 'ACLDelete' request conforms to.
@@ -49,14 +50,16 @@ type ACLDeleteResource =
            Capture "calendarId" Text :>
              "acl" :>
                Capture "ruleId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an access control rule.
 --
 -- /See:/ 'aclDelete' smart constructor.
 data ACLDelete = ACLDelete'
     { _adCalendarId :: !Text
-    , _adRuleId     :: !Text
+    , _adRuleId :: !Text
+    , _adFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ACLDelete = ACLDelete'
 -- * 'adCalendarId'
 --
 -- * 'adRuleId'
+--
+-- * 'adFields'
 aclDelete
     :: Text -- ^ 'adCalendarId'
     -> Text -- ^ 'adRuleId'
     -> ACLDelete
-aclDelete pAdCalendarId_ pAdRuleId_ =
+aclDelete pAdCalendarId_ pAdRuleId_ = 
     ACLDelete'
     { _adCalendarId = pAdCalendarId_
     , _adRuleId = pAdRuleId_
+    , _adFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -87,12 +93,16 @@ adCalendarId
 adRuleId :: Lens' ACLDelete Text
 adRuleId = lens _adRuleId (\ s a -> s{_adRuleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+adFields :: Lens' ACLDelete (Maybe Text)
+adFields = lens _adFields (\ s a -> s{_adFields = a})
+
 instance GoogleRequest ACLDelete where
         type Rs ACLDelete = ()
         type Scopes ACLDelete =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient ACLDelete'{..}
-          = go _adCalendarId _adRuleId (Just AltJSON)
+          = go _adCalendarId _adRuleId _adFields (Just AltJSON)
               appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy ACLDeleteResource)

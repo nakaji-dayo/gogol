@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Instances.Get
 
     -- * Request Lenses
     , igProject
+    , igFields
     , igInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.get@ method which the
 -- 'InstancesGet' request conforms to.
@@ -49,14 +50,16 @@ type InstancesGetResource =
            Capture "project" Text :>
              "instances" :>
                Capture "instance" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] DatabaseInstance
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] DatabaseInstance
 
 -- | Retrieves a resource containing information about a Cloud SQL instance.
 --
 -- /See:/ 'instancesGet' smart constructor.
 data InstancesGet = InstancesGet'
-    { _igProject  :: !Text
+    { _igProject :: !Text
+    , _igFields :: !(Maybe Text)
     , _igInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -66,14 +69,17 @@ data InstancesGet = InstancesGet'
 --
 -- * 'igProject'
 --
+-- * 'igFields'
+--
 -- * 'igInstance'
 instancesGet
     :: Text -- ^ 'igProject'
     -> Text -- ^ 'igInstance'
     -> InstancesGet
-instancesGet pIgProject_ pIgInstance_ =
+instancesGet pIgProject_ pIgInstance_ = 
     InstancesGet'
     { _igProject = pIgProject_
+    , _igFields = Nothing
     , _igInstance = pIgInstance_
     }
 
@@ -81,6 +87,10 @@ instancesGet pIgProject_ pIgInstance_ =
 igProject :: Lens' InstancesGet Text
 igProject
   = lens _igProject (\ s a -> s{_igProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+igFields :: Lens' InstancesGet (Maybe Text)
+igFields = lens _igFields (\ s a -> s{_igFields = a})
 
 -- | Database instance ID. This does not include the project ID.
 igInstance :: Lens' InstancesGet Text
@@ -93,7 +103,7 @@ instance GoogleRequest InstancesGet where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesGet'{..}
-          = go _igProject _igInstance (Just AltJSON)
+          = go _igProject _igInstance _igFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy InstancesGetResource)

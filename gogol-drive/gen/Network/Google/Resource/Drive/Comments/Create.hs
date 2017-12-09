@@ -35,10 +35,11 @@ module Network.Google.Resource.Drive.Comments.Create
     -- * Request Lenses
     , ccPayload
     , ccFileId
+    , ccFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.comments.create@ method which the
 -- 'CommentsCreate' request conforms to.
@@ -48,15 +49,17 @@ type CommentsCreateResource =
          "files" :>
            Capture "fileId" Text :>
              "comments" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Comment :> Post '[JSON] Comment
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Comment :> Post '[JSON] Comment
 
 -- | Creates a new comment on a file.
 --
 -- /See:/ 'commentsCreate' smart constructor.
 data CommentsCreate = CommentsCreate'
     { _ccPayload :: !Comment
-    , _ccFileId  :: !Text
+    , _ccFileId :: !Text
+    , _ccFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsCreate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CommentsCreate = CommentsCreate'
 -- * 'ccPayload'
 --
 -- * 'ccFileId'
+--
+-- * 'ccFields'
 commentsCreate
     :: Comment -- ^ 'ccPayload'
     -> Text -- ^ 'ccFileId'
     -> CommentsCreate
-commentsCreate pCcPayload_ pCcFileId_ =
+commentsCreate pCcPayload_ pCcFileId_ = 
     CommentsCreate'
     { _ccPayload = pCcPayload_
     , _ccFileId = pCcFileId_
+    , _ccFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -85,13 +91,18 @@ ccPayload
 ccFileId :: Lens' CommentsCreate Text
 ccFileId = lens _ccFileId (\ s a -> s{_ccFileId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccFields :: Lens' CommentsCreate (Maybe Text)
+ccFields = lens _ccFields (\ s a -> s{_ccFields = a})
+
 instance GoogleRequest CommentsCreate where
         type Rs CommentsCreate = Comment
         type Scopes CommentsCreate =
              '["https://www.googleapis.com/auth/drive",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient CommentsCreate'{..}
-          = go _ccFileId (Just AltJSON) _ccPayload driveService
+          = go _ccFileId _ccFields (Just AltJSON) _ccPayload
+              driveService
           where go
                   = buildClient (Proxy :: Proxy CommentsCreateResource)
                       mempty

@@ -39,10 +39,11 @@ module Network.Google.Resource.YouTube.Comments.List
     , cllTextFormat
     , cllMaxResults
     , cllParentId
+    , cllFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.list@ method which the
 -- 'CommentsList' request conforms to.
@@ -56,19 +57,21 @@ type CommentsListResource =
                  QueryParam "textFormat" CommentsListTextFormat :>
                    QueryParam "maxResults" (Textual Word32) :>
                      QueryParam "parentId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CommentListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CommentListResponse
 
 -- | Returns a list of comments that match the API request parameters.
 --
 -- /See:/ 'commentsList' smart constructor.
 data CommentsList = CommentsList'
-    { _cllPart       :: !Text
-    , _cllId         :: !(Maybe Text)
-    , _cllPageToken  :: !(Maybe Text)
+    { _cllPart :: !Text
+    , _cllId :: !(Maybe Text)
+    , _cllPageToken :: !(Maybe Text)
     , _cllTextFormat :: !CommentsListTextFormat
     , _cllMaxResults :: !(Textual Word32)
-    , _cllParentId   :: !(Maybe Text)
+    , _cllParentId :: !(Maybe Text)
+    , _cllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsList' with the minimum fields required to make a request.
@@ -86,10 +89,12 @@ data CommentsList = CommentsList'
 -- * 'cllMaxResults'
 --
 -- * 'cllParentId'
+--
+-- * 'cllFields'
 commentsList
     :: Text -- ^ 'cllPart'
     -> CommentsList
-commentsList pCllPart_ =
+commentsList pCllPart_ = 
     CommentsList'
     { _cllPart = pCllPart_
     , _cllId = Nothing
@@ -97,6 +102,7 @@ commentsList pCllPart_ =
     , _cllTextFormat = HTML
     , _cllMaxResults = 20
     , _cllParentId = Nothing
+    , _cllFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -142,6 +148,11 @@ cllParentId :: Lens' CommentsList (Maybe Text)
 cllParentId
   = lens _cllParentId (\ s a -> s{_cllParentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cllFields :: Lens' CommentsList (Maybe Text)
+cllFields
+  = lens _cllFields (\ s a -> s{_cllFields = a})
+
 instance GoogleRequest CommentsList where
         type Rs CommentsList = CommentListResponse
         type Scopes CommentsList =
@@ -151,6 +162,7 @@ instance GoogleRequest CommentsList where
               (Just _cllTextFormat)
               (Just _cllMaxResults)
               _cllParentId
+              _cllFields
               (Just AltJSON)
               youTubeService
           where go

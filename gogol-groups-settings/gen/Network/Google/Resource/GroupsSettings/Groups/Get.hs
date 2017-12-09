@@ -34,10 +34,11 @@ module Network.Google.Resource.GroupsSettings.Groups.Get
 
     -- * Request Lenses
     , ggGroupUniqueId
+    , ggFields
     ) where
 
-import           Network.Google.GroupsSettings.Types
-import           Network.Google.Prelude
+import Network.Google.GroupsSettings.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @groupsSettings.groups.get@ method which the
 -- 'GroupsGet' request conforms to.
@@ -46,13 +47,15 @@ type GroupsGetResource =
        "v1" :>
          "groups" :>
            Capture "groupUniqueId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Groups
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Groups
 
 -- | Gets one resource by id.
 --
 -- /See:/ 'groupsGet' smart constructor.
-newtype GroupsGet = GroupsGet'
-    { _ggGroupUniqueId :: Text
+data GroupsGet = GroupsGet'
+    { _ggGroupUniqueId :: !Text
+    , _ggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype GroupsGet = GroupsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ggGroupUniqueId'
+--
+-- * 'ggFields'
 groupsGet
     :: Text -- ^ 'ggGroupUniqueId'
     -> GroupsGet
-groupsGet pGgGroupUniqueId_ =
+groupsGet pGgGroupUniqueId_ = 
     GroupsGet'
     { _ggGroupUniqueId = pGgGroupUniqueId_
+    , _ggFields = Nothing
     }
 
 -- | The resource ID
@@ -74,12 +80,16 @@ ggGroupUniqueId
   = lens _ggGroupUniqueId
       (\ s a -> s{_ggGroupUniqueId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ggFields :: Lens' GroupsGet (Maybe Text)
+ggFields = lens _ggFields (\ s a -> s{_ggFields = a})
+
 instance GoogleRequest GroupsGet where
         type Rs GroupsGet = Groups
         type Scopes GroupsGet =
              '["https://www.googleapis.com/auth/apps.groups.settings"]
         requestClient GroupsGet'{..}
-          = go _ggGroupUniqueId (Just AltJSON)
+          = go _ggGroupUniqueId _ggFields (Just AltJSON)
               groupsSettingsService
           where go
                   = buildClient (Proxy :: Proxy GroupsGetResource)

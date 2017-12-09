@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.Achievements.SetStepsAtLeast
     , assalAchievementId
     , assalConsistencyToken
     , assalSteps
+    , assalFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.setStepsAtLeast@ method which the
 -- 'AchievementsSetStepsAtLeast' request conforms to.
@@ -54,8 +55,9 @@ type AchievementsSetStepsAtLeastResource =
              "setStepsAtLeast" :>
                QueryParam "steps" (Textual Int32) :>
                  QueryParam "consistencyToken" (Textual Int64) :>
-                   QueryParam "alt" AltJSON :>
-                     Post '[JSON] AchievementSetStepsAtLeastResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Post '[JSON] AchievementSetStepsAtLeastResponse
 
 -- | Sets the steps for the currently authenticated player towards unlocking
 -- an achievement. If the steps parameter is less than the current number
@@ -64,9 +66,10 @@ type AchievementsSetStepsAtLeastResource =
 --
 -- /See:/ 'achievementsSetStepsAtLeast' smart constructor.
 data AchievementsSetStepsAtLeast = AchievementsSetStepsAtLeast'
-    { _assalAchievementId    :: !Text
+    { _assalAchievementId :: !Text
     , _assalConsistencyToken :: !(Maybe (Textual Int64))
-    , _assalSteps            :: !(Textual Int32)
+    , _assalSteps :: !(Textual Int32)
+    , _assalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsSetStepsAtLeast' with the minimum fields required to make a request.
@@ -78,15 +81,18 @@ data AchievementsSetStepsAtLeast = AchievementsSetStepsAtLeast'
 -- * 'assalConsistencyToken'
 --
 -- * 'assalSteps'
+--
+-- * 'assalFields'
 achievementsSetStepsAtLeast
     :: Text -- ^ 'assalAchievementId'
     -> Int32 -- ^ 'assalSteps'
     -> AchievementsSetStepsAtLeast
-achievementsSetStepsAtLeast pAssalAchievementId_ pAssalSteps_ =
+achievementsSetStepsAtLeast pAssalAchievementId_ pAssalSteps_ = 
     AchievementsSetStepsAtLeast'
     { _assalAchievementId = pAssalAchievementId_
     , _assalConsistencyToken = Nothing
     , _assalSteps = _Coerce # pAssalSteps_
+    , _assalFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -108,6 +114,11 @@ assalSteps
   = lens _assalSteps (\ s a -> s{_assalSteps = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+assalFields :: Lens' AchievementsSetStepsAtLeast (Maybe Text)
+assalFields
+  = lens _assalFields (\ s a -> s{_assalFields = a})
+
 instance GoogleRequest AchievementsSetStepsAtLeast
          where
         type Rs AchievementsSetStepsAtLeast =
@@ -118,6 +129,7 @@ instance GoogleRequest AchievementsSetStepsAtLeast
         requestClient AchievementsSetStepsAtLeast'{..}
           = go _assalAchievementId (Just _assalSteps)
               _assalConsistencyToken
+              _assalFields
               (Just AltJSON)
               gamesService
           where go

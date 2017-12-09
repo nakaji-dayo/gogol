@@ -35,13 +35,15 @@ module Network.Google.Resource.Storage.ObjectAccessControls.Update
     -- * Request Lenses
     , oacuBucket
     , oacuPayload
+    , oacuUserProject
     , oacuObject
     , oacuEntity
     , oacuGeneration
+    , oacuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.objectAccessControls.update@ method which the
 -- 'ObjectAccessControlsUpdate' request conforms to.
@@ -54,20 +56,24 @@ type ObjectAccessControlsUpdateResource =
                Capture "object" Text :>
                  "acl" :>
                    Capture "entity" Text :>
-                     QueryParam "generation" (Textual Int64) :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ObjectAccessControl :>
-                           Put '[JSON] ObjectAccessControl
+                     QueryParam "userProject" Text :>
+                       QueryParam "generation" (Textual Int64) :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ObjectAccessControl :>
+                               Put '[JSON] ObjectAccessControl
 
 -- | Updates an ACL entry on the specified object.
 --
 -- /See:/ 'objectAccessControlsUpdate' smart constructor.
 data ObjectAccessControlsUpdate = ObjectAccessControlsUpdate'
-    { _oacuBucket     :: !Text
-    , _oacuPayload    :: !ObjectAccessControl
-    , _oacuObject     :: !Text
-    , _oacuEntity     :: !Text
+    { _oacuBucket :: !Text
+    , _oacuPayload :: !ObjectAccessControl
+    , _oacuUserProject :: !(Maybe Text)
+    , _oacuObject :: !Text
+    , _oacuEntity :: !Text
     , _oacuGeneration :: !(Maybe (Textual Int64))
+    , _oacuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ObjectAccessControlsUpdate' with the minimum fields required to make a request.
@@ -78,24 +84,30 @@ data ObjectAccessControlsUpdate = ObjectAccessControlsUpdate'
 --
 -- * 'oacuPayload'
 --
+-- * 'oacuUserProject'
+--
 -- * 'oacuObject'
 --
 -- * 'oacuEntity'
 --
 -- * 'oacuGeneration'
+--
+-- * 'oacuFields'
 objectAccessControlsUpdate
     :: Text -- ^ 'oacuBucket'
     -> ObjectAccessControl -- ^ 'oacuPayload'
     -> Text -- ^ 'oacuObject'
     -> Text -- ^ 'oacuEntity'
     -> ObjectAccessControlsUpdate
-objectAccessControlsUpdate pOacuBucket_ pOacuPayload_ pOacuObject_ pOacuEntity_ =
+objectAccessControlsUpdate pOacuBucket_ pOacuPayload_ pOacuObject_ pOacuEntity_ = 
     ObjectAccessControlsUpdate'
     { _oacuBucket = pOacuBucket_
     , _oacuPayload = pOacuPayload_
+    , _oacuUserProject = Nothing
     , _oacuObject = pOacuObject_
     , _oacuEntity = pOacuEntity_
     , _oacuGeneration = Nothing
+    , _oacuFields = Nothing
     }
 
 -- | Name of a bucket.
@@ -107,6 +119,13 @@ oacuBucket
 oacuPayload :: Lens' ObjectAccessControlsUpdate ObjectAccessControl
 oacuPayload
   = lens _oacuPayload (\ s a -> s{_oacuPayload = a})
+
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+oacuUserProject :: Lens' ObjectAccessControlsUpdate (Maybe Text)
+oacuUserProject
+  = lens _oacuUserProject
+      (\ s a -> s{_oacuUserProject = a})
 
 -- | Name of the object. For information about how to URL encode object names
 -- to be path safe, see Encoding URI Path Parts.
@@ -129,6 +148,11 @@ oacuGeneration
       (\ s a -> s{_oacuGeneration = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+oacuFields :: Lens' ObjectAccessControlsUpdate (Maybe Text)
+oacuFields
+  = lens _oacuFields (\ s a -> s{_oacuFields = a})
+
 instance GoogleRequest ObjectAccessControlsUpdate
          where
         type Rs ObjectAccessControlsUpdate =
@@ -138,7 +162,9 @@ instance GoogleRequest ObjectAccessControlsUpdate
                "https://www.googleapis.com/auth/devstorage.full_control"]
         requestClient ObjectAccessControlsUpdate'{..}
           = go _oacuBucket _oacuObject _oacuEntity
+              _oacuUserProject
               _oacuGeneration
+              _oacuFields
               (Just AltJSON)
               _oacuPayload
               storageService

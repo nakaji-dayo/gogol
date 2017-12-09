@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Regions.Get
     -- * Request Lenses
     , rgProject
     , rgRegion
+    , rgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regions.get@ method which the
 -- 'RegionsGet' request conforms to.
@@ -50,7 +51,8 @@ type RegionsGetResource =
            Capture "project" Text :>
              "regions" :>
                Capture "region" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Region
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Region
 
 -- | Returns the specified Region resource. Get a list of available regions
 -- by making a list() request.
@@ -58,7 +60,8 @@ type RegionsGetResource =
 -- /See:/ 'regionsGet' smart constructor.
 data RegionsGet = RegionsGet'
     { _rgProject :: !Text
-    , _rgRegion  :: !Text
+    , _rgRegion :: !Text
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionsGet' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data RegionsGet = RegionsGet'
 -- * 'rgProject'
 --
 -- * 'rgRegion'
+--
+-- * 'rgFields'
 regionsGet
     :: Text -- ^ 'rgProject'
     -> Text -- ^ 'rgRegion'
     -> RegionsGet
-regionsGet pRgProject_ pRgRegion_ =
+regionsGet pRgProject_ pRgRegion_ = 
     RegionsGet'
     { _rgProject = pRgProject_
     , _rgRegion = pRgRegion_
+    , _rgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,6 +93,10 @@ rgProject
 rgRegion :: Lens' RegionsGet Text
 rgRegion = lens _rgRegion (\ s a -> s{_rgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' RegionsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest RegionsGet where
         type Rs RegionsGet = Region
         type Scopes RegionsGet =
@@ -94,7 +104,7 @@ instance GoogleRequest RegionsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionsGet'{..}
-          = go _rgProject _rgRegion (Just AltJSON)
+          = go _rgProject _rgRegion _rgFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy RegionsGetResource)

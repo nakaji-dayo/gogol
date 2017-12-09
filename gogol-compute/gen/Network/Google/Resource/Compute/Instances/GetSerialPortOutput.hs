@@ -36,12 +36,13 @@ module Network.Google.Resource.Compute.Instances.GetSerialPortOutput
     , igspoProject
     , igspoStart
     , igspoZone
+    , igspoFields
     , igspoPort
     , igspoInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.getSerialPortOutput@ method which the
 -- 'InstancesGetSerialPortOutput' request conforms to.
@@ -57,17 +58,19 @@ type InstancesGetSerialPortOutputResource =
                      "serialPort" :>
                        QueryParam "start" (Textual Int64) :>
                          QueryParam "port" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] SerialPortOutput
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] SerialPortOutput
 
 -- | Returns the specified instance\'s serial port output.
 --
 -- /See:/ 'instancesGetSerialPortOutput' smart constructor.
 data InstancesGetSerialPortOutput = InstancesGetSerialPortOutput'
-    { _igspoProject  :: !Text
-    , _igspoStart    :: !(Maybe (Textual Int64))
-    , _igspoZone     :: !Text
-    , _igspoPort     :: !(Textual Int32)
+    { _igspoProject :: !Text
+    , _igspoStart :: !(Maybe (Textual Int64))
+    , _igspoZone :: !Text
+    , _igspoFields :: !(Maybe Text)
+    , _igspoPort :: !(Textual Int32)
     , _igspoInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -81,6 +84,8 @@ data InstancesGetSerialPortOutput = InstancesGetSerialPortOutput'
 --
 -- * 'igspoZone'
 --
+-- * 'igspoFields'
+--
 -- * 'igspoPort'
 --
 -- * 'igspoInstance'
@@ -89,11 +94,12 @@ instancesGetSerialPortOutput
     -> Text -- ^ 'igspoZone'
     -> Text -- ^ 'igspoInstance'
     -> InstancesGetSerialPortOutput
-instancesGetSerialPortOutput pIgspoProject_ pIgspoZone_ pIgspoInstance_ =
+instancesGetSerialPortOutput pIgspoProject_ pIgspoZone_ pIgspoInstance_ = 
     InstancesGetSerialPortOutput'
     { _igspoProject = pIgspoProject_
     , _igspoStart = Nothing
     , _igspoZone = pIgspoZone_
+    , _igspoFields = Nothing
     , _igspoPort = 1
     , _igspoInstance = pIgspoInstance_
     }
@@ -103,8 +109,10 @@ igspoProject :: Lens' InstancesGetSerialPortOutput Text
 igspoProject
   = lens _igspoProject (\ s a -> s{_igspoProject = a})
 
--- | For the initial request, leave this field unspecified. For subsequent
--- calls, this field should be set to the next value that was returned in
+-- | Returns output starting from a specific byte position. Use this to page
+-- through output when the output is too large to return in a single
+-- request. For the initial request, leave this field unspecified. For
+-- subsequent calls, this field should be set to the next value returned in
 -- the previous call.
 igspoStart :: Lens' InstancesGetSerialPortOutput (Maybe Int64)
 igspoStart
@@ -115,6 +123,11 @@ igspoStart
 igspoZone :: Lens' InstancesGetSerialPortOutput Text
 igspoZone
   = lens _igspoZone (\ s a -> s{_igspoZone = a})
+
+-- | Selector specifying which fields to include in a partial response.
+igspoFields :: Lens' InstancesGetSerialPortOutput (Maybe Text)
+igspoFields
+  = lens _igspoFields (\ s a -> s{_igspoFields = a})
 
 -- | Specifies which COM or serial port to retrieve data from.
 igspoPort :: Lens' InstancesGetSerialPortOutput Int32
@@ -140,6 +153,7 @@ instance GoogleRequest InstancesGetSerialPortOutput
           = go _igspoProject _igspoZone _igspoInstance
               _igspoStart
               (Just _igspoPort)
+              _igspoFields
               (Just AltJSON)
               computeService
           where go

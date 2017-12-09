@@ -34,10 +34,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.Unenroll
 
     -- * Request Lenses
     , euuEnterpriseId
+    , euuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.unenroll@ method which the
 -- 'EnterprisesUnenroll' request conforms to.
@@ -47,13 +48,15 @@ type EnterprisesUnenrollResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "unenroll" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Unenrolls an enterprise from the calling EMM.
 --
 -- /See:/ 'enterprisesUnenroll' smart constructor.
-newtype EnterprisesUnenroll = EnterprisesUnenroll'
-    { _euuEnterpriseId :: Text
+data EnterprisesUnenroll = EnterprisesUnenroll'
+    { _euuEnterpriseId :: !Text
+    , _euuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesUnenroll' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype EnterprisesUnenroll = EnterprisesUnenroll'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'euuEnterpriseId'
+--
+-- * 'euuFields'
 enterprisesUnenroll
     :: Text -- ^ 'euuEnterpriseId'
     -> EnterprisesUnenroll
-enterprisesUnenroll pEuuEnterpriseId_ =
+enterprisesUnenroll pEuuEnterpriseId_ = 
     EnterprisesUnenroll'
     { _euuEnterpriseId = pEuuEnterpriseId_
+    , _euuFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -75,12 +81,17 @@ euuEnterpriseId
   = lens _euuEnterpriseId
       (\ s a -> s{_euuEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+euuFields :: Lens' EnterprisesUnenroll (Maybe Text)
+euuFields
+  = lens _euuFields (\ s a -> s{_euuFields = a})
+
 instance GoogleRequest EnterprisesUnenroll where
         type Rs EnterprisesUnenroll = ()
         type Scopes EnterprisesUnenroll =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesUnenroll'{..}
-          = go _euuEnterpriseId (Just AltJSON)
+          = go _euuEnterpriseId _euuFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

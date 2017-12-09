@@ -37,11 +37,12 @@ module Network.Google.Resource.Compute.RegionBackendServices.GetHealth
     , rbsghProject
     , rbsghPayload
     , rbsghRegion
+    , rbsghFields
     , rbsghBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionBackendServices.getHealth@ method which the
 -- 'RegionBackendServicesGetHealth' request conforms to.
@@ -55,18 +56,20 @@ type RegionBackendServicesGetHealthResource =
                  "backendServices" :>
                    Capture "backendService" Text :>
                      "getHealth" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ResourceGroupReference :>
-                           Post '[JSON] BackendServiceGroupHealth
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ResourceGroupReference :>
+                             Post '[JSON] BackendServiceGroupHealth
 
 -- | Gets the most recent health check results for this regional
 -- BackendService.
 --
 -- /See:/ 'regionBackendServicesGetHealth' smart constructor.
 data RegionBackendServicesGetHealth = RegionBackendServicesGetHealth'
-    { _rbsghProject        :: !Text
-    , _rbsghPayload        :: !ResourceGroupReference
-    , _rbsghRegion         :: !Text
+    { _rbsghProject :: !Text
+    , _rbsghPayload :: !ResourceGroupReference
+    , _rbsghRegion :: !Text
+    , _rbsghFields :: !(Maybe Text)
     , _rbsghBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -80,6 +83,8 @@ data RegionBackendServicesGetHealth = RegionBackendServicesGetHealth'
 --
 -- * 'rbsghRegion'
 --
+-- * 'rbsghFields'
+--
 -- * 'rbsghBackendService'
 regionBackendServicesGetHealth
     :: Text -- ^ 'rbsghProject'
@@ -87,11 +92,12 @@ regionBackendServicesGetHealth
     -> Text -- ^ 'rbsghRegion'
     -> Text -- ^ 'rbsghBackendService'
     -> RegionBackendServicesGetHealth
-regionBackendServicesGetHealth pRbsghProject_ pRbsghPayload_ pRbsghRegion_ pRbsghBackendService_ =
+regionBackendServicesGetHealth pRbsghProject_ pRbsghPayload_ pRbsghRegion_ pRbsghBackendService_ = 
     RegionBackendServicesGetHealth'
     { _rbsghProject = pRbsghProject_
     , _rbsghPayload = pRbsghPayload_
     , _rbsghRegion = pRbsghRegion_
+    , _rbsghFields = Nothing
     , _rbsghBackendService = pRbsghBackendService_
     }
 
@@ -108,6 +114,11 @@ rbsghPayload
 rbsghRegion :: Lens' RegionBackendServicesGetHealth Text
 rbsghRegion
   = lens _rbsghRegion (\ s a -> s{_rbsghRegion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rbsghFields :: Lens' RegionBackendServicesGetHealth (Maybe Text)
+rbsghFields
+  = lens _rbsghFields (\ s a -> s{_rbsghFields = a})
 
 -- | Name of the BackendService resource to which the queried instance
 -- belongs.
@@ -126,6 +137,7 @@ instance GoogleRequest RegionBackendServicesGetHealth
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionBackendServicesGetHealth'{..}
           = go _rbsghProject _rbsghRegion _rbsghBackendService
+              _rbsghFields
               (Just AltJSON)
               _rbsghPayload
               computeService

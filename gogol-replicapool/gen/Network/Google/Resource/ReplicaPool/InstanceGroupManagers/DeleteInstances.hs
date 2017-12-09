@@ -40,10 +40,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.DeleteInstances
     , igmdiInstanceGroupManager
     , igmdiZone
     , igmdiPayload
+    , igmdiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.deleteInstances@ method which the
 -- 'InstanceGroupManagersDeleteInstances' request conforms to.
@@ -57,10 +58,11 @@ type InstanceGroupManagersDeleteInstancesResource =
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "deleteInstances" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           InstanceGroupManagersDeleteInstancesRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             InstanceGroupManagersDeleteInstancesRequest
+                             :> Post '[JSON] Operation
 
 -- | Deletes the specified instances. The instances are deleted, then removed
 -- from the instance group and any target pools of which they were a
@@ -69,10 +71,11 @@ type InstanceGroupManagersDeleteInstancesResource =
 --
 -- /See:/ 'instanceGroupManagersDeleteInstances' smart constructor.
 data InstanceGroupManagersDeleteInstances = InstanceGroupManagersDeleteInstances'
-    { _igmdiProject              :: !Text
+    { _igmdiProject :: !Text
     , _igmdiInstanceGroupManager :: !Text
-    , _igmdiZone                 :: !Text
-    , _igmdiPayload              :: !InstanceGroupManagersDeleteInstancesRequest
+    , _igmdiZone :: !Text
+    , _igmdiPayload :: !InstanceGroupManagersDeleteInstancesRequest
+    , _igmdiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersDeleteInstances' with the minimum fields required to make a request.
@@ -86,18 +89,21 @@ data InstanceGroupManagersDeleteInstances = InstanceGroupManagersDeleteInstances
 -- * 'igmdiZone'
 --
 -- * 'igmdiPayload'
+--
+-- * 'igmdiFields'
 instanceGroupManagersDeleteInstances
     :: Text -- ^ 'igmdiProject'
     -> Text -- ^ 'igmdiInstanceGroupManager'
     -> Text -- ^ 'igmdiZone'
     -> InstanceGroupManagersDeleteInstancesRequest -- ^ 'igmdiPayload'
     -> InstanceGroupManagersDeleteInstances
-instanceGroupManagersDeleteInstances pIgmdiProject_ pIgmdiInstanceGroupManager_ pIgmdiZone_ pIgmdiPayload_ =
+instanceGroupManagersDeleteInstances pIgmdiProject_ pIgmdiInstanceGroupManager_ pIgmdiZone_ pIgmdiPayload_ = 
     InstanceGroupManagersDeleteInstances'
     { _igmdiProject = pIgmdiProject_
     , _igmdiInstanceGroupManager = pIgmdiInstanceGroupManager_
     , _igmdiZone = pIgmdiZone_
     , _igmdiPayload = pIgmdiPayload_
+    , _igmdiFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -121,6 +127,11 @@ igmdiPayload :: Lens' InstanceGroupManagersDeleteInstances InstanceGroupManagers
 igmdiPayload
   = lens _igmdiPayload (\ s a -> s{_igmdiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmdiFields :: Lens' InstanceGroupManagersDeleteInstances (Maybe Text)
+igmdiFields
+  = lens _igmdiFields (\ s a -> s{_igmdiFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersDeleteInstances where
         type Rs InstanceGroupManagersDeleteInstances =
@@ -132,6 +143,7 @@ instance GoogleRequest
           InstanceGroupManagersDeleteInstances'{..}
           = go _igmdiProject _igmdiZone
               _igmdiInstanceGroupManager
+              _igmdiFields
               (Just AltJSON)
               _igmdiPayload
               replicaPoolService

@@ -37,10 +37,11 @@ module Network.Google.Resource.AdExchangeBuyer.Budget.Update
     , buPayload
     , buAccountId
     , buBillingId
+    , buFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.budget.update@ method which the
 -- 'BudgetUpdate' request conforms to.
@@ -50,17 +51,19 @@ type BudgetUpdateResource =
          "billinginfo" :>
            Capture "accountId" (Textual Int64) :>
              Capture "billingId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Budget :> Put '[JSON] Budget
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Budget :> Put '[JSON] Budget
 
 -- | Updates the budget amount for the budget of the adgroup specified by the
 -- accountId and billingId, with the budget amount in the request.
 --
 -- /See:/ 'budgetUpdate' smart constructor.
 data BudgetUpdate = BudgetUpdate'
-    { _buPayload   :: !Budget
+    { _buPayload :: !Budget
     , _buAccountId :: !(Textual Int64)
     , _buBillingId :: !(Textual Int64)
+    , _buFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BudgetUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data BudgetUpdate = BudgetUpdate'
 -- * 'buAccountId'
 --
 -- * 'buBillingId'
+--
+-- * 'buFields'
 budgetUpdate
     :: Budget -- ^ 'buPayload'
     -> Int64 -- ^ 'buAccountId'
     -> Int64 -- ^ 'buBillingId'
     -> BudgetUpdate
-budgetUpdate pBuPayload_ pBuAccountId_ pBuBillingId_ =
+budgetUpdate pBuPayload_ pBuAccountId_ pBuBillingId_ = 
     BudgetUpdate'
     { _buPayload = pBuPayload_
     , _buAccountId = _Coerce # pBuAccountId_
     , _buBillingId = _Coerce # pBuBillingId_
+    , _buFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -101,12 +107,17 @@ buBillingId
   = lens _buBillingId (\ s a -> s{_buBillingId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+buFields :: Lens' BudgetUpdate (Maybe Text)
+buFields = lens _buFields (\ s a -> s{_buFields = a})
+
 instance GoogleRequest BudgetUpdate where
         type Rs BudgetUpdate = Budget
         type Scopes BudgetUpdate =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient BudgetUpdate'{..}
-          = go _buAccountId _buBillingId (Just AltJSON)
+          = go _buAccountId _buBillingId _buFields
+              (Just AltJSON)
               _buPayload
               adExchangeBuyerService
           where go

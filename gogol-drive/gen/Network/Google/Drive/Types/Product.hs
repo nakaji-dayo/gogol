@@ -17,16 +17,17 @@
 --
 module Network.Google.Drive.Types.Product where
 
-import           Network.Google.Drive.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Drive.Types.Sum
+import Network.Google.Prelude
 
 -- | A list of files.
 --
 -- /See:/ 'fileList' smart constructor.
 data FileList = FileList'
     { _flNextPageToken :: !(Maybe Text)
-    , _flKind          :: !Text
-    , _flFiles         :: !(Maybe [File])
+    , _flIncompleteSearch :: !(Maybe Bool)
+    , _flKind :: !Text
+    , _flFiles :: !(Maybe [File])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FileList' with the minimum fields required to make a request.
@@ -35,14 +36,17 @@ data FileList = FileList'
 --
 -- * 'flNextPageToken'
 --
+-- * 'flIncompleteSearch'
+--
 -- * 'flKind'
 --
 -- * 'flFiles'
 fileList
     :: FileList
-fileList =
+fileList = 
     FileList'
     { _flNextPageToken = Nothing
+    , _flIncompleteSearch = Nothing
     , _flKind = "drive#fileList"
     , _flFiles = Nothing
     }
@@ -55,6 +59,17 @@ flNextPageToken :: Lens' FileList (Maybe Text)
 flNextPageToken
   = lens _flNextPageToken
       (\ s a -> s{_flNextPageToken = a})
+
+-- | Whether the search process was incomplete. If true, then some search
+-- results may be missing, since all documents were not searched. This may
+-- occur when searching multiple Team Drives with the
+-- \"user,allTeamDrives\" corpora, but all corpora could not be searched.
+-- When this happens, it is suggested that clients narrow their query by
+-- choosing a different corpus such as \"user\" or \"teamDrive\".
+flIncompleteSearch :: Lens' FileList (Maybe Bool)
+flIncompleteSearch
+  = lens _flIncompleteSearch
+      (\ s a -> s{_flIncompleteSearch = a})
 
 -- | Identifies what kind of resource this is. Value: the fixed string
 -- \"drive#fileList\".
@@ -74,7 +89,8 @@ instance FromJSON FileList where
               (\ o ->
                  FileList' <$>
                    (o .:? "nextPageToken") <*>
-                     (o .:? "kind" .!= "drive#fileList")
+                     (o .:? "incompleteSearch")
+                     <*> (o .:? "kind" .!= "drive#fileList")
                      <*> (o .:? "files" .!= mempty))
 
 instance ToJSON FileList where
@@ -82,7 +98,204 @@ instance ToJSON FileList where
           = object
               (catMaybes
                  [("nextPageToken" .=) <$> _flNextPageToken,
+                  ("incompleteSearch" .=) <$> _flIncompleteSearch,
                   Just ("kind" .= _flKind), ("files" .=) <$> _flFiles])
+
+-- | Capabilities the current user has on this Team Drive.
+--
+-- /See:/ 'teamDriveCapabilities' smart constructor.
+data TeamDriveCapabilities = TeamDriveCapabilities'
+    { _tdcCanRename :: !(Maybe Bool)
+    , _tdcCanComment :: !(Maybe Bool)
+    , _tdcCanRenameTeamDrive :: !(Maybe Bool)
+    , _tdcCanChangeTeamDriveBackgRound :: !(Maybe Bool)
+    , _tdcCanDownload :: !(Maybe Bool)
+    , _tdcCanAddChildren :: !(Maybe Bool)
+    , _tdcCanRemoveChildren :: !(Maybe Bool)
+    , _tdcCanDeleteTeamDrive :: !(Maybe Bool)
+    , _tdcCanListChildren :: !(Maybe Bool)
+    , _tdcCanEdit :: !(Maybe Bool)
+    , _tdcCanManageMembers :: !(Maybe Bool)
+    , _tdcCanReadRevisions :: !(Maybe Bool)
+    , _tdcCanCopy :: !(Maybe Bool)
+    , _tdcCanShare :: !(Maybe Bool)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TeamDriveCapabilities' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tdcCanRename'
+--
+-- * 'tdcCanComment'
+--
+-- * 'tdcCanRenameTeamDrive'
+--
+-- * 'tdcCanChangeTeamDriveBackgRound'
+--
+-- * 'tdcCanDownload'
+--
+-- * 'tdcCanAddChildren'
+--
+-- * 'tdcCanRemoveChildren'
+--
+-- * 'tdcCanDeleteTeamDrive'
+--
+-- * 'tdcCanListChildren'
+--
+-- * 'tdcCanEdit'
+--
+-- * 'tdcCanManageMembers'
+--
+-- * 'tdcCanReadRevisions'
+--
+-- * 'tdcCanCopy'
+--
+-- * 'tdcCanShare'
+teamDriveCapabilities
+    :: TeamDriveCapabilities
+teamDriveCapabilities = 
+    TeamDriveCapabilities'
+    { _tdcCanRename = Nothing
+    , _tdcCanComment = Nothing
+    , _tdcCanRenameTeamDrive = Nothing
+    , _tdcCanChangeTeamDriveBackgRound = Nothing
+    , _tdcCanDownload = Nothing
+    , _tdcCanAddChildren = Nothing
+    , _tdcCanRemoveChildren = Nothing
+    , _tdcCanDeleteTeamDrive = Nothing
+    , _tdcCanListChildren = Nothing
+    , _tdcCanEdit = Nothing
+    , _tdcCanManageMembers = Nothing
+    , _tdcCanReadRevisions = Nothing
+    , _tdcCanCopy = Nothing
+    , _tdcCanShare = Nothing
+    }
+
+-- | Whether the current user can rename files or folders in this Team Drive.
+tdcCanRename :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanRename
+  = lens _tdcCanRename (\ s a -> s{_tdcCanRename = a})
+
+-- | Whether the current user can comment on files in this Team Drive.
+tdcCanComment :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanComment
+  = lens _tdcCanComment
+      (\ s a -> s{_tdcCanComment = a})
+
+-- | Whether the current user can rename this Team Drive.
+tdcCanRenameTeamDrive :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanRenameTeamDrive
+  = lens _tdcCanRenameTeamDrive
+      (\ s a -> s{_tdcCanRenameTeamDrive = a})
+
+-- | Whether the current user can change the background of this Team Drive.
+tdcCanChangeTeamDriveBackgRound :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanChangeTeamDriveBackgRound
+  = lens _tdcCanChangeTeamDriveBackgRound
+      (\ s a -> s{_tdcCanChangeTeamDriveBackgRound = a})
+
+-- | Whether the current user can download files in this Team Drive.
+tdcCanDownload :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanDownload
+  = lens _tdcCanDownload
+      (\ s a -> s{_tdcCanDownload = a})
+
+-- | Whether the current user can add children to folders in this Team Drive.
+tdcCanAddChildren :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanAddChildren
+  = lens _tdcCanAddChildren
+      (\ s a -> s{_tdcCanAddChildren = a})
+
+-- | Whether the current user can remove children from folders in this Team
+-- Drive.
+tdcCanRemoveChildren :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanRemoveChildren
+  = lens _tdcCanRemoveChildren
+      (\ s a -> s{_tdcCanRemoveChildren = a})
+
+-- | Whether the current user can delete this Team Drive. Attempting to
+-- delete the Team Drive may still fail if there are untrashed items inside
+-- the Team Drive.
+tdcCanDeleteTeamDrive :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanDeleteTeamDrive
+  = lens _tdcCanDeleteTeamDrive
+      (\ s a -> s{_tdcCanDeleteTeamDrive = a})
+
+-- | Whether the current user can list the children of folders in this Team
+-- Drive.
+tdcCanListChildren :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanListChildren
+  = lens _tdcCanListChildren
+      (\ s a -> s{_tdcCanListChildren = a})
+
+-- | Whether the current user can edit files in this Team Drive
+tdcCanEdit :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanEdit
+  = lens _tdcCanEdit (\ s a -> s{_tdcCanEdit = a})
+
+-- | Whether the current user can add members to this Team Drive or remove
+-- them or change their role.
+tdcCanManageMembers :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanManageMembers
+  = lens _tdcCanManageMembers
+      (\ s a -> s{_tdcCanManageMembers = a})
+
+-- | Whether the current user can read the revisions resource of files in
+-- this Team Drive.
+tdcCanReadRevisions :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanReadRevisions
+  = lens _tdcCanReadRevisions
+      (\ s a -> s{_tdcCanReadRevisions = a})
+
+-- | Whether the current user can copy files in this Team Drive.
+tdcCanCopy :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanCopy
+  = lens _tdcCanCopy (\ s a -> s{_tdcCanCopy = a})
+
+-- | Whether the current user can share files or folders in this Team Drive.
+tdcCanShare :: Lens' TeamDriveCapabilities (Maybe Bool)
+tdcCanShare
+  = lens _tdcCanShare (\ s a -> s{_tdcCanShare = a})
+
+instance FromJSON TeamDriveCapabilities where
+        parseJSON
+          = withObject "TeamDriveCapabilities"
+              (\ o ->
+                 TeamDriveCapabilities' <$>
+                   (o .:? "canRename") <*> (o .:? "canComment") <*>
+                     (o .:? "canRenameTeamDrive")
+                     <*> (o .:? "canChangeTeamDriveBackground")
+                     <*> (o .:? "canDownload")
+                     <*> (o .:? "canAddChildren")
+                     <*> (o .:? "canRemoveChildren")
+                     <*> (o .:? "canDeleteTeamDrive")
+                     <*> (o .:? "canListChildren")
+                     <*> (o .:? "canEdit")
+                     <*> (o .:? "canManageMembers")
+                     <*> (o .:? "canReadRevisions")
+                     <*> (o .:? "canCopy")
+                     <*> (o .:? "canShare"))
+
+instance ToJSON TeamDriveCapabilities where
+        toJSON TeamDriveCapabilities'{..}
+          = object
+              (catMaybes
+                 [("canRename" .=) <$> _tdcCanRename,
+                  ("canComment" .=) <$> _tdcCanComment,
+                  ("canRenameTeamDrive" .=) <$> _tdcCanRenameTeamDrive,
+                  ("canChangeTeamDriveBackground" .=) <$>
+                    _tdcCanChangeTeamDriveBackgRound,
+                  ("canDownload" .=) <$> _tdcCanDownload,
+                  ("canAddChildren" .=) <$> _tdcCanAddChildren,
+                  ("canRemoveChildren" .=) <$> _tdcCanRemoveChildren,
+                  ("canDeleteTeamDrive" .=) <$> _tdcCanDeleteTeamDrive,
+                  ("canListChildren" .=) <$> _tdcCanListChildren,
+                  ("canEdit" .=) <$> _tdcCanEdit,
+                  ("canManageMembers" .=) <$> _tdcCanManageMembers,
+                  ("canReadRevisions" .=) <$> _tdcCanReadRevisions,
+                  ("canCopy" .=) <$> _tdcCanCopy,
+                  ("canShare" .=) <$> _tdcCanShare])
 
 -- | The file content to which the comment refers, typically within the
 -- anchor region. For a text file, for example, this would be the text at
@@ -90,7 +303,7 @@ instance ToJSON FileList where
 --
 -- /See:/ 'commentQuotedFileContent' smart constructor.
 data CommentQuotedFileContent = CommentQuotedFileContent'
-    { _cqfcValue    :: !(Maybe Text)
+    { _cqfcValue :: !(Maybe Text)
     , _cqfcMimeType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -103,7 +316,7 @@ data CommentQuotedFileContent = CommentQuotedFileContent'
 -- * 'cqfcMimeType'
 commentQuotedFileContent
     :: CommentQuotedFileContent
-commentQuotedFileContent =
+commentQuotedFileContent = 
     CommentQuotedFileContent'
     { _cqfcValue = Nothing
     , _cqfcMimeType = Nothing
@@ -140,9 +353,9 @@ instance ToJSON CommentQuotedFileContent where
 -- /See:/ 'aboutStorageQuota' smart constructor.
 data AboutStorageQuota = AboutStorageQuota'
     { _asqUsageInDriveTrash :: !(Maybe (Textual Int64))
-    , _asqLimit             :: !(Maybe (Textual Int64))
-    , _asqUsage             :: !(Maybe (Textual Int64))
-    , _asqUsageInDrive      :: !(Maybe (Textual Int64))
+    , _asqLimit :: !(Maybe (Textual Int64))
+    , _asqUsage :: !(Maybe (Textual Int64))
+    , _asqUsageInDrive :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AboutStorageQuota' with the minimum fields required to make a request.
@@ -158,7 +371,7 @@ data AboutStorageQuota = AboutStorageQuota'
 -- * 'asqUsageInDrive'
 aboutStorageQuota
     :: AboutStorageQuota
-aboutStorageQuota =
+aboutStorageQuota = 
     AboutStorageQuota'
     { _asqUsageInDriveTrash = Nothing
     , _asqLimit = Nothing
@@ -215,15 +428,15 @@ instance ToJSON AboutStorageQuota where
 --
 -- /See:/ 'reply' smart constructor.
 data Reply = Reply'
-    { _rHTMLContent  :: !(Maybe Text)
+    { _rHTMLContent :: !(Maybe Text)
     , _rModifiedTime :: !(Maybe DateTime')
-    , _rCreatedTime  :: !(Maybe DateTime')
-    , _rKind         :: !Text
-    , _rAction       :: !(Maybe Text)
-    , _rContent      :: !(Maybe Text)
-    , _rAuthor       :: !(Maybe User)
-    , _rId           :: !(Maybe Text)
-    , _rDeleted      :: !(Maybe Bool)
+    , _rCreatedTime :: !(Maybe DateTime')
+    , _rKind :: !Text
+    , _rAction :: !(Maybe Text)
+    , _rContent :: !(Maybe Text)
+    , _rAuthor :: !(Maybe User)
+    , _rId :: !(Maybe Text)
+    , _rDeleted :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Reply' with the minimum fields required to make a request.
@@ -249,7 +462,7 @@ data Reply = Reply'
 -- * 'rDeleted'
 reply
     :: Reply
-reply =
+reply = 
     Reply'
     { _rHTMLContent = Nothing
     , _rModifiedTime = Nothing
@@ -349,7 +562,7 @@ newtype AboutImportFormats = AboutImportFormats'
 aboutImportFormats
     :: HashMap Text [Text] -- ^ 'aifAddtional'
     -> AboutImportFormats
-aboutImportFormats pAifAddtional_ =
+aboutImportFormats pAifAddtional_ = 
     AboutImportFormats'
     { _aifAddtional = _Coerce # pAifAddtional_
     }
@@ -367,24 +580,61 @@ instance FromJSON AboutImportFormats where
 instance ToJSON AboutImportFormats where
         toJSON = toJSON . _aifAddtional
 
--- | Capabilities the current user has on the file.
+-- | Capabilities the current user has on this file. Each capability
+-- corresponds to a fine-grained action that a user may take.
 --
 -- /See:/ 'fileCapabilities' smart constructor.
 data FileCapabilities = FileCapabilities'
-    { _fcCanComment       :: !(Maybe Bool)
-    , _fcCanEdit          :: !(Maybe Bool)
+    { _fcCanRename :: !(Maybe Bool)
+    , _fcCanComment :: !(Maybe Bool)
+    , _fcCanDelete :: !(Maybe Bool)
+    , _fcCanMoveItemIntoTeamDrive :: !(Maybe Bool)
+    , _fcCanDownload :: !(Maybe Bool)
+    , _fcCanTrash :: !(Maybe Bool)
+    , _fcCanUntrash :: !(Maybe Bool)
+    , _fcCanAddChildren :: !(Maybe Bool)
+    , _fcCanRemoveChildren :: !(Maybe Bool)
+    , _fcCanMoveTeamDriveItem :: !(Maybe Bool)
+    , _fcCanReadTeamDrive :: !(Maybe Bool)
+    , _fcCanListChildren :: !(Maybe Bool)
+    , _fcCanEdit :: !(Maybe Bool)
+    , _fcCanChangeViewersCanCopyContent :: !(Maybe Bool)
     , _fcCanReadRevisions :: !(Maybe Bool)
-    , _fcCanCopy          :: !(Maybe Bool)
-    , _fcCanShare         :: !(Maybe Bool)
+    , _fcCanCopy :: !(Maybe Bool)
+    , _fcCanShare :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FileCapabilities' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'fcCanRename'
+--
 -- * 'fcCanComment'
 --
+-- * 'fcCanDelete'
+--
+-- * 'fcCanMoveItemIntoTeamDrive'
+--
+-- * 'fcCanDownload'
+--
+-- * 'fcCanTrash'
+--
+-- * 'fcCanUntrash'
+--
+-- * 'fcCanAddChildren'
+--
+-- * 'fcCanRemoveChildren'
+--
+-- * 'fcCanMoveTeamDriveItem'
+--
+-- * 'fcCanReadTeamDrive'
+--
+-- * 'fcCanListChildren'
+--
 -- * 'fcCanEdit'
+--
+-- * 'fcCanChangeViewersCanCopyContent'
 --
 -- * 'fcCanReadRevisions'
 --
@@ -393,39 +643,131 @@ data FileCapabilities = FileCapabilities'
 -- * 'fcCanShare'
 fileCapabilities
     :: FileCapabilities
-fileCapabilities =
+fileCapabilities = 
     FileCapabilities'
-    { _fcCanComment = Nothing
+    { _fcCanRename = Nothing
+    , _fcCanComment = Nothing
+    , _fcCanDelete = Nothing
+    , _fcCanMoveItemIntoTeamDrive = Nothing
+    , _fcCanDownload = Nothing
+    , _fcCanTrash = Nothing
+    , _fcCanUntrash = Nothing
+    , _fcCanAddChildren = Nothing
+    , _fcCanRemoveChildren = Nothing
+    , _fcCanMoveTeamDriveItem = Nothing
+    , _fcCanReadTeamDrive = Nothing
+    , _fcCanListChildren = Nothing
     , _fcCanEdit = Nothing
+    , _fcCanChangeViewersCanCopyContent = Nothing
     , _fcCanReadRevisions = Nothing
     , _fcCanCopy = Nothing
     , _fcCanShare = Nothing
     }
 
--- | Whether the user can comment on the file.
+-- | Whether the current user can rename this file.
+fcCanRename :: Lens' FileCapabilities (Maybe Bool)
+fcCanRename
+  = lens _fcCanRename (\ s a -> s{_fcCanRename = a})
+
+-- | Whether the current user can comment on this file.
 fcCanComment :: Lens' FileCapabilities (Maybe Bool)
 fcCanComment
   = lens _fcCanComment (\ s a -> s{_fcCanComment = a})
 
--- | Whether the user can edit the file\'s content.
+-- | Whether the current user can delete this file.
+fcCanDelete :: Lens' FileCapabilities (Maybe Bool)
+fcCanDelete
+  = lens _fcCanDelete (\ s a -> s{_fcCanDelete = a})
+
+-- | Whether the current user can move this item into a Team Drive. If the
+-- item is in a Team Drive, this field is equivalent to
+-- canMoveTeamDriveItem.
+fcCanMoveItemIntoTeamDrive :: Lens' FileCapabilities (Maybe Bool)
+fcCanMoveItemIntoTeamDrive
+  = lens _fcCanMoveItemIntoTeamDrive
+      (\ s a -> s{_fcCanMoveItemIntoTeamDrive = a})
+
+-- | Whether the current user can download this file.
+fcCanDownload :: Lens' FileCapabilities (Maybe Bool)
+fcCanDownload
+  = lens _fcCanDownload
+      (\ s a -> s{_fcCanDownload = a})
+
+-- | Whether the current user can move this file to trash.
+fcCanTrash :: Lens' FileCapabilities (Maybe Bool)
+fcCanTrash
+  = lens _fcCanTrash (\ s a -> s{_fcCanTrash = a})
+
+-- | Whether the current user can restore this file from trash.
+fcCanUntrash :: Lens' FileCapabilities (Maybe Bool)
+fcCanUntrash
+  = lens _fcCanUntrash (\ s a -> s{_fcCanUntrash = a})
+
+-- | Whether the current user can add children to this folder. This is always
+-- false when the item is not a folder.
+fcCanAddChildren :: Lens' FileCapabilities (Maybe Bool)
+fcCanAddChildren
+  = lens _fcCanAddChildren
+      (\ s a -> s{_fcCanAddChildren = a})
+
+-- | Whether the current user can remove children from this folder. This is
+-- always false when the item is not a folder.
+fcCanRemoveChildren :: Lens' FileCapabilities (Maybe Bool)
+fcCanRemoveChildren
+  = lens _fcCanRemoveChildren
+      (\ s a -> s{_fcCanRemoveChildren = a})
+
+-- | Whether the current user can move this Team Drive item by changing its
+-- parent. Note that a request to change the parent for this item may still
+-- fail depending on the new parent that is being added. Only populated for
+-- Team Drive files.
+fcCanMoveTeamDriveItem :: Lens' FileCapabilities (Maybe Bool)
+fcCanMoveTeamDriveItem
+  = lens _fcCanMoveTeamDriveItem
+      (\ s a -> s{_fcCanMoveTeamDriveItem = a})
+
+-- | Whether the current user can read the Team Drive to which this file
+-- belongs. Only populated for Team Drive files.
+fcCanReadTeamDrive :: Lens' FileCapabilities (Maybe Bool)
+fcCanReadTeamDrive
+  = lens _fcCanReadTeamDrive
+      (\ s a -> s{_fcCanReadTeamDrive = a})
+
+-- | Whether the current user can list the children of this folder. This is
+-- always false when the item is not a folder.
+fcCanListChildren :: Lens' FileCapabilities (Maybe Bool)
+fcCanListChildren
+  = lens _fcCanListChildren
+      (\ s a -> s{_fcCanListChildren = a})
+
+-- | Whether the current user can edit this file.
 fcCanEdit :: Lens' FileCapabilities (Maybe Bool)
 fcCanEdit
   = lens _fcCanEdit (\ s a -> s{_fcCanEdit = a})
 
--- | Whether the current user has read access to the Revisions resource of
--- the file.
+-- | Whether the current user can change whether viewers can copy the
+-- contents of this file.
+fcCanChangeViewersCanCopyContent :: Lens' FileCapabilities (Maybe Bool)
+fcCanChangeViewersCanCopyContent
+  = lens _fcCanChangeViewersCanCopyContent
+      (\ s a -> s{_fcCanChangeViewersCanCopyContent = a})
+
+-- | Whether the current user can read the revisions resource of this file.
+-- For a Team Drive item, whether revisions of non-folder descendants of
+-- this item, or this item itself if it is not a folder, can be read.
 fcCanReadRevisions :: Lens' FileCapabilities (Maybe Bool)
 fcCanReadRevisions
   = lens _fcCanReadRevisions
       (\ s a -> s{_fcCanReadRevisions = a})
 
--- | Whether the user can copy the file.
+-- | Whether the current user can copy this file. For a Team Drive item,
+-- whether the current user can copy non-folder descendants of this item,
+-- or this item itself if it is not a folder.
 fcCanCopy :: Lens' FileCapabilities (Maybe Bool)
 fcCanCopy
   = lens _fcCanCopy (\ s a -> s{_fcCanCopy = a})
 
--- | Whether the user can modify the file\'s permissions and sharing
--- settings.
+-- | Whether the current user can modify the sharing settings for this file.
 fcCanShare :: Lens' FileCapabilities (Maybe Bool)
 fcCanShare
   = lens _fcCanShare (\ s a -> s{_fcCanShare = a})
@@ -435,8 +777,20 @@ instance FromJSON FileCapabilities where
           = withObject "FileCapabilities"
               (\ o ->
                  FileCapabilities' <$>
-                   (o .:? "canComment") <*> (o .:? "canEdit") <*>
-                     (o .:? "canReadRevisions")
+                   (o .:? "canRename") <*> (o .:? "canComment") <*>
+                     (o .:? "canDelete")
+                     <*> (o .:? "canMoveItemIntoTeamDrive")
+                     <*> (o .:? "canDownload")
+                     <*> (o .:? "canTrash")
+                     <*> (o .:? "canUntrash")
+                     <*> (o .:? "canAddChildren")
+                     <*> (o .:? "canRemoveChildren")
+                     <*> (o .:? "canMoveTeamDriveItem")
+                     <*> (o .:? "canReadTeamDrive")
+                     <*> (o .:? "canListChildren")
+                     <*> (o .:? "canEdit")
+                     <*> (o .:? "canChangeViewersCanCopyContent")
+                     <*> (o .:? "canReadRevisions")
                      <*> (o .:? "canCopy")
                      <*> (o .:? "canShare"))
 
@@ -444,8 +798,23 @@ instance ToJSON FileCapabilities where
         toJSON FileCapabilities'{..}
           = object
               (catMaybes
-                 [("canComment" .=) <$> _fcCanComment,
+                 [("canRename" .=) <$> _fcCanRename,
+                  ("canComment" .=) <$> _fcCanComment,
+                  ("canDelete" .=) <$> _fcCanDelete,
+                  ("canMoveItemIntoTeamDrive" .=) <$>
+                    _fcCanMoveItemIntoTeamDrive,
+                  ("canDownload" .=) <$> _fcCanDownload,
+                  ("canTrash" .=) <$> _fcCanTrash,
+                  ("canUntrash" .=) <$> _fcCanUntrash,
+                  ("canAddChildren" .=) <$> _fcCanAddChildren,
+                  ("canRemoveChildren" .=) <$> _fcCanRemoveChildren,
+                  ("canMoveTeamDriveItem" .=) <$>
+                    _fcCanMoveTeamDriveItem,
+                  ("canReadTeamDrive" .=) <$> _fcCanReadTeamDrive,
+                  ("canListChildren" .=) <$> _fcCanListChildren,
                   ("canEdit" .=) <$> _fcCanEdit,
+                  ("canChangeViewersCanCopyContent" .=) <$>
+                    _fcCanChangeViewersCanCopyContent,
                   ("canReadRevisions" .=) <$> _fcCanReadRevisions,
                   ("canCopy" .=) <$> _fcCanCopy,
                   ("canShare" .=) <$> _fcCanShare])
@@ -455,8 +824,8 @@ instance ToJSON FileCapabilities where
 -- /See:/ 'replyList' smart constructor.
 data ReplyList = ReplyList'
     { _rlNextPageToken :: !(Maybe Text)
-    , _rlKind          :: !Text
-    , _rlReplies       :: !(Maybe [Reply])
+    , _rlKind :: !Text
+    , _rlReplies :: !(Maybe [Reply])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReplyList' with the minimum fields required to make a request.
@@ -470,7 +839,7 @@ data ReplyList = ReplyList'
 -- * 'rlReplies'
 replyList
     :: ReplyList
-replyList =
+replyList = 
     ReplyList'
     { _rlNextPageToken = Nothing
     , _rlKind = "drive#replyList"
@@ -521,7 +890,7 @@ instance ToJSON ReplyList where
 --
 -- /See:/ 'fileContentHintsThumbnail' smart constructor.
 data FileContentHintsThumbnail = FileContentHintsThumbnail'
-    { _fchtImage    :: !(Maybe Bytes)
+    { _fchtImage :: !(Maybe Bytes)
     , _fchtMimeType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -534,7 +903,7 @@ data FileContentHintsThumbnail = FileContentHintsThumbnail'
 -- * 'fchtMimeType'
 fileContentHintsThumbnail
     :: FileContentHintsThumbnail
-fileContentHintsThumbnail =
+fileContentHintsThumbnail = 
     FileContentHintsThumbnail'
     { _fchtImage = Nothing
     , _fchtMimeType = Nothing
@@ -565,20 +934,87 @@ instance ToJSON FileContentHintsThumbnail where
                  [("image" .=) <$> _fchtImage,
                   ("mimeType" .=) <$> _fchtMimeType])
 
+-- | A list of Team Drives.
+--
+-- /See:/ 'teamDriveList' smart constructor.
+data TeamDriveList = TeamDriveList'
+    { _tdlNextPageToken :: !(Maybe Text)
+    , _tdlTeamDrives :: !(Maybe [TeamDrive])
+    , _tdlKind :: !Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TeamDriveList' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tdlNextPageToken'
+--
+-- * 'tdlTeamDrives'
+--
+-- * 'tdlKind'
+teamDriveList
+    :: TeamDriveList
+teamDriveList = 
+    TeamDriveList'
+    { _tdlNextPageToken = Nothing
+    , _tdlTeamDrives = Nothing
+    , _tdlKind = "drive#teamDriveList"
+    }
+
+-- | The page token for the next page of Team Drives. This will be absent if
+-- the end of the Team Drives list has been reached. If the token is
+-- rejected for any reason, it should be discarded, and pagination should
+-- be restarted from the first page of results.
+tdlNextPageToken :: Lens' TeamDriveList (Maybe Text)
+tdlNextPageToken
+  = lens _tdlNextPageToken
+      (\ s a -> s{_tdlNextPageToken = a})
+
+-- | The list of Team Drives. If nextPageToken is populated, then this list
+-- may be incomplete and an additional page of results should be fetched.
+tdlTeamDrives :: Lens' TeamDriveList [TeamDrive]
+tdlTeamDrives
+  = lens _tdlTeamDrives
+      (\ s a -> s{_tdlTeamDrives = a})
+      . _Default
+      . _Coerce
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"drive#teamDriveList\".
+tdlKind :: Lens' TeamDriveList Text
+tdlKind = lens _tdlKind (\ s a -> s{_tdlKind = a})
+
+instance FromJSON TeamDriveList where
+        parseJSON
+          = withObject "TeamDriveList"
+              (\ o ->
+                 TeamDriveList' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "teamDrives" .!= mempty)
+                     <*> (o .:? "kind" .!= "drive#teamDriveList"))
+
+instance ToJSON TeamDriveList where
+        toJSON TeamDriveList'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _tdlNextPageToken,
+                  ("teamDrives" .=) <$> _tdlTeamDrives,
+                  Just ("kind" .= _tdlKind)])
+
 -- | An notification channel used to watch for resource changes.
 --
 -- /See:/ 'channel' smart constructor.
 data Channel = Channel'
     { _cResourceURI :: !(Maybe Text)
-    , _cResourceId  :: !(Maybe Text)
-    , _cKind        :: !Text
-    , _cExpiration  :: !(Maybe (Textual Int64))
-    , _cToken       :: !(Maybe Text)
-    , _cAddress     :: !(Maybe Text)
-    , _cPayload     :: !(Maybe Bool)
-    , _cParams      :: !(Maybe ChannelParams)
-    , _cId          :: !(Maybe Text)
-    , _cType        :: !(Maybe Text)
+    , _cResourceId :: !(Maybe Text)
+    , _cKind :: !Text
+    , _cExpiration :: !(Maybe (Textual Int64))
+    , _cToken :: !(Maybe Text)
+    , _cAddress :: !(Maybe Text)
+    , _cPayload :: !(Maybe Bool)
+    , _cParams :: !(Maybe ChannelParams)
+    , _cId :: !(Maybe Text)
+    , _cType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Channel' with the minimum fields required to make a request.
@@ -606,7 +1042,7 @@ data Channel = Channel'
 -- * 'cType'
 channel
     :: Channel
-channel =
+channel = 
     Channel'
     { _cResourceURI = Nothing
     , _cResourceId = Nothing
@@ -697,13 +1133,160 @@ instance ToJSON Channel where
                   ("params" .=) <$> _cParams, ("id" .=) <$> _cId,
                   ("type" .=) <$> _cType])
 
+--
+-- /See:/ 'aboutTeamDriveThemesItem' smart constructor.
+data AboutTeamDriveThemesItem = AboutTeamDriveThemesItem'
+    { _atdtiColorRgb :: !(Maybe Text)
+    , _atdtiBackgRoundImageLink :: !(Maybe Text)
+    , _atdtiId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AboutTeamDriveThemesItem' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'atdtiColorRgb'
+--
+-- * 'atdtiBackgRoundImageLink'
+--
+-- * 'atdtiId'
+aboutTeamDriveThemesItem
+    :: AboutTeamDriveThemesItem
+aboutTeamDriveThemesItem = 
+    AboutTeamDriveThemesItem'
+    { _atdtiColorRgb = Nothing
+    , _atdtiBackgRoundImageLink = Nothing
+    , _atdtiId = Nothing
+    }
+
+-- | The color of this Team Drive theme as an RGB hex string.
+atdtiColorRgb :: Lens' AboutTeamDriveThemesItem (Maybe Text)
+atdtiColorRgb
+  = lens _atdtiColorRgb
+      (\ s a -> s{_atdtiColorRgb = a})
+
+-- | A link to this Team Drive theme\'s background image.
+atdtiBackgRoundImageLink :: Lens' AboutTeamDriveThemesItem (Maybe Text)
+atdtiBackgRoundImageLink
+  = lens _atdtiBackgRoundImageLink
+      (\ s a -> s{_atdtiBackgRoundImageLink = a})
+
+-- | The ID of the theme.
+atdtiId :: Lens' AboutTeamDriveThemesItem (Maybe Text)
+atdtiId = lens _atdtiId (\ s a -> s{_atdtiId = a})
+
+instance FromJSON AboutTeamDriveThemesItem where
+        parseJSON
+          = withObject "AboutTeamDriveThemesItem"
+              (\ o ->
+                 AboutTeamDriveThemesItem' <$>
+                   (o .:? "colorRgb") <*> (o .:? "backgroundImageLink")
+                     <*> (o .:? "id"))
+
+instance ToJSON AboutTeamDriveThemesItem where
+        toJSON AboutTeamDriveThemesItem'{..}
+          = object
+              (catMaybes
+                 [("colorRgb" .=) <$> _atdtiColorRgb,
+                  ("backgroundImageLink" .=) <$>
+                    _atdtiBackgRoundImageLink,
+                  ("id" .=) <$> _atdtiId])
+
+-- | An image file and cropping parameters from which a background image for
+-- this Team Drive is set. This is a write only field; it can only be set
+-- on drive.teamdrives.update requests that don\'t set themeId. When
+-- specified, all fields of the backgroundImageFile must be set.
+--
+-- /See:/ 'teamDriveBackgRoundImageFile' smart constructor.
+data TeamDriveBackgRoundImageFile = TeamDriveBackgRoundImageFile'
+    { _tdbrifXCoordinate :: !(Maybe (Textual Double))
+    , _tdbrifYCoordinate :: !(Maybe (Textual Double))
+    , _tdbrifWidth :: !(Maybe (Textual Double))
+    , _tdbrifId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TeamDriveBackgRoundImageFile' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tdbrifXCoordinate'
+--
+-- * 'tdbrifYCoordinate'
+--
+-- * 'tdbrifWidth'
+--
+-- * 'tdbrifId'
+teamDriveBackgRoundImageFile
+    :: TeamDriveBackgRoundImageFile
+teamDriveBackgRoundImageFile = 
+    TeamDriveBackgRoundImageFile'
+    { _tdbrifXCoordinate = Nothing
+    , _tdbrifYCoordinate = Nothing
+    , _tdbrifWidth = Nothing
+    , _tdbrifId = Nothing
+    }
+
+-- | The X coordinate of the upper left corner of the cropping area in the
+-- background image. This is a value in the closed range of 0 to 1. This
+-- value represents the horizontal distance from the left side of the
+-- entire image to the left side of the cropping area divided by the width
+-- of the entire image.
+tdbrifXCoordinate :: Lens' TeamDriveBackgRoundImageFile (Maybe Double)
+tdbrifXCoordinate
+  = lens _tdbrifXCoordinate
+      (\ s a -> s{_tdbrifXCoordinate = a})
+      . mapping _Coerce
+
+-- | The Y coordinate of the upper left corner of the cropping area in the
+-- background image. This is a value in the closed range of 0 to 1. This
+-- value represents the vertical distance from the top side of the entire
+-- image to the top side of the cropping area divided by the height of the
+-- entire image.
+tdbrifYCoordinate :: Lens' TeamDriveBackgRoundImageFile (Maybe Double)
+tdbrifYCoordinate
+  = lens _tdbrifYCoordinate
+      (\ s a -> s{_tdbrifYCoordinate = a})
+      . mapping _Coerce
+
+-- | The width of the cropped image in the closed range of 0 to 1. This value
+-- represents the width of the cropped image divided by the width of the
+-- entire image. The height is computed by applying a width to height
+-- aspect ratio of 80 to 9. The resulting image must be at least 1280
+-- pixels wide and 144 pixels high.
+tdbrifWidth :: Lens' TeamDriveBackgRoundImageFile (Maybe Double)
+tdbrifWidth
+  = lens _tdbrifWidth (\ s a -> s{_tdbrifWidth = a}) .
+      mapping _Coerce
+
+-- | The ID of an image file in Drive to use for the background image.
+tdbrifId :: Lens' TeamDriveBackgRoundImageFile (Maybe Text)
+tdbrifId = lens _tdbrifId (\ s a -> s{_tdbrifId = a})
+
+instance FromJSON TeamDriveBackgRoundImageFile where
+        parseJSON
+          = withObject "TeamDriveBackgRoundImageFile"
+              (\ o ->
+                 TeamDriveBackgRoundImageFile' <$>
+                   (o .:? "xCoordinate") <*> (o .:? "yCoordinate") <*>
+                     (o .:? "width")
+                     <*> (o .:? "id"))
+
+instance ToJSON TeamDriveBackgRoundImageFile where
+        toJSON TeamDriveBackgRoundImageFile'{..}
+          = object
+              (catMaybes
+                 [("xCoordinate" .=) <$> _tdbrifXCoordinate,
+                  ("yCoordinate" .=) <$> _tdbrifYCoordinate,
+                  ("width" .=) <$> _tdbrifWidth,
+                  ("id" .=) <$> _tdbrifId])
+
 -- | Additional metadata about video media. This may not be available
 -- immediately upon upload.
 --
 -- /See:/ 'fileVideoMediaMetadata' smart constructor.
 data FileVideoMediaMetadata = FileVideoMediaMetadata'
-    { _fvmmHeight         :: !(Maybe (Textual Int32))
-    , _fvmmWidth          :: !(Maybe (Textual Int32))
+    { _fvmmHeight :: !(Maybe (Textual Int32))
+    , _fvmmWidth :: !(Maybe (Textual Int32))
     , _fvmmDurationMillis :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -718,7 +1301,7 @@ data FileVideoMediaMetadata = FileVideoMediaMetadata'
 -- * 'fvmmDurationMillis'
 fileVideoMediaMetadata
     :: FileVideoMediaMetadata
-fileVideoMediaMetadata =
+fileVideoMediaMetadata = 
     FileVideoMediaMetadata'
     { _fvmmHeight = Nothing
     , _fvmmWidth = Nothing
@@ -777,7 +1360,7 @@ newtype FileAppProperties = FileAppProperties'
 fileAppProperties
     :: HashMap Text Text -- ^ 'fapAddtional'
     -> FileAppProperties
-fileAppProperties pFapAddtional_ =
+fileAppProperties pFapAddtional_ = 
     FileAppProperties'
     { _fapAddtional = _Coerce # pFapAddtional_
     }
@@ -795,15 +1378,18 @@ instance FromJSON FileAppProperties where
 instance ToJSON FileAppProperties where
         toJSON = toJSON . _fapAddtional
 
--- | A change to a file.
+-- | A change to a file or Team Drive.
 --
 -- /See:/ 'change' smart constructor.
 data Change = Change'
     { _chaRemoved :: !(Maybe Bool)
-    , _chaTime    :: !(Maybe DateTime')
-    , _chaKind    :: !Text
-    , _chaFileId  :: !(Maybe Text)
-    , _chaFile    :: !(Maybe File)
+    , _chaTime :: !(Maybe DateTime')
+    , _chaKind :: !Text
+    , _chaTeamDrive :: !(Maybe TeamDrive)
+    , _chaTeamDriveId :: !(Maybe Text)
+    , _chaType :: !(Maybe Text)
+    , _chaFileId :: !(Maybe Text)
+    , _chaFile :: !(Maybe File)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Change' with the minimum fields required to make a request.
@@ -816,22 +1402,31 @@ data Change = Change'
 --
 -- * 'chaKind'
 --
+-- * 'chaTeamDrive'
+--
+-- * 'chaTeamDriveId'
+--
+-- * 'chaType'
+--
 -- * 'chaFileId'
 --
 -- * 'chaFile'
 change
     :: Change
-change =
+change = 
     Change'
     { _chaRemoved = Nothing
     , _chaTime = Nothing
     , _chaKind = "drive#change"
+    , _chaTeamDrive = Nothing
+    , _chaTeamDriveId = Nothing
+    , _chaType = Nothing
     , _chaFileId = Nothing
     , _chaFile = Nothing
     }
 
--- | Whether the file has been removed from the view of the changes list, for
--- example by deletion or lost access.
+-- | Whether the file or Team Drive has been removed from this list of
+-- changes, for example by deletion or loss of access.
 chaRemoved :: Lens' Change (Maybe Bool)
 chaRemoved
   = lens _chaRemoved (\ s a -> s{_chaRemoved = a})
@@ -847,12 +1442,30 @@ chaTime
 chaKind :: Lens' Change Text
 chaKind = lens _chaKind (\ s a -> s{_chaKind = a})
 
+-- | The updated state of the Team Drive. Present if the type is teamDrive,
+-- the user is still a member of the Team Drive, and the Team Drive has not
+-- been removed.
+chaTeamDrive :: Lens' Change (Maybe TeamDrive)
+chaTeamDrive
+  = lens _chaTeamDrive (\ s a -> s{_chaTeamDrive = a})
+
+-- | The ID of the Team Drive associated with this change.
+chaTeamDriveId :: Lens' Change (Maybe Text)
+chaTeamDriveId
+  = lens _chaTeamDriveId
+      (\ s a -> s{_chaTeamDriveId = a})
+
+-- | The type of the change. Possible values are file and teamDrive.
+chaType :: Lens' Change (Maybe Text)
+chaType = lens _chaType (\ s a -> s{_chaType = a})
+
 -- | The ID of the file which has changed.
 chaFileId :: Lens' Change (Maybe Text)
 chaFileId
   = lens _chaFileId (\ s a -> s{_chaFileId = a})
 
--- | The updated state of the file. Present if the file has not been removed.
+-- | The updated state of the file. Present if the type is file and the file
+-- has not been removed from this list of changes.
 chaFile :: Lens' Change (Maybe File)
 chaFile = lens _chaFile (\ s a -> s{_chaFile = a})
 
@@ -863,6 +1476,9 @@ instance FromJSON Change where
                  Change' <$>
                    (o .:? "removed") <*> (o .:? "time") <*>
                      (o .:? "kind" .!= "drive#change")
+                     <*> (o .:? "teamDrive")
+                     <*> (o .:? "teamDriveId")
+                     <*> (o .:? "type")
                      <*> (o .:? "fileId")
                      <*> (o .:? "file"))
 
@@ -872,8 +1488,149 @@ instance ToJSON Change where
               (catMaybes
                  [("removed" .=) <$> _chaRemoved,
                   ("time" .=) <$> _chaTime, Just ("kind" .= _chaKind),
+                  ("teamDrive" .=) <$> _chaTeamDrive,
+                  ("teamDriveId" .=) <$> _chaTeamDriveId,
+                  ("type" .=) <$> _chaType,
                   ("fileId" .=) <$> _chaFileId,
                   ("file" .=) <$> _chaFile])
+
+-- | Representation of a Team Drive.
+--
+-- /See:/ 'teamDrive' smart constructor.
+data TeamDrive = TeamDrive'
+    { _tdThemeId :: !(Maybe Text)
+    , _tdBackgRoundImageFile :: !(Maybe TeamDriveBackgRoundImageFile)
+    , _tdColorRgb :: !(Maybe Text)
+    , _tdCreatedTime :: !(Maybe DateTime')
+    , _tdKind :: !Text
+    , _tdBackgRoundImageLink :: !(Maybe Text)
+    , _tdName :: !(Maybe Text)
+    , _tdId :: !(Maybe Text)
+    , _tdCapabilities :: !(Maybe TeamDriveCapabilities)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TeamDrive' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tdThemeId'
+--
+-- * 'tdBackgRoundImageFile'
+--
+-- * 'tdColorRgb'
+--
+-- * 'tdCreatedTime'
+--
+-- * 'tdKind'
+--
+-- * 'tdBackgRoundImageLink'
+--
+-- * 'tdName'
+--
+-- * 'tdId'
+--
+-- * 'tdCapabilities'
+teamDrive
+    :: TeamDrive
+teamDrive = 
+    TeamDrive'
+    { _tdThemeId = Nothing
+    , _tdBackgRoundImageFile = Nothing
+    , _tdColorRgb = Nothing
+    , _tdCreatedTime = Nothing
+    , _tdKind = "drive#teamDrive"
+    , _tdBackgRoundImageLink = Nothing
+    , _tdName = Nothing
+    , _tdId = Nothing
+    , _tdCapabilities = Nothing
+    }
+
+-- | The ID of the theme from which the background image and color will be
+-- set. The set of possible teamDriveThemes can be retrieved from a
+-- drive.about.get response. When not specified on a
+-- drive.teamdrives.create request, a random theme is chosen from which the
+-- background image and color are set. This is a write-only field; it can
+-- only be set on requests that don\'t set colorRgb or backgroundImageFile.
+tdThemeId :: Lens' TeamDrive (Maybe Text)
+tdThemeId
+  = lens _tdThemeId (\ s a -> s{_tdThemeId = a})
+
+-- | An image file and cropping parameters from which a background image for
+-- this Team Drive is set. This is a write only field; it can only be set
+-- on drive.teamdrives.update requests that don\'t set themeId. When
+-- specified, all fields of the backgroundImageFile must be set.
+tdBackgRoundImageFile :: Lens' TeamDrive (Maybe TeamDriveBackgRoundImageFile)
+tdBackgRoundImageFile
+  = lens _tdBackgRoundImageFile
+      (\ s a -> s{_tdBackgRoundImageFile = a})
+
+-- | The color of this Team Drive as an RGB hex string. It can only be set on
+-- a drive.teamdrives.update request that does not set themeId.
+tdColorRgb :: Lens' TeamDrive (Maybe Text)
+tdColorRgb
+  = lens _tdColorRgb (\ s a -> s{_tdColorRgb = a})
+
+-- | The time at which the Team Drive was created (RFC 3339 date-time).
+tdCreatedTime :: Lens' TeamDrive (Maybe UTCTime)
+tdCreatedTime
+  = lens _tdCreatedTime
+      (\ s a -> s{_tdCreatedTime = a})
+      . mapping _DateTime
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"drive#teamDrive\".
+tdKind :: Lens' TeamDrive Text
+tdKind = lens _tdKind (\ s a -> s{_tdKind = a})
+
+-- | A short-lived link to this Team Drive\'s background image.
+tdBackgRoundImageLink :: Lens' TeamDrive (Maybe Text)
+tdBackgRoundImageLink
+  = lens _tdBackgRoundImageLink
+      (\ s a -> s{_tdBackgRoundImageLink = a})
+
+-- | The name of this Team Drive.
+tdName :: Lens' TeamDrive (Maybe Text)
+tdName = lens _tdName (\ s a -> s{_tdName = a})
+
+-- | The ID of this Team Drive which is also the ID of the top level folder
+-- for this Team Drive.
+tdId :: Lens' TeamDrive (Maybe Text)
+tdId = lens _tdId (\ s a -> s{_tdId = a})
+
+-- | Capabilities the current user has on this Team Drive.
+tdCapabilities :: Lens' TeamDrive (Maybe TeamDriveCapabilities)
+tdCapabilities
+  = lens _tdCapabilities
+      (\ s a -> s{_tdCapabilities = a})
+
+instance FromJSON TeamDrive where
+        parseJSON
+          = withObject "TeamDrive"
+              (\ o ->
+                 TeamDrive' <$>
+                   (o .:? "themeId") <*> (o .:? "backgroundImageFile")
+                     <*> (o .:? "colorRgb")
+                     <*> (o .:? "createdTime")
+                     <*> (o .:? "kind" .!= "drive#teamDrive")
+                     <*> (o .:? "backgroundImageLink")
+                     <*> (o .:? "name")
+                     <*> (o .:? "id")
+                     <*> (o .:? "capabilities"))
+
+instance ToJSON TeamDrive where
+        toJSON TeamDrive'{..}
+          = object
+              (catMaybes
+                 [("themeId" .=) <$> _tdThemeId,
+                  ("backgroundImageFile" .=) <$>
+                    _tdBackgRoundImageFile,
+                  ("colorRgb" .=) <$> _tdColorRgb,
+                  ("createdTime" .=) <$> _tdCreatedTime,
+                  Just ("kind" .= _tdKind),
+                  ("backgroundImageLink" .=) <$>
+                    _tdBackgRoundImageLink,
+                  ("name" .=) <$> _tdName, ("id" .=) <$> _tdId,
+                  ("capabilities" .=) <$> _tdCapabilities])
 
 -- | A map of source MIME type to possible targets for all supported exports.
 --
@@ -890,7 +1647,7 @@ newtype AboutExportFormats = AboutExportFormats'
 aboutExportFormats
     :: HashMap Text [Text] -- ^ 'aefAddtional'
     -> AboutExportFormats
-aboutExportFormats pAefAddtional_ =
+aboutExportFormats pAefAddtional_ = 
     AboutExportFormats'
     { _aefAddtional = _Coerce # pAefAddtional_
     }
@@ -912,11 +1669,11 @@ instance ToJSON AboutExportFormats where
 --
 -- /See:/ 'user' smart constructor.
 data User = User'
-    { _uPhotoLink    :: !(Maybe Text)
-    , _uMe           :: !(Maybe Bool)
-    , _uKind         :: !Text
+    { _uPhotoLink :: !(Maybe Text)
+    , _uMe :: !(Maybe Bool)
+    , _uKind :: !Text
     , _uEmailAddress :: !(Maybe Text)
-    , _uDisplayName  :: !(Maybe Text)
+    , _uDisplayName :: !(Maybe Text)
     , _uPermissionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -937,7 +1694,7 @@ data User = User'
 -- * 'uPermissionId'
 user
     :: User
-user =
+user = 
     User'
     { _uPhotoLink = Nothing
     , _uMe = Nothing
@@ -1006,9 +1763,9 @@ instance ToJSON User where
 -- /See:/ 'changeList' smart constructor.
 data ChangeList = ChangeList'
     { _clNewStartPageToken :: !(Maybe Text)
-    , _clNextPageToken     :: !(Maybe Text)
-    , _clChanges           :: !(Maybe [Change])
-    , _clKind              :: !Text
+    , _clNextPageToken :: !(Maybe Text)
+    , _clChanges :: !(Maybe [Change])
+    , _clKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangeList' with the minimum fields required to make a request.
@@ -1024,7 +1781,7 @@ data ChangeList = ChangeList'
 -- * 'clKind'
 changeList
     :: ChangeList
-changeList =
+changeList = 
     ChangeList'
     { _clNewStartPageToken = Nothing
     , _clNextPageToken = Nothing
@@ -1085,7 +1842,7 @@ instance ToJSON ChangeList where
 --
 -- /See:/ 'fileContentHints' smart constructor.
 data FileContentHints = FileContentHints'
-    { _fchThumbnail     :: !(Maybe FileContentHintsThumbnail)
+    { _fchThumbnail :: !(Maybe FileContentHintsThumbnail)
     , _fchIndexableText :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1098,7 +1855,7 @@ data FileContentHints = FileContentHints'
 -- * 'fchIndexableText'
 fileContentHints
     :: FileContentHints
-fileContentHints =
+fileContentHints = 
     FileContentHints'
     { _fchThumbnail = Nothing
     , _fchIndexableText = Nothing
@@ -1146,7 +1903,7 @@ newtype ChannelParams = ChannelParams'
 channelParams
     :: HashMap Text Text -- ^ 'cpAddtional'
     -> ChannelParams
-channelParams pCpAddtional_ =
+channelParams pCpAddtional_ = 
     ChannelParams'
     { _cpAddtional = _Coerce # pCpAddtional_
     }
@@ -1181,7 +1938,7 @@ newtype FileProperties = FileProperties'
 fileProperties
     :: HashMap Text Text -- ^ 'fpAddtional'
     -> FileProperties
-fileProperties pFpAddtional_ =
+fileProperties pFpAddtional_ = 
     FileProperties'
     { _fpAddtional = _Coerce # pFpAddtional_
     }
@@ -1214,7 +1971,7 @@ newtype AboutMaxImportSizes = AboutMaxImportSizes'
 aboutMaxImportSizes
     :: HashMap Text Int64 -- ^ 'amisAddtional'
     -> AboutMaxImportSizes
-aboutMaxImportSizes pAmisAddtional_ =
+aboutMaxImportSizes pAmisAddtional_ = 
     AboutMaxImportSizes'
     { _amisAddtional = _Coerce # pAmisAddtional_
     }
@@ -1237,14 +1994,15 @@ instance ToJSON AboutMaxImportSizes where
 --
 -- /See:/ 'about' smart constructor.
 data About = About'
-    { _aExportFormats      :: !(Maybe AboutExportFormats)
-    , _aMaxImportSizes     :: !(Maybe AboutMaxImportSizes)
-    , _aImportFormats      :: !(Maybe AboutImportFormats)
-    , _aKind               :: !Text
-    , _aAppInstalled       :: !(Maybe Bool)
-    , _aUser               :: !(Maybe User)
-    , _aStorageQuota       :: !(Maybe AboutStorageQuota)
-    , _aMaxUploadSize      :: !(Maybe (Textual Int64))
+    { _aExportFormats :: !(Maybe AboutExportFormats)
+    , _aMaxImportSizes :: !(Maybe AboutMaxImportSizes)
+    , _aImportFormats :: !(Maybe AboutImportFormats)
+    , _aKind :: !Text
+    , _aAppInstalled :: !(Maybe Bool)
+    , _aUser :: !(Maybe User)
+    , _aStorageQuota :: !(Maybe AboutStorageQuota)
+    , _aMaxUploadSize :: !(Maybe (Textual Int64))
+    , _aTeamDriveThemes :: !(Maybe [AboutTeamDriveThemesItem])
     , _aFolderColorPalette :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1268,10 +2026,12 @@ data About = About'
 --
 -- * 'aMaxUploadSize'
 --
+-- * 'aTeamDriveThemes'
+--
 -- * 'aFolderColorPalette'
 about
     :: About
-about =
+about = 
     About'
     { _aExportFormats = Nothing
     , _aMaxImportSizes = Nothing
@@ -1281,6 +2041,7 @@ about =
     , _aUser = Nothing
     , _aStorageQuota = Nothing
     , _aMaxUploadSize = Nothing
+    , _aTeamDriveThemes = Nothing
     , _aFolderColorPalette = Nothing
     }
 
@@ -1331,6 +2092,14 @@ aMaxUploadSize
       (\ s a -> s{_aMaxUploadSize = a})
       . mapping _Coerce
 
+-- | A list of themes that are supported for Team Drives.
+aTeamDriveThemes :: Lens' About [AboutTeamDriveThemesItem]
+aTeamDriveThemes
+  = lens _aTeamDriveThemes
+      (\ s a -> s{_aTeamDriveThemes = a})
+      . _Default
+      . _Coerce
+
 -- | The currently supported folder colors as RGB hex strings.
 aFolderColorPalette :: Lens' About [Text]
 aFolderColorPalette
@@ -1351,6 +2120,7 @@ instance FromJSON About where
                      <*> (o .:? "user")
                      <*> (o .:? "storageQuota")
                      <*> (o .:? "maxUploadSize")
+                     <*> (o .:? "teamDriveThemes" .!= mempty)
                      <*> (o .:? "folderColorPalette" .!= mempty))
 
 instance ToJSON About where
@@ -1365,14 +2135,15 @@ instance ToJSON About where
                   ("user" .=) <$> _aUser,
                   ("storageQuota" .=) <$> _aStorageQuota,
                   ("maxUploadSize" .=) <$> _aMaxUploadSize,
+                  ("teamDriveThemes" .=) <$> _aTeamDriveThemes,
                   ("folderColorPalette" .=) <$> _aFolderColorPalette])
 
 -- | Geographic location information stored in the image.
 --
 -- /See:/ 'fileImageMediaMetadataLocation' smart constructor.
 data FileImageMediaMetadataLocation = FileImageMediaMetadataLocation'
-    { _fimmlLatitude  :: !(Maybe (Textual Double))
-    , _fimmlAltitude  :: !(Maybe (Textual Double))
+    { _fimmlLatitude :: !(Maybe (Textual Double))
+    , _fimmlAltitude :: !(Maybe (Textual Double))
     , _fimmlLongitude :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1387,7 +2158,7 @@ data FileImageMediaMetadataLocation = FileImageMediaMetadataLocation'
 -- * 'fimmlLongitude'
 fileImageMediaMetadataLocation
     :: FileImageMediaMetadataLocation
-fileImageMediaMetadataLocation =
+fileImageMediaMetadataLocation = 
     FileImageMediaMetadataLocation'
     { _fimmlLatitude = Nothing
     , _fimmlAltitude = Nothing
@@ -1435,7 +2206,7 @@ instance ToJSON FileImageMediaMetadataLocation where
 --
 -- /See:/ 'startPageToken' smart constructor.
 data StartPageToken = StartPageToken'
-    { _sptKind           :: !Text
+    { _sptKind :: !Text
     , _sptStartPageToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1448,7 +2219,7 @@ data StartPageToken = StartPageToken'
 -- * 'sptStartPageToken'
 startPageToken
     :: StartPageToken
-startPageToken =
+startPageToken = 
     StartPageToken'
     { _sptKind = "drive#startPageToken"
     , _sptStartPageToken = Nothing
@@ -1484,27 +2255,27 @@ instance ToJSON StartPageToken where
 --
 -- /See:/ 'fileImageMediaMetadata' smart constructor.
 data FileImageMediaMetadata = FileImageMediaMetadata'
-    { _fimmRotation         :: !(Maybe (Textual Int32))
-    , _fimmHeight           :: !(Maybe (Textual Int32))
-    , _fimmSubjectDistance  :: !(Maybe (Textual Int32))
+    { _fimmRotation :: !(Maybe (Textual Int32))
+    , _fimmHeight :: !(Maybe (Textual Int32))
+    , _fimmSubjectDistance :: !(Maybe (Textual Int32))
     , _fimmMaxApertureValue :: !(Maybe (Textual Double))
-    , _fimmIsoSpeed         :: !(Maybe (Textual Int32))
-    , _fimmTime             :: !(Maybe Text)
-    , _fimmLocation         :: !(Maybe FileImageMediaMetadataLocation)
-    , _fimmAperture         :: !(Maybe (Textual Double))
-    , _fimmFocalLength      :: !(Maybe (Textual Double))
-    , _fimmCameraMake       :: !(Maybe Text)
-    , _fimmWidth            :: !(Maybe (Textual Int32))
-    , _fimmExposureTime     :: !(Maybe (Textual Double))
-    , _fimmCameraModel      :: !(Maybe Text)
-    , _fimmWhiteBalance     :: !(Maybe Text)
-    , _fimmLens             :: !(Maybe Text)
-    , _fimmFlashUsed        :: !(Maybe Bool)
-    , _fimmExposureBias     :: !(Maybe (Textual Double))
-    , _fimmMeteringMode     :: !(Maybe Text)
-    , _fimmExposureMode     :: !(Maybe Text)
-    , _fimmSensor           :: !(Maybe Text)
-    , _fimmColorSpace       :: !(Maybe Text)
+    , _fimmIsoSpeed :: !(Maybe (Textual Int32))
+    , _fimmTime :: !(Maybe Text)
+    , _fimmLocation :: !(Maybe FileImageMediaMetadataLocation)
+    , _fimmAperture :: !(Maybe (Textual Double))
+    , _fimmFocalLength :: !(Maybe (Textual Double))
+    , _fimmCameraMake :: !(Maybe Text)
+    , _fimmWidth :: !(Maybe (Textual Int32))
+    , _fimmExposureTime :: !(Maybe (Textual Double))
+    , _fimmCameraModel :: !(Maybe Text)
+    , _fimmWhiteBalance :: !(Maybe Text)
+    , _fimmLens :: !(Maybe Text)
+    , _fimmFlashUsed :: !(Maybe Bool)
+    , _fimmExposureBias :: !(Maybe (Textual Double))
+    , _fimmMeteringMode :: !(Maybe Text)
+    , _fimmExposureMode :: !(Maybe Text)
+    , _fimmSensor :: !(Maybe Text)
+    , _fimmColorSpace :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FileImageMediaMetadata' with the minimum fields required to make a request.
@@ -1554,7 +2325,7 @@ data FileImageMediaMetadata = FileImageMediaMetadata'
 -- * 'fimmColorSpace'
 fileImageMediaMetadata
     :: FileImageMediaMetadata
-fileImageMediaMetadata =
+fileImageMediaMetadata = 
     FileImageMediaMetadata'
     { _fimmRotation = Nothing
     , _fimmHeight = Nothing
@@ -1762,18 +2533,18 @@ instance ToJSON FileImageMediaMetadata where
 --
 -- /See:/ 'comment' smart constructor.
 data Comment = Comment'
-    { _comHTMLContent       :: !(Maybe Text)
-    , _comModifiedTime      :: !(Maybe DateTime')
-    , _comCreatedTime       :: !(Maybe DateTime')
-    , _comKind              :: !Text
-    , _comResolved          :: !(Maybe Bool)
+    { _comHTMLContent :: !(Maybe Text)
+    , _comModifiedTime :: !(Maybe DateTime')
+    , _comCreatedTime :: !(Maybe DateTime')
+    , _comKind :: !Text
+    , _comResolved :: !(Maybe Bool)
     , _comQuotedFileContent :: !(Maybe CommentQuotedFileContent)
-    , _comAnchor            :: !(Maybe Text)
-    , _comContent           :: !(Maybe Text)
-    , _comReplies           :: !(Maybe [Reply])
-    , _comAuthor            :: !(Maybe User)
-    , _comId                :: !(Maybe Text)
-    , _comDeleted           :: !(Maybe Bool)
+    , _comAnchor :: !(Maybe Text)
+    , _comContent :: !(Maybe Text)
+    , _comReplies :: !(Maybe [Reply])
+    , _comAuthor :: !(Maybe User)
+    , _comId :: !(Maybe Text)
+    , _comDeleted :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Comment' with the minimum fields required to make a request.
@@ -1805,7 +2576,7 @@ data Comment = Comment'
 -- * 'comDeleted'
 comment
     :: Comment
-comment =
+comment = 
     Comment'
     { _comHTMLContent = Nothing
     , _comModifiedTime = Nothing
@@ -1931,18 +2702,18 @@ instance ToJSON Comment where
 --
 -- /See:/ 'revision' smart constructor.
 data Revision = Revision'
-    { _revModifiedTime           :: !(Maybe DateTime')
-    , _revSize                   :: !(Maybe (Textual Int64))
-    , _revOriginalFilename       :: !(Maybe Text)
-    , _revKind                   :: !Text
-    , _revPublished              :: !(Maybe Bool)
-    , _revLastModifyingUser      :: !(Maybe User)
-    , _revPublishAuto            :: !(Maybe Bool)
-    , _revMD5Checksum            :: !(Maybe Text)
-    , _revKeepForever            :: !(Maybe Bool)
-    , _revMimeType               :: !(Maybe Text)
+    { _revModifiedTime :: !(Maybe DateTime')
+    , _revSize :: !(Maybe (Textual Int64))
+    , _revOriginalFilename :: !(Maybe Text)
+    , _revKind :: !Text
+    , _revPublished :: !(Maybe Bool)
+    , _revLastModifyingUser :: !(Maybe User)
+    , _revPublishAuto :: !(Maybe Bool)
+    , _revMD5Checksum :: !(Maybe Text)
+    , _revKeepForever :: !(Maybe Bool)
+    , _revMimeType :: !(Maybe Text)
     , _revPublishedOutsideDomain :: !(Maybe Bool)
-    , _revId                     :: !(Maybe Text)
+    , _revId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Revision' with the minimum fields required to make a request.
@@ -1974,7 +2745,7 @@ data Revision = Revision'
 -- * 'revId'
 revision
     :: Revision
-revision =
+revision = 
     Revision'
     { _revModifiedTime = Nothing
     , _revSize = Nothing
@@ -2108,16 +2879,18 @@ instance ToJSON Revision where
 --
 -- /See:/ 'permission' smart constructor.
 data Permission = Permission'
-    { _pPhotoLink          :: !(Maybe Text)
-    , _pKind               :: !Text
-    , _pDomain             :: !(Maybe Text)
-    , _pRole               :: !(Maybe Text)
-    , _pEmailAddress       :: !(Maybe Text)
+    { _pPhotoLink :: !(Maybe Text)
+    , _pTeamDrivePermissionDetails :: !(Maybe [PermissionTeamDrivePermissionDetailsItem])
+    , _pKind :: !Text
+    , _pDomain :: !(Maybe Text)
+    , _pRole :: !(Maybe Text)
+    , _pEmailAddress :: !(Maybe Text)
     , _pAllowFileDiscovery :: !(Maybe Bool)
-    , _pDisplayName        :: !(Maybe Text)
-    , _pId                 :: !(Maybe Text)
-    , _pType               :: !(Maybe Text)
-    , _pExpirationTime     :: !(Maybe DateTime')
+    , _pDisplayName :: !(Maybe Text)
+    , _pId :: !(Maybe Text)
+    , _pDeleted :: !(Maybe Bool)
+    , _pType :: !(Maybe Text)
+    , _pExpirationTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Permission' with the minimum fields required to make a request.
@@ -2125,6 +2898,8 @@ data Permission = Permission'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pPhotoLink'
+--
+-- * 'pTeamDrivePermissionDetails'
 --
 -- * 'pKind'
 --
@@ -2140,14 +2915,17 @@ data Permission = Permission'
 --
 -- * 'pId'
 --
+-- * 'pDeleted'
+--
 -- * 'pType'
 --
 -- * 'pExpirationTime'
 permission
     :: Permission
-permission =
+permission = 
     Permission'
     { _pPhotoLink = Nothing
+    , _pTeamDrivePermissionDetails = Nothing
     , _pKind = "drive#permission"
     , _pDomain = Nothing
     , _pRole = Nothing
@@ -2155,6 +2933,7 @@ permission =
     , _pAllowFileDiscovery = Nothing
     , _pDisplayName = Nothing
     , _pId = Nothing
+    , _pDeleted = Nothing
     , _pType = Nothing
     , _pExpirationTime = Nothing
     }
@@ -2163,6 +2942,16 @@ permission =
 pPhotoLink :: Lens' Permission (Maybe Text)
 pPhotoLink
   = lens _pPhotoLink (\ s a -> s{_pPhotoLink = a})
+
+-- | Details of whether the permissions on this Team Drive item are inherited
+-- or directly on this item. This is an output-only field which is present
+-- only for Team Drive items.
+pTeamDrivePermissionDetails :: Lens' Permission [PermissionTeamDrivePermissionDetailsItem]
+pTeamDrivePermissionDetails
+  = lens _pTeamDrivePermissionDetails
+      (\ s a -> s{_pTeamDrivePermissionDetails = a})
+      . _Default
+      . _Coerce
 
 -- | Identifies what kind of resource this is. Value: the fixed string
 -- \"drive#permission\".
@@ -2173,8 +2962,9 @@ pKind = lens _pKind (\ s a -> s{_pKind = a})
 pDomain :: Lens' Permission (Maybe Text)
 pDomain = lens _pDomain (\ s a -> s{_pDomain = a})
 
--- | The role granted by this permission. Valid values are: - owner - writer
--- - commenter - reader
+-- | The role granted by this permission. While new values may be supported
+-- in the future, the following are currently allowed: - organizer - owner
+-- - writer - commenter - reader
 pRole :: Lens' Permission (Maybe Text)
 pRole = lens _pRole (\ s a -> s{_pRole = a})
 
@@ -2201,12 +2991,20 @@ pDisplayName
 pId :: Lens' Permission (Maybe Text)
 pId = lens _pId (\ s a -> s{_pId = a})
 
+-- | Whether the account associated with this permission has been deleted.
+-- This field only pertains to user and group permissions.
+pDeleted :: Lens' Permission (Maybe Bool)
+pDeleted = lens _pDeleted (\ s a -> s{_pDeleted = a})
+
 -- | The type of the grantee. Valid values are: - user - group - domain -
 -- anyone
 pType :: Lens' Permission (Maybe Text)
 pType = lens _pType (\ s a -> s{_pType = a})
 
 -- | The time at which this permission will expire (RFC 3339 date-time).
+-- Expiration times have the following restrictions: - They can only be set
+-- on user and group permissions - The time must be in the future - The
+-- time cannot be more than a year in the future
 pExpirationTime :: Lens' Permission (Maybe UTCTime)
 pExpirationTime
   = lens _pExpirationTime
@@ -2219,13 +3017,15 @@ instance FromJSON Permission where
               (\ o ->
                  Permission' <$>
                    (o .:? "photoLink") <*>
-                     (o .:? "kind" .!= "drive#permission")
+                     (o .:? "teamDrivePermissionDetails" .!= mempty)
+                     <*> (o .:? "kind" .!= "drive#permission")
                      <*> (o .:? "domain")
                      <*> (o .:? "role")
                      <*> (o .:? "emailAddress")
                      <*> (o .:? "allowFileDiscovery")
                      <*> (o .:? "displayName")
                      <*> (o .:? "id")
+                     <*> (o .:? "deleted")
                      <*> (o .:? "type")
                      <*> (o .:? "expirationTime"))
 
@@ -2234,65 +3034,73 @@ instance ToJSON Permission where
           = object
               (catMaybes
                  [("photoLink" .=) <$> _pPhotoLink,
+                  ("teamDrivePermissionDetails" .=) <$>
+                    _pTeamDrivePermissionDetails,
                   Just ("kind" .= _pKind), ("domain" .=) <$> _pDomain,
                   ("role" .=) <$> _pRole,
                   ("emailAddress" .=) <$> _pEmailAddress,
                   ("allowFileDiscovery" .=) <$> _pAllowFileDiscovery,
                   ("displayName" .=) <$> _pDisplayName,
-                  ("id" .=) <$> _pId, ("type" .=) <$> _pType,
+                  ("id" .=) <$> _pId, ("deleted" .=) <$> _pDeleted,
+                  ("type" .=) <$> _pType,
                   ("expirationTime" .=) <$> _pExpirationTime])
 
 -- | The metadata for a file.
 --
 -- /See:/ 'file' smart constructor.
 data File = File'
-    { _fOwnedByMe             :: !(Maybe Bool)
-    , _fThumbnailLink         :: !(Maybe Text)
-    , _fFullFileExtension     :: !(Maybe Text)
-    , _fModifiedTime          :: !(Maybe DateTime')
-    , _fModifiedByMeTime      :: !(Maybe DateTime')
-    , _fFileExtension         :: !(Maybe Text)
-    , _fViewedByMe            :: !(Maybe Bool)
-    , _fOwners                :: !(Maybe [User])
-    , _fViewedByMeTime        :: !(Maybe DateTime')
-    , _fModifiedByMe          :: !(Maybe Bool)
-    , _fSize                  :: !(Maybe (Textual Int64))
-    , _fTrashed               :: !(Maybe Bool)
-    , _fWebViewLink           :: !(Maybe Text)
-    , _fCreatedTime           :: !(Maybe DateTime')
-    , _fOriginalFilename      :: !(Maybe Text)
-    , _fKind                  :: !Text
-    , _fLastModifyingUser     :: !(Maybe User)
-    , _fIconLink              :: !(Maybe Text)
-    , _fHasThumbnail          :: !(Maybe Bool)
-    , _fThumbnailVersion      :: !(Maybe (Textual Int64))
-    , _fImageMediaMetadata    :: !(Maybe FileImageMediaMetadata)
-    , _fExplicitlyTrashed     :: !(Maybe Bool)
-    , _fShared                :: !(Maybe Bool)
-    , _fMD5Checksum           :: !(Maybe Text)
-    , _fFolderColorRgb        :: !(Maybe Text)
-    , _fMimeType              :: !(Maybe Text)
-    , _fIsAppAuthorized       :: !(Maybe Bool)
-    , _fName                  :: !(Maybe Text)
-    , _fParents               :: !(Maybe [Text])
-    , _fStarred               :: !(Maybe Bool)
-    , _fSpaces                :: !(Maybe [Text])
-    , _fVersion               :: !(Maybe (Textual Int64))
-    , _fWritersCanShare       :: !(Maybe Bool)
-    , _fId                    :: !(Maybe Text)
-    , _fPermissions           :: !(Maybe [Permission])
-    , _fQuotaBytesUsed        :: !(Maybe (Textual Int64))
-    , _fAppProperties         :: !(Maybe FileAppProperties)
-    , _fVideoMediaMetadata    :: !(Maybe FileVideoMediaMetadata)
-    , _fSharedWithMeTime      :: !(Maybe DateTime')
-    , _fHeadRevisionId        :: !(Maybe Text)
-    , _fCapabilities          :: !(Maybe FileCapabilities)
-    , _fDescription           :: !(Maybe Text)
+    { _fOwnedByMe :: !(Maybe Bool)
+    , _fThumbnailLink :: !(Maybe Text)
+    , _fFullFileExtension :: !(Maybe Text)
+    , _fModifiedTime :: !(Maybe DateTime')
+    , _fModifiedByMeTime :: !(Maybe DateTime')
+    , _fFileExtension :: !(Maybe Text)
+    , _fViewedByMe :: !(Maybe Bool)
+    , _fOwners :: !(Maybe [User])
+    , _fViewedByMeTime :: !(Maybe DateTime')
+    , _fModifiedByMe :: !(Maybe Bool)
+    , _fSize :: !(Maybe (Textual Int64))
+    , _fTrashed :: !(Maybe Bool)
+    , _fWebViewLink :: !(Maybe Text)
+    , _fCreatedTime :: !(Maybe DateTime')
+    , _fTrashedTime :: !(Maybe DateTime')
+    , _fOriginalFilename :: !(Maybe Text)
+    , _fKind :: !Text
+    , _fLastModifyingUser :: !(Maybe User)
+    , _fIconLink :: !(Maybe Text)
+    , _fHasThumbnail :: !(Maybe Bool)
+    , _fThumbnailVersion :: !(Maybe (Textual Int64))
+    , _fImageMediaMetadata :: !(Maybe FileImageMediaMetadata)
+    , _fExplicitlyTrashed :: !(Maybe Bool)
+    , _fShared :: !(Maybe Bool)
+    , _fMD5Checksum :: !(Maybe Text)
+    , _fTeamDriveId :: !(Maybe Text)
+    , _fFolderColorRgb :: !(Maybe Text)
+    , _fMimeType :: !(Maybe Text)
+    , _fIsAppAuthorized :: !(Maybe Bool)
+    , _fName :: !(Maybe Text)
+    , _fParents :: !(Maybe [Text])
+    , _fStarred :: !(Maybe Bool)
+    , _fSpaces :: !(Maybe [Text])
+    , _fVersion :: !(Maybe (Textual Int64))
+    , _fHasAugmentedPermissions :: !(Maybe Bool)
+    , _fWritersCanShare :: !(Maybe Bool)
+    , _fTrashingUser :: !(Maybe User)
+    , _fId :: !(Maybe Text)
+    , _fPermissionIds :: !(Maybe [Text])
+    , _fPermissions :: !(Maybe [Permission])
+    , _fQuotaBytesUsed :: !(Maybe (Textual Int64))
+    , _fAppProperties :: !(Maybe FileAppProperties)
+    , _fVideoMediaMetadata :: !(Maybe FileVideoMediaMetadata)
+    , _fSharedWithMeTime :: !(Maybe DateTime')
+    , _fHeadRevisionId :: !(Maybe Text)
+    , _fCapabilities :: !(Maybe FileCapabilities)
+    , _fDescription :: !(Maybe Text)
     , _fViewersCanCopyContent :: !(Maybe Bool)
-    , _fSharingUser           :: !(Maybe User)
-    , _fWebContentLink        :: !(Maybe Text)
-    , _fContentHints          :: !(Maybe FileContentHints)
-    , _fProperties            :: !(Maybe FileProperties)
+    , _fSharingUser :: !(Maybe User)
+    , _fWebContentLink :: !(Maybe Text)
+    , _fContentHints :: !(Maybe FileContentHints)
+    , _fProperties :: !(Maybe FileProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'File' with the minimum fields required to make a request.
@@ -2327,6 +3135,8 @@ data File = File'
 --
 -- * 'fCreatedTime'
 --
+-- * 'fTrashedTime'
+--
 -- * 'fOriginalFilename'
 --
 -- * 'fKind'
@@ -2347,6 +3157,8 @@ data File = File'
 --
 -- * 'fMD5Checksum'
 --
+-- * 'fTeamDriveId'
+--
 -- * 'fFolderColorRgb'
 --
 -- * 'fMimeType'
@@ -2363,9 +3175,15 @@ data File = File'
 --
 -- * 'fVersion'
 --
+-- * 'fHasAugmentedPermissions'
+--
 -- * 'fWritersCanShare'
 --
+-- * 'fTrashingUser'
+--
 -- * 'fId'
+--
+-- * 'fPermissionIds'
 --
 -- * 'fPermissions'
 --
@@ -2394,7 +3212,7 @@ data File = File'
 -- * 'fProperties'
 file
     :: File
-file =
+file = 
     File'
     { _fOwnedByMe = Nothing
     , _fThumbnailLink = Nothing
@@ -2410,6 +3228,7 @@ file =
     , _fTrashed = Nothing
     , _fWebViewLink = Nothing
     , _fCreatedTime = Nothing
+    , _fTrashedTime = Nothing
     , _fOriginalFilename = Nothing
     , _fKind = "drive#file"
     , _fLastModifyingUser = Nothing
@@ -2420,6 +3239,7 @@ file =
     , _fExplicitlyTrashed = Nothing
     , _fShared = Nothing
     , _fMD5Checksum = Nothing
+    , _fTeamDriveId = Nothing
     , _fFolderColorRgb = Nothing
     , _fMimeType = Nothing
     , _fIsAppAuthorized = Nothing
@@ -2428,8 +3248,11 @@ file =
     , _fStarred = Nothing
     , _fSpaces = Nothing
     , _fVersion = Nothing
+    , _fHasAugmentedPermissions = Nothing
     , _fWritersCanShare = Nothing
+    , _fTrashingUser = Nothing
     , _fId = Nothing
+    , _fPermissionIds = Nothing
     , _fPermissions = Nothing
     , _fQuotaBytesUsed = Nothing
     , _fAppProperties = Nothing
@@ -2445,7 +3268,7 @@ file =
     , _fProperties = Nothing
     }
 
--- | Whether the user owns the file.
+-- | Whether the user owns the file. Not populated for Team Drive files.
 fOwnedByMe :: Lens' File (Maybe Bool)
 fOwnedByMe
   = lens _fOwnedByMe (\ s a -> s{_fOwnedByMe = a})
@@ -2497,7 +3320,7 @@ fViewedByMe
   = lens _fViewedByMe (\ s a -> s{_fViewedByMe = a})
 
 -- | The owners of the file. Currently, only certain legacy files may have
--- more than one owner.
+-- more than one owner. Not populated for Team Drive files.
 fOwners :: Lens' File [User]
 fOwners
   = lens _fOwners (\ s a -> s{_fOwners = a}) . _Default
@@ -2541,6 +3364,13 @@ fCreatedTime
   = lens _fCreatedTime (\ s a -> s{_fCreatedTime = a})
       . mapping _DateTime
 
+-- | The time that the item was trashed (RFC 3339 date-time). Only populated
+-- for Team Drive files.
+fTrashedTime :: Lens' File (Maybe UTCTime)
+fTrashedTime
+  = lens _fTrashedTime (\ s a -> s{_fTrashedTime = a})
+      . mapping _DateTime
+
 -- | The original filename of the uploaded content if available, or else the
 -- original value of the name field. This is only available for files with
 -- binary content in Drive.
@@ -2565,7 +3395,9 @@ fIconLink :: Lens' File (Maybe Text)
 fIconLink
   = lens _fIconLink (\ s a -> s{_fIconLink = a})
 
--- | Whether this file has a thumbnail.
+-- | Whether this file has a thumbnail. This does not indicate whether the
+-- requesting app has access to the thumbnail. To check access, look for
+-- the presence of the thumbnailLink field.
 fHasThumbnail :: Lens' File (Maybe Bool)
 fHasThumbnail
   = lens _fHasThumbnail
@@ -2591,7 +3423,7 @@ fExplicitlyTrashed
   = lens _fExplicitlyTrashed
       (\ s a -> s{_fExplicitlyTrashed = a})
 
--- | Whether the file has been shared.
+-- | Whether the file has been shared. Not populated for Team Drive files.
 fShared :: Lens' File (Maybe Bool)
 fShared = lens _fShared (\ s a -> s{_fShared = a})
 
@@ -2600,6 +3432,11 @@ fShared = lens _fShared (\ s a -> s{_fShared = a})
 fMD5Checksum :: Lens' File (Maybe Text)
 fMD5Checksum
   = lens _fMD5Checksum (\ s a -> s{_fMD5Checksum = a})
+
+-- | ID of the Team Drive the file resides in.
+fTeamDriveId :: Lens' File (Maybe Text)
+fTeamDriveId
+  = lens _fTeamDriveId (\ s a -> s{_fTeamDriveId = a})
 
 -- | The color for a folder as an RGB hex string. The supported colors are
 -- published in the folderColorPalette field of the About resource. If an
@@ -2627,6 +3464,9 @@ fIsAppAuthorized
       (\ s a -> s{_fIsAppAuthorized = a})
 
 -- | The name of the file. This is not necessarily unique within a folder.
+-- Note that for immutable items such as the top level folders of Team
+-- Drives, My Drive root folder, and Application Data folder the name is
+-- constant.
 fName :: Lens' File (Maybe Text)
 fName = lens _fName (\ s a -> s{_fName = a})
 
@@ -2659,19 +3499,41 @@ fVersion
   = lens _fVersion (\ s a -> s{_fVersion = a}) .
       mapping _Coerce
 
+-- | Whether any users are granted file access directly on this file. This
+-- field is only populated for Team Drive files.
+fHasAugmentedPermissions :: Lens' File (Maybe Bool)
+fHasAugmentedPermissions
+  = lens _fHasAugmentedPermissions
+      (\ s a -> s{_fHasAugmentedPermissions = a})
+
 -- | Whether users with only writer permission can modify the file\'s
--- permissions.
+-- permissions. Not populated for Team Drive files.
 fWritersCanShare :: Lens' File (Maybe Bool)
 fWritersCanShare
   = lens _fWritersCanShare
       (\ s a -> s{_fWritersCanShare = a})
 
+-- | If the file has been explicitly trashed, the user who trashed it. Only
+-- populated for Team Drive files.
+fTrashingUser :: Lens' File (Maybe User)
+fTrashingUser
+  = lens _fTrashingUser
+      (\ s a -> s{_fTrashingUser = a})
+
 -- | The ID of the file.
 fId :: Lens' File (Maybe Text)
 fId = lens _fId (\ s a -> s{_fId = a})
 
+-- | List of permission IDs for users with access to this file.
+fPermissionIds :: Lens' File [Text]
+fPermissionIds
+  = lens _fPermissionIds
+      (\ s a -> s{_fPermissionIds = a})
+      . _Default
+      . _Coerce
+
 -- | The full list of permissions for the file. This is only available if the
--- requesting user can share the file.
+-- requesting user can share the file. Not populated for Team Drive files.
 fPermissions :: Lens' File [Permission]
 fPermissions
   = lens _fPermissions (\ s a -> s{_fPermissions = a})
@@ -2716,7 +3578,8 @@ fHeadRevisionId
   = lens _fHeadRevisionId
       (\ s a -> s{_fHeadRevisionId = a})
 
--- | Capabilities the current user has on the file.
+-- | Capabilities the current user has on this file. Each capability
+-- corresponds to a fine-grained action that a user may take.
 fCapabilities :: Lens' File (Maybe FileCapabilities)
 fCapabilities
   = lens _fCapabilities
@@ -2777,6 +3640,7 @@ instance FromJSON File where
                      <*> (o .:? "trashed")
                      <*> (o .:? "webViewLink")
                      <*> (o .:? "createdTime")
+                     <*> (o .:? "trashedTime")
                      <*> (o .:? "originalFilename")
                      <*> (o .:? "kind" .!= "drive#file")
                      <*> (o .:? "lastModifyingUser")
@@ -2787,6 +3651,7 @@ instance FromJSON File where
                      <*> (o .:? "explicitlyTrashed")
                      <*> (o .:? "shared")
                      <*> (o .:? "md5Checksum")
+                     <*> (o .:? "teamDriveId")
                      <*> (o .:? "folderColorRgb")
                      <*> (o .:? "mimeType")
                      <*> (o .:? "isAppAuthorized")
@@ -2795,8 +3660,11 @@ instance FromJSON File where
                      <*> (o .:? "starred")
                      <*> (o .:? "spaces" .!= mempty)
                      <*> (o .:? "version")
+                     <*> (o .:? "hasAugmentedPermissions")
                      <*> (o .:? "writersCanShare")
+                     <*> (o .:? "trashingUser")
                      <*> (o .:? "id")
+                     <*> (o .:? "permissionIds" .!= mempty)
                      <*> (o .:? "permissions" .!= mempty)
                      <*> (o .:? "quotaBytesUsed")
                      <*> (o .:? "appProperties")
@@ -2828,6 +3696,7 @@ instance ToJSON File where
                   ("size" .=) <$> _fSize, ("trashed" .=) <$> _fTrashed,
                   ("webViewLink" .=) <$> _fWebViewLink,
                   ("createdTime" .=) <$> _fCreatedTime,
+                  ("trashedTime" .=) <$> _fTrashedTime,
                   ("originalFilename" .=) <$> _fOriginalFilename,
                   Just ("kind" .= _fKind),
                   ("lastModifyingUser" .=) <$> _fLastModifyingUser,
@@ -2838,6 +3707,7 @@ instance ToJSON File where
                   ("explicitlyTrashed" .=) <$> _fExplicitlyTrashed,
                   ("shared" .=) <$> _fShared,
                   ("md5Checksum" .=) <$> _fMD5Checksum,
+                  ("teamDriveId" .=) <$> _fTeamDriveId,
                   ("folderColorRgb" .=) <$> _fFolderColorRgb,
                   ("mimeType" .=) <$> _fMimeType,
                   ("isAppAuthorized" .=) <$> _fIsAppAuthorized,
@@ -2845,8 +3715,12 @@ instance ToJSON File where
                   ("starred" .=) <$> _fStarred,
                   ("spaces" .=) <$> _fSpaces,
                   ("version" .=) <$> _fVersion,
+                  ("hasAugmentedPermissions" .=) <$>
+                    _fHasAugmentedPermissions,
                   ("writersCanShare" .=) <$> _fWritersCanShare,
+                  ("trashingUser" .=) <$> _fTrashingUser,
                   ("id" .=) <$> _fId,
+                  ("permissionIds" .=) <$> _fPermissionIds,
                   ("permissions" .=) <$> _fPermissions,
                   ("quotaBytesUsed" .=) <$> _fQuotaBytesUsed,
                   ("appProperties" .=) <$> _fAppProperties,
@@ -2862,13 +3736,94 @@ instance ToJSON File where
                   ("contentHints" .=) <$> _fContentHints,
                   ("properties" .=) <$> _fProperties])
 
+--
+-- /See:/ 'permissionTeamDrivePermissionDetailsItem' smart constructor.
+data PermissionTeamDrivePermissionDetailsItem = PermissionTeamDrivePermissionDetailsItem'
+    { _ptdpdiInherited :: !(Maybe Bool)
+    , _ptdpdiTeamDrivePermissionType :: !(Maybe Text)
+    , _ptdpdiRole :: !(Maybe Text)
+    , _ptdpdiInheritedFrom :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'PermissionTeamDrivePermissionDetailsItem' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ptdpdiInherited'
+--
+-- * 'ptdpdiTeamDrivePermissionType'
+--
+-- * 'ptdpdiRole'
+--
+-- * 'ptdpdiInheritedFrom'
+permissionTeamDrivePermissionDetailsItem
+    :: PermissionTeamDrivePermissionDetailsItem
+permissionTeamDrivePermissionDetailsItem = 
+    PermissionTeamDrivePermissionDetailsItem'
+    { _ptdpdiInherited = Nothing
+    , _ptdpdiTeamDrivePermissionType = Nothing
+    , _ptdpdiRole = Nothing
+    , _ptdpdiInheritedFrom = Nothing
+    }
+
+-- | Whether this permission is inherited. This field is always populated.
+-- This is an output-only field.
+ptdpdiInherited :: Lens' PermissionTeamDrivePermissionDetailsItem (Maybe Bool)
+ptdpdiInherited
+  = lens _ptdpdiInherited
+      (\ s a -> s{_ptdpdiInherited = a})
+
+-- | The Team Drive permission type for this user. While new values may be
+-- added in future, the following are currently possible: - file - member
+ptdpdiTeamDrivePermissionType :: Lens' PermissionTeamDrivePermissionDetailsItem (Maybe Text)
+ptdpdiTeamDrivePermissionType
+  = lens _ptdpdiTeamDrivePermissionType
+      (\ s a -> s{_ptdpdiTeamDrivePermissionType = a})
+
+-- | The primary role for this user. While new values may be added in the
+-- future, the following are currently possible: - organizer - writer -
+-- commenter - reader
+ptdpdiRole :: Lens' PermissionTeamDrivePermissionDetailsItem (Maybe Text)
+ptdpdiRole
+  = lens _ptdpdiRole (\ s a -> s{_ptdpdiRole = a})
+
+-- | The ID of the item from which this permission is inherited. This is an
+-- output-only field and is only populated for members of the Team Drive.
+ptdpdiInheritedFrom :: Lens' PermissionTeamDrivePermissionDetailsItem (Maybe Text)
+ptdpdiInheritedFrom
+  = lens _ptdpdiInheritedFrom
+      (\ s a -> s{_ptdpdiInheritedFrom = a})
+
+instance FromJSON
+         PermissionTeamDrivePermissionDetailsItem where
+        parseJSON
+          = withObject
+              "PermissionTeamDrivePermissionDetailsItem"
+              (\ o ->
+                 PermissionTeamDrivePermissionDetailsItem' <$>
+                   (o .:? "inherited") <*>
+                     (o .:? "teamDrivePermissionType")
+                     <*> (o .:? "role")
+                     <*> (o .:? "inheritedFrom"))
+
+instance ToJSON
+         PermissionTeamDrivePermissionDetailsItem where
+        toJSON PermissionTeamDrivePermissionDetailsItem'{..}
+          = object
+              (catMaybes
+                 [("inherited" .=) <$> _ptdpdiInherited,
+                  ("teamDrivePermissionType" .=) <$>
+                    _ptdpdiTeamDrivePermissionType,
+                  ("role" .=) <$> _ptdpdiRole,
+                  ("inheritedFrom" .=) <$> _ptdpdiInheritedFrom])
+
 -- | A list of generated file IDs which can be provided in create requests.
 --
 -- /See:/ 'generatedIds' smart constructor.
 data GeneratedIds = GeneratedIds'
     { _giSpace :: !(Maybe Text)
-    , _giKind  :: !Text
-    , _giIds   :: !(Maybe [Text])
+    , _giKind :: !Text
+    , _giIds :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GeneratedIds' with the minimum fields required to make a request.
@@ -2882,7 +3837,7 @@ data GeneratedIds = GeneratedIds'
 -- * 'giIds'
 generatedIds
     :: GeneratedIds
-generatedIds =
+generatedIds = 
     GeneratedIds'
     { _giSpace = Nothing
     , _giKind = "drive#generatedIds"
@@ -2925,8 +3880,8 @@ instance ToJSON GeneratedIds where
 -- /See:/ 'commentList' smart constructor.
 data CommentList = CommentList'
     { _cllNextPageToken :: !(Maybe Text)
-    , _cllKind          :: !Text
-    , _cllComments      :: !(Maybe [Comment])
+    , _cllKind :: !Text
+    , _cllComments :: !(Maybe [Comment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentList' with the minimum fields required to make a request.
@@ -2940,7 +3895,7 @@ data CommentList = CommentList'
 -- * 'cllComments'
 commentList
     :: CommentList
-commentList =
+commentList = 
     CommentList'
     { _cllNextPageToken = Nothing
     , _cllKind = "drive#commentList"
@@ -2991,8 +3946,8 @@ instance ToJSON CommentList where
 -- /See:/ 'revisionList' smart constructor.
 data RevisionList = RevisionList'
     { _rllNextPageToken :: !(Maybe Text)
-    , _rllKind          :: !Text
-    , _rllRevisions     :: !(Maybe [Revision])
+    , _rllKind :: !Text
+    , _rllRevisions :: !(Maybe [Revision])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionList' with the minimum fields required to make a request.
@@ -3006,7 +3961,7 @@ data RevisionList = RevisionList'
 -- * 'rllRevisions'
 revisionList
     :: RevisionList
-revisionList =
+revisionList = 
     RevisionList'
     { _rllNextPageToken = Nothing
     , _rllKind = "drive#revisionList"
@@ -3056,7 +4011,8 @@ instance ToJSON RevisionList where
 --
 -- /See:/ 'permissionList' smart constructor.
 data PermissionList = PermissionList'
-    { _plKind        :: !Text
+    { _plNextPageToken :: !(Maybe Text)
+    , _plKind :: !Text
     , _plPermissions :: !(Maybe [Permission])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3064,23 +4020,36 @@ data PermissionList = PermissionList'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'plNextPageToken'
+--
 -- * 'plKind'
 --
 -- * 'plPermissions'
 permissionList
     :: PermissionList
-permissionList =
+permissionList = 
     PermissionList'
-    { _plKind = "drive#permissionList"
+    { _plNextPageToken = Nothing
+    , _plKind = "drive#permissionList"
     , _plPermissions = Nothing
     }
+
+-- | The page token for the next page of permissions. This field will be
+-- absent if the end of the permissions list has been reached. If the token
+-- is rejected for any reason, it should be discarded, and pagination
+-- should be restarted from the first page of results.
+plNextPageToken :: Lens' PermissionList (Maybe Text)
+plNextPageToken
+  = lens _plNextPageToken
+      (\ s a -> s{_plNextPageToken = a})
 
 -- | Identifies what kind of resource this is. Value: the fixed string
 -- \"drive#permissionList\".
 plKind :: Lens' PermissionList Text
 plKind = lens _plKind (\ s a -> s{_plKind = a})
 
--- | The list of permissions.
+-- | The list of permissions. If nextPageToken is populated, then this list
+-- may be incomplete and an additional page of results should be fetched.
 plPermissions :: Lens' PermissionList [Permission]
 plPermissions
   = lens _plPermissions
@@ -3093,12 +4062,14 @@ instance FromJSON PermissionList where
           = withObject "PermissionList"
               (\ o ->
                  PermissionList' <$>
-                   (o .:? "kind" .!= "drive#permissionList") <*>
-                     (o .:? "permissions" .!= mempty))
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "kind" .!= "drive#permissionList")
+                     <*> (o .:? "permissions" .!= mempty))
 
 instance ToJSON PermissionList where
         toJSON PermissionList'{..}
           = object
               (catMaybes
-                 [Just ("kind" .= _plKind),
+                 [("nextPageToken" .=) <$> _plNextPageToken,
+                  Just ("kind" .= _plKind),
                   ("permissions" .=) <$> _plPermissions])

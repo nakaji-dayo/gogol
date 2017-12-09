@@ -38,16 +38,17 @@ module Network.Google.Resource.DFAReporting.Sizes.List
     , slWidth
     , slProFileId
     , slIabStandard
+    , slFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sizes.list@ method which the
 -- 'SizesList' request conforms to.
 type SizesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sizes" :>
@@ -55,18 +56,20 @@ type SizesListResource =
                  QueryParams "ids" (Textual Int64) :>
                    QueryParam "width" (Textual Int32) :>
                      QueryParam "iabStandard" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] SizesListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] SizesListResponse
 
 -- | Retrieves a list of sizes, possibly filtered.
 --
 -- /See:/ 'sizesList' smart constructor.
 data SizesList = SizesList'
-    { _slHeight      :: !(Maybe (Textual Int32))
-    , _slIds         :: !(Maybe [Textual Int64])
-    , _slWidth       :: !(Maybe (Textual Int32))
-    , _slProFileId   :: !(Textual Int64)
+    { _slHeight :: !(Maybe (Textual Int32))
+    , _slIds :: !(Maybe [Textual Int64])
+    , _slWidth :: !(Maybe (Textual Int32))
+    , _slProFileId :: !(Textual Int64)
     , _slIabStandard :: !(Maybe Bool)
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SizesList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data SizesList = SizesList'
 -- * 'slProFileId'
 --
 -- * 'slIabStandard'
+--
+-- * 'slFields'
 sizesList
     :: Int64 -- ^ 'slProFileId'
     -> SizesList
-sizesList pSlProFileId_ =
+sizesList pSlProFileId_ = 
     SizesList'
     { _slHeight = Nothing
     , _slIds = Nothing
     , _slWidth = Nothing
     , _slProFileId = _Coerce # pSlProFileId_
     , _slIabStandard = Nothing
+    , _slFields = Nothing
     }
 
 -- | Select only sizes with this height.
@@ -124,6 +130,10 @@ slIabStandard
   = lens _slIabStandard
       (\ s a -> s{_slIabStandard = a})
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SizesList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SizesList where
         type Rs SizesList = SizesListResponse
         type Scopes SizesList =
@@ -132,6 +142,7 @@ instance GoogleRequest SizesList where
           = go _slProFileId _slHeight (_slIds ^. _Default)
               _slWidth
               _slIabStandard
+              _slFields
               (Just AltJSON)
               dFAReportingService
           where go

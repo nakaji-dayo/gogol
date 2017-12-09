@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.SSLCertificates.Get
     -- * Request Lenses
     , scgProject
     , scgSSLCertificate
+    , scgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.sslCertificates.get@ method which the
 -- 'SSLCertificatesGet' request conforms to.
@@ -51,16 +52,18 @@ type SSLCertificatesGetResource =
              "global" :>
                "sslCertificates" :>
                  Capture "sslCertificate" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] SSLCertificate
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] SSLCertificate
 
 -- | Returns the specified SslCertificate resource. Get a list of available
 -- SSL certificates by making a list() request.
 --
 -- /See:/ 'sslCertificatesGet' smart constructor.
 data SSLCertificatesGet = SSLCertificatesGet'
-    { _scgProject        :: !Text
+    { _scgProject :: !Text
     , _scgSSLCertificate :: !Text
+    , _scgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SSLCertificatesGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data SSLCertificatesGet = SSLCertificatesGet'
 -- * 'scgProject'
 --
 -- * 'scgSSLCertificate'
+--
+-- * 'scgFields'
 sslCertificatesGet
     :: Text -- ^ 'scgProject'
     -> Text -- ^ 'scgSSLCertificate'
     -> SSLCertificatesGet
-sslCertificatesGet pScgProject_ pScgSSLCertificate_ =
+sslCertificatesGet pScgProject_ pScgSSLCertificate_ = 
     SSLCertificatesGet'
     { _scgProject = pScgProject_
     , _scgSSLCertificate = pScgSSLCertificate_
+    , _scgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -91,6 +97,11 @@ scgSSLCertificate
   = lens _scgSSLCertificate
       (\ s a -> s{_scgSSLCertificate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scgFields :: Lens' SSLCertificatesGet (Maybe Text)
+scgFields
+  = lens _scgFields (\ s a -> s{_scgFields = a})
+
 instance GoogleRequest SSLCertificatesGet where
         type Rs SSLCertificatesGet = SSLCertificate
         type Scopes SSLCertificatesGet =
@@ -98,7 +109,8 @@ instance GoogleRequest SSLCertificatesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient SSLCertificatesGet'{..}
-          = go _scgProject _scgSSLCertificate (Just AltJSON)
+          = go _scgProject _scgSSLCertificate _scgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyUserLinks.Insert
     , mwpuliWebPropertyId
     , mwpuliPayload
     , mwpuliAccountId
+    , mwpuliFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webpropertyUserLinks.insert@ method which the
 -- 'ManagementWebPropertyUserLinksInsert' request conforms to.
@@ -52,17 +53,19 @@ type ManagementWebPropertyUserLinksInsertResource =
                "webproperties" :>
                  Capture "webPropertyId" Text :>
                    "entityUserLinks" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] EntityUserLink :>
-                         Post '[JSON] EntityUserLink
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] EntityUserLink :>
+                           Post '[JSON] EntityUserLink
 
 -- | Adds a new user to the given web property.
 --
 -- /See:/ 'managementWebPropertyUserLinksInsert' smart constructor.
 data ManagementWebPropertyUserLinksInsert = ManagementWebPropertyUserLinksInsert'
     { _mwpuliWebPropertyId :: !Text
-    , _mwpuliPayload       :: !EntityUserLink
-    , _mwpuliAccountId     :: !Text
+    , _mwpuliPayload :: !EntityUserLink
+    , _mwpuliAccountId :: !Text
+    , _mwpuliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyUserLinksInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementWebPropertyUserLinksInsert = ManagementWebPropertyUserLinksInsert
 -- * 'mwpuliPayload'
 --
 -- * 'mwpuliAccountId'
+--
+-- * 'mwpuliFields'
 managementWebPropertyUserLinksInsert
     :: Text -- ^ 'mwpuliWebPropertyId'
     -> EntityUserLink -- ^ 'mwpuliPayload'
     -> Text -- ^ 'mwpuliAccountId'
     -> ManagementWebPropertyUserLinksInsert
-managementWebPropertyUserLinksInsert pMwpuliWebPropertyId_ pMwpuliPayload_ pMwpuliAccountId_ =
+managementWebPropertyUserLinksInsert pMwpuliWebPropertyId_ pMwpuliPayload_ pMwpuliAccountId_ = 
     ManagementWebPropertyUserLinksInsert'
     { _mwpuliWebPropertyId = pMwpuliWebPropertyId_
     , _mwpuliPayload = pMwpuliPayload_
     , _mwpuliAccountId = pMwpuliAccountId_
+    , _mwpuliFields = Nothing
     }
 
 -- | Web Property ID to create the user link for.
@@ -104,6 +110,11 @@ mwpuliAccountId
   = lens _mwpuliAccountId
       (\ s a -> s{_mwpuliAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwpuliFields :: Lens' ManagementWebPropertyUserLinksInsert (Maybe Text)
+mwpuliFields
+  = lens _mwpuliFields (\ s a -> s{_mwpuliFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyUserLinksInsert where
         type Rs ManagementWebPropertyUserLinksInsert =
@@ -113,6 +124,7 @@ instance GoogleRequest
         requestClient
           ManagementWebPropertyUserLinksInsert'{..}
           = go _mwpuliAccountId _mwpuliWebPropertyId
+              _mwpuliFields
               (Just AltJSON)
               _mwpuliPayload
               analyticsService

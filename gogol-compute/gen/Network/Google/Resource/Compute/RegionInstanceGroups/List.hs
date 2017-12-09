@@ -40,10 +40,11 @@ module Network.Google.Resource.Compute.RegionInstanceGroups.List
     , riglRegion
     , riglPageToken
     , riglMaxResults
+    , riglFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroups.list@ method which the
 -- 'RegionInstanceGroupsList' request conforms to.
@@ -59,20 +60,22 @@ type RegionInstanceGroupsListResource =
                      QueryParam "filter" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] RegionInstanceGroupList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] RegionInstanceGroupList
 
 -- | Retrieves the list of instance group resources contained within the
 -- specified region.
 --
 -- /See:/ 'regionInstanceGroupsList' smart constructor.
 data RegionInstanceGroupsList = RegionInstanceGroupsList'
-    { _riglOrderBy    :: !(Maybe Text)
-    , _riglProject    :: !Text
-    , _riglFilter     :: !(Maybe Text)
-    , _riglRegion     :: !Text
-    , _riglPageToken  :: !(Maybe Text)
+    { _riglOrderBy :: !(Maybe Text)
+    , _riglProject :: !Text
+    , _riglFilter :: !(Maybe Text)
+    , _riglRegion :: !Text
+    , _riglPageToken :: !(Maybe Text)
     , _riglMaxResults :: !(Textual Word32)
+    , _riglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupsList' with the minimum fields required to make a request.
@@ -90,11 +93,13 @@ data RegionInstanceGroupsList = RegionInstanceGroupsList'
 -- * 'riglPageToken'
 --
 -- * 'riglMaxResults'
+--
+-- * 'riglFields'
 regionInstanceGroupsList
     :: Text -- ^ 'riglProject'
     -> Text -- ^ 'riglRegion'
     -> RegionInstanceGroupsList
-regionInstanceGroupsList pRiglProject_ pRiglRegion_ =
+regionInstanceGroupsList pRiglProject_ pRiglRegion_ = 
     RegionInstanceGroupsList'
     { _riglOrderBy = Nothing
     , _riglProject = pRiglProject_
@@ -102,6 +107,7 @@ regionInstanceGroupsList pRiglProject_ pRiglRegion_ =
     , _riglRegion = pRiglRegion_
     , _riglPageToken = Nothing
     , _riglMaxResults = 500
+    , _riglFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -121,26 +127,25 @@ riglProject :: Lens' RegionInstanceGroupsList Text
 riglProject
   = lens _riglProject (\ s a -> s{_riglProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 riglFilter :: Lens' RegionInstanceGroupsList (Maybe Text)
 riglFilter
   = lens _riglFilter (\ s a -> s{_riglFilter = a})
@@ -160,12 +165,18 @@ riglPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 riglMaxResults :: Lens' RegionInstanceGroupsList Word32
 riglMaxResults
   = lens _riglMaxResults
       (\ s a -> s{_riglMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+riglFields :: Lens' RegionInstanceGroupsList (Maybe Text)
+riglFields
+  = lens _riglFields (\ s a -> s{_riglFields = a})
 
 instance GoogleRequest RegionInstanceGroupsList where
         type Rs RegionInstanceGroupsList =
@@ -179,6 +190,7 @@ instance GoogleRequest RegionInstanceGroupsList where
               _riglFilter
               _riglPageToken
               (Just _riglMaxResults)
+              _riglFields
               (Just AltJSON)
               computeService
           where go

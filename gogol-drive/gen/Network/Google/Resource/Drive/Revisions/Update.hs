@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Revisions.Update
     , revPayload
     , revFileId
     , revRevisionId
+    , revFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.revisions.update@ method which the
 -- 'RevisionsUpdate' request conforms to.
@@ -50,16 +51,18 @@ type RevisionsUpdateResource =
            Capture "fileId" Text :>
              "revisions" :>
                Capture "revisionId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Revision :> Patch '[JSON] Revision
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Revision :> Patch '[JSON] Revision
 
 -- | Updates a revision with patch semantics.
 --
 -- /See:/ 'revisionsUpdate' smart constructor.
 data RevisionsUpdate = RevisionsUpdate'
-    { _revPayload    :: !Revision
-    , _revFileId     :: !Text
+    { _revPayload :: !Revision
+    , _revFileId :: !Text
     , _revRevisionId :: !Text
+    , _revFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionsUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data RevisionsUpdate = RevisionsUpdate'
 -- * 'revFileId'
 --
 -- * 'revRevisionId'
+--
+-- * 'revFields'
 revisionsUpdate
     :: Revision -- ^ 'revPayload'
     -> Text -- ^ 'revFileId'
     -> Text -- ^ 'revRevisionId'
     -> RevisionsUpdate
-revisionsUpdate pRevPayload_ pRevFileId_ pRevRevisionId_ =
+revisionsUpdate pRevPayload_ pRevFileId_ pRevRevisionId_ = 
     RevisionsUpdate'
     { _revPayload = pRevPayload_
     , _revFileId = pRevFileId_
     , _revRevisionId = pRevRevisionId_
+    , _revFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -99,6 +105,11 @@ revRevisionId
   = lens _revRevisionId
       (\ s a -> s{_revRevisionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+revFields :: Lens' RevisionsUpdate (Maybe Text)
+revFields
+  = lens _revFields (\ s a -> s{_revFields = a})
+
 instance GoogleRequest RevisionsUpdate where
         type Rs RevisionsUpdate = Revision
         type Scopes RevisionsUpdate =
@@ -106,7 +117,8 @@ instance GoogleRequest RevisionsUpdate where
                "https://www.googleapis.com/auth/drive.appdata",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient RevisionsUpdate'{..}
-          = go _revFileId _revRevisionId (Just AltJSON)
+          = go _revFileId _revRevisionId _revFields
+              (Just AltJSON)
               _revPayload
               driveService
           where go

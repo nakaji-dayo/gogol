@@ -37,10 +37,11 @@ module Network.Google.Resource.Plus.People.Search
     , psLanguage
     , psPageToken
     , psMaxResults
+    , psFields
     ) where
 
-import           Network.Google.Plus.Types
-import           Network.Google.Prelude
+import Network.Google.Plus.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plus.people.search@ method which the
 -- 'PeopleSearch' request conforms to.
@@ -52,16 +53,18 @@ type PeopleSearchResource =
              QueryParam "language" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
 
 -- | Search all public profiles.
 --
 -- /See:/ 'peopleSearch' smart constructor.
 data PeopleSearch = PeopleSearch'
-    { _psQuery      :: !Text
-    , _psLanguage   :: !Text
-    , _psPageToken  :: !(Maybe Text)
+    { _psQuery :: !Text
+    , _psLanguage :: !Text
+    , _psPageToken :: !(Maybe Text)
     , _psMaxResults :: !(Textual Word32)
+    , _psFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleSearch' with the minimum fields required to make a request.
@@ -75,15 +78,18 @@ data PeopleSearch = PeopleSearch'
 -- * 'psPageToken'
 --
 -- * 'psMaxResults'
+--
+-- * 'psFields'
 peopleSearch
     :: Text -- ^ 'psQuery'
     -> PeopleSearch
-peopleSearch pPsQuery_ =
+peopleSearch pPsQuery_ = 
     PeopleSearch'
     { _psQuery = pPsQuery_
     , _psLanguage = "en-US"
     , _psPageToken = Nothing
     , _psMaxResults = 25
+    , _psFields = Nothing
     }
 
 -- | Specify a query string for full text search of public text in all
@@ -113,6 +119,10 @@ psMaxResults
   = lens _psMaxResults (\ s a -> s{_psMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+psFields :: Lens' PeopleSearch (Maybe Text)
+psFields = lens _psFields (\ s a -> s{_psFields = a})
+
 instance GoogleRequest PeopleSearch where
         type Rs PeopleSearch = PeopleFeed
         type Scopes PeopleSearch =
@@ -121,6 +131,7 @@ instance GoogleRequest PeopleSearch where
         requestClient PeopleSearch'{..}
           = go (Just _psQuery) (Just _psLanguage) _psPageToken
               (Just _psMaxResults)
+              _psFields
               (Just AltJSON)
               plusService
           where go

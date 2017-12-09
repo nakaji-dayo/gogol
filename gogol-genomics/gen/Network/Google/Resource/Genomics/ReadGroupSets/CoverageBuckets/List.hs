@@ -56,11 +56,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.CoverageBuckets.List
     , rgscblEnd
     , rgscblPageToken
     , rgscblPageSize
+    , rgscblFields
     , rgscblCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.coveragebuckets.list@ method which the
 -- 'ReadGroupSetsCoverageBucketsList' request conforms to.
@@ -82,8 +83,10 @@ type ReadGroupSetsCoverageBucketsListResource =
                                  QueryParam "pageToken" Text :>
                                    QueryParam "pageSize" (Textual Int32) :>
                                      QueryParam "callback" Text :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] ListCoverageBucketsResponse
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON]
+                                             ListCoverageBucketsResponse
 
 -- | Lists fixed width coverage buckets for a read group set, each of which
 -- correspond to a range of a reference sequence. Each bucket summarizes
@@ -99,20 +102,21 @@ type ReadGroupSetsCoverageBucketsListResource =
 --
 -- /See:/ 'readGroupSetsCoverageBucketsList' smart constructor.
 data ReadGroupSetsCoverageBucketsList = ReadGroupSetsCoverageBucketsList'
-    { _rgscblXgafv             :: !(Maybe Xgafv)
-    , _rgscblReadGroupSetId    :: !Text
-    , _rgscblUploadProtocol    :: !(Maybe Text)
-    , _rgscblPp                :: !Bool
-    , _rgscblAccessToken       :: !(Maybe Text)
-    , _rgscblStart             :: !(Maybe (Textual Int64))
-    , _rgscblUploadType        :: !(Maybe Text)
+    { _rgscblXgafv :: !(Maybe Xgafv)
+    , _rgscblReadGroupSetId :: !Text
+    , _rgscblUploadProtocol :: !(Maybe Text)
+    , _rgscblPp :: !Bool
+    , _rgscblAccessToken :: !(Maybe Text)
+    , _rgscblStart :: !(Maybe (Textual Int64))
+    , _rgscblUploadType :: !(Maybe Text)
     , _rgscblTargetBucketWidth :: !(Maybe (Textual Int64))
-    , _rgscblReferenceName     :: !(Maybe Text)
-    , _rgscblBearerToken       :: !(Maybe Text)
-    , _rgscblEnd               :: !(Maybe (Textual Int64))
-    , _rgscblPageToken         :: !(Maybe Text)
-    , _rgscblPageSize          :: !(Maybe (Textual Int32))
-    , _rgscblCallback          :: !(Maybe Text)
+    , _rgscblReferenceName :: !(Maybe Text)
+    , _rgscblBearerToken :: !(Maybe Text)
+    , _rgscblEnd :: !(Maybe (Textual Int64))
+    , _rgscblPageToken :: !(Maybe Text)
+    , _rgscblPageSize :: !(Maybe (Textual Int32))
+    , _rgscblFields :: !(Maybe Text)
+    , _rgscblCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsCoverageBucketsList' with the minimum fields required to make a request.
@@ -145,11 +149,13 @@ data ReadGroupSetsCoverageBucketsList = ReadGroupSetsCoverageBucketsList'
 --
 -- * 'rgscblPageSize'
 --
+-- * 'rgscblFields'
+--
 -- * 'rgscblCallback'
 readGroupSetsCoverageBucketsList
     :: Text -- ^ 'rgscblReadGroupSetId'
     -> ReadGroupSetsCoverageBucketsList
-readGroupSetsCoverageBucketsList pRgscblReadGroupSetId_ =
+readGroupSetsCoverageBucketsList pRgscblReadGroupSetId_ = 
     ReadGroupSetsCoverageBucketsList'
     { _rgscblXgafv = Nothing
     , _rgscblReadGroupSetId = pRgscblReadGroupSetId_
@@ -164,6 +170,7 @@ readGroupSetsCoverageBucketsList pRgscblReadGroupSetId_ =
     , _rgscblEnd = Nothing
     , _rgscblPageToken = Nothing
     , _rgscblPageSize = Nothing
+    , _rgscblFields = Nothing
     , _rgscblCallback = Nothing
     }
 
@@ -256,6 +263,11 @@ rgscblPageSize
       (\ s a -> s{_rgscblPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rgscblFields :: Lens' ReadGroupSetsCoverageBucketsList (Maybe Text)
+rgscblFields
+  = lens _rgscblFields (\ s a -> s{_rgscblFields = a})
+
 -- | JSONP
 rgscblCallback :: Lens' ReadGroupSetsCoverageBucketsList (Maybe Text)
 rgscblCallback
@@ -284,6 +296,7 @@ instance GoogleRequest
               _rgscblPageToken
               _rgscblPageSize
               _rgscblCallback
+              _rgscblFields
               (Just AltJSON)
               genomicsService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.RoleAssignments.Insert
     -- * Request Lenses
     , raiPayload
     , raiCustomer
+    , raiFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roleAssignments.insert@ method which the
 -- 'RoleAssignmentsInsert' request conforms to.
@@ -49,16 +50,18 @@ type RoleAssignmentsInsertResource =
            "customer" :>
              Capture "customer" Text :>
                "roleassignments" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] RoleAssignment :>
-                     Post '[JSON] RoleAssignment
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] RoleAssignment :>
+                       Post '[JSON] RoleAssignment
 
 -- | Creates a role assignment.
 --
 -- /See:/ 'roleAssignmentsInsert' smart constructor.
 data RoleAssignmentsInsert = RoleAssignmentsInsert'
-    { _raiPayload  :: !RoleAssignment
+    { _raiPayload :: !RoleAssignment
     , _raiCustomer :: !Text
+    , _raiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignmentsInsert' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data RoleAssignmentsInsert = RoleAssignmentsInsert'
 -- * 'raiPayload'
 --
 -- * 'raiCustomer'
+--
+-- * 'raiFields'
 roleAssignmentsInsert
     :: RoleAssignment -- ^ 'raiPayload'
     -> Text -- ^ 'raiCustomer'
     -> RoleAssignmentsInsert
-roleAssignmentsInsert pRaiPayload_ pRaiCustomer_ =
+roleAssignmentsInsert pRaiPayload_ pRaiCustomer_ = 
     RoleAssignmentsInsert'
     { _raiPayload = pRaiPayload_
     , _raiCustomer = pRaiCustomer_
+    , _raiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -83,17 +89,23 @@ raiPayload :: Lens' RoleAssignmentsInsert RoleAssignment
 raiPayload
   = lens _raiPayload (\ s a -> s{_raiPayload = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 raiCustomer :: Lens' RoleAssignmentsInsert Text
 raiCustomer
   = lens _raiCustomer (\ s a -> s{_raiCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+raiFields :: Lens' RoleAssignmentsInsert (Maybe Text)
+raiFields
+  = lens _raiFields (\ s a -> s{_raiFields = a})
 
 instance GoogleRequest RoleAssignmentsInsert where
         type Rs RoleAssignmentsInsert = RoleAssignment
         type Scopes RoleAssignmentsInsert =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
         requestClient RoleAssignmentsInsert'{..}
-          = go _raiCustomer (Just AltJSON) _raiPayload
+          = go _raiCustomer _raiFields (Just AltJSON)
+              _raiPayload
               directoryService
           where go
                   = buildClient

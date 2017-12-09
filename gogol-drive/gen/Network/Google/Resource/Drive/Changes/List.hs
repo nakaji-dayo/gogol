@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists changes for a user.
+-- Lists the changes for a user or Team Drive.
 --
 -- /See:/ <https://developers.google.com/drive/ Drive API Reference> for @drive.changes.list@.
 module Network.Google.Resource.Drive.Changes.List
@@ -33,15 +33,20 @@ module Network.Google.Resource.Drive.Changes.List
     , ChangesList
 
     -- * Request Lenses
+    , clIncludeTeamDriveItems
+    , clIncludeCorpusRemovals
+    , clTeamDriveId
     , clRestrictToMyDrive
     , clSpaces
     , clPageToken
     , clPageSize
     , clIncludeRemoved
+    , clSupportsTeamDrives
+    , clFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.changes.list@ method which the
 -- 'ChangesList' request conforms to.
@@ -50,26 +55,43 @@ type ChangesListResource =
        "v3" :>
          "changes" :>
            QueryParam "pageToken" Text :>
-             QueryParam "restrictToMyDrive" Bool :>
-               QueryParam "spaces" Text :>
-                 QueryParam "pageSize" (Textual Int32) :>
-                   QueryParam "includeRemoved" Bool :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] ChangeList
+             QueryParam "includeTeamDriveItems" Bool :>
+               QueryParam "includeCorpusRemovals" Bool :>
+                 QueryParam "teamDriveId" Text :>
+                   QueryParam "restrictToMyDrive" Bool :>
+                     QueryParam "spaces" Text :>
+                       QueryParam "pageSize" (Textual Int32) :>
+                         QueryParam "includeRemoved" Bool :>
+                           QueryParam "supportsTeamDrives" Bool :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ChangeList
 
--- | Lists changes for a user.
+-- | Lists the changes for a user or Team Drive.
 --
 -- /See:/ 'changesList' smart constructor.
 data ChangesList = ChangesList'
-    { _clRestrictToMyDrive :: !Bool
-    , _clSpaces            :: !Text
-    , _clPageToken         :: !Text
-    , _clPageSize          :: !(Textual Int32)
-    , _clIncludeRemoved    :: !Bool
+    { _clIncludeTeamDriveItems :: !Bool
+    , _clIncludeCorpusRemovals :: !Bool
+    , _clTeamDriveId :: !(Maybe Text)
+    , _clRestrictToMyDrive :: !Bool
+    , _clSpaces :: !Text
+    , _clPageToken :: !Text
+    , _clPageSize :: !(Textual Int32)
+    , _clIncludeRemoved :: !Bool
+    , _clSupportsTeamDrives :: !Bool
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'clIncludeTeamDriveItems'
+--
+-- * 'clIncludeCorpusRemovals'
+--
+-- * 'clTeamDriveId'
 --
 -- * 'clRestrictToMyDrive'
 --
@@ -80,17 +102,49 @@ data ChangesList = ChangesList'
 -- * 'clPageSize'
 --
 -- * 'clIncludeRemoved'
+--
+-- * 'clSupportsTeamDrives'
+--
+-- * 'clFields'
 changesList
     :: Text -- ^ 'clPageToken'
     -> ChangesList
-changesList pClPageToken_ =
+changesList pClPageToken_ = 
     ChangesList'
-    { _clRestrictToMyDrive = False
+    { _clIncludeTeamDriveItems = False
+    , _clIncludeCorpusRemovals = False
+    , _clTeamDriveId = Nothing
+    , _clRestrictToMyDrive = False
     , _clSpaces = "drive"
     , _clPageToken = pClPageToken_
     , _clPageSize = 100
     , _clIncludeRemoved = True
+    , _clSupportsTeamDrives = False
+    , _clFields = Nothing
     }
+
+-- | Whether Team Drive files or changes should be included in results.
+clIncludeTeamDriveItems :: Lens' ChangesList Bool
+clIncludeTeamDriveItems
+  = lens _clIncludeTeamDriveItems
+      (\ s a -> s{_clIncludeTeamDriveItems = a})
+
+-- | Whether changes should include the file resource if the file is still
+-- accessible by the user at the time of the request, even when a file was
+-- removed from the list of changes and there will be no further change
+-- entries for this file.
+clIncludeCorpusRemovals :: Lens' ChangesList Bool
+clIncludeCorpusRemovals
+  = lens _clIncludeCorpusRemovals
+      (\ s a -> s{_clIncludeCorpusRemovals = a})
+
+-- | The Team Drive from which changes will be returned. If specified the
+-- change IDs will be reflective of the Team Drive; use the combined Team
+-- Drive ID and change ID as an identifier.
+clTeamDriveId :: Lens' ChangesList (Maybe Text)
+clTeamDriveId
+  = lens _clTeamDriveId
+      (\ s a -> s{_clTeamDriveId = a})
 
 -- | Whether to restrict the results to changes inside the My Drive
 -- hierarchy. This omits changes to files such as those in the Application
@@ -118,12 +172,22 @@ clPageSize
   = lens _clPageSize (\ s a -> s{_clPageSize = a}) .
       _Coerce
 
--- | Whether to include changes indicating that items have left the view of
--- the changes list, for example by deletion or lost access.
+-- | Whether to include changes indicating that items have been removed from
+-- the list of changes, for example by deletion or loss of access.
 clIncludeRemoved :: Lens' ChangesList Bool
 clIncludeRemoved
   = lens _clIncludeRemoved
       (\ s a -> s{_clIncludeRemoved = a})
+
+-- | Whether the requesting application supports Team Drives.
+clSupportsTeamDrives :: Lens' ChangesList Bool
+clSupportsTeamDrives
+  = lens _clSupportsTeamDrives
+      (\ s a -> s{_clSupportsTeamDrives = a})
+
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' ChangesList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
 
 instance GoogleRequest ChangesList where
         type Rs ChangesList = ChangeList
@@ -136,10 +200,16 @@ instance GoogleRequest ChangesList where
                "https://www.googleapis.com/auth/drive.photos.readonly",
                "https://www.googleapis.com/auth/drive.readonly"]
         requestClient ChangesList'{..}
-          = go (Just _clPageToken) (Just _clRestrictToMyDrive)
+          = go (Just _clPageToken)
+              (Just _clIncludeTeamDriveItems)
+              (Just _clIncludeCorpusRemovals)
+              _clTeamDriveId
+              (Just _clRestrictToMyDrive)
               (Just _clSpaces)
               (Just _clPageSize)
               (Just _clIncludeRemoved)
+              (Just _clSupportsTeamDrives)
+              _clFields
               (Just AltJSON)
               driveService
           where go

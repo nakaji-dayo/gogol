@@ -40,10 +40,11 @@ module Network.Google.Resource.Games.Metagame.ListCategoriesByPlayer
     , mlcbpPageToken
     , mlcbpPlayerId
     , mlcbpMaxResults
+    , mlcbpFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.metagame.listCategoriesByPlayer@ method which the
 -- 'MetagameListCategoriesByPlayer' request conforms to.
@@ -60,8 +61,9 @@ type MetagameListCategoriesByPlayerResource =
                    QueryParam "language" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] CategoryListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] CategoryListResponse
 
 -- | List play data aggregated per category for the player corresponding to
 -- playerId.
@@ -69,11 +71,12 @@ type MetagameListCategoriesByPlayerResource =
 -- /See:/ 'metagameListCategoriesByPlayer' smart constructor.
 data MetagameListCategoriesByPlayer = MetagameListCategoriesByPlayer'
     { _mlcbpConsistencyToken :: !(Maybe (Textual Int64))
-    , _mlcbpCollection       :: !MetagameListCategoriesByPlayerCollection
-    , _mlcbpLanguage         :: !(Maybe Text)
-    , _mlcbpPageToken        :: !(Maybe Text)
-    , _mlcbpPlayerId         :: !Text
-    , _mlcbpMaxResults       :: !(Maybe (Textual Int32))
+    , _mlcbpCollection :: !MetagameListCategoriesByPlayerCollection
+    , _mlcbpLanguage :: !(Maybe Text)
+    , _mlcbpPageToken :: !(Maybe Text)
+    , _mlcbpPlayerId :: !Text
+    , _mlcbpMaxResults :: !(Maybe (Textual Int32))
+    , _mlcbpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetagameListCategoriesByPlayer' with the minimum fields required to make a request.
@@ -91,11 +94,13 @@ data MetagameListCategoriesByPlayer = MetagameListCategoriesByPlayer'
 -- * 'mlcbpPlayerId'
 --
 -- * 'mlcbpMaxResults'
+--
+-- * 'mlcbpFields'
 metagameListCategoriesByPlayer
     :: MetagameListCategoriesByPlayerCollection -- ^ 'mlcbpCollection'
     -> Text -- ^ 'mlcbpPlayerId'
     -> MetagameListCategoriesByPlayer
-metagameListCategoriesByPlayer pMlcbpCollection_ pMlcbpPlayerId_ =
+metagameListCategoriesByPlayer pMlcbpCollection_ pMlcbpPlayerId_ = 
     MetagameListCategoriesByPlayer'
     { _mlcbpConsistencyToken = Nothing
     , _mlcbpCollection = pMlcbpCollection_
@@ -103,6 +108,7 @@ metagameListCategoriesByPlayer pMlcbpCollection_ pMlcbpPlayerId_ =
     , _mlcbpPageToken = Nothing
     , _mlcbpPlayerId = pMlcbpPlayerId_
     , _mlcbpMaxResults = Nothing
+    , _mlcbpFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -146,6 +152,11 @@ mlcbpMaxResults
       (\ s a -> s{_mlcbpMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mlcbpFields :: Lens' MetagameListCategoriesByPlayer (Maybe Text)
+mlcbpFields
+  = lens _mlcbpFields (\ s a -> s{_mlcbpFields = a})
+
 instance GoogleRequest MetagameListCategoriesByPlayer
          where
         type Rs MetagameListCategoriesByPlayer =
@@ -159,6 +170,7 @@ instance GoogleRequest MetagameListCategoriesByPlayer
               _mlcbpLanguage
               _mlcbpPageToken
               _mlcbpMaxResults
+              _mlcbpFields
               (Just AltJSON)
               gamesService
           where go

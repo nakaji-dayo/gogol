@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- List the jobs of a project.
+-- List the jobs of a project in a given region.
 --
 -- /See:/ <https://cloud.google.com/dataflow Google Dataflow API Reference> for @dataflow.projects.locations.jobs.list@.
 module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.List
@@ -45,11 +45,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.List
     , pljlPageToken
     , pljlProjectId
     , pljlPageSize
+    , pljlFields
     , pljlCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.list@ method which the
 -- 'ProjectsLocationsJobsList' request conforms to.
@@ -60,7 +61,7 @@ type ProjectsLocationsJobsListResource =
            "locations" :>
              Capture "location" Text :>
                "jobs" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
@@ -71,26 +72,28 @@ type ProjectsLocationsJobsListResource =
                                  QueryParam "pageToken" Text :>
                                    QueryParam "pageSize" (Textual Int32) :>
                                      QueryParam "callback" Text :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] ListJobsResponse
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] ListJobsResponse
 
--- | List the jobs of a project.
+-- | List the jobs of a project in a given region.
 --
 -- /See:/ 'projectsLocationsJobsList' smart constructor.
 data ProjectsLocationsJobsList = ProjectsLocationsJobsList'
-    { _pljlXgafv          :: !(Maybe Text)
+    { _pljlXgafv :: !(Maybe Xgafv)
     , _pljlUploadProtocol :: !(Maybe Text)
-    , _pljlLocation       :: !Text
-    , _pljlPp             :: !Bool
-    , _pljlAccessToken    :: !(Maybe Text)
-    , _pljlUploadType     :: !(Maybe Text)
-    , _pljlBearerToken    :: !(Maybe Text)
-    , _pljlView           :: !(Maybe Text)
-    , _pljlFilter         :: !(Maybe Text)
-    , _pljlPageToken      :: !(Maybe Text)
-    , _pljlProjectId      :: !Text
-    , _pljlPageSize       :: !(Maybe (Textual Int32))
-    , _pljlCallback       :: !(Maybe Text)
+    , _pljlLocation :: !Text
+    , _pljlPp :: !Bool
+    , _pljlAccessToken :: !(Maybe Text)
+    , _pljlUploadType :: !(Maybe Text)
+    , _pljlBearerToken :: !(Maybe Text)
+    , _pljlView :: !(Maybe Text)
+    , _pljlFilter :: !(Maybe Text)
+    , _pljlPageToken :: !(Maybe Text)
+    , _pljlProjectId :: !Text
+    , _pljlPageSize :: !(Maybe (Textual Int32))
+    , _pljlFields :: !(Maybe Text)
+    , _pljlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsList' with the minimum fields required to make a request.
@@ -121,12 +124,14 @@ data ProjectsLocationsJobsList = ProjectsLocationsJobsList'
 --
 -- * 'pljlPageSize'
 --
+-- * 'pljlFields'
+--
 -- * 'pljlCallback'
 projectsLocationsJobsList
     :: Text -- ^ 'pljlLocation'
     -> Text -- ^ 'pljlProjectId'
     -> ProjectsLocationsJobsList
-projectsLocationsJobsList pPljlLocation_ pPljlProjectId_ =
+projectsLocationsJobsList pPljlLocation_ pPljlProjectId_ = 
     ProjectsLocationsJobsList'
     { _pljlXgafv = Nothing
     , _pljlUploadProtocol = Nothing
@@ -140,11 +145,12 @@ projectsLocationsJobsList pPljlLocation_ pPljlProjectId_ =
     , _pljlPageToken = Nothing
     , _pljlProjectId = pPljlProjectId_
     , _pljlPageSize = Nothing
+    , _pljlFields = Nothing
     , _pljlCallback = Nothing
     }
 
 -- | V1 error format.
-pljlXgafv :: Lens' ProjectsLocationsJobsList (Maybe Text)
+pljlXgafv :: Lens' ProjectsLocationsJobsList (Maybe Xgafv)
 pljlXgafv
   = lens _pljlXgafv (\ s a -> s{_pljlXgafv = a})
 
@@ -212,6 +218,11 @@ pljlPageSize
   = lens _pljlPageSize (\ s a -> s{_pljlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pljlFields :: Lens' ProjectsLocationsJobsList (Maybe Text)
+pljlFields
+  = lens _pljlFields (\ s a -> s{_pljlFields = a})
+
 -- | JSONP
 pljlCallback :: Lens' ProjectsLocationsJobsList (Maybe Text)
 pljlCallback
@@ -222,6 +233,8 @@ instance GoogleRequest ProjectsLocationsJobsList
         type Rs ProjectsLocationsJobsList = ListJobsResponse
         type Scopes ProjectsLocationsJobsList =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsLocationsJobsList'{..}
           = go _pljlProjectId _pljlLocation _pljlXgafv
@@ -235,6 +248,7 @@ instance GoogleRequest ProjectsLocationsJobsList
               _pljlPageToken
               _pljlPageSize
               _pljlCallback
+              _pljlFields
               (Just AltJSON)
               dataflowService
           where go

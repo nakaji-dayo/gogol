@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Settings.GetVacation
 
     -- * Request Lenses
     , usgvUserId
+    , usgvFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.getVacation@ method which the
 -- 'UsersSettingsGetVacation' request conforms to.
@@ -48,14 +49,16 @@ type UsersSettingsGetVacationResource =
            Capture "userId" Text :>
              "settings" :>
                "vacation" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] VacationSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] VacationSettings
 
 -- | Gets vacation responder settings.
 --
 -- /See:/ 'usersSettingsGetVacation' smart constructor.
-newtype UsersSettingsGetVacation = UsersSettingsGetVacation'
-    { _usgvUserId :: Text
+data UsersSettingsGetVacation = UsersSettingsGetVacation'
+    { _usgvUserId :: !Text
+    , _usgvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsGetVacation' with the minimum fields required to make a request.
@@ -63,11 +66,14 @@ newtype UsersSettingsGetVacation = UsersSettingsGetVacation'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'usgvUserId'
+--
+-- * 'usgvFields'
 usersSettingsGetVacation
     :: UsersSettingsGetVacation
-usersSettingsGetVacation =
+usersSettingsGetVacation = 
     UsersSettingsGetVacation'
     { _usgvUserId = "me"
+    , _usgvFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -75,6 +81,11 @@ usersSettingsGetVacation =
 usgvUserId :: Lens' UsersSettingsGetVacation Text
 usgvUserId
   = lens _usgvUserId (\ s a -> s{_usgvUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+usgvFields :: Lens' UsersSettingsGetVacation (Maybe Text)
+usgvFields
+  = lens _usgvFields (\ s a -> s{_usgvFields = a})
 
 instance GoogleRequest UsersSettingsGetVacation where
         type Rs UsersSettingsGetVacation = VacationSettings
@@ -84,7 +95,8 @@ instance GoogleRequest UsersSettingsGetVacation where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsGetVacation'{..}
-          = go _usgvUserId (Just AltJSON) gmailService
+          = go _usgvUserId _usgvFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsGetVacationResource)

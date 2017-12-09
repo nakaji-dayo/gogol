@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Players.Get
     , pgConsistencyToken
     , pgLanguage
     , pgPlayerId
+    , pgFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.players.get@ method which the
 -- 'PlayersGet' request conforms to.
@@ -51,7 +52,8 @@ type PlayersGetResource =
            Capture "playerId" Text :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Player
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Player
 
 -- | Retrieves the Player resource with the given ID. To retrieve the player
 -- for the currently authenticated user, set playerId to me.
@@ -59,8 +61,9 @@ type PlayersGetResource =
 -- /See:/ 'playersGet' smart constructor.
 data PlayersGet = PlayersGet'
     { _pgConsistencyToken :: !(Maybe (Textual Int64))
-    , _pgLanguage         :: !(Maybe Text)
-    , _pgPlayerId         :: !Text
+    , _pgLanguage :: !(Maybe Text)
+    , _pgPlayerId :: !Text
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayersGet' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data PlayersGet = PlayersGet'
 -- * 'pgLanguage'
 --
 -- * 'pgPlayerId'
+--
+-- * 'pgFields'
 playersGet
     :: Text -- ^ 'pgPlayerId'
     -> PlayersGet
-playersGet pPgPlayerId_ =
+playersGet pPgPlayerId_ = 
     PlayersGet'
     { _pgConsistencyToken = Nothing
     , _pgLanguage = Nothing
     , _pgPlayerId = pPgPlayerId_
+    , _pgFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -100,6 +106,10 @@ pgPlayerId :: Lens' PlayersGet Text
 pgPlayerId
   = lens _pgPlayerId (\ s a -> s{_pgPlayerId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' PlayersGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest PlayersGet where
         type Rs PlayersGet = Player
         type Scopes PlayersGet =
@@ -107,6 +117,7 @@ instance GoogleRequest PlayersGet where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient PlayersGet'{..}
           = go _pgPlayerId _pgConsistencyToken _pgLanguage
+              _pgFields
               (Just AltJSON)
               gamesService
           where go

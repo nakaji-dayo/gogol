@@ -34,10 +34,11 @@ module Network.Google.Resource.DataTransfer.Transfers.Insert
 
     -- * Request Lenses
     , tiPayload
+    , tiFields
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datatransfer.transfers.insert@ method which the
 -- 'TransfersInsert' request conforms to.
@@ -46,15 +47,17 @@ type TransfersInsertResource =
        "datatransfer" :>
          "v1" :>
            "transfers" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] DataTransfer :>
-                 Post '[JSON] DataTransfer
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] DataTransfer :>
+                   Post '[JSON] DataTransfer
 
 -- | Inserts a data transfer request.
 --
 -- /See:/ 'transfersInsert' smart constructor.
-newtype TransfersInsert = TransfersInsert'
-    { _tiPayload :: DataTransfer
+data TransfersInsert = TransfersInsert'
+    { _tiPayload :: !DataTransfer
+    , _tiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransfersInsert' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype TransfersInsert = TransfersInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tiPayload'
+--
+-- * 'tiFields'
 transfersInsert
     :: DataTransfer -- ^ 'tiPayload'
     -> TransfersInsert
-transfersInsert pTiPayload_ =
+transfersInsert pTiPayload_ = 
     TransfersInsert'
     { _tiPayload = pTiPayload_
+    , _tiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,12 +81,17 @@ tiPayload :: Lens' TransfersInsert DataTransfer
 tiPayload
   = lens _tiPayload (\ s a -> s{_tiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiFields :: Lens' TransfersInsert (Maybe Text)
+tiFields = lens _tiFields (\ s a -> s{_tiFields = a})
+
 instance GoogleRequest TransfersInsert where
         type Rs TransfersInsert = DataTransfer
         type Scopes TransfersInsert =
              '["https://www.googleapis.com/auth/admin.datatransfer"]
         requestClient TransfersInsert'{..}
-          = go (Just AltJSON) _tiPayload dataTransferService
+          = go _tiFields (Just AltJSON) _tiPayload
+              dataTransferService
           where go
                   = buildClient
                       (Proxy :: Proxy TransfersInsertResource)

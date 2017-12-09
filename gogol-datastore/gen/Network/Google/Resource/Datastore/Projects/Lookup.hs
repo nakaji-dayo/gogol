@@ -41,11 +41,12 @@ module Network.Google.Resource.Datastore.Projects.Lookup
     , plPayload
     , plBearerToken
     , plProjectId
+    , plFields
     , plCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.lookup@ method which the
 -- 'ProjectsLookup' request conforms to.
@@ -60,23 +61,25 @@ type ProjectsLookupResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] LookupRequest :>
-                             Post '[JSON] LookupResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] LookupRequest :>
+                               Post '[JSON] LookupResponse
 
 -- | Looks up entities by key.
 --
 -- /See:/ 'projectsLookup' smart constructor.
 data ProjectsLookup = ProjectsLookup'
-    { _plXgafv          :: !(Maybe Xgafv)
+    { _plXgafv :: !(Maybe Xgafv)
     , _plUploadProtocol :: !(Maybe Text)
-    , _plPp             :: !Bool
-    , _plAccessToken    :: !(Maybe Text)
-    , _plUploadType     :: !(Maybe Text)
-    , _plPayload        :: !LookupRequest
-    , _plBearerToken    :: !(Maybe Text)
-    , _plProjectId      :: !Text
-    , _plCallback       :: !(Maybe Text)
+    , _plPp :: !Bool
+    , _plAccessToken :: !(Maybe Text)
+    , _plUploadType :: !(Maybe Text)
+    , _plPayload :: !LookupRequest
+    , _plBearerToken :: !(Maybe Text)
+    , _plProjectId :: !Text
+    , _plFields :: !(Maybe Text)
+    , _plCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLookup' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsLookup = ProjectsLookup'
 --
 -- * 'plProjectId'
 --
+-- * 'plFields'
+--
 -- * 'plCallback'
 projectsLookup
     :: LookupRequest -- ^ 'plPayload'
     -> Text -- ^ 'plProjectId'
     -> ProjectsLookup
-projectsLookup pPlPayload_ pPlProjectId_ =
+projectsLookup pPlPayload_ pPlProjectId_ = 
     ProjectsLookup'
     { _plXgafv = Nothing
     , _plUploadProtocol = Nothing
@@ -114,6 +119,7 @@ projectsLookup pPlPayload_ pPlProjectId_ =
     , _plPayload = pPlPayload_
     , _plBearerToken = Nothing
     , _plProjectId = pPlProjectId_
+    , _plFields = Nothing
     , _plCallback = Nothing
     }
 
@@ -158,6 +164,10 @@ plProjectId :: Lens' ProjectsLookup Text
 plProjectId
   = lens _plProjectId (\ s a -> s{_plProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' ProjectsLookup (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 -- | JSONP
 plCallback :: Lens' ProjectsLookup (Maybe Text)
 plCallback
@@ -175,6 +185,7 @@ instance GoogleRequest ProjectsLookup where
               _plUploadType
               _plBearerToken
               _plCallback
+              _plFields
               (Just AltJSON)
               _plPayload
               datastoreService

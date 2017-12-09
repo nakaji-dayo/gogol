@@ -34,10 +34,11 @@ module Network.Google.Resource.Books.Dictionary.ListOfflineMetadata
 
     -- * Request Lenses
     , dlomCpksver
+    , dlomFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.dictionary.listOfflineMetadata@ method which the
 -- 'DictionaryListOfflineMetadata' request conforms to.
@@ -47,13 +48,15 @@ type DictionaryListOfflineMetadataResource =
          "dictionary" :>
            "listOfflineMetadata" :>
              QueryParam "cpksver" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Metadata
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Metadata
 
 -- | Returns a list of offline dictionary metadata available
 --
 -- /See:/ 'dictionaryListOfflineMetadata' smart constructor.
-newtype DictionaryListOfflineMetadata = DictionaryListOfflineMetadata'
-    { _dlomCpksver :: Text
+data DictionaryListOfflineMetadata = DictionaryListOfflineMetadata'
+    { _dlomCpksver :: !Text
+    , _dlomFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictionaryListOfflineMetadata' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype DictionaryListOfflineMetadata = DictionaryListOfflineMetadata'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'dlomCpksver'
+--
+-- * 'dlomFields'
 dictionaryListOfflineMetadata
     :: Text -- ^ 'dlomCpksver'
     -> DictionaryListOfflineMetadata
-dictionaryListOfflineMetadata pDlomCpksver_ =
+dictionaryListOfflineMetadata pDlomCpksver_ = 
     DictionaryListOfflineMetadata'
     { _dlomCpksver = pDlomCpksver_
+    , _dlomFields = Nothing
     }
 
 -- | The device\/version ID from which to request the data.
@@ -74,13 +80,19 @@ dlomCpksver :: Lens' DictionaryListOfflineMetadata Text
 dlomCpksver
   = lens _dlomCpksver (\ s a -> s{_dlomCpksver = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dlomFields :: Lens' DictionaryListOfflineMetadata (Maybe Text)
+dlomFields
+  = lens _dlomFields (\ s a -> s{_dlomFields = a})
+
 instance GoogleRequest DictionaryListOfflineMetadata
          where
         type Rs DictionaryListOfflineMetadata = Metadata
         type Scopes DictionaryListOfflineMetadata =
              '["https://www.googleapis.com/auth/books"]
         requestClient DictionaryListOfflineMetadata'{..}
-          = go (Just _dlomCpksver) (Just AltJSON) booksService
+          = go (Just _dlomCpksver) _dlomFields (Just AltJSON)
+              booksService
           where go
                   = buildClient
                       (Proxy ::

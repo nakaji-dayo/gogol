@@ -17,15 +17,15 @@
 --
 module Network.Google.DoubleClickBids.Types.Product where
 
-import           Network.Google.DoubleClickBids.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types.Sum
+import Network.Google.Prelude
 
 -- | List reports response.
 --
 -- /See:/ 'listReportsResponse' smart constructor.
 data ListReportsResponse = ListReportsResponse'
     { _lrrReports :: !(Maybe [Report])
-    , _lrrKind    :: !Text
+    , _lrrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListReportsResponse' with the minimum fields required to make a request.
@@ -37,7 +37,7 @@ data ListReportsResponse = ListReportsResponse'
 -- * 'lrrKind'
 listReportsResponse
     :: ListReportsResponse
-listReportsResponse =
+listReportsResponse = 
     ListReportsResponse'
     { _lrrReports = Nothing
     , _lrrKind = "doubleclickbidmanager#listReportsResponse"
@@ -76,16 +76,16 @@ instance ToJSON ListReportsResponse where
 -- /See:/ 'queryMetadata' smart constructor.
 data QueryMetadata = QueryMetadata'
     { _qmGoogleCloudStoragePathForLatestReport :: !(Maybe Text)
-    , _qmLocale                                :: !(Maybe Text)
-    , _qmFormat                                :: !(Maybe QueryMetadataFormat)
-    , _qmGoogleDrivePathForLatestReport        :: !(Maybe Text)
-    , _qmShareEmailAddress                     :: !(Maybe [Text])
-    , _qmRunning                               :: !(Maybe Bool)
-    , _qmDataRange                             :: !(Maybe QueryMetadataDataRange)
-    , _qmLatestReportRunTimeMs                 :: !(Maybe (Textual Int64))
-    , _qmReportCount                           :: !(Maybe (Textual Int32))
-    , _qmTitle                                 :: !(Maybe Text)
-    , _qmSendNotification                      :: !(Maybe Bool)
+    , _qmLocale :: !(Maybe Text)
+    , _qmFormat :: !(Maybe QueryMetadataFormat)
+    , _qmGoogleDrivePathForLatestReport :: !(Maybe Text)
+    , _qmShareEmailAddress :: !(Maybe [Text])
+    , _qmRunning :: !(Maybe Bool)
+    , _qmDataRange :: !(Maybe QueryMetadataDataRange)
+    , _qmLatestReportRunTimeMs :: !(Maybe (Textual Int64))
+    , _qmReportCount :: !(Maybe (Textual Int32))
+    , _qmTitle :: !(Maybe Text)
+    , _qmSendNotification :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueryMetadata' with the minimum fields required to make a request.
@@ -115,7 +115,7 @@ data QueryMetadata = QueryMetadata'
 -- * 'qmSendNotification'
 queryMetadata
     :: QueryMetadata
-queryMetadata =
+queryMetadata = 
     QueryMetadata'
     { _qmGoogleCloudStoragePathForLatestReport = Nothing
     , _qmLocale = Nothing
@@ -240,10 +240,10 @@ instance ToJSON QueryMetadata where
 --
 -- /See:/ 'runQueryRequest' smart constructor.
 data RunQueryRequest = RunQueryRequest'
-    { _rqrReportDataEndTimeMs   :: !(Maybe (Textual Int64))
-    , _rqrDataRange             :: !(Maybe RunQueryRequestDataRange)
+    { _rqrReportDataEndTimeMs :: !(Maybe (Textual Int64))
+    , _rqrDataRange :: !(Maybe RunQueryRequestDataRange)
     , _rqrReportDataStartTimeMs :: !(Maybe (Textual Int64))
-    , _rqrTimezoneCode          :: !(Maybe Text)
+    , _rqrTimezoneCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RunQueryRequest' with the minimum fields required to make a request.
@@ -259,7 +259,7 @@ data RunQueryRequest = RunQueryRequest'
 -- * 'rqrTimezoneCode'
 runQueryRequest
     :: RunQueryRequest
-runQueryRequest =
+runQueryRequest = 
     RunQueryRequest'
     { _rqrReportDataEndTimeMs = Nothing
     , _rqrDataRange = Nothing
@@ -322,7 +322,7 @@ instance ToJSON RunQueryRequest where
 -- /See:/ 'filterPair' smart constructor.
 data FilterPair = FilterPair'
     { _fpValue :: !(Maybe Text)
-    , _fpType  :: !(Maybe FilterPairType)
+    , _fpType :: !(Maybe FilterPairType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilterPair' with the minimum fields required to make a request.
@@ -334,7 +334,7 @@ data FilterPair = FilterPair'
 -- * 'fpType'
 filterPair
     :: FilterPair
-filterPair =
+filterPair = 
     FilterPair'
     { _fpValue = Nothing
     , _fpType = Nothing
@@ -365,8 +365,8 @@ instance ToJSON FilterPair where
 -- /See:/ 'uploadLineItemsRequest' smart constructor.
 data UploadLineItemsRequest = UploadLineItemsRequest'
     { _ulirLineItems :: !(Maybe Text)
-    , _ulirFormat    :: !(Maybe UploadLineItemsRequestFormat)
-    , _ulirDryRun    :: !(Maybe Bool)
+    , _ulirFormat :: !(Maybe UploadLineItemsRequestFormat)
+    , _ulirDryRun :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UploadLineItemsRequest' with the minimum fields required to make a request.
@@ -380,7 +380,7 @@ data UploadLineItemsRequest = UploadLineItemsRequest'
 -- * 'ulirDryRun'
 uploadLineItemsRequest
     :: UploadLineItemsRequest
-uploadLineItemsRequest =
+uploadLineItemsRequest = 
     UploadLineItemsRequest'
     { _ulirLineItems = Nothing
     , _ulirFormat = Nothing
@@ -426,9 +426,9 @@ instance ToJSON UploadLineItemsRequest where
 -- /See:/ 'downloadLineItemsRequest' smart constructor.
 data DownloadLineItemsRequest = DownloadLineItemsRequest'
     { _dlirFilterType :: !(Maybe DownloadLineItemsRequestFilterType)
-    , _dlirFormat     :: !(Maybe DownloadLineItemsRequestFormat)
-    , _dlirFileSpec   :: !(Maybe DownloadLineItemsRequestFileSpec)
-    , _dlirFilterIds  :: !(Maybe [Textual Int64])
+    , _dlirFormat :: !(Maybe DownloadLineItemsRequestFormat)
+    , _dlirFileSpec :: !(Maybe DownloadLineItemsRequestFileSpec)
+    , _dlirFilterIds :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DownloadLineItemsRequest' with the minimum fields required to make a request.
@@ -444,7 +444,7 @@ data DownloadLineItemsRequest = DownloadLineItemsRequest'
 -- * 'dlirFilterIds'
 downloadLineItemsRequest
     :: DownloadLineItemsRequest
-downloadLineItemsRequest =
+downloadLineItemsRequest = 
     DownloadLineItemsRequest'
     { _dlirFilterType = Nothing
     , _dlirFormat = Nothing
@@ -501,10 +501,10 @@ instance ToJSON DownloadLineItemsRequest where
 --
 -- /See:/ 'downloadRequest' smart constructor.
 data DownloadRequest = DownloadRequest'
-    { _drFileTypes  :: !(Maybe [DownloadRequestFileTypesItem])
+    { _drFileTypes :: !(Maybe [DownloadRequestFileTypesItem])
     , _drFilterType :: !(Maybe DownloadRequestFilterType)
-    , _drVersion    :: !(Maybe Text)
-    , _drFilterIds  :: !(Maybe [Textual Int64])
+    , _drVersion :: !(Maybe Text)
+    , _drFilterIds :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DownloadRequest' with the minimum fields required to make a request.
@@ -520,7 +520,7 @@ data DownloadRequest = DownloadRequest'
 -- * 'drFilterIds'
 downloadRequest
     :: DownloadRequest
-downloadRequest =
+downloadRequest = 
     DownloadRequest'
     { _drFileTypes = Nothing
     , _drFilterType = Nothing
@@ -549,7 +549,7 @@ drVersion
 -- | The IDs of the specified filter type. This is used to filter entities to
 -- fetch. At least one ID must be specified. Only one ID is allowed for the
 -- ADVERTISER_ID filter type. For INSERTION_ORDER_ID or LINE_ITEM_ID filter
--- types all IDs must be from the same Advertiser.
+-- types, all IDs must be from the same Advertiser.
 drFilterIds :: Lens' DownloadRequest [Int64]
 drFilterIds
   = lens _drFilterIds (\ s a -> s{_drFilterIds = a}) .
@@ -580,7 +580,7 @@ instance ToJSON DownloadRequest where
 -- /See:/ 'listQueriesResponse' smart constructor.
 data ListQueriesResponse = ListQueriesResponse'
     { _lqrQueries :: !(Maybe [Query])
-    , _lqrKind    :: !Text
+    , _lqrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListQueriesResponse' with the minimum fields required to make a request.
@@ -592,7 +592,7 @@ data ListQueriesResponse = ListQueriesResponse'
 -- * 'lqrKind'
 listQueriesResponse
     :: ListQueriesResponse
-listQueriesResponse =
+listQueriesResponse = 
     ListQueriesResponse'
     { _lqrQueries = Nothing
     , _lqrKind = "doubleclickbidmanager#listQueriesResponse"
@@ -640,7 +640,7 @@ newtype UploadLineItemsResponse = UploadLineItemsResponse'
 -- * 'ulirUploadStatus'
 uploadLineItemsResponse
     :: UploadLineItemsResponse
-uploadLineItemsResponse =
+uploadLineItemsResponse = 
     UploadLineItemsResponse'
     { _ulirUploadStatus = Nothing
     }
@@ -667,10 +667,10 @@ instance ToJSON UploadLineItemsResponse where
 --
 -- /See:/ 'reportMetadata' smart constructor.
 data ReportMetadata = ReportMetadata'
-    { _rmStatus                 :: !(Maybe ReportStatus)
-    , _rmReportDataEndTimeMs    :: !(Maybe (Textual Int64))
+    { _rmStatus :: !(Maybe ReportStatus)
+    , _rmReportDataEndTimeMs :: !(Maybe (Textual Int64))
     , _rmGoogleCloudStoragePath :: !(Maybe Text)
-    , _rmReportDataStartTimeMs  :: !(Maybe (Textual Int64))
+    , _rmReportDataStartTimeMs :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportMetadata' with the minimum fields required to make a request.
@@ -686,7 +686,7 @@ data ReportMetadata = ReportMetadata'
 -- * 'rmReportDataStartTimeMs'
 reportMetadata
     :: ReportMetadata
-reportMetadata =
+reportMetadata = 
     ReportMetadata'
     { _rmStatus = Nothing
     , _rmReportDataEndTimeMs = Nothing
@@ -744,8 +744,8 @@ instance ToJSON ReportMetadata where
 --
 -- /See:/ 'report' smart constructor.
 data Report = Report'
-    { _rParams   :: !(Maybe Parameters)
-    , _rKey      :: !(Maybe ReportKey)
+    { _rParams :: !(Maybe Parameters)
+    , _rKey :: !(Maybe ReportKey)
     , _rMetadata :: !(Maybe ReportMetadata)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -760,7 +760,7 @@ data Report = Report'
 -- * 'rMetadata'
 report
     :: Report
-report =
+report = 
     Report'
     { _rParams = Nothing
     , _rKey = Nothing
@@ -800,11 +800,11 @@ instance ToJSON Report where
 -- /See:/ 'rowStatus' smart constructor.
 data RowStatus = RowStatus'
     { _rsEntityName :: !(Maybe Text)
-    , _rsChanged    :: !(Maybe Bool)
-    , _rsPersisted  :: !(Maybe Bool)
-    , _rsRowNumber  :: !(Maybe (Textual Int32))
-    , _rsErrors     :: !(Maybe [Text])
-    , _rsEntityId   :: !(Maybe (Textual Int64))
+    , _rsChanged :: !(Maybe Bool)
+    , _rsPersisted :: !(Maybe Bool)
+    , _rsRowNumber :: !(Maybe (Textual Int32))
+    , _rsErrors :: !(Maybe [Text])
+    , _rsEntityId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RowStatus' with the minimum fields required to make a request.
@@ -824,7 +824,7 @@ data RowStatus = RowStatus'
 -- * 'rsEntityId'
 rowStatus
     :: RowStatus
-rowStatus =
+rowStatus = 
     RowStatus'
     { _rsEntityName = Nothing
     , _rsChanged = Nothing
@@ -894,7 +894,7 @@ instance ToJSON RowStatus where
 --
 -- /See:/ 'reportKey' smart constructor.
 data ReportKey = ReportKey'
-    { _rkQueryId  :: !(Maybe (Textual Int64))
+    { _rkQueryId :: !(Maybe (Textual Int64))
     , _rkReportId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -907,7 +907,7 @@ data ReportKey = ReportKey'
 -- * 'rkReportId'
 reportKey
     :: ReportKey
-reportKey =
+reportKey = 
     ReportKey'
     { _rkQueryId = Nothing
     , _rkReportId = Nothing
@@ -944,7 +944,7 @@ instance ToJSON ReportKey where
 -- /See:/ 'uploadStatus' smart constructor.
 data UploadStatus = UploadStatus'
     { _usRowStatus :: !(Maybe [RowStatus])
-    , _usErrors    :: !(Maybe [Text])
+    , _usErrors :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UploadStatus' with the minimum fields required to make a request.
@@ -956,7 +956,7 @@ data UploadStatus = UploadStatus'
 -- * 'usErrors'
 uploadStatus
     :: UploadStatus
-uploadStatus =
+uploadStatus = 
     UploadStatus'
     { _usRowStatus = Nothing
     , _usErrors = Nothing
@@ -995,9 +995,9 @@ instance ToJSON UploadStatus where
 --
 -- /See:/ 'querySchedule' smart constructor.
 data QuerySchedule = QuerySchedule'
-    { _qsFrequency           :: !(Maybe QueryScheduleFrequency)
-    , _qsEndTimeMs           :: !(Maybe (Textual Int64))
-    , _qsNextRunMinuteOfDay  :: !(Maybe (Textual Int32))
+    { _qsFrequency :: !(Maybe QueryScheduleFrequency)
+    , _qsEndTimeMs :: !(Maybe (Textual Int64))
+    , _qsNextRunMinuteOfDay :: !(Maybe (Textual Int32))
     , _qsNextRunTimezoneCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1014,7 +1014,7 @@ data QuerySchedule = QuerySchedule'
 -- * 'qsNextRunTimezoneCode'
 querySchedule
     :: QuerySchedule
-querySchedule =
+querySchedule = 
     QuerySchedule'
     { _qsFrequency = Nothing
     , _qsEndTimeMs = Nothing
@@ -1082,13 +1082,13 @@ newtype DownloadLineItemsResponse = DownloadLineItemsResponse'
 -- * 'dlirLineItems'
 downloadLineItemsResponse
     :: DownloadLineItemsResponse
-downloadLineItemsResponse =
+downloadLineItemsResponse = 
     DownloadLineItemsResponse'
     { _dlirLineItems = Nothing
     }
 
--- | Retrieved line items in CSV format. Refer to Entity Write File Format or
--- Structured Data File Format for more information on file formats.
+-- | Retrieved line items in CSV format. For more information about file
+-- formats, see Entity Write File Format.
 dlirLineItems :: Lens' DownloadLineItemsResponse (Maybe Text)
 dlirLineItems
   = lens _dlirLineItems
@@ -1110,9 +1110,9 @@ instance ToJSON DownloadLineItemsResponse where
 -- /See:/ 'downloadResponse' smart constructor.
 data DownloadResponse = DownloadResponse'
     { _drInsertionOrders :: !(Maybe Text)
-    , _drLineItems       :: !(Maybe Text)
-    , _drAdGroups        :: !(Maybe Text)
-    , _drAds             :: !(Maybe Text)
+    , _drLineItems :: !(Maybe Text)
+    , _drAdGroups :: !(Maybe Text)
+    , _drAds :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DownloadResponse' with the minimum fields required to make a request.
@@ -1128,7 +1128,7 @@ data DownloadResponse = DownloadResponse'
 -- * 'drAds'
 downloadResponse
     :: DownloadResponse
-downloadResponse =
+downloadResponse = 
     DownloadResponse'
     { _drInsertionOrders = Nothing
     , _drLineItems = Nothing
@@ -1178,10 +1178,10 @@ instance ToJSON DownloadResponse where
 --
 -- /See:/ 'reportStatus' smart constructor.
 data ReportStatus = ReportStatus'
-    { _rsState        :: !(Maybe ReportStatusState)
+    { _rsState :: !(Maybe ReportStatusState)
     , _rsFinishTimeMs :: !(Maybe (Textual Int64))
-    , _rsFormat       :: !(Maybe ReportStatusFormat)
-    , _rsFailure      :: !(Maybe ReportFailure)
+    , _rsFormat :: !(Maybe ReportStatusFormat)
+    , _rsFailure :: !(Maybe ReportFailure)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportStatus' with the minimum fields required to make a request.
@@ -1197,7 +1197,7 @@ data ReportStatus = ReportStatus'
 -- * 'rsFailure'
 reportStatus
     :: ReportStatus
-reportStatus =
+reportStatus = 
     ReportStatus'
     { _rsState = Nothing
     , _rsFinishTimeMs = Nothing
@@ -1247,14 +1247,14 @@ instance ToJSON ReportStatus where
 --
 -- /See:/ 'query' smart constructor.
 data Query = Query'
-    { _qQueryId               :: !(Maybe (Textual Int64))
-    , _qReportDataEndTimeMs   :: !(Maybe (Textual Int64))
-    , _qSchedule              :: !(Maybe QuerySchedule)
-    , _qKind                  :: !Text
-    , _qParams                :: !(Maybe Parameters)
-    , _qMetadata              :: !(Maybe QueryMetadata)
+    { _qQueryId :: !(Maybe (Textual Int64))
+    , _qReportDataEndTimeMs :: !(Maybe (Textual Int64))
+    , _qSchedule :: !(Maybe QuerySchedule)
+    , _qKind :: !Text
+    , _qParams :: !(Maybe Parameters)
+    , _qMetadata :: !(Maybe QueryMetadata)
     , _qReportDataStartTimeMs :: !(Maybe (Textual Int64))
-    , _qTimezoneCode          :: !(Maybe Text)
+    , _qTimezoneCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Query' with the minimum fields required to make a request.
@@ -1278,7 +1278,7 @@ data Query = Query'
 -- * 'qTimezoneCode'
 query
     :: Query
-query =
+query = 
     Query'
     { _qQueryId = Nothing
     , _qReportDataEndTimeMs = Nothing
@@ -1370,11 +1370,11 @@ instance ToJSON Query where
 --
 -- /See:/ 'parameters' smart constructor.
 data Parameters = Parameters'
-    { _pMetrics           :: !(Maybe [ParametersMetricsItem])
+    { _pMetrics :: !(Maybe [ParametersMetricsItem])
     , _pIncludeInviteData :: !(Maybe Bool)
-    , _pFilters           :: !(Maybe [FilterPair])
-    , _pGroupBys          :: !(Maybe [ParametersGroupBysItem])
-    , _pType              :: !(Maybe ParametersType)
+    , _pFilters :: !(Maybe [FilterPair])
+    , _pGroupBys :: !(Maybe [ParametersGroupBysItem])
+    , _pType :: !(Maybe ParametersType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Parameters' with the minimum fields required to make a request.
@@ -1392,7 +1392,7 @@ data Parameters = Parameters'
 -- * 'pType'
 parameters
     :: Parameters
-parameters =
+parameters = 
     Parameters'
     { _pMetrics = Nothing
     , _pIncludeInviteData = Nothing
@@ -1467,7 +1467,7 @@ newtype ReportFailure = ReportFailure'
 -- * 'rfErrorCode'
 reportFailure
     :: ReportFailure
-reportFailure =
+reportFailure = 
     ReportFailure'
     { _rfErrorCode = Nothing
     }

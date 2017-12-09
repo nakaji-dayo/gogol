@@ -35,10 +35,11 @@ module Network.Google.Resource.BigQuery.DataSets.Get
     -- * Request Lenses
     , dsgDataSetId
     , dsgProjectId
+    , dsgFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.get@ method which the
 -- 'DataSetsGet' request conforms to.
@@ -49,7 +50,8 @@ type DataSetsGetResource =
            Capture "projectId" Text :>
              "datasets" :>
                Capture "datasetId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] DataSet
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] DataSet
 
 -- | Returns the dataset specified by datasetID.
 --
@@ -57,6 +59,7 @@ type DataSetsGetResource =
 data DataSetsGet = DataSetsGet'
     { _dsgDataSetId :: !Text
     , _dsgProjectId :: !Text
+    , _dsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data DataSetsGet = DataSetsGet'
 -- * 'dsgDataSetId'
 --
 -- * 'dsgProjectId'
+--
+-- * 'dsgFields'
 dataSetsGet
     :: Text -- ^ 'dsgDataSetId'
     -> Text -- ^ 'dsgProjectId'
     -> DataSetsGet
-dataSetsGet pDsgDataSetId_ pDsgProjectId_ =
+dataSetsGet pDsgDataSetId_ pDsgProjectId_ = 
     DataSetsGet'
     { _dsgDataSetId = pDsgDataSetId_
     , _dsgProjectId = pDsgProjectId_
+    , _dsgFields = Nothing
     }
 
 -- | Dataset ID of the requested dataset
@@ -86,6 +92,11 @@ dsgProjectId :: Lens' DataSetsGet Text
 dsgProjectId
   = lens _dsgProjectId (\ s a -> s{_dsgProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsgFields :: Lens' DataSetsGet (Maybe Text)
+dsgFields
+  = lens _dsgFields (\ s a -> s{_dsgFields = a})
+
 instance GoogleRequest DataSetsGet where
         type Rs DataSetsGet = DataSet
         type Scopes DataSetsGet =
@@ -93,7 +104,8 @@ instance GoogleRequest DataSetsGet where
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient DataSetsGet'{..}
-          = go _dsgProjectId _dsgDataSetId (Just AltJSON)
+          = go _dsgProjectId _dsgDataSetId _dsgFields
+              (Just AltJSON)
               bigQueryService
           where go
                   = buildClient (Proxy :: Proxy DataSetsGetResource)

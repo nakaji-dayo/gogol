@@ -36,11 +36,12 @@ module Network.Google.Resource.Tasks.Tasks.Insert
     , tiParent
     , tiPayload
     , tiTaskList
+    , tiFields
     , tiPrevious
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.insert@ method which the
 -- 'TasksInsert' request conforms to.
@@ -52,16 +53,18 @@ type TasksInsertResource =
              "tasks" :>
                QueryParam "parent" Text :>
                  QueryParam "previous" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Task :> Post '[JSON] Task
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Task :> Post '[JSON] Task
 
 -- | Creates a new task on the specified task list.
 --
 -- /See:/ 'tasksInsert' smart constructor.
 data TasksInsert = TasksInsert'
-    { _tiParent   :: !(Maybe Text)
-    , _tiPayload  :: !Task
+    { _tiParent :: !(Maybe Text)
+    , _tiPayload :: !Task
     , _tiTaskList :: !Text
+    , _tiFields :: !(Maybe Text)
     , _tiPrevious :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -75,16 +78,19 @@ data TasksInsert = TasksInsert'
 --
 -- * 'tiTaskList'
 --
+-- * 'tiFields'
+--
 -- * 'tiPrevious'
 tasksInsert
     :: Task -- ^ 'tiPayload'
     -> Text -- ^ 'tiTaskList'
     -> TasksInsert
-tasksInsert pTiPayload_ pTiTaskList_ =
+tasksInsert pTiPayload_ pTiTaskList_ = 
     TasksInsert'
     { _tiParent = Nothing
     , _tiPayload = pTiPayload_
     , _tiTaskList = pTiTaskList_
+    , _tiFields = Nothing
     , _tiPrevious = Nothing
     }
 
@@ -103,6 +109,10 @@ tiTaskList :: Lens' TasksInsert Text
 tiTaskList
   = lens _tiTaskList (\ s a -> s{_tiTaskList = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiFields :: Lens' TasksInsert (Maybe Text)
+tiFields = lens _tiFields (\ s a -> s{_tiFields = a})
+
 -- | Previous sibling task identifier. If the task is created at the first
 -- position among its siblings, this parameter is omitted. Optional.
 tiPrevious :: Lens' TasksInsert (Maybe Text)
@@ -114,7 +124,8 @@ instance GoogleRequest TasksInsert where
         type Scopes TasksInsert =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TasksInsert'{..}
-          = go _tiTaskList _tiParent _tiPrevious (Just AltJSON)
+          = go _tiTaskList _tiParent _tiPrevious _tiFields
+              (Just AltJSON)
               _tiPayload
               appsTasksService
           where go

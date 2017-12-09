@@ -39,10 +39,11 @@ module Network.Google.Resource.BigQuery.DataSets.Delete
     , dsdDataSetId
     , dsdProjectId
     , dsdDeleteContents
+    , dsdFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.delete@ method which the
 -- 'DataSetsDelete' request conforms to.
@@ -54,7 +55,8 @@ type DataSetsDeleteResource =
              "datasets" :>
                Capture "datasetId" Text :>
                  QueryParam "deleteContents" Bool :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the dataset specified by the datasetId value. Before you can
 -- delete a dataset, you must delete all its tables, either manually or by
@@ -63,9 +65,10 @@ type DataSetsDeleteResource =
 --
 -- /See:/ 'dataSetsDelete' smart constructor.
 data DataSetsDelete = DataSetsDelete'
-    { _dsdDataSetId      :: !Text
-    , _dsdProjectId      :: !Text
+    { _dsdDataSetId :: !Text
+    , _dsdProjectId :: !Text
     , _dsdDeleteContents :: !(Maybe Bool)
+    , _dsdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsDelete' with the minimum fields required to make a request.
@@ -77,15 +80,18 @@ data DataSetsDelete = DataSetsDelete'
 -- * 'dsdProjectId'
 --
 -- * 'dsdDeleteContents'
+--
+-- * 'dsdFields'
 dataSetsDelete
     :: Text -- ^ 'dsdDataSetId'
     -> Text -- ^ 'dsdProjectId'
     -> DataSetsDelete
-dataSetsDelete pDsdDataSetId_ pDsdProjectId_ =
+dataSetsDelete pDsdDataSetId_ pDsdProjectId_ = 
     DataSetsDelete'
     { _dsdDataSetId = pDsdDataSetId_
     , _dsdProjectId = pDsdProjectId_
     , _dsdDeleteContents = Nothing
+    , _dsdFields = Nothing
     }
 
 -- | Dataset ID of dataset being deleted
@@ -105,6 +111,11 @@ dsdDeleteContents
   = lens _dsdDeleteContents
       (\ s a -> s{_dsdDeleteContents = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsdFields :: Lens' DataSetsDelete (Maybe Text)
+dsdFields
+  = lens _dsdFields (\ s a -> s{_dsdFields = a})
+
 instance GoogleRequest DataSetsDelete where
         type Rs DataSetsDelete = ()
         type Scopes DataSetsDelete =
@@ -112,6 +123,7 @@ instance GoogleRequest DataSetsDelete where
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DataSetsDelete'{..}
           = go _dsdProjectId _dsdDataSetId _dsdDeleteContents
+              _dsdFields
               (Just AltJSON)
               bigQueryService
           where go

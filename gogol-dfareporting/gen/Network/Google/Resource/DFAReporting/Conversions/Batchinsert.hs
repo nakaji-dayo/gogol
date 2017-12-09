@@ -35,30 +35,33 @@ module Network.Google.Resource.DFAReporting.Conversions.Batchinsert
     -- * Request Lenses
     , cbProFileId
     , cbPayload
+    , cbFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.conversions.batchinsert@ method which the
 -- 'ConversionsBatchinsert' request conforms to.
 type ConversionsBatchinsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "conversions" :>
                "batchinsert" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ConversionsBatchInsertRequest :>
-                     Post '[JSON] ConversionsBatchInsertResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ConversionsBatchInsertRequest :>
+                       Post '[JSON] ConversionsBatchInsertResponse
 
 -- | Inserts conversions.
 --
 -- /See:/ 'conversionsBatchinsert' smart constructor.
 data ConversionsBatchinsert = ConversionsBatchinsert'
     { _cbProFileId :: !(Textual Int64)
-    , _cbPayload   :: !ConversionsBatchInsertRequest
+    , _cbPayload :: !ConversionsBatchInsertRequest
+    , _cbFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConversionsBatchinsert' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data ConversionsBatchinsert = ConversionsBatchinsert'
 -- * 'cbProFileId'
 --
 -- * 'cbPayload'
+--
+-- * 'cbFields'
 conversionsBatchinsert
     :: Int64 -- ^ 'cbProFileId'
     -> ConversionsBatchInsertRequest -- ^ 'cbPayload'
     -> ConversionsBatchinsert
-conversionsBatchinsert pCbProFileId_ pCbPayload_ =
+conversionsBatchinsert pCbProFileId_ pCbPayload_ = 
     ConversionsBatchinsert'
     { _cbProFileId = _Coerce # pCbProFileId_
     , _cbPayload = pCbPayload_
+    , _cbFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,13 +95,17 @@ cbPayload :: Lens' ConversionsBatchinsert ConversionsBatchInsertRequest
 cbPayload
   = lens _cbPayload (\ s a -> s{_cbPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cbFields :: Lens' ConversionsBatchinsert (Maybe Text)
+cbFields = lens _cbFields (\ s a -> s{_cbFields = a})
+
 instance GoogleRequest ConversionsBatchinsert where
         type Rs ConversionsBatchinsert =
              ConversionsBatchInsertResponse
         type Scopes ConversionsBatchinsert =
              '["https://www.googleapis.com/auth/ddmconversions"]
         requestClient ConversionsBatchinsert'{..}
-          = go _cbProFileId (Just AltJSON) _cbPayload
+          = go _cbProFileId _cbFields (Just AltJSON) _cbPayload
               dFAReportingService
           where go
                   = buildClient

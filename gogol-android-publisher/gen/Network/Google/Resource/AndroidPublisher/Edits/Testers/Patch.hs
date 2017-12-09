@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Testers.Patch
     , etpPackageName
     , etpPayload
     , etpEditId
+    , etpFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.testers.patch@ method which the
 -- 'EditsTestersPatch' request conforms to.
@@ -51,16 +52,18 @@ type EditsTestersPatchResource =
                Capture "editId" Text :>
                  "testers" :>
                    Capture "track" EditsTestersPatchTrack :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Testers :> Patch '[JSON] Testers
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Testers :> Patch '[JSON] Testers
 
 --
 -- /See:/ 'editsTestersPatch' smart constructor.
 data EditsTestersPatch = EditsTestersPatch'
-    { _etpTrack       :: !EditsTestersPatchTrack
+    { _etpTrack :: !EditsTestersPatchTrack
     , _etpPackageName :: !Text
-    , _etpPayload     :: !Testers
-    , _etpEditId      :: !Text
+    , _etpPayload :: !Testers
+    , _etpEditId :: !Text
+    , _etpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTestersPatch' with the minimum fields required to make a request.
@@ -74,18 +77,21 @@ data EditsTestersPatch = EditsTestersPatch'
 -- * 'etpPayload'
 --
 -- * 'etpEditId'
+--
+-- * 'etpFields'
 editsTestersPatch
     :: EditsTestersPatchTrack -- ^ 'etpTrack'
     -> Text -- ^ 'etpPackageName'
     -> Testers -- ^ 'etpPayload'
     -> Text -- ^ 'etpEditId'
     -> EditsTestersPatch
-editsTestersPatch pEtpTrack_ pEtpPackageName_ pEtpPayload_ pEtpEditId_ =
+editsTestersPatch pEtpTrack_ pEtpPackageName_ pEtpPayload_ pEtpEditId_ = 
     EditsTestersPatch'
     { _etpTrack = pEtpTrack_
     , _etpPackageName = pEtpPackageName_
     , _etpPayload = pEtpPayload_
     , _etpEditId = pEtpEditId_
+    , _etpFields = Nothing
     }
 
 etpTrack :: Lens' EditsTestersPatch EditsTestersPatchTrack
@@ -108,12 +114,17 @@ etpEditId :: Lens' EditsTestersPatch Text
 etpEditId
   = lens _etpEditId (\ s a -> s{_etpEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etpFields :: Lens' EditsTestersPatch (Maybe Text)
+etpFields
+  = lens _etpFields (\ s a -> s{_etpFields = a})
+
 instance GoogleRequest EditsTestersPatch where
         type Rs EditsTestersPatch = Testers
         type Scopes EditsTestersPatch =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTestersPatch'{..}
-          = go _etpPackageName _etpEditId _etpTrack
+          = go _etpPackageName _etpEditId _etpTrack _etpFields
               (Just AltJSON)
               _etpPayload
               androidPublisherService

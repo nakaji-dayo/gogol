@@ -41,11 +41,12 @@ module Network.Google.Resource.Datastore.Projects.RunQuery
     , prqPayload
     , prqBearerToken
     , prqProjectId
+    , prqFields
     , prqCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.runQuery@ method which the
 -- 'ProjectsRunQuery' request conforms to.
@@ -60,23 +61,25 @@ type ProjectsRunQueryResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] RunQueryRequest :>
-                             Post '[JSON] RunQueryResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] RunQueryRequest :>
+                               Post '[JSON] RunQueryResponse
 
 -- | Queries for entities.
 --
 -- /See:/ 'projectsRunQuery' smart constructor.
 data ProjectsRunQuery = ProjectsRunQuery'
-    { _prqXgafv          :: !(Maybe Xgafv)
+    { _prqXgafv :: !(Maybe Xgafv)
     , _prqUploadProtocol :: !(Maybe Text)
-    , _prqPp             :: !Bool
-    , _prqAccessToken    :: !(Maybe Text)
-    , _prqUploadType     :: !(Maybe Text)
-    , _prqPayload        :: !RunQueryRequest
-    , _prqBearerToken    :: !(Maybe Text)
-    , _prqProjectId      :: !Text
-    , _prqCallback       :: !(Maybe Text)
+    , _prqPp :: !Bool
+    , _prqAccessToken :: !(Maybe Text)
+    , _prqUploadType :: !(Maybe Text)
+    , _prqPayload :: !RunQueryRequest
+    , _prqBearerToken :: !(Maybe Text)
+    , _prqProjectId :: !Text
+    , _prqFields :: !(Maybe Text)
+    , _prqCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRunQuery' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsRunQuery = ProjectsRunQuery'
 --
 -- * 'prqProjectId'
 --
+-- * 'prqFields'
+--
 -- * 'prqCallback'
 projectsRunQuery
     :: RunQueryRequest -- ^ 'prqPayload'
     -> Text -- ^ 'prqProjectId'
     -> ProjectsRunQuery
-projectsRunQuery pPrqPayload_ pPrqProjectId_ =
+projectsRunQuery pPrqPayload_ pPrqProjectId_ = 
     ProjectsRunQuery'
     { _prqXgafv = Nothing
     , _prqUploadProtocol = Nothing
@@ -114,6 +119,7 @@ projectsRunQuery pPrqPayload_ pPrqProjectId_ =
     , _prqPayload = pPrqPayload_
     , _prqBearerToken = Nothing
     , _prqProjectId = pPrqProjectId_
+    , _prqFields = Nothing
     , _prqCallback = Nothing
     }
 
@@ -159,6 +165,11 @@ prqProjectId :: Lens' ProjectsRunQuery Text
 prqProjectId
   = lens _prqProjectId (\ s a -> s{_prqProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prqFields :: Lens' ProjectsRunQuery (Maybe Text)
+prqFields
+  = lens _prqFields (\ s a -> s{_prqFields = a})
+
 -- | JSONP
 prqCallback :: Lens' ProjectsRunQuery (Maybe Text)
 prqCallback
@@ -176,6 +187,7 @@ instance GoogleRequest ProjectsRunQuery where
               _prqUploadType
               _prqBearerToken
               _prqCallback
+              _prqFields
               (Just AltJSON)
               _prqPayload
               datastoreService

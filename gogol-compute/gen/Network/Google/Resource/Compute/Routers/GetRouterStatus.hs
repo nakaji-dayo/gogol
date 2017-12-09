@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Routers.GetRouterStatus
     , rgrsProject
     , rgrsRouter
     , rgrsRegion
+    , rgrsFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.getRouterStatus@ method which the
 -- 'RoutersGetRouterStatus' request conforms to.
@@ -53,16 +54,18 @@ type RoutersGetRouterStatusResource =
                  "routers" :>
                    Capture "router" Text :>
                      "getRouterStatus" :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] RouterStatusResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] RouterStatusResponse
 
 -- | Retrieves runtime information of the specified router.
 --
 -- /See:/ 'routersGetRouterStatus' smart constructor.
 data RoutersGetRouterStatus = RoutersGetRouterStatus'
     { _rgrsProject :: !Text
-    , _rgrsRouter  :: !Text
-    , _rgrsRegion  :: !Text
+    , _rgrsRouter :: !Text
+    , _rgrsRegion :: !Text
+    , _rgrsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersGetRouterStatus' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data RoutersGetRouterStatus = RoutersGetRouterStatus'
 -- * 'rgrsRouter'
 --
 -- * 'rgrsRegion'
+--
+-- * 'rgrsFields'
 routersGetRouterStatus
     :: Text -- ^ 'rgrsProject'
     -> Text -- ^ 'rgrsRouter'
     -> Text -- ^ 'rgrsRegion'
     -> RoutersGetRouterStatus
-routersGetRouterStatus pRgrsProject_ pRgrsRouter_ pRgrsRegion_ =
+routersGetRouterStatus pRgrsProject_ pRgrsRouter_ pRgrsRegion_ = 
     RoutersGetRouterStatus'
     { _rgrsProject = pRgrsProject_
     , _rgrsRouter = pRgrsRouter_
     , _rgrsRegion = pRgrsRegion_
+    , _rgrsFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ rgrsRegion :: Lens' RoutersGetRouterStatus Text
 rgrsRegion
   = lens _rgrsRegion (\ s a -> s{_rgrsRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgrsFields :: Lens' RoutersGetRouterStatus (Maybe Text)
+rgrsFields
+  = lens _rgrsFields (\ s a -> s{_rgrsFields = a})
+
 instance GoogleRequest RoutersGetRouterStatus where
         type Rs RoutersGetRouterStatus = RouterStatusResponse
         type Scopes RoutersGetRouterStatus =
@@ -108,7 +119,7 @@ instance GoogleRequest RoutersGetRouterStatus where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RoutersGetRouterStatus'{..}
-          = go _rgrsProject _rgrsRegion _rgrsRouter
+          = go _rgrsProject _rgrsRegion _rgrsRouter _rgrsFields
               (Just AltJSON)
               computeService
           where go

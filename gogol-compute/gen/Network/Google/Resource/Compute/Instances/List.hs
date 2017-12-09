@@ -33,16 +33,17 @@ module Network.Google.Resource.Compute.Instances.List
     , InstancesList
 
     -- * Request Lenses
-    , ilOrderBy
-    , ilProject
-    , ilZone
-    , ilFilter
-    , ilPageToken
-    , ilMaxResults
+    , il1OrderBy
+    , il1Project
+    , il1Zone
+    , il1Filter
+    , il1PageToken
+    , il1MaxResults
+    , il1Fields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.list@ method which the
 -- 'InstancesList' request conforms to.
@@ -58,47 +59,53 @@ type InstancesListResource =
                      QueryParam "filter" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] InstanceList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] InstanceList
 
 -- | Retrieves the list of instances contained within the specified zone.
 --
 -- /See:/ 'instancesList' smart constructor.
 data InstancesList = InstancesList'
-    { _ilOrderBy    :: !(Maybe Text)
-    , _ilProject    :: !Text
-    , _ilZone       :: !Text
-    , _ilFilter     :: !(Maybe Text)
-    , _ilPageToken  :: !(Maybe Text)
-    , _ilMaxResults :: !(Textual Word32)
+    { _il1OrderBy :: !(Maybe Text)
+    , _il1Project :: !Text
+    , _il1Zone :: !Text
+    , _il1Filter :: !(Maybe Text)
+    , _il1PageToken :: !(Maybe Text)
+    , _il1MaxResults :: !(Textual Word32)
+    , _il1Fields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'ilOrderBy'
+-- * 'il1OrderBy'
 --
--- * 'ilProject'
+-- * 'il1Project'
 --
--- * 'ilZone'
+-- * 'il1Zone'
 --
--- * 'ilFilter'
+-- * 'il1Filter'
 --
--- * 'ilPageToken'
+-- * 'il1PageToken'
 --
--- * 'ilMaxResults'
+-- * 'il1MaxResults'
+--
+-- * 'il1Fields'
 instancesList
-    :: Text -- ^ 'ilProject'
-    -> Text -- ^ 'ilZone'
+    :: Text -- ^ 'il1Project'
+    -> Text -- ^ 'il1Zone'
     -> InstancesList
-instancesList pIlProject_ pIlZone_ =
+instancesList pIl1Project_ pIl1Zone_ = 
     InstancesList'
-    { _ilOrderBy = Nothing
-    , _ilProject = pIlProject_
-    , _ilZone = pIlZone_
-    , _ilFilter = Nothing
-    , _ilPageToken = Nothing
-    , _ilMaxResults = 500
+    { _il1OrderBy = Nothing
+    , _il1Project = pIl1Project_
+    , _il1Zone = pIl1Zone_
+    , _il1Filter = Nothing
+    , _il1PageToken = Nothing
+    , _il1MaxResults = 500
+    , _il1Fields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -109,56 +116,63 @@ instancesList pIlProject_ pIlZone_ =
 -- first). Use this to sort resources like operations so that the newest
 -- operation is returned first. Currently, only sorting by name or
 -- creationTimestamp desc is supported.
-ilOrderBy :: Lens' InstancesList (Maybe Text)
-ilOrderBy
-  = lens _ilOrderBy (\ s a -> s{_ilOrderBy = a})
+il1OrderBy :: Lens' InstancesList (Maybe Text)
+il1OrderBy
+  = lens _il1OrderBy (\ s a -> s{_il1OrderBy = a})
 
 -- | Project ID for this request.
-ilProject :: Lens' InstancesList Text
-ilProject
-  = lens _ilProject (\ s a -> s{_ilProject = a})
+il1Project :: Lens' InstancesList Text
+il1Project
+  = lens _il1Project (\ s a -> s{_il1Project = a})
 
 -- | The name of the zone for this request.
-ilZone :: Lens' InstancesList Text
-ilZone = lens _ilZone (\ s a -> s{_ilZone = a})
+il1Zone :: Lens' InstancesList Text
+il1Zone = lens _il1Zone (\ s a -> s{_il1Zone = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
-ilFilter :: Lens' InstancesList (Maybe Text)
-ilFilter = lens _ilFilter (\ s a -> s{_ilFilter = a})
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
+il1Filter :: Lens' InstancesList (Maybe Text)
+il1Filter
+  = lens _il1Filter (\ s a -> s{_il1Filter = a})
 
 -- | Specifies a page token to use. Set pageToken to the nextPageToken
 -- returned by a previous list request to get the next page of results.
-ilPageToken :: Lens' InstancesList (Maybe Text)
-ilPageToken
-  = lens _ilPageToken (\ s a -> s{_ilPageToken = a})
+il1PageToken :: Lens' InstancesList (Maybe Text)
+il1PageToken
+  = lens _il1PageToken (\ s a -> s{_il1PageToken = a})
 
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
-ilMaxResults :: Lens' InstancesList Word32
-ilMaxResults
-  = lens _ilMaxResults (\ s a -> s{_ilMaxResults = a})
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
+il1MaxResults :: Lens' InstancesList Word32
+il1MaxResults
+  = lens _il1MaxResults
+      (\ s a -> s{_il1MaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+il1Fields :: Lens' InstancesList (Maybe Text)
+il1Fields
+  = lens _il1Fields (\ s a -> s{_il1Fields = a})
 
 instance GoogleRequest InstancesList where
         type Rs InstancesList = InstanceList
@@ -167,9 +181,10 @@ instance GoogleRequest InstancesList where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient InstancesList'{..}
-          = go _ilProject _ilZone _ilOrderBy _ilFilter
-              _ilPageToken
-              (Just _ilMaxResults)
+          = go _il1Project _il1Zone _il1OrderBy _il1Filter
+              _il1PageToken
+              (Just _il1MaxResults)
+              _il1Fields
               (Just AltJSON)
               computeService
           where go

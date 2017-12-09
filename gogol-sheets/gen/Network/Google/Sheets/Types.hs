@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -23,7 +23,11 @@ module Network.Google.Sheets.Types
     , spreadsheetsReadOnlyScope
     , driveReadOnlyScope
     , driveScope
+    , driveFileScope
     , spreadsheetsScope
+
+    -- * BasicChartSpecStackedType
+    , BasicChartSpecStackedType (..)
 
     -- * PivotGroupSortValueBucket
     , PivotGroupSortValueBucket
@@ -46,6 +50,12 @@ module Network.Google.Sheets.Types
 
     -- * CopyPasteRequestPasteType
     , CopyPasteRequestPasteType (..)
+
+    -- * DeveloperMetadataLookupLocationMatchingStrategy
+    , DeveloperMetadataLookupLocationMatchingStrategy (..)
+
+    -- * BatchUpdateValuesByDataFilterRequestResponseDateTimeRenderOption
+    , BatchUpdateValuesByDataFilterRequestResponseDateTimeRenderOption (..)
 
     -- * DeleteNamedRangeRequest
     , DeleteNamedRangeRequest
@@ -71,17 +81,26 @@ module Network.Google.Sheets.Types
     , batchClearValuesRequest
     , bcvrRanges
 
+    -- * CreateDeveloperMetadataResponse
+    , CreateDeveloperMetadataResponse
+    , createDeveloperMetadataResponse
+    , cdmrDeveloperMetadata
+
     -- * DeleteRangeRequestShiftDimension
     , DeleteRangeRequestShiftDimension (..)
 
     -- * BasicChartSeriesTargetAxis
     , BasicChartSeriesTargetAxis (..)
 
+    -- * DataFilterValueRangeMajorDimension
+    , DataFilterValueRangeMajorDimension (..)
+
     -- * SpreadsheetProperties
     , SpreadsheetProperties
     , spreadsheetProperties
     , spDefaultFormat
     , spLocale
+    , spIterativeCalculationSettings
     , spAutoRecalc
     , spTitle
     , spTimeZone
@@ -94,11 +113,19 @@ module Network.Google.Sheets.Types
     , boRight
     , boTop
 
+    -- * BatchClearValuesByDataFilterRequest
+    , BatchClearValuesByDataFilterRequest
+    , batchClearValuesByDataFilterRequest
+    , bcvbdfrDataFilters
+
     -- * TextFormatRun
     , TextFormatRun
     , textFormatRun
     , tfrFormat
     , tfrStartIndex
+
+    -- * BubbleChartSpecLegendPosition
+    , BubbleChartSpecLegendPosition (..)
 
     -- * AddSheetRequest
     , AddSheetRequest
@@ -153,6 +180,21 @@ module Network.Google.Sheets.Types
     , autoResizeDimensionsRequest
     , ardrDimensions
 
+    -- * BubbleChartSpec
+    , BubbleChartSpec
+    , bubbleChartSpec
+    , bcsBubbleTextStyle
+    , bcsBubbleBOrderColor
+    , bcsLegendPosition
+    , bcsDomain
+    , bcsSeries
+    , bcsBubbleLabels
+    , bcsGroupIds
+    , bcsBubbleMinRadiusSize
+    , bcsBubbleMaxRadiusSize
+    , bcsBubbleOpacity
+    , bcsBubbleSizes
+
     -- * DeleteRangeRequest
     , DeleteRangeRequest
     , deleteRangeRequest
@@ -168,6 +210,7 @@ module Network.Google.Sheets.Types
     , sBandedRanges
     , sCharts
     , sBasicFilter
+    , sDeveloperMetadata
     , sConditionalFormats
     , sFilterViews
     , sProperties
@@ -190,6 +233,9 @@ module Network.Google.Sheets.Types
     , clearBasicFilterRequest
     , cbfrSheetId
 
+    -- * BatchGetValuesByDataFilterRequestValueRenderOption
+    , BatchGetValuesByDataFilterRequestValueRenderOption (..)
+
     -- * UpdateEmbeddedObjectPositionRequest
     , UpdateEmbeddedObjectPositionRequest
     , updateEmbeddedObjectPositionRequest
@@ -208,6 +254,12 @@ module Network.Google.Sheets.Types
 
     -- * CellFormatWrapStrategy
     , CellFormatWrapStrategy (..)
+
+    -- * BatchGetValuesByDataFilterResponse
+    , BatchGetValuesByDataFilterResponse
+    , batchGetValuesByDataFilterResponse
+    , bgvbdfrSpreadsheetId
+    , bgvbdfrValueRanges
 
     -- * SourceAndDestination
     , SourceAndDestination
@@ -253,12 +305,28 @@ module Network.Google.Sheets.Types
     , pcsSeries
     , pcsThreeDimensional
 
+    -- * BatchUpdateValuesByDataFilterResponse
+    , BatchUpdateValuesByDataFilterResponse
+    , batchUpdateValuesByDataFilterResponse
+    , buvbdfrTotalUpdatedColumns
+    , buvbdfrResponses
+    , buvbdfrSpreadsheetId
+    , buvbdfrTotalUpdatedSheets
+    , buvbdfrTotalUpdatedCells
+    , buvbdfrTotalUpdatedRows
+
+    -- * TextPositionHorizontalAlignment
+    , TextPositionHorizontalAlignment (..)
+
     -- * AppendValuesResponse
     , AppendValuesResponse
     , appendValuesResponse
     , avrSpreadsheetId
     , avrUpdates
     , avrTableRange
+
+    -- * DeveloperMetadataVisibility
+    , DeveloperMetadataVisibility (..)
 
     -- * BatchUpdateValuesRequestResponseValueRenderOption
     , BatchUpdateValuesRequestResponseValueRenderOption (..)
@@ -303,9 +371,9 @@ module Network.Google.Sheets.Types
     -- * BasicChartSeries
     , BasicChartSeries
     , basicChartSeries
-    , bcsTargetAxis
-    , bcsSeries
-    , bcsType
+    , bTargetAxis
+    , bSeries
+    , bType
 
     -- * AddProtectedRangeRequest
     , AddProtectedRangeRequest
@@ -356,6 +424,14 @@ module Network.Google.Sheets.Types
     , mdrDestinationIndex
     , mdrSource
 
+    -- * BatchGetValuesByDataFilterRequest
+    , BatchGetValuesByDataFilterRequest
+    , batchGetValuesByDataFilterRequest
+    , bgvbdfrValueRenderOption
+    , bgvbdfrDataFilters
+    , bgvbdfrDateTimeRenderOption
+    , bgvbdfrMajorDimension
+
     -- * CellFormatVerticalAlignment
     , CellFormatVerticalAlignment (..)
 
@@ -384,10 +460,14 @@ module Network.Google.Sheets.Types
     -- * ConditionValueRelativeDate
     , ConditionValueRelativeDate (..)
 
+    -- * DeveloperMetadataLocationLocationType
+    , DeveloperMetadataLocationLocationType (..)
+
     -- * Response
     , Response
     , response
     , rAddFilterView
+    , rCreateDeveloperMetadata
     , rDuplicateFilterView
     , rUpdateEmbeddedObjectPosition
     , rAddSheet
@@ -395,6 +475,8 @@ module Network.Google.Sheets.Types
     , rAddProtectedRange
     , rDeleteConditionalFormatRule
     , rUpdateConditionalFormatRule
+    , rDeleteDeveloperMetadata
+    , rUpdateDeveloperMetadata
     , rAddNamedRange
     , rAddChart
     , rAddBanding
@@ -426,8 +508,20 @@ module Network.Google.Sheets.Types
     , dcfrrSheetId
     , dcfrrIndex
 
+    -- * UpdateDeveloperMetadataRequest
+    , UpdateDeveloperMetadataRequest
+    , updateDeveloperMetadataRequest
+    , udmrDataFilters
+    , udmrDeveloperMetadata
+    , udmrFields
+
     -- * SortSpecSortOrder
     , SortSpecSortOrder (..)
+
+    -- * DeleteDeveloperMetadataRequest
+    , DeleteDeveloperMetadataRequest
+    , deleteDeveloperMetadataRequest
+    , ddmrDataFilter
 
     -- * OverlayPosition
     , OverlayPosition
@@ -442,6 +536,14 @@ module Network.Google.Sheets.Types
     , DeleteEmbeddedObjectRequest
     , deleteEmbeddedObjectRequest
     , deorObjectId
+
+    -- * DeveloperMetadataLocation
+    , DeveloperMetadataLocation
+    , developerMetadataLocation
+    , dmlSpreadsheet
+    , dmlDimensionRange
+    , dmlSheetId
+    , dmlLocationType
 
     -- * SheetProperties
     , SheetProperties
@@ -483,13 +585,25 @@ module Network.Google.Sheets.Types
     , sprNamedRanges
     , sprSpreadsheetId
     , sprSpreadsheetURL
+    , sprDeveloperMetadata
     , sprProperties
+
+    -- * CandlestickChartSpec
+    , CandlestickChartSpec
+    , candlestickChartSpec
+    , ccsData
+    , ccsDomain
 
     -- * InsertDimensionRequest
     , InsertDimensionRequest
     , insertDimensionRequest
     , idrRange
     , idrInheritFromBefore
+
+    -- * SearchDeveloperMetadataResponse
+    , SearchDeveloperMetadataResponse
+    , searchDeveloperMetadataResponse
+    , sdmrMatchedDeveloperMetadata
 
     -- * PivotValueSummarizeFunction
     , PivotValueSummarizeFunction (..)
@@ -500,6 +614,9 @@ module Network.Google.Sheets.Types
     , ipColor
     , ipValue
     , ipType
+
+    -- * OrgChartSpecNodeSize
+    , OrgChartSpecNodeSize (..)
 
     -- * CellData
     , CellData
@@ -514,6 +631,9 @@ module Network.Google.Sheets.Types
     , cdDataValidation
     , cdHyperlink
     , cdEffectiveValue
+
+    -- * BatchUpdateValuesByDataFilterRequestResponseValueRenderOption
+    , BatchUpdateValuesByDataFilterRequestResponseValueRenderOption (..)
 
     -- * ChartSourceRange
     , ChartSourceRange
@@ -541,6 +661,22 @@ module Network.Google.Sheets.Types
     , setBasicFilterRequest
     , sbfrFilter
 
+    -- * IterativeCalculationSettings
+    , IterativeCalculationSettings
+    , iterativeCalculationSettings
+    , icsMaxIterations
+    , icsConvergenceThreshold
+
+    -- * UpdateValuesByDataFilterResponse
+    , UpdateValuesByDataFilterResponse
+    , updateValuesByDataFilterResponse
+    , uvbdfrUpdatedCells
+    , uvbdfrUpdatedRows
+    , uvbdfrUpdatedRange
+    , uvbdfrUpdatedData
+    , uvbdfrUpdatedColumns
+    , uvbdfrDataFilter
+
     -- * GridProperties
     , GridProperties
     , gridProperties
@@ -550,8 +686,20 @@ module Network.Google.Sheets.Types
     , gpFrozenRowCount
     , gpRowCount
 
+    -- * HistogramChartSpec
+    , HistogramChartSpec
+    , histogramChartSpec
+    , hcsLegendPosition
+    , hcsSeries
+    , hcsShowItemDividers
+    , hcsOutlierPercentile
+    , hcsBucketSize
+
     -- * CellFormatHyperlinkDisplayType
     , CellFormatHyperlinkDisplayType (..)
+
+    -- * BatchUpdateValuesByDataFilterRequestValueInputOption
+    , BatchUpdateValuesByDataFilterRequestValueInputOption (..)
 
     -- * BasicFilterCriteria
     , BasicFilterCriteria
@@ -582,6 +730,20 @@ module Network.Google.Sheets.Types
     , afrUseAlternateSeries
     , afrRange
 
+    -- * DeveloperMetadataLookup
+    , DeveloperMetadataLookup
+    , developerMetadataLookup
+    , dLocationMatchingStrategy
+    , dMetadataId
+    , dVisibility
+    , dMetadataKey
+    , dLocationType
+    , dMetadataLocation
+    , dMetadataValue
+
+    -- * HistogramChartSpecLegendPosition
+    , HistogramChartSpecLegendPosition (..)
+
     -- * DuplicateSheetRequest
     , DuplicateSheetRequest
     , duplicateSheetRequest
@@ -589,6 +751,12 @@ module Network.Google.Sheets.Types
     , dsrInsertSheetIndex
     , dsrSourceSheetId
     , dsrNewSheetId
+
+    -- * TextRotation
+    , TextRotation
+    , textRotation
+    , trAngle
+    , trVertical
 
     -- * DuplicateFilterViewResponse
     , DuplicateFilterViewResponse
@@ -607,6 +775,13 @@ module Network.Google.Sheets.Types
     , buvrResponseDateTimeRenderOption
     , buvrResponseValueRenderOption
 
+    -- * DataFilterValueRange
+    , DataFilterValueRange
+    , dataFilterValueRange
+    , dfvrValues
+    , dfvrDataFilter
+    , dfvrMajorDimension
+
     -- * AddChartRequest
     , AddChartRequest
     , addChartRequest
@@ -619,6 +794,9 @@ module Network.Google.Sheets.Types
     , nrName
     , nrRange
 
+    -- * DeveloperMetadataLookupLocationType
+    , DeveloperMetadataLookupLocationType (..)
+
     -- * MergeCellsRequest
     , MergeCellsRequest
     , mergeCellsRequest
@@ -627,6 +805,11 @@ module Network.Google.Sheets.Types
 
     -- * MergeCellsRequestMergeType
     , MergeCellsRequestMergeType (..)
+
+    -- * TextPosition
+    , TextPosition
+    , textPosition
+    , tpHorizontalAlignment
 
     -- * CellFormatHorizontalAlignment
     , CellFormatHorizontalAlignment (..)
@@ -637,6 +820,16 @@ module Network.Google.Sheets.Types
     , boStyle
     , boColor
     , boWidth
+
+    -- * SearchDeveloperMetadataRequest
+    , SearchDeveloperMetadataRequest
+    , searchDeveloperMetadataRequest
+    , sdmrDataFilters
+
+    -- * CandlestickSeries
+    , CandlestickSeries
+    , candlestickSeries
+    , csData
 
     -- * ExtendedValue
     , ExtendedValue
@@ -671,6 +864,15 @@ module Network.Google.Sheets.Types
     , uFields
     , uProperties
 
+    -- * DeveloperMetadataLookupVisibility
+    , DeveloperMetadataLookupVisibility (..)
+
+    -- * CandlestickDomain
+    , CandlestickDomain
+    , candlestickDomain
+    , cdReversed
+    , cdData
+
     -- * AddProtectedRangeResponse
     , AddProtectedRangeResponse
     , addProtectedRangeResponse
@@ -691,6 +893,9 @@ module Network.Google.Sheets.Types
     , pvName
     , pvSummarizeFunction
 
+    -- * BasicChartSpecCompareMode
+    , BasicChartSpecCompareMode (..)
+
     -- * UnmergeCellsRequest
     , UnmergeCellsRequest
     , unmergeCellsRequest
@@ -703,6 +908,14 @@ module Network.Google.Sheets.Types
 
     -- * BooleanConditionType
     , BooleanConditionType (..)
+
+    -- * CandlestickData
+    , CandlestickData
+    , candlestickData
+    , cdLowSeries
+    , cdHighSeries
+    , cdOpenSeries
+    , cdCloseSeries
 
     -- * BandedRange
     , BandedRange
@@ -725,6 +938,15 @@ module Network.Google.Sheets.Types
 
     -- * ValueRangeMajorDimension
     , ValueRangeMajorDimension (..)
+
+    -- * BatchUpdateValuesByDataFilterRequest
+    , BatchUpdateValuesByDataFilterRequest
+    , batchUpdateValuesByDataFilterRequest
+    , buvbdfrData
+    , buvbdfrValueInputOption
+    , buvbdfrIncludeValuesInResponse
+    , buvbdfrResponseDateTimeRenderOption
+    , buvbdfrResponseValueRenderOption
 
     -- * PivotGroupSortOrder
     , PivotGroupSortOrder (..)
@@ -791,6 +1013,12 @@ module Network.Google.Sheets.Types
     -- * CopyPasteRequestPasteOrientation
     , CopyPasteRequestPasteOrientation (..)
 
+    -- * GetSpreadsheetByDataFilterRequest
+    , GetSpreadsheetByDataFilterRequest
+    , getSpreadsheetByDataFilterRequest
+    , gsbdfrDataFilters
+    , gsbdfrIncludeGridData
+
     -- * BatchUpdateSpreadsheetRequest
     , BatchUpdateSpreadsheetRequest
     , batchUpdateSpreadsheetRequest
@@ -831,6 +1059,12 @@ module Network.Google.Sheets.Types
     -- * CellFormatTextDirection
     , CellFormatTextDirection (..)
 
+    -- * BatchClearValuesByDataFilterResponse
+    , BatchClearValuesByDataFilterResponse
+    , batchClearValuesByDataFilterResponse
+    , bcvbdfrClearedRanges
+    , bcvbdfrSpreadsheetId
+
     -- * BasicChartSeriesType
     , BasicChartSeriesType (..)
 
@@ -848,6 +1082,7 @@ module Network.Google.Sheets.Types
     , cfBOrders
     , cfVerticalAlignment
     , cfBackgRoundColor
+    , cfTextRotation
     , cfHyperlinkDisplayType
     , cfWrapStrategy
     , cfNumberFormat
@@ -887,6 +1122,7 @@ module Network.Google.Sheets.Types
     -- * BasicChartAxis
     , BasicChartAxis
     , basicChartAxis
+    , bcaTitleTextPosition
     , bcaFormat
     , bcaTitle
     , bcaPosition
@@ -906,12 +1142,22 @@ module Network.Google.Sheets.Types
     , nfPattern
     , nfType
 
+    -- * BatchGetValuesByDataFilterRequestDateTimeRenderOption
+    , BatchGetValuesByDataFilterRequestDateTimeRenderOption (..)
+
     -- * BatchUpdateSpreadsheetResponse
     , BatchUpdateSpreadsheetResponse
     , batchUpdateSpreadsheetResponse
     , busrSpreadsheetId
     , busrReplies
     , busrUpdatedSpreadsheet
+
+    -- * DataFilter
+    , DataFilter
+    , dataFilter
+    , dfGridRange
+    , dfA1Range
+    , dfDeveloperMetadataLookup
 
     -- * SetDataValidationRequest
     , SetDataValidationRequest
@@ -952,6 +1198,16 @@ module Network.Google.Sheets.Types
     , addBandingResponse
     , aBandedRange
 
+    -- * OrgChartSpec
+    , OrgChartSpec
+    , orgChartSpec
+    , ocsNodeColor
+    , ocsNodeSize
+    , ocsTooltips
+    , ocsSelectedNodeColor
+    , ocsLabels
+    , ocsParentLabels
+
     -- * CutPasteRequestPasteType
     , CutPasteRequestPasteType (..)
 
@@ -960,6 +1216,17 @@ module Network.Google.Sheets.Types
 
     -- * ErrorValueType
     , ErrorValueType (..)
+
+    -- * RandomizeRangeRequest
+    , RandomizeRangeRequest
+    , randomizeRangeRequest
+    , rrrRange
+
+    -- * HistogramSeries
+    , HistogramSeries
+    , histogramSeries
+    , hsBarColor
+    , hsData
 
     -- * ConditionalFormatRule
     , ConditionalFormatRule
@@ -971,18 +1238,35 @@ module Network.Google.Sheets.Types
     -- * BasicChartSpec
     , BasicChartSpec
     , basicChartSpec
-    , bHeaderCount
-    , bLegendPosition
-    , bSeries
-    , bChartType
-    , bDomains
-    , bAxis
+    , basHeaderCount
+    , basLineSmoothing
+    , basInterpolateNulls
+    , basStackedType
+    , basLegendPosition
+    , basSeries
+    , basCompareMode
+    , basChartType
+    , basThreeDimensional
+    , basDomains
+    , basAxis
+
+    -- * BatchGetValuesByDataFilterRequestMajorDimension
+    , BatchGetValuesByDataFilterRequestMajorDimension (..)
 
     -- * AddConditionalFormatRuleRequest
     , AddConditionalFormatRuleRequest
     , addConditionalFormatRuleRequest
     , acfrrRule
     , acfrrIndex
+
+    -- * DeveloperMetadata
+    , DeveloperMetadata
+    , developerMetadata
+    , dmLocation
+    , dmMetadataId
+    , dmVisibility
+    , dmMetadataKey
+    , dmMetadataValue
 
     -- * PivotTableValueLayout
     , PivotTableValueLayout (..)
@@ -1003,19 +1287,37 @@ module Network.Google.Sheets.Types
     , tfBold
     , tfStrikethrough
 
+    -- * CreateDeveloperMetadataRequest
+    , CreateDeveloperMetadataRequest
+    , createDeveloperMetadataRequest
+    , cDeveloperMetadata
+
     -- * BatchClearValuesResponse
     , BatchClearValuesResponse
     , batchClearValuesResponse
     , bcvrClearedRanges
     , bcvrSpreadsheetId
 
+    -- * MatchedValueRange
+    , MatchedValueRange
+    , matchedValueRange
+    , mvrValueRange
+    , mvrDataFilters
+
     -- * BasicChartDomain
     , BasicChartDomain
     , basicChartDomain
+    , bcdReversed
     , bcdDomain
 
     -- * InterpolationPointType
     , InterpolationPointType (..)
+
+    -- * MatchedDeveloperMetadata
+    , MatchedDeveloperMetadata
+    , matchedDeveloperMetadata
+    , mdmDataFilters
+    , mdmDeveloperMetadata
 
     -- * TextToColumnsRequestDelimiterType
     , TextToColumnsRequestDelimiterType (..)
@@ -1040,8 +1342,21 @@ module Network.Google.Sheets.Types
     -- * ChartSpec
     , ChartSpec
     , chartSpec
+    , csTitleTextPosition
+    , csFontName
+    , csSubtitleTextPosition
+    , csBackgRoundColor
+    , csCandlestickChart
+    , csTitleTextFormat
+    , csSubtitle
+    , csAltText
+    , csHistogramChart
+    , csBubbleChart
+    , csMaximized
+    , csSubtitleTextFormat
     , csTitle
     , csPieChart
+    , csOrgChart
     , csBasicChart
     , csHiddenDimensionStrategy
 
@@ -1051,6 +1366,7 @@ module Network.Google.Sheets.Types
     , dpHiddenByFilter
     , dpPixelSize
     , dpHiddenByUser
+    , dpDeveloperMetadata
 
     -- * UpdateBandingRequest
     , UpdateBandingRequest
@@ -1069,6 +1385,16 @@ module Network.Google.Sheets.Types
     , deleteBandingRequest
     , dbrBandedRangeId
 
+    -- * DeleteDeveloperMetadataResponse
+    , DeleteDeveloperMetadataResponse
+    , deleteDeveloperMetadataResponse
+    , ddmrDeletedDeveloperMetadata
+
+    -- * UpdateDeveloperMetadataResponse
+    , UpdateDeveloperMetadataResponse
+    , updateDeveloperMetadataResponse
+    , uDeveloperMetadata
+
     -- * Request'
     , Request'
     , request'
@@ -1076,8 +1402,10 @@ module Network.Google.Sheets.Types
     , reqDeleteProtectedRange
     , reqUpdateProtectedRange
     , reqUpdateCells
+    , reqCreateDeveloperMetadata
     , reqDuplicateFilterView
     , reqAddConditionalFormatRule
+    , reqRandomizeRange
     , reqSortRange
     , reqUpdateNamedRange
     , reqDeleteNamedRange
@@ -1105,6 +1433,8 @@ module Network.Google.Sheets.Types
     , reqDeleteConditionalFormatRule
     , reqUpdateConditionalFormatRule
     , reqDeleteEmbeddedObject
+    , reqDeleteDeveloperMetadata
+    , reqUpdateDeveloperMetadata
     , reqMergeCells
     , reqAddNamedRange
     , reqAddChart
@@ -1136,9 +1466,9 @@ module Network.Google.Sheets.Types
     , uOldRule
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types.Product
-import           Network.Google.Sheets.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Sheets.Types.Product
+import Network.Google.Sheets.Types.Sum
 
 -- | Default request referring to version 'v4' of the Google Sheets API. This contains the host and root path used as a starting point for constructing service requests.
 sheetsService :: ServiceConfig
@@ -1157,6 +1487,11 @@ driveReadOnlyScope = Proxy;
 -- | View and manage the files in your Google Drive
 driveScope :: Proxy '["https://www.googleapis.com/auth/drive"]
 driveScope = Proxy;
+
+-- | View and manage Google Drive files and folders that you have opened or
+-- created with this app
+driveFileScope :: Proxy '["https://www.googleapis.com/auth/drive.file"]
+driveFileScope = Proxy;
 
 -- | View and manage your spreadsheets in Google Drive
 spreadsheetsScope :: Proxy '["https://www.googleapis.com/auth/spreadsheets"]

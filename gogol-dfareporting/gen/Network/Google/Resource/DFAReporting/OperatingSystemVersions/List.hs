@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.OperatingSystemVersions.List
 
     -- * Request Lenses
     , osvlProFileId
+    , osvlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.operatingSystemVersions.list@ method which the
 -- 'OperatingSystemVersionsList' request conforms to.
 type OperatingSystemVersionsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "operatingSystemVersions" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] OperatingSystemVersionsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] OperatingSystemVersionsListResponse
 
 -- | Retrieves a list of operating system versions.
 --
 -- /See:/ 'operatingSystemVersionsList' smart constructor.
-newtype OperatingSystemVersionsList = OperatingSystemVersionsList'
-    { _osvlProFileId :: Textual Int64
+data OperatingSystemVersionsList = OperatingSystemVersionsList'
+    { _osvlProFileId :: !(Textual Int64)
+    , _osvlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperatingSystemVersionsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype OperatingSystemVersionsList = OperatingSystemVersionsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'osvlProFileId'
+--
+-- * 'osvlFields'
 operatingSystemVersionsList
     :: Int64 -- ^ 'osvlProFileId'
     -> OperatingSystemVersionsList
-operatingSystemVersionsList pOsvlProFileId_ =
+operatingSystemVersionsList pOsvlProFileId_ = 
     OperatingSystemVersionsList'
     { _osvlProFileId = _Coerce # pOsvlProFileId_
+    , _osvlFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -77,6 +83,11 @@ osvlProFileId
       (\ s a -> s{_osvlProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+osvlFields :: Lens' OperatingSystemVersionsList (Maybe Text)
+osvlFields
+  = lens _osvlFields (\ s a -> s{_osvlFields = a})
+
 instance GoogleRequest OperatingSystemVersionsList
          where
         type Rs OperatingSystemVersionsList =
@@ -84,7 +95,7 @@ instance GoogleRequest OperatingSystemVersionsList
         type Scopes OperatingSystemVersionsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient OperatingSystemVersionsList'{..}
-          = go _osvlProFileId (Just AltJSON)
+          = go _osvlProFileId _osvlFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

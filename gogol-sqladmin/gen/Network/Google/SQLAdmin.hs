@@ -70,6 +70,9 @@ module Network.Google.SQLAdmin
     -- ** sql.instances.delete
     , module Network.Google.Resource.SQL.Instances.Delete
 
+    -- ** sql.instances.demoteMaster
+    , module Network.Google.Resource.SQL.Instances.DemoteMaster
+
     -- ** sql.instances.export
     , module Network.Google.Resource.SQL.Instances.Export
 
@@ -153,6 +156,16 @@ module Network.Google.SQLAdmin
 
     -- * Types
 
+    -- ** DemoteMasterMySQLReplicaConfiguration
+    , DemoteMasterMySQLReplicaConfiguration
+    , demoteMasterMySQLReplicaConfiguration
+    , dmmsqlrcKind
+    , dmmsqlrcClientKey
+    , dmmsqlrcUsername
+    , dmmsqlrcClientCertificate
+    , dmmsqlrcCaCertificate
+    , dmmsqlrcPassword
+
     -- ** SSLCert
     , SSLCert
     , sslCert
@@ -198,6 +211,7 @@ module Network.Google.SQLAdmin
     , icCSVImportOptions
     , icURI
     , icFileType
+    , icImportUser
 
     -- ** Operation
     , Operation
@@ -232,12 +246,15 @@ module Network.Google.SQLAdmin
     , sIPConfiguration
     , sMaintenanceWindow
     , sDatabaseReplicationEnabled
+    , sUserLabels
     , sTier
     , sDatabaseFlags
     , sDataDiskType
     , sCrashSafeReplicationEnabled
     , sLocationPreference
     , sBackupConfiguration
+    , sAvailabilityType
+    , sStorageAutoResizeLimit
 
     -- ** IPMApping
     , IPMApping
@@ -359,6 +376,7 @@ module Network.Google.SQLAdmin
     , datBackendType
     , datMaxDiskSize
     , datOnPremisesConfiguration
+    , datGceZone
     , datEtag
     , datState
     , datIPv6Address
@@ -470,6 +488,11 @@ module Network.Google.SQLAdmin
     , instancesRestoreBackupRequest
     , irbrRestoreBackupContext
 
+    -- ** InstancesDemoteMasterRequest
+    , InstancesDemoteMasterRequest
+    , instancesDemoteMasterRequest
+    , idmrDemoteMasterContext
+
     -- ** BackupRunsListResponse
     , BackupRunsListResponse
     , backupRunsListResponse
@@ -523,6 +546,12 @@ module Network.Google.SQLAdmin
     , ilrKind
     , ilrItems
 
+    -- ** DemoteMasterConfiguration
+    , DemoteMasterConfiguration
+    , demoteMasterConfiguration
+    , dmcKind
+    , dmcMysqlReplicaConfiguration
+
     -- ** BackupConfiguration
     , BackupConfiguration
     , backupConfiguration
@@ -566,50 +595,63 @@ module Network.Google.SQLAdmin
     , rbcInstanceId
     , rbcBackupRunId
     , rbcKind
+
+    -- ** DemoteMasterContext
+    , DemoteMasterContext
+    , demoteMasterContext
+    , demKind
+    , demMasterInstanceName
+    , demReplicaConfiguration
+
+    -- ** SettingsUserLabels
+    , SettingsUserLabels
+    , settingsUserLabels
+    , sulAddtional
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.SQL.BackupRuns.Delete
-import           Network.Google.Resource.SQL.BackupRuns.Get
-import           Network.Google.Resource.SQL.BackupRuns.Insert
-import           Network.Google.Resource.SQL.BackupRuns.List
-import           Network.Google.Resource.SQL.Databases.Delete
-import           Network.Google.Resource.SQL.Databases.Get
-import           Network.Google.Resource.SQL.Databases.Insert
-import           Network.Google.Resource.SQL.Databases.List
-import           Network.Google.Resource.SQL.Databases.Patch
-import           Network.Google.Resource.SQL.Databases.Update
-import           Network.Google.Resource.SQL.Flags.List
-import           Network.Google.Resource.SQL.Instances.Clone
-import           Network.Google.Resource.SQL.Instances.Delete
-import           Network.Google.Resource.SQL.Instances.Export
-import           Network.Google.Resource.SQL.Instances.Failover
-import           Network.Google.Resource.SQL.Instances.Get
-import           Network.Google.Resource.SQL.Instances.Import
-import           Network.Google.Resource.SQL.Instances.Insert
-import           Network.Google.Resource.SQL.Instances.List
-import           Network.Google.Resource.SQL.Instances.Patch
-import           Network.Google.Resource.SQL.Instances.PromoteReplica
-import           Network.Google.Resource.SQL.Instances.ResetSSLConfig
-import           Network.Google.Resource.SQL.Instances.Restart
-import           Network.Google.Resource.SQL.Instances.RestoreBackup
-import           Network.Google.Resource.SQL.Instances.StartReplica
-import           Network.Google.Resource.SQL.Instances.StopReplica
-import           Network.Google.Resource.SQL.Instances.TruncateLog
-import           Network.Google.Resource.SQL.Instances.Update
-import           Network.Google.Resource.SQL.Operations.Get
-import           Network.Google.Resource.SQL.Operations.List
-import           Network.Google.Resource.SQL.SSLCerts.CreateEphemeral
-import           Network.Google.Resource.SQL.SSLCerts.Delete
-import           Network.Google.Resource.SQL.SSLCerts.Get
-import           Network.Google.Resource.SQL.SSLCerts.Insert
-import           Network.Google.Resource.SQL.SSLCerts.List
-import           Network.Google.Resource.SQL.Tiers.List
-import           Network.Google.Resource.SQL.Users.Delete
-import           Network.Google.Resource.SQL.Users.Insert
-import           Network.Google.Resource.SQL.Users.List
-import           Network.Google.Resource.SQL.Users.Update
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.Resource.SQL.BackupRuns.Delete
+import Network.Google.Resource.SQL.BackupRuns.Get
+import Network.Google.Resource.SQL.BackupRuns.Insert
+import Network.Google.Resource.SQL.BackupRuns.List
+import Network.Google.Resource.SQL.Databases.Delete
+import Network.Google.Resource.SQL.Databases.Get
+import Network.Google.Resource.SQL.Databases.Insert
+import Network.Google.Resource.SQL.Databases.List
+import Network.Google.Resource.SQL.Databases.Patch
+import Network.Google.Resource.SQL.Databases.Update
+import Network.Google.Resource.SQL.Flags.List
+import Network.Google.Resource.SQL.Instances.Clone
+import Network.Google.Resource.SQL.Instances.Delete
+import Network.Google.Resource.SQL.Instances.DemoteMaster
+import Network.Google.Resource.SQL.Instances.Export
+import Network.Google.Resource.SQL.Instances.Failover
+import Network.Google.Resource.SQL.Instances.Get
+import Network.Google.Resource.SQL.Instances.Import
+import Network.Google.Resource.SQL.Instances.Insert
+import Network.Google.Resource.SQL.Instances.List
+import Network.Google.Resource.SQL.Instances.Patch
+import Network.Google.Resource.SQL.Instances.PromoteReplica
+import Network.Google.Resource.SQL.Instances.ResetSSLConfig
+import Network.Google.Resource.SQL.Instances.Restart
+import Network.Google.Resource.SQL.Instances.RestoreBackup
+import Network.Google.Resource.SQL.Instances.StartReplica
+import Network.Google.Resource.SQL.Instances.StopReplica
+import Network.Google.Resource.SQL.Instances.TruncateLog
+import Network.Google.Resource.SQL.Instances.Update
+import Network.Google.Resource.SQL.Operations.Get
+import Network.Google.Resource.SQL.Operations.List
+import Network.Google.Resource.SQL.SSLCerts.CreateEphemeral
+import Network.Google.Resource.SQL.SSLCerts.Delete
+import Network.Google.Resource.SQL.SSLCerts.Get
+import Network.Google.Resource.SQL.SSLCerts.Insert
+import Network.Google.Resource.SQL.SSLCerts.List
+import Network.Google.Resource.SQL.Tiers.List
+import Network.Google.Resource.SQL.Users.Delete
+import Network.Google.Resource.SQL.Users.Insert
+import Network.Google.Resource.SQL.Users.List
+import Network.Google.Resource.SQL.Users.Update
+import Network.Google.SQLAdmin.Types
 
 {- $resources
 TODO
@@ -637,6 +679,7 @@ type SQLAdminAPI =
        :<|> InstancesStartReplicaResource
        :<|> InstancesCloneResource
        :<|> InstancesPatchResource
+       :<|> InstancesDemoteMasterResource
        :<|> InstancesGetResource
        :<|> InstancesRestoreBackupResource
        :<|> InstancesFailoverResource

@@ -38,10 +38,11 @@ module Network.Google.Resource.Games.Rooms.Join
     , rjPayload
     , rjRoomId
     , rjLanguage
+    , rjFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.rooms.join@ method which the
 -- 'RoomsJoin' request conforms to.
@@ -53,8 +54,9 @@ type RoomsJoinResource =
              "join" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] RoomJoinRequest :> Post '[JSON] Room
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] RoomJoinRequest :> Post '[JSON] Room
 
 -- | Join a room. For internal use by the Games SDK only. Calling this method
 -- directly is unsupported.
@@ -62,9 +64,10 @@ type RoomsJoinResource =
 -- /See:/ 'roomsJoin' smart constructor.
 data RoomsJoin = RoomsJoin'
     { _rjConsistencyToken :: !(Maybe (Textual Int64))
-    , _rjPayload          :: !RoomJoinRequest
-    , _rjRoomId           :: !Text
-    , _rjLanguage         :: !(Maybe Text)
+    , _rjPayload :: !RoomJoinRequest
+    , _rjRoomId :: !Text
+    , _rjLanguage :: !(Maybe Text)
+    , _rjFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsJoin' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data RoomsJoin = RoomsJoin'
 -- * 'rjRoomId'
 --
 -- * 'rjLanguage'
+--
+-- * 'rjFields'
 roomsJoin
     :: RoomJoinRequest -- ^ 'rjPayload'
     -> Text -- ^ 'rjRoomId'
     -> RoomsJoin
-roomsJoin pRjPayload_ pRjRoomId_ =
+roomsJoin pRjPayload_ pRjRoomId_ = 
     RoomsJoin'
     { _rjConsistencyToken = Nothing
     , _rjPayload = pRjPayload_
     , _rjRoomId = pRjRoomId_
     , _rjLanguage = Nothing
+    , _rjFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -111,6 +117,10 @@ rjLanguage :: Lens' RoomsJoin (Maybe Text)
 rjLanguage
   = lens _rjLanguage (\ s a -> s{_rjLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rjFields :: Lens' RoomsJoin (Maybe Text)
+rjFields = lens _rjFields (\ s a -> s{_rjFields = a})
+
 instance GoogleRequest RoomsJoin where
         type Rs RoomsJoin = Room
         type Scopes RoomsJoin =
@@ -118,6 +128,7 @@ instance GoogleRequest RoomsJoin where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RoomsJoin'{..}
           = go _rjRoomId _rjConsistencyToken _rjLanguage
+              _rjFields
               (Just AltJSON)
               _rjPayload
               gamesService

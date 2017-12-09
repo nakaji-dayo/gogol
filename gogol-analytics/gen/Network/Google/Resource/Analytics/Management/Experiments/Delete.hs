@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.Delete
     , medProFileId
     , medAccountId
     , medExperimentId
+    , medFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.delete@ method which the
 -- 'ManagementExperimentsDelete' request conforms to.
@@ -56,16 +57,18 @@ type ManagementExperimentsDeleteResource =
                      Capture "profileId" Text :>
                        "experiments" :>
                          Capture "experimentId" Text :>
-                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete an experiment.
 --
 -- /See:/ 'managementExperimentsDelete' smart constructor.
 data ManagementExperimentsDelete = ManagementExperimentsDelete'
     { _medWebPropertyId :: !Text
-    , _medProFileId     :: !Text
-    , _medAccountId     :: !Text
-    , _medExperimentId  :: !Text
+    , _medProFileId :: !Text
+    , _medAccountId :: !Text
+    , _medExperimentId :: !Text
+    , _medFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsDelete' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementExperimentsDelete = ManagementExperimentsDelete'
 -- * 'medAccountId'
 --
 -- * 'medExperimentId'
+--
+-- * 'medFields'
 managementExperimentsDelete
     :: Text -- ^ 'medWebPropertyId'
     -> Text -- ^ 'medProFileId'
     -> Text -- ^ 'medAccountId'
     -> Text -- ^ 'medExperimentId'
     -> ManagementExperimentsDelete
-managementExperimentsDelete pMedWebPropertyId_ pMedProFileId_ pMedAccountId_ pMedExperimentId_ =
+managementExperimentsDelete pMedWebPropertyId_ pMedProFileId_ pMedAccountId_ pMedExperimentId_ = 
     ManagementExperimentsDelete'
     { _medWebPropertyId = pMedWebPropertyId_
     , _medProFileId = pMedProFileId_
     , _medAccountId = pMedAccountId_
     , _medExperimentId = pMedExperimentId_
+    , _medFields = Nothing
     }
 
 -- | Web property ID to which the experiment belongs
@@ -115,6 +121,11 @@ medExperimentId
   = lens _medExperimentId
       (\ s a -> s{_medExperimentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+medFields :: Lens' ManagementExperimentsDelete (Maybe Text)
+medFields
+  = lens _medFields (\ s a -> s{_medFields = a})
+
 instance GoogleRequest ManagementExperimentsDelete
          where
         type Rs ManagementExperimentsDelete = ()
@@ -124,6 +135,7 @@ instance GoogleRequest ManagementExperimentsDelete
         requestClient ManagementExperimentsDelete'{..}
           = go _medAccountId _medWebPropertyId _medProFileId
               _medExperimentId
+              _medFields
               (Just AltJSON)
               analyticsService
           where go

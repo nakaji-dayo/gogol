@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.Enroll
     -- * Request Lenses
     , eeToken
     , eePayload
+    , eeFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.enroll@ method which the
 -- 'EnterprisesEnroll' request conforms to.
@@ -48,15 +49,17 @@ type EnterprisesEnrollResource =
          "enterprises" :>
            "enroll" :>
              QueryParam "token" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Enterprise :> Post '[JSON] Enterprise
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Enterprise :> Post '[JSON] Enterprise
 
 -- | Enrolls an enterprise with the calling EMM.
 --
 -- /See:/ 'enterprisesEnroll' smart constructor.
 data EnterprisesEnroll = EnterprisesEnroll'
-    { _eeToken   :: !Text
+    { _eeToken :: !Text
     , _eePayload :: !Enterprise
+    , _eeFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesEnroll' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data EnterprisesEnroll = EnterprisesEnroll'
 -- * 'eeToken'
 --
 -- * 'eePayload'
+--
+-- * 'eeFields'
 enterprisesEnroll
     :: Text -- ^ 'eeToken'
     -> Enterprise -- ^ 'eePayload'
     -> EnterprisesEnroll
-enterprisesEnroll pEeToken_ pEePayload_ =
+enterprisesEnroll pEeToken_ pEePayload_ = 
     EnterprisesEnroll'
     { _eeToken = pEeToken_
     , _eePayload = pEePayload_
+    , _eeFields = Nothing
     }
 
 -- | The token provided by the enterprise to register the EMM.
@@ -85,12 +91,17 @@ eePayload :: Lens' EnterprisesEnroll Enterprise
 eePayload
   = lens _eePayload (\ s a -> s{_eePayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eeFields :: Lens' EnterprisesEnroll (Maybe Text)
+eeFields = lens _eeFields (\ s a -> s{_eeFields = a})
+
 instance GoogleRequest EnterprisesEnroll where
         type Rs EnterprisesEnroll = Enterprise
         type Scopes EnterprisesEnroll =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesEnroll'{..}
-          = go (Just _eeToken) (Just AltJSON) _eePayload
+          = go (Just _eeToken) _eeFields (Just AltJSON)
+              _eePayload
               androidEnterpriseService
           where go
                   = buildClient

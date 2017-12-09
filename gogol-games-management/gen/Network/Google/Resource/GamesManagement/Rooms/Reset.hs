@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Rooms.Reset
     , roomsReset
     , RoomsReset
 
+    -- * Request Lenses
+    , rrFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.rooms.reset@ method which the
 -- 'RoomsReset' request conforms to.
@@ -46,30 +48,41 @@ type RoomsResetResource =
        "v1management" :>
          "rooms" :>
            "reset" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Reset all rooms for the currently authenticated player for your
 -- application. This method is only accessible to whitelisted tester
 -- accounts for your application.
 --
 -- /See:/ 'roomsReset' smart constructor.
-data RoomsReset =
-    RoomsReset'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype RoomsReset = RoomsReset'
+    { _rrFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsReset' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rrFields'
 roomsReset
     :: RoomsReset
-roomsReset = RoomsReset'
+roomsReset = 
+    RoomsReset'
+    { _rrFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+rrFields :: Lens' RoomsReset (Maybe Text)
+rrFields = lens _rrFields (\ s a -> s{_rrFields = a})
 
 instance GoogleRequest RoomsReset where
         type Rs RoomsReset = ()
         type Scopes RoomsReset =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient RoomsReset'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient RoomsReset'{..}
+          = go _rrFields (Just AltJSON) gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy RoomsResetResource)
                       mempty

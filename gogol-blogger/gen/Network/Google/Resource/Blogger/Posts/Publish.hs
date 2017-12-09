@@ -37,10 +37,11 @@ module Network.Google.Resource.Blogger.Posts.Publish
     , pppPublishDate
     , pppBlogId
     , pppPostId
+    , pppFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.publish@ method which the
 -- 'PostsPublish' request conforms to.
@@ -53,7 +54,8 @@ type PostsPublishResource =
                Capture "postId" Text :>
                  "publish" :>
                    QueryParam "publishDate" DateTime' :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] Post'
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] Post'
 
 -- | Publishes a draft post, optionally at the specific time of the given
 -- publishDate parameter.
@@ -61,8 +63,9 @@ type PostsPublishResource =
 -- /See:/ 'postsPublish' smart constructor.
 data PostsPublish = PostsPublish'
     { _pppPublishDate :: !(Maybe DateTime')
-    , _pppBlogId      :: !Text
-    , _pppPostId      :: !Text
+    , _pppBlogId :: !Text
+    , _pppPostId :: !Text
+    , _pppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsPublish' with the minimum fields required to make a request.
@@ -74,15 +77,18 @@ data PostsPublish = PostsPublish'
 -- * 'pppBlogId'
 --
 -- * 'pppPostId'
+--
+-- * 'pppFields'
 postsPublish
     :: Text -- ^ 'pppBlogId'
     -> Text -- ^ 'pppPostId'
     -> PostsPublish
-postsPublish pPppBlogId_ pPppPostId_ =
+postsPublish pPppBlogId_ pPppPostId_ = 
     PostsPublish'
     { _pppPublishDate = Nothing
     , _pppBlogId = pPppBlogId_
     , _pppPostId = pPppPostId_
+    , _pppFields = Nothing
     }
 
 -- | Optional date and time to schedule the publishing of the Blog. If no
@@ -105,12 +111,17 @@ pppPostId :: Lens' PostsPublish Text
 pppPostId
   = lens _pppPostId (\ s a -> s{_pppPostId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pppFields :: Lens' PostsPublish (Maybe Text)
+pppFields
+  = lens _pppFields (\ s a -> s{_pppFields = a})
+
 instance GoogleRequest PostsPublish where
         type Rs PostsPublish = Post'
         type Scopes PostsPublish =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PostsPublish'{..}
-          = go _pppBlogId _pppPostId _pppPublishDate
+          = go _pppBlogId _pppPostId _pppPublishDate _pppFields
               (Just AltJSON)
               bloggerService
           where go

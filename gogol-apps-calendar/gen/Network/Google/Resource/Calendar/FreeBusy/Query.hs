@@ -34,10 +34,11 @@ module Network.Google.Resource.Calendar.FreeBusy.Query
 
     -- * Request Lenses
     , fbqPayload
+    , fbqFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.freebusy.query@ method which the
 -- 'FreeBusyQuery' request conforms to.
@@ -45,15 +46,17 @@ type FreeBusyQueryResource =
      "calendar" :>
        "v3" :>
          "freeBusy" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] FreeBusyRequest :>
-               Post '[JSON] FreeBusyResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] FreeBusyRequest :>
+                 Post '[JSON] FreeBusyResponse
 
 -- | Returns free\/busy information for a set of calendars.
 --
 -- /See:/ 'freeBusyQuery' smart constructor.
-newtype FreeBusyQuery = FreeBusyQuery'
-    { _fbqPayload :: FreeBusyRequest
+data FreeBusyQuery = FreeBusyQuery'
+    { _fbqPayload :: !FreeBusyRequest
+    , _fbqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FreeBusyQuery' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype FreeBusyQuery = FreeBusyQuery'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'fbqPayload'
+--
+-- * 'fbqFields'
 freeBusyQuery
     :: FreeBusyRequest -- ^ 'fbqPayload'
     -> FreeBusyQuery
-freeBusyQuery pFbqPayload_ =
+freeBusyQuery pFbqPayload_ = 
     FreeBusyQuery'
     { _fbqPayload = pFbqPayload_
+    , _fbqFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -74,13 +80,19 @@ fbqPayload :: Lens' FreeBusyQuery FreeBusyRequest
 fbqPayload
   = lens _fbqPayload (\ s a -> s{_fbqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+fbqFields :: Lens' FreeBusyQuery (Maybe Text)
+fbqFields
+  = lens _fbqFields (\ s a -> s{_fbqFields = a})
+
 instance GoogleRequest FreeBusyQuery where
         type Rs FreeBusyQuery = FreeBusyResponse
         type Scopes FreeBusyQuery =
              '["https://www.googleapis.com/auth/calendar",
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient FreeBusyQuery'{..}
-          = go (Just AltJSON) _fbqPayload appsCalendarService
+          = go _fbqFields (Just AltJSON) _fbqPayload
+              appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy FreeBusyQueryResource)
                       mempty

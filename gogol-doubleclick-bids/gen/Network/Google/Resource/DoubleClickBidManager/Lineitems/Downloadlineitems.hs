@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Lineitems.Downloadlineitems
 
     -- * Request Lenses
     , ldPayload
+    , ldFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.lineitems.downloadlineitems@ method which the
 -- 'LineitemsDownloadlineitems' request conforms to.
@@ -46,15 +47,17 @@ type LineitemsDownloadlineitemsResource =
        "v1" :>
          "lineitems" :>
            "downloadlineitems" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] DownloadLineItemsRequest :>
-                 Post '[JSON] DownloadLineItemsResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] DownloadLineItemsRequest :>
+                   Post '[JSON] DownloadLineItemsResponse
 
 -- | Retrieves line items in CSV format.
 --
 -- /See:/ 'lineitemsDownloadlineitems' smart constructor.
-newtype LineitemsDownloadlineitems = LineitemsDownloadlineitems'
-    { _ldPayload :: DownloadLineItemsRequest
+data LineitemsDownloadlineitems = LineitemsDownloadlineitems'
+    { _ldPayload :: !DownloadLineItemsRequest
+    , _ldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LineitemsDownloadlineitems' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype LineitemsDownloadlineitems = LineitemsDownloadlineitems'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ldPayload'
+--
+-- * 'ldFields'
 lineitemsDownloadlineitems
     :: DownloadLineItemsRequest -- ^ 'ldPayload'
     -> LineitemsDownloadlineitems
-lineitemsDownloadlineitems pLdPayload_ =
+lineitemsDownloadlineitems pLdPayload_ = 
     LineitemsDownloadlineitems'
     { _ldPayload = pLdPayload_
+    , _ldFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,13 +81,19 @@ ldPayload :: Lens' LineitemsDownloadlineitems DownloadLineItemsRequest
 ldPayload
   = lens _ldPayload (\ s a -> s{_ldPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ldFields :: Lens' LineitemsDownloadlineitems (Maybe Text)
+ldFields = lens _ldFields (\ s a -> s{_ldFields = a})
+
 instance GoogleRequest LineitemsDownloadlineitems
          where
         type Rs LineitemsDownloadlineitems =
              DownloadLineItemsResponse
-        type Scopes LineitemsDownloadlineitems = '[]
+        type Scopes LineitemsDownloadlineitems =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient LineitemsDownloadlineitems'{..}
-          = go (Just AltJSON) _ldPayload doubleClickBidsService
+          = go _ldFields (Just AltJSON) _ldPayload
+              doubleClickBidsService
           where go
                   = buildClient
                       (Proxy :: Proxy LineitemsDownloadlineitemsResource)

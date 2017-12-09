@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.CallSets.Create
     , cscUploadType
     , cscPayload
     , cscBearerToken
+    , cscFields
     , cscCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.callsets.create@ method which the
 -- 'CallSetsCreate' request conforms to.
@@ -60,8 +61,9 @@ type CallSetsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] CallSet :> Post '[JSON] CallSet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] CallSet :> Post '[JSON] CallSet
 
 -- | Creates a new call set. For the definitions of call sets and other
 -- genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type CallSetsCreateResource =
 --
 -- /See:/ 'callSetsCreate' smart constructor.
 data CallSetsCreate = CallSetsCreate'
-    { _cscXgafv          :: !(Maybe Xgafv)
+    { _cscXgafv :: !(Maybe Xgafv)
     , _cscUploadProtocol :: !(Maybe Text)
-    , _cscPp             :: !Bool
-    , _cscAccessToken    :: !(Maybe Text)
-    , _cscUploadType     :: !(Maybe Text)
-    , _cscPayload        :: !CallSet
-    , _cscBearerToken    :: !(Maybe Text)
-    , _cscCallback       :: !(Maybe Text)
+    , _cscPp :: !Bool
+    , _cscAccessToken :: !(Maybe Text)
+    , _cscUploadType :: !(Maybe Text)
+    , _cscPayload :: !CallSet
+    , _cscBearerToken :: !(Maybe Text)
+    , _cscFields :: !(Maybe Text)
+    , _cscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CallSetsCreate' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data CallSetsCreate = CallSetsCreate'
 --
 -- * 'cscBearerToken'
 --
+-- * 'cscFields'
+--
 -- * 'cscCallback'
 callSetsCreate
     :: CallSet -- ^ 'cscPayload'
     -> CallSetsCreate
-callSetsCreate pCscPayload_ =
+callSetsCreate pCscPayload_ = 
     CallSetsCreate'
     { _cscXgafv = Nothing
     , _cscUploadProtocol = Nothing
@@ -110,6 +115,7 @@ callSetsCreate pCscPayload_ =
     , _cscUploadType = Nothing
     , _cscPayload = pCscPayload_
     , _cscBearerToken = Nothing
+    , _cscFields = Nothing
     , _cscCallback = Nothing
     }
 
@@ -150,6 +156,11 @@ cscBearerToken
   = lens _cscBearerToken
       (\ s a -> s{_cscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cscFields :: Lens' CallSetsCreate (Maybe Text)
+cscFields
+  = lens _cscFields (\ s a -> s{_cscFields = a})
+
 -- | JSONP
 cscCallback :: Lens' CallSetsCreate (Maybe Text)
 cscCallback
@@ -166,6 +177,7 @@ instance GoogleRequest CallSetsCreate where
               _cscUploadType
               _cscBearerToken
               _cscCallback
+              _cscFields
               (Just AltJSON)
               _cscPayload
               genomicsService

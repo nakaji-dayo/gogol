@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Resources.Calendars.Get
     -- * Request Lenses
     , rcgCustomer
     , rcgCalendarResourceId
+    , rcgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.resources.calendars.get@ method which the
 -- 'ResourcesCalendarsGet' request conforms to.
@@ -51,15 +52,17 @@ type ResourcesCalendarsGetResource =
                "resources" :>
                  "calendars" :>
                    Capture "calendarResourceId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] CalendarResource
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] CalendarResource
 
 -- | Retrieves a calendar resource.
 --
 -- /See:/ 'resourcesCalendarsGet' smart constructor.
 data ResourcesCalendarsGet = ResourcesCalendarsGet'
-    { _rcgCustomer           :: !Text
+    { _rcgCustomer :: !Text
     , _rcgCalendarResourceId :: !Text
+    , _rcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourcesCalendarsGet' with the minimum fields required to make a request.
@@ -69,17 +72,20 @@ data ResourcesCalendarsGet = ResourcesCalendarsGet'
 -- * 'rcgCustomer'
 --
 -- * 'rcgCalendarResourceId'
+--
+-- * 'rcgFields'
 resourcesCalendarsGet
     :: Text -- ^ 'rcgCustomer'
     -> Text -- ^ 'rcgCalendarResourceId'
     -> ResourcesCalendarsGet
-resourcesCalendarsGet pRcgCustomer_ pRcgCalendarResourceId_ =
+resourcesCalendarsGet pRcgCustomer_ pRcgCalendarResourceId_ = 
     ResourcesCalendarsGet'
     { _rcgCustomer = pRcgCustomer_
     , _rcgCalendarResourceId = pRcgCalendarResourceId_
+    , _rcgFields = Nothing
     }
 
--- | The unique ID for the customer\'s Google account. As an account
+-- | The unique ID for the customer\'s G Suite account. As an account
 -- administrator, you can also use the my_customer alias to represent your
 -- account\'s customer ID.
 rcgCustomer :: Lens' ResourcesCalendarsGet Text
@@ -92,13 +98,18 @@ rcgCalendarResourceId
   = lens _rcgCalendarResourceId
       (\ s a -> s{_rcgCalendarResourceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rcgFields :: Lens' ResourcesCalendarsGet (Maybe Text)
+rcgFields
+  = lens _rcgFields (\ s a -> s{_rcgFields = a})
+
 instance GoogleRequest ResourcesCalendarsGet where
         type Rs ResourcesCalendarsGet = CalendarResource
         type Scopes ResourcesCalendarsGet =
              '["https://www.googleapis.com/auth/admin.directory.resource.calendar",
                "https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly"]
         requestClient ResourcesCalendarsGet'{..}
-          = go _rcgCustomer _rcgCalendarResourceId
+          = go _rcgCustomer _rcgCalendarResourceId _rcgFields
               (Just AltJSON)
               directoryService
           where go

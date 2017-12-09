@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.PretargetingConfig.Delete
     -- * Request Lenses
     , pcdAccountId
     , pcdConfigId
+    , pcdFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.pretargetingConfig.delete@ method which the
 -- 'PretargetingConfigDelete' request conforms to.
@@ -48,14 +49,16 @@ type PretargetingConfigDeleteResource =
          "pretargetingconfigs" :>
            Capture "accountId" (Textual Int64) :>
              Capture "configId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing pretargeting config.
 --
 -- /See:/ 'pretargetingConfigDelete' smart constructor.
 data PretargetingConfigDelete = PretargetingConfigDelete'
     { _pcdAccountId :: !(Textual Int64)
-    , _pcdConfigId  :: !(Textual Int64)
+    , _pcdConfigId :: !(Textual Int64)
+    , _pcdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigDelete' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data PretargetingConfigDelete = PretargetingConfigDelete'
 -- * 'pcdAccountId'
 --
 -- * 'pcdConfigId'
+--
+-- * 'pcdFields'
 pretargetingConfigDelete
     :: Int64 -- ^ 'pcdAccountId'
     -> Int64 -- ^ 'pcdConfigId'
     -> PretargetingConfigDelete
-pretargetingConfigDelete pPcdAccountId_ pPcdConfigId_ =
+pretargetingConfigDelete pPcdAccountId_ pPcdConfigId_ = 
     PretargetingConfigDelete'
     { _pcdAccountId = _Coerce # pPcdAccountId_
     , _pcdConfigId = _Coerce # pPcdConfigId_
+    , _pcdFields = Nothing
     }
 
 -- | The account id to delete the pretargeting config for.
@@ -87,12 +93,18 @@ pcdConfigId
   = lens _pcdConfigId (\ s a -> s{_pcdConfigId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pcdFields :: Lens' PretargetingConfigDelete (Maybe Text)
+pcdFields
+  = lens _pcdFields (\ s a -> s{_pcdFields = a})
+
 instance GoogleRequest PretargetingConfigDelete where
         type Rs PretargetingConfigDelete = ()
         type Scopes PretargetingConfigDelete =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient PretargetingConfigDelete'{..}
-          = go _pcdAccountId _pcdConfigId (Just AltJSON)
+          = go _pcdAccountId _pcdConfigId _pcdFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

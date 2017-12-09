@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.CustomMetrics.Patch
     , mcmpIgnoreCustomDataSourceLinks
     , mcmpPayload
     , mcmpAccountId
+    , mcmpFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customMetrics.patch@ method which the
 -- 'ManagementCustomMetricsPatch' request conforms to.
@@ -56,19 +57,21 @@ type ManagementCustomMetricsPatchResource =
                    "customMetrics" :>
                      Capture "customMetricId" Text :>
                        QueryParam "ignoreCustomDataSourceLinks" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CustomMetric :>
-                             Patch '[JSON] CustomMetric
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CustomMetric :>
+                               Patch '[JSON] CustomMetric
 
 -- | Updates an existing custom metric. This method supports patch semantics.
 --
 -- /See:/ 'managementCustomMetricsPatch' smart constructor.
 data ManagementCustomMetricsPatch = ManagementCustomMetricsPatch'
-    { _mcmpCustomMetricId              :: !Text
-    , _mcmpWebPropertyId               :: !Text
+    { _mcmpCustomMetricId :: !Text
+    , _mcmpWebPropertyId :: !Text
     , _mcmpIgnoreCustomDataSourceLinks :: !Bool
-    , _mcmpPayload                     :: !CustomMetric
-    , _mcmpAccountId                   :: !Text
+    , _mcmpPayload :: !CustomMetric
+    , _mcmpAccountId :: !Text
+    , _mcmpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomMetricsPatch' with the minimum fields required to make a request.
@@ -84,19 +87,22 @@ data ManagementCustomMetricsPatch = ManagementCustomMetricsPatch'
 -- * 'mcmpPayload'
 --
 -- * 'mcmpAccountId'
+--
+-- * 'mcmpFields'
 managementCustomMetricsPatch
     :: Text -- ^ 'mcmpCustomMetricId'
     -> Text -- ^ 'mcmpWebPropertyId'
     -> CustomMetric -- ^ 'mcmpPayload'
     -> Text -- ^ 'mcmpAccountId'
     -> ManagementCustomMetricsPatch
-managementCustomMetricsPatch pMcmpCustomMetricId_ pMcmpWebPropertyId_ pMcmpPayload_ pMcmpAccountId_ =
+managementCustomMetricsPatch pMcmpCustomMetricId_ pMcmpWebPropertyId_ pMcmpPayload_ pMcmpAccountId_ = 
     ManagementCustomMetricsPatch'
     { _mcmpCustomMetricId = pMcmpCustomMetricId_
     , _mcmpWebPropertyId = pMcmpWebPropertyId_
     , _mcmpIgnoreCustomDataSourceLinks = False
     , _mcmpPayload = pMcmpPayload_
     , _mcmpAccountId = pMcmpAccountId_
+    , _mcmpFields = Nothing
     }
 
 -- | Custom metric ID for the custom metric to update.
@@ -129,6 +135,11 @@ mcmpAccountId
   = lens _mcmpAccountId
       (\ s a -> s{_mcmpAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcmpFields :: Lens' ManagementCustomMetricsPatch (Maybe Text)
+mcmpFields
+  = lens _mcmpFields (\ s a -> s{_mcmpFields = a})
+
 instance GoogleRequest ManagementCustomMetricsPatch
          where
         type Rs ManagementCustomMetricsPatch = CustomMetric
@@ -138,6 +149,7 @@ instance GoogleRequest ManagementCustomMetricsPatch
           = go _mcmpAccountId _mcmpWebPropertyId
               _mcmpCustomMetricId
               (Just _mcmpIgnoreCustomDataSourceLinks)
+              _mcmpFields
               (Just AltJSON)
               _mcmpPayload
               analyticsService

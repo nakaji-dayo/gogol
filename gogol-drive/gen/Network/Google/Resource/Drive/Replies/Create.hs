@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Replies.Create
     , rcPayload
     , rcFileId
     , rcCommentId
+    , rcFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.replies.create@ method which the
 -- 'RepliesCreate' request conforms to.
@@ -51,16 +52,18 @@ type RepliesCreateResource =
              "comments" :>
                Capture "commentId" Text :>
                  "replies" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Reply :> Post '[JSON] Reply
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Reply :> Post '[JSON] Reply
 
 -- | Creates a new reply to a comment.
 --
 -- /See:/ 'repliesCreate' smart constructor.
 data RepliesCreate = RepliesCreate'
-    { _rcPayload   :: !Reply
-    , _rcFileId    :: !Text
+    { _rcPayload :: !Reply
+    , _rcFileId :: !Text
     , _rcCommentId :: !Text
+    , _rcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepliesCreate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RepliesCreate = RepliesCreate'
 -- * 'rcFileId'
 --
 -- * 'rcCommentId'
+--
+-- * 'rcFields'
 repliesCreate
     :: Reply -- ^ 'rcPayload'
     -> Text -- ^ 'rcFileId'
     -> Text -- ^ 'rcCommentId'
     -> RepliesCreate
-repliesCreate pRcPayload_ pRcFileId_ pRcCommentId_ =
+repliesCreate pRcPayload_ pRcFileId_ pRcCommentId_ = 
     RepliesCreate'
     { _rcPayload = pRcPayload_
     , _rcFileId = pRcFileId_
     , _rcCommentId = pRcCommentId_
+    , _rcFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -98,13 +104,18 @@ rcCommentId :: Lens' RepliesCreate Text
 rcCommentId
   = lens _rcCommentId (\ s a -> s{_rcCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rcFields :: Lens' RepliesCreate (Maybe Text)
+rcFields = lens _rcFields (\ s a -> s{_rcFields = a})
+
 instance GoogleRequest RepliesCreate where
         type Rs RepliesCreate = Reply
         type Scopes RepliesCreate =
              '["https://www.googleapis.com/auth/drive",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient RepliesCreate'{..}
-          = go _rcFileId _rcCommentId (Just AltJSON) _rcPayload
+          = go _rcFileId _rcCommentId _rcFields (Just AltJSON)
+              _rcPayload
               driveService
           where go
                   = buildClient (Proxy :: Proxy RepliesCreateResource)

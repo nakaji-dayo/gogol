@@ -35,10 +35,11 @@ module Network.Google.Resource.DoubleClickSearch.Reports.GetFile
     -- * Request Lenses
     , rgfReportId
     , rgfReportFragment
+    , rgfFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.reports.getFile@ method which the
 -- 'ReportsGetFile' request conforms to.
@@ -49,7 +50,8 @@ type ReportsGetFileResource =
            Capture "reportId" Text :>
              "files" :>
                Capture "reportFragment" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] ()
        :<|>
        "doubleclicksearch" :>
          "v2" :>
@@ -57,15 +59,17 @@ type ReportsGetFileResource =
              Capture "reportId" Text :>
                "files" :>
                  Capture "reportFragment" (Textual Int32) :>
-                   QueryParam "alt" AltMedia :>
-                     Get '[OctetStream] Stream
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Get '[OctetStream] Stream
 
 -- | Downloads a report file encoded in UTF-8.
 --
 -- /See:/ 'reportsGetFile' smart constructor.
 data ReportsGetFile = ReportsGetFile'
-    { _rgfReportId       :: !Text
+    { _rgfReportId :: !Text
     , _rgfReportFragment :: !(Textual Int32)
+    , _rgfFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsGetFile' with the minimum fields required to make a request.
@@ -75,14 +79,17 @@ data ReportsGetFile = ReportsGetFile'
 -- * 'rgfReportId'
 --
 -- * 'rgfReportFragment'
+--
+-- * 'rgfFields'
 reportsGetFile
     :: Text -- ^ 'rgfReportId'
     -> Int32 -- ^ 'rgfReportFragment'
     -> ReportsGetFile
-reportsGetFile pRgfReportId_ pRgfReportFragment_ =
+reportsGetFile pRgfReportId_ pRgfReportFragment_ = 
     ReportsGetFile'
     { _rgfReportId = pRgfReportId_
     , _rgfReportFragment = _Coerce # pRgfReportFragment_
+    , _rgfFields = Nothing
     }
 
 -- | ID of the report.
@@ -97,12 +104,18 @@ rgfReportFragment
       (\ s a -> s{_rgfReportFragment = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rgfFields :: Lens' ReportsGetFile (Maybe Text)
+rgfFields
+  = lens _rgfFields (\ s a -> s{_rgfFields = a})
+
 instance GoogleRequest ReportsGetFile where
         type Rs ReportsGetFile = ()
         type Scopes ReportsGetFile =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient ReportsGetFile'{..}
-          = go _rgfReportId _rgfReportFragment (Just AltJSON)
+          = go _rgfReportId _rgfReportFragment _rgfFields
+              (Just AltJSON)
               doubleClickSearchService
           where go :<|> _
                   = buildClient (Proxy :: Proxy ReportsGetFileResource)
@@ -114,7 +127,8 @@ instance GoogleRequest (MediaDownload ReportsGetFile)
         type Scopes (MediaDownload ReportsGetFile) =
              Scopes ReportsGetFile
         requestClient (MediaDownload ReportsGetFile'{..})
-          = go _rgfReportId _rgfReportFragment (Just AltMedia)
+          = go _rgfReportId _rgfReportFragment _rgfFields
+              (Just AltMedia)
               doubleClickSearchService
           where _ :<|> go
                   = buildClient (Proxy :: Proxy ReportsGetFileResource)

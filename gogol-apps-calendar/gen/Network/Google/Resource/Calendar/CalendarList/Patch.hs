@@ -37,10 +37,11 @@ module Network.Google.Resource.Calendar.CalendarList.Patch
     , clpCalendarId
     , clpPayload
     , clpColorRgbFormat
+    , clpFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendarList.patch@ method which the
 -- 'CalendarListPatch' request conforms to.
@@ -52,18 +53,20 @@ type CalendarListPatchResource =
              "calendarList" :>
                Capture "calendarId" Text :>
                  QueryParam "colorRgbFormat" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CalendarListEntry :>
-                       Patch '[JSON] CalendarListEntry
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CalendarListEntry :>
+                         Patch '[JSON] CalendarListEntry
 
 -- | Updates an entry on the user\'s calendar list. This method supports
 -- patch semantics.
 --
 -- /See:/ 'calendarListPatch' smart constructor.
 data CalendarListPatch = CalendarListPatch'
-    { _clpCalendarId     :: !Text
-    , _clpPayload        :: !CalendarListEntry
+    { _clpCalendarId :: !Text
+    , _clpPayload :: !CalendarListEntry
     , _clpColorRgbFormat :: !(Maybe Bool)
+    , _clpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarListPatch' with the minimum fields required to make a request.
@@ -75,15 +78,18 @@ data CalendarListPatch = CalendarListPatch'
 -- * 'clpPayload'
 --
 -- * 'clpColorRgbFormat'
+--
+-- * 'clpFields'
 calendarListPatch
     :: Text -- ^ 'clpCalendarId'
     -> CalendarListEntry -- ^ 'clpPayload'
     -> CalendarListPatch
-calendarListPatch pClpCalendarId_ pClpPayload_ =
+calendarListPatch pClpCalendarId_ pClpPayload_ = 
     CalendarListPatch'
     { _clpCalendarId = pClpCalendarId_
     , _clpPayload = pClpPayload_
     , _clpColorRgbFormat = Nothing
+    , _clpFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -108,12 +114,18 @@ clpColorRgbFormat
   = lens _clpColorRgbFormat
       (\ s a -> s{_clpColorRgbFormat = a})
 
+-- | Selector specifying which fields to include in a partial response.
+clpFields :: Lens' CalendarListPatch (Maybe Text)
+clpFields
+  = lens _clpFields (\ s a -> s{_clpFields = a})
+
 instance GoogleRequest CalendarListPatch where
         type Rs CalendarListPatch = CalendarListEntry
         type Scopes CalendarListPatch =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarListPatch'{..}
-          = go _clpCalendarId _clpColorRgbFormat (Just AltJSON)
+          = go _clpCalendarId _clpColorRgbFormat _clpFields
+              (Just AltJSON)
               _clpPayload
               appsCalendarService
           where go

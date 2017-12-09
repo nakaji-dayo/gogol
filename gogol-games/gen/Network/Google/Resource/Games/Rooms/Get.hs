@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.Rooms.Get
     , rgConsistencyToken
     , rgRoomId
     , rgLanguage
+    , rgFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.rooms.get@ method which the
 -- 'RoomsGet' request conforms to.
@@ -50,15 +51,17 @@ type RoomsGetResource =
            Capture "roomId" Text :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Room
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Room
 
 -- | Get the data for a room.
 --
 -- /See:/ 'roomsGet' smart constructor.
 data RoomsGet = RoomsGet'
     { _rgConsistencyToken :: !(Maybe (Textual Int64))
-    , _rgRoomId           :: !Text
-    , _rgLanguage         :: !(Maybe Text)
+    , _rgRoomId :: !Text
+    , _rgLanguage :: !(Maybe Text)
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data RoomsGet = RoomsGet'
 -- * 'rgRoomId'
 --
 -- * 'rgLanguage'
+--
+-- * 'rgFields'
 roomsGet
     :: Text -- ^ 'rgRoomId'
     -> RoomsGet
-roomsGet pRgRoomId_ =
+roomsGet pRgRoomId_ = 
     RoomsGet'
     { _rgConsistencyToken = Nothing
     , _rgRoomId = pRgRoomId_
     , _rgLanguage = Nothing
+    , _rgFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -96,6 +102,10 @@ rgLanguage :: Lens' RoomsGet (Maybe Text)
 rgLanguage
   = lens _rgLanguage (\ s a -> s{_rgLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' RoomsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest RoomsGet where
         type Rs RoomsGet = Room
         type Scopes RoomsGet =
@@ -103,6 +113,7 @@ instance GoogleRequest RoomsGet where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RoomsGet'{..}
           = go _rgRoomId _rgConsistencyToken _rgLanguage
+              _rgFields
               (Just AltJSON)
               gamesService
           where go

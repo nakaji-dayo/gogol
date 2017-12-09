@@ -40,11 +40,12 @@ module Network.Google.Resource.CloudUserAccounts.Linux.GetLinuxAccountViews
     , lglavFilter
     , lglavPageToken
     , lglavMaxResults
+    , lglavFields
     , lglavInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.linux.getLinuxAccountViews@ method which the
 -- 'LinuxGetLinuxAccountViews' request conforms to.
@@ -61,21 +62,23 @@ type LinuxGetLinuxAccountViewsResource =
                        QueryParam "filter" Text :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :>
-                               Post '[JSON] LinuxGetLinuxAccountViewsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Post '[JSON] LinuxGetLinuxAccountViewsResponse
 
 -- | Retrieves a list of user accounts for an instance within a specific
 -- project.
 --
 -- /See:/ 'linuxGetLinuxAccountViews' smart constructor.
 data LinuxGetLinuxAccountViews = LinuxGetLinuxAccountViews'
-    { _lglavOrderBy    :: !(Maybe Text)
-    , _lglavProject    :: !Text
-    , _lglavZone       :: !Text
-    , _lglavFilter     :: !(Maybe Text)
-    , _lglavPageToken  :: !(Maybe Text)
+    { _lglavOrderBy :: !(Maybe Text)
+    , _lglavProject :: !Text
+    , _lglavZone :: !Text
+    , _lglavFilter :: !(Maybe Text)
+    , _lglavPageToken :: !(Maybe Text)
     , _lglavMaxResults :: !(Textual Word32)
-    , _lglavInstance   :: !Text
+    , _lglavFields :: !(Maybe Text)
+    , _lglavInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LinuxGetLinuxAccountViews' with the minimum fields required to make a request.
@@ -94,13 +97,15 @@ data LinuxGetLinuxAccountViews = LinuxGetLinuxAccountViews'
 --
 -- * 'lglavMaxResults'
 --
+-- * 'lglavFields'
+--
 -- * 'lglavInstance'
 linuxGetLinuxAccountViews
     :: Text -- ^ 'lglavProject'
     -> Text -- ^ 'lglavZone'
     -> Text -- ^ 'lglavInstance'
     -> LinuxGetLinuxAccountViews
-linuxGetLinuxAccountViews pLglavProject_ pLglavZone_ pLglavInstance_ =
+linuxGetLinuxAccountViews pLglavProject_ pLglavZone_ pLglavInstance_ = 
     LinuxGetLinuxAccountViews'
     { _lglavOrderBy = Nothing
     , _lglavProject = pLglavProject_
@@ -108,6 +113,7 @@ linuxGetLinuxAccountViews pLglavProject_ pLglavZone_ pLglavInstance_ =
     , _lglavFilter = Nothing
     , _lglavPageToken = Nothing
     , _lglavMaxResults = 500
+    , _lglavFields = Nothing
     , _lglavInstance = pLglavInstance_
     }
 
@@ -176,6 +182,11 @@ lglavMaxResults
       (\ s a -> s{_lglavMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lglavFields :: Lens' LinuxGetLinuxAccountViews (Maybe Text)
+lglavFields
+  = lens _lglavFields (\ s a -> s{_lglavFields = a})
+
 -- | The fully-qualified URL of the virtual machine requesting the views.
 lglavInstance :: Lens' LinuxGetLinuxAccountViews Text
 lglavInstance
@@ -197,6 +208,7 @@ instance GoogleRequest LinuxGetLinuxAccountViews
               _lglavFilter
               _lglavPageToken
               (Just _lglavMaxResults)
+              _lglavFields
               (Just AltJSON)
               userAccountsService
           where go

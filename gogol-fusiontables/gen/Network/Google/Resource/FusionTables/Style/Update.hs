@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Style.Update
     , suPayload
     , suStyleId
     , suTableId
+    , suFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.update@ method which the
 -- 'StyleUpdate' request conforms to.
@@ -50,9 +51,10 @@ type StyleUpdateResource =
            Capture "tableId" Text :>
              "styles" :>
                Capture "styleId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] StyleSetting :>
-                     Put '[JSON] StyleSetting
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] StyleSetting :>
+                       Put '[JSON] StyleSetting
 
 -- | Updates an existing style.
 --
@@ -61,6 +63,7 @@ data StyleUpdate = StyleUpdate'
     { _suPayload :: !StyleSetting
     , _suStyleId :: !(Textual Int32)
     , _suTableId :: !Text
+    , _suFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StyleUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data StyleUpdate = StyleUpdate'
 -- * 'suStyleId'
 --
 -- * 'suTableId'
+--
+-- * 'suFields'
 styleUpdate
     :: StyleSetting -- ^ 'suPayload'
     -> Int32 -- ^ 'suStyleId'
     -> Text -- ^ 'suTableId'
     -> StyleUpdate
-styleUpdate pSuPayload_ pSuStyleId_ pSuTableId_ =
+styleUpdate pSuPayload_ pSuStyleId_ pSuTableId_ = 
     StyleUpdate'
     { _suPayload = pSuPayload_
     , _suStyleId = _Coerce # pSuStyleId_
     , _suTableId = pSuTableId_
+    , _suFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -100,12 +106,17 @@ suTableId :: Lens' StyleUpdate Text
 suTableId
   = lens _suTableId (\ s a -> s{_suTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' StyleUpdate (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 instance GoogleRequest StyleUpdate where
         type Rs StyleUpdate = StyleSetting
         type Scopes StyleUpdate =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient StyleUpdate'{..}
-          = go _suTableId _suStyleId (Just AltJSON) _suPayload
+          = go _suTableId _suStyleId _suFields (Just AltJSON)
+              _suPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy StyleUpdateResource)

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.Update
     -- * Request Lenses
     , aguProFileId
     , aguPayload
+    , aguFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.update@ method which the
 -- 'AdvertiserGroupsUpdate' request conforms to.
 type AdvertiserGroupsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AdvertiserGroup :>
-                   Put '[JSON] AdvertiserGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AdvertiserGroup :>
+                     Put '[JSON] AdvertiserGroup
 
 -- | Updates an existing advertiser group.
 --
 -- /See:/ 'advertiserGroupsUpdate' smart constructor.
 data AdvertiserGroupsUpdate = AdvertiserGroupsUpdate'
     { _aguProFileId :: !(Textual Int64)
-    , _aguPayload   :: !AdvertiserGroup
+    , _aguPayload :: !AdvertiserGroup
+    , _aguFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AdvertiserGroupsUpdate = AdvertiserGroupsUpdate'
 -- * 'aguProFileId'
 --
 -- * 'aguPayload'
+--
+-- * 'aguFields'
 advertiserGroupsUpdate
     :: Int64 -- ^ 'aguProFileId'
     -> AdvertiserGroup -- ^ 'aguPayload'
     -> AdvertiserGroupsUpdate
-advertiserGroupsUpdate pAguProFileId_ pAguPayload_ =
+advertiserGroupsUpdate pAguProFileId_ pAguPayload_ = 
     AdvertiserGroupsUpdate'
     { _aguProFileId = _Coerce # pAguProFileId_
     , _aguPayload = pAguPayload_
+    , _aguFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ aguPayload :: Lens' AdvertiserGroupsUpdate AdvertiserGroup
 aguPayload
   = lens _aguPayload (\ s a -> s{_aguPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aguFields :: Lens' AdvertiserGroupsUpdate (Maybe Text)
+aguFields
+  = lens _aguFields (\ s a -> s{_aguFields = a})
+
 instance GoogleRequest AdvertiserGroupsUpdate where
         type Rs AdvertiserGroupsUpdate = AdvertiserGroup
         type Scopes AdvertiserGroupsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertiserGroupsUpdate'{..}
-          = go _aguProFileId (Just AltJSON) _aguPayload
+          = go _aguProFileId _aguFields (Just AltJSON)
+              _aguPayload
               dFAReportingService
           where go
                   = buildClient

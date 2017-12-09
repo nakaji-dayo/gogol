@@ -37,10 +37,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdUnits.Delete
     , aaudAdUnitId
     , aaudAdClientId
     , aaudAccountId
+    , aaudFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adunits.delete@ method which the
 -- 'AccountsAdUnitsDelete' request conforms to.
@@ -53,16 +54,18 @@ type AccountsAdUnitsDeleteResource =
                Capture "adClientId" Text :>
                  "adunits" :>
                    Capture "adUnitId" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] AdUnit
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] AdUnit
 
 -- | Delete the specified ad unit from the specified publisher AdSense
 -- account.
 --
 -- /See:/ 'accountsAdUnitsDelete' smart constructor.
 data AccountsAdUnitsDelete = AccountsAdUnitsDelete'
-    { _aaudAdUnitId   :: !Text
+    { _aaudAdUnitId :: !Text
     , _aaudAdClientId :: !Text
-    , _aaudAccountId  :: !Text
+    , _aaudAccountId :: !Text
+    , _aaudFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsDelete' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data AccountsAdUnitsDelete = AccountsAdUnitsDelete'
 -- * 'aaudAdClientId'
 --
 -- * 'aaudAccountId'
+--
+-- * 'aaudFields'
 accountsAdUnitsDelete
     :: Text -- ^ 'aaudAdUnitId'
     -> Text -- ^ 'aaudAdClientId'
     -> Text -- ^ 'aaudAccountId'
     -> AccountsAdUnitsDelete
-accountsAdUnitsDelete pAaudAdUnitId_ pAaudAdClientId_ pAaudAccountId_ =
+accountsAdUnitsDelete pAaudAdUnitId_ pAaudAdClientId_ pAaudAccountId_ = 
     AccountsAdUnitsDelete'
     { _aaudAdUnitId = pAaudAdUnitId_
     , _aaudAdClientId = pAaudAdClientId_
     , _aaudAccountId = pAaudAccountId_
+    , _aaudFields = Nothing
     }
 
 -- | Ad unit to delete.
@@ -103,12 +109,18 @@ aaudAccountId
   = lens _aaudAccountId
       (\ s a -> s{_aaudAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aaudFields :: Lens' AccountsAdUnitsDelete (Maybe Text)
+aaudFields
+  = lens _aaudFields (\ s a -> s{_aaudFields = a})
+
 instance GoogleRequest AccountsAdUnitsDelete where
         type Rs AccountsAdUnitsDelete = AdUnit
         type Scopes AccountsAdUnitsDelete =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient AccountsAdUnitsDelete'{..}
           = go _aaudAccountId _aaudAdClientId _aaudAdUnitId
+              _aaudFields
               (Just AltJSON)
               adSenseHostService
           where go

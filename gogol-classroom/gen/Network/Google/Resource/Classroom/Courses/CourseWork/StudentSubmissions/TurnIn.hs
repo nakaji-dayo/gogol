@@ -53,12 +53,13 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.StudentSubmissions.T
     , ccwsstiPayload
     , ccwsstiBearerToken
     , ccwsstiId
+    , ccwsstiFields
     , ccwsstiCallback
     , ccwsstiCourseWorkId
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.studentSubmissions.turnIn@ method which the
 -- 'CoursesCourseWorkStudentSubmissionsTurnIn' request conforms to.
@@ -71,17 +72,18 @@ type CoursesCourseWorkStudentSubmissionsTurnInResource
              Capture "courseWorkId" Text :>
                "studentSubmissions" :>
                  CaptureMode "id" "turnIn" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON]
-                                     TurnInStudentSubmissionRequest
-                                     :> Post '[JSON] Empty
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON]
+                                       TurnInStudentSubmissionRequest
+                                       :> Post '[JSON] Empty
 
 -- | Turns in a student submission. Turning in a student submission transfers
 -- ownership of attached Drive files to the teacher and may also update the
@@ -98,17 +100,18 @@ type CoursesCourseWorkStudentSubmissionsTurnInResource
 --
 -- /See:/ 'coursesCourseWorkStudentSubmissionsTurnIn' smart constructor.
 data CoursesCourseWorkStudentSubmissionsTurnIn = CoursesCourseWorkStudentSubmissionsTurnIn'
-    { _ccwsstiXgafv          :: !(Maybe Text)
+    { _ccwsstiXgafv :: !(Maybe Xgafv)
     , _ccwsstiUploadProtocol :: !(Maybe Text)
-    , _ccwsstiPp             :: !Bool
-    , _ccwsstiCourseId       :: !Text
-    , _ccwsstiAccessToken    :: !(Maybe Text)
-    , _ccwsstiUploadType     :: !(Maybe Text)
-    , _ccwsstiPayload        :: !TurnInStudentSubmissionRequest
-    , _ccwsstiBearerToken    :: !(Maybe Text)
-    , _ccwsstiId             :: !Text
-    , _ccwsstiCallback       :: !(Maybe Text)
-    , _ccwsstiCourseWorkId   :: !Text
+    , _ccwsstiPp :: !Bool
+    , _ccwsstiCourseId :: !Text
+    , _ccwsstiAccessToken :: !(Maybe Text)
+    , _ccwsstiUploadType :: !(Maybe Text)
+    , _ccwsstiPayload :: !TurnInStudentSubmissionRequest
+    , _ccwsstiBearerToken :: !(Maybe Text)
+    , _ccwsstiId :: !Text
+    , _ccwsstiFields :: !(Maybe Text)
+    , _ccwsstiCallback :: !(Maybe Text)
+    , _ccwsstiCourseWorkId :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkStudentSubmissionsTurnIn' with the minimum fields required to make a request.
@@ -133,6 +136,8 @@ data CoursesCourseWorkStudentSubmissionsTurnIn = CoursesCourseWorkStudentSubmiss
 --
 -- * 'ccwsstiId'
 --
+-- * 'ccwsstiFields'
+--
 -- * 'ccwsstiCallback'
 --
 -- * 'ccwsstiCourseWorkId'
@@ -142,7 +147,7 @@ coursesCourseWorkStudentSubmissionsTurnIn
     -> Text -- ^ 'ccwsstiId'
     -> Text -- ^ 'ccwsstiCourseWorkId'
     -> CoursesCourseWorkStudentSubmissionsTurnIn
-coursesCourseWorkStudentSubmissionsTurnIn pCcwsstiCourseId_ pCcwsstiPayload_ pCcwsstiId_ pCcwsstiCourseWorkId_ =
+coursesCourseWorkStudentSubmissionsTurnIn pCcwsstiCourseId_ pCcwsstiPayload_ pCcwsstiId_ pCcwsstiCourseWorkId_ = 
     CoursesCourseWorkStudentSubmissionsTurnIn'
     { _ccwsstiXgafv = Nothing
     , _ccwsstiUploadProtocol = Nothing
@@ -153,12 +158,13 @@ coursesCourseWorkStudentSubmissionsTurnIn pCcwsstiCourseId_ pCcwsstiPayload_ pCc
     , _ccwsstiPayload = pCcwsstiPayload_
     , _ccwsstiBearerToken = Nothing
     , _ccwsstiId = pCcwsstiId_
+    , _ccwsstiFields = Nothing
     , _ccwsstiCallback = Nothing
     , _ccwsstiCourseWorkId = pCcwsstiCourseWorkId_
     }
 
 -- | V1 error format.
-ccwsstiXgafv :: Lens' CoursesCourseWorkStudentSubmissionsTurnIn (Maybe Text)
+ccwsstiXgafv :: Lens' CoursesCourseWorkStudentSubmissionsTurnIn (Maybe Xgafv)
 ccwsstiXgafv
   = lens _ccwsstiXgafv (\ s a -> s{_ccwsstiXgafv = a})
 
@@ -209,6 +215,12 @@ ccwsstiId :: Lens' CoursesCourseWorkStudentSubmissionsTurnIn Text
 ccwsstiId
   = lens _ccwsstiId (\ s a -> s{_ccwsstiId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwsstiFields :: Lens' CoursesCourseWorkStudentSubmissionsTurnIn (Maybe Text)
+ccwsstiFields
+  = lens _ccwsstiFields
+      (\ s a -> s{_ccwsstiFields = a})
+
 -- | JSONP
 ccwsstiCallback :: Lens' CoursesCourseWorkStudentSubmissionsTurnIn (Maybe Text)
 ccwsstiCallback
@@ -238,6 +250,7 @@ instance GoogleRequest
               _ccwsstiUploadType
               _ccwsstiBearerToken
               _ccwsstiCallback
+              _ccwsstiFields
               (Just AltJSON)
               _ccwsstiPayload
               classroomService

@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.OrderDocuments.Get
     , odgProFileId
     , odgId
     , odgProjectId
+    , odgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.orderDocuments.get@ method which the
 -- 'OrderDocumentsGet' request conforms to.
 type OrderDocumentsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
                Capture "projectId" (Textual Int64) :>
                  "orderDocuments" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] OrderDocument
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] OrderDocument
 
 -- | Gets one order document by ID.
 --
 -- /See:/ 'orderDocumentsGet' smart constructor.
 data OrderDocumentsGet = OrderDocumentsGet'
     { _odgProFileId :: !(Textual Int64)
-    , _odgId        :: !(Textual Int64)
+    , _odgId :: !(Textual Int64)
     , _odgProjectId :: !(Textual Int64)
+    , _odgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrderDocumentsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data OrderDocumentsGet = OrderDocumentsGet'
 -- * 'odgId'
 --
 -- * 'odgProjectId'
+--
+-- * 'odgFields'
 orderDocumentsGet
     :: Int64 -- ^ 'odgProFileId'
     -> Int64 -- ^ 'odgId'
     -> Int64 -- ^ 'odgProjectId'
     -> OrderDocumentsGet
-orderDocumentsGet pOdgProFileId_ pOdgId_ pOdgProjectId_ =
+orderDocumentsGet pOdgProFileId_ pOdgId_ pOdgProjectId_ = 
     OrderDocumentsGet'
     { _odgProFileId = _Coerce # pOdgProFileId_
     , _odgId = _Coerce # pOdgId_
     , _odgProjectId = _Coerce # pOdgProjectId_
+    , _odgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -101,12 +107,17 @@ odgProjectId
   = lens _odgProjectId (\ s a -> s{_odgProjectId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+odgFields :: Lens' OrderDocumentsGet (Maybe Text)
+odgFields
+  = lens _odgFields (\ s a -> s{_odgFields = a})
+
 instance GoogleRequest OrderDocumentsGet where
         type Rs OrderDocumentsGet = OrderDocument
         type Scopes OrderDocumentsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient OrderDocumentsGet'{..}
-          = go _odgProFileId _odgProjectId _odgId
+          = go _odgProFileId _odgProjectId _odgId _odgFields
               (Just AltJSON)
               dFAReportingService
           where go

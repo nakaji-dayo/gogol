@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Patc
     -- * Request Lenses
     , acpAchievementId
     , acpPayload
+    , acpFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.achievementConfigurations.patch@ method which the
 -- 'AchievementConfigurationsPatch' request conforms to.
@@ -48,9 +49,10 @@ type AchievementConfigurationsPatchResource =
        "v1configuration" :>
          "achievements" :>
            Capture "achievementId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] AchievementConfiguration :>
-                 Patch '[JSON] AchievementConfiguration
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] AchievementConfiguration :>
+                   Patch '[JSON] AchievementConfiguration
 
 -- | Update the metadata of the achievement configuration with the given ID.
 -- This method supports patch semantics.
@@ -58,7 +60,8 @@ type AchievementConfigurationsPatchResource =
 -- /See:/ 'achievementConfigurationsPatch' smart constructor.
 data AchievementConfigurationsPatch = AchievementConfigurationsPatch'
     { _acpAchievementId :: !Text
-    , _acpPayload       :: !AchievementConfiguration
+    , _acpPayload :: !AchievementConfiguration
+    , _acpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationsPatch' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data AchievementConfigurationsPatch = AchievementConfigurationsPatch'
 -- * 'acpAchievementId'
 --
 -- * 'acpPayload'
+--
+-- * 'acpFields'
 achievementConfigurationsPatch
     :: Text -- ^ 'acpAchievementId'
     -> AchievementConfiguration -- ^ 'acpPayload'
     -> AchievementConfigurationsPatch
-achievementConfigurationsPatch pAcpAchievementId_ pAcpPayload_ =
+achievementConfigurationsPatch pAcpAchievementId_ pAcpPayload_ = 
     AchievementConfigurationsPatch'
     { _acpAchievementId = pAcpAchievementId_
     , _acpPayload = pAcpPayload_
+    , _acpFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -89,6 +95,11 @@ acpPayload :: Lens' AchievementConfigurationsPatch AchievementConfiguration
 acpPayload
   = lens _acpPayload (\ s a -> s{_acpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acpFields :: Lens' AchievementConfigurationsPatch (Maybe Text)
+acpFields
+  = lens _acpFields (\ s a -> s{_acpFields = a})
+
 instance GoogleRequest AchievementConfigurationsPatch
          where
         type Rs AchievementConfigurationsPatch =
@@ -96,7 +107,8 @@ instance GoogleRequest AchievementConfigurationsPatch
         type Scopes AchievementConfigurationsPatch =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient AchievementConfigurationsPatch'{..}
-          = go _acpAchievementId (Just AltJSON) _acpPayload
+          = go _acpAchievementId _acpFields (Just AltJSON)
+              _acpPayload
               gamesConfigurationService
           where go
                   = buildClient

@@ -40,11 +40,12 @@ module Network.Google.Resource.Language.Documents.AnalyzeSentiment
     , dasUploadType
     , dasPayload
     , dasBearerToken
+    , dasFields
     , dasCallback
     ) where
 
-import           Network.Google.Language.Types
-import           Network.Google.Prelude
+import Network.Google.Language.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @language.documents.analyzeSentiment@ method which the
 -- 'DocumentsAnalyzeSentiment' request conforms to.
@@ -58,22 +59,24 @@ type DocumentsAnalyzeSentimentResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AnalyzeSentimentRequest :>
-                           Post '[JSON] AnalyzeSentimentResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AnalyzeSentimentRequest :>
+                             Post '[JSON] AnalyzeSentimentResponse
 
 -- | Analyzes the sentiment of the provided text.
 --
 -- /See:/ 'documentsAnalyzeSentiment' smart constructor.
 data DocumentsAnalyzeSentiment = DocumentsAnalyzeSentiment'
-    { _dasXgafv          :: !(Maybe Xgafv)
+    { _dasXgafv :: !(Maybe Xgafv)
     , _dasUploadProtocol :: !(Maybe Text)
-    , _dasPp             :: !Bool
-    , _dasAccessToken    :: !(Maybe Text)
-    , _dasUploadType     :: !(Maybe Text)
-    , _dasPayload        :: !AnalyzeSentimentRequest
-    , _dasBearerToken    :: !(Maybe Text)
-    , _dasCallback       :: !(Maybe Text)
+    , _dasPp :: !Bool
+    , _dasAccessToken :: !(Maybe Text)
+    , _dasUploadType :: !(Maybe Text)
+    , _dasPayload :: !AnalyzeSentimentRequest
+    , _dasBearerToken :: !(Maybe Text)
+    , _dasFields :: !(Maybe Text)
+    , _dasCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DocumentsAnalyzeSentiment' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data DocumentsAnalyzeSentiment = DocumentsAnalyzeSentiment'
 --
 -- * 'dasBearerToken'
 --
+-- * 'dasFields'
+--
 -- * 'dasCallback'
 documentsAnalyzeSentiment
     :: AnalyzeSentimentRequest -- ^ 'dasPayload'
     -> DocumentsAnalyzeSentiment
-documentsAnalyzeSentiment pDasPayload_ =
+documentsAnalyzeSentiment pDasPayload_ = 
     DocumentsAnalyzeSentiment'
     { _dasXgafv = Nothing
     , _dasUploadProtocol = Nothing
@@ -107,6 +112,7 @@ documentsAnalyzeSentiment pDasPayload_ =
     , _dasUploadType = Nothing
     , _dasPayload = pDasPayload_
     , _dasBearerToken = Nothing
+    , _dasFields = Nothing
     , _dasCallback = Nothing
     }
 
@@ -147,6 +153,11 @@ dasBearerToken
   = lens _dasBearerToken
       (\ s a -> s{_dasBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dasFields :: Lens' DocumentsAnalyzeSentiment (Maybe Text)
+dasFields
+  = lens _dasFields (\ s a -> s{_dasFields = a})
+
 -- | JSONP
 dasCallback :: Lens' DocumentsAnalyzeSentiment (Maybe Text)
 dasCallback
@@ -157,13 +168,15 @@ instance GoogleRequest DocumentsAnalyzeSentiment
         type Rs DocumentsAnalyzeSentiment =
              AnalyzeSentimentResponse
         type Scopes DocumentsAnalyzeSentiment =
-             '["https://www.googleapis.com/auth/cloud-platform"]
+             '["https://www.googleapis.com/auth/cloud-language",
+               "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DocumentsAnalyzeSentiment'{..}
           = go _dasXgafv _dasUploadProtocol (Just _dasPp)
               _dasAccessToken
               _dasUploadType
               _dasBearerToken
               _dasCallback
+              _dasFields
               (Just AltJSON)
               _dasPayload
               languageService

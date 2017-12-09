@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.ContentCategories.Insert
     -- * Request Lenses
     , cciProFileId
     , cciPayload
+    , cciFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.contentCategories.insert@ method which the
 -- 'ContentCategoriesInsert' request conforms to.
 type ContentCategoriesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "contentCategories" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ContentCategory :>
-                   Post '[JSON] ContentCategory
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ContentCategory :>
+                     Post '[JSON] ContentCategory
 
 -- | Inserts a new content category.
 --
 -- /See:/ 'contentCategoriesInsert' smart constructor.
 data ContentCategoriesInsert = ContentCategoriesInsert'
     { _cciProFileId :: !(Textual Int64)
-    , _cciPayload   :: !ContentCategory
+    , _cciPayload :: !ContentCategory
+    , _cciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategoriesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ContentCategoriesInsert = ContentCategoriesInsert'
 -- * 'cciProFileId'
 --
 -- * 'cciPayload'
+--
+-- * 'cciFields'
 contentCategoriesInsert
     :: Int64 -- ^ 'cciProFileId'
     -> ContentCategory -- ^ 'cciPayload'
     -> ContentCategoriesInsert
-contentCategoriesInsert pCciProFileId_ pCciPayload_ =
+contentCategoriesInsert pCciProFileId_ pCciPayload_ = 
     ContentCategoriesInsert'
     { _cciProFileId = _Coerce # pCciProFileId_
     , _cciPayload = pCciPayload_
+    , _cciFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cciPayload :: Lens' ContentCategoriesInsert ContentCategory
 cciPayload
   = lens _cciPayload (\ s a -> s{_cciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cciFields :: Lens' ContentCategoriesInsert (Maybe Text)
+cciFields
+  = lens _cciFields (\ s a -> s{_cciFields = a})
+
 instance GoogleRequest ContentCategoriesInsert where
         type Rs ContentCategoriesInsert = ContentCategory
         type Scopes ContentCategoriesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ContentCategoriesInsert'{..}
-          = go _cciProFileId (Just AltJSON) _cciPayload
+          = go _cciProFileId _cciFields (Just AltJSON)
+              _cciPayload
               dFAReportingService
           where go
                   = buildClient

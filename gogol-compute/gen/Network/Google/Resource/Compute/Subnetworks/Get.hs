@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.Subnetworks.Get
     , sgProject
     , sgSubnetwork
     , sgRegion
+    , sgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.subnetworks.get@ method which the
 -- 'SubnetworksGet' request conforms to.
@@ -53,16 +54,18 @@ type SubnetworksGetResource =
                Capture "region" Text :>
                  "subnetworks" :>
                    Capture "subnetwork" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Subnetwork
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Subnetwork
 
 -- | Returns the specified subnetwork. Get a list of available subnetworks
 -- list() request.
 --
 -- /See:/ 'subnetworksGet' smart constructor.
 data SubnetworksGet = SubnetworksGet'
-    { _sgProject    :: !Text
+    { _sgProject :: !Text
     , _sgSubnetwork :: !Text
-    , _sgRegion     :: !Text
+    , _sgRegion :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubnetworksGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data SubnetworksGet = SubnetworksGet'
 -- * 'sgSubnetwork'
 --
 -- * 'sgRegion'
+--
+-- * 'sgFields'
 subnetworksGet
     :: Text -- ^ 'sgProject'
     -> Text -- ^ 'sgSubnetwork'
     -> Text -- ^ 'sgRegion'
     -> SubnetworksGet
-subnetworksGet pSgProject_ pSgSubnetwork_ pSgRegion_ =
+subnetworksGet pSgProject_ pSgSubnetwork_ pSgRegion_ = 
     SubnetworksGet'
     { _sgProject = pSgProject_
     , _sgSubnetwork = pSgSubnetwork_
     , _sgRegion = pSgRegion_
+    , _sgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -100,6 +106,10 @@ sgSubnetwork
 sgRegion :: Lens' SubnetworksGet Text
 sgRegion = lens _sgRegion (\ s a -> s{_sgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SubnetworksGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SubnetworksGet where
         type Rs SubnetworksGet = Subnetwork
         type Scopes SubnetworksGet =
@@ -107,7 +117,7 @@ instance GoogleRequest SubnetworksGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient SubnetworksGet'{..}
-          = go _sgProject _sgRegion _sgSubnetwork
+          = go _sgProject _sgRegion _sgSubnetwork _sgFields
               (Just AltJSON)
               computeService
           where go

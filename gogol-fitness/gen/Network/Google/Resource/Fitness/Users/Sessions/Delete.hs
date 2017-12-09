@@ -36,10 +36,11 @@ module Network.Google.Resource.Fitness.Users.Sessions.Delete
     , usdUserId
     , usdCurrentTimeMillis
     , usdSessionId
+    , usdFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.sessions.delete@ method which the
 -- 'UsersSessionsDelete' request conforms to.
@@ -51,15 +52,17 @@ type UsersSessionsDeleteResource =
              "sessions" :>
                Capture "sessionId" Text :>
                  QueryParam "currentTimeMillis" (Textual Int64) :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a session specified by the given session ID.
 --
 -- /See:/ 'usersSessionsDelete' smart constructor.
 data UsersSessionsDelete = UsersSessionsDelete'
-    { _usdUserId            :: !Text
+    { _usdUserId :: !Text
     , _usdCurrentTimeMillis :: !(Maybe (Textual Int64))
-    , _usdSessionId         :: !Text
+    , _usdSessionId :: !Text
+    , _usdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSessionsDelete' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data UsersSessionsDelete = UsersSessionsDelete'
 -- * 'usdCurrentTimeMillis'
 --
 -- * 'usdSessionId'
+--
+-- * 'usdFields'
 usersSessionsDelete
     :: Text -- ^ 'usdUserId'
     -> Text -- ^ 'usdSessionId'
     -> UsersSessionsDelete
-usersSessionsDelete pUsdUserId_ pUsdSessionId_ =
+usersSessionsDelete pUsdUserId_ pUsdSessionId_ = 
     UsersSessionsDelete'
     { _usdUserId = pUsdUserId_
     , _usdCurrentTimeMillis = Nothing
     , _usdSessionId = pUsdSessionId_
+    , _usdFields = Nothing
     }
 
 -- | Delete a session for the person identified. Use me to indicate the
@@ -100,12 +106,18 @@ usdSessionId :: Lens' UsersSessionsDelete Text
 usdSessionId
   = lens _usdSessionId (\ s a -> s{_usdSessionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usdFields :: Lens' UsersSessionsDelete (Maybe Text)
+usdFields
+  = lens _usdFields (\ s a -> s{_usdFields = a})
+
 instance GoogleRequest UsersSessionsDelete where
         type Rs UsersSessionsDelete = ()
         type Scopes UsersSessionsDelete =
              '["https://www.googleapis.com/auth/fitness.activity.write"]
         requestClient UsersSessionsDelete'{..}
           = go _usdUserId _usdSessionId _usdCurrentTimeMillis
+              _usdFields
               (Just AltJSON)
               fitnessService
           where go

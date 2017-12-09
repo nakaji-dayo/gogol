@@ -21,6 +21,9 @@ module Network.Google.DoubleClickBids
     -- * Service Configuration
       doubleClickBidsService
 
+    -- * OAuth Scopes
+    , doubleClickBidManagerScope
+
     -- * API Declaration
     , DoubleClickBidsAPI
 
@@ -268,17 +271,17 @@ module Network.Google.DoubleClickBids
     , ReportStatusFormat (..)
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.DoubleClickBidManager.Lineitems.Downloadlineitems
-import           Network.Google.Resource.DoubleClickBidManager.Lineitems.Uploadlineitems
-import           Network.Google.Resource.DoubleClickBidManager.Queries.CreateQuery
-import           Network.Google.Resource.DoubleClickBidManager.Queries.DeleteQuery
-import           Network.Google.Resource.DoubleClickBidManager.Queries.GetQuery
-import           Network.Google.Resource.DoubleClickBidManager.Queries.Listqueries
-import           Network.Google.Resource.DoubleClickBidManager.Queries.RunQuery
-import           Network.Google.Resource.DoubleClickBidManager.Reports.Listreports
-import           Network.Google.Resource.DoubleClickBidManager.Sdf.Download
+import Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Resource.DoubleClickBidManager.Lineitems.Downloadlineitems
+import Network.Google.Resource.DoubleClickBidManager.Lineitems.Uploadlineitems
+import Network.Google.Resource.DoubleClickBidManager.Queries.CreateQuery
+import Network.Google.Resource.DoubleClickBidManager.Queries.DeleteQuery
+import Network.Google.Resource.DoubleClickBidManager.Queries.GetQuery
+import Network.Google.Resource.DoubleClickBidManager.Queries.Listqueries
+import Network.Google.Resource.DoubleClickBidManager.Queries.RunQuery
+import Network.Google.Resource.DoubleClickBidManager.Reports.Listreports
+import Network.Google.Resource.DoubleClickBidManager.Sdf.Download
 
 {- $resources
 TODO

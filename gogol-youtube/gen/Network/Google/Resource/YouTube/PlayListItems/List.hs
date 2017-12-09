@@ -42,10 +42,11 @@ module Network.Google.Resource.YouTube.PlayListItems.List
     , plilPageToken
     , plilPlayListId
     , plilMaxResults
+    , plilFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlistItems.list@ method which the
 -- 'PlayListItemsList' request conforms to.
@@ -60,8 +61,9 @@ type PlayListItemsListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "playlistId" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] PlayListItemListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] PlayListItemListResponse
 
 -- | Returns a collection of playlist items that match the API request
 -- parameters. You can retrieve all of the playlist items in a specified
@@ -69,13 +71,14 @@ type PlayListItemsListResource =
 --
 -- /See:/ 'playListItemsList' smart constructor.
 data PlayListItemsList = PlayListItemsList'
-    { _plilPart                   :: !Text
+    { _plilPart :: !Text
     , _plilOnBehalfOfContentOwner :: !(Maybe Text)
-    , _plilVideoId                :: !(Maybe Text)
-    , _plilId                     :: !(Maybe Text)
-    , _plilPageToken              :: !(Maybe Text)
-    , _plilPlayListId             :: !(Maybe Text)
-    , _plilMaxResults             :: !(Textual Word32)
+    , _plilVideoId :: !(Maybe Text)
+    , _plilId :: !(Maybe Text)
+    , _plilPageToken :: !(Maybe Text)
+    , _plilPlayListId :: !(Maybe Text)
+    , _plilMaxResults :: !(Textual Word32)
+    , _plilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListItemsList' with the minimum fields required to make a request.
@@ -95,10 +98,12 @@ data PlayListItemsList = PlayListItemsList'
 -- * 'plilPlayListId'
 --
 -- * 'plilMaxResults'
+--
+-- * 'plilFields'
 playListItemsList
     :: Text -- ^ 'plilPart'
     -> PlayListItemsList
-playListItemsList pPlilPart_ =
+playListItemsList pPlilPart_ = 
     PlayListItemsList'
     { _plilPart = pPlilPart_
     , _plilOnBehalfOfContentOwner = Nothing
@@ -107,6 +112,7 @@ playListItemsList pPlilPart_ =
     , _plilPageToken = Nothing
     , _plilPlayListId = Nothing
     , _plilMaxResults = 5
+    , _plilFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -171,6 +177,11 @@ plilMaxResults
       (\ s a -> s{_plilMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plilFields :: Lens' PlayListItemsList (Maybe Text)
+plilFields
+  = lens _plilFields (\ s a -> s{_plilFields = a})
+
 instance GoogleRequest PlayListItemsList where
         type Rs PlayListItemsList = PlayListItemListResponse
         type Scopes PlayListItemsList =
@@ -185,6 +196,7 @@ instance GoogleRequest PlayListItemsList where
               _plilPageToken
               _plilPlayListId
               (Just _plilMaxResults)
+              _plilFields
               (Just AltJSON)
               youTubeService
           where go

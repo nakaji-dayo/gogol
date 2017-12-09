@@ -37,10 +37,11 @@ module Network.Google.Resource.PlusDomains.Circles.AddPeople
     , capEmail
     , capUserId
     , capCircleId
+    , capFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.circles.addPeople@ method which the
 -- 'CirclesAddPeople' request conforms to.
@@ -52,16 +53,18 @@ type CirclesAddPeopleResource =
              "people" :>
                QueryParams "email" Text :>
                  QueryParams "userId" Text :>
-                   QueryParam "alt" AltJSON :> Put '[JSON] Circle
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Put '[JSON] Circle
 
 -- | Add a person to a circle. Google+ limits certain circle operations,
 -- including the number of circle adds. Learn More.
 --
 -- /See:/ 'circlesAddPeople' smart constructor.
 data CirclesAddPeople = CirclesAddPeople'
-    { _capEmail    :: !(Maybe [Text])
-    , _capUserId   :: !(Maybe [Text])
+    { _capEmail :: !(Maybe [Text])
+    , _capUserId :: !(Maybe [Text])
     , _capCircleId :: !Text
+    , _capFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CirclesAddPeople' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data CirclesAddPeople = CirclesAddPeople'
 -- * 'capUserId'
 --
 -- * 'capCircleId'
+--
+-- * 'capFields'
 circlesAddPeople
     :: Text -- ^ 'capCircleId'
     -> CirclesAddPeople
-circlesAddPeople pCapCircleId_ =
+circlesAddPeople pCapCircleId_ = 
     CirclesAddPeople'
     { _capEmail = Nothing
     , _capUserId = Nothing
     , _capCircleId = pCapCircleId_
+    , _capFields = Nothing
     }
 
 -- | Email of the people to add to the circle. Optional, can be repeated.
@@ -102,6 +108,11 @@ capCircleId :: Lens' CirclesAddPeople Text
 capCircleId
   = lens _capCircleId (\ s a -> s{_capCircleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+capFields :: Lens' CirclesAddPeople (Maybe Text)
+capFields
+  = lens _capFields (\ s a -> s{_capFields = a})
+
 instance GoogleRequest CirclesAddPeople where
         type Rs CirclesAddPeople = Circle
         type Scopes CirclesAddPeople =
@@ -110,6 +121,7 @@ instance GoogleRequest CirclesAddPeople where
         requestClient CirclesAddPeople'{..}
           = go _capCircleId (_capEmail ^. _Default)
               (_capUserId ^. _Default)
+              _capFields
               (Just AltJSON)
               plusDomainsService
           where go

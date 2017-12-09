@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.AnnotationSets.Search
     , assUploadType
     , assPayload
     , assBearerToken
+    , assFields
     , assCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotationsets.search@ method which the
 -- 'AnnotationSetsSearch' request conforms to.
@@ -64,9 +65,10 @@ type AnnotationSetsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchAnnotationSetsRequest :>
-                             Post '[JSON] SearchAnnotationSetsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchAnnotationSetsRequest :>
+                               Post '[JSON] SearchAnnotationSetsResponse
 
 -- | Searches for annotation sets that match the given criteria. Annotation
 -- sets are returned in an unspecified order. This order is consistent,
@@ -77,14 +79,15 @@ type AnnotationSetsSearchResource =
 --
 -- /See:/ 'annotationSetsSearch' smart constructor.
 data AnnotationSetsSearch = AnnotationSetsSearch'
-    { _assXgafv          :: !(Maybe Xgafv)
+    { _assXgafv :: !(Maybe Xgafv)
     , _assUploadProtocol :: !(Maybe Text)
-    , _assPp             :: !Bool
-    , _assAccessToken    :: !(Maybe Text)
-    , _assUploadType     :: !(Maybe Text)
-    , _assPayload        :: !SearchAnnotationSetsRequest
-    , _assBearerToken    :: !(Maybe Text)
-    , _assCallback       :: !(Maybe Text)
+    , _assPp :: !Bool
+    , _assAccessToken :: !(Maybe Text)
+    , _assUploadType :: !(Maybe Text)
+    , _assPayload :: !SearchAnnotationSetsRequest
+    , _assBearerToken :: !(Maybe Text)
+    , _assFields :: !(Maybe Text)
+    , _assCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationSetsSearch' with the minimum fields required to make a request.
@@ -105,11 +108,13 @@ data AnnotationSetsSearch = AnnotationSetsSearch'
 --
 -- * 'assBearerToken'
 --
+-- * 'assFields'
+--
 -- * 'assCallback'
 annotationSetsSearch
     :: SearchAnnotationSetsRequest -- ^ 'assPayload'
     -> AnnotationSetsSearch
-annotationSetsSearch pAssPayload_ =
+annotationSetsSearch pAssPayload_ = 
     AnnotationSetsSearch'
     { _assXgafv = Nothing
     , _assUploadProtocol = Nothing
@@ -118,6 +123,7 @@ annotationSetsSearch pAssPayload_ =
     , _assUploadType = Nothing
     , _assPayload = pAssPayload_
     , _assBearerToken = Nothing
+    , _assFields = Nothing
     , _assCallback = Nothing
     }
 
@@ -158,6 +164,11 @@ assBearerToken
   = lens _assBearerToken
       (\ s a -> s{_assBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+assFields :: Lens' AnnotationSetsSearch (Maybe Text)
+assFields
+  = lens _assFields (\ s a -> s{_assFields = a})
+
 -- | JSONP
 assCallback :: Lens' AnnotationSetsSearch (Maybe Text)
 assCallback
@@ -176,6 +187,7 @@ instance GoogleRequest AnnotationSetsSearch where
               _assUploadType
               _assBearerToken
               _assCallback
+              _assFields
               (Just AltJSON)
               _assPayload
               genomicsService

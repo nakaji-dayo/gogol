@@ -36,10 +36,11 @@ module Network.Google.Resource.ResourceViews.ZoneOperations.Get
     , zogProject
     , zogOperation
     , zogZone
+    , zogFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneOperations.get@ method which the
 -- 'ZoneOperationsGet' request conforms to.
@@ -52,15 +53,17 @@ type ZoneOperationsGetResource =
                Capture "zone" Text :>
                  "operations" :>
                    Capture "operation" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Retrieves the specified zone-specific operation resource.
 --
 -- /See:/ 'zoneOperationsGet' smart constructor.
 data ZoneOperationsGet = ZoneOperationsGet'
-    { _zogProject   :: !Text
+    { _zogProject :: !Text
     , _zogOperation :: !Text
-    , _zogZone      :: !Text
+    , _zogZone :: !Text
+    , _zogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneOperationsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data ZoneOperationsGet = ZoneOperationsGet'
 -- * 'zogOperation'
 --
 -- * 'zogZone'
+--
+-- * 'zogFields'
 zoneOperationsGet
     :: Text -- ^ 'zogProject'
     -> Text -- ^ 'zogOperation'
     -> Text -- ^ 'zogZone'
     -> ZoneOperationsGet
-zoneOperationsGet pZogProject_ pZogOperation_ pZogZone_ =
+zoneOperationsGet pZogProject_ pZogOperation_ pZogZone_ = 
     ZoneOperationsGet'
     { _zogProject = pZogProject_
     , _zogOperation = pZogOperation_
     , _zogZone = pZogZone_
+    , _zogFields = Nothing
     }
 
 -- | Name of the project scoping this request.
@@ -98,6 +104,11 @@ zogOperation
 zogZone :: Lens' ZoneOperationsGet Text
 zogZone = lens _zogZone (\ s a -> s{_zogZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zogFields :: Lens' ZoneOperationsGet (Maybe Text)
+zogFields
+  = lens _zogFields (\ s a -> s{_zogFields = a})
+
 instance GoogleRequest ZoneOperationsGet where
         type Rs ZoneOperationsGet = Operation
         type Scopes ZoneOperationsGet =
@@ -108,7 +119,7 @@ instance GoogleRequest ZoneOperationsGet where
                "https://www.googleapis.com/auth/ndev.cloudman",
                "https://www.googleapis.com/auth/ndev.cloudman.readonly"]
         requestClient ZoneOperationsGet'{..}
-          = go _zogProject _zogZone _zogOperation
+          = go _zogProject _zogZone _zogOperation _zogFields
               (Just AltJSON)
               resourceViewsService
           where go

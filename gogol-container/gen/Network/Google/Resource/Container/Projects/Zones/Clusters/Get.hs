@@ -42,11 +42,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.Get
     , pzcgBearerToken
     , pzcgClusterId
     , pzcgProjectId
+    , pzcgFields
     , pzcgCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.get@ method which the
 -- 'ProjectsZonesClustersGet' request conforms to.
@@ -58,29 +59,32 @@ type ProjectsZonesClustersGetResource =
              Capture "zone" Text :>
                "clusters" :>
                  Capture "clusterId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :> Get '[JSON] Cluster
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] Cluster
 
 -- | Gets the details of a specific cluster.
 --
 -- /See:/ 'projectsZonesClustersGet' smart constructor.
 data ProjectsZonesClustersGet = ProjectsZonesClustersGet'
-    { _pzcgXgafv          :: !(Maybe Text)
+    { _pzcgXgafv :: !(Maybe Xgafv)
     , _pzcgUploadProtocol :: !(Maybe Text)
-    , _pzcgPp             :: !Bool
-    , _pzcgAccessToken    :: !(Maybe Text)
-    , _pzcgUploadType     :: !(Maybe Text)
-    , _pzcgZone           :: !Text
-    , _pzcgBearerToken    :: !(Maybe Text)
-    , _pzcgClusterId      :: !Text
-    , _pzcgProjectId      :: !Text
-    , _pzcgCallback       :: !(Maybe Text)
+    , _pzcgPp :: !Bool
+    , _pzcgAccessToken :: !(Maybe Text)
+    , _pzcgUploadType :: !(Maybe Text)
+    , _pzcgZone :: !Text
+    , _pzcgBearerToken :: !(Maybe Text)
+    , _pzcgClusterId :: !Text
+    , _pzcgProjectId :: !Text
+    , _pzcgFields :: !(Maybe Text)
+    , _pzcgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersGet' with the minimum fields required to make a request.
@@ -105,13 +109,15 @@ data ProjectsZonesClustersGet = ProjectsZonesClustersGet'
 --
 -- * 'pzcgProjectId'
 --
+-- * 'pzcgFields'
+--
 -- * 'pzcgCallback'
 projectsZonesClustersGet
     :: Text -- ^ 'pzcgZone'
     -> Text -- ^ 'pzcgClusterId'
     -> Text -- ^ 'pzcgProjectId'
     -> ProjectsZonesClustersGet
-projectsZonesClustersGet pPzcgZone_ pPzcgClusterId_ pPzcgProjectId_ =
+projectsZonesClustersGet pPzcgZone_ pPzcgClusterId_ pPzcgProjectId_ = 
     ProjectsZonesClustersGet'
     { _pzcgXgafv = Nothing
     , _pzcgUploadProtocol = Nothing
@@ -122,11 +128,12 @@ projectsZonesClustersGet pPzcgZone_ pPzcgClusterId_ pPzcgProjectId_ =
     , _pzcgBearerToken = Nothing
     , _pzcgClusterId = pPzcgClusterId_
     , _pzcgProjectId = pPzcgProjectId_
+    , _pzcgFields = Nothing
     , _pzcgCallback = Nothing
     }
 
 -- | V1 error format.
-pzcgXgafv :: Lens' ProjectsZonesClustersGet (Maybe Text)
+pzcgXgafv :: Lens' ProjectsZonesClustersGet (Maybe Xgafv)
 pzcgXgafv
   = lens _pzcgXgafv (\ s a -> s{_pzcgXgafv = a})
 
@@ -176,6 +183,11 @@ pzcgProjectId
   = lens _pzcgProjectId
       (\ s a -> s{_pzcgProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcgFields :: Lens' ProjectsZonesClustersGet (Maybe Text)
+pzcgFields
+  = lens _pzcgFields (\ s a -> s{_pzcgFields = a})
+
 -- | JSONP
 pzcgCallback :: Lens' ProjectsZonesClustersGet (Maybe Text)
 pzcgCallback
@@ -194,6 +206,7 @@ instance GoogleRequest ProjectsZonesClustersGet where
               _pzcgUploadType
               _pzcgBearerToken
               _pzcgCallback
+              _pzcgFields
               (Just AltJSON)
               containerService
           where go

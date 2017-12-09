@@ -39,10 +39,11 @@ module Network.Google.Resource.Analytics.Data.Realtime.Get
     , drgSort
     , drgDimensions
     , drgMaxResults
+    , drgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.data.realtime.get@ method which the
 -- 'DataRealtimeGet' request conforms to.
@@ -57,18 +58,20 @@ type DataRealtimeGetResource =
                    QueryParam "sort" Text :>
                      QueryParam "dimensions" Text :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] RealtimeData
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] RealtimeData
 
 -- | Returns real time data for a view (profile).
 --
 -- /See:/ 'dataRealtimeGet' smart constructor.
 data DataRealtimeGet = DataRealtimeGet'
-    { _drgMetrics    :: !Text
-    , _drgFilters    :: !(Maybe Text)
-    , _drgIds        :: !Text
-    , _drgSort       :: !(Maybe Text)
+    { _drgMetrics :: !Text
+    , _drgFilters :: !(Maybe Text)
+    , _drgIds :: !Text
+    , _drgSort :: !(Maybe Text)
     , _drgDimensions :: !(Maybe Text)
     , _drgMaxResults :: !(Maybe (Textual Int32))
+    , _drgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataRealtimeGet' with the minimum fields required to make a request.
@@ -86,11 +89,13 @@ data DataRealtimeGet = DataRealtimeGet'
 -- * 'drgDimensions'
 --
 -- * 'drgMaxResults'
+--
+-- * 'drgFields'
 dataRealtimeGet
     :: Text -- ^ 'drgMetrics'
     -> Text -- ^ 'drgIds'
     -> DataRealtimeGet
-dataRealtimeGet pDrgMetrics_ pDrgIds_ =
+dataRealtimeGet pDrgMetrics_ pDrgIds_ = 
     DataRealtimeGet'
     { _drgMetrics = pDrgMetrics_
     , _drgFilters = Nothing
@@ -98,6 +103,7 @@ dataRealtimeGet pDrgMetrics_ pDrgIds_ =
     , _drgSort = Nothing
     , _drgDimensions = Nothing
     , _drgMaxResults = Nothing
+    , _drgFields = Nothing
     }
 
 -- | A comma-separated list of real time metrics. E.g., \'rt:activeUsers\'.
@@ -136,6 +142,11 @@ drgMaxResults
       (\ s a -> s{_drgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+drgFields :: Lens' DataRealtimeGet (Maybe Text)
+drgFields
+  = lens _drgFields (\ s a -> s{_drgFields = a})
+
 instance GoogleRequest DataRealtimeGet where
         type Rs DataRealtimeGet = RealtimeData
         type Scopes DataRealtimeGet =
@@ -146,6 +157,7 @@ instance GoogleRequest DataRealtimeGet where
               _drgSort
               _drgDimensions
               _drgMaxResults
+              _drgFields
               (Just AltJSON)
               analyticsService
           where go

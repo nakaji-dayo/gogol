@@ -17,13 +17,13 @@
 --
 module Network.Google.TaskQueue.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types.Sum
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types.Sum
 
 --
 -- /See:/ 'tasks2' smart constructor.
 data Tasks2 = Tasks2'
-    { _tKind  :: !Text
+    { _tKind :: !Text
     , _tItems :: !(Maybe [Task])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -36,7 +36,7 @@ data Tasks2 = Tasks2'
 -- * 'tItems'
 tasks2
     :: Tasks2
-tasks2 =
+tasks2 = 
     Tasks2'
     { _tKind = "taskqueues#tasks"
     , _tItems = Nothing
@@ -69,11 +69,11 @@ instance ToJSON Tasks2 where
 --
 -- /See:/ 'taskQueue' smart constructor.
 data TaskQueue = TaskQueue'
-    { _tqKind      :: !Text
-    , _tqStats     :: !(Maybe TaskQueueStats)
+    { _tqKind :: !Text
+    , _tqStats :: !(Maybe TaskQueueStats)
     , _tqMaxLeases :: !(Maybe (Textual Int32))
-    , _tqId        :: !(Maybe Text)
-    , _tqACL       :: !(Maybe TaskQueueACL)
+    , _tqId :: !(Maybe Text)
+    , _tqACL :: !(Maybe TaskQueueACL)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskQueue' with the minimum fields required to make a request.
@@ -91,7 +91,7 @@ data TaskQueue = TaskQueue'
 -- * 'tqACL'
 taskQueue
     :: TaskQueue
-taskQueue =
+taskQueue = 
     TaskQueue'
     { _tqKind = "taskqueues#taskqueue"
     , _tqStats = Nothing
@@ -147,7 +147,7 @@ instance ToJSON TaskQueue where
 -- /See:/ 'taskQueueACL' smart constructor.
 data TaskQueueACL = TaskQueueACL'
     { _tqaProducerEmails :: !(Maybe [Text])
-    , _tqaAdminEmails    :: !(Maybe [Text])
+    , _tqaAdminEmails :: !(Maybe [Text])
     , _tqaConsumerEmails :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -162,7 +162,7 @@ data TaskQueueACL = TaskQueueACL'
 -- * 'tqaConsumerEmails'
 taskQueueACL
     :: TaskQueueACL
-taskQueueACL =
+taskQueueACL = 
     TaskQueueACL'
     { _tqaProducerEmails = Nothing
     , _tqaAdminEmails = Nothing
@@ -217,9 +217,9 @@ instance ToJSON TaskQueueACL where
 --
 -- /See:/ 'taskQueueStats' smart constructor.
 data TaskQueueStats = TaskQueueStats'
-    { _tqsTotalTasks       :: !(Maybe (Textual Int32))
-    , _tqsOldestTask       :: !(Maybe (Textual Int64))
-    , _tqsLeasedLastHour   :: !(Maybe (Textual Int64))
+    { _tqsTotalTasks :: !(Maybe (Textual Int32))
+    , _tqsOldestTask :: !(Maybe (Textual Int64))
+    , _tqsLeasedLastHour :: !(Maybe (Textual Int64))
     , _tqsLeasedLastMinute :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -236,7 +236,7 @@ data TaskQueueStats = TaskQueueStats'
 -- * 'tqsLeasedLastMinute'
 taskQueueStats
     :: TaskQueueStats
-taskQueueStats =
+taskQueueStats = 
     TaskQueueStats'
     { _tqsTotalTasks = Nothing
     , _tqsOldestTask = Nothing
@@ -294,7 +294,7 @@ instance ToJSON TaskQueueStats where
 --
 -- /See:/ 'tasks' smart constructor.
 data Tasks = Tasks'
-    { _tasKind  :: !Text
+    { _tasKind :: !Text
     , _tasItems :: !(Maybe [Task])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -307,7 +307,7 @@ data Tasks = Tasks'
 -- * 'tasItems'
 tasks
     :: Tasks
-tasks =
+tasks = 
     Tasks'
     { _tasKind = "taskqueue#tasks"
     , _tasItems = Nothing
@@ -342,14 +342,14 @@ instance ToJSON Tasks where
 --
 -- /See:/ 'task' smart constructor.
 data Task = Task'
-    { _ttRetryCount       :: !(Maybe (Textual Int32))
+    { _ttRetryCount :: !(Maybe (Textual Int32))
     , _ttEnQueueTimestamp :: !(Maybe (Textual Int64))
-    , _ttTag              :: !(Maybe Text)
-    , _ttKind             :: !Text
-    , _ttQueueName        :: !(Maybe Text)
-    , _ttPayloadBase64    :: !(Maybe Text)
-    , _ttId               :: !(Maybe Text)
-    , _ttLeaseTimestamp   :: !(Maybe (Textual Int64))
+    , _ttTag :: !(Maybe Text)
+    , _ttKind :: !Text
+    , _ttQueueName :: !(Maybe Text)
+    , _ttPayloadBase64 :: !(Maybe Text)
+    , _ttId :: !(Maybe Text)
+    , _ttLeaseTimestamp :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Task' with the minimum fields required to make a request.
@@ -373,7 +373,7 @@ data Task = Task'
 -- * 'ttLeaseTimestamp'
 task
     :: Task
-task =
+task = 
     Task'
     { _ttRetryCount = Nothing
     , _ttEnQueueTimestamp = Nothing

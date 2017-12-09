@@ -48,10 +48,11 @@ module Network.Google.Resource.Books.Layers.VolumeAnnotations.List
     , lvalLayerId
     , lvalMaxResults
     , lvalStartPosition
+    , lvalFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.layers.volumeAnnotations.list@ method which the
 -- 'LayersVolumeAnnotationsList' request conforms to.
@@ -76,28 +77,30 @@ type LayersVolumeAnnotationsListResource =
                                        QueryParam "maxResults" (Textual Word32)
                                          :>
                                          QueryParam "startPosition" Text :>
-                                           QueryParam "alt" AltJSON :>
-                                             Get '[JSON] Volumeannotations
+                                           QueryParam "fields" Text :>
+                                             QueryParam "alt" AltJSON :>
+                                               Get '[JSON] Volumeannotations
 
 -- | Gets the volume annotations for a volume and layer.
 --
 -- /See:/ 'layersVolumeAnnotationsList' smart constructor.
 data LayersVolumeAnnotationsList = LayersVolumeAnnotationsList'
-    { _lvalStartOffSet              :: !(Maybe Text)
-    , _lvalLocale                   :: !(Maybe Text)
-    , _lvalContentVersion           :: !Text
-    , _lvalShowDeleted              :: !(Maybe Bool)
+    { _lvalStartOffSet :: !(Maybe Text)
+    , _lvalLocale :: !(Maybe Text)
+    , _lvalContentVersion :: !Text
+    , _lvalShowDeleted :: !(Maybe Bool)
     , _lvalVolumeAnnotationsVersion :: !(Maybe Text)
-    , _lvalUpdatedMax               :: !(Maybe Text)
-    , _lvalUpdatedMin               :: !(Maybe Text)
-    , _lvalEndOffSet                :: !(Maybe Text)
-    , _lvalVolumeId                 :: !Text
-    , _lvalSource                   :: !(Maybe Text)
-    , _lvalPageToken                :: !(Maybe Text)
-    , _lvalEndPosition              :: !(Maybe Text)
-    , _lvalLayerId                  :: !Text
-    , _lvalMaxResults               :: !(Maybe (Textual Word32))
-    , _lvalStartPosition            :: !(Maybe Text)
+    , _lvalUpdatedMax :: !(Maybe Text)
+    , _lvalUpdatedMin :: !(Maybe Text)
+    , _lvalEndOffSet :: !(Maybe Text)
+    , _lvalVolumeId :: !Text
+    , _lvalSource :: !(Maybe Text)
+    , _lvalPageToken :: !(Maybe Text)
+    , _lvalEndPosition :: !(Maybe Text)
+    , _lvalLayerId :: !Text
+    , _lvalMaxResults :: !(Maybe (Textual Word32))
+    , _lvalStartPosition :: !(Maybe Text)
+    , _lvalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LayersVolumeAnnotationsList' with the minimum fields required to make a request.
@@ -133,12 +136,14 @@ data LayersVolumeAnnotationsList = LayersVolumeAnnotationsList'
 -- * 'lvalMaxResults'
 --
 -- * 'lvalStartPosition'
+--
+-- * 'lvalFields'
 layersVolumeAnnotationsList
     :: Text -- ^ 'lvalContentVersion'
     -> Text -- ^ 'lvalVolumeId'
     -> Text -- ^ 'lvalLayerId'
     -> LayersVolumeAnnotationsList
-layersVolumeAnnotationsList pLvalContentVersion_ pLvalVolumeId_ pLvalLayerId_ =
+layersVolumeAnnotationsList pLvalContentVersion_ pLvalVolumeId_ pLvalLayerId_ = 
     LayersVolumeAnnotationsList'
     { _lvalStartOffSet = Nothing
     , _lvalLocale = Nothing
@@ -155,6 +160,7 @@ layersVolumeAnnotationsList pLvalContentVersion_ pLvalVolumeId_ pLvalLayerId_ =
     , _lvalLayerId = pLvalLayerId_
     , _lvalMaxResults = Nothing
     , _lvalStartPosition = Nothing
+    , _lvalFields = Nothing
     }
 
 -- | The start offset to start retrieving data from.
@@ -248,6 +254,11 @@ lvalStartPosition
   = lens _lvalStartPosition
       (\ s a -> s{_lvalStartPosition = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lvalFields :: Lens' LayersVolumeAnnotationsList (Maybe Text)
+lvalFields
+  = lens _lvalFields (\ s a -> s{_lvalFields = a})
+
 instance GoogleRequest LayersVolumeAnnotationsList
          where
         type Rs LayersVolumeAnnotationsList =
@@ -269,6 +280,7 @@ instance GoogleRequest LayersVolumeAnnotationsList
               _lvalEndPosition
               _lvalMaxResults
               _lvalStartPosition
+              _lvalFields
               (Just AltJSON)
               booksService
           where go

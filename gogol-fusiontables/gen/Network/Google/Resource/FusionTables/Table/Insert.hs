@@ -34,10 +34,11 @@ module Network.Google.Resource.FusionTables.Table.Insert
 
     -- * Request Lenses
     , tiPayload
+    , tiFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.insert@ method which the
 -- 'TableInsert' request conforms to.
@@ -45,14 +46,16 @@ type TableInsertResource =
      "fusiontables" :>
        "v2" :>
          "tables" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] Table :> Post '[JSON] Table
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] Table :> Post '[JSON] Table
 
 -- | Creates a new table.
 --
 -- /See:/ 'tableInsert' smart constructor.
-newtype TableInsert = TableInsert'
-    { _tiPayload :: Table
+data TableInsert = TableInsert'
+    { _tiPayload :: !Table
+    , _tiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableInsert' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype TableInsert = TableInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tiPayload'
+--
+-- * 'tiFields'
 tableInsert
     :: Table -- ^ 'tiPayload'
     -> TableInsert
-tableInsert pTiPayload_ =
+tableInsert pTiPayload_ = 
     TableInsert'
     { _tiPayload = pTiPayload_
+    , _tiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,17 @@ tiPayload :: Lens' TableInsert Table
 tiPayload
   = lens _tiPayload (\ s a -> s{_tiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiFields :: Lens' TableInsert (Maybe Text)
+tiFields = lens _tiFields (\ s a -> s{_tiFields = a})
+
 instance GoogleRequest TableInsert where
         type Rs TableInsert = Table
         type Scopes TableInsert =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TableInsert'{..}
-          = go (Just AltJSON) _tiPayload fusionTablesService
+          = go _tiFields (Just AltJSON) _tiPayload
+              fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TableInsertResource)
                       mempty

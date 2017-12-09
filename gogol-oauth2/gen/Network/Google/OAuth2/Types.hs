@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -69,9 +69,9 @@ module Network.Google.OAuth2.Types
     , uiId
     ) where
 
-import           Network.Google.OAuth2.Types.Product
-import           Network.Google.OAuth2.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types.Product
+import Network.Google.OAuth2.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v2' of the Google OAuth2 API. This contains the host and root path used as a starting point for constructing service requests.
 oAuth2Service :: ServiceConfig

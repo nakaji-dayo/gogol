@@ -39,16 +39,17 @@ module Network.Google.Resource.DFAReporting.CampaignCreativeAssociations.List
     , ccalSortOrder
     , ccalPageToken
     , ccalMaxResults
+    , ccalFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.campaignCreativeAssociations.list@ method which the
 -- 'CampaignCreativeAssociationsList' request conforms to.
 type CampaignCreativeAssociationsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "campaigns" :>
@@ -59,8 +60,10 @@ type CampaignCreativeAssociationsListResource =
                      :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] CampaignCreativeAssociationsListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON]
+                               CampaignCreativeAssociationsListResponse
 
 -- | Retrieves the list of creative IDs associated with the specified
 -- campaign. This method supports paging.
@@ -68,10 +71,11 @@ type CampaignCreativeAssociationsListResource =
 -- /See:/ 'campaignCreativeAssociationsList' smart constructor.
 data CampaignCreativeAssociationsList = CampaignCreativeAssociationsList'
     { _ccalCampaignId :: !(Textual Int64)
-    , _ccalProFileId  :: !(Textual Int64)
-    , _ccalSortOrder  :: !(Maybe CampaignCreativeAssociationsListSortOrder)
-    , _ccalPageToken  :: !(Maybe Text)
-    , _ccalMaxResults :: !(Maybe (Textual Int32))
+    , _ccalProFileId :: !(Textual Int64)
+    , _ccalSortOrder :: !CampaignCreativeAssociationsListSortOrder
+    , _ccalPageToken :: !(Maybe Text)
+    , _ccalMaxResults :: !(Textual Int32)
+    , _ccalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CampaignCreativeAssociationsList' with the minimum fields required to make a request.
@@ -87,17 +91,20 @@ data CampaignCreativeAssociationsList = CampaignCreativeAssociationsList'
 -- * 'ccalPageToken'
 --
 -- * 'ccalMaxResults'
+--
+-- * 'ccalFields'
 campaignCreativeAssociationsList
     :: Int64 -- ^ 'ccalCampaignId'
     -> Int64 -- ^ 'ccalProFileId'
     -> CampaignCreativeAssociationsList
-campaignCreativeAssociationsList pCcalCampaignId_ pCcalProFileId_ =
+campaignCreativeAssociationsList pCcalCampaignId_ pCcalProFileId_ = 
     CampaignCreativeAssociationsList'
     { _ccalCampaignId = _Coerce # pCcalCampaignId_
     , _ccalProFileId = _Coerce # pCcalProFileId_
-    , _ccalSortOrder = Nothing
+    , _ccalSortOrder = CCALSOAscending
     , _ccalPageToken = Nothing
-    , _ccalMaxResults = Nothing
+    , _ccalMaxResults = 1000
+    , _ccalFields = Nothing
     }
 
 -- | Campaign ID in this association.
@@ -114,8 +121,8 @@ ccalProFileId
       (\ s a -> s{_ccalProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-ccalSortOrder :: Lens' CampaignCreativeAssociationsList (Maybe CampaignCreativeAssociationsListSortOrder)
+-- | Order of sorted results.
+ccalSortOrder :: Lens' CampaignCreativeAssociationsList CampaignCreativeAssociationsListSortOrder
 ccalSortOrder
   = lens _ccalSortOrder
       (\ s a -> s{_ccalSortOrder = a})
@@ -127,11 +134,16 @@ ccalPageToken
       (\ s a -> s{_ccalPageToken = a})
 
 -- | Maximum number of results to return.
-ccalMaxResults :: Lens' CampaignCreativeAssociationsList (Maybe Int32)
+ccalMaxResults :: Lens' CampaignCreativeAssociationsList Int32
 ccalMaxResults
   = lens _ccalMaxResults
       (\ s a -> s{_ccalMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+ccalFields :: Lens' CampaignCreativeAssociationsList (Maybe Text)
+ccalFields
+  = lens _ccalFields (\ s a -> s{_ccalFields = a})
 
 instance GoogleRequest
          CampaignCreativeAssociationsList where
@@ -140,9 +152,11 @@ instance GoogleRequest
         type Scopes CampaignCreativeAssociationsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CampaignCreativeAssociationsList'{..}
-          = go _ccalProFileId _ccalCampaignId _ccalSortOrder
+          = go _ccalProFileId _ccalCampaignId
+              (Just _ccalSortOrder)
               _ccalPageToken
-              _ccalMaxResults
+              (Just _ccalMaxResults)
+              _ccalFields
               (Just AltJSON)
               dFAReportingService
           where go

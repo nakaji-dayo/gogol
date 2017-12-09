@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Aliases.Insert
     -- * Request Lenses
     , uaiPayload
     , uaiUserKey
+    , uaiFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.aliases.insert@ method which the
 -- 'UsersAliasesInsert' request conforms to.
@@ -49,8 +50,9 @@ type UsersAliasesInsertResource =
            "users" :>
              Capture "userKey" Text :>
                "aliases" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Alias :> Post '[JSON] Alias
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Alias :> Post '[JSON] Alias
 
 -- | Add a alias for the user
 --
@@ -58,6 +60,7 @@ type UsersAliasesInsertResource =
 data UsersAliasesInsert = UsersAliasesInsert'
     { _uaiPayload :: !Alias
     , _uaiUserKey :: !Text
+    , _uaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersAliasesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersAliasesInsert = UsersAliasesInsert'
 -- * 'uaiPayload'
 --
 -- * 'uaiUserKey'
+--
+-- * 'uaiFields'
 usersAliasesInsert
     :: Alias -- ^ 'uaiPayload'
     -> Text -- ^ 'uaiUserKey'
     -> UsersAliasesInsert
-usersAliasesInsert pUaiPayload_ pUaiUserKey_ =
+usersAliasesInsert pUaiPayload_ pUaiUserKey_ = 
     UsersAliasesInsert'
     { _uaiPayload = pUaiPayload_
     , _uaiUserKey = pUaiUserKey_
+    , _uaiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -82,10 +88,15 @@ uaiPayload :: Lens' UsersAliasesInsert Alias
 uaiPayload
   = lens _uaiPayload (\ s a -> s{_uaiPayload = a})
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 uaiUserKey :: Lens' UsersAliasesInsert Text
 uaiUserKey
   = lens _uaiUserKey (\ s a -> s{_uaiUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+uaiFields :: Lens' UsersAliasesInsert (Maybe Text)
+uaiFields
+  = lens _uaiFields (\ s a -> s{_uaiFields = a})
 
 instance GoogleRequest UsersAliasesInsert where
         type Rs UsersAliasesInsert = Alias
@@ -93,7 +104,8 @@ instance GoogleRequest UsersAliasesInsert where
              '["https://www.googleapis.com/auth/admin.directory.user",
                "https://www.googleapis.com/auth/admin.directory.user.alias"]
         requestClient UsersAliasesInsert'{..}
-          = go _uaiUserKey (Just AltJSON) _uaiPayload
+          = go _uaiUserKey _uaiFields (Just AltJSON)
+              _uaiPayload
               directoryService
           where go
                   = buildClient

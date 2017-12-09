@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.GlobalOperations.Get
     -- * Request Lenses
     , gogProject
     , gogOperation
+    , gogFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalOperations.get@ method which the
 -- 'GlobalOperationsGet' request conforms to.
@@ -51,15 +52,17 @@ type GlobalOperationsGetResource =
              "global" :>
                "operations" :>
                  Capture "operation" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Retrieves the specified Operations resource. Get a list of operations by
 -- making a list() request.
 --
 -- /See:/ 'globalOperationsGet' smart constructor.
 data GlobalOperationsGet = GlobalOperationsGet'
-    { _gogProject   :: !Text
+    { _gogProject :: !Text
     , _gogOperation :: !Text
+    , _gogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalOperationsGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data GlobalOperationsGet = GlobalOperationsGet'
 -- * 'gogProject'
 --
 -- * 'gogOperation'
+--
+-- * 'gogFields'
 globalOperationsGet
     :: Text -- ^ 'gogProject'
     -> Text -- ^ 'gogOperation'
     -> GlobalOperationsGet
-globalOperationsGet pGogProject_ pGogOperation_ =
+globalOperationsGet pGogProject_ pGogOperation_ = 
     GlobalOperationsGet'
     { _gogProject = pGogProject_
     , _gogOperation = pGogOperation_
+    , _gogFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,6 +95,11 @@ gogOperation :: Lens' GlobalOperationsGet Text
 gogOperation
   = lens _gogOperation (\ s a -> s{_gogOperation = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gogFields :: Lens' GlobalOperationsGet (Maybe Text)
+gogFields
+  = lens _gogFields (\ s a -> s{_gogFields = a})
+
 instance GoogleRequest GlobalOperationsGet where
         type Rs GlobalOperationsGet = Operation
         type Scopes GlobalOperationsGet =
@@ -96,7 +107,8 @@ instance GoogleRequest GlobalOperationsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient GlobalOperationsGet'{..}
-          = go _gogProject _gogOperation (Just AltJSON)
+          = go _gogProject _gogOperation _gogFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

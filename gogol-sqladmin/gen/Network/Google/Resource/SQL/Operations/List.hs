@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Operations.List
     , olProject
     , olPageToken
     , olMaxResults
+    , olFields
     , olInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.operations.list@ method which the
 -- 'OperationsList' request conforms to.
@@ -54,18 +55,20 @@ type OperationsListResource =
                QueryParam "instance" Text :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] OperationsListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] OperationsListResponse
 
 -- | Lists all instance operations that have been performed on the given
 -- Cloud SQL instance in the reverse chronological order of the start time.
 --
 -- /See:/ 'operationsList' smart constructor.
 data OperationsList = OperationsList'
-    { _olProject    :: !Text
-    , _olPageToken  :: !(Maybe Text)
+    { _olProject :: !Text
+    , _olPageToken :: !(Maybe Text)
     , _olMaxResults :: !(Maybe (Textual Word32))
-    , _olInstance   :: !Text
+    , _olFields :: !(Maybe Text)
+    , _olInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationsList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data OperationsList = OperationsList'
 --
 -- * 'olMaxResults'
 --
+-- * 'olFields'
+--
 -- * 'olInstance'
 operationsList
     :: Text -- ^ 'olProject'
     -> Text -- ^ 'olInstance'
     -> OperationsList
-operationsList pOlProject_ pOlInstance_ =
+operationsList pOlProject_ pOlInstance_ = 
     OperationsList'
     { _olProject = pOlProject_
     , _olPageToken = Nothing
     , _olMaxResults = Nothing
+    , _olFields = Nothing
     , _olInstance = pOlInstance_
     }
 
@@ -108,6 +114,10 @@ olMaxResults
   = lens _olMaxResults (\ s a -> s{_olMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+olFields :: Lens' OperationsList (Maybe Text)
+olFields = lens _olFields (\ s a -> s{_olFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 olInstance :: Lens' OperationsList Text
 olInstance
@@ -121,6 +131,7 @@ instance GoogleRequest OperationsList where
         requestClient OperationsList'{..}
           = go _olProject (Just _olInstance) _olPageToken
               _olMaxResults
+              _olFields
               (Just AltJSON)
               sQLAdminService
           where go

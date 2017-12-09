@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.Languages.List
 
     -- * Request Lenses
     , llProFileId
+    , llFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.languages.list@ method which the
 -- 'LanguagesList' request conforms to.
 type LanguagesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "languages" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] LanguagesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] LanguagesListResponse
 
 -- | Retrieves a list of languages.
 --
 -- /See:/ 'languagesList' smart constructor.
-newtype LanguagesList = LanguagesList'
-    { _llProFileId :: Textual Int64
+data LanguagesList = LanguagesList'
+    { _llProFileId :: !(Textual Int64)
+    , _llFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LanguagesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype LanguagesList = LanguagesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'llProFileId'
+--
+-- * 'llFields'
 languagesList
     :: Int64 -- ^ 'llProFileId'
     -> LanguagesList
-languagesList pLlProFileId_ =
+languagesList pLlProFileId_ = 
     LanguagesList'
     { _llProFileId = _Coerce # pLlProFileId_
+    , _llFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,17 @@ llProFileId
   = lens _llProFileId (\ s a -> s{_llProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+llFields :: Lens' LanguagesList (Maybe Text)
+llFields = lens _llFields (\ s a -> s{_llFields = a})
+
 instance GoogleRequest LanguagesList where
         type Rs LanguagesList = LanguagesListResponse
         type Scopes LanguagesList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient LanguagesList'{..}
-          = go _llProFileId (Just AltJSON) dFAReportingService
+          = go _llProFileId _llFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy LanguagesListResource)
                       mempty

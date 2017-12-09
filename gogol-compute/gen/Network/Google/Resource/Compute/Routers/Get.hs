@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.Routers.Get
     , rggProject
     , rggRouter
     , rggRegion
+    , rggFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.get@ method which the
 -- 'RoutersGet' request conforms to.
@@ -53,7 +54,8 @@ type RoutersGetResource =
                Capture "region" Text :>
                  "routers" :>
                    Capture "router" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Router
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Router
 
 -- | Returns the specified Router resource. Get a list of available routers
 -- by making a list() request.
@@ -61,8 +63,9 @@ type RoutersGetResource =
 -- /See:/ 'routersGet' smart constructor.
 data RoutersGet = RoutersGet'
     { _rggProject :: !Text
-    , _rggRouter  :: !Text
-    , _rggRegion  :: !Text
+    , _rggRouter :: !Text
+    , _rggRegion :: !Text
+    , _rggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data RoutersGet = RoutersGet'
 -- * 'rggRouter'
 --
 -- * 'rggRegion'
+--
+-- * 'rggFields'
 routersGet
     :: Text -- ^ 'rggProject'
     -> Text -- ^ 'rggRouter'
     -> Text -- ^ 'rggRegion'
     -> RoutersGet
-routersGet pRggProject_ pRggRouter_ pRggRegion_ =
+routersGet pRggProject_ pRggRouter_ pRggRegion_ = 
     RoutersGet'
     { _rggProject = pRggProject_
     , _rggRouter = pRggRouter_
     , _rggRegion = pRggRegion_
+    , _rggFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ rggRegion :: Lens' RoutersGet Text
 rggRegion
   = lens _rggRegion (\ s a -> s{_rggRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rggFields :: Lens' RoutersGet (Maybe Text)
+rggFields
+  = lens _rggFields (\ s a -> s{_rggFields = a})
+
 instance GoogleRequest RoutersGet where
         type Rs RoutersGet = Router
         type Scopes RoutersGet =
@@ -108,7 +119,8 @@ instance GoogleRequest RoutersGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RoutersGet'{..}
-          = go _rggProject _rggRegion _rggRouter (Just AltJSON)
+          = go _rggProject _rggRegion _rggRouter _rggFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy RoutersGetResource)

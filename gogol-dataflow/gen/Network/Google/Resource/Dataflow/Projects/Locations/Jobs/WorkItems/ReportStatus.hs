@@ -43,11 +43,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.WorkItems.Report
     , pljwirsPayload
     , pljwirsBearerToken
     , pljwirsProjectId
+    , pljwirsFields
     , pljwirsCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.workItems.reportStatus@ method which the
 -- 'ProjectsLocationsJobsWorkItemsReportStatus' request conforms to.
@@ -61,33 +62,37 @@ type ProjectsLocationsJobsWorkItemsReportStatusResource
                "jobs" :>
                  Capture "jobId" Text :>
                    "workItems:reportStatus" :>
-                     QueryParam "$.xgafv" Text :>
+                     QueryParam "$.xgafv" Xgafv :>
                        QueryParam "upload_protocol" Text :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] ReportWorkItemStatusRequest
-                                       :>
-                                       Post '[JSON] ReportWorkItemStatusResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       ReqBody '[JSON]
+                                         ReportWorkItemStatusRequest
+                                         :>
+                                         Post '[JSON]
+                                           ReportWorkItemStatusResponse
 
 -- | Reports the status of dataflow WorkItems leased by a worker.
 --
 -- /See:/ 'projectsLocationsJobsWorkItemsReportStatus' smart constructor.
 data ProjectsLocationsJobsWorkItemsReportStatus = ProjectsLocationsJobsWorkItemsReportStatus'
-    { _pljwirsXgafv          :: !(Maybe Text)
-    , _pljwirsJobId          :: !Text
+    { _pljwirsXgafv :: !(Maybe Xgafv)
+    , _pljwirsJobId :: !Text
     , _pljwirsUploadProtocol :: !(Maybe Text)
-    , _pljwirsLocation       :: !Text
-    , _pljwirsPp             :: !Bool
-    , _pljwirsAccessToken    :: !(Maybe Text)
-    , _pljwirsUploadType     :: !(Maybe Text)
-    , _pljwirsPayload        :: !ReportWorkItemStatusRequest
-    , _pljwirsBearerToken    :: !(Maybe Text)
-    , _pljwirsProjectId      :: !Text
-    , _pljwirsCallback       :: !(Maybe Text)
+    , _pljwirsLocation :: !Text
+    , _pljwirsPp :: !Bool
+    , _pljwirsAccessToken :: !(Maybe Text)
+    , _pljwirsUploadType :: !(Maybe Text)
+    , _pljwirsPayload :: !ReportWorkItemStatusRequest
+    , _pljwirsBearerToken :: !(Maybe Text)
+    , _pljwirsProjectId :: !Text
+    , _pljwirsFields :: !(Maybe Text)
+    , _pljwirsCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsWorkItemsReportStatus' with the minimum fields required to make a request.
@@ -114,6 +119,8 @@ data ProjectsLocationsJobsWorkItemsReportStatus = ProjectsLocationsJobsWorkItems
 --
 -- * 'pljwirsProjectId'
 --
+-- * 'pljwirsFields'
+--
 -- * 'pljwirsCallback'
 projectsLocationsJobsWorkItemsReportStatus
     :: Text -- ^ 'pljwirsJobId'
@@ -121,7 +128,7 @@ projectsLocationsJobsWorkItemsReportStatus
     -> ReportWorkItemStatusRequest -- ^ 'pljwirsPayload'
     -> Text -- ^ 'pljwirsProjectId'
     -> ProjectsLocationsJobsWorkItemsReportStatus
-projectsLocationsJobsWorkItemsReportStatus pPljwirsJobId_ pPljwirsLocation_ pPljwirsPayload_ pPljwirsProjectId_ =
+projectsLocationsJobsWorkItemsReportStatus pPljwirsJobId_ pPljwirsLocation_ pPljwirsPayload_ pPljwirsProjectId_ = 
     ProjectsLocationsJobsWorkItemsReportStatus'
     { _pljwirsXgafv = Nothing
     , _pljwirsJobId = pPljwirsJobId_
@@ -133,11 +140,12 @@ projectsLocationsJobsWorkItemsReportStatus pPljwirsJobId_ pPljwirsLocation_ pPlj
     , _pljwirsPayload = pPljwirsPayload_
     , _pljwirsBearerToken = Nothing
     , _pljwirsProjectId = pPljwirsProjectId_
+    , _pljwirsFields = Nothing
     , _pljwirsCallback = Nothing
     }
 
 -- | V1 error format.
-pljwirsXgafv :: Lens' ProjectsLocationsJobsWorkItemsReportStatus (Maybe Text)
+pljwirsXgafv :: Lens' ProjectsLocationsJobsWorkItemsReportStatus (Maybe Xgafv)
 pljwirsXgafv
   = lens _pljwirsXgafv (\ s a -> s{_pljwirsXgafv = a})
 
@@ -193,6 +201,12 @@ pljwirsProjectId
   = lens _pljwirsProjectId
       (\ s a -> s{_pljwirsProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pljwirsFields :: Lens' ProjectsLocationsJobsWorkItemsReportStatus (Maybe Text)
+pljwirsFields
+  = lens _pljwirsFields
+      (\ s a -> s{_pljwirsFields = a})
+
 -- | JSONP
 pljwirsCallback :: Lens' ProjectsLocationsJobsWorkItemsReportStatus (Maybe Text)
 pljwirsCallback
@@ -207,6 +221,8 @@ instance GoogleRequest
                ProjectsLocationsJobsWorkItemsReportStatus
              =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient
           ProjectsLocationsJobsWorkItemsReportStatus'{..}
@@ -218,6 +234,7 @@ instance GoogleRequest
               _pljwirsUploadType
               _pljwirsBearerToken
               _pljwirsCallback
+              _pljwirsFields
               (Just AltJSON)
               _pljwirsPayload
               dataflowService

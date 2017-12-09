@@ -43,11 +43,12 @@ module Network.Google.Resource.CloudBilling.Projects.GetBillingInfo
     , pgbiUploadType
     , pgbiBearerToken
     , pgbiName
+    , pgbiFields
     , pgbiCallback
     ) where
 
-import           Network.Google.Billing.Types
-import           Network.Google.Prelude
+import Network.Google.Billing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbilling.projects.getBillingInfo@ method which the
 -- 'ProjectsGetBillingInfo' request conforms to.
@@ -55,15 +56,16 @@ type ProjectsGetBillingInfoResource =
      "v1" :>
        Capture "name" Text :>
          "billingInfo" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ProjectBillingInfo
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ProjectBillingInfo
 
 -- | Gets the billing information for a project. The current authenticated
 -- user must have [permission to view the
@@ -72,14 +74,15 @@ type ProjectsGetBillingInfoResource =
 --
 -- /See:/ 'projectsGetBillingInfo' smart constructor.
 data ProjectsGetBillingInfo = ProjectsGetBillingInfo'
-    { _pgbiXgafv          :: !(Maybe Text)
+    { _pgbiXgafv :: !(Maybe Xgafv)
     , _pgbiUploadProtocol :: !(Maybe Text)
-    , _pgbiPp             :: !Bool
-    , _pgbiAccessToken    :: !(Maybe Text)
-    , _pgbiUploadType     :: !(Maybe Text)
-    , _pgbiBearerToken    :: !(Maybe Text)
-    , _pgbiName           :: !Text
-    , _pgbiCallback       :: !(Maybe Text)
+    , _pgbiPp :: !Bool
+    , _pgbiAccessToken :: !(Maybe Text)
+    , _pgbiUploadType :: !(Maybe Text)
+    , _pgbiBearerToken :: !(Maybe Text)
+    , _pgbiName :: !Text
+    , _pgbiFields :: !(Maybe Text)
+    , _pgbiCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGetBillingInfo' with the minimum fields required to make a request.
@@ -100,11 +103,13 @@ data ProjectsGetBillingInfo = ProjectsGetBillingInfo'
 --
 -- * 'pgbiName'
 --
+-- * 'pgbiFields'
+--
 -- * 'pgbiCallback'
 projectsGetBillingInfo
     :: Text -- ^ 'pgbiName'
     -> ProjectsGetBillingInfo
-projectsGetBillingInfo pPgbiName_ =
+projectsGetBillingInfo pPgbiName_ = 
     ProjectsGetBillingInfo'
     { _pgbiXgafv = Nothing
     , _pgbiUploadProtocol = Nothing
@@ -113,11 +118,12 @@ projectsGetBillingInfo pPgbiName_ =
     , _pgbiUploadType = Nothing
     , _pgbiBearerToken = Nothing
     , _pgbiName = pPgbiName_
+    , _pgbiFields = Nothing
     , _pgbiCallback = Nothing
     }
 
 -- | V1 error format.
-pgbiXgafv :: Lens' ProjectsGetBillingInfo (Maybe Text)
+pgbiXgafv :: Lens' ProjectsGetBillingInfo (Maybe Xgafv)
 pgbiXgafv
   = lens _pgbiXgafv (\ s a -> s{_pgbiXgafv = a})
 
@@ -154,6 +160,11 @@ pgbiBearerToken
 pgbiName :: Lens' ProjectsGetBillingInfo Text
 pgbiName = lens _pgbiName (\ s a -> s{_pgbiName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgbiFields :: Lens' ProjectsGetBillingInfo (Maybe Text)
+pgbiFields
+  = lens _pgbiFields (\ s a -> s{_pgbiFields = a})
+
 -- | JSONP
 pgbiCallback :: Lens' ProjectsGetBillingInfo (Maybe Text)
 pgbiCallback
@@ -170,6 +181,7 @@ instance GoogleRequest ProjectsGetBillingInfo where
               _pgbiUploadType
               _pgbiBearerToken
               _pgbiCallback
+              _pgbiFields
               (Just AltJSON)
               billingService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Style.Insert
     -- * Request Lenses
     , siPayload
     , siTableId
+    , siFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.insert@ method which the
 -- 'StyleInsert' request conforms to.
@@ -48,9 +49,10 @@ type StyleInsertResource =
          "tables" :>
            Capture "tableId" Text :>
              "styles" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] StyleSetting :>
-                   Post '[JSON] StyleSetting
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] StyleSetting :>
+                     Post '[JSON] StyleSetting
 
 -- | Adds a new style for the table.
 --
@@ -58,6 +60,7 @@ type StyleInsertResource =
 data StyleInsert = StyleInsert'
     { _siPayload :: !StyleSetting
     , _siTableId :: !Text
+    , _siFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StyleInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data StyleInsert = StyleInsert'
 -- * 'siPayload'
 --
 -- * 'siTableId'
+--
+-- * 'siFields'
 styleInsert
     :: StyleSetting -- ^ 'siPayload'
     -> Text -- ^ 'siTableId'
     -> StyleInsert
-styleInsert pSiPayload_ pSiTableId_ =
+styleInsert pSiPayload_ pSiTableId_ = 
     StyleInsert'
     { _siPayload = pSiPayload_
     , _siTableId = pSiTableId_
+    , _siFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,12 +93,16 @@ siTableId :: Lens' StyleInsert Text
 siTableId
   = lens _siTableId (\ s a -> s{_siTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+siFields :: Lens' StyleInsert (Maybe Text)
+siFields = lens _siFields (\ s a -> s{_siFields = a})
+
 instance GoogleRequest StyleInsert where
         type Rs StyleInsert = StyleSetting
         type Scopes StyleInsert =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient StyleInsert'{..}
-          = go _siTableId (Just AltJSON) _siPayload
+          = go _siTableId _siFields (Just AltJSON) _siPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy StyleInsertResource)

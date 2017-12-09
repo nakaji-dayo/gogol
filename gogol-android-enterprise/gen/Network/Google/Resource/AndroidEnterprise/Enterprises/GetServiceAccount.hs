@@ -45,10 +45,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.GetServiceAccount
     -- * Request Lenses
     , egsaKeyType
     , egsaEnterpriseId
+    , egsaFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.getServiceAccount@ method which the
 -- 'EnterprisesGetServiceAccount' request conforms to.
@@ -61,8 +62,9 @@ type EnterprisesGetServiceAccountResource =
                QueryParam "keyType"
                  EnterprisesGetServiceAccountKeyType
                  :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ServiceAccount
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ServiceAccount
 
 -- | Returns a service account and credentials. The service account can be
 -- bound to the enterprise by calling setAccount. The service account is
@@ -78,8 +80,9 @@ type EnterprisesGetServiceAccountResource =
 --
 -- /See:/ 'enterprisesGetServiceAccount' smart constructor.
 data EnterprisesGetServiceAccount = EnterprisesGetServiceAccount'
-    { _egsaKeyType      :: !(Maybe EnterprisesGetServiceAccountKeyType)
+    { _egsaKeyType :: !(Maybe EnterprisesGetServiceAccountKeyType)
     , _egsaEnterpriseId :: !Text
+    , _egsaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesGetServiceAccount' with the minimum fields required to make a request.
@@ -89,13 +92,16 @@ data EnterprisesGetServiceAccount = EnterprisesGetServiceAccount'
 -- * 'egsaKeyType'
 --
 -- * 'egsaEnterpriseId'
+--
+-- * 'egsaFields'
 enterprisesGetServiceAccount
     :: Text -- ^ 'egsaEnterpriseId'
     -> EnterprisesGetServiceAccount
-enterprisesGetServiceAccount pEgsaEnterpriseId_ =
+enterprisesGetServiceAccount pEgsaEnterpriseId_ = 
     EnterprisesGetServiceAccount'
     { _egsaKeyType = Nothing
     , _egsaEnterpriseId = pEgsaEnterpriseId_
+    , _egsaFields = Nothing
     }
 
 -- | The type of credential to return with the service account. Required.
@@ -109,13 +115,19 @@ egsaEnterpriseId
   = lens _egsaEnterpriseId
       (\ s a -> s{_egsaEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egsaFields :: Lens' EnterprisesGetServiceAccount (Maybe Text)
+egsaFields
+  = lens _egsaFields (\ s a -> s{_egsaFields = a})
+
 instance GoogleRequest EnterprisesGetServiceAccount
          where
         type Rs EnterprisesGetServiceAccount = ServiceAccount
         type Scopes EnterprisesGetServiceAccount =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesGetServiceAccount'{..}
-          = go _egsaEnterpriseId _egsaKeyType (Just AltJSON)
+          = go _egsaEnterpriseId _egsaKeyType _egsaFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.RegionAutoscalers.Update
     , RegionAutoscalersUpdate
 
     -- * Request Lenses
+    , rauRequestId
     , rauProject
     , rauPayload
     , rauAutoscaler
     , rauRegion
+    , rauFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionAutoscalers.update@ method which the
 -- 'RegionAutoscalersUpdate' request conforms to.
@@ -53,24 +55,30 @@ type RegionAutoscalersUpdateResource =
              "regions" :>
                Capture "region" Text :>
                  "autoscalers" :>
-                   QueryParam "autoscaler" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Autoscaler :> Put '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "autoscaler" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Autoscaler :> Put '[JSON] Operation
 
 -- | Updates an autoscaler in the specified project using the data included
 -- in the request.
 --
 -- /See:/ 'regionAutoscalersUpdate' smart constructor.
 data RegionAutoscalersUpdate = RegionAutoscalersUpdate'
-    { _rauProject    :: !Text
-    , _rauPayload    :: !Autoscaler
+    { _rauRequestId :: !(Maybe Text)
+    , _rauProject :: !Text
+    , _rauPayload :: !Autoscaler
     , _rauAutoscaler :: !(Maybe Text)
-    , _rauRegion     :: !Text
+    , _rauRegion :: !Text
+    , _rauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionAutoscalersUpdate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rauRequestId'
 --
 -- * 'rauProject'
 --
@@ -79,18 +87,36 @@ data RegionAutoscalersUpdate = RegionAutoscalersUpdate'
 -- * 'rauAutoscaler'
 --
 -- * 'rauRegion'
+--
+-- * 'rauFields'
 regionAutoscalersUpdate
     :: Text -- ^ 'rauProject'
     -> Autoscaler -- ^ 'rauPayload'
     -> Text -- ^ 'rauRegion'
     -> RegionAutoscalersUpdate
-regionAutoscalersUpdate pRauProject_ pRauPayload_ pRauRegion_ =
+regionAutoscalersUpdate pRauProject_ pRauPayload_ pRauRegion_ = 
     RegionAutoscalersUpdate'
-    { _rauProject = pRauProject_
+    { _rauRequestId = Nothing
+    , _rauProject = pRauProject_
     , _rauPayload = pRauPayload_
     , _rauAutoscaler = Nothing
     , _rauRegion = pRauRegion_
+    , _rauFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rauRequestId :: Lens' RegionAutoscalersUpdate (Maybe Text)
+rauRequestId
+  = lens _rauRequestId (\ s a -> s{_rauRequestId = a})
 
 -- | Project ID for this request.
 rauProject :: Lens' RegionAutoscalersUpdate Text
@@ -113,13 +139,20 @@ rauRegion :: Lens' RegionAutoscalersUpdate Text
 rauRegion
   = lens _rauRegion (\ s a -> s{_rauRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rauFields :: Lens' RegionAutoscalersUpdate (Maybe Text)
+rauFields
+  = lens _rauFields (\ s a -> s{_rauFields = a})
+
 instance GoogleRequest RegionAutoscalersUpdate where
         type Rs RegionAutoscalersUpdate = Operation
         type Scopes RegionAutoscalersUpdate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient RegionAutoscalersUpdate'{..}
-          = go _rauProject _rauRegion _rauAutoscaler
+          = go _rauProject _rauRegion _rauRequestId
+              _rauAutoscaler
+              _rauFields
               (Just AltJSON)
               _rauPayload
               computeService

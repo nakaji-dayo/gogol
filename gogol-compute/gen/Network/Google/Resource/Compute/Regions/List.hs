@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.Regions.List
     , regFilter
     , regPageToken
     , regMaxResults
+    , regFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regions.list@ method which the
 -- 'RegionsList' request conforms to.
@@ -56,18 +57,20 @@ type RegionsListResource =
                  QueryParam "filter" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] RegionList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] RegionList
 
 -- | Retrieves the list of region resources available to the specified
 -- project.
 --
 -- /See:/ 'regionsList' smart constructor.
 data RegionsList = RegionsList'
-    { _regOrderBy    :: !(Maybe Text)
-    , _regProject    :: !Text
-    , _regFilter     :: !(Maybe Text)
-    , _regPageToken  :: !(Maybe Text)
+    { _regOrderBy :: !(Maybe Text)
+    , _regProject :: !Text
+    , _regFilter :: !(Maybe Text)
+    , _regPageToken :: !(Maybe Text)
     , _regMaxResults :: !(Textual Word32)
+    , _regFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionsList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data RegionsList = RegionsList'
 -- * 'regPageToken'
 --
 -- * 'regMaxResults'
+--
+-- * 'regFields'
 regionsList
     :: Text -- ^ 'regProject'
     -> RegionsList
-regionsList pRegProject_ =
+regionsList pRegProject_ = 
     RegionsList'
     { _regOrderBy = Nothing
     , _regProject = pRegProject_
     , _regFilter = Nothing
     , _regPageToken = Nothing
     , _regMaxResults = 500
+    , _regFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -112,26 +118,25 @@ regProject :: Lens' RegionsList Text
 regProject
   = lens _regProject (\ s a -> s{_regProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 regFilter :: Lens' RegionsList (Maybe Text)
 regFilter
   = lens _regFilter (\ s a -> s{_regFilter = a})
@@ -145,12 +150,18 @@ regPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 regMaxResults :: Lens' RegionsList Word32
 regMaxResults
   = lens _regMaxResults
       (\ s a -> s{_regMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+regFields :: Lens' RegionsList (Maybe Text)
+regFields
+  = lens _regFields (\ s a -> s{_regFields = a})
 
 instance GoogleRequest RegionsList where
         type Rs RegionsList = RegionList
@@ -161,6 +172,7 @@ instance GoogleRequest RegionsList where
         requestClient RegionsList'{..}
           = go _regProject _regOrderBy _regFilter _regPageToken
               (Just _regMaxResults)
+              _regFields
               (Just AltJSON)
               computeService
           where go

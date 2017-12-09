@@ -37,10 +37,11 @@ module Network.Google.Resource.Books.Volumes.Recommended.Rate
     , vrrLocale
     , vrrVolumeId
     , vrrSource
+    , vrrFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.recommended.rate@ method which the
 -- 'VolumesRecommendedRate' request conforms to.
@@ -54,17 +55,19 @@ type VolumesRecommendedRateResource =
                  QueryParam "volumeId" Text :>
                    QueryParam "locale" Text :>
                      QueryParam "source" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] BooksVolumesRecommendedRateResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] BooksVolumesRecommendedRateResponse
 
 -- | Rate a recommended book for the current user.
 --
 -- /See:/ 'volumesRecommendedRate' smart constructor.
 data VolumesRecommendedRate = VolumesRecommendedRate'
-    { _vrrRating   :: !VolumesRecommendedRateRating
-    , _vrrLocale   :: !(Maybe Text)
+    { _vrrRating :: !VolumesRecommendedRateRating
+    , _vrrLocale :: !(Maybe Text)
     , _vrrVolumeId :: !Text
-    , _vrrSource   :: !(Maybe Text)
+    , _vrrSource :: !(Maybe Text)
+    , _vrrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesRecommendedRate' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data VolumesRecommendedRate = VolumesRecommendedRate'
 -- * 'vrrVolumeId'
 --
 -- * 'vrrSource'
+--
+-- * 'vrrFields'
 volumesRecommendedRate
     :: VolumesRecommendedRateRating -- ^ 'vrrRating'
     -> Text -- ^ 'vrrVolumeId'
     -> VolumesRecommendedRate
-volumesRecommendedRate pVrrRating_ pVrrVolumeId_ =
+volumesRecommendedRate pVrrRating_ pVrrVolumeId_ = 
     VolumesRecommendedRate'
     { _vrrRating = pVrrRating_
     , _vrrLocale = Nothing
     , _vrrVolumeId = pVrrVolumeId_
     , _vrrSource = Nothing
+    , _vrrFields = Nothing
     }
 
 -- | Rating to be given to the volume.
@@ -111,6 +117,11 @@ vrrSource :: Lens' VolumesRecommendedRate (Maybe Text)
 vrrSource
   = lens _vrrSource (\ s a -> s{_vrrSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vrrFields :: Lens' VolumesRecommendedRate (Maybe Text)
+vrrFields
+  = lens _vrrFields (\ s a -> s{_vrrFields = a})
+
 instance GoogleRequest VolumesRecommendedRate where
         type Rs VolumesRecommendedRate =
              BooksVolumesRecommendedRateResponse
@@ -119,6 +130,7 @@ instance GoogleRequest VolumesRecommendedRate where
         requestClient VolumesRecommendedRate'{..}
           = go (Just _vrrRating) (Just _vrrVolumeId) _vrrLocale
               _vrrSource
+              _vrrFields
               (Just AltJSON)
               booksService
           where go

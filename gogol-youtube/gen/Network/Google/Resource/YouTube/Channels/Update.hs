@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.Channels.Update
     , chaPart
     , chaPayload
     , chaOnBehalfOfContentOwner
+    , chaFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channels.update@ method which the
 -- 'ChannelsUpdate' request conforms to.
@@ -51,8 +52,9 @@ type ChannelsUpdateResource =
          "channels" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Channel :> Put '[JSON] Channel
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Channel :> Put '[JSON] Channel
 
 -- | Updates a channel\'s metadata. Note that this method currently only
 -- supports updates to the channel resource\'s brandingSettings and
@@ -60,9 +62,10 @@ type ChannelsUpdateResource =
 --
 -- /See:/ 'channelsUpdate' smart constructor.
 data ChannelsUpdate = ChannelsUpdate'
-    { _chaPart                   :: !Text
-    , _chaPayload                :: !Channel
+    { _chaPart :: !Text
+    , _chaPayload :: !Channel
     , _chaOnBehalfOfContentOwner :: !(Maybe Text)
+    , _chaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelsUpdate' with the minimum fields required to make a request.
@@ -74,15 +77,18 @@ data ChannelsUpdate = ChannelsUpdate'
 -- * 'chaPayload'
 --
 -- * 'chaOnBehalfOfContentOwner'
+--
+-- * 'chaFields'
 channelsUpdate
     :: Text -- ^ 'chaPart'
     -> Channel -- ^ 'chaPayload'
     -> ChannelsUpdate
-channelsUpdate pChaPart_ pChaPayload_ =
+channelsUpdate pChaPart_ pChaPayload_ = 
     ChannelsUpdate'
     { _chaPart = pChaPart_
     , _chaPayload = pChaPayload_
     , _chaOnBehalfOfContentOwner = Nothing
+    , _chaFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -114,6 +120,11 @@ chaOnBehalfOfContentOwner
   = lens _chaOnBehalfOfContentOwner
       (\ s a -> s{_chaOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+chaFields :: Lens' ChannelsUpdate (Maybe Text)
+chaFields
+  = lens _chaFields (\ s a -> s{_chaFields = a})
+
 instance GoogleRequest ChannelsUpdate where
         type Rs ChannelsUpdate = Channel
         type Scopes ChannelsUpdate =
@@ -122,6 +133,7 @@ instance GoogleRequest ChannelsUpdate where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient ChannelsUpdate'{..}
           = go (Just _chaPart) _chaOnBehalfOfContentOwner
+              _chaFields
               (Just AltJSON)
               _chaPayload
               youTubeService

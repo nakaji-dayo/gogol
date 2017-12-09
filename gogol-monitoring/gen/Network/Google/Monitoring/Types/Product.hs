@@ -17,8 +17,8 @@
 --
 module Network.Google.Monitoring.Types.Product where
 
-import           Network.Google.Monitoring.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types.Sum
+import Network.Google.Prelude
 
 -- | An object that describes the schema of a MonitoredResource object using
 -- a type name and a set of labels. For example, the monitored resource
@@ -30,10 +30,10 @@ import           Network.Google.Prelude
 --
 -- /See:/ 'monitoredResourceDescriptor' smart constructor.
 data MonitoredResourceDescriptor = MonitoredResourceDescriptor'
-    { _mrdName        :: !(Maybe Text)
+    { _mrdName :: !(Maybe Text)
     , _mrdDisplayName :: !(Maybe Text)
-    , _mrdLabels      :: !(Maybe [LabelDescriptor])
-    , _mrdType        :: !(Maybe Text)
+    , _mrdLabels :: !(Maybe [LabelDescriptor])
+    , _mrdType :: !(Maybe Text)
     , _mrdDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -52,7 +52,7 @@ data MonitoredResourceDescriptor = MonitoredResourceDescriptor'
 -- * 'mrdDescription'
 monitoredResourceDescriptor
     :: MonitoredResourceDescriptor
-monitoredResourceDescriptor =
+monitoredResourceDescriptor = 
     MonitoredResourceDescriptor'
     { _mrdName = Nothing
     , _mrdDisplayName = Nothing
@@ -121,12 +121,108 @@ instance ToJSON MonitoredResourceDescriptor where
                   ("type" .=) <$> _mrdType,
                   ("description" .=) <$> _mrdDescription])
 
+-- | The Status type defines a logical error model that is suitable for
+-- different programming environments, including REST APIs and RPC APIs. It
+-- is used by gRPC (https:\/\/github.com\/grpc). The error model is
+-- designed to be: Simple to use and understand for most users Flexible
+-- enough to meet unexpected needsOverviewThe Status message contains three
+-- pieces of data: error code, error message, and error details. The error
+-- code should be an enum value of google.rpc.Code, but it may accept
+-- additional error codes if needed. The error message should be a
+-- developer-facing English message that helps developers understand and
+-- resolve the error. If a localized user-facing error message is needed,
+-- put the localized message in the error details or localize it in the
+-- client. The optional error details may contain arbitrary information
+-- about the error. There is a predefined set of error detail types in the
+-- package google.rpc that can be used for common error conditions.Language
+-- mappingThe Status message is the logical representation of the error
+-- model, but it is not necessarily the actual wire format. When the Status
+-- message is exposed in different client libraries and different wire
+-- protocols, it can be mapped differently. For example, it will likely be
+-- mapped to some exceptions in Java, but more likely mapped to some error
+-- codes in C.Other usesThe error model and the Status message can be used
+-- in a variety of environments, either with or without APIs, to provide a
+-- consistent developer experience across different environments.Example
+-- uses of this error model include: Partial errors. If a service needs to
+-- return partial errors to the client, it may embed the Status in the
+-- normal response to indicate the partial errors. Workflow errors. A
+-- typical workflow has multiple steps. Each step may have a Status message
+-- for error reporting. Batch operations. If a client uses batch request
+-- and batch response, the Status message should be used directly inside
+-- batch response, one for each error sub-response. Asynchronous
+-- operations. If an API call embeds asynchronous operation results in its
+-- response, the status of those operations should be represented directly
+-- using the Status message. Logging. If some API errors are stored in
+-- logs, the message Status could be used directly after any stripping
+-- needed for security\/privacy reasons.
+--
+-- /See:/ 'status' smart constructor.
+data Status = Status'
+    { _sDetails :: !(Maybe [StatusDetailsItem])
+    , _sCode :: !(Maybe (Textual Int32))
+    , _sMessage :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Status' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sDetails'
+--
+-- * 'sCode'
+--
+-- * 'sMessage'
+status
+    :: Status
+status = 
+    Status'
+    { _sDetails = Nothing
+    , _sCode = Nothing
+    , _sMessage = Nothing
+    }
+
+-- | A list of messages that carry the error details. There is a common set
+-- of message types for APIs to use.
+sDetails :: Lens' Status [StatusDetailsItem]
+sDetails
+  = lens _sDetails (\ s a -> s{_sDetails = a}) .
+      _Default
+      . _Coerce
+
+-- | The status code, which should be an enum value of google.rpc.Code.
+sCode :: Lens' Status (Maybe Int32)
+sCode
+  = lens _sCode (\ s a -> s{_sCode = a}) .
+      mapping _Coerce
+
+-- | A developer-facing error message, which should be in English. Any
+-- user-facing error message should be localized and sent in the
+-- google.rpc.Status.details field, or localized by the client.
+sMessage :: Lens' Status (Maybe Text)
+sMessage = lens _sMessage (\ s a -> s{_sMessage = a})
+
+instance FromJSON Status where
+        parseJSON
+          = withObject "Status"
+              (\ o ->
+                 Status' <$>
+                   (o .:? "details" .!= mempty) <*> (o .:? "code") <*>
+                     (o .:? "message"))
+
+instance ToJSON Status where
+        toJSON Status'{..}
+          = object
+              (catMaybes
+                 [("details" .=) <$> _sDetails,
+                  ("code" .=) <$> _sCode,
+                  ("message" .=) <$> _sMessage])
+
 -- | The ListTimeSeries response.
 --
 -- /See:/ 'listTimeSeriesResponse' smart constructor.
 data ListTimeSeriesResponse = ListTimeSeriesResponse'
     { _ltsrNextPageToken :: !(Maybe Text)
-    , _ltsrTimeSeries    :: !(Maybe [TimeSeries])
+    , _ltsrTimeSeries :: !(Maybe [TimeSeries])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListTimeSeriesResponse' with the minimum fields required to make a request.
@@ -138,7 +234,7 @@ data ListTimeSeriesResponse = ListTimeSeriesResponse'
 -- * 'ltsrTimeSeries'
 listTimeSeriesResponse
     :: ListTimeSeriesResponse
-listTimeSeriesResponse =
+listTimeSeriesResponse = 
     ListTimeSeriesResponse'
     { _ltsrNextPageToken = Nothing
     , _ltsrTimeSeries = Nothing
@@ -175,76 +271,20 @@ instance ToJSON ListTimeSeriesResponse where
                  [("nextPageToken" .=) <$> _ltsrNextPageToken,
                   ("timeSeries" .=) <$> _ltsrTimeSeries])
 
--- | The MetricAssociations response.
---
--- /See:/ 'listMetricAssociationsResponse' smart constructor.
-data ListMetricAssociationsResponse = ListMetricAssociationsResponse'
-    { _lmarNextPageToken      :: !(Maybe Text)
-    , _lmarMetricAssociations :: !(Maybe [MetricAssociation])
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'ListMetricAssociationsResponse' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'lmarNextPageToken'
---
--- * 'lmarMetricAssociations'
-listMetricAssociationsResponse
-    :: ListMetricAssociationsResponse
-listMetricAssociationsResponse =
-    ListMetricAssociationsResponse'
-    { _lmarNextPageToken = Nothing
-    , _lmarMetricAssociations = Nothing
-    }
-
--- | If there are more results than have been returned, then this field is
--- set to a non-empty value. To see the additional results, use that value
--- as pageToken in the next call to this method.
-lmarNextPageToken :: Lens' ListMetricAssociationsResponse (Maybe Text)
-lmarNextPageToken
-  = lens _lmarNextPageToken
-      (\ s a -> s{_lmarNextPageToken = a})
-
--- | The MetricAssociations that match the specified filters.
-lmarMetricAssociations :: Lens' ListMetricAssociationsResponse [MetricAssociation]
-lmarMetricAssociations
-  = lens _lmarMetricAssociations
-      (\ s a -> s{_lmarMetricAssociations = a})
-      . _Default
-      . _Coerce
-
-instance FromJSON ListMetricAssociationsResponse
-         where
-        parseJSON
-          = withObject "ListMetricAssociationsResponse"
-              (\ o ->
-                 ListMetricAssociationsResponse' <$>
-                   (o .:? "nextPageToken") <*>
-                     (o .:? "metricAssociations" .!= mempty))
-
-instance ToJSON ListMetricAssociationsResponse where
-        toJSON ListMetricAssociationsResponse'{..}
-          = object
-              (catMaybes
-                 [("nextPageToken" .=) <$> _lmarNextPageToken,
-                  ("metricAssociations" .=) <$>
-                    _lmarMetricAssociations])
-
 -- | Defines a metric type and its schema. Once a metric descriptor is
 -- created, deleting or altering it stops data collection and makes the
 -- metric type\'s existing data unusable.
 --
 -- /See:/ 'metricDescriptor' smart constructor.
 data MetricDescriptor = MetricDescriptor'
-    { _mdMetricKind  :: !(Maybe MetricDescriptorMetricKind)
-    , _mdName        :: !(Maybe Text)
+    { _mdMetricKind :: !(Maybe MetricDescriptorMetricKind)
+    , _mdName :: !(Maybe Text)
     , _mdDisplayName :: !(Maybe Text)
-    , _mdLabels      :: !(Maybe [LabelDescriptor])
-    , _mdType        :: !(Maybe Text)
-    , _mdValueType   :: !(Maybe MetricDescriptorValueType)
+    , _mdLabels :: !(Maybe [LabelDescriptor])
+    , _mdType :: !(Maybe Text)
+    , _mdValueType :: !(Maybe MetricDescriptorValueType)
     , _mdDescription :: !(Maybe Text)
-    , _mdUnit        :: !(Maybe Text)
+    , _mdUnit :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptor' with the minimum fields required to make a request.
@@ -268,7 +308,7 @@ data MetricDescriptor = MetricDescriptor'
 -- * 'mdUnit'
 metricDescriptor
     :: MetricDescriptor
-metricDescriptor =
+metricDescriptor = 
     MetricDescriptor'
     { _mdMetricKind = Nothing
     , _mdName = Nothing
@@ -287,19 +327,15 @@ mdMetricKind :: Lens' MetricDescriptor (Maybe MetricDescriptorMetricKind)
 mdMetricKind
   = lens _mdMetricKind (\ s a -> s{_mdMetricKind = a})
 
--- | The resource name of the metric descriptor. Depending on the
--- implementation, the name typically includes: (1) the parent resource
--- name that defines the scope of the metric type or of its data; and (2)
--- the metric\'s URL-encoded type, which also appears in the type field of
--- this descriptor. For example, following is the resource name of a custom
--- metric within the GCP project my-project-id:
--- \"projects\/my-project-id\/metricDescriptors\/custom.googleapis.com%2Finvoice%2Fpaid%2Famount\"
+-- | The resource name of the metric descriptor.
 mdName :: Lens' MetricDescriptor (Maybe Text)
 mdName = lens _mdName (\ s a -> s{_mdName = a})
 
 -- | A concise name for the metric, which can be displayed in user
 -- interfaces. Use sentence case without an ending period, for example
--- \"Request count\".
+-- \"Request count\". This field is optional but it is recommended to be
+-- set for any metrics associated with user-visible concepts, such as
+-- Quota.
 mdDisplayName :: Lens' MetricDescriptor (Maybe Text)
 mdDisplayName
   = lens _mdDisplayName
@@ -337,26 +373,12 @@ mdDescription
   = lens _mdDescription
       (\ s a -> s{_mdDescription = a})
 
--- | The unit in which the metric value is reported. It is only applicable if
--- the value_type is INT64, DOUBLE, or DISTRIBUTION. The supported units
--- are a subset of The Unified Code for Units of Measure
--- (http:\/\/unitsofmeasure.org\/ucum.html) standard:Basic units (UNIT) bit
--- bit By byte s second min minute h hour d dayPrefixes (PREFIX) k kilo
--- (10**3) M mega (10**6) G giga (10**9) T tera (10**12) P peta (10**15) E
--- exa (10**18) Z zetta (10**21) Y yotta (10**24) m milli (10**-3) u micro
--- (10**-6) n nano (10**-9) p pico (10**-12) f femto (10**-15) a atto
--- (10**-18) z zepto (10**-21) y yocto (10**-24) Ki kibi (2**10) Mi mebi
--- (2**20) Gi gibi (2**30) Ti tebi (2**40)GrammarThe grammar includes the
--- dimensionless unit 1, such as 1\/s.The grammar also includes these
--- connectors: \/ division (as an infix operator, e.g. 1\/s). .
--- multiplication (as an infix operator, e.g. GBy.d)The grammar for a unit
--- is as follows: Expression = Component { \".\" Component } { \"\/\"
--- Component } ; Component = [ PREFIX ] UNIT [ Annotation ] | Annotation |
--- \"1\" ; Annotation = \"{\" NAME \"}\" ; Notes: Annotation is just a
--- comment if it follows a UNIT and is equivalent to 1 if it is used alone.
--- For examples, {requests}\/s == 1\/s, By{transmitted}\/s == By\/s. NAME
--- is a sequence of non-blank printable ASCII characters not containing
--- \'{\' or \'}\'.
+-- | Optional. The unit in which the metric value is reported. For example,
+-- kBy\/s means kilobytes\/sec, and 1 is the dimensionless unit. The
+-- supported units are a subset of The Unified Code for Units of Measure
+-- standard (http:\/\/unitsofmeasure.org\/ucum.html).
+-- This field is part of the metric\'s documentation, but it is ignored by
+-- Stackdriver.
 mdUnit :: Lens' MetricDescriptor (Maybe Text)
 mdUnit = lens _mdUnit (\ s a -> s{_mdUnit = a})
 
@@ -410,11 +432,11 @@ instance ToJSON MetricDescriptor where
 --
 -- /See:/ 'group'' smart constructor.
 data Group = Group'
-    { _gName        :: !(Maybe Text)
+    { _gName :: !(Maybe Text)
     , _gDisplayName :: !(Maybe Text)
-    , _gFilter      :: !(Maybe Text)
-    , _gIsCluster   :: !(Maybe Bool)
-    , _gParentName  :: !(Maybe Text)
+    , _gFilter :: !(Maybe Text)
+    , _gIsCluster :: !(Maybe Bool)
+    , _gParentName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Group' with the minimum fields required to make a request.
@@ -432,7 +454,7 @@ data Group = Group'
 -- * 'gParentName'
 group'
     :: Group
-group' =
+group' = 
     Group'
     { _gName = Nothing
     , _gDisplayName = Nothing
@@ -496,11 +518,11 @@ instance ToJSON Group where
 --
 -- /See:/ 'typedValue' smart constructor.
 data TypedValue = TypedValue'
-    { _tvBoolValue         :: !(Maybe Bool)
-    , _tvDoubleValue       :: !(Maybe (Textual Double))
-    , _tvStringValue       :: !(Maybe Text)
+    { _tvBoolValue :: !(Maybe Bool)
+    , _tvDoubleValue :: !(Maybe (Textual Double))
+    , _tvStringValue :: !(Maybe Text)
     , _tvDistributionValue :: !(Maybe Distribution)
-    , _tvInt64Value        :: !(Maybe (Textual Int64))
+    , _tvInt64Value :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TypedValue' with the minimum fields required to make a request.
@@ -518,7 +540,7 @@ data TypedValue = TypedValue'
 -- * 'tvInt64Value'
 typedValue
     :: TypedValue
-typedValue =
+typedValue = 
     TypedValue'
     { _tvBoolValue = Nothing
     , _tvDoubleValue = Nothing
@@ -579,8 +601,8 @@ instance ToJSON TypedValue where
                   ("int64Value" .=) <$> _tvInt64Value])
 
 -- | Required. Values for all of the labels listed in the associated
--- monitored resource descriptor. For example, Cloud SQL databases use the
--- labels \"database_id\" and \"zone\".
+-- monitored resource descriptor. For example, Compute Engine VM instances
+-- use the labels \"project_id\", \"instance_id\", and \"zone\".
 --
 -- /See:/ 'monitoredResourceLabels' smart constructor.
 newtype MonitoredResourceLabels = MonitoredResourceLabels'
@@ -595,7 +617,7 @@ newtype MonitoredResourceLabels = MonitoredResourceLabels'
 monitoredResourceLabels
     :: HashMap Text Text -- ^ 'mrlAddtional'
     -> MonitoredResourceLabels
-monitoredResourceLabels pMrlAddtional_ =
+monitoredResourceLabels pMrlAddtional_ = 
     MonitoredResourceLabels'
     { _mrlAddtional = _Coerce # pMrlAddtional_
     }
@@ -629,7 +651,7 @@ newtype SourceContext = SourceContext'
 -- * 'scFileName'
 sourceContext
     :: SourceContext
-sourceContext =
+sourceContext = 
     SourceContext'
     { _scFileName = Nothing
     }
@@ -651,16 +673,64 @@ instance ToJSON SourceContext where
           = object
               (catMaybes [("fileName" .=) <$> _scFileName])
 
--- | Distribution contains summary statistics for a population of values and,
--- optionally, a histogram representing the distribution of those values
--- across a specified set of histogram buckets.The summary statistics are
--- the count, mean, sum of the squared deviation from the mean, the
--- minimum, and the maximum of the set of population of values.The
--- histogram is based on a sequence of buckets and gives a count of values
--- that fall into each bucket. The boundaries of the buckets are given
--- either explicitly or by specifying parameters for a method of computing
--- them (buckets of fixed width or buckets of exponentially increasing
--- width).Although it is not forbidden, it is generally a bad idea to
+-- | A type of authentication to perform against the specified resource or
+-- URL that uses username and password. Currently, only Basic
+-- authentication is supported in Uptime Monitoring.
+--
+-- /See:/ 'basicAuthentication' smart constructor.
+data BasicAuthentication = BasicAuthentication'
+    { _baUsername :: !(Maybe Text)
+    , _baPassword :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BasicAuthentication' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'baUsername'
+--
+-- * 'baPassword'
+basicAuthentication
+    :: BasicAuthentication
+basicAuthentication = 
+    BasicAuthentication'
+    { _baUsername = Nothing
+    , _baPassword = Nothing
+    }
+
+-- | The username to authenticate.
+baUsername :: Lens' BasicAuthentication (Maybe Text)
+baUsername
+  = lens _baUsername (\ s a -> s{_baUsername = a})
+
+-- | The password to authenticate.
+baPassword :: Lens' BasicAuthentication (Maybe Text)
+baPassword
+  = lens _baPassword (\ s a -> s{_baPassword = a})
+
+instance FromJSON BasicAuthentication where
+        parseJSON
+          = withObject "BasicAuthentication"
+              (\ o ->
+                 BasicAuthentication' <$>
+                   (o .:? "username") <*> (o .:? "password"))
+
+instance ToJSON BasicAuthentication where
+        toJSON BasicAuthentication'{..}
+          = object
+              (catMaybes
+                 [("username" .=) <$> _baUsername,
+                  ("password" .=) <$> _baPassword])
+
+-- | Distribution contains summary statistics for a population of values. It
+-- optionally contains a histogram representing the distribution of those
+-- values across a set of buckets.The summary statistics are the count,
+-- mean, sum of the squared deviation from the mean, the minimum, and the
+-- maximum of the set of population of values. The histogram is based on a
+-- sequence of buckets and gives a count of values that fall into each
+-- bucket. The boundaries of the buckets are given either explicitly or by
+-- formulas for buckets of fixed or exponentially increasing
+-- widths.Although it is not forbidden, it is generally a bad idea to
 -- include non-finite values (infinities or NaNs) in the population of
 -- values, as this will render the mean and sum_of_squared_deviation fields
 -- meaningless.
@@ -668,11 +738,11 @@ instance ToJSON SourceContext where
 -- /See:/ 'distribution' smart constructor.
 data Distribution = Distribution'
     { _dSumOfSquaredDeviation :: !(Maybe (Textual Double))
-    , _dMean                  :: !(Maybe (Textual Double))
-    , _dCount                 :: !(Maybe (Textual Int64))
-    , _dBucketCounts          :: !(Maybe [Textual Int64])
-    , _dRange                 :: !(Maybe Range)
-    , _dBucketOptions         :: !(Maybe BucketOptions)
+    , _dMean :: !(Maybe (Textual Double))
+    , _dCount :: !(Maybe (Textual Int64))
+    , _dBucketCounts :: !(Maybe [Textual Int64])
+    , _dRange :: !(Maybe Range)
+    , _dBucketOptions :: !(Maybe BucketOptions)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Distribution' with the minimum fields required to make a request.
@@ -692,7 +762,7 @@ data Distribution = Distribution'
 -- * 'dBucketOptions'
 distribution
     :: Distribution
-distribution =
+distribution = 
     Distribution'
     { _dSumOfSquaredDeviation = Nothing
     , _dMean = Nothing
@@ -720,20 +790,23 @@ dMean
   = lens _dMean (\ s a -> s{_dMean = a}) .
       mapping _Coerce
 
--- | The number of values in the population. Must be non-negative.
+-- | The number of values in the population. Must be non-negative. This value
+-- must equal the sum of the values in bucket_counts if a histogram is
+-- provided.
 dCount :: Lens' Distribution (Maybe Int64)
 dCount
   = lens _dCount (\ s a -> s{_dCount = a}) .
       mapping _Coerce
 
--- | If bucket_options is given, then the sum of the values in bucket_counts
--- must equal the value in count. If bucket_options is not given, no
--- bucket_counts fields may be given.Bucket counts are given in order under
--- the numbering scheme described above (the underflow bucket has number 0;
--- the finite buckets, if any, have numbers 1 through N-2; the overflow
--- bucket has number N-1).The size of bucket_counts must be no greater than
--- N as defined in bucket_options.Any suffix of trailing zero bucket_count
--- fields may be omitted.
+-- | Required in the Stackdriver Monitoring API v3. The values for each
+-- bucket specified in bucket_options. The sum of the values in
+-- bucketCounts must equal the value in the count field of the Distribution
+-- object. The order of the bucket counts follows the numbering schemes
+-- described for the three bucket types. The underflow bucket has number 0;
+-- the finite buckets, if any, have numbers 1 through N-2; and the overflow
+-- bucket has number N-1. The size of bucket_counts must not be greater
+-- than N. If the size is less than N, then the remaining buckets are
+-- assigned values of zero.
 dBucketCounts :: Lens' Distribution [Int64]
 dBucketCounts
   = lens _dBucketCounts
@@ -747,7 +820,8 @@ dBucketCounts
 dRange :: Lens' Distribution (Maybe Range)
 dRange = lens _dRange (\ s a -> s{_dRange = a})
 
--- | Defines the histogram bucket boundaries.
+-- | Required in the Stackdriver Monitoring API v3. Defines the histogram
+-- bucket boundaries.
 dBucketOptions :: Lens' Distribution (Maybe BucketOptions)
 dBucketOptions
   = lens _dBucketOptions
@@ -779,16 +853,16 @@ instance ToJSON Distribution where
 --
 -- /See:/ 'field' smart constructor.
 data Field = Field'
-    { _fKind         :: !(Maybe FieldKind)
-    , _fOneofIndex   :: !(Maybe (Textual Int32))
-    , _fName         :: !(Maybe Text)
-    , _fJSONName     :: !(Maybe Text)
-    , _fCardinality  :: !(Maybe FieldCardinality)
-    , _fOptions      :: !(Maybe [Option])
-    , _fPacked       :: !(Maybe Bool)
+    { _fKind :: !(Maybe FieldKind)
+    , _fOneofIndex :: !(Maybe (Textual Int32))
+    , _fName :: !(Maybe Text)
+    , _fJSONName :: !(Maybe Text)
+    , _fCardinality :: !(Maybe FieldCardinality)
+    , _fOptions :: !(Maybe [Option])
+    , _fPacked :: !(Maybe Bool)
     , _fDefaultValue :: !(Maybe Text)
-    , _fNumber       :: !(Maybe (Textual Int32))
-    , _fTypeURL      :: !(Maybe Text)
+    , _fNumber :: !(Maybe (Textual Int32))
+    , _fTypeURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Field' with the minimum fields required to make a request.
@@ -816,7 +890,7 @@ data Field = Field'
 -- * 'fTypeURL'
 field
     :: Field
-field =
+field = 
     Field'
     { _fKind = Nothing
     , _fOneofIndex = Nothing
@@ -914,66 +988,6 @@ instance ToJSON Field where
                   ("number" .=) <$> _fNumber,
                   ("typeUrl" .=) <$> _fTypeURL])
 
--- | A Vital Signs MetricAssociation, representing the inclusion of its
--- referenced metric type within its parent category.
---
--- /See:/ 'metricAssociation' smart constructor.
-data MetricAssociation = MetricAssociation'
-    { _maMetricType :: !(Maybe Text)
-    , _maName       :: !(Maybe Text)
-    , _maIsDefault  :: !(Maybe Bool)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'MetricAssociation' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'maMetricType'
---
--- * 'maName'
---
--- * 'maIsDefault'
-metricAssociation
-    :: MetricAssociation
-metricAssociation =
-    MetricAssociation'
-    { _maMetricType = Nothing
-    , _maName = Nothing
-    , _maIsDefault = Nothing
-    }
-
--- | Resource name of the metric. It must be the full resource name. For
--- example, \"compute.googleapis.com\/instance\/cpu\/utilization\".
-maMetricType :: Lens' MetricAssociation (Maybe Text)
-maMetricType
-  = lens _maMetricType (\ s a -> s{_maMetricType = a})
-
--- | Resource name for the metric association.
-maName :: Lens' MetricAssociation (Maybe Text)
-maName = lens _maName (\ s a -> s{_maName = a})
-
--- | A flag to indicate whether this association is part of Stackdriver\'s
--- default taxonomy.
-maIsDefault :: Lens' MetricAssociation (Maybe Bool)
-maIsDefault
-  = lens _maIsDefault (\ s a -> s{_maIsDefault = a})
-
-instance FromJSON MetricAssociation where
-        parseJSON
-          = withObject "MetricAssociation"
-              (\ o ->
-                 MetricAssociation' <$>
-                   (o .:? "metricType") <*> (o .:? "name") <*>
-                     (o .:? "isDefault"))
-
-instance ToJSON MetricAssociation where
-        toJSON MetricAssociation'{..}
-          = object
-              (catMaybes
-                 [("metricType" .=) <$> _maMetricType,
-                  ("name" .=) <$> _maName,
-                  ("isDefault" .=) <$> _maIsDefault])
-
 -- | A generic empty message that you can re-use to avoid defining duplicated
 -- empty messages in your APIs. A typical example is to use it as the
 -- request or the response type of an API method. For instance: service Foo
@@ -982,7 +996,7 @@ instance ToJSON MetricAssociation where
 --
 -- /See:/ 'empty' smart constructor.
 data Empty =
-    Empty'
+    Empty' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Empty' with the minimum fields required to make a request.
@@ -1002,7 +1016,7 @@ instance ToJSON Empty where
 -- /See:/ 'listGroupsResponse' smart constructor.
 data ListGroupsResponse = ListGroupsResponse'
     { _lgrNextPageToken :: !(Maybe Text)
-    , _lgrGroup         :: !(Maybe [Group])
+    , _lgrGroup :: !(Maybe [Group])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListGroupsResponse' with the minimum fields required to make a request.
@@ -1014,7 +1028,7 @@ data ListGroupsResponse = ListGroupsResponse'
 -- * 'lgrGroup'
 listGroupsResponse
     :: ListGroupsResponse
-listGroupsResponse =
+listGroupsResponse = 
     ListGroupsResponse'
     { _lgrNextPageToken = Nothing
     , _lgrGroup = Nothing
@@ -1055,7 +1069,7 @@ instance ToJSON ListGroupsResponse where
 -- /See:/ 'listMetricDescriptorsResponse' smart constructor.
 data ListMetricDescriptorsResponse = ListMetricDescriptorsResponse'
     { _lmdrMetricDescriptors :: !(Maybe [MetricDescriptor])
-    , _lmdrNextPageToken     :: !(Maybe Text)
+    , _lmdrNextPageToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListMetricDescriptorsResponse' with the minimum fields required to make a request.
@@ -1067,7 +1081,7 @@ data ListMetricDescriptorsResponse = ListMetricDescriptorsResponse'
 -- * 'lmdrNextPageToken'
 listMetricDescriptorsResponse
     :: ListMetricDescriptorsResponse
-listMetricDescriptorsResponse =
+listMetricDescriptorsResponse = 
     ListMetricDescriptorsResponse'
     { _lmdrMetricDescriptors = Nothing
     , _lmdrNextPageToken = Nothing
@@ -1124,7 +1138,7 @@ newtype OptionValue = OptionValue'
 optionValue
     :: HashMap Text JSONValue -- ^ 'ovAddtional'
     -> OptionValue
-optionValue pOvAddtional_ =
+optionValue pOvAddtional_ = 
     OptionValue'
     { _ovAddtional = _Coerce # pOvAddtional_
     }
@@ -1143,90 +1157,6 @@ instance FromJSON OptionValue where
 instance ToJSON OptionValue where
         toJSON = toJSON . _ovAddtional
 
--- | A Vital Signs Category.
---
--- /See:/ 'category' smart constructor.
-data Category = Category'
-    { _cShortName   :: !(Maybe Text)
-    , _cName        :: !(Maybe Text)
-    , _cDisplayName :: !(Maybe Text)
-    , _cDescription :: !(Maybe Text)
-    , _cIsDefault   :: !(Maybe Bool)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'Category' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'cShortName'
---
--- * 'cName'
---
--- * 'cDisplayName'
---
--- * 'cDescription'
---
--- * 'cIsDefault'
-category
-    :: Category
-category =
-    Category'
-    { _cShortName = Nothing
-    , _cName = Nothing
-    , _cDisplayName = Nothing
-    , _cDescription = Nothing
-    , _cIsDefault = Nothing
-    }
-
--- | Unique usually one-word name for this category. e.g. latency or
--- custom:goodness
-cShortName :: Lens' Category (Maybe Text)
-cShortName
-  = lens _cShortName (\ s a -> s{_cShortName = a})
-
--- | Resource name for the category. e.g.
--- projects\/91091\/categories\/latency or
--- projects\/91091\/categories\/custom:goodness
-cName :: Lens' Category (Maybe Text)
-cName = lens _cName (\ s a -> s{_cName = a})
-
--- | A human-readable name for the category.
-cDisplayName :: Lens' Category (Maybe Text)
-cDisplayName
-  = lens _cDisplayName (\ s a -> s{_cDisplayName = a})
-
--- | A human-readable description for the category. The description can be
--- longer and contain more details.
-cDescription :: Lens' Category (Maybe Text)
-cDescription
-  = lens _cDescription (\ s a -> s{_cDescription = a})
-
--- | A flag to indicate whether this category is part of Stackdriver\'s
--- default taxonomy.
-cIsDefault :: Lens' Category (Maybe Bool)
-cIsDefault
-  = lens _cIsDefault (\ s a -> s{_cIsDefault = a})
-
-instance FromJSON Category where
-        parseJSON
-          = withObject "Category"
-              (\ o ->
-                 Category' <$>
-                   (o .:? "shortName") <*> (o .:? "name") <*>
-                     (o .:? "displayName")
-                     <*> (o .:? "description")
-                     <*> (o .:? "isDefault"))
-
-instance ToJSON Category where
-        toJSON Category'{..}
-          = object
-              (catMaybes
-                 [("shortName" .=) <$> _cShortName,
-                  ("name" .=) <$> _cName,
-                  ("displayName" .=) <$> _cDisplayName,
-                  ("description" .=) <$> _cDescription,
-                  ("isDefault" .=) <$> _cIsDefault])
-
 -- | The CreateTimeSeries request.
 --
 -- /See:/ 'createTimeSeriesRequest' smart constructor.
@@ -1241,7 +1171,7 @@ newtype CreateTimeSeriesRequest = CreateTimeSeriesRequest'
 -- * 'ctsrTimeSeries'
 createTimeSeriesRequest
     :: CreateTimeSeriesRequest
-createTimeSeriesRequest =
+createTimeSeriesRequest = 
     CreateTimeSeriesRequest'
     { _ctsrTimeSeries = Nothing
     }
@@ -1270,11 +1200,127 @@ instance ToJSON CreateTimeSeriesRequest where
           = object
               (catMaybes [("timeSeries" .=) <$> _ctsrTimeSeries])
 
--- | The ListMonitoredResourcDescriptors response.
+--
+-- /See:/ 'statusDetailsItem' smart constructor.
+newtype StatusDetailsItem = StatusDetailsItem'
+    { _sdiAddtional :: HashMap Text JSONValue
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'StatusDetailsItem' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sdiAddtional'
+statusDetailsItem
+    :: HashMap Text JSONValue -- ^ 'sdiAddtional'
+    -> StatusDetailsItem
+statusDetailsItem pSdiAddtional_ = 
+    StatusDetailsItem'
+    { _sdiAddtional = _Coerce # pSdiAddtional_
+    }
+
+-- | Properties of the object. Contains field \'type with type URL.
+sdiAddtional :: Lens' StatusDetailsItem (HashMap Text JSONValue)
+sdiAddtional
+  = lens _sdiAddtional (\ s a -> s{_sdiAddtional = a})
+      . _Coerce
+
+instance FromJSON StatusDetailsItem where
+        parseJSON
+          = withObject "StatusDetailsItem"
+              (\ o -> StatusDetailsItem' <$> (parseJSONObject o))
+
+instance ToJSON StatusDetailsItem where
+        toJSON = toJSON . _sdiAddtional
+
+-- | Nimbus InternalCheckers.
+--
+-- /See:/ 'internalChecker' smart constructor.
+data InternalChecker = InternalChecker'
+    { _icNetwork :: !(Maybe Text)
+    , _icCheckerId :: !(Maybe Text)
+    , _icGcpZone :: !(Maybe Text)
+    , _icDisplayName :: !(Maybe Text)
+    , _icProjectId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'InternalChecker' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'icNetwork'
+--
+-- * 'icCheckerId'
+--
+-- * 'icGcpZone'
+--
+-- * 'icDisplayName'
+--
+-- * 'icProjectId'
+internalChecker
+    :: InternalChecker
+internalChecker = 
+    InternalChecker'
+    { _icNetwork = Nothing
+    , _icCheckerId = Nothing
+    , _icGcpZone = Nothing
+    , _icDisplayName = Nothing
+    , _icProjectId = Nothing
+    }
+
+-- | The internal network to perform this uptime check on.
+icNetwork :: Lens' InternalChecker (Maybe Text)
+icNetwork
+  = lens _icNetwork (\ s a -> s{_icNetwork = a})
+
+-- | The checker ID.
+icCheckerId :: Lens' InternalChecker (Maybe Text)
+icCheckerId
+  = lens _icCheckerId (\ s a -> s{_icCheckerId = a})
+
+-- | The GCP zone the uptime check should egress from. Only respected for
+-- internal uptime checks, where internal_network is specified.
+icGcpZone :: Lens' InternalChecker (Maybe Text)
+icGcpZone
+  = lens _icGcpZone (\ s a -> s{_icGcpZone = a})
+
+-- | The checker\'s human-readable name.
+icDisplayName :: Lens' InternalChecker (Maybe Text)
+icDisplayName
+  = lens _icDisplayName
+      (\ s a -> s{_icDisplayName = a})
+
+-- | The GCP project ID. Not necessarily the same as the project_id for the
+-- config.
+icProjectId :: Lens' InternalChecker (Maybe Text)
+icProjectId
+  = lens _icProjectId (\ s a -> s{_icProjectId = a})
+
+instance FromJSON InternalChecker where
+        parseJSON
+          = withObject "InternalChecker"
+              (\ o ->
+                 InternalChecker' <$>
+                   (o .:? "network") <*> (o .:? "checkerId") <*>
+                     (o .:? "gcpZone")
+                     <*> (o .:? "displayName")
+                     <*> (o .:? "projectId"))
+
+instance ToJSON InternalChecker where
+        toJSON InternalChecker'{..}
+          = object
+              (catMaybes
+                 [("network" .=) <$> _icNetwork,
+                  ("checkerId" .=) <$> _icCheckerId,
+                  ("gcpZone" .=) <$> _icGcpZone,
+                  ("displayName" .=) <$> _icDisplayName,
+                  ("projectId" .=) <$> _icProjectId])
+
+-- | The ListMonitoredResourceDescriptors response.
 --
 -- /See:/ 'listMonitoredResourceDescriptorsResponse' smart constructor.
 data ListMonitoredResourceDescriptorsResponse = ListMonitoredResourceDescriptorsResponse'
-    { _lmrdrNextPageToken       :: !(Maybe Text)
+    { _lmrdrNextPageToken :: !(Maybe Text)
     , _lmrdrResourceDescriptors :: !(Maybe [MonitoredResourceDescriptor])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1287,7 +1333,7 @@ data ListMonitoredResourceDescriptorsResponse = ListMonitoredResourceDescriptors
 -- * 'lmrdrResourceDescriptors'
 listMonitoredResourceDescriptorsResponse
     :: ListMonitoredResourceDescriptorsResponse
-listMonitoredResourceDescriptorsResponse =
+listMonitoredResourceDescriptorsResponse = 
     ListMonitoredResourceDescriptorsResponse'
     { _lmrdrNextPageToken = Nothing
     , _lmrdrResourceDescriptors = Nothing
@@ -1329,12 +1375,12 @@ instance ToJSON
                   ("resourceDescriptors" .=) <$>
                     _lmrdrResourceDescriptors])
 
--- | A set of buckets with arbitrary widths.Defines size(bounds) + 1 (= N)
--- buckets with these boundaries for bucket i:Upper bound (0 \<= i \< N-1):
--- boundsi Lower bound (1 \<= i \< N); boundsi - 1There must be at least
--- one element in bounds. If bounds has only one element, there are no
--- finite buckets, and that single element is the common boundary of the
--- overflow and underflow buckets.
+-- | Specifies a set of buckets with arbitrary widths.There are size(bounds)
+-- + 1 (= N) buckets. Bucket i has the following boundaries:Upper bound (0
+-- \<= i \< N-1): boundsi Lower bound (1 \<= i \< N); boundsi - 1The bounds
+-- field must contain at least one element. If bounds has only one element,
+-- then there are no finite buckets, and that single element is the common
+-- boundary of the overflow and underflow buckets.
 --
 -- /See:/ 'explicit' smart constructor.
 newtype Explicit = Explicit'
@@ -1348,7 +1394,7 @@ newtype Explicit = Explicit'
 -- * 'eBounds'
 explicit
     :: Explicit
-explicit =
+explicit = 
     Explicit'
     { _eBounds = Nothing
     }
@@ -1384,7 +1430,7 @@ newtype MetricLabels = MetricLabels'
 metricLabels
     :: HashMap Text Text -- ^ 'mlAddtional'
     -> MetricLabels
-metricLabels pMlAddtional_ =
+metricLabels pMlAddtional_ = 
     MetricLabels'
     { _mlAddtional = _Coerce # pMlAddtional_
     }
@@ -1417,7 +1463,7 @@ newtype CollectdPayloadMetadata = CollectdPayloadMetadata'
 collectdPayloadMetadata
     :: HashMap Text TypedValue -- ^ 'cpmAddtional'
     -> CollectdPayloadMetadata
-collectdPayloadMetadata pCpmAddtional_ =
+collectdPayloadMetadata pCpmAddtional_ = 
     CollectdPayloadMetadata'
     { _cpmAddtional = _Coerce # pCpmAddtional_
     }
@@ -1442,7 +1488,7 @@ instance ToJSON CollectdPayloadMetadata where
 data CollectdValue = CollectdValue'
     { _cvDataSourceName :: !(Maybe Text)
     , _cvDataSourceType :: !(Maybe CollectdValueDataSourceType)
-    , _cvValue          :: !(Maybe TypedValue)
+    , _cvValue :: !(Maybe TypedValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CollectdValue' with the minimum fields required to make a request.
@@ -1456,7 +1502,7 @@ data CollectdValue = CollectdValue'
 -- * 'cvValue'
 collectdValue
     :: CollectdValue
-collectdValue =
+collectdValue = 
     CollectdValue'
     { _cvDataSourceName = Nothing
     , _cvDataSourceType = Nothing
@@ -1501,8 +1547,8 @@ instance ToJSON CollectdValue where
 -- /See:/ 'createCollectdTimeSeriesRequest' smart constructor.
 data CreateCollectdTimeSeriesRequest = CreateCollectdTimeSeriesRequest'
     { _cctsrCollectdPayloads :: !(Maybe [CollectdPayload])
-    , _cctsrResource         :: !(Maybe MonitoredResource)
-    , _cctsrCollectdVersion  :: !(Maybe Text)
+    , _cctsrResource :: !(Maybe MonitoredResource)
+    , _cctsrCollectdVersion :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreateCollectdTimeSeriesRequest' with the minimum fields required to make a request.
@@ -1516,7 +1562,7 @@ data CreateCollectdTimeSeriesRequest = CreateCollectdTimeSeriesRequest'
 -- * 'cctsrCollectdVersion'
 createCollectdTimeSeriesRequest
     :: CreateCollectdTimeSeriesRequest
-createCollectdTimeSeriesRequest =
+createCollectdTimeSeriesRequest = 
     CreateCollectdTimeSeriesRequest'
     { _cctsrCollectdPayloads = Nothing
     , _cctsrResource = Nothing
@@ -1565,11 +1611,202 @@ instance ToJSON CreateCollectdTimeSeriesRequest where
                   ("resource" .=) <$> _cctsrResource,
                   ("collectdVersion" .=) <$> _cctsrCollectdVersion])
 
+-- | This message configures which resources and services to monitor for
+-- availability.
+--
+-- /See:/ 'uptimeCheckConfig' smart constructor.
+data UptimeCheckConfig = UptimeCheckConfig'
+    { _uccInternalCheckers :: !(Maybe [InternalChecker])
+    , _uccPeriod :: !(Maybe Duration)
+    , _uccContentMatchers :: !(Maybe [ContentMatcher])
+    , _uccName :: !(Maybe Text)
+    , _uccMonitoredResource :: !(Maybe MonitoredResource)
+    , _uccSelectedRegions :: !(Maybe [Text])
+    , _uccIsInternal :: !(Maybe Bool)
+    , _uccDisplayName :: !(Maybe Text)
+    , _uccResourceGroup :: !(Maybe ResourceGroup)
+    , _uccTimeout :: !(Maybe Duration)
+    , _uccHTTPCheck :: !(Maybe HTTPCheck)
+    , _uccTCPCheck :: !(Maybe TCPCheck)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UptimeCheckConfig' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uccInternalCheckers'
+--
+-- * 'uccPeriod'
+--
+-- * 'uccContentMatchers'
+--
+-- * 'uccName'
+--
+-- * 'uccMonitoredResource'
+--
+-- * 'uccSelectedRegions'
+--
+-- * 'uccIsInternal'
+--
+-- * 'uccDisplayName'
+--
+-- * 'uccResourceGroup'
+--
+-- * 'uccTimeout'
+--
+-- * 'uccHTTPCheck'
+--
+-- * 'uccTCPCheck'
+uptimeCheckConfig
+    :: UptimeCheckConfig
+uptimeCheckConfig = 
+    UptimeCheckConfig'
+    { _uccInternalCheckers = Nothing
+    , _uccPeriod = Nothing
+    , _uccContentMatchers = Nothing
+    , _uccName = Nothing
+    , _uccMonitoredResource = Nothing
+    , _uccSelectedRegions = Nothing
+    , _uccIsInternal = Nothing
+    , _uccDisplayName = Nothing
+    , _uccResourceGroup = Nothing
+    , _uccTimeout = Nothing
+    , _uccHTTPCheck = Nothing
+    , _uccTCPCheck = Nothing
+    }
+
+-- | The internal checkers that this check will egress from. If is_internal
+-- is true and this list is empty, the check will egress from all
+-- InternalCheckers configured for the project that owns this CheckConfig.
+uccInternalCheckers :: Lens' UptimeCheckConfig [InternalChecker]
+uccInternalCheckers
+  = lens _uccInternalCheckers
+      (\ s a -> s{_uccInternalCheckers = a})
+      . _Default
+      . _Coerce
+
+-- | How often the uptime check is performed. Currently, only 1, 5, 10, and
+-- 15 minutes are supported. Required.
+uccPeriod :: Lens' UptimeCheckConfig (Maybe Scientific)
+uccPeriod
+  = lens _uccPeriod (\ s a -> s{_uccPeriod = a}) .
+      mapping _Duration
+
+-- | The expected content on the page the check is run against. Currently,
+-- only the first entry in the list is supported, and other entries will be
+-- ignored. The server will look for an exact match of the string in the
+-- page response\'s content. This field is optional and should only be
+-- specified if a content match is required.
+uccContentMatchers :: Lens' UptimeCheckConfig [ContentMatcher]
+uccContentMatchers
+  = lens _uccContentMatchers
+      (\ s a -> s{_uccContentMatchers = a})
+      . _Default
+      . _Coerce
+
+-- | A unique resource name for this UptimeCheckConfig. The format
+-- is:projects\/[PROJECT_ID]\/uptimeCheckConfigs\/[UPTIME_CHECK_ID].This
+-- field should be omitted when creating the uptime check configuration; on
+-- create, the resource name is assigned by the server and included in the
+-- response.
+uccName :: Lens' UptimeCheckConfig (Maybe Text)
+uccName = lens _uccName (\ s a -> s{_uccName = a})
+
+-- | The monitored resource associated with the configuration.
+uccMonitoredResource :: Lens' UptimeCheckConfig (Maybe MonitoredResource)
+uccMonitoredResource
+  = lens _uccMonitoredResource
+      (\ s a -> s{_uccMonitoredResource = a})
+
+-- | The list of regions from which the check will be run. If this field is
+-- specified, enough regions to include a minimum of 3 locations must be
+-- provided, or an error message is returned. Not specifying this field
+-- will result in uptime checks running from all regions.
+uccSelectedRegions :: Lens' UptimeCheckConfig [Text]
+uccSelectedRegions
+  = lens _uccSelectedRegions
+      (\ s a -> s{_uccSelectedRegions = a})
+      . _Default
+      . _Coerce
+
+-- | Denotes whether this check is a check that egresses from
+-- InternalCheckers.
+uccIsInternal :: Lens' UptimeCheckConfig (Maybe Bool)
+uccIsInternal
+  = lens _uccIsInternal
+      (\ s a -> s{_uccIsInternal = a})
+
+-- | A human-friendly name for the uptime check configuration. The display
+-- name should be unique within a Stackdriver Account in order to make it
+-- easier to identify; however, uniqueness is not enforced. Required.
+uccDisplayName :: Lens' UptimeCheckConfig (Maybe Text)
+uccDisplayName
+  = lens _uccDisplayName
+      (\ s a -> s{_uccDisplayName = a})
+
+-- | The group resource associated with the configuration.
+uccResourceGroup :: Lens' UptimeCheckConfig (Maybe ResourceGroup)
+uccResourceGroup
+  = lens _uccResourceGroup
+      (\ s a -> s{_uccResourceGroup = a})
+
+-- | The maximum amount of time to wait for the request to complete (must be
+-- between 1 and 60 seconds). Required.
+uccTimeout :: Lens' UptimeCheckConfig (Maybe Scientific)
+uccTimeout
+  = lens _uccTimeout (\ s a -> s{_uccTimeout = a}) .
+      mapping _Duration
+
+-- | Contains information needed to make an HTTP or HTTPS check.
+uccHTTPCheck :: Lens' UptimeCheckConfig (Maybe HTTPCheck)
+uccHTTPCheck
+  = lens _uccHTTPCheck (\ s a -> s{_uccHTTPCheck = a})
+
+-- | Contains information needed to make a TCP check.
+uccTCPCheck :: Lens' UptimeCheckConfig (Maybe TCPCheck)
+uccTCPCheck
+  = lens _uccTCPCheck (\ s a -> s{_uccTCPCheck = a})
+
+instance FromJSON UptimeCheckConfig where
+        parseJSON
+          = withObject "UptimeCheckConfig"
+              (\ o ->
+                 UptimeCheckConfig' <$>
+                   (o .:? "internalCheckers" .!= mempty) <*>
+                     (o .:? "period")
+                     <*> (o .:? "contentMatchers" .!= mempty)
+                     <*> (o .:? "name")
+                     <*> (o .:? "monitoredResource")
+                     <*> (o .:? "selectedRegions" .!= mempty)
+                     <*> (o .:? "isInternal")
+                     <*> (o .:? "displayName")
+                     <*> (o .:? "resourceGroup")
+                     <*> (o .:? "timeout")
+                     <*> (o .:? "httpCheck")
+                     <*> (o .:? "tcpCheck"))
+
+instance ToJSON UptimeCheckConfig where
+        toJSON UptimeCheckConfig'{..}
+          = object
+              (catMaybes
+                 [("internalCheckers" .=) <$> _uccInternalCheckers,
+                  ("period" .=) <$> _uccPeriod,
+                  ("contentMatchers" .=) <$> _uccContentMatchers,
+                  ("name" .=) <$> _uccName,
+                  ("monitoredResource" .=) <$> _uccMonitoredResource,
+                  ("selectedRegions" .=) <$> _uccSelectedRegions,
+                  ("isInternal" .=) <$> _uccIsInternal,
+                  ("displayName" .=) <$> _uccDisplayName,
+                  ("resourceGroup" .=) <$> _uccResourceGroup,
+                  ("timeout" .=) <$> _uccTimeout,
+                  ("httpCheck" .=) <$> _uccHTTPCheck,
+                  ("tcpCheck" .=) <$> _uccTCPCheck])
+
 -- | A single data point in a time series.
 --
 -- /See:/ 'point' smart constructor.
 data Point = Point'
-    { _pValue    :: !(Maybe TypedValue)
+    { _pValue :: !(Maybe TypedValue)
     , _pInterval :: !(Maybe TimeInterval)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1582,7 +1819,7 @@ data Point = Point'
 -- * 'pInterval'
 point
     :: Point
-point =
+point = 
     Point'
     { _pValue = Nothing
     , _pInterval = Nothing
@@ -1622,14 +1859,14 @@ instance ToJSON Point where
 --
 -- /See:/ 'collectdPayload' smart constructor.
 data CollectdPayload = CollectdPayload'
-    { _cpStartTime      :: !(Maybe DateTime')
+    { _cpStartTime :: !(Maybe DateTime')
     , _cpPluginInstance :: !(Maybe Text)
-    , _cpValues         :: !(Maybe [CollectdValue])
-    , _cpTypeInstance   :: !(Maybe Text)
-    , _cpEndTime        :: !(Maybe DateTime')
-    , _cpMetadata       :: !(Maybe CollectdPayloadMetadata)
-    , _cpType           :: !(Maybe Text)
-    , _cpPlugin         :: !(Maybe Text)
+    , _cpValues :: !(Maybe [CollectdValue])
+    , _cpTypeInstance :: !(Maybe Text)
+    , _cpEndTime :: !(Maybe DateTime')
+    , _cpMetadata :: !(Maybe CollectdPayloadMetadata)
+    , _cpType :: !(Maybe Text)
+    , _cpPlugin :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CollectdPayload' with the minimum fields required to make a request.
@@ -1653,7 +1890,7 @@ data CollectdPayload = CollectdPayload'
 -- * 'cpPlugin'
 collectdPayload
     :: CollectdPayload
-collectdPayload =
+collectdPayload = 
     CollectdPayload'
     { _cpStartTime = Nothing
     , _cpPluginInstance = Nothing
@@ -1742,7 +1979,7 @@ instance ToJSON CollectdPayload where
 -- /See:/ 'metric' smart constructor.
 data Metric = Metric'
     { _mLabels :: !(Maybe MetricLabels)
-    , _mType   :: !(Maybe Text)
+    , _mType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Metric' with the minimum fields required to make a request.
@@ -1754,7 +1991,7 @@ data Metric = Metric'
 -- * 'mType'
 metric
     :: Metric
-metric =
+metric = 
     Metric'
     { _mLabels = Nothing
     , _mType = Nothing
@@ -1782,17 +2019,82 @@ instance ToJSON Metric where
               (catMaybes
                  [("labels" .=) <$> _mLabels, ("type" .=) <$> _mType])
 
--- | Specify a sequence of buckets that have a width that is proportional to
--- the value of the lower bound. Each bucket represents a constant relative
--- uncertainty on a specific value in the bucket.Defines num_finite_buckets
--- + 2 (= N) buckets with these boundaries for bucket i:Upper bound (0 \<=
--- i \< N-1): scale * (growth_factor ^ i). Lower bound (1 \<= i \< N):
--- scale * (growth_factor ^ (i - 1)).
+-- | Describes the error status for payloads that were not written.
+--
+-- /See:/ 'collectdPayloadError' smart constructor.
+data CollectdPayloadError = CollectdPayloadError'
+    { _cpeError :: !(Maybe Status)
+    , _cpeValueErrors :: !(Maybe [CollectdValueError])
+    , _cpeIndex :: !(Maybe (Textual Int32))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CollectdPayloadError' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cpeError'
+--
+-- * 'cpeValueErrors'
+--
+-- * 'cpeIndex'
+collectdPayloadError
+    :: CollectdPayloadError
+collectdPayloadError = 
+    CollectdPayloadError'
+    { _cpeError = Nothing
+    , _cpeValueErrors = Nothing
+    , _cpeIndex = Nothing
+    }
+
+-- | Records the error status for the payload. If this field is present, the
+-- partial errors for nested values won\'t be populated.
+cpeError :: Lens' CollectdPayloadError (Maybe Status)
+cpeError = lens _cpeError (\ s a -> s{_cpeError = a})
+
+-- | Records the error status for values that were not written due to an
+-- error.Failed payloads for which nothing is written will not include
+-- partial value errors.
+cpeValueErrors :: Lens' CollectdPayloadError [CollectdValueError]
+cpeValueErrors
+  = lens _cpeValueErrors
+      (\ s a -> s{_cpeValueErrors = a})
+      . _Default
+      . _Coerce
+
+-- | The zero-based index in
+-- CreateCollectdTimeSeriesRequest.collectd_payloads.
+cpeIndex :: Lens' CollectdPayloadError (Maybe Int32)
+cpeIndex
+  = lens _cpeIndex (\ s a -> s{_cpeIndex = a}) .
+      mapping _Coerce
+
+instance FromJSON CollectdPayloadError where
+        parseJSON
+          = withObject "CollectdPayloadError"
+              (\ o ->
+                 CollectdPayloadError' <$>
+                   (o .:? "error") <*> (o .:? "valueErrors" .!= mempty)
+                     <*> (o .:? "index"))
+
+instance ToJSON CollectdPayloadError where
+        toJSON CollectdPayloadError'{..}
+          = object
+              (catMaybes
+                 [("error" .=) <$> _cpeError,
+                  ("valueErrors" .=) <$> _cpeValueErrors,
+                  ("index" .=) <$> _cpeIndex])
+
+-- | Specifies an exponential sequence of buckets that have a width that is
+-- proportional to the value of the lower bound. Each bucket represents a
+-- constant relative uncertainty on a specific value in the bucket.There
+-- are num_finite_buckets + 2 (= N) buckets. Bucket i has the following
+-- boundaries:Upper bound (0 \<= i \< N-1): scale * (growth_factor ^ i).
+-- Lower bound (1 \<= i \< N): scale * (growth_factor ^ (i - 1)).
 --
 -- /See:/ 'exponential' smart constructor.
 data Exponential = Exponential'
-    { _eGrowthFactor     :: !(Maybe (Textual Double))
-    , _eScale            :: !(Maybe (Textual Double))
+    { _eGrowthFactor :: !(Maybe (Textual Double))
+    , _eScale :: !(Maybe (Textual Double))
     , _eNumFiniteBuckets :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1807,7 +2109,7 @@ data Exponential = Exponential'
 -- * 'eNumFiniteBuckets'
 exponential
     :: Exponential
-exponential =
+exponential = 
     Exponential'
     { _eGrowthFactor = Nothing
     , _eScale = Nothing
@@ -1850,59 +2152,6 @@ instance ToJSON Exponential where
                   ("scale" .=) <$> _eScale,
                   ("numFiniteBuckets" .=) <$> _eNumFiniteBuckets])
 
--- | The ListCategories response.
---
--- /See:/ 'listCategoriesResponse' smart constructor.
-data ListCategoriesResponse = ListCategoriesResponse'
-    { _lcrNextPageToken :: !(Maybe Text)
-    , _lcrCategory      :: !(Maybe [Category])
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'ListCategoriesResponse' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'lcrNextPageToken'
---
--- * 'lcrCategory'
-listCategoriesResponse
-    :: ListCategoriesResponse
-listCategoriesResponse =
-    ListCategoriesResponse'
-    { _lcrNextPageToken = Nothing
-    , _lcrCategory = Nothing
-    }
-
--- | If there are more results than have been returned, then this field is
--- set to a non-empty value. To see the additional results, use that value
--- as pageToken in the next call to this method.
-lcrNextPageToken :: Lens' ListCategoriesResponse (Maybe Text)
-lcrNextPageToken
-  = lens _lcrNextPageToken
-      (\ s a -> s{_lcrNextPageToken = a})
-
--- | The Categories that match the specified filters.
-lcrCategory :: Lens' ListCategoriesResponse [Category]
-lcrCategory
-  = lens _lcrCategory (\ s a -> s{_lcrCategory = a}) .
-      _Default
-      . _Coerce
-
-instance FromJSON ListCategoriesResponse where
-        parseJSON
-          = withObject "ListCategoriesResponse"
-              (\ o ->
-                 ListCategoriesResponse' <$>
-                   (o .:? "nextPageToken") <*>
-                     (o .:? "category" .!= mempty))
-
-instance ToJSON ListCategoriesResponse where
-        toJSON ListCategoriesResponse'{..}
-          = object
-              (catMaybes
-                 [("nextPageToken" .=) <$> _lcrNextPageToken,
-                  ("category" .=) <$> _lcrCategory])
-
 -- | The range of the population values.
 --
 -- /See:/ 'range' smart constructor.
@@ -1920,7 +2169,7 @@ data Range = Range'
 -- * 'rMin'
 range
     :: Range
-range =
+range = 
     Range'
     { _rMax = Nothing
     , _rMin = Nothing
@@ -1964,7 +2213,7 @@ instance ToJSON Range where
 -- /See:/ 'monitoredResource' smart constructor.
 data MonitoredResource = MonitoredResource'
     { _mrLabels :: !(Maybe MonitoredResourceLabels)
-    , _mrType   :: !(Maybe Text)
+    , _mrType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MonitoredResource' with the minimum fields required to make a request.
@@ -1976,21 +2225,21 @@ data MonitoredResource = MonitoredResource'
 -- * 'mrType'
 monitoredResource
     :: MonitoredResource
-monitoredResource =
+monitoredResource = 
     MonitoredResource'
     { _mrLabels = Nothing
     , _mrType = Nothing
     }
 
 -- | Required. Values for all of the labels listed in the associated
--- monitored resource descriptor. For example, Cloud SQL databases use the
--- labels \"database_id\" and \"zone\".
+-- monitored resource descriptor. For example, Compute Engine VM instances
+-- use the labels \"project_id\", \"instance_id\", and \"zone\".
 mrLabels :: Lens' MonitoredResource (Maybe MonitoredResourceLabels)
 mrLabels = lens _mrLabels (\ s a -> s{_mrLabels = a})
 
 -- | Required. The monitored resource type. This field must match the type
 -- field of a MonitoredResourceDescriptor object. For example, the type of
--- a Cloud SQL database is \"cloudsql_database\".
+-- a Compute Engine VM instance is gce_instance.
 mrType :: Lens' MonitoredResource (Maybe Text)
 mrType = lens _mrType (\ s a -> s{_mrType = a})
 
@@ -2008,6 +2257,71 @@ instance ToJSON MonitoredResource where
                  [("labels" .=) <$> _mrLabels,
                   ("type" .=) <$> _mrType])
 
+-- | Contains the region, location, and list of IP addresses where checkers
+-- in the location run from.
+--
+-- /See:/ 'uptimeCheckIP' smart constructor.
+data UptimeCheckIP = UptimeCheckIP'
+    { _uciIPAddress :: !(Maybe Text)
+    , _uciLocation :: !(Maybe Text)
+    , _uciRegion :: !(Maybe UptimeCheckIPRegion)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UptimeCheckIP' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uciIPAddress'
+--
+-- * 'uciLocation'
+--
+-- * 'uciRegion'
+uptimeCheckIP
+    :: UptimeCheckIP
+uptimeCheckIP = 
+    UptimeCheckIP'
+    { _uciIPAddress = Nothing
+    , _uciLocation = Nothing
+    , _uciRegion = Nothing
+    }
+
+-- | The IP address from which the uptime check originates. This is a full IP
+-- address (not an IP address range). Most IP addresses, as of this
+-- publication, are in IPv4 format; however, one should not rely on the IP
+-- addresses being in IPv4 format indefinitely and should support
+-- interpreting this field in either IPv4 or IPv6 format.
+uciIPAddress :: Lens' UptimeCheckIP (Maybe Text)
+uciIPAddress
+  = lens _uciIPAddress (\ s a -> s{_uciIPAddress = a})
+
+-- | A more specific location within the region that typically encodes a
+-- particular city\/town\/metro (and its containing state\/province or
+-- country) within the broader umbrella region category.
+uciLocation :: Lens' UptimeCheckIP (Maybe Text)
+uciLocation
+  = lens _uciLocation (\ s a -> s{_uciLocation = a})
+
+-- | A broad region category in which the IP address is located.
+uciRegion :: Lens' UptimeCheckIP (Maybe UptimeCheckIPRegion)
+uciRegion
+  = lens _uciRegion (\ s a -> s{_uciRegion = a})
+
+instance FromJSON UptimeCheckIP where
+        parseJSON
+          = withObject "UptimeCheckIP"
+              (\ o ->
+                 UptimeCheckIP' <$>
+                   (o .:? "ipAddress") <*> (o .:? "location") <*>
+                     (o .:? "region"))
+
+instance ToJSON UptimeCheckIP where
+        toJSON UptimeCheckIP'{..}
+          = object
+              (catMaybes
+                 [("ipAddress" .=) <$> _uciIPAddress,
+                  ("location" .=) <$> _uciLocation,
+                  ("region" .=) <$> _uciRegion])
+
 -- | A time interval extending just after a start time through an end time.
 -- If the start time is the same as the end time, then the interval
 -- represents a single point in time.
@@ -2015,7 +2329,7 @@ instance ToJSON MonitoredResource where
 -- /See:/ 'timeInterval' smart constructor.
 data TimeInterval = TimeInterval'
     { _tiStartTime :: !(Maybe DateTime')
-    , _tiEndTime   :: !(Maybe DateTime')
+    , _tiEndTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeInterval' with the minimum fields required to make a request.
@@ -2027,7 +2341,7 @@ data TimeInterval = TimeInterval'
 -- * 'tiEndTime'
 timeInterval
     :: TimeInterval
-timeInterval =
+timeInterval = 
     TimeInterval'
     { _tiStartTime = Nothing
     , _tiEndTime = Nothing
@@ -2061,13 +2375,88 @@ instance ToJSON TimeInterval where
                  [("startTime" .=) <$> _tiStartTime,
                   ("endTime" .=) <$> _tiEndTime])
 
+-- | The list of headers to send as part of the uptime check request. If two
+-- headers have the same key and different values, they should be entered
+-- as a single header, with the value being a comma-separated list of all
+-- the desired values as described at
+-- https:\/\/www.w3.org\/Protocols\/rfc2616\/rfc2616.txt (page 31).
+-- Entering two separate headers with the same key in a Create call will
+-- cause the first to be overwritten by the second.
+--
+-- /See:/ 'hTTPCheckHeaders' smart constructor.
+newtype HTTPCheckHeaders = HTTPCheckHeaders'
+    { _httpchAddtional :: HashMap Text Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'HTTPCheckHeaders' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'httpchAddtional'
+hTTPCheckHeaders
+    :: HashMap Text Text -- ^ 'httpchAddtional'
+    -> HTTPCheckHeaders
+hTTPCheckHeaders pHttpchAddtional_ = 
+    HTTPCheckHeaders'
+    { _httpchAddtional = _Coerce # pHttpchAddtional_
+    }
+
+httpchAddtional :: Lens' HTTPCheckHeaders (HashMap Text Text)
+httpchAddtional
+  = lens _httpchAddtional
+      (\ s a -> s{_httpchAddtional = a})
+      . _Coerce
+
+instance FromJSON HTTPCheckHeaders where
+        parseJSON
+          = withObject "HTTPCheckHeaders"
+              (\ o -> HTTPCheckHeaders' <$> (parseJSONObject o))
+
+instance ToJSON HTTPCheckHeaders where
+        toJSON = toJSON . _httpchAddtional
+
+-- | Used to perform string matching. Currently, this matches on the exact
+-- content. In the future, it can be expanded to allow for regular
+-- expressions and more complex matching.
+--
+-- /See:/ 'contentMatcher' smart constructor.
+newtype ContentMatcher = ContentMatcher'
+    { _cmContent :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ContentMatcher' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cmContent'
+contentMatcher
+    :: ContentMatcher
+contentMatcher = 
+    ContentMatcher'
+    { _cmContent = Nothing
+    }
+
+-- | String content to match
+cmContent :: Lens' ContentMatcher (Maybe Text)
+cmContent
+  = lens _cmContent (\ s a -> s{_cmContent = a})
+
+instance FromJSON ContentMatcher where
+        parseJSON
+          = withObject "ContentMatcher"
+              (\ o -> ContentMatcher' <$> (o .:? "content"))
+
+instance ToJSON ContentMatcher where
+        toJSON ContentMatcher'{..}
+          = object (catMaybes [("content" .=) <$> _cmContent])
+
 -- | The ListGroupMembers response.
 --
 -- /See:/ 'listGroupMembersResponse' smart constructor.
 data ListGroupMembersResponse = ListGroupMembersResponse'
     { _lgmrNextPageToken :: !(Maybe Text)
-    , _lgmrMembers       :: !(Maybe [MonitoredResource])
-    , _lgmrTotalSize     :: !(Maybe (Textual Int32))
+    , _lgmrMembers :: !(Maybe [MonitoredResource])
+    , _lgmrTotalSize :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListGroupMembersResponse' with the minimum fields required to make a request.
@@ -2081,7 +2470,7 @@ data ListGroupMembersResponse = ListGroupMembersResponse'
 -- * 'lgmrTotalSize'
 listGroupMembersResponse
     :: ListGroupMembersResponse
-listGroupMembersResponse =
+listGroupMembersResponse = 
     ListGroupMembersResponse'
     { _lgmrNextPageToken = Nothing
     , _lgmrMembers = Nothing
@@ -2131,8 +2520,8 @@ instance ToJSON ListGroupMembersResponse where
 --
 -- /See:/ 'labelDescriptor' smart constructor.
 data LabelDescriptor = LabelDescriptor'
-    { _ldKey         :: !(Maybe Text)
-    , _ldValueType   :: !(Maybe LabelDescriptorValueType)
+    { _ldKey :: !(Maybe Text)
+    , _ldValueType :: !(Maybe LabelDescriptorValueType)
     , _ldDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2147,7 +2536,7 @@ data LabelDescriptor = LabelDescriptor'
 -- * 'ldDescription'
 labelDescriptor
     :: LabelDescriptor
-labelDescriptor =
+labelDescriptor = 
     LabelDescriptor'
     { _ldKey = Nothing
     , _ldValueType = Nothing
@@ -2185,17 +2574,17 @@ instance ToJSON LabelDescriptor where
                   ("valueType" .=) <$> _ldValueType,
                   ("description" .=) <$> _ldDescription])
 
--- | Specify a sequence of buckets that all have the same width (except
--- overflow and underflow). Each bucket represents a constant absolute
--- uncertainty on the specific value in the bucket.Defines
--- num_finite_buckets + 2 (= N) buckets with these boundaries for bucket
--- i:Upper bound (0 \<= i \< N-1): offset + (width * i). Lower bound (1 \<=
--- i \< N): offset + (width * (i - 1)).
+-- | Specifies a linear sequence of buckets that all have the same width
+-- (except overflow and underflow). Each bucket represents a constant
+-- absolute uncertainty on the specific value in the bucket.There are
+-- num_finite_buckets + 2 (= N) buckets. Bucket i has the following
+-- boundaries:Upper bound (0 \<= i \< N-1): offset + (width * i). Lower
+-- bound (1 \<= i \< N): offset + (width * (i - 1)).
 --
 -- /See:/ 'linear' smart constructor.
 data Linear = Linear'
-    { _lOffSet           :: !(Maybe (Textual Double))
-    , _lWidth            :: !(Maybe (Textual Double))
+    { _lOffSet :: !(Maybe (Textual Double))
+    , _lWidth :: !(Maybe (Textual Double))
     , _lNumFiniteBuckets :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2210,7 +2599,7 @@ data Linear = Linear'
 -- * 'lNumFiniteBuckets'
 linear
     :: Linear
-linear =
+linear = 
     Linear'
     { _lOffSet = Nothing
     , _lWidth = Nothing
@@ -2252,16 +2641,124 @@ instance ToJSON Linear where
                   ("width" .=) <$> _lWidth,
                   ("numFiniteBuckets" .=) <$> _lNumFiniteBuckets])
 
+-- | The protocol for the ListUptimeCheckIps response.
+--
+-- /See:/ 'listUptimeCheckIPsResponse' smart constructor.
+data ListUptimeCheckIPsResponse = ListUptimeCheckIPsResponse'
+    { _lucirNextPageToken :: !(Maybe Text)
+    , _lucirUptimeCheckIPs :: !(Maybe [UptimeCheckIP])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ListUptimeCheckIPsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'lucirNextPageToken'
+--
+-- * 'lucirUptimeCheckIPs'
+listUptimeCheckIPsResponse
+    :: ListUptimeCheckIPsResponse
+listUptimeCheckIPsResponse = 
+    ListUptimeCheckIPsResponse'
+    { _lucirNextPageToken = Nothing
+    , _lucirUptimeCheckIPs = Nothing
+    }
+
+-- | This field represents the pagination token to retrieve the next page of
+-- results. If the value is empty, it means no further results for the
+-- request. To retrieve the next page of results, the value of the
+-- next_page_token is passed to the subsequent List method call (in the
+-- request message\'s page_token field). NOTE: this field is not yet
+-- implemented
+lucirNextPageToken :: Lens' ListUptimeCheckIPsResponse (Maybe Text)
+lucirNextPageToken
+  = lens _lucirNextPageToken
+      (\ s a -> s{_lucirNextPageToken = a})
+
+-- | The returned list of IP addresses (including region and location) that
+-- the checkers run from.
+lucirUptimeCheckIPs :: Lens' ListUptimeCheckIPsResponse [UptimeCheckIP]
+lucirUptimeCheckIPs
+  = lens _lucirUptimeCheckIPs
+      (\ s a -> s{_lucirUptimeCheckIPs = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListUptimeCheckIPsResponse where
+        parseJSON
+          = withObject "ListUptimeCheckIPsResponse"
+              (\ o ->
+                 ListUptimeCheckIPsResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "uptimeCheckIps" .!= mempty))
+
+instance ToJSON ListUptimeCheckIPsResponse where
+        toJSON ListUptimeCheckIPsResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _lucirNextPageToken,
+                  ("uptimeCheckIps" .=) <$> _lucirUptimeCheckIPs])
+
+-- | The resource submessage for group checks. It can be used instead of a
+-- monitored resource, when multiple resources are being monitored.
+--
+-- /See:/ 'resourceGroup' smart constructor.
+data ResourceGroup = ResourceGroup'
+    { _rgResourceType :: !(Maybe ResourceGroupResourceType)
+    , _rgGroupId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ResourceGroup' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rgResourceType'
+--
+-- * 'rgGroupId'
+resourceGroup
+    :: ResourceGroup
+resourceGroup = 
+    ResourceGroup'
+    { _rgResourceType = Nothing
+    , _rgGroupId = Nothing
+    }
+
+-- | The resource type of the group members.
+rgResourceType :: Lens' ResourceGroup (Maybe ResourceGroupResourceType)
+rgResourceType
+  = lens _rgResourceType
+      (\ s a -> s{_rgResourceType = a})
+
+-- | The group of resources being monitored. Should be only the group_id, not
+-- projects\/\/groups\/.
+rgGroupId :: Lens' ResourceGroup (Maybe Text)
+rgGroupId
+  = lens _rgGroupId (\ s a -> s{_rgGroupId = a})
+
+instance FromJSON ResourceGroup where
+        parseJSON
+          = withObject "ResourceGroup"
+              (\ o ->
+                 ResourceGroup' <$>
+                   (o .:? "resourceType") <*> (o .:? "groupId"))
+
+instance ToJSON ResourceGroup where
+        toJSON ResourceGroup'{..}
+          = object
+              (catMaybes
+                 [("resourceType" .=) <$> _rgResourceType,
+                  ("groupId" .=) <$> _rgGroupId])
+
 -- | A protocol buffer message type.
 --
 -- /See:/ 'type'' smart constructor.
 data Type = Type'
     { _tSourceContext :: !(Maybe SourceContext)
-    , _tOneofs        :: !(Maybe [Text])
-    , _tName          :: !(Maybe Text)
-    , _tOptions       :: !(Maybe [Option])
-    , _tFields        :: !(Maybe [Field])
-    , _tSyntax        :: !(Maybe TypeSyntax)
+    , _tOneofs :: !(Maybe [Text])
+    , _tName :: !(Maybe Text)
+    , _tOptions :: !(Maybe [Option])
+    , _tFields :: !(Maybe [Field])
+    , _tSyntax :: !(Maybe TypeSyntax)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Type' with the minimum fields required to make a request.
@@ -2281,7 +2778,7 @@ data Type = Type'
 -- * 'tSyntax'
 type'
     :: Type
-type' =
+type' = 
     Type'
     { _tSourceContext = Nothing
     , _tOneofs = Nothing
@@ -2346,13 +2843,57 @@ instance ToJSON Type where
                   ("fields" .=) <$> _tFields,
                   ("syntax" .=) <$> _tSyntax])
 
+-- | The CreateCollectdTimeSeries response.
+--
+-- /See:/ 'createCollectdTimeSeriesResponse' smart constructor.
+newtype CreateCollectdTimeSeriesResponse = CreateCollectdTimeSeriesResponse'
+    { _cctsrPayloadErrors :: Maybe [CollectdPayloadError]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CreateCollectdTimeSeriesResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cctsrPayloadErrors'
+createCollectdTimeSeriesResponse
+    :: CreateCollectdTimeSeriesResponse
+createCollectdTimeSeriesResponse = 
+    CreateCollectdTimeSeriesResponse'
+    { _cctsrPayloadErrors = Nothing
+    }
+
+-- | Records the error status for points that were not written due to an
+-- error.Failed requests for which nothing is written will return an error
+-- response instead.
+cctsrPayloadErrors :: Lens' CreateCollectdTimeSeriesResponse [CollectdPayloadError]
+cctsrPayloadErrors
+  = lens _cctsrPayloadErrors
+      (\ s a -> s{_cctsrPayloadErrors = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON CreateCollectdTimeSeriesResponse
+         where
+        parseJSON
+          = withObject "CreateCollectdTimeSeriesResponse"
+              (\ o ->
+                 CreateCollectdTimeSeriesResponse' <$>
+                   (o .:? "payloadErrors" .!= mempty))
+
+instance ToJSON CreateCollectdTimeSeriesResponse
+         where
+        toJSON CreateCollectdTimeSeriesResponse'{..}
+          = object
+              (catMaybes
+                 [("payloadErrors" .=) <$> _cctsrPayloadErrors])
+
 -- | A protocol buffer option, which can be attached to a message, field,
 -- enumeration, etc.
 --
 -- /See:/ 'option' smart constructor.
 data Option = Option'
     { _oValue :: !(Maybe OptionValue)
-    , _oName  :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Option' with the minimum fields required to make a request.
@@ -2364,7 +2905,7 @@ data Option = Option'
 -- * 'oName'
 option
     :: Option
-option =
+option = 
     Option'
     { _oValue = Nothing
     , _oName = Nothing
@@ -2397,30 +2938,26 @@ instance ToJSON Option where
               (catMaybes
                  [("value" .=) <$> _oValue, ("name" .=) <$> _oName])
 
--- | A Distribution may optionally contain a histogram of the values in the
--- population. The histogram is given in bucket_counts as counts of values
--- that fall into one of a sequence of non-overlapping buckets. The
--- sequence of buckets is described by bucket_options.A bucket specifies an
--- inclusive lower bound and exclusive upper bound for the values that are
--- counted for that bucket. The upper bound of a bucket is strictly greater
--- than the lower bound.The sequence of N buckets for a Distribution
--- consists of an underflow bucket (number 0), zero or more finite buckets
--- (number 1 through N - 2) and an overflow bucket (number N - 1). The
--- buckets are contiguous: the lower bound of bucket i (i > 0) is the same
--- as the upper bound of bucket i - 1. The buckets span the whole range of
--- finite values: lower bound of the underflow bucket is -infinity and the
--- upper bound of the overflow bucket is +infinity. The finite buckets are
--- so-called because both bounds are finite.BucketOptions describes bucket
--- boundaries in one of three ways. Two describe the boundaries by giving
--- parameters for a formula to generate boundaries and one gives the bucket
--- boundaries explicitly.If bucket_options is not given, then no
--- bucket_counts may be given.
+-- | BucketOptions describes the bucket boundaries used to create a histogram
+-- for the distribution. The buckets can be in a linear sequence, an
+-- exponential sequence, or each bucket can be specified explicitly.
+-- BucketOptions does not include the number of values in each bucket.A
+-- bucket has an inclusive lower bound and exclusive upper bound for the
+-- values that are counted for that bucket. The upper bound of a bucket
+-- must be strictly greater than the lower bound. The sequence of N buckets
+-- for a distribution consists of an underflow bucket (number 0), zero or
+-- more finite buckets (number 1 through N - 2) and an overflow bucket
+-- (number N - 1). The buckets are contiguous: the lower bound of bucket i
+-- (i > 0) is the same as the upper bound of bucket i - 1. The buckets span
+-- the whole range of finite values: lower bound of the underflow bucket is
+-- -infinity and the upper bound of the overflow bucket is +infinity. The
+-- finite buckets are so-called because both bounds are finite.
 --
 -- /See:/ 'bucketOptions' smart constructor.
 data BucketOptions = BucketOptions'
     { _boExponentialBuckets :: !(Maybe Exponential)
-    , _boLinearBuckets      :: !(Maybe Linear)
-    , _boExplicitBuckets    :: !(Maybe Explicit)
+    , _boLinearBuckets :: !(Maybe Linear)
+    , _boExplicitBuckets :: !(Maybe Explicit)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BucketOptions' with the minimum fields required to make a request.
@@ -2434,7 +2971,7 @@ data BucketOptions = BucketOptions'
 -- * 'boExplicitBuckets'
 bucketOptions
     :: BucketOptions
-bucketOptions =
+bucketOptions = 
     BucketOptions'
     { _boExponentialBuckets = Nothing
     , _boLinearBuckets = Nothing
@@ -2476,6 +3013,174 @@ instance ToJSON BucketOptions where
                   ("linearBuckets" .=) <$> _boLinearBuckets,
                   ("explicitBuckets" .=) <$> _boExplicitBuckets])
 
+-- | The protocol for the ListUptimeCheckConfigs response.
+--
+-- /See:/ 'listUptimeCheckConfigsResponse' smart constructor.
+data ListUptimeCheckConfigsResponse = ListUptimeCheckConfigsResponse'
+    { _luccrUptimeCheckConfigs :: !(Maybe [UptimeCheckConfig])
+    , _luccrNextPageToken :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ListUptimeCheckConfigsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'luccrUptimeCheckConfigs'
+--
+-- * 'luccrNextPageToken'
+listUptimeCheckConfigsResponse
+    :: ListUptimeCheckConfigsResponse
+listUptimeCheckConfigsResponse = 
+    ListUptimeCheckConfigsResponse'
+    { _luccrUptimeCheckConfigs = Nothing
+    , _luccrNextPageToken = Nothing
+    }
+
+-- | The returned uptime check configurations.
+luccrUptimeCheckConfigs :: Lens' ListUptimeCheckConfigsResponse [UptimeCheckConfig]
+luccrUptimeCheckConfigs
+  = lens _luccrUptimeCheckConfigs
+      (\ s a -> s{_luccrUptimeCheckConfigs = a})
+      . _Default
+      . _Coerce
+
+-- | This field represents the pagination token to retrieve the next page of
+-- results. If the value is empty, it means no further results for the
+-- request. To retrieve the next page of results, the value of the
+-- next_page_token is passed to the subsequent List method call (in the
+-- request message\'s page_token field).
+luccrNextPageToken :: Lens' ListUptimeCheckConfigsResponse (Maybe Text)
+luccrNextPageToken
+  = lens _luccrNextPageToken
+      (\ s a -> s{_luccrNextPageToken = a})
+
+instance FromJSON ListUptimeCheckConfigsResponse
+         where
+        parseJSON
+          = withObject "ListUptimeCheckConfigsResponse"
+              (\ o ->
+                 ListUptimeCheckConfigsResponse' <$>
+                   (o .:? "uptimeCheckConfigs" .!= mempty) <*>
+                     (o .:? "nextPageToken"))
+
+instance ToJSON ListUptimeCheckConfigsResponse where
+        toJSON ListUptimeCheckConfigsResponse'{..}
+          = object
+              (catMaybes
+                 [("uptimeCheckConfigs" .=) <$>
+                    _luccrUptimeCheckConfigs,
+                  ("nextPageToken" .=) <$> _luccrNextPageToken])
+
+-- | Information involved in an HTTP\/HTTPS uptime check request.
+--
+-- /See:/ 'hTTPCheck' smart constructor.
+data HTTPCheck = HTTPCheck'
+    { _httpcUseSSL :: !(Maybe Bool)
+    , _httpcPath :: !(Maybe Text)
+    , _httpcMaskHeaders :: !(Maybe Bool)
+    , _httpcHeaders :: !(Maybe HTTPCheckHeaders)
+    , _httpcAuthInfo :: !(Maybe BasicAuthentication)
+    , _httpcPort :: !(Maybe (Textual Int32))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'HTTPCheck' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'httpcUseSSL'
+--
+-- * 'httpcPath'
+--
+-- * 'httpcMaskHeaders'
+--
+-- * 'httpcHeaders'
+--
+-- * 'httpcAuthInfo'
+--
+-- * 'httpcPort'
+hTTPCheck
+    :: HTTPCheck
+hTTPCheck = 
+    HTTPCheck'
+    { _httpcUseSSL = Nothing
+    , _httpcPath = Nothing
+    , _httpcMaskHeaders = Nothing
+    , _httpcHeaders = Nothing
+    , _httpcAuthInfo = Nothing
+    , _httpcPort = Nothing
+    }
+
+-- | If true, use HTTPS instead of HTTP to run the check.
+httpcUseSSL :: Lens' HTTPCheck (Maybe Bool)
+httpcUseSSL
+  = lens _httpcUseSSL (\ s a -> s{_httpcUseSSL = a})
+
+-- | The path to the page to run the check against. Will be combined with the
+-- host (specified within the MonitoredResource) and port to construct the
+-- full URL. Optional (defaults to \"\/\").
+httpcPath :: Lens' HTTPCheck (Maybe Text)
+httpcPath
+  = lens _httpcPath (\ s a -> s{_httpcPath = a})
+
+-- | Boolean specifiying whether to encrypt the header information.
+-- Encryption should be specified for any headers related to authentication
+-- that you do not wish to be seen when retrieving the configuration. The
+-- server will be responsible for encrypting the headers. On Get\/List
+-- calls, if mask_headers is set to True then the headers will be obscured
+-- with ******.
+httpcMaskHeaders :: Lens' HTTPCheck (Maybe Bool)
+httpcMaskHeaders
+  = lens _httpcMaskHeaders
+      (\ s a -> s{_httpcMaskHeaders = a})
+
+-- | The list of headers to send as part of the uptime check request. If two
+-- headers have the same key and different values, they should be entered
+-- as a single header, with the value being a comma-separated list of all
+-- the desired values as described at
+-- https:\/\/www.w3.org\/Protocols\/rfc2616\/rfc2616.txt (page 31).
+-- Entering two separate headers with the same key in a Create call will
+-- cause the first to be overwritten by the second.
+httpcHeaders :: Lens' HTTPCheck (Maybe HTTPCheckHeaders)
+httpcHeaders
+  = lens _httpcHeaders (\ s a -> s{_httpcHeaders = a})
+
+-- | The authentication information. Optional when creating an HTTP check;
+-- defaults to empty.
+httpcAuthInfo :: Lens' HTTPCheck (Maybe BasicAuthentication)
+httpcAuthInfo
+  = lens _httpcAuthInfo
+      (\ s a -> s{_httpcAuthInfo = a})
+
+-- | The port to the page to run the check against. Will be combined with
+-- host (specified within the MonitoredResource) and path to construct the
+-- full URL. Optional (defaults to 80 without SSL, or 443 with SSL).
+httpcPort :: Lens' HTTPCheck (Maybe Int32)
+httpcPort
+  = lens _httpcPort (\ s a -> s{_httpcPort = a}) .
+      mapping _Coerce
+
+instance FromJSON HTTPCheck where
+        parseJSON
+          = withObject "HTTPCheck"
+              (\ o ->
+                 HTTPCheck' <$>
+                   (o .:? "useSsl") <*> (o .:? "path") <*>
+                     (o .:? "maskHeaders")
+                     <*> (o .:? "headers")
+                     <*> (o .:? "authInfo")
+                     <*> (o .:? "port"))
+
+instance ToJSON HTTPCheck where
+        toJSON HTTPCheck'{..}
+          = object
+              (catMaybes
+                 [("useSsl" .=) <$> _httpcUseSSL,
+                  ("path" .=) <$> _httpcPath,
+                  ("maskHeaders" .=) <$> _httpcMaskHeaders,
+                  ("headers" .=) <$> _httpcHeaders,
+                  ("authInfo" .=) <$> _httpcAuthInfo,
+                  ("port" .=) <$> _httpcPort])
+
 -- | A collection of data points that describes the time-varying values of a
 -- metric. A time series is identified by a combination of a
 -- fully-specified monitored resource and a fully-specified metric. This
@@ -2483,11 +3188,11 @@ instance ToJSON BucketOptions where
 --
 -- /See:/ 'timeSeries' smart constructor.
 data TimeSeries = TimeSeries'
-    { _tsPoints     :: !(Maybe [Point])
+    { _tsPoints :: !(Maybe [Point])
     , _tsMetricKind :: !(Maybe TimeSeriesMetricKind)
-    , _tsMetric     :: !(Maybe Metric)
-    , _tsResource   :: !(Maybe MonitoredResource)
-    , _tsValueType  :: !(Maybe TimeSeriesValueType)
+    , _tsMetric :: !(Maybe Metric)
+    , _tsResource :: !(Maybe MonitoredResource)
+    , _tsValueType :: !(Maybe TimeSeriesValueType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeSeries' with the minimum fields required to make a request.
@@ -2505,7 +3210,7 @@ data TimeSeries = TimeSeries'
 -- * 'tsValueType'
 timeSeries
     :: TimeSeries
-timeSeries =
+timeSeries = 
     TimeSeries'
     { _tsPoints = Nothing
     , _tsMetricKind = Nothing
@@ -2544,8 +3249,8 @@ tsMetricKind
 tsMetric :: Lens' TimeSeries (Maybe Metric)
 tsMetric = lens _tsMetric (\ s a -> s{_tsMetric = a})
 
--- | The associated resource. A fully-specified monitored resource used to
--- identify the time series.
+-- | The associated monitored resource. Custom metrics can use only certain
+-- monitored resource types in their time series data.
 tsResource :: Lens' TimeSeries (Maybe MonitoredResource)
 tsResource
   = lens _tsResource (\ s a -> s{_tsResource = a})
@@ -2578,3 +3283,87 @@ instance ToJSON TimeSeries where
                   ("metric" .=) <$> _tsMetric,
                   ("resource" .=) <$> _tsResource,
                   ("valueType" .=) <$> _tsValueType])
+
+-- | Information required for a TCP uptime check request.
+--
+-- /See:/ 'tcpCheck' smart constructor.
+newtype TCPCheck = TCPCheck'
+    { _tcPort :: Maybe (Textual Int32)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TCPCheck' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tcPort'
+tcpCheck
+    :: TCPCheck
+tcpCheck = 
+    TCPCheck'
+    { _tcPort = Nothing
+    }
+
+-- | The port to the page to run the check against. Will be combined with
+-- host (specified within the MonitoredResource) to construct the full URL.
+-- Required.
+tcPort :: Lens' TCPCheck (Maybe Int32)
+tcPort
+  = lens _tcPort (\ s a -> s{_tcPort = a}) .
+      mapping _Coerce
+
+instance FromJSON TCPCheck where
+        parseJSON
+          = withObject "TCPCheck"
+              (\ o -> TCPCheck' <$> (o .:? "port"))
+
+instance ToJSON TCPCheck where
+        toJSON TCPCheck'{..}
+          = object (catMaybes [("port" .=) <$> _tcPort])
+
+-- | Describes the error status for values that were not written.
+--
+-- /See:/ 'collectdValueError' smart constructor.
+data CollectdValueError = CollectdValueError'
+    { _cveError :: !(Maybe Status)
+    , _cveIndex :: !(Maybe (Textual Int32))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CollectdValueError' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cveError'
+--
+-- * 'cveIndex'
+collectdValueError
+    :: CollectdValueError
+collectdValueError = 
+    CollectdValueError'
+    { _cveError = Nothing
+    , _cveIndex = Nothing
+    }
+
+-- | Records the error status for the value.
+cveError :: Lens' CollectdValueError (Maybe Status)
+cveError = lens _cveError (\ s a -> s{_cveError = a})
+
+-- | The zero-based index in CollectdPayload.values within the parent
+-- CreateCollectdTimeSeriesRequest.collectd_payloads.
+cveIndex :: Lens' CollectdValueError (Maybe Int32)
+cveIndex
+  = lens _cveIndex (\ s a -> s{_cveIndex = a}) .
+      mapping _Coerce
+
+instance FromJSON CollectdValueError where
+        parseJSON
+          = withObject "CollectdValueError"
+              (\ o ->
+                 CollectdValueError' <$>
+                   (o .:? "error") <*> (o .:? "index"))
+
+instance ToJSON CollectdValueError where
+        toJSON CollectdValueError'{..}
+          = object
+              (catMaybes
+                 [("error" .=) <$> _cveError,
+                  ("index" .=) <$> _cveIndex])

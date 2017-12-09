@@ -36,10 +36,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Delete
     , tdTaskQueue
     , tdProject
     , tdTask
+    , tdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.delete@ method which the
 -- 'TasksDelete' request conforms to.
@@ -52,15 +53,17 @@ type TasksDeleteResource =
                Capture "taskqueue" Text :>
                  "tasks" :>
                    Capture "task" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a task from a TaskQueue.
 --
 -- /See:/ 'tasksDelete' smart constructor.
 data TasksDelete = TasksDelete'
     { _tdTaskQueue :: !Text
-    , _tdProject   :: !Text
-    , _tdTask      :: !Text
+    , _tdProject :: !Text
+    , _tdTask :: !Text
+    , _tdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data TasksDelete = TasksDelete'
 -- * 'tdProject'
 --
 -- * 'tdTask'
+--
+-- * 'tdFields'
 tasksDelete
     :: Text -- ^ 'tdTaskQueue'
     -> Text -- ^ 'tdProject'
     -> Text -- ^ 'tdTask'
     -> TasksDelete
-tasksDelete pTdTaskQueue_ pTdProject_ pTdTask_ =
+tasksDelete pTdTaskQueue_ pTdProject_ pTdTask_ = 
     TasksDelete'
     { _tdTaskQueue = pTdTaskQueue_
     , _tdProject = pTdProject_
     , _tdTask = pTdTask_
+    , _tdFields = Nothing
     }
 
 -- | The taskqueue to delete a task from.
@@ -98,13 +104,18 @@ tdProject
 tdTask :: Lens' TasksDelete Text
 tdTask = lens _tdTask (\ s a -> s{_tdTask = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdFields :: Lens' TasksDelete (Maybe Text)
+tdFields = lens _tdFields (\ s a -> s{_tdFields = a})
+
 instance GoogleRequest TasksDelete where
         type Rs TasksDelete = ()
         type Scopes TasksDelete =
              '["https://www.googleapis.com/auth/taskqueue",
                "https://www.googleapis.com/auth/taskqueue.consumer"]
         requestClient TasksDelete'{..}
-          = go _tdProject _tdTaskQueue _tdTask (Just AltJSON)
+          = go _tdProject _tdTaskQueue _tdTask _tdFields
+              (Just AltJSON)
               taskQueueService
           where go
                   = buildClient (Proxy :: Proxy TasksDeleteResource)

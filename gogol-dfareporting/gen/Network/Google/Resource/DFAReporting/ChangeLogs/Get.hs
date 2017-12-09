@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.ChangeLogs.Get
     -- * Request Lenses
     , clgProFileId
     , clgId
+    , clgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.changeLogs.get@ method which the
 -- 'ChangeLogsGet' request conforms to.
 type ChangeLogsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "changeLogs" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] ChangeLog
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] ChangeLog
 
 -- | Gets one change log by ID.
 --
 -- /See:/ 'changeLogsGet' smart constructor.
 data ChangeLogsGet = ChangeLogsGet'
     { _clgProFileId :: !(Textual Int64)
-    , _clgId        :: !(Textual Int64)
+    , _clgId :: !(Textual Int64)
+    , _clgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangeLogsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ChangeLogsGet = ChangeLogsGet'
 -- * 'clgProFileId'
 --
 -- * 'clgId'
+--
+-- * 'clgFields'
 changeLogsGet
     :: Int64 -- ^ 'clgProFileId'
     -> Int64 -- ^ 'clgId'
     -> ChangeLogsGet
-changeLogsGet pClgProFileId_ pClgId_ =
+changeLogsGet pClgProFileId_ pClgId_ = 
     ChangeLogsGet'
     { _clgProFileId = _Coerce # pClgProFileId_
     , _clgId = _Coerce # pClgId_
+    , _clgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ clgId :: Lens' ChangeLogsGet Int64
 clgId
   = lens _clgId (\ s a -> s{_clgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clgFields :: Lens' ChangeLogsGet (Maybe Text)
+clgFields
+  = lens _clgFields (\ s a -> s{_clgFields = a})
+
 instance GoogleRequest ChangeLogsGet where
         type Rs ChangeLogsGet = ChangeLog
         type Scopes ChangeLogsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ChangeLogsGet'{..}
-          = go _clgProFileId _clgId (Just AltJSON)
+          = go _clgProFileId _clgId _clgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy ChangeLogsGetResource)

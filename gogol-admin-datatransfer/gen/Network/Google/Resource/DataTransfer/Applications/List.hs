@@ -36,10 +36,11 @@ module Network.Google.Resource.DataTransfer.Applications.List
     , alCustomerId
     , alPageToken
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datatransfer.applications.list@ method which the
 -- 'ApplicationsList' request conforms to.
@@ -51,16 +52,18 @@ type ApplicationsListResource =
              QueryParam "customerId" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ApplicationsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ApplicationsListResponse
 
 -- | Lists the applications available for data transfer for a customer.
 --
 -- /See:/ 'applicationsList' smart constructor.
 data ApplicationsList = ApplicationsList'
     { _alCustomerId :: !(Maybe Text)
-    , _alPageToken  :: !(Maybe Text)
+    , _alPageToken :: !(Maybe Text)
     , _alMaxResults :: !(Maybe (Textual Int32))
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsList' with the minimum fields required to make a request.
@@ -72,13 +75,16 @@ data ApplicationsList = ApplicationsList'
 -- * 'alPageToken'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 applicationsList
     :: ApplicationsList
-applicationsList =
+applicationsList = 
     ApplicationsList'
     { _alCustomerId = Nothing
     , _alPageToken = Nothing
     , _alMaxResults = Nothing
+    , _alFields = Nothing
     }
 
 -- | Immutable ID of the Google Apps account.
@@ -97,6 +103,10 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ApplicationsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ApplicationsList where
         type Rs ApplicationsList = ApplicationsListResponse
         type Scopes ApplicationsList =
@@ -104,6 +114,7 @@ instance GoogleRequest ApplicationsList where
                "https://www.googleapis.com/auth/admin.datatransfer.readonly"]
         requestClient ApplicationsList'{..}
           = go _alCustomerId _alPageToken _alMaxResults
+              _alFields
               (Just AltJSON)
               dataTransferService
           where go

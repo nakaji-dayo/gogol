@@ -34,30 +34,6 @@ module Network.Google.Monitoring
 
     -- * Resources
 
-    -- ** monitoring.categories.list
-    , module Network.Google.Resource.Monitoring.Categories.List
-
-    -- ** monitoring.categories.metricAssociations.list
-    , module Network.Google.Resource.Monitoring.Categories.MetricAssociations.List
-
-    -- ** monitoring.projects.categories.create
-    , module Network.Google.Resource.Monitoring.Projects.Categories.Create
-
-    -- ** monitoring.projects.categories.delete
-    , module Network.Google.Resource.Monitoring.Projects.Categories.Delete
-
-    -- ** monitoring.projects.categories.list
-    , module Network.Google.Resource.Monitoring.Projects.Categories.List
-
-    -- ** monitoring.projects.categories.metricAssociations.create
-    , module Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.Create
-
-    -- ** monitoring.projects.categories.metricAssociations.delete
-    , module Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.Delete
-
-    -- ** monitoring.projects.categories.metricAssociations.list
-    , module Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.List
-
     -- ** monitoring.projects.collectdTimeSeries.create
     , module Network.Google.Resource.Monitoring.Projects.CollectdTimeSeries.Create
 
@@ -103,6 +79,24 @@ module Network.Google.Monitoring
     -- ** monitoring.projects.timeSeries.list
     , module Network.Google.Resource.Monitoring.Projects.TimeSeries.List
 
+    -- ** monitoring.projects.uptimeCheckConfigs.create
+    , module Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Create
+
+    -- ** monitoring.projects.uptimeCheckConfigs.delete
+    , module Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Delete
+
+    -- ** monitoring.projects.uptimeCheckConfigs.get
+    , module Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Get
+
+    -- ** monitoring.projects.uptimeCheckConfigs.list
+    , module Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.List
+
+    -- ** monitoring.projects.uptimeCheckConfigs.patch
+    , module Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Patch
+
+    -- ** monitoring.uptimeCheckIps.list
+    , module Network.Google.Resource.Monitoring.UptimeCheckIPs.List
+
     -- * Types
 
     -- ** MetricDescriptorValueType
@@ -120,17 +114,21 @@ module Network.Google.Monitoring
     -- ** CollectdValueDataSourceType
     , CollectdValueDataSourceType (..)
 
+    -- ** Status
+    , Status
+    , status
+    , sDetails
+    , sCode
+    , sMessage
+
     -- ** ListTimeSeriesResponse
     , ListTimeSeriesResponse
     , listTimeSeriesResponse
     , ltsrNextPageToken
     , ltsrTimeSeries
 
-    -- ** ListMetricAssociationsResponse
-    , ListMetricAssociationsResponse
-    , listMetricAssociationsResponse
-    , lmarNextPageToken
-    , lmarMetricAssociations
+    -- ** UptimeCheckIPRegion
+    , UptimeCheckIPRegion (..)
 
     -- ** MetricDescriptor
     , MetricDescriptor
@@ -172,6 +170,12 @@ module Network.Google.Monitoring
     , sourceContext
     , scFileName
 
+    -- ** BasicAuthentication
+    , BasicAuthentication
+    , basicAuthentication
+    , baUsername
+    , baPassword
+
     -- ** Distribution
     , Distribution
     , distribution
@@ -199,13 +203,6 @@ module Network.Google.Monitoring
     -- ** FieldKind
     , FieldKind (..)
 
-    -- ** MetricAssociation
-    , MetricAssociation
-    , metricAssociation
-    , maMetricType
-    , maName
-    , maIsDefault
-
     -- ** Empty
     , Empty
     , empty
@@ -227,19 +224,24 @@ module Network.Google.Monitoring
     , optionValue
     , ovAddtional
 
-    -- ** Category
-    , Category
-    , category
-    , cShortName
-    , cName
-    , cDisplayName
-    , cDescription
-    , cIsDefault
-
     -- ** CreateTimeSeriesRequest
     , CreateTimeSeriesRequest
     , createTimeSeriesRequest
     , ctsrTimeSeries
+
+    -- ** StatusDetailsItem
+    , StatusDetailsItem
+    , statusDetailsItem
+    , sdiAddtional
+
+    -- ** InternalChecker
+    , InternalChecker
+    , internalChecker
+    , icNetwork
+    , icCheckerId
+    , icGcpZone
+    , icDisplayName
+    , icProjectId
 
     -- ** ListMonitoredResourceDescriptorsResponse
     , ListMonitoredResourceDescriptorsResponse
@@ -282,6 +284,22 @@ module Network.Google.Monitoring
     -- ** TypeSyntax
     , TypeSyntax (..)
 
+    -- ** UptimeCheckConfig
+    , UptimeCheckConfig
+    , uptimeCheckConfig
+    , uccInternalCheckers
+    , uccPeriod
+    , uccContentMatchers
+    , uccName
+    , uccMonitoredResource
+    , uccSelectedRegions
+    , uccIsInternal
+    , uccDisplayName
+    , uccResourceGroup
+    , uccTimeout
+    , uccHTTPCheck
+    , uccTCPCheck
+
     -- ** Point
     , Point
     , point
@@ -306,6 +324,13 @@ module Network.Google.Monitoring
     , mLabels
     , mType
 
+    -- ** CollectdPayloadError
+    , CollectdPayloadError
+    , collectdPayloadError
+    , cpeError
+    , cpeValueErrors
+    , cpeIndex
+
     -- ** Exponential
     , Exponential
     , exponential
@@ -313,11 +338,8 @@ module Network.Google.Monitoring
     , eScale
     , eNumFiniteBuckets
 
-    -- ** ListCategoriesResponse
-    , ListCategoriesResponse
-    , listCategoriesResponse
-    , lcrNextPageToken
-    , lcrCategory
+    -- ** ResourceGroupResourceType
+    , ResourceGroupResourceType (..)
 
     -- ** Range
     , Range
@@ -331,6 +353,13 @@ module Network.Google.Monitoring
     , mrLabels
     , mrType
 
+    -- ** UptimeCheckIP
+    , UptimeCheckIP
+    , uptimeCheckIP
+    , uciIPAddress
+    , uciLocation
+    , uciRegion
+
     -- ** Xgafv
     , Xgafv (..)
 
@@ -340,8 +369,18 @@ module Network.Google.Monitoring
     , tiStartTime
     , tiEndTime
 
+    -- ** HTTPCheckHeaders
+    , HTTPCheckHeaders
+    , hTTPCheckHeaders
+    , httpchAddtional
+
     -- ** TimeSeriesMetricKind
     , TimeSeriesMetricKind (..)
+
+    -- ** ContentMatcher
+    , ContentMatcher
+    , contentMatcher
+    , cmContent
 
     -- ** ListGroupMembersResponse
     , ListGroupMembersResponse
@@ -367,6 +406,18 @@ module Network.Google.Monitoring
     , lWidth
     , lNumFiniteBuckets
 
+    -- ** ListUptimeCheckIPsResponse
+    , ListUptimeCheckIPsResponse
+    , listUptimeCheckIPsResponse
+    , lucirNextPageToken
+    , lucirUptimeCheckIPs
+
+    -- ** ResourceGroup
+    , ResourceGroup
+    , resourceGroup
+    , rgResourceType
+    , rgGroupId
+
     -- ** FieldCardinality
     , FieldCardinality (..)
 
@@ -383,6 +434,11 @@ module Network.Google.Monitoring
     -- ** MetricDescriptorMetricKind
     , MetricDescriptorMetricKind (..)
 
+    -- ** CreateCollectdTimeSeriesResponse
+    , CreateCollectdTimeSeriesResponse
+    , createCollectdTimeSeriesResponse
+    , cctsrPayloadErrors
+
     -- ** Option
     , Option
     , option
@@ -396,6 +452,22 @@ module Network.Google.Monitoring
     , boLinearBuckets
     , boExplicitBuckets
 
+    -- ** ListUptimeCheckConfigsResponse
+    , ListUptimeCheckConfigsResponse
+    , listUptimeCheckConfigsResponse
+    , luccrUptimeCheckConfigs
+    , luccrNextPageToken
+
+    -- ** HTTPCheck
+    , HTTPCheck
+    , hTTPCheck
+    , httpcUseSSL
+    , httpcPath
+    , httpcMaskHeaders
+    , httpcHeaders
+    , httpcAuthInfo
+    , httpcPort
+
     -- ** TimeSeries
     , TimeSeries
     , timeSeries
@@ -404,33 +476,42 @@ module Network.Google.Monitoring
     , tsMetric
     , tsResource
     , tsValueType
+
+    -- ** TCPCheck
+    , TCPCheck
+    , tcpCheck
+    , tcPort
+
+    -- ** CollectdValueError
+    , CollectdValueError
+    , collectdValueError
+    , cveError
+    , cveIndex
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Monitoring.Categories.List
-import           Network.Google.Resource.Monitoring.Categories.MetricAssociations.List
-import           Network.Google.Resource.Monitoring.Projects.Categories.Create
-import           Network.Google.Resource.Monitoring.Projects.Categories.Delete
-import           Network.Google.Resource.Monitoring.Projects.Categories.List
-import           Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.Create
-import           Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.Delete
-import           Network.Google.Resource.Monitoring.Projects.Categories.MetricAssociations.List
-import           Network.Google.Resource.Monitoring.Projects.CollectdTimeSeries.Create
-import           Network.Google.Resource.Monitoring.Projects.Groups.Create
-import           Network.Google.Resource.Monitoring.Projects.Groups.Delete
-import           Network.Google.Resource.Monitoring.Projects.Groups.Get
-import           Network.Google.Resource.Monitoring.Projects.Groups.List
-import           Network.Google.Resource.Monitoring.Projects.Groups.Members.List
-import           Network.Google.Resource.Monitoring.Projects.Groups.Update
-import           Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Create
-import           Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Delete
-import           Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Get
-import           Network.Google.Resource.Monitoring.Projects.MetricDescriptors.List
-import           Network.Google.Resource.Monitoring.Projects.MonitoredResourceDescriptors.Get
-import           Network.Google.Resource.Monitoring.Projects.MonitoredResourceDescriptors.List
-import           Network.Google.Resource.Monitoring.Projects.TimeSeries.Create
-import           Network.Google.Resource.Monitoring.Projects.TimeSeries.List
+import Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Resource.Monitoring.Projects.CollectdTimeSeries.Create
+import Network.Google.Resource.Monitoring.Projects.Groups.Create
+import Network.Google.Resource.Monitoring.Projects.Groups.Delete
+import Network.Google.Resource.Monitoring.Projects.Groups.Get
+import Network.Google.Resource.Monitoring.Projects.Groups.List
+import Network.Google.Resource.Monitoring.Projects.Groups.Members.List
+import Network.Google.Resource.Monitoring.Projects.Groups.Update
+import Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Create
+import Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Delete
+import Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Get
+import Network.Google.Resource.Monitoring.Projects.MetricDescriptors.List
+import Network.Google.Resource.Monitoring.Projects.MonitoredResourceDescriptors.Get
+import Network.Google.Resource.Monitoring.Projects.MonitoredResourceDescriptors.List
+import Network.Google.Resource.Monitoring.Projects.TimeSeries.Create
+import Network.Google.Resource.Monitoring.Projects.TimeSeries.List
+import Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Create
+import Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Delete
+import Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Get
+import Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.List
+import Network.Google.Resource.Monitoring.Projects.UptimeCheckConfigs.Patch
+import Network.Google.Resource.Monitoring.UptimeCheckIPs.List
 
 {- $resources
 TODO
@@ -438,9 +519,8 @@ TODO
 
 -- | Represents the entirety of the methods and resources available for the Stackdriver Monitoring API service.
 type MonitoringAPI =
-     CategoriesMetricAssociationsListResource :<|>
-       CategoriesListResource
-       :<|> ProjectsMetricDescriptorsListResource
+     UptimeCheckIPsListResource :<|>
+       ProjectsMetricDescriptorsListResource
        :<|> ProjectsMetricDescriptorsGetResource
        :<|> ProjectsMetricDescriptorsCreateResource
        :<|> ProjectsMetricDescriptorsDeleteResource
@@ -451,14 +531,11 @@ type MonitoringAPI =
        :<|> ProjectsGroupsDeleteResource
        :<|> ProjectsGroupsUpdateResource
        :<|> ProjectsCollectdTimeSeriesCreateResource
-       :<|> ProjectsCategoriesMetricAssociationsListResource
-       :<|>
-       ProjectsCategoriesMetricAssociationsCreateResource
-       :<|>
-       ProjectsCategoriesMetricAssociationsDeleteResource
-       :<|> ProjectsCategoriesListResource
-       :<|> ProjectsCategoriesCreateResource
-       :<|> ProjectsCategoriesDeleteResource
+       :<|> ProjectsUptimeCheckConfigsListResource
+       :<|> ProjectsUptimeCheckConfigsPatchResource
+       :<|> ProjectsUptimeCheckConfigsGetResource
+       :<|> ProjectsUptimeCheckConfigsCreateResource
+       :<|> ProjectsUptimeCheckConfigsDeleteResource
        :<|> ProjectsMonitoredResourceDescriptorsListResource
        :<|> ProjectsMonitoredResourceDescriptorsGetResource
        :<|> ProjectsTimeSeriesListResource

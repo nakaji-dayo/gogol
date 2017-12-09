@@ -40,11 +40,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Releases.Delete
     , prdUploadType
     , prdBearerToken
     , prdName
+    , prdFields
     , prdCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.releases.delete@ method which the
 -- 'ProjectsReleasesDelete' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsReleasesDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Delete a \`Release\` by resource name.
 --
 -- /See:/ 'projectsReleasesDelete' smart constructor.
 data ProjectsReleasesDelete = ProjectsReleasesDelete'
-    { _prdXgafv          :: !(Maybe Xgafv)
+    { _prdXgafv :: !(Maybe Xgafv)
     , _prdUploadProtocol :: !(Maybe Text)
-    , _prdPp             :: !Bool
-    , _prdAccessToken    :: !(Maybe Text)
-    , _prdUploadType     :: !(Maybe Text)
-    , _prdBearerToken    :: !(Maybe Text)
-    , _prdName           :: !Text
-    , _prdCallback       :: !(Maybe Text)
+    , _prdPp :: !Bool
+    , _prdAccessToken :: !(Maybe Text)
+    , _prdUploadType :: !(Maybe Text)
+    , _prdBearerToken :: !(Maybe Text)
+    , _prdName :: !Text
+    , _prdFields :: !(Maybe Text)
+    , _prdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsReleasesDelete' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsReleasesDelete = ProjectsReleasesDelete'
 --
 -- * 'prdName'
 --
+-- * 'prdFields'
+--
 -- * 'prdCallback'
 projectsReleasesDelete
     :: Text -- ^ 'prdName'
     -> ProjectsReleasesDelete
-projectsReleasesDelete pPrdName_ =
+projectsReleasesDelete pPrdName_ = 
     ProjectsReleasesDelete'
     { _prdXgafv = Nothing
     , _prdUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsReleasesDelete pPrdName_ =
     , _prdUploadType = Nothing
     , _prdBearerToken = Nothing
     , _prdName = pPrdName_
+    , _prdFields = Nothing
     , _prdCallback = Nothing
     }
 
@@ -145,6 +151,11 @@ prdBearerToken
 prdName :: Lens' ProjectsReleasesDelete Text
 prdName = lens _prdName (\ s a -> s{_prdName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prdFields :: Lens' ProjectsReleasesDelete (Maybe Text)
+prdFields
+  = lens _prdFields (\ s a -> s{_prdFields = a})
+
 -- | JSONP
 prdCallback :: Lens' ProjectsReleasesDelete (Maybe Text)
 prdCallback
@@ -162,6 +173,7 @@ instance GoogleRequest ProjectsReleasesDelete where
               _prdUploadType
               _prdBearerToken
               _prdCallback
+              _prdFields
               (Just AltJSON)
               firebaseRulesService
           where go

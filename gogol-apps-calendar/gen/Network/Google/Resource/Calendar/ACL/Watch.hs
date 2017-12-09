@@ -39,10 +39,11 @@ module Network.Google.Resource.Calendar.ACL.Watch
     , awPayload
     , awPageToken
     , awMaxResults
+    , awFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.watch@ method which the
 -- 'ACLWatch' request conforms to.
@@ -57,19 +58,21 @@ type ACLWatchResource =
                    QueryParam "showDeleted" Bool :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Channel :> Post '[JSON] Channel
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Channel :> Post '[JSON] Channel
 
 -- | Watch for changes to ACL resources.
 --
 -- /See:/ 'aclWatch' smart constructor.
 data ACLWatch = ACLWatch'
-    { _awSyncToken   :: !(Maybe Text)
-    , _awCalendarId  :: !Text
+    { _awSyncToken :: !(Maybe Text)
+    , _awCalendarId :: !Text
     , _awShowDeleted :: !(Maybe Bool)
-    , _awPayload     :: !Channel
-    , _awPageToken   :: !(Maybe Text)
-    , _awMaxResults  :: !(Maybe (Textual Int32))
+    , _awPayload :: !Channel
+    , _awPageToken :: !(Maybe Text)
+    , _awMaxResults :: !(Maybe (Textual Int32))
+    , _awFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLWatch' with the minimum fields required to make a request.
@@ -87,11 +90,13 @@ data ACLWatch = ACLWatch'
 -- * 'awPageToken'
 --
 -- * 'awMaxResults'
+--
+-- * 'awFields'
 aclWatch
     :: Text -- ^ 'awCalendarId'
     -> Channel -- ^ 'awPayload'
     -> ACLWatch
-aclWatch pAwCalendarId_ pAwPayload_ =
+aclWatch pAwCalendarId_ pAwPayload_ = 
     ACLWatch'
     { _awSyncToken = Nothing
     , _awCalendarId = pAwCalendarId_
@@ -99,6 +104,7 @@ aclWatch pAwCalendarId_ pAwPayload_ =
     , _awPayload = pAwPayload_
     , _awPageToken = Nothing
     , _awMaxResults = Nothing
+    , _awFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -147,6 +153,10 @@ awMaxResults
   = lens _awMaxResults (\ s a -> s{_awMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+awFields :: Lens' ACLWatch (Maybe Text)
+awFields = lens _awFields (\ s a -> s{_awFields = a})
+
 instance GoogleRequest ACLWatch where
         type Rs ACLWatch = Channel
         type Scopes ACLWatch =
@@ -155,6 +165,7 @@ instance GoogleRequest ACLWatch where
           = go _awCalendarId _awSyncToken _awShowDeleted
               _awPageToken
               _awMaxResults
+              _awFields
               (Just AltJSON)
               _awPayload
               appsCalendarService

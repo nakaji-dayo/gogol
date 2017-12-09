@@ -37,10 +37,11 @@ module Network.Google.Resource.Books.MyLibrary.Bookshelves.MoveVolume
     , mlbmvVolumeId
     , mlbmvSource
     , mlbmvVolumePosition
+    , mlbmvFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.bookshelves.moveVolume@ method which the
 -- 'MyLibraryBookshelvesMoveVolume' request conforms to.
@@ -54,16 +55,18 @@ type MyLibraryBookshelvesMoveVolumeResource =
                  QueryParam "volumeId" Text :>
                    QueryParam "volumePosition" (Textual Int32) :>
                      QueryParam "source" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Moves a volume within a bookshelf.
 --
 -- /See:/ 'myLibraryBookshelvesMoveVolume' smart constructor.
 data MyLibraryBookshelvesMoveVolume = MyLibraryBookshelvesMoveVolume'
-    { _mlbmvShelf          :: !Text
-    , _mlbmvVolumeId       :: !Text
-    , _mlbmvSource         :: !(Maybe Text)
+    { _mlbmvShelf :: !Text
+    , _mlbmvVolumeId :: !Text
+    , _mlbmvSource :: !(Maybe Text)
     , _mlbmvVolumePosition :: !(Textual Int32)
+    , _mlbmvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryBookshelvesMoveVolume' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data MyLibraryBookshelvesMoveVolume = MyLibraryBookshelvesMoveVolume'
 -- * 'mlbmvSource'
 --
 -- * 'mlbmvVolumePosition'
+--
+-- * 'mlbmvFields'
 myLibraryBookshelvesMoveVolume
     :: Text -- ^ 'mlbmvShelf'
     -> Text -- ^ 'mlbmvVolumeId'
     -> Int32 -- ^ 'mlbmvVolumePosition'
     -> MyLibraryBookshelvesMoveVolume
-myLibraryBookshelvesMoveVolume pMlbmvShelf_ pMlbmvVolumeId_ pMlbmvVolumePosition_ =
+myLibraryBookshelvesMoveVolume pMlbmvShelf_ pMlbmvVolumeId_ pMlbmvVolumePosition_ = 
     MyLibraryBookshelvesMoveVolume'
     { _mlbmvShelf = pMlbmvShelf_
     , _mlbmvVolumeId = pMlbmvVolumeId_
     , _mlbmvSource = Nothing
     , _mlbmvVolumePosition = _Coerce # pMlbmvVolumePosition_
+    , _mlbmvFields = Nothing
     }
 
 -- | ID of bookshelf with the volume.
@@ -114,6 +120,11 @@ mlbmvVolumePosition
       (\ s a -> s{_mlbmvVolumePosition = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mlbmvFields :: Lens' MyLibraryBookshelvesMoveVolume (Maybe Text)
+mlbmvFields
+  = lens _mlbmvFields (\ s a -> s{_mlbmvFields = a})
+
 instance GoogleRequest MyLibraryBookshelvesMoveVolume
          where
         type Rs MyLibraryBookshelvesMoveVolume = ()
@@ -123,6 +134,7 @@ instance GoogleRequest MyLibraryBookshelvesMoveVolume
           = go _mlbmvShelf (Just _mlbmvVolumeId)
               (Just _mlbmvVolumePosition)
               _mlbmvSource
+              _mlbmvFields
               (Just AltJSON)
               booksService
           where go

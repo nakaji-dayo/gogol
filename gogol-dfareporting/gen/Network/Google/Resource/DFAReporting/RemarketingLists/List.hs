@@ -43,16 +43,17 @@ module Network.Google.Resource.DFAReporting.RemarketingLists.List
     , rllPageToken
     , rllSortField
     , rllMaxResults
+    , rllFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingLists.list@ method which the
 -- 'RemarketingListsList' request conforms to.
 type RemarketingListsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingLists" :>
@@ -66,8 +67,9 @@ type RemarketingListsListResource =
                            QueryParam "sortField" RemarketingListsListSortField
                              :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] RemarketingListsListResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] RemarketingListsListResponse
 
 -- | Retrieves a list of remarketing lists, possibly filtered. This method
 -- supports paging.
@@ -75,14 +77,15 @@ type RemarketingListsListResource =
 -- /See:/ 'remarketingListsList' smart constructor.
 data RemarketingListsList = RemarketingListsList'
     { _rllFloodlightActivityId :: !(Maybe (Textual Int64))
-    , _rllAdvertiserId         :: !(Textual Int64)
-    , _rllProFileId            :: !(Textual Int64)
-    , _rllSortOrder            :: !(Maybe RemarketingListsListSortOrder)
-    , _rllActive               :: !(Maybe Bool)
-    , _rllName                 :: !(Maybe Text)
-    , _rllPageToken            :: !(Maybe Text)
-    , _rllSortField            :: !(Maybe RemarketingListsListSortField)
-    , _rllMaxResults           :: !(Maybe (Textual Int32))
+    , _rllAdvertiserId :: !(Textual Int64)
+    , _rllProFileId :: !(Textual Int64)
+    , _rllSortOrder :: !RemarketingListsListSortOrder
+    , _rllActive :: !(Maybe Bool)
+    , _rllName :: !(Maybe Text)
+    , _rllPageToken :: !(Maybe Text)
+    , _rllSortField :: !RemarketingListsListSortField
+    , _rllMaxResults :: !(Textual Int32)
+    , _rllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListsList' with the minimum fields required to make a request.
@@ -106,21 +109,24 @@ data RemarketingListsList = RemarketingListsList'
 -- * 'rllSortField'
 --
 -- * 'rllMaxResults'
+--
+-- * 'rllFields'
 remarketingListsList
     :: Int64 -- ^ 'rllAdvertiserId'
     -> Int64 -- ^ 'rllProFileId'
     -> RemarketingListsList
-remarketingListsList pRllAdvertiserId_ pRllProFileId_ =
+remarketingListsList pRllAdvertiserId_ pRllProFileId_ = 
     RemarketingListsList'
     { _rllFloodlightActivityId = Nothing
     , _rllAdvertiserId = _Coerce # pRllAdvertiserId_
     , _rllProFileId = _Coerce # pRllProFileId_
-    , _rllSortOrder = Nothing
+    , _rllSortOrder = RLLSOAscending
     , _rllActive = Nothing
     , _rllName = Nothing
     , _rllPageToken = Nothing
-    , _rllSortField = Nothing
-    , _rllMaxResults = Nothing
+    , _rllSortField = RLLSFID
+    , _rllMaxResults = 1000
+    , _rllFields = Nothing
     }
 
 -- | Select only remarketing lists that have this floodlight activity ID.
@@ -143,8 +149,8 @@ rllProFileId
   = lens _rllProFileId (\ s a -> s{_rllProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-rllSortOrder :: Lens' RemarketingListsList (Maybe RemarketingListsListSortOrder)
+-- | Order of sorted results.
+rllSortOrder :: Lens' RemarketingListsList RemarketingListsListSortOrder
 rllSortOrder
   = lens _rllSortOrder (\ s a -> s{_rllSortOrder = a})
 
@@ -170,16 +176,21 @@ rllPageToken
   = lens _rllPageToken (\ s a -> s{_rllPageToken = a})
 
 -- | Field by which to sort the list.
-rllSortField :: Lens' RemarketingListsList (Maybe RemarketingListsListSortField)
+rllSortField :: Lens' RemarketingListsList RemarketingListsListSortField
 rllSortField
   = lens _rllSortField (\ s a -> s{_rllSortField = a})
 
 -- | Maximum number of results to return.
-rllMaxResults :: Lens' RemarketingListsList (Maybe Int32)
+rllMaxResults :: Lens' RemarketingListsList Int32
 rllMaxResults
   = lens _rllMaxResults
       (\ s a -> s{_rllMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+rllFields :: Lens' RemarketingListsList (Maybe Text)
+rllFields
+  = lens _rllFields (\ s a -> s{_rllFields = a})
 
 instance GoogleRequest RemarketingListsList where
         type Rs RemarketingListsList =
@@ -189,12 +200,13 @@ instance GoogleRequest RemarketingListsList where
         requestClient RemarketingListsList'{..}
           = go _rllProFileId (Just _rllAdvertiserId)
               _rllFloodlightActivityId
-              _rllSortOrder
+              (Just _rllSortOrder)
               _rllActive
               _rllName
               _rllPageToken
-              _rllSortField
-              _rllMaxResults
+              (Just _rllSortField)
+              (Just _rllMaxResults)
+              _rllFields
               (Just AltJSON)
               dFAReportingService
           where go

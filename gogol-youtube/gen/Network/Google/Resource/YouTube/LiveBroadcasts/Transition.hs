@@ -43,10 +43,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Transition
     , lbtOnBehalfOfContentOwner
     , lbtOnBehalfOfContentOwnerChannel
     , lbtId
+    , lbtFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.transition@ method which the
 -- 'LiveBroadcastsTransition' request conforms to.
@@ -62,8 +63,9 @@ type LiveBroadcastsTransitionResource =
                  QueryParam "part" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] LiveBroadcast
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] LiveBroadcast
 
 -- | Changes the status of a YouTube live broadcast and initiates any
 -- processes associated with the new status. For example, when you
@@ -74,11 +76,12 @@ type LiveBroadcastsTransitionResource =
 --
 -- /See:/ 'liveBroadcastsTransition' smart constructor.
 data LiveBroadcastsTransition = LiveBroadcastsTransition'
-    { _lbtPart                          :: !Text
-    , _lbtBroadcastStatus               :: !LiveBroadcastsTransitionBroadcastStatus
-    , _lbtOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbtPart :: !Text
+    , _lbtBroadcastStatus :: !LiveBroadcastsTransitionBroadcastStatus
+    , _lbtOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbtOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lbtId                            :: !Text
+    , _lbtId :: !Text
+    , _lbtFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsTransition' with the minimum fields required to make a request.
@@ -94,18 +97,21 @@ data LiveBroadcastsTransition = LiveBroadcastsTransition'
 -- * 'lbtOnBehalfOfContentOwnerChannel'
 --
 -- * 'lbtId'
+--
+-- * 'lbtFields'
 liveBroadcastsTransition
     :: Text -- ^ 'lbtPart'
     -> LiveBroadcastsTransitionBroadcastStatus -- ^ 'lbtBroadcastStatus'
     -> Text -- ^ 'lbtId'
     -> LiveBroadcastsTransition
-liveBroadcastsTransition pLbtPart_ pLbtBroadcastStatus_ pLbtId_ =
+liveBroadcastsTransition pLbtPart_ pLbtBroadcastStatus_ pLbtId_ = 
     LiveBroadcastsTransition'
     { _lbtPart = pLbtPart_
     , _lbtBroadcastStatus = pLbtBroadcastStatus_
     , _lbtOnBehalfOfContentOwner = Nothing
     , _lbtOnBehalfOfContentOwnerChannel = Nothing
     , _lbtId = pLbtId_
+    , _lbtFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -165,6 +171,11 @@ lbtOnBehalfOfContentOwnerChannel
 lbtId :: Lens' LiveBroadcastsTransition Text
 lbtId = lens _lbtId (\ s a -> s{_lbtId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lbtFields :: Lens' LiveBroadcastsTransition (Maybe Text)
+lbtFields
+  = lens _lbtFields (\ s a -> s{_lbtFields = a})
+
 instance GoogleRequest LiveBroadcastsTransition where
         type Rs LiveBroadcastsTransition = LiveBroadcast
         type Scopes LiveBroadcastsTransition =
@@ -175,6 +186,7 @@ instance GoogleRequest LiveBroadcastsTransition where
               (Just _lbtPart)
               _lbtOnBehalfOfContentOwner
               _lbtOnBehalfOfContentOwnerChannel
+              _lbtFields
               (Just AltJSON)
               youTubeService
           where go

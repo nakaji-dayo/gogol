@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AccountUserProFiles.Update
     -- * Request Lenses
     , aupfuProFileId
     , aupfuPayload
+    , aupfuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountUserProfiles.update@ method which the
 -- 'AccountUserProFilesUpdate' request conforms to.
 type AccountUserProFilesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountUserProfiles" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AccountUserProFile :>
-                   Put '[JSON] AccountUserProFile
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AccountUserProFile :>
+                     Put '[JSON] AccountUserProFile
 
 -- | Updates an existing account user profile.
 --
 -- /See:/ 'accountUserProFilesUpdate' smart constructor.
 data AccountUserProFilesUpdate = AccountUserProFilesUpdate'
     { _aupfuProFileId :: !(Textual Int64)
-    , _aupfuPayload   :: !AccountUserProFile
+    , _aupfuPayload :: !AccountUserProFile
+    , _aupfuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AccountUserProFilesUpdate = AccountUserProFilesUpdate'
 -- * 'aupfuProFileId'
 --
 -- * 'aupfuPayload'
+--
+-- * 'aupfuFields'
 accountUserProFilesUpdate
     :: Int64 -- ^ 'aupfuProFileId'
     -> AccountUserProFile -- ^ 'aupfuPayload'
     -> AccountUserProFilesUpdate
-accountUserProFilesUpdate pAupfuProFileId_ pAupfuPayload_ =
+accountUserProFilesUpdate pAupfuProFileId_ pAupfuPayload_ = 
     AccountUserProFilesUpdate'
     { _aupfuProFileId = _Coerce # pAupfuProFileId_
     , _aupfuPayload = pAupfuPayload_
+    , _aupfuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,6 +95,11 @@ aupfuPayload :: Lens' AccountUserProFilesUpdate AccountUserProFile
 aupfuPayload
   = lens _aupfuPayload (\ s a -> s{_aupfuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aupfuFields :: Lens' AccountUserProFilesUpdate (Maybe Text)
+aupfuFields
+  = lens _aupfuFields (\ s a -> s{_aupfuFields = a})
+
 instance GoogleRequest AccountUserProFilesUpdate
          where
         type Rs AccountUserProFilesUpdate =
@@ -96,7 +107,8 @@ instance GoogleRequest AccountUserProFilesUpdate
         type Scopes AccountUserProFilesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountUserProFilesUpdate'{..}
-          = go _aupfuProFileId (Just AltJSON) _aupfuPayload
+          = go _aupfuProFileId _aupfuFields (Just AltJSON)
+              _aupfuPayload
               dFAReportingService
           where go
                   = buildClient

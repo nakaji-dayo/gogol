@@ -49,11 +49,12 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.Delete
     , ccwdUploadType
     , ccwdBearerToken
     , ccwdId
+    , ccwdFields
     , ccwdCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.delete@ method which the
 -- 'CoursesCourseWorkDelete' request conforms to.
@@ -63,14 +64,15 @@ type CoursesCourseWorkDeleteResource =
          Capture "courseId" Text :>
            "courseWork" :>
              Capture "id" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a course work. This request must be made by the Developer
 -- Console project of the [OAuth client
@@ -84,15 +86,16 @@ type CoursesCourseWorkDeleteResource =
 --
 -- /See:/ 'coursesCourseWorkDelete' smart constructor.
 data CoursesCourseWorkDelete = CoursesCourseWorkDelete'
-    { _ccwdXgafv          :: !(Maybe Text)
+    { _ccwdXgafv :: !(Maybe Xgafv)
     , _ccwdUploadProtocol :: !(Maybe Text)
-    , _ccwdPp             :: !Bool
-    , _ccwdCourseId       :: !Text
-    , _ccwdAccessToken    :: !(Maybe Text)
-    , _ccwdUploadType     :: !(Maybe Text)
-    , _ccwdBearerToken    :: !(Maybe Text)
-    , _ccwdId             :: !Text
-    , _ccwdCallback       :: !(Maybe Text)
+    , _ccwdPp :: !Bool
+    , _ccwdCourseId :: !Text
+    , _ccwdAccessToken :: !(Maybe Text)
+    , _ccwdUploadType :: !(Maybe Text)
+    , _ccwdBearerToken :: !(Maybe Text)
+    , _ccwdId :: !Text
+    , _ccwdFields :: !(Maybe Text)
+    , _ccwdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkDelete' with the minimum fields required to make a request.
@@ -115,12 +118,14 @@ data CoursesCourseWorkDelete = CoursesCourseWorkDelete'
 --
 -- * 'ccwdId'
 --
+-- * 'ccwdFields'
+--
 -- * 'ccwdCallback'
 coursesCourseWorkDelete
     :: Text -- ^ 'ccwdCourseId'
     -> Text -- ^ 'ccwdId'
     -> CoursesCourseWorkDelete
-coursesCourseWorkDelete pCcwdCourseId_ pCcwdId_ =
+coursesCourseWorkDelete pCcwdCourseId_ pCcwdId_ = 
     CoursesCourseWorkDelete'
     { _ccwdXgafv = Nothing
     , _ccwdUploadProtocol = Nothing
@@ -130,11 +135,12 @@ coursesCourseWorkDelete pCcwdCourseId_ pCcwdId_ =
     , _ccwdUploadType = Nothing
     , _ccwdBearerToken = Nothing
     , _ccwdId = pCcwdId_
+    , _ccwdFields = Nothing
     , _ccwdCallback = Nothing
     }
 
 -- | V1 error format.
-ccwdXgafv :: Lens' CoursesCourseWorkDelete (Maybe Text)
+ccwdXgafv :: Lens' CoursesCourseWorkDelete (Maybe Xgafv)
 ccwdXgafv
   = lens _ccwdXgafv (\ s a -> s{_ccwdXgafv = a})
 
@@ -177,6 +183,11 @@ ccwdBearerToken
 ccwdId :: Lens' CoursesCourseWorkDelete Text
 ccwdId = lens _ccwdId (\ s a -> s{_ccwdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwdFields :: Lens' CoursesCourseWorkDelete (Maybe Text)
+ccwdFields
+  = lens _ccwdFields (\ s a -> s{_ccwdFields = a})
+
 -- | JSONP
 ccwdCallback :: Lens' CoursesCourseWorkDelete (Maybe Text)
 ccwdCallback
@@ -194,6 +205,7 @@ instance GoogleRequest CoursesCourseWorkDelete where
               _ccwdUploadType
               _ccwdBearerToken
               _ccwdCallback
+              _ccwdFields
               (Just AltJSON)
               classroomService
           where go

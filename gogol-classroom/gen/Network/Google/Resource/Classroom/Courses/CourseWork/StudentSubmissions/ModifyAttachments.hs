@@ -53,12 +53,13 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.StudentSubmissions.M
     , ccwssmaPayload
     , ccwssmaBearerToken
     , ccwssmaId
+    , ccwssmaFields
     , ccwssmaCallback
     , ccwssmaCourseWorkId
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.studentSubmissions.modifyAttachments@ method which the
 -- 'CoursesCourseWorkStudentSubmissionsModifyAttachments' request conforms to.
@@ -71,16 +72,17 @@ type CoursesCourseWorkStudentSubmissionsModifyAttachmentsResource
              Capture "courseWorkId" Text :>
                "studentSubmissions" :>
                  CaptureMode "id" "modifyAttachments" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] ModifyAttachmentsRequest :>
-                                     Post '[JSON] StudentSubmission
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] ModifyAttachmentsRequest :>
+                                       Post '[JSON] StudentSubmission
 
 -- | Modifies attachments of student submission. Attachments may only be
 -- added to student submissions belonging to course work objects with a
@@ -97,17 +99,18 @@ type CoursesCourseWorkStudentSubmissionsModifyAttachmentsResource
 --
 -- /See:/ 'coursesCourseWorkStudentSubmissionsModifyAttachments' smart constructor.
 data CoursesCourseWorkStudentSubmissionsModifyAttachments = CoursesCourseWorkStudentSubmissionsModifyAttachments'
-    { _ccwssmaXgafv          :: !(Maybe Text)
+    { _ccwssmaXgafv :: !(Maybe Xgafv)
     , _ccwssmaUploadProtocol :: !(Maybe Text)
-    , _ccwssmaPp             :: !Bool
-    , _ccwssmaCourseId       :: !Text
-    , _ccwssmaAccessToken    :: !(Maybe Text)
-    , _ccwssmaUploadType     :: !(Maybe Text)
-    , _ccwssmaPayload        :: !ModifyAttachmentsRequest
-    , _ccwssmaBearerToken    :: !(Maybe Text)
-    , _ccwssmaId             :: !Text
-    , _ccwssmaCallback       :: !(Maybe Text)
-    , _ccwssmaCourseWorkId   :: !Text
+    , _ccwssmaPp :: !Bool
+    , _ccwssmaCourseId :: !Text
+    , _ccwssmaAccessToken :: !(Maybe Text)
+    , _ccwssmaUploadType :: !(Maybe Text)
+    , _ccwssmaPayload :: !ModifyAttachmentsRequest
+    , _ccwssmaBearerToken :: !(Maybe Text)
+    , _ccwssmaId :: !Text
+    , _ccwssmaFields :: !(Maybe Text)
+    , _ccwssmaCallback :: !(Maybe Text)
+    , _ccwssmaCourseWorkId :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkStudentSubmissionsModifyAttachments' with the minimum fields required to make a request.
@@ -132,6 +135,8 @@ data CoursesCourseWorkStudentSubmissionsModifyAttachments = CoursesCourseWorkStu
 --
 -- * 'ccwssmaId'
 --
+-- * 'ccwssmaFields'
+--
 -- * 'ccwssmaCallback'
 --
 -- * 'ccwssmaCourseWorkId'
@@ -141,7 +146,7 @@ coursesCourseWorkStudentSubmissionsModifyAttachments
     -> Text -- ^ 'ccwssmaId'
     -> Text -- ^ 'ccwssmaCourseWorkId'
     -> CoursesCourseWorkStudentSubmissionsModifyAttachments
-coursesCourseWorkStudentSubmissionsModifyAttachments pCcwssmaCourseId_ pCcwssmaPayload_ pCcwssmaId_ pCcwssmaCourseWorkId_ =
+coursesCourseWorkStudentSubmissionsModifyAttachments pCcwssmaCourseId_ pCcwssmaPayload_ pCcwssmaId_ pCcwssmaCourseWorkId_ = 
     CoursesCourseWorkStudentSubmissionsModifyAttachments'
     { _ccwssmaXgafv = Nothing
     , _ccwssmaUploadProtocol = Nothing
@@ -152,12 +157,13 @@ coursesCourseWorkStudentSubmissionsModifyAttachments pCcwssmaCourseId_ pCcwssmaP
     , _ccwssmaPayload = pCcwssmaPayload_
     , _ccwssmaBearerToken = Nothing
     , _ccwssmaId = pCcwssmaId_
+    , _ccwssmaFields = Nothing
     , _ccwssmaCallback = Nothing
     , _ccwssmaCourseWorkId = pCcwssmaCourseWorkId_
     }
 
 -- | V1 error format.
-ccwssmaXgafv :: Lens' CoursesCourseWorkStudentSubmissionsModifyAttachments (Maybe Text)
+ccwssmaXgafv :: Lens' CoursesCourseWorkStudentSubmissionsModifyAttachments (Maybe Xgafv)
 ccwssmaXgafv
   = lens _ccwssmaXgafv (\ s a -> s{_ccwssmaXgafv = a})
 
@@ -208,6 +214,12 @@ ccwssmaId :: Lens' CoursesCourseWorkStudentSubmissionsModifyAttachments Text
 ccwssmaId
   = lens _ccwssmaId (\ s a -> s{_ccwssmaId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwssmaFields :: Lens' CoursesCourseWorkStudentSubmissionsModifyAttachments (Maybe Text)
+ccwssmaFields
+  = lens _ccwssmaFields
+      (\ s a -> s{_ccwssmaFields = a})
+
 -- | JSONP
 ccwssmaCallback :: Lens' CoursesCourseWorkStudentSubmissionsModifyAttachments (Maybe Text)
 ccwssmaCallback
@@ -241,6 +253,7 @@ instance GoogleRequest
               _ccwssmaUploadType
               _ccwssmaBearerToken
               _ccwssmaCallback
+              _ccwssmaFields
               (Just AltJSON)
               _ccwssmaPayload
               classroomService

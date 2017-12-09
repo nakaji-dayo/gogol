@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.Applications.Get
     , agApplicationId
     , agPlatformType
     , agLanguage
+    , agFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.applications.get@ method which the
 -- 'ApplicationsGet' request conforms to.
@@ -55,7 +56,8 @@ type ApplicationsGetResource =
                QueryParam "platformType" ApplicationsGetPlatformType
                  :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Application
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Application
 
 -- | Retrieves the metadata of the application with the given ID. If the
 -- requested application is not available for the specified platformType,
@@ -64,9 +66,10 @@ type ApplicationsGetResource =
 -- /See:/ 'applicationsGet' smart constructor.
 data ApplicationsGet = ApplicationsGet'
     { _agConsistencyToken :: !(Maybe (Textual Int64))
-    , _agApplicationId    :: !Text
-    , _agPlatformType     :: !(Maybe ApplicationsGetPlatformType)
-    , _agLanguage         :: !(Maybe Text)
+    , _agApplicationId :: !Text
+    , _agPlatformType :: !(Maybe ApplicationsGetPlatformType)
+    , _agLanguage :: !(Maybe Text)
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsGet' with the minimum fields required to make a request.
@@ -80,15 +83,18 @@ data ApplicationsGet = ApplicationsGet'
 -- * 'agPlatformType'
 --
 -- * 'agLanguage'
+--
+-- * 'agFields'
 applicationsGet
     :: Text -- ^ 'agApplicationId'
     -> ApplicationsGet
-applicationsGet pAgApplicationId_ =
+applicationsGet pAgApplicationId_ = 
     ApplicationsGet'
     { _agConsistencyToken = Nothing
     , _agApplicationId = pAgApplicationId_
     , _agPlatformType = Nothing
     , _agLanguage = Nothing
+    , _agFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -115,6 +121,10 @@ agLanguage :: Lens' ApplicationsGet (Maybe Text)
 agLanguage
   = lens _agLanguage (\ s a -> s{_agLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' ApplicationsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest ApplicationsGet where
         type Rs ApplicationsGet = Application
         type Scopes ApplicationsGet =
@@ -124,6 +134,7 @@ instance GoogleRequest ApplicationsGet where
           = go _agApplicationId _agConsistencyToken
               _agPlatformType
               _agLanguage
+              _agFields
               (Just AltJSON)
               gamesService
           where go

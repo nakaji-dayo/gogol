@@ -33,11 +33,12 @@ module Network.Google.Resource.AdExchangeBuyer.Proposals.Setupcomplete
     , ProposalsSetupcomplete
 
     -- * Request Lenses
-    , psProposalId
+    , proProposalId
+    , proFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.proposals.setupcomplete@ method which the
 -- 'ProposalsSetupcomplete' request conforms to.
@@ -47,39 +48,50 @@ type ProposalsSetupcompleteResource =
          "proposals" :>
            Capture "proposalId" Text :>
              "setupcomplete" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Update the given proposal to indicate that setup has been completed.
 --
 -- /See:/ 'proposalsSetupcomplete' smart constructor.
-newtype ProposalsSetupcomplete = ProposalsSetupcomplete'
-    { _psProposalId :: Text
+data ProposalsSetupcomplete = ProposalsSetupcomplete'
+    { _proProposalId :: !Text
+    , _proFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProposalsSetupcomplete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'psProposalId'
+-- * 'proProposalId'
+--
+-- * 'proFields'
 proposalsSetupcomplete
-    :: Text -- ^ 'psProposalId'
+    :: Text -- ^ 'proProposalId'
     -> ProposalsSetupcomplete
-proposalsSetupcomplete pPsProposalId_ =
+proposalsSetupcomplete pProProposalId_ = 
     ProposalsSetupcomplete'
-    { _psProposalId = pPsProposalId_
+    { _proProposalId = pProProposalId_
+    , _proFields = Nothing
     }
 
 -- | The proposal id for which the setup is complete
-psProposalId :: Lens' ProposalsSetupcomplete Text
-psProposalId
-  = lens _psProposalId (\ s a -> s{_psProposalId = a})
+proProposalId :: Lens' ProposalsSetupcomplete Text
+proProposalId
+  = lens _proProposalId
+      (\ s a -> s{_proProposalId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+proFields :: Lens' ProposalsSetupcomplete (Maybe Text)
+proFields
+  = lens _proFields (\ s a -> s{_proFields = a})
 
 instance GoogleRequest ProposalsSetupcomplete where
         type Rs ProposalsSetupcomplete = ()
         type Scopes ProposalsSetupcomplete =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProposalsSetupcomplete'{..}
-          = go _psProposalId (Just AltJSON)
+          = go _proProposalId _proFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

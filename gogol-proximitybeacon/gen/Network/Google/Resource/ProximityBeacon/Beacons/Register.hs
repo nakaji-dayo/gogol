@@ -46,18 +46,19 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Register
     , brPayload
     , brBearerToken
     , brProjectId
+    , brFields
     , brCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.register@ method which the
 -- 'BeaconsRegister' request conforms to.
 type BeaconsRegisterResource =
      "v1beta1" :>
        "beacons:register" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -65,8 +66,9 @@ type BeaconsRegisterResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Beacon :> Post '[JSON] Beacon
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Beacon :> Post '[JSON] Beacon
 
 -- | Registers a previously unregistered beacon given its \`advertisedId\`.
 -- These IDs are unique within the system. An ID can be registered only
@@ -77,15 +79,16 @@ type BeaconsRegisterResource =
 --
 -- /See:/ 'beaconsRegister' smart constructor.
 data BeaconsRegister = BeaconsRegister'
-    { _brXgafv          :: !(Maybe Text)
+    { _brXgafv :: !(Maybe Xgafv)
     , _brUploadProtocol :: !(Maybe Text)
-    , _brPp             :: !Bool
-    , _brAccessToken    :: !(Maybe Text)
-    , _brUploadType     :: !(Maybe Text)
-    , _brPayload        :: !Beacon
-    , _brBearerToken    :: !(Maybe Text)
-    , _brProjectId      :: !(Maybe Text)
-    , _brCallback       :: !(Maybe Text)
+    , _brPp :: !Bool
+    , _brAccessToken :: !(Maybe Text)
+    , _brUploadType :: !(Maybe Text)
+    , _brPayload :: !Beacon
+    , _brBearerToken :: !(Maybe Text)
+    , _brProjectId :: !(Maybe Text)
+    , _brFields :: !(Maybe Text)
+    , _brCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsRegister' with the minimum fields required to make a request.
@@ -108,11 +111,13 @@ data BeaconsRegister = BeaconsRegister'
 --
 -- * 'brProjectId'
 --
+-- * 'brFields'
+--
 -- * 'brCallback'
 beaconsRegister
     :: Beacon -- ^ 'brPayload'
     -> BeaconsRegister
-beaconsRegister pBrPayload_ =
+beaconsRegister pBrPayload_ = 
     BeaconsRegister'
     { _brXgafv = Nothing
     , _brUploadProtocol = Nothing
@@ -122,11 +127,12 @@ beaconsRegister pBrPayload_ =
     , _brPayload = pBrPayload_
     , _brBearerToken = Nothing
     , _brProjectId = Nothing
+    , _brFields = Nothing
     , _brCallback = Nothing
     }
 
 -- | V1 error format.
-brXgafv :: Lens' BeaconsRegister (Maybe Text)
+brXgafv :: Lens' BeaconsRegister (Maybe Xgafv)
 brXgafv = lens _brXgafv (\ s a -> s{_brXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -168,6 +174,10 @@ brProjectId :: Lens' BeaconsRegister (Maybe Text)
 brProjectId
   = lens _brProjectId (\ s a -> s{_brProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+brFields :: Lens' BeaconsRegister (Maybe Text)
+brFields = lens _brFields (\ s a -> s{_brFields = a})
+
 -- | JSONP
 brCallback :: Lens' BeaconsRegister (Maybe Text)
 brCallback
@@ -184,6 +194,7 @@ instance GoogleRequest BeaconsRegister where
               _brBearerToken
               _brProjectId
               _brCallback
+              _brFields
               (Just AltJSON)
               _brPayload
               proximityBeaconService

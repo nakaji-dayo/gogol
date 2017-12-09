@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Get
     , stoEnterpriseId
     , stoPageId
     , stoClusterId
+    , stoFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.get@ method which the
 -- 'StorelayoutclustersGet' request conforms to.
@@ -53,15 +54,17 @@ type StorelayoutclustersGetResource =
                  Capture "pageId" Text :>
                    "clusters" :>
                      Capture "clusterId" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] StoreCluster
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] StoreCluster
 
 -- | Retrieves details of a cluster.
 --
 -- /See:/ 'storelayoutclustersGet' smart constructor.
 data StorelayoutclustersGet = StorelayoutclustersGet'
     { _stoEnterpriseId :: !Text
-    , _stoPageId       :: !Text
-    , _stoClusterId    :: !Text
+    , _stoPageId :: !Text
+    , _stoClusterId :: !Text
+    , _stoFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data StorelayoutclustersGet = StorelayoutclustersGet'
 -- * 'stoPageId'
 --
 -- * 'stoClusterId'
+--
+-- * 'stoFields'
 storelayoutclustersGet
     :: Text -- ^ 'stoEnterpriseId'
     -> Text -- ^ 'stoPageId'
     -> Text -- ^ 'stoClusterId'
     -> StorelayoutclustersGet
-storelayoutclustersGet pStoEnterpriseId_ pStoPageId_ pStoClusterId_ =
+storelayoutclustersGet pStoEnterpriseId_ pStoPageId_ pStoClusterId_ = 
     StorelayoutclustersGet'
     { _stoEnterpriseId = pStoEnterpriseId_
     , _stoPageId = pStoPageId_
     , _stoClusterId = pStoClusterId_
+    , _stoFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -101,12 +107,18 @@ stoClusterId :: Lens' StorelayoutclustersGet Text
 stoClusterId
   = lens _stoClusterId (\ s a -> s{_stoClusterId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+stoFields :: Lens' StorelayoutclustersGet (Maybe Text)
+stoFields
+  = lens _stoFields (\ s a -> s{_stoFields = a})
+
 instance GoogleRequest StorelayoutclustersGet where
         type Rs StorelayoutclustersGet = StoreCluster
         type Scopes StorelayoutclustersGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersGet'{..}
           = go _stoEnterpriseId _stoPageId _stoClusterId
+              _stoFields
               (Just AltJSON)
               androidEnterpriseService
           where go

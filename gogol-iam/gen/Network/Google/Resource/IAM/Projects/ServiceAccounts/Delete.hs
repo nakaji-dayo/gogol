@@ -40,38 +40,41 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.Delete
     , psadUploadType
     , psadBearerToken
     , psadName
+    , psadFields
     , psadCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.delete@ method which the
 -- 'ProjectsServiceAccountsDelete' request conforms to.
 type ProjectsServiceAccountsDeleteResource =
      "v1" :>
        Capture "name" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a ServiceAccount.
 --
 -- /See:/ 'projectsServiceAccountsDelete' smart constructor.
 data ProjectsServiceAccountsDelete = ProjectsServiceAccountsDelete'
-    { _psadXgafv          :: !(Maybe Text)
+    { _psadXgafv :: !(Maybe Xgafv)
     , _psadUploadProtocol :: !(Maybe Text)
-    , _psadPp             :: !Bool
-    , _psadAccessToken    :: !(Maybe Text)
-    , _psadUploadType     :: !(Maybe Text)
-    , _psadBearerToken    :: !(Maybe Text)
-    , _psadName           :: !Text
-    , _psadCallback       :: !(Maybe Text)
+    , _psadPp :: !Bool
+    , _psadAccessToken :: !(Maybe Text)
+    , _psadUploadType :: !(Maybe Text)
+    , _psadBearerToken :: !(Maybe Text)
+    , _psadName :: !Text
+    , _psadFields :: !(Maybe Text)
+    , _psadCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsDelete' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsServiceAccountsDelete = ProjectsServiceAccountsDelete'
 --
 -- * 'psadName'
 --
+-- * 'psadFields'
+--
 -- * 'psadCallback'
 projectsServiceAccountsDelete
     :: Text -- ^ 'psadName'
     -> ProjectsServiceAccountsDelete
-projectsServiceAccountsDelete pPsadName_ =
+projectsServiceAccountsDelete pPsadName_ = 
     ProjectsServiceAccountsDelete'
     { _psadXgafv = Nothing
     , _psadUploadProtocol = Nothing
@@ -105,11 +110,12 @@ projectsServiceAccountsDelete pPsadName_ =
     , _psadUploadType = Nothing
     , _psadBearerToken = Nothing
     , _psadName = pPsadName_
+    , _psadFields = Nothing
     , _psadCallback = Nothing
     }
 
 -- | V1 error format.
-psadXgafv :: Lens' ProjectsServiceAccountsDelete (Maybe Text)
+psadXgafv :: Lens' ProjectsServiceAccountsDelete (Maybe Xgafv)
 psadXgafv
   = lens _psadXgafv (\ s a -> s{_psadXgafv = a})
 
@@ -142,12 +148,17 @@ psadBearerToken
       (\ s a -> s{_psadBearerToken = a})
 
 -- | The resource name of the service account in the following format:
--- \`projects\/{project}\/serviceAccounts\/{account}\`. Using \`-\` as a
--- wildcard for the project will infer the project from the account. The
--- \`account\` value can be the \`email\` address or the \`unique_id\` of
--- the service account.
+-- \`projects\/{PROJECT_ID}\/serviceAccounts\/{ACCOUNT}\`. Using \`-\` as a
+-- wildcard for the \`PROJECT_ID\` will infer the project from the account.
+-- The \`ACCOUNT\` value can be the \`email\` address or the \`unique_id\`
+-- of the service account.
 psadName :: Lens' ProjectsServiceAccountsDelete Text
 psadName = lens _psadName (\ s a -> s{_psadName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psadFields :: Lens' ProjectsServiceAccountsDelete (Maybe Text)
+psadFields
+  = lens _psadFields (\ s a -> s{_psadFields = a})
 
 -- | JSONP
 psadCallback :: Lens' ProjectsServiceAccountsDelete (Maybe Text)
@@ -166,6 +177,7 @@ instance GoogleRequest ProjectsServiceAccountsDelete
               _psadUploadType
               _psadBearerToken
               _psadCallback
+              _psadFields
               (Just AltJSON)
               iAMService
           where go

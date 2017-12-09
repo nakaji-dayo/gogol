@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Join
     , tbmjConsistencyToken
     , tbmjLanguage
     , tbmjMatchId
+    , tbmjFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.join@ method which the
 -- 'TurnBasedMatchesJoin' request conforms to.
@@ -51,16 +52,18 @@ type TurnBasedMatchesJoinResource =
              "join" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Put '[JSON] TurnBasedMatch
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Put '[JSON] TurnBasedMatch
 
 -- | Join a turn-based match.
 --
 -- /See:/ 'turnBasedMatchesJoin' smart constructor.
 data TurnBasedMatchesJoin = TurnBasedMatchesJoin'
     { _tbmjConsistencyToken :: !(Maybe (Textual Int64))
-    , _tbmjLanguage         :: !(Maybe Text)
-    , _tbmjMatchId          :: !Text
+    , _tbmjLanguage :: !(Maybe Text)
+    , _tbmjMatchId :: !Text
+    , _tbmjFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesJoin' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data TurnBasedMatchesJoin = TurnBasedMatchesJoin'
 -- * 'tbmjLanguage'
 --
 -- * 'tbmjMatchId'
+--
+-- * 'tbmjFields'
 turnBasedMatchesJoin
     :: Text -- ^ 'tbmjMatchId'
     -> TurnBasedMatchesJoin
-turnBasedMatchesJoin pTbmjMatchId_ =
+turnBasedMatchesJoin pTbmjMatchId_ = 
     TurnBasedMatchesJoin'
     { _tbmjConsistencyToken = Nothing
     , _tbmjLanguage = Nothing
     , _tbmjMatchId = pTbmjMatchId_
+    , _tbmjFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -99,6 +105,11 @@ tbmjMatchId :: Lens' TurnBasedMatchesJoin Text
 tbmjMatchId
   = lens _tbmjMatchId (\ s a -> s{_tbmjMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmjFields :: Lens' TurnBasedMatchesJoin (Maybe Text)
+tbmjFields
+  = lens _tbmjFields (\ s a -> s{_tbmjFields = a})
+
 instance GoogleRequest TurnBasedMatchesJoin where
         type Rs TurnBasedMatchesJoin = TurnBasedMatch
         type Scopes TurnBasedMatchesJoin =
@@ -106,6 +117,7 @@ instance GoogleRequest TurnBasedMatchesJoin where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient TurnBasedMatchesJoin'{..}
           = go _tbmjMatchId _tbmjConsistencyToken _tbmjLanguage
+              _tbmjFields
               (Just AltJSON)
               gamesService
           where go

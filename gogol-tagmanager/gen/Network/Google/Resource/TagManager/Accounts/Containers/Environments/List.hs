@@ -22,7 +22,7 @@
 --
 -- Lists all GTM Environments of a GTM Container.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.list@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.environments.list@.
 module Network.Google.Resource.TagManager.Accounts.Containers.Environments.List
     (
     -- * REST Resource
@@ -33,62 +33,70 @@ module Network.Google.Resource.TagManager.Accounts.Containers.Environments.List
     , AccountsContainersEnvironmentsList
 
     -- * Request Lenses
-    , acelContainerId
-    , acelAccountId
+    , acelParent
+    , acelPageToken
+    , acelFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.environments.list@ method which the
 -- 'AccountsContainersEnvironmentsList' request conforms to.
 type AccountsContainersEnvironmentsListResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               Capture "containerId" Text :>
-                 "environments" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ListEnvironmentsResponse
+       "v2" :>
+         Capture "parent" Text :>
+           "environments" :>
+             QueryParam "pageToken" Text :>
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ListEnvironmentsResponse
 
 -- | Lists all GTM Environments of a GTM Container.
 --
 -- /See:/ 'accountsContainersEnvironmentsList' smart constructor.
 data AccountsContainersEnvironmentsList = AccountsContainersEnvironmentsList'
-    { _acelContainerId :: !Text
-    , _acelAccountId   :: !Text
+    { _acelParent :: !Text
+    , _acelPageToken :: !(Maybe Text)
+    , _acelFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersEnvironmentsList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acelContainerId'
+-- * 'acelParent'
 --
--- * 'acelAccountId'
+-- * 'acelPageToken'
+--
+-- * 'acelFields'
 accountsContainersEnvironmentsList
-    :: Text -- ^ 'acelContainerId'
-    -> Text -- ^ 'acelAccountId'
+    :: Text -- ^ 'acelParent'
     -> AccountsContainersEnvironmentsList
-accountsContainersEnvironmentsList pAcelContainerId_ pAcelAccountId_ =
+accountsContainersEnvironmentsList pAcelParent_ = 
     AccountsContainersEnvironmentsList'
-    { _acelContainerId = pAcelContainerId_
-    , _acelAccountId = pAcelAccountId_
+    { _acelParent = pAcelParent_
+    , _acelPageToken = Nothing
+    , _acelFields = Nothing
     }
 
--- | The GTM Container ID.
-acelContainerId :: Lens' AccountsContainersEnvironmentsList Text
-acelContainerId
-  = lens _acelContainerId
-      (\ s a -> s{_acelContainerId = a})
+-- | GTM Container\'s API relative path. Example:
+-- accounts\/{account_id}\/containers\/{container_id}
+acelParent :: Lens' AccountsContainersEnvironmentsList Text
+acelParent
+  = lens _acelParent (\ s a -> s{_acelParent = a})
 
--- | The GTM Account ID.
-acelAccountId :: Lens' AccountsContainersEnvironmentsList Text
-acelAccountId
-  = lens _acelAccountId
-      (\ s a -> s{_acelAccountId = a})
+-- | Continuation token for fetching the next page of results.
+acelPageToken :: Lens' AccountsContainersEnvironmentsList (Maybe Text)
+acelPageToken
+  = lens _acelPageToken
+      (\ s a -> s{_acelPageToken = a})
+
+-- | Selector specifying which fields to include in a partial response.
+acelFields :: Lens' AccountsContainersEnvironmentsList (Maybe Text)
+acelFields
+  = lens _acelFields (\ s a -> s{_acelFields = a})
 
 instance GoogleRequest
          AccountsContainersEnvironmentsList where
@@ -98,7 +106,8 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/tagmanager.edit.containers",
                "https://www.googleapis.com/auth/tagmanager.readonly"]
         requestClient AccountsContainersEnvironmentsList'{..}
-          = go _acelAccountId _acelContainerId (Just AltJSON)
+          = go _acelParent _acelPageToken _acelFields
+              (Just AltJSON)
               tagManagerService
           where go
                   = buildClient

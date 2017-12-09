@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Proposals.Get
 
     -- * Request Lenses
     , pgProposalId
+    , pgFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.proposals.get@ method which the
 -- 'ProposalsGet' request conforms to.
@@ -46,13 +47,15 @@ type ProposalsGetResource =
        "v1.4" :>
          "proposals" :>
            Capture "proposalId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Proposal
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Proposal
 
 -- | Get a proposal given its id
 --
 -- /See:/ 'proposalsGet' smart constructor.
-newtype ProposalsGet = ProposalsGet'
-    { _pgProposalId :: Text
+data ProposalsGet = ProposalsGet'
+    { _pgProposalId :: !Text
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProposalsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype ProposalsGet = ProposalsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pgProposalId'
+--
+-- * 'pgFields'
 proposalsGet
     :: Text -- ^ 'pgProposalId'
     -> ProposalsGet
-proposalsGet pPgProposalId_ =
+proposalsGet pPgProposalId_ = 
     ProposalsGet'
     { _pgProposalId = pPgProposalId_
+    , _pgFields = Nothing
     }
 
 -- | Id of the proposal to retrieve.
@@ -73,12 +79,16 @@ pgProposalId :: Lens' ProposalsGet Text
 pgProposalId
   = lens _pgProposalId (\ s a -> s{_pgProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' ProposalsGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest ProposalsGet where
         type Rs ProposalsGet = Proposal
         type Scopes ProposalsGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProposalsGet'{..}
-          = go _pgProposalId (Just AltJSON)
+          = go _pgProposalId _pgFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy ProposalsGetResource)

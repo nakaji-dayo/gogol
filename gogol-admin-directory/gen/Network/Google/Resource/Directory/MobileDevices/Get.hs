@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.MobileDevices.Get
     , mdgResourceId
     , mdgCustomerId
     , mdgProjection
+    , mdgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.mobiledevices.get@ method which the
 -- 'MobileDevicesGet' request conforms to.
@@ -53,7 +54,8 @@ type MobileDevicesGetResource =
                  "mobile" :>
                    Capture "resourceId" Text :>
                      QueryParam "projection" MobileDevicesGetProjection :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] MobileDevice
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] MobileDevice
 
 -- | Retrieve Mobile Device
 --
@@ -62,6 +64,7 @@ data MobileDevicesGet = MobileDevicesGet'
     { _mdgResourceId :: !Text
     , _mdgCustomerId :: !Text
     , _mdgProjection :: !(Maybe MobileDevicesGetProjection)
+    , _mdgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDevicesGet' with the minimum fields required to make a request.
@@ -73,24 +76,27 @@ data MobileDevicesGet = MobileDevicesGet'
 -- * 'mdgCustomerId'
 --
 -- * 'mdgProjection'
+--
+-- * 'mdgFields'
 mobileDevicesGet
     :: Text -- ^ 'mdgResourceId'
     -> Text -- ^ 'mdgCustomerId'
     -> MobileDevicesGet
-mobileDevicesGet pMdgResourceId_ pMdgCustomerId_ =
+mobileDevicesGet pMdgResourceId_ pMdgCustomerId_ = 
     MobileDevicesGet'
     { _mdgResourceId = pMdgResourceId_
     , _mdgCustomerId = pMdgCustomerId_
     , _mdgProjection = Nothing
+    , _mdgFields = Nothing
     }
 
--- | Immutable id of Mobile Device
+-- | Immutable ID of Mobile Device
 mdgResourceId :: Lens' MobileDevicesGet Text
 mdgResourceId
   = lens _mdgResourceId
       (\ s a -> s{_mdgResourceId = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 mdgCustomerId :: Lens' MobileDevicesGet Text
 mdgCustomerId
   = lens _mdgCustomerId
@@ -102,6 +108,11 @@ mdgProjection
   = lens _mdgProjection
       (\ s a -> s{_mdgProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdgFields :: Lens' MobileDevicesGet (Maybe Text)
+mdgFields
+  = lens _mdgFields (\ s a -> s{_mdgFields = a})
+
 instance GoogleRequest MobileDevicesGet where
         type Rs MobileDevicesGet = MobileDevice
         type Scopes MobileDevicesGet =
@@ -110,6 +121,7 @@ instance GoogleRequest MobileDevicesGet where
                "https://www.googleapis.com/auth/admin.directory.device.mobile.readonly"]
         requestClient MobileDevicesGet'{..}
           = go _mdgCustomerId _mdgResourceId _mdgProjection
+              _mdgFields
               (Just AltJSON)
               directoryService
           where go

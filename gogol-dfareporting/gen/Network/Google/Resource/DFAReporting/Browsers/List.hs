@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.Browsers.List
 
     -- * Request Lenses
     , blProFileId
+    , blFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.browsers.list@ method which the
 -- 'BrowsersList' request conforms to.
 type BrowsersListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "browsers" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] BrowsersListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] BrowsersListResponse
 
 -- | Retrieves a list of browsers.
 --
 -- /See:/ 'browsersList' smart constructor.
-newtype BrowsersList = BrowsersList'
-    { _blProFileId :: Textual Int64
+data BrowsersList = BrowsersList'
+    { _blProFileId :: !(Textual Int64)
+    , _blFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BrowsersList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype BrowsersList = BrowsersList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'blProFileId'
+--
+-- * 'blFields'
 browsersList
     :: Int64 -- ^ 'blProFileId'
     -> BrowsersList
-browsersList pBlProFileId_ =
+browsersList pBlProFileId_ = 
     BrowsersList'
     { _blProFileId = _Coerce # pBlProFileId_
+    , _blFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,17 @@ blProFileId
   = lens _blProFileId (\ s a -> s{_blProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+blFields :: Lens' BrowsersList (Maybe Text)
+blFields = lens _blFields (\ s a -> s{_blFields = a})
+
 instance GoogleRequest BrowsersList where
         type Rs BrowsersList = BrowsersListResponse
         type Scopes BrowsersList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient BrowsersList'{..}
-          = go _blProFileId (Just AltJSON) dFAReportingService
+          = go _blProFileId _blFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy BrowsersListResource)
                       mempty

@@ -50,16 +50,17 @@ module Network.Google.Resource.DFAReporting.Sites.List
     , sitApproved
     , sitAdWordsSite
     , sitMaxResults
+    , sitFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sites.list@ method which the
 -- 'SitesList' request conforms to.
 type SitesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sites" :>
@@ -82,30 +83,32 @@ type SitesListResource =
                                            QueryParam "maxResults"
                                              (Textual Int32)
                                              :>
-                                             QueryParam "alt" AltJSON :>
-                                               Get '[JSON] SitesListResponse
+                                             QueryParam "fields" Text :>
+                                               QueryParam "alt" AltJSON :>
+                                                 Get '[JSON] SitesListResponse
 
 -- | Retrieves a list of sites, possibly filtered. This method supports
 -- paging.
 --
 -- /See:/ 'sitesList' smart constructor.
 data SitesList = SitesList'
-    { _sitUnmAppedSite                   :: !(Maybe Bool)
-    , _sitCampaignIds                    :: !(Maybe [Textual Int64])
-    , _sitSearchString                   :: !(Maybe Text)
-    , _sitAcceptsInterstitialPlacements  :: !(Maybe Bool)
+    { _sitUnmAppedSite :: !(Maybe Bool)
+    , _sitCampaignIds :: !(Maybe [Textual Int64])
+    , _sitSearchString :: !(Maybe Text)
+    , _sitAcceptsInterstitialPlacements :: !(Maybe Bool)
     , _sitAcceptsPublisherPaidPlacements :: !(Maybe Bool)
-    , _sitIds                            :: !(Maybe [Textual Int64])
-    , _sitProFileId                      :: !(Textual Int64)
-    , _sitDirectorySiteIds               :: !(Maybe [Textual Int64])
-    , _sitSortOrder                      :: !(Maybe SitesListSortOrder)
-    , _sitPageToken                      :: !(Maybe Text)
-    , _sitSortField                      :: !(Maybe SitesListSortField)
-    , _sitSubAccountId                   :: !(Maybe (Textual Int64))
+    , _sitIds :: !(Maybe [Textual Int64])
+    , _sitProFileId :: !(Textual Int64)
+    , _sitDirectorySiteIds :: !(Maybe [Textual Int64])
+    , _sitSortOrder :: !SitesListSortOrder
+    , _sitPageToken :: !(Maybe Text)
+    , _sitSortField :: !SitesListSortField
+    , _sitSubAccountId :: !(Maybe (Textual Int64))
     , _sitAcceptsInStreamVideoPlacements :: !(Maybe Bool)
-    , _sitApproved                       :: !(Maybe Bool)
-    , _sitAdWordsSite                    :: !(Maybe Bool)
-    , _sitMaxResults                     :: !(Maybe (Textual Int32))
+    , _sitApproved :: !(Maybe Bool)
+    , _sitAdWordsSite :: !(Maybe Bool)
+    , _sitMaxResults :: !(Textual Int32)
+    , _sitFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesList' with the minimum fields required to make a request.
@@ -143,10 +146,12 @@ data SitesList = SitesList'
 -- * 'sitAdWordsSite'
 --
 -- * 'sitMaxResults'
+--
+-- * 'sitFields'
 sitesList
     :: Int64 -- ^ 'sitProFileId'
     -> SitesList
-sitesList pSitProFileId_ =
+sitesList pSitProFileId_ = 
     SitesList'
     { _sitUnmAppedSite = Nothing
     , _sitCampaignIds = Nothing
@@ -156,14 +161,15 @@ sitesList pSitProFileId_ =
     , _sitIds = Nothing
     , _sitProFileId = _Coerce # pSitProFileId_
     , _sitDirectorySiteIds = Nothing
-    , _sitSortOrder = Nothing
+    , _sitSortOrder = SLSOAscending
     , _sitPageToken = Nothing
-    , _sitSortField = Nothing
+    , _sitSortField = SLSFID
     , _sitSubAccountId = Nothing
     , _sitAcceptsInStreamVideoPlacements = Nothing
     , _sitApproved = Nothing
     , _sitAdWordsSite = Nothing
-    , _sitMaxResults = Nothing
+    , _sitMaxResults = 1000
+    , _sitFields = Nothing
     }
 
 -- | Select only sites that have not been mapped to a directory site.
@@ -224,8 +230,8 @@ sitDirectorySiteIds
       . _Default
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-sitSortOrder :: Lens' SitesList (Maybe SitesListSortOrder)
+-- | Order of sorted results.
+sitSortOrder :: Lens' SitesList SitesListSortOrder
 sitSortOrder
   = lens _sitSortOrder (\ s a -> s{_sitSortOrder = a})
 
@@ -235,7 +241,7 @@ sitPageToken
   = lens _sitPageToken (\ s a -> s{_sitPageToken = a})
 
 -- | Field by which to sort the list.
-sitSortField :: Lens' SitesList (Maybe SitesListSortField)
+sitSortField :: Lens' SitesList SitesListSortField
 sitSortField
   = lens _sitSortField (\ s a -> s{_sitSortField = a})
 
@@ -265,11 +271,16 @@ sitAdWordsSite
       (\ s a -> s{_sitAdWordsSite = a})
 
 -- | Maximum number of results to return.
-sitMaxResults :: Lens' SitesList (Maybe Int32)
+sitMaxResults :: Lens' SitesList Int32
 sitMaxResults
   = lens _sitMaxResults
       (\ s a -> s{_sitMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+sitFields :: Lens' SitesList (Maybe Text)
+sitFields
+  = lens _sitFields (\ s a -> s{_sitFields = a})
 
 instance GoogleRequest SitesList where
         type Rs SitesList = SitesListResponse
@@ -283,14 +294,15 @@ instance GoogleRequest SitesList where
               _sitAcceptsPublisherPaidPlacements
               (_sitIds ^. _Default)
               (_sitDirectorySiteIds ^. _Default)
-              _sitSortOrder
+              (Just _sitSortOrder)
               _sitPageToken
-              _sitSortField
+              (Just _sitSortField)
               _sitSubAccountId
               _sitAcceptsInStreamVideoPlacements
               _sitApproved
               _sitAdWordsSite
-              _sitMaxResults
+              (Just _sitMaxResults)
+              _sitFields
               (Just AltJSON)
               dFAReportingService
           where go

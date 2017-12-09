@@ -34,10 +34,11 @@ module Network.Google.Resource.Admin.Channels.Stop
 
     -- * Request Lenses
     , csPayload
+    , csFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @admin.channels.stop@ method which the
 -- 'ChannelsStop' request conforms to.
@@ -49,14 +50,16 @@ type ChannelsStopResource =
              "directory_v1" :>
                "channels" :>
                  "stop" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Channel :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Channel :> Post '[JSON] ()
 
 -- | Stop watching resources through this channel
 --
 -- /See:/ 'channelsStop' smart constructor.
-newtype ChannelsStop = ChannelsStop'
-    { _csPayload :: Channel
+data ChannelsStop = ChannelsStop'
+    { _csPayload :: !Channel
+    , _csFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelsStop' with the minimum fields required to make a request.
@@ -64,18 +67,25 @@ newtype ChannelsStop = ChannelsStop'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'csPayload'
+--
+-- * 'csFields'
 channelsStop
     :: Channel -- ^ 'csPayload'
     -> ChannelsStop
-channelsStop pCsPayload_ =
+channelsStop pCsPayload_ = 
     ChannelsStop'
     { _csPayload = pCsPayload_
+    , _csFields = Nothing
     }
 
 -- | Multipart request metadata.
 csPayload :: Lens' ChannelsStop Channel
 csPayload
   = lens _csPayload (\ s a -> s{_csPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+csFields :: Lens' ChannelsStop (Maybe Text)
+csFields = lens _csFields (\ s a -> s{_csFields = a})
 
 instance GoogleRequest ChannelsStop where
         type Rs ChannelsStop = ()
@@ -85,7 +95,8 @@ instance GoogleRequest ChannelsStop where
                "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
                "https://www.googleapis.com/auth/admin.directory.user.readonly"]
         requestClient ChannelsStop'{..}
-          = go (Just AltJSON) _csPayload directoryService
+          = go _csFields (Just AltJSON) _csPayload
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy ChannelsStopResource)
                       mempty

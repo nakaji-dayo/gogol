@@ -34,10 +34,11 @@ module Network.Google.Resource.PlusDomains.Circles.Remove
 
     -- * Request Lenses
     , crCircleId
+    , crFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.circles.remove@ method which the
 -- 'CirclesRemove' request conforms to.
@@ -46,13 +47,15 @@ type CirclesRemoveResource =
        "v1" :>
          "circles" :>
            Capture "circleId" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a circle.
 --
 -- /See:/ 'circlesRemove' smart constructor.
-newtype CirclesRemove = CirclesRemove'
-    { _crCircleId :: Text
+data CirclesRemove = CirclesRemove'
+    { _crCircleId :: !Text
+    , _crFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CirclesRemove' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CirclesRemove = CirclesRemove'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'crCircleId'
+--
+-- * 'crFields'
 circlesRemove
     :: Text -- ^ 'crCircleId'
     -> CirclesRemove
-circlesRemove pCrCircleId_ =
+circlesRemove pCrCircleId_ = 
     CirclesRemove'
     { _crCircleId = pCrCircleId_
+    , _crFields = Nothing
     }
 
 -- | The ID of the circle to delete.
@@ -73,13 +79,18 @@ crCircleId :: Lens' CirclesRemove Text
 crCircleId
   = lens _crCircleId (\ s a -> s{_crCircleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+crFields :: Lens' CirclesRemove (Maybe Text)
+crFields = lens _crFields (\ s a -> s{_crFields = a})
+
 instance GoogleRequest CirclesRemove where
         type Rs CirclesRemove = ()
         type Scopes CirclesRemove =
              '["https://www.googleapis.com/auth/plus.circles.write",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient CirclesRemove'{..}
-          = go _crCircleId (Just AltJSON) plusDomainsService
+          = go _crCircleId _crFields (Just AltJSON)
+              plusDomainsService
           where go
                   = buildClient (Proxy :: Proxy CirclesRemoveResource)
                       mempty

@@ -46,10 +46,11 @@ module Network.Google.Resource.YouTube.Activities.List
     , alPageToken
     , alMaxResults
     , alPublishedBefore
+    , alFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.activities.list@ method which the
 -- 'ActivitiesList' request conforms to.
@@ -66,8 +67,9 @@ type ActivitiesListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
                            QueryParam "publishedBefore" DateTime' :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ActivityListResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ActivityListResponse
 
 -- | Returns a list of channel activity events that match the request
 -- criteria. For example, you can retrieve events associated with a
@@ -77,15 +79,16 @@ type ActivitiesListResource =
 --
 -- /See:/ 'activitiesList' smart constructor.
 data ActivitiesList = ActivitiesList'
-    { _alPublishedAfter  :: !(Maybe DateTime')
-    , _alPart            :: !Text
-    , _alHome            :: !(Maybe Bool)
-    , _alMine            :: !(Maybe Bool)
-    , _alRegionCode      :: !(Maybe Text)
-    , _alChannelId       :: !(Maybe Text)
-    , _alPageToken       :: !(Maybe Text)
-    , _alMaxResults      :: !(Textual Word32)
+    { _alPublishedAfter :: !(Maybe DateTime')
+    , _alPart :: !Text
+    , _alHome :: !(Maybe Bool)
+    , _alMine :: !(Maybe Bool)
+    , _alRegionCode :: !(Maybe Text)
+    , _alChannelId :: !(Maybe Text)
+    , _alPageToken :: !(Maybe Text)
+    , _alMaxResults :: !(Textual Word32)
     , _alPublishedBefore :: !(Maybe DateTime')
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesList' with the minimum fields required to make a request.
@@ -109,10 +112,12 @@ data ActivitiesList = ActivitiesList'
 -- * 'alMaxResults'
 --
 -- * 'alPublishedBefore'
+--
+-- * 'alFields'
 activitiesList
     :: Text -- ^ 'alPart'
     -> ActivitiesList
-activitiesList pAlPart_ =
+activitiesList pAlPart_ = 
     ActivitiesList'
     { _alPublishedAfter = Nothing
     , _alPart = pAlPart_
@@ -123,6 +128,7 @@ activitiesList pAlPart_ =
     , _alPageToken = Nothing
     , _alMaxResults = 5
     , _alPublishedBefore = Nothing
+    , _alFields = Nothing
     }
 
 -- | The publishedAfter parameter specifies the earliest date and time that
@@ -199,6 +205,10 @@ alPublishedBefore
       (\ s a -> s{_alPublishedBefore = a})
       . mapping _DateTime
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ActivitiesList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ActivitiesList where
         type Rs ActivitiesList = ActivityListResponse
         type Scopes ActivitiesList =
@@ -212,6 +222,7 @@ instance GoogleRequest ActivitiesList where
               _alPageToken
               (Just _alMaxResults)
               _alPublishedBefore
+              _alFields
               (Just AltJSON)
               youTubeService
           where go

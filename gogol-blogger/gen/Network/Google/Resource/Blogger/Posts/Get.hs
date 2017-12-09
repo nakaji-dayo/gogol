@@ -39,10 +39,11 @@ module Network.Google.Resource.Blogger.Posts.Get
     , pggMaxComments
     , pggView
     , pggPostId
+    , pggFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.get@ method which the
 -- 'PostsGet' request conforms to.
@@ -57,18 +58,20 @@ type PostsGetResource =
                    QueryParam "fetchImages" Bool :>
                      QueryParam "maxComments" (Textual Word32) :>
                        QueryParam "view" PostsGetView :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Post'
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Post'
 
 -- | Get a post by ID.
 --
 -- /See:/ 'postsGet' smart constructor.
 data PostsGet = PostsGet'
-    { _pggFetchBody   :: !Bool
+    { _pggFetchBody :: !Bool
     , _pggFetchImages :: !(Maybe Bool)
-    , _pggBlogId      :: !Text
+    , _pggBlogId :: !Text
     , _pggMaxComments :: !(Maybe (Textual Word32))
-    , _pggView        :: !(Maybe PostsGetView)
-    , _pggPostId      :: !Text
+    , _pggView :: !(Maybe PostsGetView)
+    , _pggPostId :: !Text
+    , _pggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsGet' with the minimum fields required to make a request.
@@ -86,11 +89,13 @@ data PostsGet = PostsGet'
 -- * 'pggView'
 --
 -- * 'pggPostId'
+--
+-- * 'pggFields'
 postsGet
     :: Text -- ^ 'pggBlogId'
     -> Text -- ^ 'pggPostId'
     -> PostsGet
-postsGet pPggBlogId_ pPggPostId_ =
+postsGet pPggBlogId_ pPggPostId_ = 
     PostsGet'
     { _pggFetchBody = True
     , _pggFetchImages = Nothing
@@ -98,6 +103,7 @@ postsGet pPggBlogId_ pPggPostId_ =
     , _pggMaxComments = Nothing
     , _pggView = Nothing
     , _pggPostId = pPggPostId_
+    , _pggFields = Nothing
     }
 
 -- | Whether the body content of the post is included (default: true). This
@@ -135,6 +141,11 @@ pggPostId :: Lens' PostsGet Text
 pggPostId
   = lens _pggPostId (\ s a -> s{_pggPostId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pggFields :: Lens' PostsGet (Maybe Text)
+pggFields
+  = lens _pggFields (\ s a -> s{_pggFields = a})
+
 instance GoogleRequest PostsGet where
         type Rs PostsGet = Post'
         type Scopes PostsGet =
@@ -145,6 +156,7 @@ instance GoogleRequest PostsGet where
               _pggFetchImages
               _pggMaxComments
               _pggView
+              _pggFields
               (Just AltJSON)
               bloggerService
           where go

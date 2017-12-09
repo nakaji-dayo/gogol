@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.LiveChatBans.Insert
     -- * Request Lenses
     , lcbiPart
     , lcbiPayload
+    , lcbiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatBans.insert@ method which the
 -- 'LiveChatBansInsert' request conforms to.
@@ -48,16 +49,18 @@ type LiveChatBansInsertResource =
          "liveChat" :>
            "bans" :>
              QueryParam "part" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] LiveChatBan :>
-                   Post '[JSON] LiveChatBan
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] LiveChatBan :>
+                     Post '[JSON] LiveChatBan
 
 -- | Adds a new ban to the chat.
 --
 -- /See:/ 'liveChatBansInsert' smart constructor.
 data LiveChatBansInsert = LiveChatBansInsert'
-    { _lcbiPart    :: !Text
+    { _lcbiPart :: !Text
     , _lcbiPayload :: !LiveChatBan
+    , _lcbiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatBansInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data LiveChatBansInsert = LiveChatBansInsert'
 -- * 'lcbiPart'
 --
 -- * 'lcbiPayload'
+--
+-- * 'lcbiFields'
 liveChatBansInsert
     :: Text -- ^ 'lcbiPart'
     -> LiveChatBan -- ^ 'lcbiPayload'
     -> LiveChatBansInsert
-liveChatBansInsert pLcbiPart_ pLcbiPayload_ =
+liveChatBansInsert pLcbiPart_ pLcbiPayload_ = 
     LiveChatBansInsert'
     { _lcbiPart = pLcbiPart_
     , _lcbiPayload = pLcbiPayload_
+    , _lcbiFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -89,13 +95,19 @@ lcbiPayload :: Lens' LiveChatBansInsert LiveChatBan
 lcbiPayload
   = lens _lcbiPayload (\ s a -> s{_lcbiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcbiFields :: Lens' LiveChatBansInsert (Maybe Text)
+lcbiFields
+  = lens _lcbiFields (\ s a -> s{_lcbiFields = a})
+
 instance GoogleRequest LiveChatBansInsert where
         type Rs LiveChatBansInsert = LiveChatBan
         type Scopes LiveChatBansInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatBansInsert'{..}
-          = go (Just _lcbiPart) (Just AltJSON) _lcbiPayload
+          = go (Just _lcbiPart) _lcbiFields (Just AltJSON)
+              _lcbiPayload
               youTubeService
           where go
                   = buildClient

@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -29,9 +29,9 @@ module Network.Google.GroupsMigration.Types
     , gResponseCode
     ) where
 
-import           Network.Google.GroupsMigration.Types.Product
-import           Network.Google.GroupsMigration.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.GroupsMigration.Types.Product
+import Network.Google.GroupsMigration.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Groups Migration API. This contains the host and root path used as a starting point for constructing service requests.
 groupsMigrationService :: ServiceConfig

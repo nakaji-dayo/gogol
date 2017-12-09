@@ -45,10 +45,11 @@ module Network.Google.Resource.Games.Scores.Get
     , sgPageToken
     , sgPlayerId
     , sgMaxResults
+    , sgFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.scores.get@ method which the
 -- 'ScoresGet' request conforms to.
@@ -67,8 +68,10 @@ type ScoresGetResource =
                          QueryParam "language" Text :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] PlayerLeaderboardScoreListResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON]
+                                     PlayerLeaderboardScoreListResponse
 
 -- | Get high scores, and optionally ranks, in leaderboards for the currently
 -- authenticated player. For a specific time span, leaderboardId can be set
@@ -79,13 +82,14 @@ type ScoresGetResource =
 -- /See:/ 'scoresGet' smart constructor.
 data ScoresGet = ScoresGet'
     { _sgConsistencyToken :: !(Maybe (Textual Int64))
-    , _sgTimeSpan         :: !ScoresGetTimeSpan
-    , _sgLeaderboardId    :: !Text
-    , _sgIncludeRankType  :: !(Maybe ScoresGetIncludeRankType)
-    , _sgLanguage         :: !(Maybe Text)
-    , _sgPageToken        :: !(Maybe Text)
-    , _sgPlayerId         :: !Text
-    , _sgMaxResults       :: !(Maybe (Textual Int32))
+    , _sgTimeSpan :: !ScoresGetTimeSpan
+    , _sgLeaderboardId :: !Text
+    , _sgIncludeRankType :: !(Maybe ScoresGetIncludeRankType)
+    , _sgLanguage :: !(Maybe Text)
+    , _sgPageToken :: !(Maybe Text)
+    , _sgPlayerId :: !Text
+    , _sgMaxResults :: !(Maybe (Textual Int32))
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresGet' with the minimum fields required to make a request.
@@ -107,12 +111,14 @@ data ScoresGet = ScoresGet'
 -- * 'sgPlayerId'
 --
 -- * 'sgMaxResults'
+--
+-- * 'sgFields'
 scoresGet
     :: ScoresGetTimeSpan -- ^ 'sgTimeSpan'
     -> Text -- ^ 'sgLeaderboardId'
     -> Text -- ^ 'sgPlayerId'
     -> ScoresGet
-scoresGet pSgTimeSpan_ pSgLeaderboardId_ pSgPlayerId_ =
+scoresGet pSgTimeSpan_ pSgLeaderboardId_ pSgPlayerId_ = 
     ScoresGet'
     { _sgConsistencyToken = Nothing
     , _sgTimeSpan = pSgTimeSpan_
@@ -122,6 +128,7 @@ scoresGet pSgTimeSpan_ pSgLeaderboardId_ pSgPlayerId_ =
     , _sgPageToken = Nothing
     , _sgPlayerId = pSgPlayerId_
     , _sgMaxResults = Nothing
+    , _sgFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -174,6 +181,10 @@ sgMaxResults
   = lens _sgMaxResults (\ s a -> s{_sgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' ScoresGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest ScoresGet where
         type Rs ScoresGet =
              PlayerLeaderboardScoreListResponse
@@ -187,6 +198,7 @@ instance GoogleRequest ScoresGet where
               _sgLanguage
               _sgPageToken
               _sgMaxResults
+              _sgFields
               (Just AltJSON)
               gamesService
           where go

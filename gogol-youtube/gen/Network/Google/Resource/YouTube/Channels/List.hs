@@ -45,10 +45,11 @@ module Network.Google.Resource.YouTube.Channels.List
     , cPageToken
     , cManagedByMe
     , cMaxResults
+    , cFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channels.list@ method which the
 -- 'ChannelsList' request conforms to.
@@ -67,25 +68,27 @@ type ChannelsListResource =
                            QueryParam "pageToken" Text :>
                              QueryParam "managedByMe" Bool :>
                                QueryParam "maxResults" (Textual Word32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ChannelListResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ChannelListResponse
 
 -- | Returns a collection of zero or more channel resources that match the
 -- request criteria.
 --
 -- /See:/ 'channelsList' smart constructor.
 data ChannelsList = ChannelsList'
-    { _cPart                   :: !Text
-    , _cMine                   :: !(Maybe Bool)
-    , _cForUsername            :: !(Maybe Text)
-    , _cHl                     :: !(Maybe Text)
+    { _cPart :: !Text
+    , _cMine :: !(Maybe Bool)
+    , _cForUsername :: !(Maybe Text)
+    , _cHl :: !(Maybe Text)
     , _cOnBehalfOfContentOwner :: !(Maybe Text)
-    , _cCategoryId             :: !(Maybe Text)
-    , _cId                     :: !(Maybe Text)
-    , _cMySubscribers          :: !(Maybe Bool)
-    , _cPageToken              :: !(Maybe Text)
-    , _cManagedByMe            :: !(Maybe Bool)
-    , _cMaxResults             :: !(Textual Word32)
+    , _cCategoryId :: !(Maybe Text)
+    , _cId :: !(Maybe Text)
+    , _cMySubscribers :: !(Maybe Bool)
+    , _cPageToken :: !(Maybe Text)
+    , _cManagedByMe :: !(Maybe Bool)
+    , _cMaxResults :: !(Textual Word32)
+    , _cFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelsList' with the minimum fields required to make a request.
@@ -113,10 +116,12 @@ data ChannelsList = ChannelsList'
 -- * 'cManagedByMe'
 --
 -- * 'cMaxResults'
+--
+-- * 'cFields'
 channelsList
     :: Text -- ^ 'cPart'
     -> ChannelsList
-channelsList pCPart_ =
+channelsList pCPart_ = 
     ChannelsList'
     { _cPart = pCPart_
     , _cMine = Nothing
@@ -129,6 +134,7 @@ channelsList pCPart_ =
     , _cPageToken = Nothing
     , _cManagedByMe = Nothing
     , _cMaxResults = 5
+    , _cFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -215,6 +221,10 @@ cMaxResults
   = lens _cMaxResults (\ s a -> s{_cMaxResults = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cFields :: Lens' ChannelsList (Maybe Text)
+cFields = lens _cFields (\ s a -> s{_cFields = a})
+
 instance GoogleRequest ChannelsList where
         type Rs ChannelsList = ChannelListResponse
         type Scopes ChannelsList =
@@ -232,6 +242,7 @@ instance GoogleRequest ChannelsList where
               _cPageToken
               _cManagedByMe
               (Just _cMaxResults)
+              _cFields
               (Just AltJSON)
               youTubeService
           where go

@@ -34,10 +34,11 @@ module Network.Google.Resource.Calendar.Calendars.Get
 
     -- * Request Lenses
     , cgCalendarId
+    , cgFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.get@ method which the
 -- 'CalendarsGet' request conforms to.
@@ -46,13 +47,15 @@ type CalendarsGetResource =
        "v3" :>
          "calendars" :>
            Capture "calendarId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Calendar
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Calendar
 
 -- | Returns metadata for a calendar.
 --
 -- /See:/ 'calendarsGet' smart constructor.
-newtype CalendarsGet = CalendarsGet'
-    { _cgCalendarId :: Text
+data CalendarsGet = CalendarsGet'
+    { _cgCalendarId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CalendarsGet = CalendarsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cgCalendarId'
+--
+-- * 'cgFields'
 calendarsGet
     :: Text -- ^ 'cgCalendarId'
     -> CalendarsGet
-calendarsGet pCgCalendarId_ =
+calendarsGet pCgCalendarId_ = 
     CalendarsGet'
     { _cgCalendarId = pCgCalendarId_
+    , _cgFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -75,13 +81,18 @@ cgCalendarId :: Lens' CalendarsGet Text
 cgCalendarId
   = lens _cgCalendarId (\ s a -> s{_cgCalendarId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CalendarsGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CalendarsGet where
         type Rs CalendarsGet = Calendar
         type Scopes CalendarsGet =
              '["https://www.googleapis.com/auth/calendar",
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient CalendarsGet'{..}
-          = go _cgCalendarId (Just AltJSON) appsCalendarService
+          = go _cgCalendarId _cgFields (Just AltJSON)
+              appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy CalendarsGetResource)
                       mempty

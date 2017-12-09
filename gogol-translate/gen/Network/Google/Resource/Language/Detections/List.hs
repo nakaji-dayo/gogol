@@ -20,9 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Detect the language of text.
+-- Detects the language of text within a request.
 --
--- /See:/ <https://developers.google.com/translate/v2/using_rest Translate API Reference> for @language.detections.list@.
+-- /See:/ <https://code.google.com/apis/language/translate/v2/getting_started.html Google Cloud Translation API Reference> for @language.detections.list@.
 module Network.Google.Resource.Language.Detections.List
     (
     -- * REST Resource
@@ -33,11 +33,19 @@ module Network.Google.Resource.Language.Detections.List
     , DetectionsList
 
     -- * Request Lenses
+    , dlXgafv
+    , dlUploadProtocol
+    , dlPp
+    , dlAccessToken
+    , dlUploadType
     , dlQ
+    , dlBearerToken
+    , dlFields
+    , dlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Translate.Types
+import Network.Google.Prelude
+import Network.Google.Translate.Types
 
 -- | A resource alias for @language.detections.list@ method which the
 -- 'DetectionsList' request conforms to.
@@ -47,38 +55,128 @@ type DetectionsListResource =
          "v2" :>
            "detect" :>
              QueryParams "q" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] DetectionsListResponse
+               QueryParam "$.xgafv" Xgafv :>
+                 QueryParam "upload_protocol" Text :>
+                   QueryParam "pp" Bool :>
+                     QueryParam "access_token" Text :>
+                       QueryParam "uploadType" Text :>
+                         QueryParam "bearer_token" Text :>
+                           QueryParam "callback" Text :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] DetectionsListResponse
 
--- | Detect the language of text.
+-- | Detects the language of text within a request.
 --
 -- /See:/ 'detectionsList' smart constructor.
-newtype DetectionsList = DetectionsList'
-    { _dlQ :: [Text]
+data DetectionsList = DetectionsList'
+    { _dlXgafv :: !(Maybe Xgafv)
+    , _dlUploadProtocol :: !(Maybe Text)
+    , _dlPp :: !Bool
+    , _dlAccessToken :: !(Maybe Text)
+    , _dlUploadType :: !(Maybe Text)
+    , _dlQ :: ![Text]
+    , _dlBearerToken :: !(Maybe Text)
+    , _dlFields :: !(Maybe Text)
+    , _dlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DetectionsList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'dlXgafv'
+--
+-- * 'dlUploadProtocol'
+--
+-- * 'dlPp'
+--
+-- * 'dlAccessToken'
+--
+-- * 'dlUploadType'
+--
 -- * 'dlQ'
+--
+-- * 'dlBearerToken'
+--
+-- * 'dlFields'
+--
+-- * 'dlCallback'
 detectionsList
     :: [Text] -- ^ 'dlQ'
     -> DetectionsList
-detectionsList pDlQ_ =
+detectionsList pDlQ_ = 
     DetectionsList'
-    { _dlQ = _Coerce # pDlQ_
+    { _dlXgafv = Nothing
+    , _dlUploadProtocol = Nothing
+    , _dlPp = True
+    , _dlAccessToken = Nothing
+    , _dlUploadType = Nothing
+    , _dlQ = _Coerce # pDlQ_
+    , _dlBearerToken = Nothing
+    , _dlFields = Nothing
+    , _dlCallback = Nothing
     }
 
--- | The text to detect
+-- | V1 error format.
+dlXgafv :: Lens' DetectionsList (Maybe Xgafv)
+dlXgafv = lens _dlXgafv (\ s a -> s{_dlXgafv = a})
+
+-- | Upload protocol for media (e.g. \"raw\", \"multipart\").
+dlUploadProtocol :: Lens' DetectionsList (Maybe Text)
+dlUploadProtocol
+  = lens _dlUploadProtocol
+      (\ s a -> s{_dlUploadProtocol = a})
+
+-- | Pretty-print response.
+dlPp :: Lens' DetectionsList Bool
+dlPp = lens _dlPp (\ s a -> s{_dlPp = a})
+
+-- | OAuth access token.
+dlAccessToken :: Lens' DetectionsList (Maybe Text)
+dlAccessToken
+  = lens _dlAccessToken
+      (\ s a -> s{_dlAccessToken = a})
+
+-- | Legacy upload protocol for media (e.g. \"media\", \"multipart\").
+dlUploadType :: Lens' DetectionsList (Maybe Text)
+dlUploadType
+  = lens _dlUploadType (\ s a -> s{_dlUploadType = a})
+
+-- | The input text upon which to perform language detection. Repeat this
+-- parameter to perform language detection on multiple text inputs.
 dlQ :: Lens' DetectionsList [Text]
 dlQ = lens _dlQ (\ s a -> s{_dlQ = a}) . _Coerce
 
+-- | OAuth bearer token.
+dlBearerToken :: Lens' DetectionsList (Maybe Text)
+dlBearerToken
+  = lens _dlBearerToken
+      (\ s a -> s{_dlBearerToken = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dlFields :: Lens' DetectionsList (Maybe Text)
+dlFields = lens _dlFields (\ s a -> s{_dlFields = a})
+
+-- | JSONP
+dlCallback :: Lens' DetectionsList (Maybe Text)
+dlCallback
+  = lens _dlCallback (\ s a -> s{_dlCallback = a})
+
 instance GoogleRequest DetectionsList where
         type Rs DetectionsList = DetectionsListResponse
-        type Scopes DetectionsList = '[]
+        type Scopes DetectionsList =
+             '["https://www.googleapis.com/auth/cloud-translation",
+               "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DetectionsList'{..}
-          = go _dlQ (Just AltJSON) translateService
+          = go _dlQ _dlXgafv _dlUploadProtocol (Just _dlPp)
+              _dlAccessToken
+              _dlUploadType
+              _dlBearerToken
+              _dlCallback
+              _dlFields
+              (Just AltJSON)
+              translateService
           where go
                   = buildClient (Proxy :: Proxy DetectionsListResource)
                       mempty

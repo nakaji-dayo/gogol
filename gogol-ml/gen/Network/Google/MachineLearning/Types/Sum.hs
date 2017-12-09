@@ -16,111 +16,10 @@
 --
 module Network.Google.MachineLearning.Types.Sum where
 
-import           Network.Google.Prelude
-
--- | Output only. The detailed state of a job.
-data GoogleCloudMlV1beta1__JobState
-    = StateUnspecified
-      -- ^ @STATE_UNSPECIFIED@
-      -- The job state is unspecified.
-    | Queued
-      -- ^ @QUEUED@
-      -- The job has been just created and processing has not yet begun.
-    | Preparing
-      -- ^ @PREPARING@
-      -- The service is preparing to run the job.
-    | Running
-      -- ^ @RUNNING@
-      -- The job is in progress.
-    | Succeeded
-      -- ^ @SUCCEEDED@
-      -- The job completed successfully.
-    | Failed
-      -- ^ @FAILED@
-      -- The job failed. \`error_message\` should contain the details of the
-      -- failure.
-    | Cancelling
-      -- ^ @CANCELLING@
-      -- The job is being cancelled. \`error_message\` should describe the reason
-      -- for the cancellation.
-    | Cancelled
-      -- ^ @CANCELLED@
-      -- The job has been cancelled. \`error_message\` should describe the reason
-      -- for the cancellation.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable GoogleCloudMlV1beta1__JobState
-
-instance FromHttpApiData GoogleCloudMlV1beta1__JobState where
-    parseQueryParam = \case
-        "STATE_UNSPECIFIED" -> Right StateUnspecified
-        "QUEUED" -> Right Queued
-        "PREPARING" -> Right Preparing
-        "RUNNING" -> Right Running
-        "SUCCEEDED" -> Right Succeeded
-        "FAILED" -> Right Failed
-        "CANCELLING" -> Right Cancelling
-        "CANCELLED" -> Right Cancelled
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__JobState from: " <> x)
-
-instance ToHttpApiData GoogleCloudMlV1beta1__JobState where
-    toQueryParam = \case
-        StateUnspecified -> "STATE_UNSPECIFIED"
-        Queued -> "QUEUED"
-        Preparing -> "PREPARING"
-        Running -> "RUNNING"
-        Succeeded -> "SUCCEEDED"
-        Failed -> "FAILED"
-        Cancelling -> "CANCELLING"
-        Cancelled -> "CANCELLED"
-
-instance FromJSON GoogleCloudMlV1beta1__JobState where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__JobState"
-
-instance ToJSON GoogleCloudMlV1beta1__JobState where
-    toJSON = toJSONText
-
--- | The operation type.
-data GoogleCloudMlV1beta1__OperationMetadataOperationType
-    = OperationTypeUnspecified
-      -- ^ @OPERATION_TYPE_UNSPECIFIED@
-      -- Unspecified operation type.
-    | CreateVersion
-      -- ^ @CREATE_VERSION@
-      -- An operation to create a new version.
-    | DeleteVersion
-      -- ^ @DELETE_VERSION@
-      -- An operation to delete an existing version.
-    | DeleteModel
-      -- ^ @DELETE_MODEL@
-      -- An operation to delete an existing model.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable GoogleCloudMlV1beta1__OperationMetadataOperationType
-
-instance FromHttpApiData GoogleCloudMlV1beta1__OperationMetadataOperationType where
-    parseQueryParam = \case
-        "OPERATION_TYPE_UNSPECIFIED" -> Right OperationTypeUnspecified
-        "CREATE_VERSION" -> Right CreateVersion
-        "DELETE_VERSION" -> Right DeleteVersion
-        "DELETE_MODEL" -> Right DeleteModel
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__OperationMetadataOperationType from: " <> x)
-
-instance ToHttpApiData GoogleCloudMlV1beta1__OperationMetadataOperationType where
-    toQueryParam = \case
-        OperationTypeUnspecified -> "OPERATION_TYPE_UNSPECIFIED"
-        CreateVersion -> "CREATE_VERSION"
-        DeleteVersion -> "DELETE_VERSION"
-        DeleteModel -> "DELETE_MODEL"
-
-instance FromJSON GoogleCloudMlV1beta1__OperationMetadataOperationType where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__OperationMetadataOperationType"
-
-instance ToJSON GoogleCloudMlV1beta1__OperationMetadataOperationType where
-    toJSON = toJSONText
+import Network.Google.Prelude
 
 -- | Required. The type of the parameter.
-data GoogleCloudMlV1beta1__ParameterSpecType
+data GoogleCloudMlV1__ParameterSpecType
     = ParameterTypeUnspecified
       -- ^ @PARAMETER_TYPE_UNSPECIFIED@
       -- You must specify a valid type. Using this unspecified type will result
@@ -142,18 +41,18 @@ data GoogleCloudMlV1beta1__ParameterSpecType
       -- {\`min_value\`, \`max_value\`} will be ignored.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
-instance Hashable GoogleCloudMlV1beta1__ParameterSpecType
+instance Hashable GoogleCloudMlV1__ParameterSpecType
 
-instance FromHttpApiData GoogleCloudMlV1beta1__ParameterSpecType where
+instance FromHttpApiData GoogleCloudMlV1__ParameterSpecType where
     parseQueryParam = \case
         "PARAMETER_TYPE_UNSPECIFIED" -> Right ParameterTypeUnspecified
         "DOUBLE" -> Right Double
         "INTEGER" -> Right Integer
         "CATEGORICAL" -> Right Categorical
         "DISCRETE" -> Right Discrete
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__ParameterSpecType from: " <> x)
+        x -> Left ("Unable to parse GoogleCloudMlV1__ParameterSpecType from: " <> x)
 
-instance ToHttpApiData GoogleCloudMlV1beta1__ParameterSpecType where
+instance ToHttpApiData GoogleCloudMlV1__ParameterSpecType where
     toQueryParam = \case
         ParameterTypeUnspecified -> "PARAMETER_TYPE_UNSPECIFIED"
         Double -> "DOUBLE"
@@ -161,10 +60,383 @@ instance ToHttpApiData GoogleCloudMlV1beta1__ParameterSpecType where
         Categorical -> "CATEGORICAL"
         Discrete -> "DISCRETE"
 
-instance FromJSON GoogleCloudMlV1beta1__ParameterSpecType where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__ParameterSpecType"
+instance FromJSON GoogleCloudMlV1__ParameterSpecType where
+    parseJSON = parseJSONText "GoogleCloudMlV1__ParameterSpecType"
 
-instance ToJSON GoogleCloudMlV1beta1__ParameterSpecType where
+instance ToJSON GoogleCloudMlV1__ParameterSpecType where
+    toJSON = toJSONText
+
+-- | Required. Specifies the machine types, the number of replicas for
+-- workers and parameter servers.
+data GoogleCloudMlV1__TrainingInputScaleTier
+    = Basic
+      -- ^ @BASIC@
+      -- A single worker instance. This tier is suitable for learning how to use
+      -- Cloud ML, and for experimenting with new models using small datasets.
+    | Standard1
+      -- ^ @STANDARD_1@
+      -- Many workers and a few parameter servers.
+    | Premium1
+      -- ^ @PREMIUM_1@
+      -- A large number of workers with many parameter servers.
+    | BasicGpu
+      -- ^ @BASIC_GPU@
+      -- A single worker instance [with a
+      -- GPU](\/ml-engine\/docs\/how-tos\/using-gpus).
+    | BasicTpu
+      -- ^ @BASIC_TPU@
+      -- A single worker instance with a [Cloud TPU](\/tpu)
+    | Custom
+      -- ^ @CUSTOM@
+      -- The CUSTOM tier is not a set tier, but rather enables you to use your
+      -- own cluster specification. When you use this tier, set values to
+      -- configure your processing cluster according to these guidelines: * You
+      -- _must_ set \`TrainingInput.masterType\` to specify the type of machine
+      -- to use for your master node. This is the only required setting. * You
+      -- _may_ set \`TrainingInput.workerCount\` to specify the number of workers
+      -- to use. If you specify one or more workers, you _must_ also set
+      -- \`TrainingInput.workerType\` to specify the type of machine to use for
+      -- your worker nodes. * You _may_ set
+      -- \`TrainingInput.parameterServerCount\` to specify the number of
+      -- parameter servers to use. If you specify one or more parameter servers,
+      -- you _must_ also set \`TrainingInput.parameterServerType\` to specify the
+      -- type of machine to use for your parameter servers. Note that all of your
+      -- workers must use the same machine type, which can be different from your
+      -- parameter server type and master type. Your parameter servers must
+      -- likewise use the same machine type, which can be different from your
+      -- worker type and master type.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__TrainingInputScaleTier
+
+instance FromHttpApiData GoogleCloudMlV1__TrainingInputScaleTier where
+    parseQueryParam = \case
+        "BASIC" -> Right Basic
+        "STANDARD_1" -> Right Standard1
+        "PREMIUM_1" -> Right Premium1
+        "BASIC_GPU" -> Right BasicGpu
+        "BASIC_TPU" -> Right BasicTpu
+        "CUSTOM" -> Right Custom
+        x -> Left ("Unable to parse GoogleCloudMlV1__TrainingInputScaleTier from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__TrainingInputScaleTier where
+    toQueryParam = \case
+        Basic -> "BASIC"
+        Standard1 -> "STANDARD_1"
+        Premium1 -> "PREMIUM_1"
+        BasicGpu -> "BASIC_GPU"
+        BasicTpu -> "BASIC_TPU"
+        Custom -> "CUSTOM"
+
+instance FromJSON GoogleCloudMlV1__TrainingInputScaleTier where
+    parseJSON = parseJSONText "GoogleCloudMlV1__TrainingInputScaleTier"
+
+instance ToJSON GoogleCloudMlV1__TrainingInputScaleTier where
+    toJSON = toJSONText
+
+-- | Optional. How the parameter should be scaled to the hypercube. Leave
+-- unset for categorical parameters. Some kind of scaling is strongly
+-- recommended for real or integral parameters (e.g.,
+-- \`UNIT_LINEAR_SCALE\`).
+data GoogleCloudMlV1__ParameterSpecScaleType
+    = None
+      -- ^ @NONE@
+      -- By default, no scaling is applied.
+    | UnitLinearScale
+      -- ^ @UNIT_LINEAR_SCALE@
+      -- Scales the feasible space to (0, 1) linearly.
+    | UnitLogScale
+      -- ^ @UNIT_LOG_SCALE@
+      -- Scales the feasible space logarithmically to (0, 1). The entire feasible
+      -- space must be strictly positive.
+    | UnitReverseLogScale
+      -- ^ @UNIT_REVERSE_LOG_SCALE@
+      -- Scales the feasible space \"reverse\" logarithmically to (0, 1). The
+      -- result is that values close to the top of the feasible space are spread
+      -- out more than points near the bottom. The entire feasible space must be
+      -- strictly positive.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__ParameterSpecScaleType
+
+instance FromHttpApiData GoogleCloudMlV1__ParameterSpecScaleType where
+    parseQueryParam = \case
+        "NONE" -> Right None
+        "UNIT_LINEAR_SCALE" -> Right UnitLinearScale
+        "UNIT_LOG_SCALE" -> Right UnitLogScale
+        "UNIT_REVERSE_LOG_SCALE" -> Right UnitReverseLogScale
+        x -> Left ("Unable to parse GoogleCloudMlV1__ParameterSpecScaleType from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__ParameterSpecScaleType where
+    toQueryParam = \case
+        None -> "NONE"
+        UnitLinearScale -> "UNIT_LINEAR_SCALE"
+        UnitLogScale -> "UNIT_LOG_SCALE"
+        UnitReverseLogScale -> "UNIT_REVERSE_LOG_SCALE"
+
+instance FromJSON GoogleCloudMlV1__ParameterSpecScaleType where
+    parseJSON = parseJSONText "GoogleCloudMlV1__ParameterSpecScaleType"
+
+instance ToJSON GoogleCloudMlV1__ParameterSpecScaleType where
+    toJSON = toJSONText
+
+-- | Output only. The state of a version.
+data GoogleCloudMlV1__VersionState
+    = Unknown
+      -- ^ @UNKNOWN@
+      -- The version state is unspecified.
+    | Ready
+      -- ^ @READY@
+      -- The version is ready for prediction.
+    | Creating
+      -- ^ @CREATING@
+      -- The version is in the process of creation.
+    | Failed
+      -- ^ @FAILED@
+      -- The version failed to be created, possibly cancelled. \`error_message\`
+      -- should contain the details of the failure.
+    | Deleting
+      -- ^ @DELETING@
+      -- The version is in the process of deletion.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__VersionState
+
+instance FromHttpApiData GoogleCloudMlV1__VersionState where
+    parseQueryParam = \case
+        "UNKNOWN" -> Right Unknown
+        "READY" -> Right Ready
+        "CREATING" -> Right Creating
+        "FAILED" -> Right Failed
+        "DELETING" -> Right Deleting
+        x -> Left ("Unable to parse GoogleCloudMlV1__VersionState from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__VersionState where
+    toQueryParam = \case
+        Unknown -> "UNKNOWN"
+        Ready -> "READY"
+        Creating -> "CREATING"
+        Failed -> "FAILED"
+        Deleting -> "DELETING"
+
+instance FromJSON GoogleCloudMlV1__VersionState where
+    parseJSON = parseJSONText "GoogleCloudMlV1__VersionState"
+
+instance ToJSON GoogleCloudMlV1__VersionState where
+    toJSON = toJSONText
+
+-- | Output only. The detailed state of a job.
+data GoogleCloudMlV1__JobState
+    = GCMVJSStateUnspecified
+      -- ^ @STATE_UNSPECIFIED@
+      -- The job state is unspecified.
+    | GCMVJSQueued
+      -- ^ @QUEUED@
+      -- The job has been just created and processing has not yet begun.
+    | GCMVJSPreparing
+      -- ^ @PREPARING@
+      -- The service is preparing to run the job.
+    | GCMVJSRunning
+      -- ^ @RUNNING@
+      -- The job is in progress.
+    | GCMVJSSucceeded
+      -- ^ @SUCCEEDED@
+      -- The job completed successfully.
+    | GCMVJSFailed
+      -- ^ @FAILED@
+      -- The job failed. \`error_message\` should contain the details of the
+      -- failure.
+    | GCMVJSCancelling
+      -- ^ @CANCELLING@
+      -- The job is being cancelled. \`error_message\` should describe the reason
+      -- for the cancellation.
+    | GCMVJSCancelled
+      -- ^ @CANCELLED@
+      -- The job has been cancelled. \`error_message\` should describe the reason
+      -- for the cancellation.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__JobState
+
+instance FromHttpApiData GoogleCloudMlV1__JobState where
+    parseQueryParam = \case
+        "STATE_UNSPECIFIED" -> Right GCMVJSStateUnspecified
+        "QUEUED" -> Right GCMVJSQueued
+        "PREPARING" -> Right GCMVJSPreparing
+        "RUNNING" -> Right GCMVJSRunning
+        "SUCCEEDED" -> Right GCMVJSSucceeded
+        "FAILED" -> Right GCMVJSFailed
+        "CANCELLING" -> Right GCMVJSCancelling
+        "CANCELLED" -> Right GCMVJSCancelled
+        x -> Left ("Unable to parse GoogleCloudMlV1__JobState from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__JobState where
+    toQueryParam = \case
+        GCMVJSStateUnspecified -> "STATE_UNSPECIFIED"
+        GCMVJSQueued -> "QUEUED"
+        GCMVJSPreparing -> "PREPARING"
+        GCMVJSRunning -> "RUNNING"
+        GCMVJSSucceeded -> "SUCCEEDED"
+        GCMVJSFailed -> "FAILED"
+        GCMVJSCancelling -> "CANCELLING"
+        GCMVJSCancelled -> "CANCELLED"
+
+instance FromJSON GoogleCloudMlV1__JobState where
+    parseJSON = parseJSONText "GoogleCloudMlV1__JobState"
+
+instance ToJSON GoogleCloudMlV1__JobState where
+    toJSON = toJSONText
+
+-- | Required. The format of the input data files.
+data GoogleCloudMlV1__PredictionInputDataFormat
+    = DataFormatUnspecified
+      -- ^ @DATA_FORMAT_UNSPECIFIED@
+      -- Unspecified format.
+    | JSON
+      -- ^ @JSON@
+      -- Each line of the file is a JSON dictionary representing one record.
+    | Text
+      -- ^ @TEXT@
+      -- Deprecated. Use JSON instead.
+    | TfRecord
+      -- ^ @TF_RECORD@
+      -- INPUT ONLY. The source file is a TFRecord file.
+    | TfRecordGzip
+      -- ^ @TF_RECORD_GZIP@
+      -- INPUT ONLY. The source file is a GZIP-compressed TFRecord file.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__PredictionInputDataFormat
+
+instance FromHttpApiData GoogleCloudMlV1__PredictionInputDataFormat where
+    parseQueryParam = \case
+        "DATA_FORMAT_UNSPECIFIED" -> Right DataFormatUnspecified
+        "JSON" -> Right JSON
+        "TEXT" -> Right Text
+        "TF_RECORD" -> Right TfRecord
+        "TF_RECORD_GZIP" -> Right TfRecordGzip
+        x -> Left ("Unable to parse GoogleCloudMlV1__PredictionInputDataFormat from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__PredictionInputDataFormat where
+    toQueryParam = \case
+        DataFormatUnspecified -> "DATA_FORMAT_UNSPECIFIED"
+        JSON -> "JSON"
+        Text -> "TEXT"
+        TfRecord -> "TF_RECORD"
+        TfRecordGzip -> "TF_RECORD_GZIP"
+
+instance FromJSON GoogleCloudMlV1__PredictionInputDataFormat where
+    parseJSON = parseJSONText "GoogleCloudMlV1__PredictionInputDataFormat"
+
+instance ToJSON GoogleCloudMlV1__PredictionInputDataFormat where
+    toJSON = toJSONText
+
+data GoogleCloudMlV1__CapabilityType
+    = TypeUnspecified
+      -- ^ @TYPE_UNSPECIFIED@
+    | Training
+      -- ^ @TRAINING@
+    | BatchPrediction
+      -- ^ @BATCH_PREDICTION@
+    | OnlinePrediction
+      -- ^ @ONLINE_PREDICTION@
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__CapabilityType
+
+instance FromHttpApiData GoogleCloudMlV1__CapabilityType where
+    parseQueryParam = \case
+        "TYPE_UNSPECIFIED" -> Right TypeUnspecified
+        "TRAINING" -> Right Training
+        "BATCH_PREDICTION" -> Right BatchPrediction
+        "ONLINE_PREDICTION" -> Right OnlinePrediction
+        x -> Left ("Unable to parse GoogleCloudMlV1__CapabilityType from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__CapabilityType where
+    toQueryParam = \case
+        TypeUnspecified -> "TYPE_UNSPECIFIED"
+        Training -> "TRAINING"
+        BatchPrediction -> "BATCH_PREDICTION"
+        OnlinePrediction -> "ONLINE_PREDICTION"
+
+instance FromJSON GoogleCloudMlV1__CapabilityType where
+    parseJSON = parseJSONText "GoogleCloudMlV1__CapabilityType"
+
+instance ToJSON GoogleCloudMlV1__CapabilityType where
+    toJSON = toJSONText
+
+-- | Required. The type of goal to use for tuning. Available types are
+-- \`MAXIMIZE\` and \`MINIMIZE\`. Defaults to \`MAXIMIZE\`.
+data GoogleCloudMlV1__HyperparameterSpecGoal
+    = GoalTypeUnspecified
+      -- ^ @GOAL_TYPE_UNSPECIFIED@
+      -- Goal Type will default to maximize.
+    | Maximize
+      -- ^ @MAXIMIZE@
+      -- Maximize the goal metric.
+    | Minimize
+      -- ^ @MINIMIZE@
+      -- Minimize the goal metric.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleCloudMlV1__HyperparameterSpecGoal
+
+instance FromHttpApiData GoogleCloudMlV1__HyperparameterSpecGoal where
+    parseQueryParam = \case
+        "GOAL_TYPE_UNSPECIFIED" -> Right GoalTypeUnspecified
+        "MAXIMIZE" -> Right Maximize
+        "MINIMIZE" -> Right Minimize
+        x -> Left ("Unable to parse GoogleCloudMlV1__HyperparameterSpecGoal from: " <> x)
+
+instance ToHttpApiData GoogleCloudMlV1__HyperparameterSpecGoal where
+    toQueryParam = \case
+        GoalTypeUnspecified -> "GOAL_TYPE_UNSPECIFIED"
+        Maximize -> "MAXIMIZE"
+        Minimize -> "MINIMIZE"
+
+instance FromJSON GoogleCloudMlV1__HyperparameterSpecGoal where
+    parseJSON = parseJSONText "GoogleCloudMlV1__HyperparameterSpecGoal"
+
+instance ToJSON GoogleCloudMlV1__HyperparameterSpecGoal where
+    toJSON = toJSONText
+
+-- | The log type that this config enables.
+data GoogleIAMV1__AuditLogConfigLogType
+    = LogTypeUnspecified
+      -- ^ @LOG_TYPE_UNSPECIFIED@
+      -- Default case. Should never be this.
+    | AdminRead
+      -- ^ @ADMIN_READ@
+      -- Admin reads. Example: CloudIAM getIamPolicy
+    | DataWrite
+      -- ^ @DATA_WRITE@
+      -- Data writes. Example: CloudSQL Users create
+    | DataRead
+      -- ^ @DATA_READ@
+      -- Data reads. Example: CloudSQL Users list
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleIAMV1__AuditLogConfigLogType
+
+instance FromHttpApiData GoogleIAMV1__AuditLogConfigLogType where
+    parseQueryParam = \case
+        "LOG_TYPE_UNSPECIFIED" -> Right LogTypeUnspecified
+        "ADMIN_READ" -> Right AdminRead
+        "DATA_WRITE" -> Right DataWrite
+        "DATA_READ" -> Right DataRead
+        x -> Left ("Unable to parse GoogleIAMV1__AuditLogConfigLogType from: " <> x)
+
+instance ToHttpApiData GoogleIAMV1__AuditLogConfigLogType where
+    toQueryParam = \case
+        LogTypeUnspecified -> "LOG_TYPE_UNSPECIFIED"
+        AdminRead -> "ADMIN_READ"
+        DataWrite -> "DATA_WRITE"
+        DataRead -> "DATA_READ"
+
+instance FromJSON GoogleIAMV1__AuditLogConfigLogType where
+    parseJSON = parseJSONText "GoogleIAMV1__AuditLogConfigLogType"
+
+instance ToJSON GoogleIAMV1__AuditLogConfigLogType where
     toJSON = toJSONText
 
 -- | V1 error format.
@@ -196,180 +468,56 @@ instance FromJSON Xgafv where
 instance ToJSON Xgafv where
     toJSON = toJSONText
 
--- | Required. The type of goal to use for tuning. Available types are
--- \`MAXIMIZE\` and \`MINIMIZE\`. Defaults to \`MAXIMIZE\`.
-data GoogleCloudMlV1beta1__HyperparameterSpecGoal
-    = GoalTypeUnspecified
-      -- ^ @GOAL_TYPE_UNSPECIFIED@
-      -- Goal Type will default to maximize.
-    | Maximize
-      -- ^ @MAXIMIZE@
-      -- Maximize the goal metric.
-    | Minimize
-      -- ^ @MINIMIZE@
-      -- Minimize the goal metric.
+-- | The operation type.
+data GoogleCloudMlV1__OperationMetadataOperationType
+    = OperationTypeUnspecified
+      -- ^ @OPERATION_TYPE_UNSPECIFIED@
+      -- Unspecified operation type.
+    | CreateVersion
+      -- ^ @CREATE_VERSION@
+      -- An operation to create a new version.
+    | DeleteVersion
+      -- ^ @DELETE_VERSION@
+      -- An operation to delete an existing version.
+    | DeleteModel
+      -- ^ @DELETE_MODEL@
+      -- An operation to delete an existing model.
+    | UpdateModel
+      -- ^ @UPDATE_MODEL@
+      -- An operation to update an existing model.
+    | UpdateVersion
+      -- ^ @UPDATE_VERSION@
+      -- An operation to update an existing version.
+    | UpdateConfig
+      -- ^ @UPDATE_CONFIG@
+      -- An operation to update project configuration.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
-instance Hashable GoogleCloudMlV1beta1__HyperparameterSpecGoal
+instance Hashable GoogleCloudMlV1__OperationMetadataOperationType
 
-instance FromHttpApiData GoogleCloudMlV1beta1__HyperparameterSpecGoal where
+instance FromHttpApiData GoogleCloudMlV1__OperationMetadataOperationType where
     parseQueryParam = \case
-        "GOAL_TYPE_UNSPECIFIED" -> Right GoalTypeUnspecified
-        "MAXIMIZE" -> Right Maximize
-        "MINIMIZE" -> Right Minimize
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__HyperparameterSpecGoal from: " <> x)
+        "OPERATION_TYPE_UNSPECIFIED" -> Right OperationTypeUnspecified
+        "CREATE_VERSION" -> Right CreateVersion
+        "DELETE_VERSION" -> Right DeleteVersion
+        "DELETE_MODEL" -> Right DeleteModel
+        "UPDATE_MODEL" -> Right UpdateModel
+        "UPDATE_VERSION" -> Right UpdateVersion
+        "UPDATE_CONFIG" -> Right UpdateConfig
+        x -> Left ("Unable to parse GoogleCloudMlV1__OperationMetadataOperationType from: " <> x)
 
-instance ToHttpApiData GoogleCloudMlV1beta1__HyperparameterSpecGoal where
+instance ToHttpApiData GoogleCloudMlV1__OperationMetadataOperationType where
     toQueryParam = \case
-        GoalTypeUnspecified -> "GOAL_TYPE_UNSPECIFIED"
-        Maximize -> "MAXIMIZE"
-        Minimize -> "MINIMIZE"
+        OperationTypeUnspecified -> "OPERATION_TYPE_UNSPECIFIED"
+        CreateVersion -> "CREATE_VERSION"
+        DeleteVersion -> "DELETE_VERSION"
+        DeleteModel -> "DELETE_MODEL"
+        UpdateModel -> "UPDATE_MODEL"
+        UpdateVersion -> "UPDATE_VERSION"
+        UpdateConfig -> "UPDATE_CONFIG"
 
-instance FromJSON GoogleCloudMlV1beta1__HyperparameterSpecGoal where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__HyperparameterSpecGoal"
+instance FromJSON GoogleCloudMlV1__OperationMetadataOperationType where
+    parseJSON = parseJSONText "GoogleCloudMlV1__OperationMetadataOperationType"
 
-instance ToJSON GoogleCloudMlV1beta1__HyperparameterSpecGoal where
-    toJSON = toJSONText
-
--- | Required. The format of the input data files.
-data GoogleCloudMlV1beta1__PredictionInputDataFormat
-    = DataFormatUnspecified
-      -- ^ @DATA_FORMAT_UNSPECIFIED@
-      -- Unspecified format.
-    | Text
-      -- ^ @TEXT@
-      -- The source file is a text file with instances separated by the new-line
-      -- character.
-    | TfRecord
-      -- ^ @TF_RECORD@
-      -- The source file is a TFRecord file.
-    | TfRecordGzip
-      -- ^ @TF_RECORD_GZIP@
-      -- The source file is a GZIP-compressed TFRecord file.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable GoogleCloudMlV1beta1__PredictionInputDataFormat
-
-instance FromHttpApiData GoogleCloudMlV1beta1__PredictionInputDataFormat where
-    parseQueryParam = \case
-        "DATA_FORMAT_UNSPECIFIED" -> Right DataFormatUnspecified
-        "TEXT" -> Right Text
-        "TF_RECORD" -> Right TfRecord
-        "TF_RECORD_GZIP" -> Right TfRecordGzip
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__PredictionInputDataFormat from: " <> x)
-
-instance ToHttpApiData GoogleCloudMlV1beta1__PredictionInputDataFormat where
-    toQueryParam = \case
-        DataFormatUnspecified -> "DATA_FORMAT_UNSPECIFIED"
-        Text -> "TEXT"
-        TfRecord -> "TF_RECORD"
-        TfRecordGzip -> "TF_RECORD_GZIP"
-
-instance FromJSON GoogleCloudMlV1beta1__PredictionInputDataFormat where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__PredictionInputDataFormat"
-
-instance ToJSON GoogleCloudMlV1beta1__PredictionInputDataFormat where
-    toJSON = toJSONText
-
--- | Optional. How the parameter should be scaled to the hypercube. Leave
--- unset for categorical parameters. Some kind of scaling is strongly
--- recommended for real or integral parameters (e.g.,
--- \`UNIT_LINEAR_SCALE\`).
-data GoogleCloudMlV1beta1__ParameterSpecScaleType
-    = None
-      -- ^ @NONE@
-      -- By default, no scaling is applied.
-    | UnitLinearScale
-      -- ^ @UNIT_LINEAR_SCALE@
-      -- Scales the feasible space to (0, 1) linearly.
-    | UnitLogScale
-      -- ^ @UNIT_LOG_SCALE@
-      -- Scales the feasible space logarithmically to (0, 1). The entire feasible
-      -- space must be strictly positive.
-    | UnitReverseLogScale
-      -- ^ @UNIT_REVERSE_LOG_SCALE@
-      -- Scales the feasible space \"reverse\" logarithmically to (0, 1). The
-      -- result is that values close to the top of the feasible space are spread
-      -- out more than points near the bottom. The entire feasible space must be
-      -- strictly positive.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable GoogleCloudMlV1beta1__ParameterSpecScaleType
-
-instance FromHttpApiData GoogleCloudMlV1beta1__ParameterSpecScaleType where
-    parseQueryParam = \case
-        "NONE" -> Right None
-        "UNIT_LINEAR_SCALE" -> Right UnitLinearScale
-        "UNIT_LOG_SCALE" -> Right UnitLogScale
-        "UNIT_REVERSE_LOG_SCALE" -> Right UnitReverseLogScale
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__ParameterSpecScaleType from: " <> x)
-
-instance ToHttpApiData GoogleCloudMlV1beta1__ParameterSpecScaleType where
-    toQueryParam = \case
-        None -> "NONE"
-        UnitLinearScale -> "UNIT_LINEAR_SCALE"
-        UnitLogScale -> "UNIT_LOG_SCALE"
-        UnitReverseLogScale -> "UNIT_REVERSE_LOG_SCALE"
-
-instance FromJSON GoogleCloudMlV1beta1__ParameterSpecScaleType where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__ParameterSpecScaleType"
-
-instance ToJSON GoogleCloudMlV1beta1__ParameterSpecScaleType where
-    toJSON = toJSONText
-
--- | Required. Specifies the machine types, the number of replicas for
--- workers and parameter servers.
-data GoogleCloudMlV1beta1__TrainingInputScaleTier
-    = Basic
-      -- ^ @BASIC@
-      -- A single worker instance. This tier is suitable for learning how to use
-      -- Cloud ML, and for experimenting with new models using small datasets.
-    | Standard1
-      -- ^ @STANDARD_1@
-      -- Many workers and a few parameter servers.
-    | Premium1
-      -- ^ @PREMIUM_1@
-      -- A large number of workers with many parameter servers.
-    | Custom
-      -- ^ @CUSTOM@
-      -- The CUSTOM tier is not a set tier, but rather enables you to use your
-      -- own cluster specification. When you use this tier, set values to
-      -- configure your processing cluster according to these guidelines: * You
-      -- _must_ set \`TrainingInput.masterType\` to specify the type of machine
-      -- to use for your master node. This is the only required setting. * You
-      -- _may_ set \`TrainingInput.workerCount\` to specify the number of workers
-      -- to use. If you specify one or more workers, you _must_ also set
-      -- \`TrainingInput.workerType\` to specify the type of machine to use for
-      -- your worker nodes. * You _may_ set
-      -- \`TrainingInput.parameterServerCount\` to specify the number of
-      -- parameter servers to use. If you specify one or more parameter servers,
-      -- you _must_ also set \`TrainingInput.parameterServerType\` to specify the
-      -- type of machine to use for your parameter servers. Note that all of your
-      -- workers must use the same machine type, which can be different from your
-      -- parameter server type and master type. Your parameter servers must
-      -- likewise use the same machine type, which can be different from your
-      -- worker type and master type.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable GoogleCloudMlV1beta1__TrainingInputScaleTier
-
-instance FromHttpApiData GoogleCloudMlV1beta1__TrainingInputScaleTier where
-    parseQueryParam = \case
-        "BASIC" -> Right Basic
-        "STANDARD_1" -> Right Standard1
-        "PREMIUM_1" -> Right Premium1
-        "CUSTOM" -> Right Custom
-        x -> Left ("Unable to parse GoogleCloudMlV1beta1__TrainingInputScaleTier from: " <> x)
-
-instance ToHttpApiData GoogleCloudMlV1beta1__TrainingInputScaleTier where
-    toQueryParam = \case
-        Basic -> "BASIC"
-        Standard1 -> "STANDARD_1"
-        Premium1 -> "PREMIUM_1"
-        Custom -> "CUSTOM"
-
-instance FromJSON GoogleCloudMlV1beta1__TrainingInputScaleTier where
-    parseJSON = parseJSONText "GoogleCloudMlV1beta1__TrainingInputScaleTier"
-
-instance ToJSON GoogleCloudMlV1beta1__TrainingInputScaleTier where
+instance ToJSON GoogleCloudMlV1__OperationMetadataOperationType where
     toJSON = toJSONText

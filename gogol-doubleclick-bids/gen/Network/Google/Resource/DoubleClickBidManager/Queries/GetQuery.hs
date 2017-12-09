@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Queries.GetQuery
 
     -- * Request Lenses
     , qgqQueryId
+    , qgqFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.queries.getquery@ method which the
 -- 'QueriesGetQuery' request conforms to.
@@ -46,13 +47,15 @@ type QueriesGetQueryResource =
        "v1" :>
          "query" :>
            Capture "queryId" (Textual Int64) :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Query
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Query
 
 -- | Retrieves a stored query.
 --
 -- /See:/ 'queriesGetQuery' smart constructor.
-newtype QueriesGetQuery = QueriesGetQuery'
-    { _qgqQueryId :: Textual Int64
+data QueriesGetQuery = QueriesGetQuery'
+    { _qgqQueryId :: !(Textual Int64)
+    , _qgqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueriesGetQuery' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype QueriesGetQuery = QueriesGetQuery'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'qgqQueryId'
+--
+-- * 'qgqFields'
 queriesGetQuery
     :: Int64 -- ^ 'qgqQueryId'
     -> QueriesGetQuery
-queriesGetQuery pQgqQueryId_ =
+queriesGetQuery pQgqQueryId_ = 
     QueriesGetQuery'
     { _qgqQueryId = _Coerce # pQgqQueryId_
+    , _qgqFields = Nothing
     }
 
 -- | Query ID to retrieve.
@@ -74,11 +80,17 @@ qgqQueryId
   = lens _qgqQueryId (\ s a -> s{_qgqQueryId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+qgqFields :: Lens' QueriesGetQuery (Maybe Text)
+qgqFields
+  = lens _qgqFields (\ s a -> s{_qgqFields = a})
+
 instance GoogleRequest QueriesGetQuery where
         type Rs QueriesGetQuery = Query
-        type Scopes QueriesGetQuery = '[]
+        type Scopes QueriesGetQuery =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient QueriesGetQuery'{..}
-          = go _qgqQueryId (Just AltJSON)
+          = go _qgqQueryId _qgqFields (Just AltJSON)
               doubleClickBidsService
           where go
                   = buildClient

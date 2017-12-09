@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Contacts.Update
     -- * Request Lenses
     , cuPayload
     , cuId
+    , cuFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.contacts.update@ method which the
 -- 'ContactsUpdate' request conforms to.
@@ -47,15 +48,17 @@ type ContactsUpdateResource =
        "v1" :>
          "contacts" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Contact :> Put '[JSON] Contact
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Contact :> Put '[JSON] Contact
 
 -- | Updates a contact in place.
 --
 -- /See:/ 'contactsUpdate' smart constructor.
 data ContactsUpdate = ContactsUpdate'
     { _cuPayload :: !Contact
-    , _cuId      :: !Text
+    , _cuId :: !Text
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactsUpdate' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data ContactsUpdate = ContactsUpdate'
 -- * 'cuPayload'
 --
 -- * 'cuId'
+--
+-- * 'cuFields'
 contactsUpdate
     :: Contact -- ^ 'cuPayload'
     -> Text -- ^ 'cuId'
     -> ContactsUpdate
-contactsUpdate pCuPayload_ pCuId_ =
+contactsUpdate pCuPayload_ pCuId_ = 
     ContactsUpdate'
     { _cuPayload = pCuPayload_
     , _cuId = pCuId_
+    , _cuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -84,12 +90,17 @@ cuPayload
 cuId :: Lens' ContactsUpdate Text
 cuId = lens _cuId (\ s a -> s{_cuId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' ContactsUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest ContactsUpdate where
         type Rs ContactsUpdate = Contact
         type Scopes ContactsUpdate =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient ContactsUpdate'{..}
-          = go _cuId (Just AltJSON) _cuPayload mirrorService
+          = go _cuId _cuFields (Just AltJSON) _cuPayload
+              mirrorService
           where go
                   = buildClient (Proxy :: Proxy ContactsUpdateResource)
                       mempty

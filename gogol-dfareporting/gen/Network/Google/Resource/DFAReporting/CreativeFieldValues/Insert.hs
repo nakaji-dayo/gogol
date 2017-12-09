@@ -36,32 +36,35 @@ module Network.Google.Resource.DFAReporting.CreativeFieldValues.Insert
     , cfviCreativeFieldId
     , cfviProFileId
     , cfviPayload
+    , cfviFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFieldValues.insert@ method which the
 -- 'CreativeFieldValuesInsert' request conforms to.
 type CreativeFieldValuesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "creativeFieldId" (Textual Int64) :>
                  "creativeFieldValues" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CreativeFieldValue :>
-                       Post '[JSON] CreativeFieldValue
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CreativeFieldValue :>
+                         Post '[JSON] CreativeFieldValue
 
 -- | Inserts a new creative field value.
 --
 -- /See:/ 'creativeFieldValuesInsert' smart constructor.
 data CreativeFieldValuesInsert = CreativeFieldValuesInsert'
     { _cfviCreativeFieldId :: !(Textual Int64)
-    , _cfviProFileId       :: !(Textual Int64)
-    , _cfviPayload         :: !CreativeFieldValue
+    , _cfviProFileId :: !(Textual Int64)
+    , _cfviPayload :: !CreativeFieldValue
+    , _cfviFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValuesInsert' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CreativeFieldValuesInsert = CreativeFieldValuesInsert'
 -- * 'cfviProFileId'
 --
 -- * 'cfviPayload'
+--
+-- * 'cfviFields'
 creativeFieldValuesInsert
     :: Int64 -- ^ 'cfviCreativeFieldId'
     -> Int64 -- ^ 'cfviProFileId'
     -> CreativeFieldValue -- ^ 'cfviPayload'
     -> CreativeFieldValuesInsert
-creativeFieldValuesInsert pCfviCreativeFieldId_ pCfviProFileId_ pCfviPayload_ =
+creativeFieldValuesInsert pCfviCreativeFieldId_ pCfviProFileId_ pCfviPayload_ = 
     CreativeFieldValuesInsert'
     { _cfviCreativeFieldId = _Coerce # pCfviCreativeFieldId_
     , _cfviProFileId = _Coerce # pCfviProFileId_
     , _cfviPayload = pCfviPayload_
+    , _cfviFields = Nothing
     }
 
 -- | Creative field ID for this creative field value.
@@ -104,6 +110,11 @@ cfviPayload :: Lens' CreativeFieldValuesInsert CreativeFieldValue
 cfviPayload
   = lens _cfviPayload (\ s a -> s{_cfviPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cfviFields :: Lens' CreativeFieldValuesInsert (Maybe Text)
+cfviFields
+  = lens _cfviFields (\ s a -> s{_cfviFields = a})
+
 instance GoogleRequest CreativeFieldValuesInsert
          where
         type Rs CreativeFieldValuesInsert =
@@ -111,7 +122,7 @@ instance GoogleRequest CreativeFieldValuesInsert
         type Scopes CreativeFieldValuesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldValuesInsert'{..}
-          = go _cfviProFileId _cfviCreativeFieldId
+          = go _cfviProFileId _cfviCreativeFieldId _cfviFields
               (Just AltJSON)
               _cfviPayload
               dFAReportingService

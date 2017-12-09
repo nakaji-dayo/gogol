@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.BackupRuns.List
     , brlProject
     , brlPageToken
     , brlMaxResults
+    , brlFields
     , brlInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.backupRuns.list@ method which the
 -- 'BackupRunsList' request conforms to.
@@ -55,18 +56,20 @@ type BackupRunsListResource =
                  "backupRuns" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] BackupRunsListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] BackupRunsListResponse
 
 -- | Lists all backup runs associated with a given instance and configuration
 -- in the reverse chronological order of the enqueued time.
 --
 -- /See:/ 'backupRunsList' smart constructor.
 data BackupRunsList = BackupRunsList'
-    { _brlProject    :: !Text
-    , _brlPageToken  :: !(Maybe Text)
+    { _brlProject :: !Text
+    , _brlPageToken :: !(Maybe Text)
     , _brlMaxResults :: !(Maybe (Textual Int32))
-    , _brlInstance   :: !Text
+    , _brlFields :: !(Maybe Text)
+    , _brlInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BackupRunsList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data BackupRunsList = BackupRunsList'
 --
 -- * 'brlMaxResults'
 --
+-- * 'brlFields'
+--
 -- * 'brlInstance'
 backupRunsList
     :: Text -- ^ 'brlProject'
     -> Text -- ^ 'brlInstance'
     -> BackupRunsList
-backupRunsList pBrlProject_ pBrlInstance_ =
+backupRunsList pBrlProject_ pBrlInstance_ = 
     BackupRunsList'
     { _brlProject = pBrlProject_
     , _brlPageToken = Nothing
     , _brlMaxResults = Nothing
+    , _brlFields = Nothing
     , _brlInstance = pBrlInstance_
     }
 
@@ -110,6 +116,11 @@ brlMaxResults
       (\ s a -> s{_brlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+brlFields :: Lens' BackupRunsList (Maybe Text)
+brlFields
+  = lens _brlFields (\ s a -> s{_brlFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 brlInstance :: Lens' BackupRunsList Text
 brlInstance
@@ -123,6 +134,7 @@ instance GoogleRequest BackupRunsList where
         requestClient BackupRunsList'{..}
           = go _brlProject _brlInstance _brlPageToken
               _brlMaxResults
+              _brlFields
               (Just AltJSON)
               sQLAdminService
           where go

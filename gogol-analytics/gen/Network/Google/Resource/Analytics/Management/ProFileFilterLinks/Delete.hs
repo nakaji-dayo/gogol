@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.Delete
     , mpffldProFileId
     , mpffldAccountId
     , mpffldLinkId
+    , mpffldFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.delete@ method which the
 -- 'ManagementProFileFilterLinksDelete' request conforms to.
@@ -56,16 +57,18 @@ type ManagementProFileFilterLinksDeleteResource =
                      Capture "profileId" Text :>
                        "profileFilterLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a profile filter link.
 --
 -- /See:/ 'managementProFileFilterLinksDelete' smart constructor.
 data ManagementProFileFilterLinksDelete = ManagementProFileFilterLinksDelete'
     { _mpffldWebPropertyId :: !Text
-    , _mpffldProFileId     :: !Text
-    , _mpffldAccountId     :: !Text
-    , _mpffldLinkId        :: !Text
+    , _mpffldProFileId :: !Text
+    , _mpffldAccountId :: !Text
+    , _mpffldLinkId :: !Text
+    , _mpffldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksDelete' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementProFileFilterLinksDelete = ManagementProFileFilterLinksDelete'
 -- * 'mpffldAccountId'
 --
 -- * 'mpffldLinkId'
+--
+-- * 'mpffldFields'
 managementProFileFilterLinksDelete
     :: Text -- ^ 'mpffldWebPropertyId'
     -> Text -- ^ 'mpffldProFileId'
     -> Text -- ^ 'mpffldAccountId'
     -> Text -- ^ 'mpffldLinkId'
     -> ManagementProFileFilterLinksDelete
-managementProFileFilterLinksDelete pMpffldWebPropertyId_ pMpffldProFileId_ pMpffldAccountId_ pMpffldLinkId_ =
+managementProFileFilterLinksDelete pMpffldWebPropertyId_ pMpffldProFileId_ pMpffldAccountId_ pMpffldLinkId_ = 
     ManagementProFileFilterLinksDelete'
     { _mpffldWebPropertyId = pMpffldWebPropertyId_
     , _mpffldProFileId = pMpffldProFileId_
     , _mpffldAccountId = pMpffldAccountId_
     , _mpffldLinkId = pMpffldLinkId_
+    , _mpffldFields = Nothing
     }
 
 -- | Web property Id to which the profile filter link belongs.
@@ -116,6 +122,11 @@ mpffldLinkId :: Lens' ManagementProFileFilterLinksDelete Text
 mpffldLinkId
   = lens _mpffldLinkId (\ s a -> s{_mpffldLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpffldFields :: Lens' ManagementProFileFilterLinksDelete (Maybe Text)
+mpffldFields
+  = lens _mpffldFields (\ s a -> s{_mpffldFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksDelete where
         type Rs ManagementProFileFilterLinksDelete = ()
@@ -125,6 +136,7 @@ instance GoogleRequest
           = go _mpffldAccountId _mpffldWebPropertyId
               _mpffldProFileId
               _mpffldLinkId
+              _mpffldFields
               (Just AltJSON)
               analyticsService
           where go

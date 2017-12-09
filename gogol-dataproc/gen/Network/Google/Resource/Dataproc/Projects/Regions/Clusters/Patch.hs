@@ -41,14 +41,16 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Patch
     , prcpUploadType
     , prcpPayload
     , prcpBearerToken
+    , prcpGracefulDecommissionTimeout
     , prcpClusterName
     , prcpRegion
     , prcpProjectId
+    , prcpFields
     , prcpCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.clusters.patch@ method which the
 -- 'ProjectsRegionsClustersPatch' request conforms to.
@@ -60,34 +62,40 @@ type ProjectsRegionsClustersPatchResource =
              Capture "region" Text :>
                "clusters" :>
                  Capture "clusterName" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
-                       QueryParam "updateMask" Text :>
+                       QueryParam "updateMask" FieldMask :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
-                                 QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] Cluster :>
-                                       Patch '[JSON] Operation
+                                 QueryParam "gracefulDecommissionTimeout"
+                                   Duration
+                                   :>
+                                   QueryParam "callback" Text :>
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         ReqBody '[JSON] Cluster :>
+                                           Patch '[JSON] Operation
 
 -- | Updates a cluster in a project.
 --
 -- /See:/ 'projectsRegionsClustersPatch' smart constructor.
 data ProjectsRegionsClustersPatch = ProjectsRegionsClustersPatch'
-    { _prcpXgafv          :: !(Maybe Text)
+    { _prcpXgafv :: !(Maybe Xgafv)
     , _prcpUploadProtocol :: !(Maybe Text)
-    , _prcpUpdateMask     :: !(Maybe Text)
-    , _prcpPp             :: !Bool
-    , _prcpAccessToken    :: !(Maybe Text)
-    , _prcpUploadType     :: !(Maybe Text)
-    , _prcpPayload        :: !Cluster
-    , _prcpBearerToken    :: !(Maybe Text)
-    , _prcpClusterName    :: !Text
-    , _prcpRegion         :: !Text
-    , _prcpProjectId      :: !Text
-    , _prcpCallback       :: !(Maybe Text)
+    , _prcpUpdateMask :: !(Maybe FieldMask)
+    , _prcpPp :: !Bool
+    , _prcpAccessToken :: !(Maybe Text)
+    , _prcpUploadType :: !(Maybe Text)
+    , _prcpPayload :: !Cluster
+    , _prcpBearerToken :: !(Maybe Text)
+    , _prcpGracefulDecommissionTimeout :: !(Maybe Duration)
+    , _prcpClusterName :: !Text
+    , _prcpRegion :: !Text
+    , _prcpProjectId :: !Text
+    , _prcpFields :: !(Maybe Text)
+    , _prcpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsClustersPatch' with the minimum fields required to make a request.
@@ -110,11 +118,15 @@ data ProjectsRegionsClustersPatch = ProjectsRegionsClustersPatch'
 --
 -- * 'prcpBearerToken'
 --
+-- * 'prcpGracefulDecommissionTimeout'
+--
 -- * 'prcpClusterName'
 --
 -- * 'prcpRegion'
 --
 -- * 'prcpProjectId'
+--
+-- * 'prcpFields'
 --
 -- * 'prcpCallback'
 projectsRegionsClustersPatch
@@ -123,7 +135,7 @@ projectsRegionsClustersPatch
     -> Text -- ^ 'prcpRegion'
     -> Text -- ^ 'prcpProjectId'
     -> ProjectsRegionsClustersPatch
-projectsRegionsClustersPatch pPrcpPayload_ pPrcpClusterName_ pPrcpRegion_ pPrcpProjectId_ =
+projectsRegionsClustersPatch pPrcpPayload_ pPrcpClusterName_ pPrcpRegion_ pPrcpProjectId_ = 
     ProjectsRegionsClustersPatch'
     { _prcpXgafv = Nothing
     , _prcpUploadProtocol = Nothing
@@ -133,14 +145,16 @@ projectsRegionsClustersPatch pPrcpPayload_ pPrcpClusterName_ pPrcpRegion_ pPrcpP
     , _prcpUploadType = Nothing
     , _prcpPayload = pPrcpPayload_
     , _prcpBearerToken = Nothing
+    , _prcpGracefulDecommissionTimeout = Nothing
     , _prcpClusterName = pPrcpClusterName_
     , _prcpRegion = pPrcpRegion_
     , _prcpProjectId = pPrcpProjectId_
+    , _prcpFields = Nothing
     , _prcpCallback = Nothing
     }
 
 -- | V1 error format.
-prcpXgafv :: Lens' ProjectsRegionsClustersPatch (Maybe Text)
+prcpXgafv :: Lens' ProjectsRegionsClustersPatch (Maybe Xgafv)
 prcpXgafv
   = lens _prcpXgafv (\ s a -> s{_prcpXgafv = a})
 
@@ -150,20 +164,24 @@ prcpUploadProtocol
   = lens _prcpUploadProtocol
       (\ s a -> s{_prcpUploadProtocol = a})
 
--- | [Required] Specifies the path, relative to Cluster, of the field to
+-- | Required. Specifies the path, relative to Cluster, of the field to
 -- update. For example, to change the number of workers in a cluster to 5,
 -- the update_mask parameter would be specified as
--- config.worker_config.num_instances, and the \`PATCH\` request body would
+-- config.worker_config.num_instances, and the PATCH request body would
 -- specify the new value, as follows: { \"config\":{ \"workerConfig\":{
 -- \"numInstances\":\"5\" } } } Similarly, to change the number of
 -- preemptible workers in a cluster to 5, the update_mask parameter would
--- be config.secondary_worker_config.num_instances, and the \`PATCH\`
--- request body would be set as follows: { \"config\":{
--- \"secondaryWorkerConfig\":{ \"numInstances\":\"5\" } } } Note:
--- Currently, config.worker_config.num_instances and
--- config.secondary_worker_config.num_instances are the only fields that
--- can be updated.
-prcpUpdateMask :: Lens' ProjectsRegionsClustersPatch (Maybe Text)
+-- be config.secondary_worker_config.num_instances, and the PATCH request
+-- body would be set as follows: { \"config\":{ \"secondaryWorkerConfig\":{
+-- \"numInstances\":\"5\" } } } __Note:__ Currently, only the following
+-- fields can be updated:
+-- >   ---------------------------------------------------- -------------------------------
+-- >   __Mask__                                             __Purpose__
+-- >   __/labels/__                                         Update labels
+-- >   __/config.worker_config.num_instances/__             Resize primary worker group
+-- >   __/config.secondary_worker_config.num_instances/__   Resize secondary worker group
+-- >   ---------------------------------------------------- -------------------------------
+prcpUpdateMask :: Lens' ProjectsRegionsClustersPatch (Maybe FieldMask)
 prcpUpdateMask
   = lens _prcpUpdateMask
       (\ s a -> s{_prcpUpdateMask = a})
@@ -195,23 +213,41 @@ prcpBearerToken
   = lens _prcpBearerToken
       (\ s a -> s{_prcpBearerToken = a})
 
--- | [Required] The cluster name.
+-- | Optional. Timeout for graceful YARN decomissioning. Graceful
+-- decommissioning allows removing nodes from the cluster without
+-- interrupting jobs in progress. Timeout specifies how long to wait for
+-- jobs in progress to finish before forcefully removing nodes (and
+-- potentially interrupting jobs). Default timeout is 0 (for forceful
+-- decommission), and the maximum allowed timeout is 1 day.Only supported
+-- on Dataproc image versions 1.2 and higher.
+prcpGracefulDecommissionTimeout :: Lens' ProjectsRegionsClustersPatch (Maybe Scientific)
+prcpGracefulDecommissionTimeout
+  = lens _prcpGracefulDecommissionTimeout
+      (\ s a -> s{_prcpGracefulDecommissionTimeout = a})
+      . mapping _Duration
+
+-- | Required. The cluster name.
 prcpClusterName :: Lens' ProjectsRegionsClustersPatch Text
 prcpClusterName
   = lens _prcpClusterName
       (\ s a -> s{_prcpClusterName = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prcpRegion :: Lens' ProjectsRegionsClustersPatch Text
 prcpRegion
   = lens _prcpRegion (\ s a -> s{_prcpRegion = a})
 
--- | [Required] The ID of the Google Cloud Platform project the cluster
+-- | Required. The ID of the Google Cloud Platform project the cluster
 -- belongs to.
 prcpProjectId :: Lens' ProjectsRegionsClustersPatch Text
 prcpProjectId
   = lens _prcpProjectId
       (\ s a -> s{_prcpProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+prcpFields :: Lens' ProjectsRegionsClustersPatch (Maybe Text)
+prcpFields
+  = lens _prcpFields (\ s a -> s{_prcpFields = a})
 
 -- | JSONP
 prcpCallback :: Lens' ProjectsRegionsClustersPatch (Maybe Text)
@@ -232,7 +268,9 @@ instance GoogleRequest ProjectsRegionsClustersPatch
               _prcpAccessToken
               _prcpUploadType
               _prcpBearerToken
+              _prcpGracefulDecommissionTimeout
               _prcpCallback
+              _prcpFields
               (Just AltJSON)
               _prcpPayload
               dataprocService

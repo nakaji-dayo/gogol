@@ -45,11 +45,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.Get
     , svgRange
     , svgDateTimeRenderOption
     , svgMajorDimension
+    , svgFields
     , svgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.get@ method which the
 -- 'SpreadsheetsValuesGet' request conforms to.
@@ -69,26 +70,28 @@ type SpreadsheetsValuesGetResource =
                              QueryParam "dateTimeRenderOption" Text :>
                                QueryParam "majorDimension" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] ValueRange
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] ValueRange
 
 -- | Returns a range of values from a spreadsheet. The caller must specify
 -- the spreadsheet ID and a range.
 --
 -- /See:/ 'spreadsheetsValuesGet' smart constructor.
 data SpreadsheetsValuesGet = SpreadsheetsValuesGet'
-    { _svgXgafv                :: !(Maybe Xgafv)
-    , _svgValueRenderOption    :: !(Maybe Text)
-    , _svgUploadProtocol       :: !(Maybe Text)
-    , _svgPp                   :: !Bool
-    , _svgAccessToken          :: !(Maybe Text)
-    , _svgSpreadsheetId        :: !Text
-    , _svgUploadType           :: !(Maybe Text)
-    , _svgBearerToken          :: !(Maybe Text)
-    , _svgRange                :: !Text
+    { _svgXgafv :: !(Maybe Xgafv)
+    , _svgValueRenderOption :: !(Maybe Text)
+    , _svgUploadProtocol :: !(Maybe Text)
+    , _svgPp :: !Bool
+    , _svgAccessToken :: !(Maybe Text)
+    , _svgSpreadsheetId :: !Text
+    , _svgUploadType :: !(Maybe Text)
+    , _svgBearerToken :: !(Maybe Text)
+    , _svgRange :: !Text
     , _svgDateTimeRenderOption :: !(Maybe Text)
-    , _svgMajorDimension       :: !(Maybe Text)
-    , _svgCallback             :: !(Maybe Text)
+    , _svgMajorDimension :: !(Maybe Text)
+    , _svgFields :: !(Maybe Text)
+    , _svgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesGet' with the minimum fields required to make a request.
@@ -117,12 +120,14 @@ data SpreadsheetsValuesGet = SpreadsheetsValuesGet'
 --
 -- * 'svgMajorDimension'
 --
+-- * 'svgFields'
+--
 -- * 'svgCallback'
 spreadsheetsValuesGet
     :: Text -- ^ 'svgSpreadsheetId'
     -> Text -- ^ 'svgRange'
     -> SpreadsheetsValuesGet
-spreadsheetsValuesGet pSvgSpreadsheetId_ pSvgRange_ =
+spreadsheetsValuesGet pSvgSpreadsheetId_ pSvgRange_ = 
     SpreadsheetsValuesGet'
     { _svgXgafv = Nothing
     , _svgValueRenderOption = Nothing
@@ -135,6 +140,7 @@ spreadsheetsValuesGet pSvgSpreadsheetId_ pSvgRange_ =
     , _svgRange = pSvgRange_
     , _svgDateTimeRenderOption = Nothing
     , _svgMajorDimension = Nothing
+    , _svgFields = Nothing
     , _svgCallback = Nothing
     }
 
@@ -205,6 +211,11 @@ svgMajorDimension
   = lens _svgMajorDimension
       (\ s a -> s{_svgMajorDimension = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svgFields :: Lens' SpreadsheetsValuesGet (Maybe Text)
+svgFields
+  = lens _svgFields (\ s a -> s{_svgFields = a})
+
 -- | JSONP
 svgCallback :: Lens' SpreadsheetsValuesGet (Maybe Text)
 svgCallback
@@ -214,6 +225,7 @@ instance GoogleRequest SpreadsheetsValuesGet where
         type Rs SpreadsheetsValuesGet = ValueRange
         type Scopes SpreadsheetsValuesGet =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/drive.readonly",
                "https://www.googleapis.com/auth/spreadsheets",
                "https://www.googleapis.com/auth/spreadsheets.readonly"]
@@ -228,6 +240,7 @@ instance GoogleRequest SpreadsheetsValuesGet where
               _svgDateTimeRenderOption
               _svgMajorDimension
               _svgCallback
+              _svgFields
               (Just AltJSON)
               sheetsService
           where go

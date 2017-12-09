@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Creatives.Patch
     , cppProFileId
     , cppPayload
     , cppId
+    , cppFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creatives.patch@ method which the
 -- 'CreativesPatch' request conforms to.
 type CreativesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creatives" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Creative :> Patch '[JSON] Creative
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Creative :> Patch '[JSON] Creative
 
 -- | Updates an existing creative. This method supports patch semantics.
 --
 -- /See:/ 'creativesPatch' smart constructor.
 data CreativesPatch = CreativesPatch'
     { _cppProFileId :: !(Textual Int64)
-    , _cppPayload   :: !Creative
-    , _cppId        :: !(Textual Int64)
+    , _cppPayload :: !Creative
+    , _cppId :: !(Textual Int64)
+    , _cppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data CreativesPatch = CreativesPatch'
 -- * 'cppPayload'
 --
 -- * 'cppId'
+--
+-- * 'cppFields'
 creativesPatch
     :: Int64 -- ^ 'cppProFileId'
     -> Creative -- ^ 'cppPayload'
     -> Int64 -- ^ 'cppId'
     -> CreativesPatch
-creativesPatch pCppProFileId_ pCppPayload_ pCppId_ =
+creativesPatch pCppProFileId_ pCppPayload_ pCppId_ = 
     CreativesPatch'
     { _cppProFileId = _Coerce # pCppProFileId_
     , _cppPayload = pCppPayload_
     , _cppId = _Coerce # pCppId_
+    , _cppFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -99,12 +105,18 @@ cppId :: Lens' CreativesPatch Int64
 cppId
   = lens _cppId (\ s a -> s{_cppId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cppFields :: Lens' CreativesPatch (Maybe Text)
+cppFields
+  = lens _cppFields (\ s a -> s{_cppFields = a})
+
 instance GoogleRequest CreativesPatch where
         type Rs CreativesPatch = Creative
         type Scopes CreativesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativesPatch'{..}
-          = go _cppProFileId (Just _cppId) (Just AltJSON)
+          = go _cppProFileId (Just _cppId) _cppFields
+              (Just AltJSON)
               _cppPayload
               dFAReportingService
           where go

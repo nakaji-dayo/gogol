@@ -36,10 +36,11 @@ module Network.Google.Resource.Tasks.Tasks.Clear
 
     -- * Request Lenses
     , tcTaskList
+    , tcFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.clear@ method which the
 -- 'TasksClear' request conforms to.
@@ -49,15 +50,17 @@ type TasksClearResource =
          "lists" :>
            Capture "tasklist" Text :>
              "clear" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Clears all completed tasks from the specified task list. The affected
 -- tasks will be marked as \'hidden\' and no longer be returned by default
 -- when retrieving all tasks for a task list.
 --
 -- /See:/ 'tasksClear' smart constructor.
-newtype TasksClear = TasksClear'
-    { _tcTaskList :: Text
+data TasksClear = TasksClear'
+    { _tcTaskList :: !Text
+    , _tcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksClear' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype TasksClear = TasksClear'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tcTaskList'
+--
+-- * 'tcFields'
 tasksClear
     :: Text -- ^ 'tcTaskList'
     -> TasksClear
-tasksClear pTcTaskList_ =
+tasksClear pTcTaskList_ = 
     TasksClear'
     { _tcTaskList = pTcTaskList_
+    , _tcFields = Nothing
     }
 
 -- | Task list identifier.
@@ -78,12 +84,17 @@ tcTaskList :: Lens' TasksClear Text
 tcTaskList
   = lens _tcTaskList (\ s a -> s{_tcTaskList = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tcFields :: Lens' TasksClear (Maybe Text)
+tcFields = lens _tcFields (\ s a -> s{_tcFields = a})
+
 instance GoogleRequest TasksClear where
         type Rs TasksClear = ()
         type Scopes TasksClear =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TasksClear'{..}
-          = go _tcTaskList (Just AltJSON) appsTasksService
+          = go _tcTaskList _tcFields (Just AltJSON)
+              appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TasksClearResource)
                       mempty

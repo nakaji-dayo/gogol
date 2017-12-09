@@ -13,7 +13,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lets you search over a website or collection of websites
+-- Searches over a website or collection of websites
 --
 -- /See:/ <https://developers.google.com/custom-search/v1/using_rest CustomSearch API Reference>
 module Network.Google.CustomSearch
@@ -153,7 +153,6 @@ module Network.Google.CustomSearch
     , qDisableCnTwTranslation
     , qRelatedSite
     , qHl
-    , qCref
     , qSort
     , qLanguage
     , qSiteSearch
@@ -222,9 +221,9 @@ module Network.Google.CustomSearch
     , CSEListImgSize (..)
     ) where
 
-import           Network.Google.CustomSearch.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Search.CSE.List
+import Network.Google.Prelude
+import Network.Google.CustomSearch.Types
+import Network.Google.Resource.Search.CSE.List
 
 {- $resources
 TODO

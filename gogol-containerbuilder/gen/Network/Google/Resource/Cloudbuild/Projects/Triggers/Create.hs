@@ -41,11 +41,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.Create
     , ptcPayload
     , ptcBearerToken
     , ptcProjectId
+    , ptcFields
     , ptcCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.create@ method which the
 -- 'ProjectsTriggersCreate' request conforms to.
@@ -61,23 +62,25 @@ type ProjectsTriggersCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] BuildTrigger :>
-                               Post '[JSON] BuildTrigger
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] BuildTrigger :>
+                                 Post '[JSON] BuildTrigger
 
 -- | Creates a new BuildTrigger. This API is experimental.
 --
 -- /See:/ 'projectsTriggersCreate' smart constructor.
 data ProjectsTriggersCreate = ProjectsTriggersCreate'
-    { _ptcXgafv          :: !(Maybe Xgafv)
+    { _ptcXgafv :: !(Maybe Xgafv)
     , _ptcUploadProtocol :: !(Maybe Text)
-    , _ptcPp             :: !Bool
-    , _ptcAccessToken    :: !(Maybe Text)
-    , _ptcUploadType     :: !(Maybe Text)
-    , _ptcPayload        :: !BuildTrigger
-    , _ptcBearerToken    :: !(Maybe Text)
-    , _ptcProjectId      :: !Text
-    , _ptcCallback       :: !(Maybe Text)
+    , _ptcPp :: !Bool
+    , _ptcAccessToken :: !(Maybe Text)
+    , _ptcUploadType :: !(Maybe Text)
+    , _ptcPayload :: !BuildTrigger
+    , _ptcBearerToken :: !(Maybe Text)
+    , _ptcProjectId :: !Text
+    , _ptcFields :: !(Maybe Text)
+    , _ptcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTriggersCreate' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ProjectsTriggersCreate = ProjectsTriggersCreate'
 --
 -- * 'ptcProjectId'
 --
+-- * 'ptcFields'
+--
 -- * 'ptcCallback'
 projectsTriggersCreate
     :: BuildTrigger -- ^ 'ptcPayload'
     -> Text -- ^ 'ptcProjectId'
     -> ProjectsTriggersCreate
-projectsTriggersCreate pPtcPayload_ pPtcProjectId_ =
+projectsTriggersCreate pPtcPayload_ pPtcProjectId_ = 
     ProjectsTriggersCreate'
     { _ptcXgafv = Nothing
     , _ptcUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsTriggersCreate pPtcPayload_ pPtcProjectId_ =
     , _ptcPayload = pPtcPayload_
     , _ptcBearerToken = Nothing
     , _ptcProjectId = pPtcProjectId_
+    , _ptcFields = Nothing
     , _ptcCallback = Nothing
     }
 
@@ -160,6 +166,11 @@ ptcProjectId :: Lens' ProjectsTriggersCreate Text
 ptcProjectId
   = lens _ptcProjectId (\ s a -> s{_ptcProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptcFields :: Lens' ProjectsTriggersCreate (Maybe Text)
+ptcFields
+  = lens _ptcFields (\ s a -> s{_ptcFields = a})
+
 -- | JSONP
 ptcCallback :: Lens' ProjectsTriggersCreate (Maybe Text)
 ptcCallback
@@ -176,6 +187,7 @@ instance GoogleRequest ProjectsTriggersCreate where
               _ptcUploadType
               _ptcBearerToken
               _ptcCallback
+              _ptcFields
               (Just AltJSON)
               _ptcPayload
               containerBuilderService

@@ -34,11 +34,13 @@ module Network.Google.Resource.Storage.BucketAccessControls.Get
 
     -- * Request Lenses
     , bacgBucket
+    , bacgUserProject
     , bacgEntity
+    , bacgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.bucketAccessControls.get@ method which the
 -- 'BucketAccessControlsGet' request conforms to.
@@ -49,15 +51,19 @@ type BucketAccessControlsGetResource =
            Capture "bucket" Text :>
              "acl" :>
                Capture "entity" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] BucketAccessControl
+                 QueryParam "userProject" Text :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] BucketAccessControl
 
 -- | Returns the ACL entry for the specified entity on the specified bucket.
 --
 -- /See:/ 'bucketAccessControlsGet' smart constructor.
 data BucketAccessControlsGet = BucketAccessControlsGet'
     { _bacgBucket :: !Text
+    , _bacgUserProject :: !(Maybe Text)
     , _bacgEntity :: !Text
+    , _bacgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BucketAccessControlsGet' with the minimum fields required to make a request.
@@ -66,21 +72,34 @@ data BucketAccessControlsGet = BucketAccessControlsGet'
 --
 -- * 'bacgBucket'
 --
+-- * 'bacgUserProject'
+--
 -- * 'bacgEntity'
+--
+-- * 'bacgFields'
 bucketAccessControlsGet
     :: Text -- ^ 'bacgBucket'
     -> Text -- ^ 'bacgEntity'
     -> BucketAccessControlsGet
-bucketAccessControlsGet pBacgBucket_ pBacgEntity_ =
+bucketAccessControlsGet pBacgBucket_ pBacgEntity_ = 
     BucketAccessControlsGet'
     { _bacgBucket = pBacgBucket_
+    , _bacgUserProject = Nothing
     , _bacgEntity = pBacgEntity_
+    , _bacgFields = Nothing
     }
 
 -- | Name of a bucket.
 bacgBucket :: Lens' BucketAccessControlsGet Text
 bacgBucket
   = lens _bacgBucket (\ s a -> s{_bacgBucket = a})
+
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+bacgUserProject :: Lens' BucketAccessControlsGet (Maybe Text)
+bacgUserProject
+  = lens _bacgUserProject
+      (\ s a -> s{_bacgUserProject = a})
 
 -- | The entity holding the permission. Can be user-userId,
 -- user-emailAddress, group-groupId, group-emailAddress, allUsers, or
@@ -89,13 +108,20 @@ bacgEntity :: Lens' BucketAccessControlsGet Text
 bacgEntity
   = lens _bacgEntity (\ s a -> s{_bacgEntity = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bacgFields :: Lens' BucketAccessControlsGet (Maybe Text)
+bacgFields
+  = lens _bacgFields (\ s a -> s{_bacgFields = a})
+
 instance GoogleRequest BucketAccessControlsGet where
         type Rs BucketAccessControlsGet = BucketAccessControl
         type Scopes BucketAccessControlsGet =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/devstorage.full_control"]
         requestClient BucketAccessControlsGet'{..}
-          = go _bacgBucket _bacgEntity (Just AltJSON)
+          = go _bacgBucket _bacgEntity _bacgUserProject
+              _bacgFields
+              (Just AltJSON)
               storageService
           where go
                   = buildClient

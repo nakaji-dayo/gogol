@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.SSLCerts.Insert
     -- * Request Lenses
     , sciProject
     , sciPayload
+    , sciFields
     , sciInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.sslCerts.insert@ method which the
 -- 'SSLCertsInsert' request conforms to.
@@ -53,9 +54,10 @@ type SSLCertsInsertResource =
              "instances" :>
                Capture "instance" Text :>
                  "sslCerts" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] SSLCertsInsertRequest :>
-                       Post '[JSON] SSLCertsInsertResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] SSLCertsInsertRequest :>
+                         Post '[JSON] SSLCertsInsertResponse
 
 -- | Creates an SSL certificate and returns it along with the private key and
 -- server certificate authority. The new certificate will not be usable
@@ -63,8 +65,9 @@ type SSLCertsInsertResource =
 --
 -- /See:/ 'sslCertsInsert' smart constructor.
 data SSLCertsInsert = SSLCertsInsert'
-    { _sciProject  :: !Text
-    , _sciPayload  :: !SSLCertsInsertRequest
+    { _sciProject :: !Text
+    , _sciPayload :: !SSLCertsInsertRequest
+    , _sciFields :: !(Maybe Text)
     , _sciInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -76,16 +79,19 @@ data SSLCertsInsert = SSLCertsInsert'
 --
 -- * 'sciPayload'
 --
+-- * 'sciFields'
+--
 -- * 'sciInstance'
 sslCertsInsert
     :: Text -- ^ 'sciProject'
     -> SSLCertsInsertRequest -- ^ 'sciPayload'
     -> Text -- ^ 'sciInstance'
     -> SSLCertsInsert
-sslCertsInsert pSciProject_ pSciPayload_ pSciInstance_ =
+sslCertsInsert pSciProject_ pSciPayload_ pSciInstance_ = 
     SSLCertsInsert'
     { _sciProject = pSciProject_
     , _sciPayload = pSciPayload_
+    , _sciFields = Nothing
     , _sciInstance = pSciInstance_
     }
 
@@ -100,6 +106,11 @@ sciPayload :: Lens' SSLCertsInsert SSLCertsInsertRequest
 sciPayload
   = lens _sciPayload (\ s a -> s{_sciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sciFields :: Lens' SSLCertsInsert (Maybe Text)
+sciFields
+  = lens _sciFields (\ s a -> s{_sciFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 sciInstance :: Lens' SSLCertsInsert Text
 sciInstance
@@ -111,7 +122,8 @@ instance GoogleRequest SSLCertsInsert where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient SSLCertsInsert'{..}
-          = go _sciProject _sciInstance (Just AltJSON)
+          = go _sciProject _sciInstance _sciFields
+              (Just AltJSON)
               _sciPayload
               sQLAdminService
           where go

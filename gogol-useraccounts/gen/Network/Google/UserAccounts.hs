@@ -255,25 +255,25 @@ module Network.Google.UserAccounts
     , owiMessage
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.Delete
-import           Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.Get
-import           Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.List
-import           Network.Google.Resource.CloudUserAccounts.Groups.AddMember
-import           Network.Google.Resource.CloudUserAccounts.Groups.Delete
-import           Network.Google.Resource.CloudUserAccounts.Groups.Get
-import           Network.Google.Resource.CloudUserAccounts.Groups.Insert
-import           Network.Google.Resource.CloudUserAccounts.Groups.List
-import           Network.Google.Resource.CloudUserAccounts.Groups.RemoveMember
-import           Network.Google.Resource.CloudUserAccounts.Linux.GetAuthorizedKeysView
-import           Network.Google.Resource.CloudUserAccounts.Linux.GetLinuxAccountViews
-import           Network.Google.Resource.CloudUserAccounts.Users.AddPublicKey
-import           Network.Google.Resource.CloudUserAccounts.Users.Delete
-import           Network.Google.Resource.CloudUserAccounts.Users.Get
-import           Network.Google.Resource.CloudUserAccounts.Users.Insert
-import           Network.Google.Resource.CloudUserAccounts.Users.List
-import           Network.Google.Resource.CloudUserAccounts.Users.RemovePublicKey
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.Delete
+import Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.Get
+import Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.List
+import Network.Google.Resource.CloudUserAccounts.Groups.AddMember
+import Network.Google.Resource.CloudUserAccounts.Groups.Delete
+import Network.Google.Resource.CloudUserAccounts.Groups.Get
+import Network.Google.Resource.CloudUserAccounts.Groups.Insert
+import Network.Google.Resource.CloudUserAccounts.Groups.List
+import Network.Google.Resource.CloudUserAccounts.Groups.RemoveMember
+import Network.Google.Resource.CloudUserAccounts.Linux.GetAuthorizedKeysView
+import Network.Google.Resource.CloudUserAccounts.Linux.GetLinuxAccountViews
+import Network.Google.Resource.CloudUserAccounts.Users.AddPublicKey
+import Network.Google.Resource.CloudUserAccounts.Users.Delete
+import Network.Google.Resource.CloudUserAccounts.Users.Get
+import Network.Google.Resource.CloudUserAccounts.Users.Insert
+import Network.Google.Resource.CloudUserAccounts.Users.List
+import Network.Google.Resource.CloudUserAccounts.Users.RemovePublicKey
+import Network.Google.UserAccounts.Types
 
 {- $resources
 TODO

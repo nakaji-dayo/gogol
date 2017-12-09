@@ -35,11 +35,12 @@ module Network.Google.Resource.DeploymentManager.Resources.Get
     -- * Request Lenses
     , rgProject
     , rgResource
+    , rgFields
     , rgDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.resources.get@ method which the
 -- 'ResourcesGet' request conforms to.
@@ -53,14 +54,16 @@ type ResourcesGetResource =
                  Capture "deployment" Text :>
                    "resources" :>
                      Capture "resource" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Resource
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Resource
 
 -- | Gets information about a single resource.
 --
 -- /See:/ 'resourcesGet' smart constructor.
 data ResourcesGet = ResourcesGet'
-    { _rgProject    :: !Text
-    , _rgResource   :: !Text
+    { _rgProject :: !Text
+    , _rgResource :: !Text
+    , _rgFields :: !(Maybe Text)
     , _rgDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data ResourcesGet = ResourcesGet'
 --
 -- * 'rgResource'
 --
+-- * 'rgFields'
+--
 -- * 'rgDeployment'
 resourcesGet
     :: Text -- ^ 'rgProject'
     -> Text -- ^ 'rgResource'
     -> Text -- ^ 'rgDeployment'
     -> ResourcesGet
-resourcesGet pRgProject_ pRgResource_ pRgDeployment_ =
+resourcesGet pRgProject_ pRgResource_ pRgDeployment_ = 
     ResourcesGet'
     { _rgProject = pRgProject_
     , _rgResource = pRgResource_
+    , _rgFields = Nothing
     , _rgDeployment = pRgDeployment_
     }
 
@@ -94,6 +100,10 @@ rgProject
 rgResource :: Lens' ResourcesGet Text
 rgResource
   = lens _rgResource (\ s a -> s{_rgResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ResourcesGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
 
 -- | The name of the deployment for this request.
 rgDeployment :: Lens' ResourcesGet Text
@@ -108,7 +118,7 @@ instance GoogleRequest ResourcesGet where
                "https://www.googleapis.com/auth/ndev.cloudman",
                "https://www.googleapis.com/auth/ndev.cloudman.readonly"]
         requestClient ResourcesGet'{..}
-          = go _rgProject _rgDeployment _rgResource
+          = go _rgProject _rgDeployment _rgResource _rgFields
               (Just AltJSON)
               deploymentManagerService
           where go

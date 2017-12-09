@@ -39,10 +39,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Patch
     , tpPayload
     , tpTask
     , tpNewLeaseSeconds
+    , tpFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.patch@ method which the
 -- 'TasksPatch' request conforms to.
@@ -56,19 +57,21 @@ type TasksPatchResource =
                  "tasks" :>
                    Capture "task" Text :>
                      QueryParam "newLeaseSeconds" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Task :> Patch '[JSON] Task
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Task :> Patch '[JSON] Task
 
 -- | Update tasks that are leased out of a TaskQueue. This method supports
 -- patch semantics.
 --
 -- /See:/ 'tasksPatch' smart constructor.
 data TasksPatch = TasksPatch'
-    { _tpTaskQueue       :: !Text
-    , _tpProject         :: !Text
-    , _tpPayload         :: !Task
-    , _tpTask            :: !Text
+    { _tpTaskQueue :: !Text
+    , _tpProject :: !Text
+    , _tpPayload :: !Task
+    , _tpTask :: !Text
     , _tpNewLeaseSeconds :: !(Textual Int32)
+    , _tpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksPatch' with the minimum fields required to make a request.
@@ -84,6 +87,8 @@ data TasksPatch = TasksPatch'
 -- * 'tpTask'
 --
 -- * 'tpNewLeaseSeconds'
+--
+-- * 'tpFields'
 tasksPatch
     :: Text -- ^ 'tpTaskQueue'
     -> Text -- ^ 'tpProject'
@@ -91,13 +96,14 @@ tasksPatch
     -> Text -- ^ 'tpTask'
     -> Int32 -- ^ 'tpNewLeaseSeconds'
     -> TasksPatch
-tasksPatch pTpTaskQueue_ pTpProject_ pTpPayload_ pTpTask_ pTpNewLeaseSeconds_ =
+tasksPatch pTpTaskQueue_ pTpProject_ pTpPayload_ pTpTask_ pTpNewLeaseSeconds_ = 
     TasksPatch'
     { _tpTaskQueue = pTpTaskQueue_
     , _tpProject = pTpProject_
     , _tpPayload = pTpPayload_
     , _tpTask = pTpTask_
     , _tpNewLeaseSeconds = _Coerce # pTpNewLeaseSeconds_
+    , _tpFields = Nothing
     }
 
 tpTaskQueue :: Lens' TasksPatch Text
@@ -124,6 +130,10 @@ tpNewLeaseSeconds
       (\ s a -> s{_tpNewLeaseSeconds = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tpFields :: Lens' TasksPatch (Maybe Text)
+tpFields = lens _tpFields (\ s a -> s{_tpFields = a})
+
 instance GoogleRequest TasksPatch where
         type Rs TasksPatch = Task
         type Scopes TasksPatch =
@@ -132,6 +142,7 @@ instance GoogleRequest TasksPatch where
         requestClient TasksPatch'{..}
           = go _tpProject _tpTaskQueue _tpTask
               (Just _tpNewLeaseSeconds)
+              _tpFields
               (Just AltJSON)
               _tpPayload
               taskQueueService

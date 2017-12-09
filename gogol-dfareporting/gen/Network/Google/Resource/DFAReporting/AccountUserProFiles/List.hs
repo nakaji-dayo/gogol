@@ -44,16 +44,17 @@ module Network.Google.Resource.DFAReporting.AccountUserProFiles.List
     , aupflSortField
     , aupflSubAccountId
     , aupflMaxResults
+    , aupflFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountUserProfiles.list@ method which the
 -- 'AccountUserProFilesList' request conforms to.
 type AccountUserProFilesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountUserProfiles" :>
@@ -70,24 +71,26 @@ type AccountUserProFilesListResource =
                              :>
                              QueryParam "subaccountId" (Textual Int64) :>
                                QueryParam "maxResults" (Textual Int32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] AccountUserProFilesListResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] AccountUserProFilesListResponse
 
 -- | Retrieves a list of account user profiles, possibly filtered. This
 -- method supports paging.
 --
 -- /See:/ 'accountUserProFilesList' smart constructor.
 data AccountUserProFilesList = AccountUserProFilesList'
-    { _aupflUserRoleId   :: !(Maybe (Textual Int64))
+    { _aupflUserRoleId :: !(Maybe (Textual Int64))
     , _aupflSearchString :: !(Maybe Text)
-    , _aupflIds          :: !(Maybe [Textual Int64])
-    , _aupflProFileId    :: !(Textual Int64)
-    , _aupflSortOrder    :: !(Maybe AccountUserProFilesListSortOrder)
-    , _aupflActive       :: !(Maybe Bool)
-    , _aupflPageToken    :: !(Maybe Text)
-    , _aupflSortField    :: !(Maybe AccountUserProFilesListSortField)
+    , _aupflIds :: !(Maybe [Textual Int64])
+    , _aupflProFileId :: !(Textual Int64)
+    , _aupflSortOrder :: !AccountUserProFilesListSortOrder
+    , _aupflActive :: !(Maybe Bool)
+    , _aupflPageToken :: !(Maybe Text)
+    , _aupflSortField :: !AccountUserProFilesListSortField
     , _aupflSubAccountId :: !(Maybe (Textual Int64))
-    , _aupflMaxResults   :: !(Maybe (Textual Int32))
+    , _aupflMaxResults :: !(Textual Int32)
+    , _aupflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesList' with the minimum fields required to make a request.
@@ -113,21 +116,24 @@ data AccountUserProFilesList = AccountUserProFilesList'
 -- * 'aupflSubAccountId'
 --
 -- * 'aupflMaxResults'
+--
+-- * 'aupflFields'
 accountUserProFilesList
     :: Int64 -- ^ 'aupflProFileId'
     -> AccountUserProFilesList
-accountUserProFilesList pAupflProFileId_ =
+accountUserProFilesList pAupflProFileId_ = 
     AccountUserProFilesList'
     { _aupflUserRoleId = Nothing
     , _aupflSearchString = Nothing
     , _aupflIds = Nothing
     , _aupflProFileId = _Coerce # pAupflProFileId_
-    , _aupflSortOrder = Nothing
+    , _aupflSortOrder = AUPFLSOAscending
     , _aupflActive = Nothing
     , _aupflPageToken = Nothing
-    , _aupflSortField = Nothing
+    , _aupflSortField = AUPFLSFID
     , _aupflSubAccountId = Nothing
-    , _aupflMaxResults = Nothing
+    , _aupflMaxResults = 1000
+    , _aupflFields = Nothing
     }
 
 -- | Select only user profiles with the specified user role ID.
@@ -163,8 +169,8 @@ aupflProFileId
       (\ s a -> s{_aupflProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-aupflSortOrder :: Lens' AccountUserProFilesList (Maybe AccountUserProFilesListSortOrder)
+-- | Order of sorted results.
+aupflSortOrder :: Lens' AccountUserProFilesList AccountUserProFilesListSortOrder
 aupflSortOrder
   = lens _aupflSortOrder
       (\ s a -> s{_aupflSortOrder = a})
@@ -181,7 +187,7 @@ aupflPageToken
       (\ s a -> s{_aupflPageToken = a})
 
 -- | Field by which to sort the list.
-aupflSortField :: Lens' AccountUserProFilesList (Maybe AccountUserProFilesListSortField)
+aupflSortField :: Lens' AccountUserProFilesList AccountUserProFilesListSortField
 aupflSortField
   = lens _aupflSortField
       (\ s a -> s{_aupflSortField = a})
@@ -194,11 +200,16 @@ aupflSubAccountId
       . mapping _Coerce
 
 -- | Maximum number of results to return.
-aupflMaxResults :: Lens' AccountUserProFilesList (Maybe Int32)
+aupflMaxResults :: Lens' AccountUserProFilesList Int32
 aupflMaxResults
   = lens _aupflMaxResults
       (\ s a -> s{_aupflMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+aupflFields :: Lens' AccountUserProFilesList (Maybe Text)
+aupflFields
+  = lens _aupflFields (\ s a -> s{_aupflFields = a})
 
 instance GoogleRequest AccountUserProFilesList where
         type Rs AccountUserProFilesList =
@@ -209,12 +220,13 @@ instance GoogleRequest AccountUserProFilesList where
           = go _aupflProFileId _aupflUserRoleId
               _aupflSearchString
               (_aupflIds ^. _Default)
-              _aupflSortOrder
+              (Just _aupflSortOrder)
               _aupflActive
               _aupflPageToken
-              _aupflSortField
+              (Just _aupflSortField)
               _aupflSubAccountId
-              _aupflMaxResults
+              (Just _aupflMaxResults)
+              _aupflFields
               (Just AltJSON)
               dFAReportingService
           where go

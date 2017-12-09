@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Delete
     , sddEnterpriseId
     , sddPageId
     , sddClusterId
+    , sddFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.delete@ method which the
 -- 'StorelayoutclustersDelete' request conforms to.
@@ -53,15 +54,17 @@ type StorelayoutclustersDeleteResource =
                  Capture "pageId" Text :>
                    "clusters" :>
                      Capture "clusterId" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a cluster.
 --
 -- /See:/ 'storelayoutclustersDelete' smart constructor.
 data StorelayoutclustersDelete = StorelayoutclustersDelete'
     { _sddEnterpriseId :: !Text
-    , _sddPageId       :: !Text
-    , _sddClusterId    :: !Text
+    , _sddPageId :: !Text
+    , _sddClusterId :: !Text
+    , _sddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersDelete' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data StorelayoutclustersDelete = StorelayoutclustersDelete'
 -- * 'sddPageId'
 --
 -- * 'sddClusterId'
+--
+-- * 'sddFields'
 storelayoutclustersDelete
     :: Text -- ^ 'sddEnterpriseId'
     -> Text -- ^ 'sddPageId'
     -> Text -- ^ 'sddClusterId'
     -> StorelayoutclustersDelete
-storelayoutclustersDelete pSddEnterpriseId_ pSddPageId_ pSddClusterId_ =
+storelayoutclustersDelete pSddEnterpriseId_ pSddPageId_ pSddClusterId_ = 
     StorelayoutclustersDelete'
     { _sddEnterpriseId = pSddEnterpriseId_
     , _sddPageId = pSddPageId_
     , _sddClusterId = pSddClusterId_
+    , _sddFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -101,6 +107,11 @@ sddClusterId :: Lens' StorelayoutclustersDelete Text
 sddClusterId
   = lens _sddClusterId (\ s a -> s{_sddClusterId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sddFields :: Lens' StorelayoutclustersDelete (Maybe Text)
+sddFields
+  = lens _sddFields (\ s a -> s{_sddFields = a})
+
 instance GoogleRequest StorelayoutclustersDelete
          where
         type Rs StorelayoutclustersDelete = ()
@@ -108,6 +119,7 @@ instance GoogleRequest StorelayoutclustersDelete
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersDelete'{..}
           = go _sddEnterpriseId _sddPageId _sddClusterId
+              _sddFields
               (Just AltJSON)
               androidEnterpriseService
           where go

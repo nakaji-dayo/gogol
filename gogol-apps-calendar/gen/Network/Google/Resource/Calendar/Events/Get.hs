@@ -38,10 +38,11 @@ module Network.Google.Resource.Calendar.Events.Get
     , egTimeZone
     , egAlwaysIncludeEmail
     , egEventId
+    , egFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.get@ method which the
 -- 'EventsGet' request conforms to.
@@ -55,17 +56,19 @@ type EventsGetResource =
                  QueryParam "maxAttendees" (Textual Int32) :>
                    QueryParam "timeZone" Text :>
                      QueryParam "alwaysIncludeEmail" Bool :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Event
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Event
 
 -- | Returns an event.
 --
 -- /See:/ 'eventsGet' smart constructor.
 data EventsGet = EventsGet'
-    { _egCalendarId         :: !Text
-    , _egMaxAttendees       :: !(Maybe (Textual Int32))
-    , _egTimeZone           :: !(Maybe Text)
+    { _egCalendarId :: !Text
+    , _egMaxAttendees :: !(Maybe (Textual Int32))
+    , _egTimeZone :: !(Maybe Text)
     , _egAlwaysIncludeEmail :: !(Maybe Bool)
-    , _egEventId            :: !Text
+    , _egEventId :: !Text
+    , _egFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsGet' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data EventsGet = EventsGet'
 -- * 'egAlwaysIncludeEmail'
 --
 -- * 'egEventId'
+--
+-- * 'egFields'
 eventsGet
     :: Text -- ^ 'egCalendarId'
     -> Text -- ^ 'egEventId'
     -> EventsGet
-eventsGet pEgCalendarId_ pEgEventId_ =
+eventsGet pEgCalendarId_ pEgEventId_ = 
     EventsGet'
     { _egCalendarId = pEgCalendarId_
     , _egMaxAttendees = Nothing
     , _egTimeZone = Nothing
     , _egAlwaysIncludeEmail = Nothing
     , _egEventId = pEgEventId_
+    , _egFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -132,6 +138,10 @@ egEventId :: Lens' EventsGet Text
 egEventId
   = lens _egEventId (\ s a -> s{_egEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egFields :: Lens' EventsGet (Maybe Text)
+egFields = lens _egFields (\ s a -> s{_egFields = a})
+
 instance GoogleRequest EventsGet where
         type Rs EventsGet = Event
         type Scopes EventsGet =
@@ -141,6 +151,7 @@ instance GoogleRequest EventsGet where
           = go _egCalendarId _egEventId _egMaxAttendees
               _egTimeZone
               _egAlwaysIncludeEmail
+              _egFields
               (Just AltJSON)
               appsCalendarService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.Games.Events.ListByPlayer
     , elbpLanguage
     , elbpPageToken
     , elbpMaxResults
+    , elbpFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.events.listByPlayer@ method which the
 -- 'EventsListByPlayer' request conforms to.
@@ -53,8 +54,9 @@ type EventsListByPlayerResource =
              QueryParam "language" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] PlayerEventListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] PlayerEventListResponse
 
 -- | Returns a list showing the current progress on events in this
 -- application for the currently authenticated user.
@@ -62,9 +64,10 @@ type EventsListByPlayerResource =
 -- /See:/ 'eventsListByPlayer' smart constructor.
 data EventsListByPlayer = EventsListByPlayer'
     { _elbpConsistencyToken :: !(Maybe (Textual Int64))
-    , _elbpLanguage         :: !(Maybe Text)
-    , _elbpPageToken        :: !(Maybe Text)
-    , _elbpMaxResults       :: !(Maybe (Textual Int32))
+    , _elbpLanguage :: !(Maybe Text)
+    , _elbpPageToken :: !(Maybe Text)
+    , _elbpMaxResults :: !(Maybe (Textual Int32))
+    , _elbpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsListByPlayer' with the minimum fields required to make a request.
@@ -78,14 +81,17 @@ data EventsListByPlayer = EventsListByPlayer'
 -- * 'elbpPageToken'
 --
 -- * 'elbpMaxResults'
+--
+-- * 'elbpFields'
 eventsListByPlayer
     :: EventsListByPlayer
-eventsListByPlayer =
+eventsListByPlayer = 
     EventsListByPlayer'
     { _elbpConsistencyToken = Nothing
     , _elbpLanguage = Nothing
     , _elbpPageToken = Nothing
     , _elbpMaxResults = Nothing
+    , _elbpFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -115,6 +121,11 @@ elbpMaxResults
       (\ s a -> s{_elbpMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+elbpFields :: Lens' EventsListByPlayer (Maybe Text)
+elbpFields
+  = lens _elbpFields (\ s a -> s{_elbpFields = a})
+
 instance GoogleRequest EventsListByPlayer where
         type Rs EventsListByPlayer = PlayerEventListResponse
         type Scopes EventsListByPlayer =
@@ -124,6 +135,7 @@ instance GoogleRequest EventsListByPlayer where
           = go _elbpConsistencyToken _elbpLanguage
               _elbpPageToken
               _elbpMaxResults
+              _elbpFields
               (Just AltJSON)
               gamesService
           where go

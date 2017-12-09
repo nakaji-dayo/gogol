@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.Insert
     -- * Request Lenses
     , uiEnterpriseId
     , uiPayload
+    , uiFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.insert@ method which the
 -- 'UsersInsert' request conforms to.
@@ -52,8 +53,9 @@ type UsersInsertResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "users" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] User :> Post '[JSON] User
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] User :> Post '[JSON] User
 
 -- | Creates a new EMM-managed user. The Users resource passed in the body of
 -- the request should include an accountIdentifier and an accountType. If a
@@ -64,7 +66,8 @@ type UsersInsertResource =
 -- /See:/ 'usersInsert' smart constructor.
 data UsersInsert = UsersInsert'
     { _uiEnterpriseId :: !Text
-    , _uiPayload      :: !User
+    , _uiPayload :: !User
+    , _uiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersInsert' with the minimum fields required to make a request.
@@ -74,14 +77,17 @@ data UsersInsert = UsersInsert'
 -- * 'uiEnterpriseId'
 --
 -- * 'uiPayload'
+--
+-- * 'uiFields'
 usersInsert
     :: Text -- ^ 'uiEnterpriseId'
     -> User -- ^ 'uiPayload'
     -> UsersInsert
-usersInsert pUiEnterpriseId_ pUiPayload_ =
+usersInsert pUiEnterpriseId_ pUiPayload_ = 
     UsersInsert'
     { _uiEnterpriseId = pUiEnterpriseId_
     , _uiPayload = pUiPayload_
+    , _uiFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -95,12 +101,17 @@ uiPayload :: Lens' UsersInsert User
 uiPayload
   = lens _uiPayload (\ s a -> s{_uiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uiFields :: Lens' UsersInsert (Maybe Text)
+uiFields = lens _uiFields (\ s a -> s{_uiFields = a})
+
 instance GoogleRequest UsersInsert where
         type Rs UsersInsert = User
         type Scopes UsersInsert =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersInsert'{..}
-          = go _uiEnterpriseId (Just AltJSON) _uiPayload
+          = go _uiEnterpriseId _uiFields (Just AltJSON)
+              _uiPayload
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy UsersInsertResource)

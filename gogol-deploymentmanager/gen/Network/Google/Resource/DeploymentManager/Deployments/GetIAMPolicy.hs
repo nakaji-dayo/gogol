@@ -36,10 +36,11 @@ module Network.Google.Resource.DeploymentManager.Deployments.GetIAMPolicy
     -- * Request Lenses
     , dgipProject
     , dgipResource
+    , dgipFields
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.getIamPolicy@ method which the
 -- 'DeploymentsGetIAMPolicy' request conforms to.
@@ -52,15 +53,17 @@ type DeploymentsGetIAMPolicyResource =
                "deployments" :>
                  Capture "resource" Text :>
                    "getIamPolicy" :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Policy
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Policy
 
 -- | Gets the access control policy for a resource. May be empty if no such
 -- policy or resource exists.
 --
 -- /See:/ 'deploymentsGetIAMPolicy' smart constructor.
 data DeploymentsGetIAMPolicy = DeploymentsGetIAMPolicy'
-    { _dgipProject  :: !Text
+    { _dgipProject :: !Text
     , _dgipResource :: !Text
+    , _dgipFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsGetIAMPolicy' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data DeploymentsGetIAMPolicy = DeploymentsGetIAMPolicy'
 -- * 'dgipProject'
 --
 -- * 'dgipResource'
+--
+-- * 'dgipFields'
 deploymentsGetIAMPolicy
     :: Text -- ^ 'dgipProject'
     -> Text -- ^ 'dgipResource'
     -> DeploymentsGetIAMPolicy
-deploymentsGetIAMPolicy pDgipProject_ pDgipResource_ =
+deploymentsGetIAMPolicy pDgipProject_ pDgipResource_ = 
     DeploymentsGetIAMPolicy'
     { _dgipProject = pDgipProject_
     , _dgipResource = pDgipResource_
+    , _dgipFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -90,13 +96,19 @@ dgipResource :: Lens' DeploymentsGetIAMPolicy Text
 dgipResource
   = lens _dgipResource (\ s a -> s{_dgipResource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgipFields :: Lens' DeploymentsGetIAMPolicy (Maybe Text)
+dgipFields
+  = lens _dgipFields (\ s a -> s{_dgipFields = a})
+
 instance GoogleRequest DeploymentsGetIAMPolicy where
         type Rs DeploymentsGetIAMPolicy = Policy
         type Scopes DeploymentsGetIAMPolicy =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsGetIAMPolicy'{..}
-          = go _dgipProject _dgipResource (Just AltJSON)
+          = go _dgipProject _dgipResource _dgipFields
+              (Just AltJSON)
               deploymentManagerService
           where go
                   = buildClient

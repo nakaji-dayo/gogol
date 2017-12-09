@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Blogs.Get
     , bgBlogId
     , bgMaxPosts
     , bgView
+    , bgFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.blogs.get@ method which the
 -- 'BlogsGet' request conforms to.
@@ -50,15 +51,17 @@ type BlogsGetResource =
            Capture "blogId" Text :>
              QueryParam "maxPosts" (Textual Word32) :>
                QueryParam "view" BlogsGetView :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Blog
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Blog
 
 -- | Gets one blog by ID.
 --
 -- /See:/ 'blogsGet' smart constructor.
 data BlogsGet = BlogsGet'
-    { _bgBlogId   :: !Text
+    { _bgBlogId :: !Text
     , _bgMaxPosts :: !(Maybe (Textual Word32))
-    , _bgView     :: !(Maybe BlogsGetView)
+    , _bgView :: !(Maybe BlogsGetView)
+    , _bgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BlogsGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data BlogsGet = BlogsGet'
 -- * 'bgMaxPosts'
 --
 -- * 'bgView'
+--
+-- * 'bgFields'
 blogsGet
     :: Text -- ^ 'bgBlogId'
     -> BlogsGet
-blogsGet pBgBlogId_ =
+blogsGet pBgBlogId_ = 
     BlogsGet'
     { _bgBlogId = pBgBlogId_
     , _bgMaxPosts = Nothing
     , _bgView = Nothing
+    , _bgFields = Nothing
     }
 
 -- | The ID of the blog to get.
@@ -95,13 +101,18 @@ bgMaxPosts
 bgView :: Lens' BlogsGet (Maybe BlogsGetView)
 bgView = lens _bgView (\ s a -> s{_bgView = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bgFields :: Lens' BlogsGet (Maybe Text)
+bgFields = lens _bgFields (\ s a -> s{_bgFields = a})
+
 instance GoogleRequest BlogsGet where
         type Rs BlogsGet = Blog
         type Scopes BlogsGet =
              '["https://www.googleapis.com/auth/blogger",
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient BlogsGet'{..}
-          = go _bgBlogId _bgMaxPosts _bgView (Just AltJSON)
+          = go _bgBlogId _bgMaxPosts _bgView _bgFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy BlogsGetResource)

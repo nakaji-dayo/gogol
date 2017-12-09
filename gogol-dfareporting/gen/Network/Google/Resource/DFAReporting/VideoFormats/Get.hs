@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.VideoFormats.Get
     -- * Request Lenses
     , vfgProFileId
     , vfgId
+    , vfgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.videoFormats.get@ method which the
 -- 'VideoFormatsGet' request conforms to.
 type VideoFormatsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "videoFormats" :>
                Capture "id" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] VideoFormat
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] VideoFormat
 
 -- | Gets one video format by ID.
 --
 -- /See:/ 'videoFormatsGet' smart constructor.
 data VideoFormatsGet = VideoFormatsGet'
     { _vfgProFileId :: !(Textual Int64)
-    , _vfgId        :: !(Textual Int32)
+    , _vfgId :: !(Textual Int32)
+    , _vfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoFormatsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data VideoFormatsGet = VideoFormatsGet'
 -- * 'vfgProFileId'
 --
 -- * 'vfgId'
+--
+-- * 'vfgFields'
 videoFormatsGet
     :: Int64 -- ^ 'vfgProFileId'
     -> Int32 -- ^ 'vfgId'
     -> VideoFormatsGet
-videoFormatsGet pVfgProFileId_ pVfgId_ =
+videoFormatsGet pVfgProFileId_ pVfgId_ = 
     VideoFormatsGet'
     { _vfgProFileId = _Coerce # pVfgProFileId_
     , _vfgId = _Coerce # pVfgId_
+    , _vfgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ vfgId :: Lens' VideoFormatsGet Int32
 vfgId
   = lens _vfgId (\ s a -> s{_vfgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+vfgFields :: Lens' VideoFormatsGet (Maybe Text)
+vfgFields
+  = lens _vfgFields (\ s a -> s{_vfgFields = a})
+
 instance GoogleRequest VideoFormatsGet where
         type Rs VideoFormatsGet = VideoFormat
         type Scopes VideoFormatsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient VideoFormatsGet'{..}
-          = go _vfgProFileId _vfgId (Just AltJSON)
+          = go _vfgProFileId _vfgId _vfgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

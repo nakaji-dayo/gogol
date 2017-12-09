@@ -37,10 +37,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Pause
     , rupRollingUpdate
     , rupProject
     , rupZone
+    , rupFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.pause@ method which the
 -- 'RollingUpdatesPause' request conforms to.
@@ -54,7 +55,8 @@ type RollingUpdatesPauseResource =
                  "rollingUpdates" :>
                    Capture "rollingUpdate" Text :>
                      "pause" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Pauses the update in state from ROLLING_FORWARD or ROLLING_BACK. Has no
 -- effect if invoked when the state of the update is PAUSED.
@@ -62,8 +64,9 @@ type RollingUpdatesPauseResource =
 -- /See:/ 'rollingUpdatesPause' smart constructor.
 data RollingUpdatesPause = RollingUpdatesPause'
     { _rupRollingUpdate :: !Text
-    , _rupProject       :: !Text
-    , _rupZone          :: !Text
+    , _rupProject :: !Text
+    , _rupZone :: !Text
+    , _rupFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesPause' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data RollingUpdatesPause = RollingUpdatesPause'
 -- * 'rupProject'
 --
 -- * 'rupZone'
+--
+-- * 'rupFields'
 rollingUpdatesPause
     :: Text -- ^ 'rupRollingUpdate'
     -> Text -- ^ 'rupProject'
     -> Text -- ^ 'rupZone'
     -> RollingUpdatesPause
-rollingUpdatesPause pRupRollingUpdate_ pRupProject_ pRupZone_ =
+rollingUpdatesPause pRupRollingUpdate_ pRupProject_ pRupZone_ = 
     RollingUpdatesPause'
     { _rupRollingUpdate = pRupRollingUpdate_
     , _rupProject = pRupProject_
     , _rupZone = pRupZone_
+    , _rupFields = Nothing
     }
 
 -- | The name of the update.
@@ -102,6 +108,11 @@ rupProject
 rupZone :: Lens' RollingUpdatesPause Text
 rupZone = lens _rupZone (\ s a -> s{_rupZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rupFields :: Lens' RollingUpdatesPause (Maybe Text)
+rupFields
+  = lens _rupFields (\ s a -> s{_rupFields = a})
+
 instance GoogleRequest RollingUpdatesPause where
         type Rs RollingUpdatesPause = Operation
         type Scopes RollingUpdatesPause =
@@ -109,6 +120,7 @@ instance GoogleRequest RollingUpdatesPause where
                "https://www.googleapis.com/auth/replicapool"]
         requestClient RollingUpdatesPause'{..}
           = go _rupProject _rupZone _rupRollingUpdate
+              _rupFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

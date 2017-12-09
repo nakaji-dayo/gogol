@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Images.GetFromFamily
     -- * Request Lenses
     , igffProject
     , igffFamily
+    , igffFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.images.getFromFamily@ method which the
 -- 'ImagesGetFromFamily' request conforms to.
@@ -52,7 +53,8 @@ type ImagesGetFromFamilyResource =
                "images" :>
                  "family" :>
                    Capture "family" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Image
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Image
 
 -- | Returns the latest image that is part of an image family and is not
 -- deprecated.
@@ -60,7 +62,8 @@ type ImagesGetFromFamilyResource =
 -- /See:/ 'imagesGetFromFamily' smart constructor.
 data ImagesGetFromFamily = ImagesGetFromFamily'
     { _igffProject :: !Text
-    , _igffFamily  :: !Text
+    , _igffFamily :: !Text
+    , _igffFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImagesGetFromFamily' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data ImagesGetFromFamily = ImagesGetFromFamily'
 -- * 'igffProject'
 --
 -- * 'igffFamily'
+--
+-- * 'igffFields'
 imagesGetFromFamily
     :: Text -- ^ 'igffProject'
     -> Text -- ^ 'igffFamily'
     -> ImagesGetFromFamily
-imagesGetFromFamily pIgffProject_ pIgffFamily_ =
+imagesGetFromFamily pIgffProject_ pIgffFamily_ = 
     ImagesGetFromFamily'
     { _igffProject = pIgffProject_
     , _igffFamily = pIgffFamily_
+    , _igffFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -90,6 +96,11 @@ igffFamily :: Lens' ImagesGetFromFamily Text
 igffFamily
   = lens _igffFamily (\ s a -> s{_igffFamily = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igffFields :: Lens' ImagesGetFromFamily (Maybe Text)
+igffFields
+  = lens _igffFields (\ s a -> s{_igffFields = a})
+
 instance GoogleRequest ImagesGetFromFamily where
         type Rs ImagesGetFromFamily = Image
         type Scopes ImagesGetFromFamily =
@@ -97,7 +108,8 @@ instance GoogleRequest ImagesGetFromFamily where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient ImagesGetFromFamily'{..}
-          = go _igffProject _igffFamily (Just AltJSON)
+          = go _igffProject _igffFamily _igffFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

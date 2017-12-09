@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.ProFileUserLinks.Update
     , mpfuluPayload
     , mpfuluAccountId
     , mpfuluLinkId
+    , mpfuluFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileUserLinks.update@ method which the
 -- 'ManagementProFileUserLinksUpdate' request conforms to.
@@ -57,19 +58,21 @@ type ManagementProFileUserLinksUpdateResource =
                      Capture "profileId" Text :>
                        "entityUserLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] EntityUserLink :>
-                               Put '[JSON] EntityUserLink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] EntityUserLink :>
+                                 Put '[JSON] EntityUserLink
 
 -- | Updates permissions for an existing user on the given view (profile).
 --
 -- /See:/ 'managementProFileUserLinksUpdate' smart constructor.
 data ManagementProFileUserLinksUpdate = ManagementProFileUserLinksUpdate'
     { _mpfuluWebPropertyId :: !Text
-    , _mpfuluProFileId     :: !Text
-    , _mpfuluPayload       :: !EntityUserLink
-    , _mpfuluAccountId     :: !Text
-    , _mpfuluLinkId        :: !Text
+    , _mpfuluProFileId :: !Text
+    , _mpfuluPayload :: !EntityUserLink
+    , _mpfuluAccountId :: !Text
+    , _mpfuluLinkId :: !Text
+    , _mpfuluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileUserLinksUpdate' with the minimum fields required to make a request.
@@ -85,6 +88,8 @@ data ManagementProFileUserLinksUpdate = ManagementProFileUserLinksUpdate'
 -- * 'mpfuluAccountId'
 --
 -- * 'mpfuluLinkId'
+--
+-- * 'mpfuluFields'
 managementProFileUserLinksUpdate
     :: Text -- ^ 'mpfuluWebPropertyId'
     -> Text -- ^ 'mpfuluProFileId'
@@ -92,13 +97,14 @@ managementProFileUserLinksUpdate
     -> Text -- ^ 'mpfuluAccountId'
     -> Text -- ^ 'mpfuluLinkId'
     -> ManagementProFileUserLinksUpdate
-managementProFileUserLinksUpdate pMpfuluWebPropertyId_ pMpfuluProFileId_ pMpfuluPayload_ pMpfuluAccountId_ pMpfuluLinkId_ =
+managementProFileUserLinksUpdate pMpfuluWebPropertyId_ pMpfuluProFileId_ pMpfuluPayload_ pMpfuluAccountId_ pMpfuluLinkId_ = 
     ManagementProFileUserLinksUpdate'
     { _mpfuluWebPropertyId = pMpfuluWebPropertyId_
     , _mpfuluProFileId = pMpfuluProFileId_
     , _mpfuluPayload = pMpfuluPayload_
     , _mpfuluAccountId = pMpfuluAccountId_
     , _mpfuluLinkId = pMpfuluLinkId_
+    , _mpfuluFields = Nothing
     }
 
 -- | Web Property ID to update the user link for.
@@ -130,6 +136,11 @@ mpfuluLinkId :: Lens' ManagementProFileUserLinksUpdate Text
 mpfuluLinkId
   = lens _mpfuluLinkId (\ s a -> s{_mpfuluLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfuluFields :: Lens' ManagementProFileUserLinksUpdate (Maybe Text)
+mpfuluFields
+  = lens _mpfuluFields (\ s a -> s{_mpfuluFields = a})
+
 instance GoogleRequest
          ManagementProFileUserLinksUpdate where
         type Rs ManagementProFileUserLinksUpdate =
@@ -140,6 +151,7 @@ instance GoogleRequest
           = go _mpfuluAccountId _mpfuluWebPropertyId
               _mpfuluProFileId
               _mpfuluLinkId
+              _mpfuluFields
               (Just AltJSON)
               _mpfuluPayload
               analyticsService

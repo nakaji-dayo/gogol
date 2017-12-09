@@ -39,10 +39,11 @@ module Network.Google.Resource.YouTube.LiveChatMessages.List
     , lcmlPageToken
     , lcmlMaxResults
     , lcmlProFileImageSize
+    , lcmlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatMessages.list@ method which the
 -- 'LiveChatMessagesList' request conforms to.
@@ -57,19 +58,21 @@ type LiveChatMessagesListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
                        QueryParam "profileImageSize" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] LiveChatMessageListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] LiveChatMessageListResponse
 
 -- | Lists live chat messages for a specific chat.
 --
 -- /See:/ 'liveChatMessagesList' smart constructor.
 data LiveChatMessagesList = LiveChatMessagesList'
-    { _lcmlPart             :: !Text
-    , _lcmlLiveChatId       :: !Text
-    , _lcmlHl               :: !(Maybe Text)
-    , _lcmlPageToken        :: !(Maybe Text)
-    , _lcmlMaxResults       :: !(Textual Word32)
+    { _lcmlPart :: !Text
+    , _lcmlLiveChatId :: !Text
+    , _lcmlHl :: !(Maybe Text)
+    , _lcmlPageToken :: !(Maybe Text)
+    , _lcmlMaxResults :: !(Textual Word32)
     , _lcmlProFileImageSize :: !(Maybe (Textual Word32))
+    , _lcmlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatMessagesList' with the minimum fields required to make a request.
@@ -87,11 +90,13 @@ data LiveChatMessagesList = LiveChatMessagesList'
 -- * 'lcmlMaxResults'
 --
 -- * 'lcmlProFileImageSize'
+--
+-- * 'lcmlFields'
 liveChatMessagesList
     :: Text -- ^ 'lcmlPart'
     -> Text -- ^ 'lcmlLiveChatId'
     -> LiveChatMessagesList
-liveChatMessagesList pLcmlPart_ pLcmlLiveChatId_ =
+liveChatMessagesList pLcmlPart_ pLcmlLiveChatId_ = 
     LiveChatMessagesList'
     { _lcmlPart = pLcmlPart_
     , _lcmlLiveChatId = pLcmlLiveChatId_
@@ -99,6 +104,7 @@ liveChatMessagesList pLcmlPart_ pLcmlLiveChatId_ =
     , _lcmlPageToken = Nothing
     , _lcmlMaxResults = 500
     , _lcmlProFileImageSize = Nothing
+    , _lcmlFields = Nothing
     }
 
 -- | The part parameter specifies the liveChatComment resource parts that the
@@ -148,6 +154,11 @@ lcmlProFileImageSize
       (\ s a -> s{_lcmlProFileImageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lcmlFields :: Lens' LiveChatMessagesList (Maybe Text)
+lcmlFields
+  = lens _lcmlFields (\ s a -> s{_lcmlFields = a})
+
 instance GoogleRequest LiveChatMessagesList where
         type Rs LiveChatMessagesList =
              LiveChatMessageListResponse
@@ -160,6 +171,7 @@ instance GoogleRequest LiveChatMessagesList where
               _lcmlPageToken
               (Just _lcmlMaxResults)
               _lcmlProFileImageSize
+              _lcmlFields
               (Just AltJSON)
               youTubeService
           where go

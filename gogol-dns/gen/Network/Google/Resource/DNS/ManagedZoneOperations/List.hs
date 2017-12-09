@@ -37,11 +37,12 @@ module Network.Google.Resource.DNS.ManagedZoneOperations.List
     , mzolPageToken
     , mzolManagedZone
     , mzolMaxResults
+    , mzolFields
     , mzolSortBy
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZoneOperations.list@ method which the
 -- 'ManagedZoneOperationsList' request conforms to.
@@ -57,18 +58,20 @@ type ManagedZoneOperationsListResource =
                      QueryParam "maxResults" (Textual Int32) :>
                        QueryParam "sortBy" ManagedZoneOperationsListSortBy
                          :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ManagedZoneOperationsListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ManagedZoneOperationsListResponse
 
 -- | Enumerate Operations for the given ManagedZone.
 --
 -- /See:/ 'managedZoneOperationsList' smart constructor.
 data ManagedZoneOperationsList = ManagedZoneOperationsList'
-    { _mzolProject     :: !Text
-    , _mzolPageToken   :: !(Maybe Text)
+    { _mzolProject :: !Text
+    , _mzolPageToken :: !(Maybe Text)
     , _mzolManagedZone :: !Text
-    , _mzolMaxResults  :: !(Maybe (Textual Int32))
-    , _mzolSortBy      :: !ManagedZoneOperationsListSortBy
+    , _mzolMaxResults :: !(Maybe (Textual Int32))
+    , _mzolFields :: !(Maybe Text)
+    , _mzolSortBy :: !ManagedZoneOperationsListSortBy
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZoneOperationsList' with the minimum fields required to make a request.
@@ -83,17 +86,20 @@ data ManagedZoneOperationsList = ManagedZoneOperationsList'
 --
 -- * 'mzolMaxResults'
 --
+-- * 'mzolFields'
+--
 -- * 'mzolSortBy'
 managedZoneOperationsList
     :: Text -- ^ 'mzolProject'
     -> Text -- ^ 'mzolManagedZone'
     -> ManagedZoneOperationsList
-managedZoneOperationsList pMzolProject_ pMzolManagedZone_ =
+managedZoneOperationsList pMzolProject_ pMzolManagedZone_ = 
     ManagedZoneOperationsList'
     { _mzolProject = pMzolProject_
     , _mzolPageToken = Nothing
     , _mzolManagedZone = pMzolManagedZone_
     , _mzolMaxResults = Nothing
+    , _mzolFields = Nothing
     , _mzolSortBy = StartTime
     }
 
@@ -123,6 +129,11 @@ mzolMaxResults
       (\ s a -> s{_mzolMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mzolFields :: Lens' ManagedZoneOperationsList (Maybe Text)
+mzolFields
+  = lens _mzolFields (\ s a -> s{_mzolFields = a})
+
 -- | Sorting criterion. The only supported values are START_TIME and ID.
 mzolSortBy :: Lens' ManagedZoneOperationsList ManagedZoneOperationsListSortBy
 mzolSortBy
@@ -141,6 +152,7 @@ instance GoogleRequest ManagedZoneOperationsList
           = go _mzolProject _mzolManagedZone _mzolPageToken
               _mzolMaxResults
               (Just _mzolSortBy)
+              _mzolFields
               (Just AltJSON)
               dNSService
           where go

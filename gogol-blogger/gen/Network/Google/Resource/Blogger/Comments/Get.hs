@@ -37,10 +37,11 @@ module Network.Google.Resource.Blogger.Comments.Get
     , cgView
     , cgPostId
     , cgCommentId
+    , cgFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.get@ method which the
 -- 'CommentsGet' request conforms to.
@@ -54,16 +55,18 @@ type CommentsGetResource =
                  "comments" :>
                    Capture "commentId" Text :>
                      QueryParam "view" CommentsGetView :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Comment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Comment
 
 -- | Gets one comment by ID.
 --
 -- /See:/ 'commentsGet' smart constructor.
 data CommentsGet = CommentsGet'
-    { _cgBlogId    :: !Text
-    , _cgView      :: !(Maybe CommentsGetView)
-    , _cgPostId    :: !Text
+    { _cgBlogId :: !Text
+    , _cgView :: !(Maybe CommentsGetView)
+    , _cgPostId :: !Text
     , _cgCommentId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsGet' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data CommentsGet = CommentsGet'
 -- * 'cgPostId'
 --
 -- * 'cgCommentId'
+--
+-- * 'cgFields'
 commentsGet
     :: Text -- ^ 'cgBlogId'
     -> Text -- ^ 'cgPostId'
     -> Text -- ^ 'cgCommentId'
     -> CommentsGet
-commentsGet pCgBlogId_ pCgPostId_ pCgCommentId_ =
+commentsGet pCgBlogId_ pCgPostId_ pCgCommentId_ = 
     CommentsGet'
     { _cgBlogId = pCgBlogId_
     , _cgView = Nothing
     , _cgPostId = pCgPostId_
     , _cgCommentId = pCgCommentId_
+    , _cgFields = Nothing
     }
 
 -- | ID of the blog to containing the comment.
@@ -110,6 +116,10 @@ cgCommentId :: Lens' CommentsGet Text
 cgCommentId
   = lens _cgCommentId (\ s a -> s{_cgCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CommentsGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CommentsGet where
         type Rs CommentsGet = Comment
         type Scopes CommentsGet =
@@ -117,6 +127,7 @@ instance GoogleRequest CommentsGet where
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient CommentsGet'{..}
           = go _cgBlogId _cgPostId _cgCommentId _cgView
+              _cgFields
               (Just AltJSON)
               bloggerService
           where go

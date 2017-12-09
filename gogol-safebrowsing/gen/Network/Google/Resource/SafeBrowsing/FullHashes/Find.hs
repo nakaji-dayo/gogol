@@ -22,7 +22,7 @@
 --
 -- Finds the full hashes that match the requested hash prefixes.
 --
--- /See:/ <https://developers.google.com/safe-browsing/ Safe Browsing APIs Reference> for @safebrowsing.fullHashes.find@.
+-- /See:/ <https://developers.google.com/safe-browsing/ Google Safe Browsing API Reference> for @safebrowsing.fullHashes.find@.
 module Network.Google.Resource.SafeBrowsing.FullHashes.Find
     (
     -- * REST Resource
@@ -40,40 +40,43 @@ module Network.Google.Resource.SafeBrowsing.FullHashes.Find
     , fhfUploadType
     , fhfPayload
     , fhfBearerToken
+    , fhfFields
     , fhfCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SafeBrowsing.Types
+import Network.Google.Prelude
+import Network.Google.SafeBrowsing.Types
 
 -- | A resource alias for @safebrowsing.fullHashes.find@ method which the
 -- 'FullHashesFind' request conforms to.
 type FullHashesFindResource =
      "v4" :>
        "fullHashes:find" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] FindFullHashesRequest :>
-                           Post '[JSON] FindFullHashesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] FindFullHashesRequest :>
+                             Post '[JSON] FindFullHashesResponse
 
 -- | Finds the full hashes that match the requested hash prefixes.
 --
 -- /See:/ 'fullHashesFind' smart constructor.
 data FullHashesFind = FullHashesFind'
-    { _fhfXgafv          :: !(Maybe Text)
+    { _fhfXgafv :: !(Maybe Xgafv)
     , _fhfUploadProtocol :: !(Maybe Text)
-    , _fhfPp             :: !Bool
-    , _fhfAccessToken    :: !(Maybe Text)
-    , _fhfUploadType     :: !(Maybe Text)
-    , _fhfPayload        :: !FindFullHashesRequest
-    , _fhfBearerToken    :: !(Maybe Text)
-    , _fhfCallback       :: !(Maybe Text)
+    , _fhfPp :: !Bool
+    , _fhfAccessToken :: !(Maybe Text)
+    , _fhfUploadType :: !(Maybe Text)
+    , _fhfPayload :: !FindFullHashesRequest
+    , _fhfBearerToken :: !(Maybe Text)
+    , _fhfFields :: !(Maybe Text)
+    , _fhfCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FullHashesFind' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data FullHashesFind = FullHashesFind'
 --
 -- * 'fhfBearerToken'
 --
+-- * 'fhfFields'
+--
 -- * 'fhfCallback'
 fullHashesFind
     :: FindFullHashesRequest -- ^ 'fhfPayload'
     -> FullHashesFind
-fullHashesFind pFhfPayload_ =
+fullHashesFind pFhfPayload_ = 
     FullHashesFind'
     { _fhfXgafv = Nothing
     , _fhfUploadProtocol = Nothing
@@ -107,11 +112,12 @@ fullHashesFind pFhfPayload_ =
     , _fhfUploadType = Nothing
     , _fhfPayload = pFhfPayload_
     , _fhfBearerToken = Nothing
+    , _fhfFields = Nothing
     , _fhfCallback = Nothing
     }
 
 -- | V1 error format.
-fhfXgafv :: Lens' FullHashesFind (Maybe Text)
+fhfXgafv :: Lens' FullHashesFind (Maybe Xgafv)
 fhfXgafv = lens _fhfXgafv (\ s a -> s{_fhfXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -147,6 +153,11 @@ fhfBearerToken
   = lens _fhfBearerToken
       (\ s a -> s{_fhfBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+fhfFields :: Lens' FullHashesFind (Maybe Text)
+fhfFields
+  = lens _fhfFields (\ s a -> s{_fhfFields = a})
+
 -- | JSONP
 fhfCallback :: Lens' FullHashesFind (Maybe Text)
 fhfCallback
@@ -161,6 +172,7 @@ instance GoogleRequest FullHashesFind where
               _fhfUploadType
               _fhfBearerToken
               _fhfCallback
+              _fhfFields
               (Just AltJSON)
               _fhfPayload
               safeBrowsingService

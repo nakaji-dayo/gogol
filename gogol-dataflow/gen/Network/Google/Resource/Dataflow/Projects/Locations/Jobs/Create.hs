@@ -44,11 +44,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.Create
     , pljcView
     , pljcProjectId
     , pljcReplaceJobId
+    , pljcFields
     , pljcCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.create@ method which the
 -- 'ProjectsLocationsJobsCreate' request conforms to.
@@ -59,7 +60,7 @@ type ProjectsLocationsJobsCreateResource =
            "locations" :>
              Capture "location" Text :>
                "jobs" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
@@ -68,25 +69,27 @@ type ProjectsLocationsJobsCreateResource =
                              QueryParam "view" Text :>
                                QueryParam "replaceJobId" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] Job :> Post '[JSON] Job
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       ReqBody '[JSON] Job :> Post '[JSON] Job
 
 -- | Creates a Cloud Dataflow job.
 --
 -- /See:/ 'projectsLocationsJobsCreate' smart constructor.
 data ProjectsLocationsJobsCreate = ProjectsLocationsJobsCreate'
-    { _pljcXgafv          :: !(Maybe Text)
+    { _pljcXgafv :: !(Maybe Xgafv)
     , _pljcUploadProtocol :: !(Maybe Text)
-    , _pljcLocation       :: !Text
-    , _pljcPp             :: !Bool
-    , _pljcAccessToken    :: !(Maybe Text)
-    , _pljcUploadType     :: !(Maybe Text)
-    , _pljcPayload        :: !Job
-    , _pljcBearerToken    :: !(Maybe Text)
-    , _pljcView           :: !(Maybe Text)
-    , _pljcProjectId      :: !Text
-    , _pljcReplaceJobId   :: !(Maybe Text)
-    , _pljcCallback       :: !(Maybe Text)
+    , _pljcLocation :: !Text
+    , _pljcPp :: !Bool
+    , _pljcAccessToken :: !(Maybe Text)
+    , _pljcUploadType :: !(Maybe Text)
+    , _pljcPayload :: !Job
+    , _pljcBearerToken :: !(Maybe Text)
+    , _pljcView :: !(Maybe Text)
+    , _pljcProjectId :: !Text
+    , _pljcReplaceJobId :: !(Maybe Text)
+    , _pljcFields :: !(Maybe Text)
+    , _pljcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsCreate' with the minimum fields required to make a request.
@@ -115,13 +118,15 @@ data ProjectsLocationsJobsCreate = ProjectsLocationsJobsCreate'
 --
 -- * 'pljcReplaceJobId'
 --
+-- * 'pljcFields'
+--
 -- * 'pljcCallback'
 projectsLocationsJobsCreate
     :: Text -- ^ 'pljcLocation'
     -> Job -- ^ 'pljcPayload'
     -> Text -- ^ 'pljcProjectId'
     -> ProjectsLocationsJobsCreate
-projectsLocationsJobsCreate pPljcLocation_ pPljcPayload_ pPljcProjectId_ =
+projectsLocationsJobsCreate pPljcLocation_ pPljcPayload_ pPljcProjectId_ = 
     ProjectsLocationsJobsCreate'
     { _pljcXgafv = Nothing
     , _pljcUploadProtocol = Nothing
@@ -134,11 +139,12 @@ projectsLocationsJobsCreate pPljcLocation_ pPljcPayload_ pPljcProjectId_ =
     , _pljcView = Nothing
     , _pljcProjectId = pPljcProjectId_
     , _pljcReplaceJobId = Nothing
+    , _pljcFields = Nothing
     , _pljcCallback = Nothing
     }
 
 -- | V1 error format.
-pljcXgafv :: Lens' ProjectsLocationsJobsCreate (Maybe Text)
+pljcXgafv :: Lens' ProjectsLocationsJobsCreate (Maybe Xgafv)
 pljcXgafv
   = lens _pljcXgafv (\ s a -> s{_pljcXgafv = a})
 
@@ -196,6 +202,11 @@ pljcReplaceJobId
   = lens _pljcReplaceJobId
       (\ s a -> s{_pljcReplaceJobId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pljcFields :: Lens' ProjectsLocationsJobsCreate (Maybe Text)
+pljcFields
+  = lens _pljcFields (\ s a -> s{_pljcFields = a})
+
 -- | JSONP
 pljcCallback :: Lens' ProjectsLocationsJobsCreate (Maybe Text)
 pljcCallback
@@ -206,6 +217,8 @@ instance GoogleRequest ProjectsLocationsJobsCreate
         type Rs ProjectsLocationsJobsCreate = Job
         type Scopes ProjectsLocationsJobsCreate =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsLocationsJobsCreate'{..}
           = go _pljcProjectId _pljcLocation _pljcXgafv
@@ -217,6 +230,7 @@ instance GoogleRequest ProjectsLocationsJobsCreate
               _pljcView
               _pljcReplaceJobId
               _pljcCallback
+              _pljcFields
               (Just AltJSON)
               _pljcPayload
               dataflowService

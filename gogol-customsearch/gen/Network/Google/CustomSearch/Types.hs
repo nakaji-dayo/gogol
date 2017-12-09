@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -141,7 +141,6 @@ module Network.Google.CustomSearch.Types
     , qDisableCnTwTranslation
     , qRelatedSite
     , qHl
-    , qCref
     , qSort
     , qLanguage
     , qSiteSearch
@@ -210,9 +209,9 @@ module Network.Google.CustomSearch.Types
     , CSEListImgSize (..)
     ) where
 
-import           Network.Google.CustomSearch.Types.Product
-import           Network.Google.CustomSearch.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.CustomSearch.Types.Product
+import Network.Google.CustomSearch.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the CustomSearch API. This contains the host and root path used as a starting point for constructing service requests.
 customSearchService :: ServiceConfig

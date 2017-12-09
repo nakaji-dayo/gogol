@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.CustomMetrics.Get
     , mcmgCustomMetricId
     , mcmgWebPropertyId
     , mcmgAccountId
+    , mcmgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customMetrics.get@ method which the
 -- 'ManagementCustomMetricsGet' request conforms to.
@@ -53,15 +54,17 @@ type ManagementCustomMetricsGetResource =
                  Capture "webPropertyId" Text :>
                    "customMetrics" :>
                      Capture "customMetricId" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] CustomMetric
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] CustomMetric
 
 -- | Get a custom metric to which the user has access.
 --
 -- /See:/ 'managementCustomMetricsGet' smart constructor.
 data ManagementCustomMetricsGet = ManagementCustomMetricsGet'
     { _mcmgCustomMetricId :: !Text
-    , _mcmgWebPropertyId  :: !Text
-    , _mcmgAccountId      :: !Text
+    , _mcmgWebPropertyId :: !Text
+    , _mcmgAccountId :: !Text
+    , _mcmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomMetricsGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementCustomMetricsGet = ManagementCustomMetricsGet'
 -- * 'mcmgWebPropertyId'
 --
 -- * 'mcmgAccountId'
+--
+-- * 'mcmgFields'
 managementCustomMetricsGet
     :: Text -- ^ 'mcmgCustomMetricId'
     -> Text -- ^ 'mcmgWebPropertyId'
     -> Text -- ^ 'mcmgAccountId'
     -> ManagementCustomMetricsGet
-managementCustomMetricsGet pMcmgCustomMetricId_ pMcmgWebPropertyId_ pMcmgAccountId_ =
+managementCustomMetricsGet pMcmgCustomMetricId_ pMcmgWebPropertyId_ pMcmgAccountId_ = 
     ManagementCustomMetricsGet'
     { _mcmgCustomMetricId = pMcmgCustomMetricId_
     , _mcmgWebPropertyId = pMcmgWebPropertyId_
     , _mcmgAccountId = pMcmgAccountId_
+    , _mcmgFields = Nothing
     }
 
 -- | The ID of the custom metric to retrieve.
@@ -103,6 +109,11 @@ mcmgAccountId
   = lens _mcmgAccountId
       (\ s a -> s{_mcmgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcmgFields :: Lens' ManagementCustomMetricsGet (Maybe Text)
+mcmgFields
+  = lens _mcmgFields (\ s a -> s{_mcmgFields = a})
+
 instance GoogleRequest ManagementCustomMetricsGet
          where
         type Rs ManagementCustomMetricsGet = CustomMetric
@@ -112,6 +123,7 @@ instance GoogleRequest ManagementCustomMetricsGet
         requestClient ManagementCustomMetricsGet'{..}
           = go _mcmgAccountId _mcmgWebPropertyId
               _mcmgCustomMetricId
+              _mcmgFields
               (Just AltJSON)
               analyticsService
           where go

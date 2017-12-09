@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSense.Reports.Saved.Generate
     , rsgSavedReportId
     , rsgStartIndex
     , rsgMaxResults
+    , rsgFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.reports.saved.generate@ method which the
 -- 'ReportsSavedGenerate' request conforms to.
@@ -53,18 +54,20 @@ type ReportsSavedGenerateResource =
              QueryParam "locale" Text :>
                QueryParam "startIndex" (Textual Int32) :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] AdsenseReportsGenerateResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] AdsenseReportsGenerateResponse
 
 -- | Generate an AdSense report based on the saved report ID sent in the
 -- query parameters.
 --
 -- /See:/ 'reportsSavedGenerate' smart constructor.
 data ReportsSavedGenerate = ReportsSavedGenerate'
-    { _rsgLocale        :: !(Maybe Text)
+    { _rsgLocale :: !(Maybe Text)
     , _rsgSavedReportId :: !Text
-    , _rsgStartIndex    :: !(Maybe (Textual Int32))
-    , _rsgMaxResults    :: !(Maybe (Textual Int32))
+    , _rsgStartIndex :: !(Maybe (Textual Int32))
+    , _rsgMaxResults :: !(Maybe (Textual Int32))
+    , _rsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsSavedGenerate' with the minimum fields required to make a request.
@@ -78,15 +81,18 @@ data ReportsSavedGenerate = ReportsSavedGenerate'
 -- * 'rsgStartIndex'
 --
 -- * 'rsgMaxResults'
+--
+-- * 'rsgFields'
 reportsSavedGenerate
     :: Text -- ^ 'rsgSavedReportId'
     -> ReportsSavedGenerate
-reportsSavedGenerate pRsgSavedReportId_ =
+reportsSavedGenerate pRsgSavedReportId_ = 
     ReportsSavedGenerate'
     { _rsgLocale = Nothing
     , _rsgSavedReportId = pRsgSavedReportId_
     , _rsgStartIndex = Nothing
     , _rsgMaxResults = Nothing
+    , _rsgFields = Nothing
     }
 
 -- | Optional locale to use for translating report output to a local
@@ -115,6 +121,11 @@ rsgMaxResults
       (\ s a -> s{_rsgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rsgFields :: Lens' ReportsSavedGenerate (Maybe Text)
+rsgFields
+  = lens _rsgFields (\ s a -> s{_rsgFields = a})
+
 instance GoogleRequest ReportsSavedGenerate where
         type Rs ReportsSavedGenerate =
              AdsenseReportsGenerateResponse
@@ -124,6 +135,7 @@ instance GoogleRequest ReportsSavedGenerate where
         requestClient ReportsSavedGenerate'{..}
           = go _rsgSavedReportId _rsgLocale _rsgStartIndex
               _rsgMaxResults
+              _rsgFields
               (Just AltJSON)
               adSenseService
           where go

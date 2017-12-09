@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -72,9 +72,9 @@ module Network.Google.TaskQueue.Types
     , ttLeaseTimestamp
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types.Product
-import           Network.Google.TaskQueue.Types.Sum
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types.Product
+import Network.Google.TaskQueue.Types.Sum
 
 -- | Default request referring to version 'v1beta2' of the TaskQueue API. This contains the host and root path used as a starting point for constructing service requests.
 taskQueueService :: ServiceConfig

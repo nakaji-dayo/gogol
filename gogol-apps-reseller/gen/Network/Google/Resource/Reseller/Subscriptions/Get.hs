@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Gets a subscription of the customer.
+-- Get a specific subscription.
 --
 -- /See:/ <https://developers.google.com/google-apps/reseller/ Enterprise Apps Reseller API Reference> for @reseller.subscriptions.get@.
 module Network.Google.Resource.Reseller.Subscriptions.Get
@@ -35,10 +35,11 @@ module Network.Google.Resource.Reseller.Subscriptions.Get
     -- * Request Lenses
     , sgCustomerId
     , sgSubscriptionId
+    , sgFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.subscriptions.get@ method which the
 -- 'SubscriptionsGet' request conforms to.
@@ -50,14 +51,16 @@ type SubscriptionsGetResource =
              Capture "customerId" Text :>
                "subscriptions" :>
                  Capture "subscriptionId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Subscription
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Subscription
 
--- | Gets a subscription of the customer.
+-- | Get a specific subscription.
 --
 -- /See:/ 'subscriptionsGet' smart constructor.
 data SubscriptionsGet = SubscriptionsGet'
-    { _sgCustomerId     :: !Text
+    { _sgCustomerId :: !Text
     , _sgSubscriptionId :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsGet' with the minimum fields required to make a request.
@@ -67,26 +70,40 @@ data SubscriptionsGet = SubscriptionsGet'
 -- * 'sgCustomerId'
 --
 -- * 'sgSubscriptionId'
+--
+-- * 'sgFields'
 subscriptionsGet
     :: Text -- ^ 'sgCustomerId'
     -> Text -- ^ 'sgSubscriptionId'
     -> SubscriptionsGet
-subscriptionsGet pSgCustomerId_ pSgSubscriptionId_ =
+subscriptionsGet pSgCustomerId_ pSgSubscriptionId_ = 
     SubscriptionsGet'
     { _sgCustomerId = pSgCustomerId_
     , _sgSubscriptionId = pSgSubscriptionId_
+    , _sgFields = Nothing
     }
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 sgCustomerId :: Lens' SubscriptionsGet Text
 sgCustomerId
   = lens _sgCustomerId (\ s a -> s{_sgCustomerId = a})
 
--- | Id of the subscription, which is unique for a customer
+-- | This is a required property. The subscriptionId is the subscription
+-- identifier and is unique for each customer. Since a subscriptionId
+-- changes when a subscription is updated, we recommend to not use this ID
+-- as a key for persistent data. And the subscriptionId can be found using
+-- the retrieve all reseller subscriptions method.
 sgSubscriptionId :: Lens' SubscriptionsGet Text
 sgSubscriptionId
   = lens _sgSubscriptionId
       (\ s a -> s{_sgSubscriptionId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SubscriptionsGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
 
 instance GoogleRequest SubscriptionsGet where
         type Rs SubscriptionsGet = Subscription
@@ -94,7 +111,8 @@ instance GoogleRequest SubscriptionsGet where
              '["https://www.googleapis.com/auth/apps.order",
                "https://www.googleapis.com/auth/apps.order.readonly"]
         requestClient SubscriptionsGet'{..}
-          = go _sgCustomerId _sgSubscriptionId (Just AltJSON)
+          = go _sgCustomerId _sgSubscriptionId _sgFields
+              (Just AltJSON)
               appsResellerService
           where go
                   = buildClient

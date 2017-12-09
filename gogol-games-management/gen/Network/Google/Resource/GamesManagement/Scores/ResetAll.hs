@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Scores.ResetAll
     , scoresResetAll
     , ScoresResetAll
 
+    -- * Request Lenses
+    , sraFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.scores.resetAll@ method which the
 -- 'ScoresResetAll' request conforms to.
@@ -46,31 +48,43 @@ type ScoresResetAllResource =
        "v1management" :>
          "scores" :>
            "reset" :>
-             QueryParam "alt" AltJSON :>
-               Post '[JSON] PlayerScoreResetAllResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Post '[JSON] PlayerScoreResetAllResponse
 
 -- | Resets all scores for all leaderboards for the currently authenticated
 -- players. This method is only accessible to whitelisted tester accounts
 -- for your application.
 --
 -- /See:/ 'scoresResetAll' smart constructor.
-data ScoresResetAll =
-    ScoresResetAll'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype ScoresResetAll = ScoresResetAll'
+    { _sraFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresResetAll' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sraFields'
 scoresResetAll
     :: ScoresResetAll
-scoresResetAll = ScoresResetAll'
+scoresResetAll = 
+    ScoresResetAll'
+    { _sraFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+sraFields :: Lens' ScoresResetAll (Maybe Text)
+sraFields
+  = lens _sraFields (\ s a -> s{_sraFields = a})
 
 instance GoogleRequest ScoresResetAll where
         type Rs ScoresResetAll = PlayerScoreResetAllResponse
         type Scopes ScoresResetAll =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient ScoresResetAll'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient ScoresResetAll'{..}
+          = go _sraFields (Just AltJSON) gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy ScoresResetAllResource)
                       mempty

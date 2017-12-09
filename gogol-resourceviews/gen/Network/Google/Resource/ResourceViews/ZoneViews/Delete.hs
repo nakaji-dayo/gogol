@@ -36,10 +36,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.Delete
     , zvdResourceView
     , zvdProject
     , zvdZone
+    , zvdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.delete@ method which the
 -- 'ZoneViewsDelete' request conforms to.
@@ -52,15 +53,17 @@ type ZoneViewsDeleteResource =
                Capture "zone" Text :>
                  "resourceViews" :>
                    Capture "resourceView" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Delete a resource view.
 --
 -- /See:/ 'zoneViewsDelete' smart constructor.
 data ZoneViewsDelete = ZoneViewsDelete'
     { _zvdResourceView :: !Text
-    , _zvdProject      :: !Text
-    , _zvdZone         :: !Text
+    , _zvdProject :: !Text
+    , _zvdZone :: !Text
+    , _zvdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data ZoneViewsDelete = ZoneViewsDelete'
 -- * 'zvdProject'
 --
 -- * 'zvdZone'
+--
+-- * 'zvdFields'
 zoneViewsDelete
     :: Text -- ^ 'zvdResourceView'
     -> Text -- ^ 'zvdProject'
     -> Text -- ^ 'zvdZone'
     -> ZoneViewsDelete
-zoneViewsDelete pZvdResourceView_ pZvdProject_ pZvdZone_ =
+zoneViewsDelete pZvdResourceView_ pZvdProject_ pZvdZone_ = 
     ZoneViewsDelete'
     { _zvdResourceView = pZvdResourceView_
     , _zvdProject = pZvdProject_
     , _zvdZone = pZvdZone_
+    , _zvdFields = Nothing
     }
 
 -- | The name of the resource view.
@@ -99,6 +105,11 @@ zvdProject
 zvdZone :: Lens' ZoneViewsDelete Text
 zvdZone = lens _zvdZone (\ s a -> s{_zvdZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zvdFields :: Lens' ZoneViewsDelete (Maybe Text)
+zvdFields
+  = lens _zvdFields (\ s a -> s{_zvdFields = a})
+
 instance GoogleRequest ZoneViewsDelete where
         type Rs ZoneViewsDelete = Operation
         type Scopes ZoneViewsDelete =
@@ -106,7 +117,7 @@ instance GoogleRequest ZoneViewsDelete where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient ZoneViewsDelete'{..}
-          = go _zvdProject _zvdZone _zvdResourceView
+          = go _zvdProject _zvdZone _zvdResourceView _zvdFields
               (Just AltJSON)
               resourceViewsService
           where go

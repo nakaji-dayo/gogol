@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTubeAnalytics.GroupItems.Delete
     -- * Request Lenses
     , gidOnBehalfOfContentOwner
     , gidId
+    , gidFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groupItems.delete@ method which the
 -- 'GroupItemsDelete' request conforms to.
@@ -49,14 +50,16 @@ type GroupItemsDeleteResource =
            "groupItems" :>
              QueryParam "id" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes an item from a group.
 --
 -- /See:/ 'groupItemsDelete' smart constructor.
 data GroupItemsDelete = GroupItemsDelete'
     { _gidOnBehalfOfContentOwner :: !(Maybe Text)
-    , _gidId                     :: !Text
+    , _gidId :: !Text
+    , _gidFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupItemsDelete' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data GroupItemsDelete = GroupItemsDelete'
 -- * 'gidOnBehalfOfContentOwner'
 --
 -- * 'gidId'
+--
+-- * 'gidFields'
 groupItemsDelete
     :: Text -- ^ 'gidId'
     -> GroupItemsDelete
-groupItemsDelete pGidId_ =
+groupItemsDelete pGidId_ = 
     GroupItemsDelete'
     { _gidOnBehalfOfContentOwner = Nothing
     , _gidId = pGidId_
+    , _gidFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -95,6 +101,11 @@ gidOnBehalfOfContentOwner
 gidId :: Lens' GroupItemsDelete Text
 gidId = lens _gidId (\ s a -> s{_gidId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gidFields :: Lens' GroupItemsDelete (Maybe Text)
+gidFields
+  = lens _gidFields (\ s a -> s{_gidFields = a})
+
 instance GoogleRequest GroupItemsDelete where
         type Rs GroupItemsDelete = ()
         type Scopes GroupItemsDelete =
@@ -102,6 +113,7 @@ instance GoogleRequest GroupItemsDelete where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient GroupItemsDelete'{..}
           = go (Just _gidId) _gidOnBehalfOfContentOwner
+              _gidFields
               (Just AltJSON)
               youTubeAnalyticsService
           where go

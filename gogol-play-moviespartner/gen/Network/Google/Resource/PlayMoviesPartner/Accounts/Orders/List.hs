@@ -50,11 +50,12 @@ module Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.List
     , aolName
     , aolPageToken
     , aolPageSize
+    , aolFields
     , aolCallback
     ) where
 
-import           Network.Google.PlayMoviesPartner.Types
-import           Network.Google.Prelude
+import Network.Google.PlayMoviesPartner.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @playmoviespartner.accounts.orders.list@ method which the
 -- 'AccountsOrdersList' request conforms to.
@@ -65,7 +66,7 @@ type AccountsOrdersListResource =
            "orders" :>
              QueryParams "status" Text :>
                QueryParams "pphNames" Text :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParams "studioNames" Text :>
                      QueryParams "videoIds" Text :>
                        QueryParam "upload_protocol" Text :>
@@ -78,8 +79,9 @@ type AccountsOrdersListResource =
                                      QueryParam "pageToken" Text :>
                                        QueryParam "pageSize" (Textual Int32) :>
                                          QueryParam "callback" Text :>
-                                           QueryParam "alt" AltJSON :>
-                                             Get '[JSON] ListOrdersResponse
+                                           QueryParam "fields" Text :>
+                                             QueryParam "alt" AltJSON :>
+                                               Get '[JSON] ListOrdersResponse
 
 -- | List Orders owned or managed by the partner. See _Authentication and
 -- Authorization rules_ and _List methods rules_ for more information about
@@ -87,22 +89,23 @@ type AccountsOrdersListResource =
 --
 -- /See:/ 'accountsOrdersList' smart constructor.
 data AccountsOrdersList = AccountsOrdersList'
-    { _aolStatus         :: !(Maybe [Text])
-    , _aolPphNames       :: !(Maybe [Text])
-    , _aolXgafv          :: !(Maybe Text)
-    , _aolStudioNames    :: !(Maybe [Text])
-    , _aolVideoIds       :: !(Maybe [Text])
+    { _aolStatus :: !(Maybe [Text])
+    , _aolPphNames :: !(Maybe [Text])
+    , _aolXgafv :: !(Maybe Xgafv)
+    , _aolStudioNames :: !(Maybe [Text])
+    , _aolVideoIds :: !(Maybe [Text])
     , _aolUploadProtocol :: !(Maybe Text)
-    , _aolPp             :: !Bool
-    , _aolAccessToken    :: !(Maybe Text)
-    , _aolUploadType     :: !(Maybe Text)
-    , _aolCustomId       :: !(Maybe Text)
-    , _aolAccountId      :: !Text
-    , _aolBearerToken    :: !(Maybe Text)
-    , _aolName           :: !(Maybe Text)
-    , _aolPageToken      :: !(Maybe Text)
-    , _aolPageSize       :: !(Maybe (Textual Int32))
-    , _aolCallback       :: !(Maybe Text)
+    , _aolPp :: !Bool
+    , _aolAccessToken :: !(Maybe Text)
+    , _aolUploadType :: !(Maybe Text)
+    , _aolCustomId :: !(Maybe Text)
+    , _aolAccountId :: !Text
+    , _aolBearerToken :: !(Maybe Text)
+    , _aolName :: !(Maybe Text)
+    , _aolPageToken :: !(Maybe Text)
+    , _aolPageSize :: !(Maybe (Textual Int32))
+    , _aolFields :: !(Maybe Text)
+    , _aolCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsOrdersList' with the minimum fields required to make a request.
@@ -139,11 +142,13 @@ data AccountsOrdersList = AccountsOrdersList'
 --
 -- * 'aolPageSize'
 --
+-- * 'aolFields'
+--
 -- * 'aolCallback'
 accountsOrdersList
     :: Text -- ^ 'aolAccountId'
     -> AccountsOrdersList
-accountsOrdersList pAolAccountId_ =
+accountsOrdersList pAolAccountId_ = 
     AccountsOrdersList'
     { _aolStatus = Nothing
     , _aolPphNames = Nothing
@@ -160,6 +165,7 @@ accountsOrdersList pAolAccountId_ =
     , _aolName = Nothing
     , _aolPageToken = Nothing
     , _aolPageSize = Nothing
+    , _aolFields = Nothing
     , _aolCallback = Nothing
     }
 
@@ -178,7 +184,7 @@ aolPphNames
       . _Coerce
 
 -- | V1 error format.
-aolXgafv :: Lens' AccountsOrdersList (Maybe Text)
+aolXgafv :: Lens' AccountsOrdersList (Maybe Xgafv)
 aolXgafv = lens _aolXgafv (\ s a -> s{_aolXgafv = a})
 
 -- | See _List methods rules_ for info about this field.
@@ -250,6 +256,11 @@ aolPageSize
   = lens _aolPageSize (\ s a -> s{_aolPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aolFields :: Lens' AccountsOrdersList (Maybe Text)
+aolFields
+  = lens _aolFields (\ s a -> s{_aolFields = a})
+
 -- | JSONP
 aolCallback :: Lens' AccountsOrdersList (Maybe Text)
 aolCallback
@@ -275,6 +286,7 @@ instance GoogleRequest AccountsOrdersList where
               _aolPageToken
               _aolPageSize
               _aolCallback
+              _aolFields
               (Just AltJSON)
               playMoviesPartnerService
           where go

@@ -21,10 +21,9 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates the specified Application resource. You can update the following
--- fields: auth_domain
--- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps#Application.FIELDS.auth_domain)
--- default_cookie_expiration
--- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps#Application.FIELDS.default_cookie_expiration)
+-- fields: auth_domain - Google authentication domain for controlling user
+-- access to the application. default_cookie_expiration - Cookie expiration
+-- policy for the application.
 --
 -- /See:/ <https://cloud.google.com/appengine/docs/admin-api/ Google App Engine Admin API Reference> for @appengine.apps.patch@.
 module Network.Google.Resource.AppEngine.Apps.Patch
@@ -46,11 +45,12 @@ module Network.Google.Resource.AppEngine.Apps.Patch
     , apPayload
     , apBearerToken
     , apAppsId
+    , apFields
     , apCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.patch@ method which the
 -- 'AppsPatch' request conforms to.
@@ -58,36 +58,37 @@ type AppsPatchResource =
      "v1" :>
        "apps" :>
          Capture "appsId" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
-               QueryParam "updateMask" Text :>
+               QueryParam "updateMask" FieldMask :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Application :>
-                               Patch '[JSON] Operation
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Application :>
+                                 Patch '[JSON] Operation
 
 -- | Updates the specified Application resource. You can update the following
--- fields: auth_domain
--- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps#Application.FIELDS.auth_domain)
--- default_cookie_expiration
--- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps#Application.FIELDS.default_cookie_expiration)
+-- fields: auth_domain - Google authentication domain for controlling user
+-- access to the application. default_cookie_expiration - Cookie expiration
+-- policy for the application.
 --
 -- /See:/ 'appsPatch' smart constructor.
 data AppsPatch = AppsPatch'
-    { _apXgafv          :: !(Maybe Text)
+    { _apXgafv :: !(Maybe Xgafv)
     , _apUploadProtocol :: !(Maybe Text)
-    , _apUpdateMask     :: !(Maybe Text)
-    , _apPp             :: !Bool
-    , _apAccessToken    :: !(Maybe Text)
-    , _apUploadType     :: !(Maybe Text)
-    , _apPayload        :: !Application
-    , _apBearerToken    :: !(Maybe Text)
-    , _apAppsId         :: !Text
-    , _apCallback       :: !(Maybe Text)
+    , _apUpdateMask :: !(Maybe FieldMask)
+    , _apPp :: !Bool
+    , _apAccessToken :: !(Maybe Text)
+    , _apUploadType :: !(Maybe Text)
+    , _apPayload :: !Application
+    , _apBearerToken :: !(Maybe Text)
+    , _apAppsId :: !Text
+    , _apFields :: !(Maybe Text)
+    , _apCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsPatch' with the minimum fields required to make a request.
@@ -112,12 +113,14 @@ data AppsPatch = AppsPatch'
 --
 -- * 'apAppsId'
 --
+-- * 'apFields'
+--
 -- * 'apCallback'
 appsPatch
     :: Application -- ^ 'apPayload'
     -> Text -- ^ 'apAppsId'
     -> AppsPatch
-appsPatch pApPayload_ pApAppsId_ =
+appsPatch pApPayload_ pApAppsId_ = 
     AppsPatch'
     { _apXgafv = Nothing
     , _apUploadProtocol = Nothing
@@ -128,11 +131,12 @@ appsPatch pApPayload_ pApAppsId_ =
     , _apPayload = pApPayload_
     , _apBearerToken = Nothing
     , _apAppsId = pApAppsId_
+    , _apFields = Nothing
     , _apCallback = Nothing
     }
 
 -- | V1 error format.
-apXgafv :: Lens' AppsPatch (Maybe Text)
+apXgafv :: Lens' AppsPatch (Maybe Xgafv)
 apXgafv = lens _apXgafv (\ s a -> s{_apXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -142,7 +146,7 @@ apUploadProtocol
       (\ s a -> s{_apUploadProtocol = a})
 
 -- | Standard field mask for the set of fields to be updated.
-apUpdateMask :: Lens' AppsPatch (Maybe Text)
+apUpdateMask :: Lens' AppsPatch (Maybe FieldMask)
 apUpdateMask
   = lens _apUpdateMask (\ s a -> s{_apUpdateMask = a})
 
@@ -177,6 +181,10 @@ apBearerToken
 apAppsId :: Lens' AppsPatch Text
 apAppsId = lens _apAppsId (\ s a -> s{_apAppsId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' AppsPatch (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
+
 -- | JSONP
 apCallback :: Lens' AppsPatch (Maybe Text)
 apCallback
@@ -194,6 +202,7 @@ instance GoogleRequest AppsPatch where
               _apUploadType
               _apBearerToken
               _apCallback
+              _apFields
               (Just AltJSON)
               _apPayload
               appEngineService

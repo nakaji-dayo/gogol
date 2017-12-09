@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.ConnectionTypes.Get
     -- * Request Lenses
     , ctgProFileId
     , ctgId
+    , ctgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.connectionTypes.get@ method which the
 -- 'ConnectionTypesGet' request conforms to.
 type ConnectionTypesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "connectionTypes" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ConnectionType
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ConnectionType
 
 -- | Gets one connection type by ID.
 --
 -- /See:/ 'connectionTypesGet' smart constructor.
 data ConnectionTypesGet = ConnectionTypesGet'
     { _ctgProFileId :: !(Textual Int64)
-    , _ctgId        :: !(Textual Int64)
+    , _ctgId :: !(Textual Int64)
+    , _ctgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConnectionTypesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ConnectionTypesGet = ConnectionTypesGet'
 -- * 'ctgProFileId'
 --
 -- * 'ctgId'
+--
+-- * 'ctgFields'
 connectionTypesGet
     :: Int64 -- ^ 'ctgProFileId'
     -> Int64 -- ^ 'ctgId'
     -> ConnectionTypesGet
-connectionTypesGet pCtgProFileId_ pCtgId_ =
+connectionTypesGet pCtgProFileId_ pCtgId_ = 
     ConnectionTypesGet'
     { _ctgProFileId = _Coerce # pCtgProFileId_
     , _ctgId = _Coerce # pCtgId_
+    , _ctgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ ctgId :: Lens' ConnectionTypesGet Int64
 ctgId
   = lens _ctgId (\ s a -> s{_ctgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ctgFields :: Lens' ConnectionTypesGet (Maybe Text)
+ctgFields
+  = lens _ctgFields (\ s a -> s{_ctgFields = a})
+
 instance GoogleRequest ConnectionTypesGet where
         type Rs ConnectionTypesGet = ConnectionType
         type Scopes ConnectionTypesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ConnectionTypesGet'{..}
-          = go _ctgProFileId _ctgId (Just AltJSON)
+          = go _ctgProFileId _ctgId _ctgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

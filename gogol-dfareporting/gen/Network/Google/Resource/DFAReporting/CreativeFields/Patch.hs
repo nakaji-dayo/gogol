@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.CreativeFields.Patch
     , cfpProFileId
     , cfpPayload
     , cfpId
+    , cfpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFields.patch@ method which the
 -- 'CreativeFieldsPatch' request conforms to.
 type CreativeFieldsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] CreativeField :>
-                     Patch '[JSON] CreativeField
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] CreativeField :>
+                       Patch '[JSON] CreativeField
 
 -- | Updates an existing creative field. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type CreativeFieldsPatchResource =
 -- /See:/ 'creativeFieldsPatch' smart constructor.
 data CreativeFieldsPatch = CreativeFieldsPatch'
     { _cfpProFileId :: !(Textual Int64)
-    , _cfpPayload   :: !CreativeField
-    , _cfpId        :: !(Textual Int64)
+    , _cfpPayload :: !CreativeField
+    , _cfpId :: !(Textual Int64)
+    , _cfpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data CreativeFieldsPatch = CreativeFieldsPatch'
 -- * 'cfpPayload'
 --
 -- * 'cfpId'
+--
+-- * 'cfpFields'
 creativeFieldsPatch
     :: Int64 -- ^ 'cfpProFileId'
     -> CreativeField -- ^ 'cfpPayload'
     -> Int64 -- ^ 'cfpId'
     -> CreativeFieldsPatch
-creativeFieldsPatch pCfpProFileId_ pCfpPayload_ pCfpId_ =
+creativeFieldsPatch pCfpProFileId_ pCfpPayload_ pCfpId_ = 
     CreativeFieldsPatch'
     { _cfpProFileId = _Coerce # pCfpProFileId_
     , _cfpPayload = pCfpPayload_
     , _cfpId = _Coerce # pCfpId_
+    , _cfpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ cfpId :: Lens' CreativeFieldsPatch Int64
 cfpId
   = lens _cfpId (\ s a -> s{_cfpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfpFields :: Lens' CreativeFieldsPatch (Maybe Text)
+cfpFields
+  = lens _cfpFields (\ s a -> s{_cfpFields = a})
+
 instance GoogleRequest CreativeFieldsPatch where
         type Rs CreativeFieldsPatch = CreativeField
         type Scopes CreativeFieldsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldsPatch'{..}
-          = go _cfpProFileId (Just _cfpId) (Just AltJSON)
+          = go _cfpProFileId (Just _cfpId) _cfpFields
+              (Just AltJSON)
               _cfpPayload
               dFAReportingService
           where go

@@ -37,32 +37,35 @@ module Network.Google.Resource.DFAReporting.RemarketingListShares.Patch
     , rlspProFileId
     , rlspPayload
     , rlspRemarketingListId
+    , rlspFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingListShares.patch@ method which the
 -- 'RemarketingListSharesPatch' request conforms to.
 type RemarketingListSharesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingListShares" :>
                QueryParam "remarketingListId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] RemarketingListShare :>
-                     Patch '[JSON] RemarketingListShare
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] RemarketingListShare :>
+                       Patch '[JSON] RemarketingListShare
 
 -- | Updates an existing remarketing list share. This method supports patch
 -- semantics.
 --
 -- /See:/ 'remarketingListSharesPatch' smart constructor.
 data RemarketingListSharesPatch = RemarketingListSharesPatch'
-    { _rlspProFileId         :: !(Textual Int64)
-    , _rlspPayload           :: !RemarketingListShare
+    { _rlspProFileId :: !(Textual Int64)
+    , _rlspPayload :: !RemarketingListShare
     , _rlspRemarketingListId :: !(Textual Int64)
+    , _rlspFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListSharesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data RemarketingListSharesPatch = RemarketingListSharesPatch'
 -- * 'rlspPayload'
 --
 -- * 'rlspRemarketingListId'
+--
+-- * 'rlspFields'
 remarketingListSharesPatch
     :: Int64 -- ^ 'rlspProFileId'
     -> RemarketingListShare -- ^ 'rlspPayload'
     -> Int64 -- ^ 'rlspRemarketingListId'
     -> RemarketingListSharesPatch
-remarketingListSharesPatch pRlspProFileId_ pRlspPayload_ pRlspRemarketingListId_ =
+remarketingListSharesPatch pRlspProFileId_ pRlspPayload_ pRlspRemarketingListId_ = 
     RemarketingListSharesPatch'
     { _rlspProFileId = _Coerce # pRlspProFileId_
     , _rlspPayload = pRlspPayload_
     , _rlspRemarketingListId = _Coerce # pRlspRemarketingListId_
+    , _rlspFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -105,6 +111,11 @@ rlspRemarketingListId
       (\ s a -> s{_rlspRemarketingListId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlspFields :: Lens' RemarketingListSharesPatch (Maybe Text)
+rlspFields
+  = lens _rlspFields (\ s a -> s{_rlspFields = a})
+
 instance GoogleRequest RemarketingListSharesPatch
          where
         type Rs RemarketingListSharesPatch =
@@ -113,6 +124,7 @@ instance GoogleRequest RemarketingListSharesPatch
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListSharesPatch'{..}
           = go _rlspProFileId (Just _rlspRemarketingListId)
+              _rlspFields
               (Just AltJSON)
               _rlspPayload
               dFAReportingService

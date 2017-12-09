@@ -41,10 +41,11 @@ module Network.Google.Resource.PagespeedOnline.PagespeedAPI.RunPagespeed
     , parpFilterThirdPartyResources
     , parpStrategy
     , parpRule
+    , parpFields
     ) where
 
-import           Network.Google.PageSpeed.Types
-import           Network.Google.Prelude
+import Network.Google.PageSpeed.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @pagespeedonline.pagespeedapi.runpagespeed@ method which the
 -- 'PagespeedAPIRunPagespeed' request conforms to.
@@ -60,7 +61,8 @@ type PagespeedAPIRunPagespeedResource =
                      PagespeedAPIRunPagespeedStrategy
                      :>
                      QueryParams "rule" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Result
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Result
 
 -- | Runs PageSpeed analysis on the page at the specified URL, and returns
 -- PageSpeed scores, a list of suggestions to make that page faster, and
@@ -68,12 +70,13 @@ type PagespeedAPIRunPagespeedResource =
 --
 -- /See:/ 'pagespeedAPIRunPagespeed' smart constructor.
 data PagespeedAPIRunPagespeed = PagespeedAPIRunPagespeed'
-    { _parpScreenshot                :: !Bool
-    , _parpLocale                    :: !(Maybe Text)
-    , _parpURL                       :: !Text
+    { _parpScreenshot :: !Bool
+    , _parpLocale :: !(Maybe Text)
+    , _parpURL :: !Text
     , _parpFilterThirdPartyResources :: !Bool
-    , _parpStrategy                  :: !(Maybe PagespeedAPIRunPagespeedStrategy)
-    , _parpRule                      :: !(Maybe [Text])
+    , _parpStrategy :: !(Maybe PagespeedAPIRunPagespeedStrategy)
+    , _parpRule :: !(Maybe [Text])
+    , _parpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagespeedAPIRunPagespeed' with the minimum fields required to make a request.
@@ -91,10 +94,12 @@ data PagespeedAPIRunPagespeed = PagespeedAPIRunPagespeed'
 -- * 'parpStrategy'
 --
 -- * 'parpRule'
+--
+-- * 'parpFields'
 pagespeedAPIRunPagespeed
     :: Text -- ^ 'parpURL'
     -> PagespeedAPIRunPagespeed
-pagespeedAPIRunPagespeed pParpURL_ =
+pagespeedAPIRunPagespeed pParpURL_ = 
     PagespeedAPIRunPagespeed'
     { _parpScreenshot = False
     , _parpLocale = Nothing
@@ -102,6 +107,7 @@ pagespeedAPIRunPagespeed pParpURL_ =
     , _parpFilterThirdPartyResources = False
     , _parpStrategy = Nothing
     , _parpRule = Nothing
+    , _parpFields = Nothing
     }
 
 -- | Indicates if binary data containing a screenshot should be included
@@ -138,6 +144,11 @@ parpRule
       _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+parpFields :: Lens' PagespeedAPIRunPagespeed (Maybe Text)
+parpFields
+  = lens _parpFields (\ s a -> s{_parpFields = a})
+
 instance GoogleRequest PagespeedAPIRunPagespeed where
         type Rs PagespeedAPIRunPagespeed = Result
         type Scopes PagespeedAPIRunPagespeed = '[]
@@ -147,6 +158,7 @@ instance GoogleRequest PagespeedAPIRunPagespeed where
               (Just _parpFilterThirdPartyResources)
               _parpStrategy
               (_parpRule ^. _Default)
+              _parpFields
               (Just AltJSON)
               pageSpeedService
           where go

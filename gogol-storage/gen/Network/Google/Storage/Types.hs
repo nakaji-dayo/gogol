@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -56,6 +56,24 @@ module Network.Google.Storage.Types
     , bKind
     , bItems
 
+    -- * BucketBilling
+    , BucketBilling
+    , bucketBilling
+    , bbRequesterPays
+
+    -- * Notification
+    , Notification
+    , notification
+    , nEtag
+    , nObjectNamePrefix
+    , nPayloadFormat
+    , nEventTypes
+    , nKind
+    , nTopic
+    , nSelfLink
+    , nId
+    , nCustomAttributes
+
     -- * BucketLogging
     , BucketLogging
     , bucketLogging
@@ -86,6 +104,11 @@ module Network.Google.Storage.Types
     , BucketLifecycle
     , bucketLifecycle
     , blRule
+
+    -- * BucketLabels
+    , BucketLabels
+    , bucketLabels
+    , blAddtional
 
     -- * Channel
     , Channel
@@ -142,13 +165,16 @@ module Network.Google.Storage.Types
     , bucOwner
     , bucSelfLink
     , bucName
+    , bucEncryption
     , bucStorageClass
     , bucVersioning
     , bucCORS
     , bucTimeCreated
     , bucId
+    , bucLabels
     , bucUpdated
     , bucDefaultObjectACL
+    , bucBilling
     , bucMetageneration
     , bucLogging
     , bucACL
@@ -173,6 +199,11 @@ module Network.Google.Storage.Types
     , bacKind
     , bacItems
 
+    -- * BucketEncryption
+    , BucketEncryption
+    , bucketEncryption
+    , beDefaultKmsKeyName
+
     -- * BucketsUpdateProjection
     , BucketsUpdateProjection (..)
 
@@ -194,6 +225,12 @@ module Network.Google.Storage.Types
 
     -- * BucketsUpdatePredefinedACL
     , BucketsUpdatePredefinedACL (..)
+
+    -- * ServiceAccount
+    , ServiceAccount
+    , serviceAccount
+    , saKind
+    , saEmailAddress
 
     -- * ObjectsCopyDestinationPredefinedACL
     , ObjectsCopyDestinationPredefinedACL (..)
@@ -222,6 +259,13 @@ module Network.Google.Storage.Types
     , channelParams
     , cpAddtional
 
+    -- * PolicyBindingsItem
+    , PolicyBindingsItem
+    , policyBindingsItem
+    , pbiMembers
+    , pbiRole
+    , pbiCondition
+
     -- * BucketsListProjection
     , BucketsListProjection (..)
 
@@ -249,6 +293,7 @@ module Network.Google.Storage.Types
     , objMetadata
     , objTimeCreated
     , objId
+    , objKmsKeyName
     , objUpdated
     , objContentLanguage
     , objCacheControl
@@ -312,6 +357,20 @@ module Network.Google.Storage.Types
     -- * BucketsPatchPredefinedDefaultObjectACL
     , BucketsPatchPredefinedDefaultObjectACL (..)
 
+    -- * TestIAMPermissionsResponse
+    , TestIAMPermissionsResponse
+    , testIAMPermissionsResponse
+    , tiprKind
+    , tiprPermissions
+
+    -- * Policy
+    , Policy
+    , policy
+    , pEtag
+    , pResourceId
+    , pKind
+    , pBindings
+
     -- * BucketsPatchPredefinedACL
     , BucketsPatchPredefinedACL (..)
 
@@ -332,6 +391,17 @@ module Network.Google.Storage.Types
     , oacaGeneration
     , oacaEntityId
 
+    -- * Notifications
+    , Notifications
+    , notifications
+    , notKind
+    , notItems
+
+    -- * NotificationCustom_attributes
+    , NotificationCustom_attributes
+    , notificationCustom_attributes
+    , ncAddtional
+
     -- * ObjectsCopyProjection
     , ObjectsCopyProjection (..)
 
@@ -349,9 +419,9 @@ module Network.Google.Storage.Types
     , ObjectsRewriteProjection (..)
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types.Product
-import           Network.Google.Storage.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Storage.Types.Product
+import Network.Google.Storage.Types.Sum
 
 -- | Default request referring to version 'v1' of the Cloud Storage JSON API. This contains the host and root path used as a starting point for constructing service requests.
 storageService :: ServiceConfig

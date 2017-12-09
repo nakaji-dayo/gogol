@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Instances.RestoreBackup
     -- * Request Lenses
     , irbProject
     , irbPayload
+    , irbFields
     , irbInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.restoreBackup@ method which the
 -- 'InstancesRestoreBackup' request conforms to.
@@ -51,16 +52,18 @@ type InstancesRestoreBackupResource =
              "instances" :>
                Capture "instance" Text :>
                  "restoreBackup" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstancesRestoreBackupRequest :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InstancesRestoreBackupRequest :>
+                         Post '[JSON] Operation
 
 -- | Restores a backup of a Cloud SQL instance.
 --
 -- /See:/ 'instancesRestoreBackup' smart constructor.
 data InstancesRestoreBackup = InstancesRestoreBackup'
-    { _irbProject  :: !Text
-    , _irbPayload  :: !InstancesRestoreBackupRequest
+    { _irbProject :: !Text
+    , _irbPayload :: !InstancesRestoreBackupRequest
+    , _irbFields :: !(Maybe Text)
     , _irbInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data InstancesRestoreBackup = InstancesRestoreBackup'
 --
 -- * 'irbPayload'
 --
+-- * 'irbFields'
+--
 -- * 'irbInstance'
 instancesRestoreBackup
     :: Text -- ^ 'irbProject'
     -> InstancesRestoreBackupRequest -- ^ 'irbPayload'
     -> Text -- ^ 'irbInstance'
     -> InstancesRestoreBackup
-instancesRestoreBackup pIrbProject_ pIrbPayload_ pIrbInstance_ =
+instancesRestoreBackup pIrbProject_ pIrbPayload_ pIrbInstance_ = 
     InstancesRestoreBackup'
     { _irbProject = pIrbProject_
     , _irbPayload = pIrbPayload_
+    , _irbFields = Nothing
     , _irbInstance = pIrbInstance_
     }
 
@@ -95,6 +101,11 @@ irbPayload :: Lens' InstancesRestoreBackup InstancesRestoreBackupRequest
 irbPayload
   = lens _irbPayload (\ s a -> s{_irbPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+irbFields :: Lens' InstancesRestoreBackup (Maybe Text)
+irbFields
+  = lens _irbFields (\ s a -> s{_irbFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 irbInstance :: Lens' InstancesRestoreBackup Text
 irbInstance
@@ -106,7 +117,8 @@ instance GoogleRequest InstancesRestoreBackup where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesRestoreBackup'{..}
-          = go _irbProject _irbInstance (Just AltJSON)
+          = go _irbProject _irbInstance _irbFields
+              (Just AltJSON)
               _irbPayload
               sQLAdminService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.RegionInstanceGroups.Get
     , riggProject
     , riggRegion
     , riggInstanceGroup
+    , riggFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroups.get@ method which the
 -- 'RegionInstanceGroupsGet' request conforms to.
@@ -52,15 +53,17 @@ type RegionInstanceGroupsGetResource =
                Capture "region" Text :>
                  "instanceGroups" :>
                    Capture "instanceGroup" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] InstanceGroup
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] InstanceGroup
 
 -- | Returns the specified instance group resource.
 --
 -- /See:/ 'regionInstanceGroupsGet' smart constructor.
 data RegionInstanceGroupsGet = RegionInstanceGroupsGet'
-    { _riggProject       :: !Text
-    , _riggRegion        :: !Text
+    { _riggProject :: !Text
+    , _riggRegion :: !Text
     , _riggInstanceGroup :: !Text
+    , _riggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RegionInstanceGroupsGet = RegionInstanceGroupsGet'
 -- * 'riggRegion'
 --
 -- * 'riggInstanceGroup'
+--
+-- * 'riggFields'
 regionInstanceGroupsGet
     :: Text -- ^ 'riggProject'
     -> Text -- ^ 'riggRegion'
     -> Text -- ^ 'riggInstanceGroup'
     -> RegionInstanceGroupsGet
-regionInstanceGroupsGet pRiggProject_ pRiggRegion_ pRiggInstanceGroup_ =
+regionInstanceGroupsGet pRiggProject_ pRiggRegion_ pRiggInstanceGroup_ = 
     RegionInstanceGroupsGet'
     { _riggProject = pRiggProject_
     , _riggRegion = pRiggRegion_
     , _riggInstanceGroup = pRiggInstanceGroup_
+    , _riggFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -100,6 +106,11 @@ riggInstanceGroup
   = lens _riggInstanceGroup
       (\ s a -> s{_riggInstanceGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+riggFields :: Lens' RegionInstanceGroupsGet (Maybe Text)
+riggFields
+  = lens _riggFields (\ s a -> s{_riggFields = a})
+
 instance GoogleRequest RegionInstanceGroupsGet where
         type Rs RegionInstanceGroupsGet = InstanceGroup
         type Scopes RegionInstanceGroupsGet =
@@ -108,6 +119,7 @@ instance GoogleRequest RegionInstanceGroupsGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionInstanceGroupsGet'{..}
           = go _riggProject _riggRegion _riggInstanceGroup
+              _riggFields
               (Just AltJSON)
               computeService
           where go

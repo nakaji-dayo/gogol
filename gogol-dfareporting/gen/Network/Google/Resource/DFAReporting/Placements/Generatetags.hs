@@ -37,16 +37,17 @@ module Network.Google.Resource.DFAReporting.Placements.Generatetags
     , pgsCampaignId
     , pgsProFileId
     , pgsPlacementIds
+    , pgsFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placements.generatetags@ method which the
 -- 'PlacementsGeneratetags' request conforms to.
 type PlacementsGeneratetagsResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placements" :>
@@ -56,17 +57,19 @@ type PlacementsGeneratetagsResource =
                    :>
                    QueryParam "campaignId" (Textual Int64) :>
                      QueryParams "placementIds" (Textual Int64) :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] PlacementsGenerateTagsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] PlacementsGenerateTagsResponse
 
 -- | Generates tags for a placement.
 --
 -- /See:/ 'placementsGeneratetags' smart constructor.
 data PlacementsGeneratetags = PlacementsGeneratetags'
-    { _pgsTagFormats   :: !(Maybe [PlacementsGeneratetagsTagFormats])
-    , _pgsCampaignId   :: !(Maybe (Textual Int64))
-    , _pgsProFileId    :: !(Textual Int64)
+    { _pgsTagFormats :: !(Maybe [PlacementsGeneratetagsTagFormats])
+    , _pgsCampaignId :: !(Maybe (Textual Int64))
+    , _pgsProFileId :: !(Textual Int64)
     , _pgsPlacementIds :: !(Maybe [Textual Int64])
+    , _pgsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementsGeneratetags' with the minimum fields required to make a request.
@@ -80,18 +83,22 @@ data PlacementsGeneratetags = PlacementsGeneratetags'
 -- * 'pgsProFileId'
 --
 -- * 'pgsPlacementIds'
+--
+-- * 'pgsFields'
 placementsGeneratetags
     :: Int64 -- ^ 'pgsProFileId'
     -> PlacementsGeneratetags
-placementsGeneratetags pPgsProFileId_ =
+placementsGeneratetags pPgsProFileId_ = 
     PlacementsGeneratetags'
     { _pgsTagFormats = Nothing
     , _pgsCampaignId = Nothing
     , _pgsProFileId = _Coerce # pPgsProFileId_
     , _pgsPlacementIds = Nothing
+    , _pgsFields = Nothing
     }
 
--- | Tag formats to generate for these placements.
+-- | Tag formats to generate for these placements. Note:
+-- PLACEMENT_TAG_STANDARD can only be generated for 1x1 placements.
 pgsTagFormats :: Lens' PlacementsGeneratetags [PlacementsGeneratetagsTagFormats]
 pgsTagFormats
   = lens _pgsTagFormats
@@ -121,6 +128,11 @@ pgsPlacementIds
       . _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pgsFields :: Lens' PlacementsGeneratetags (Maybe Text)
+pgsFields
+  = lens _pgsFields (\ s a -> s{_pgsFields = a})
+
 instance GoogleRequest PlacementsGeneratetags where
         type Rs PlacementsGeneratetags =
              PlacementsGenerateTagsResponse
@@ -130,6 +142,7 @@ instance GoogleRequest PlacementsGeneratetags where
           = go _pgsProFileId (_pgsTagFormats ^. _Default)
               _pgsCampaignId
               (_pgsPlacementIds ^. _Default)
+              _pgsFields
               (Just AltJSON)
               dFAReportingService
           where go

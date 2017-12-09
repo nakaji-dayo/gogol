@@ -38,10 +38,11 @@ module Network.Google.Resource.Reports.CustomerUsageReports.Get
     , curgDate
     , curgParameters
     , curgPageToken
+    , curgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Reports.Types
+import Network.Google.Prelude
+import Network.Google.Reports.Types
 
 -- | A resource alias for @reports.customerUsageReports.get@ method which the
 -- 'CustomerUsageReportsGet' request conforms to.
@@ -55,7 +56,8 @@ type CustomerUsageReportsGetResource =
                  QueryParam "customerId" Text :>
                    QueryParam "parameters" Text :>
                      QueryParam "pageToken" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] UsageReports
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] UsageReports
 
 -- | Retrieves a report which is a collection of properties \/ statistics for
 -- a specific customer.
@@ -63,9 +65,10 @@ type CustomerUsageReportsGetResource =
 -- /See:/ 'customerUsageReportsGet' smart constructor.
 data CustomerUsageReportsGet = CustomerUsageReportsGet'
     { _curgCustomerId :: !(Maybe Text)
-    , _curgDate       :: !Text
+    , _curgDate :: !Text
     , _curgParameters :: !(Maybe Text)
-    , _curgPageToken  :: !(Maybe Text)
+    , _curgPageToken :: !(Maybe Text)
+    , _curgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomerUsageReportsGet' with the minimum fields required to make a request.
@@ -79,15 +82,18 @@ data CustomerUsageReportsGet = CustomerUsageReportsGet'
 -- * 'curgParameters'
 --
 -- * 'curgPageToken'
+--
+-- * 'curgFields'
 customerUsageReportsGet
     :: Text -- ^ 'curgDate'
     -> CustomerUsageReportsGet
-customerUsageReportsGet pCurgDate_ =
+customerUsageReportsGet pCurgDate_ = 
     CustomerUsageReportsGet'
     { _curgCustomerId = Nothing
     , _curgDate = pCurgDate_
     , _curgParameters = Nothing
     , _curgPageToken = Nothing
+    , _curgFields = Nothing
     }
 
 -- | Represents the customer for which the data is to be fetched.
@@ -114,6 +120,11 @@ curgPageToken
   = lens _curgPageToken
       (\ s a -> s{_curgPageToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+curgFields :: Lens' CustomerUsageReportsGet (Maybe Text)
+curgFields
+  = lens _curgFields (\ s a -> s{_curgFields = a})
+
 instance GoogleRequest CustomerUsageReportsGet where
         type Rs CustomerUsageReportsGet = UsageReports
         type Scopes CustomerUsageReportsGet =
@@ -121,6 +132,7 @@ instance GoogleRequest CustomerUsageReportsGet where
         requestClient CustomerUsageReportsGet'{..}
           = go _curgDate _curgCustomerId _curgParameters
               _curgPageToken
+              _curgFields
               (Just AltJSON)
               reportsService
           where go

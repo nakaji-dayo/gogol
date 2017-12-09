@@ -48,10 +48,11 @@ module Network.Google.Resource.CloudMonitoring.Timeseries.List
     , tlLabels
     , tlPageToken
     , tlYoungest
+    , tlFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.timeseries.list@ method which the
 -- 'TimeseriesList' request conforms to.
@@ -70,9 +71,10 @@ type TimeseriesListResource =
                            QueryParam "oldest" Text :>
                              QueryParams "labels" Text :>
                                QueryParam "pageToken" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] ListTimeseriesRequest :>
-                                     Get '[JSON] ListTimeseriesResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] ListTimeseriesRequest :>
+                                       Get '[JSON] ListTimeseriesResponse
 
 -- | List the data points of the time series that match the metric and labels
 -- values and that have data points in the interval. Large responses are
@@ -82,17 +84,18 @@ type TimeseriesListResource =
 --
 -- /See:/ 'timeseriesList' smart constructor.
 data TimeseriesList = TimeseriesList'
-    { _tlWindow     :: !(Maybe Text)
-    , _tlProject    :: !Text
-    , _tlCount      :: !(Textual Int32)
-    , _tlPayload    :: !ListTimeseriesRequest
+    { _tlWindow :: !(Maybe Text)
+    , _tlProject :: !Text
+    , _tlCount :: !(Textual Int32)
+    , _tlPayload :: !ListTimeseriesRequest
     , _tlAggregator :: !(Maybe TimeseriesListAggregator)
-    , _tlTimespan   :: !(Maybe Text)
-    , _tlMetric     :: !Text
-    , _tlOldest     :: !(Maybe Text)
-    , _tlLabels     :: !(Maybe [Text])
-    , _tlPageToken  :: !(Maybe Text)
-    , _tlYoungest   :: !Text
+    , _tlTimespan :: !(Maybe Text)
+    , _tlMetric :: !Text
+    , _tlOldest :: !(Maybe Text)
+    , _tlLabels :: !(Maybe [Text])
+    , _tlPageToken :: !(Maybe Text)
+    , _tlYoungest :: !Text
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeseriesList' with the minimum fields required to make a request.
@@ -120,13 +123,15 @@ data TimeseriesList = TimeseriesList'
 -- * 'tlPageToken'
 --
 -- * 'tlYoungest'
+--
+-- * 'tlFields'
 timeseriesList
     :: Text -- ^ 'tlProject'
     -> ListTimeseriesRequest -- ^ 'tlPayload'
     -> Text -- ^ 'tlMetric'
     -> Text -- ^ 'tlYoungest'
     -> TimeseriesList
-timeseriesList pTlProject_ pTlPayload_ pTlMetric_ pTlYoungest_ =
+timeseriesList pTlProject_ pTlPayload_ pTlMetric_ pTlYoungest_ = 
     TimeseriesList'
     { _tlWindow = Nothing
     , _tlProject = pTlProject_
@@ -139,6 +144,7 @@ timeseriesList pTlProject_ pTlPayload_ pTlMetric_ pTlYoungest_ =
     , _tlLabels = Nothing
     , _tlPageToken = Nothing
     , _tlYoungest = pTlYoungest_
+    , _tlFields = Nothing
     }
 
 -- | The sampling window. At most one data point will be returned for each
@@ -221,6 +227,10 @@ tlYoungest :: Lens' TimeseriesList Text
 tlYoungest
   = lens _tlYoungest (\ s a -> s{_tlYoungest = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TimeseriesList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TimeseriesList where
         type Rs TimeseriesList = ListTimeseriesResponse
         type Scopes TimeseriesList =
@@ -235,6 +245,7 @@ instance GoogleRequest TimeseriesList where
               _tlOldest
               (_tlLabels ^. _Default)
               _tlPageToken
+              _tlFields
               (Just AltJSON)
               _tlPayload
               cloudMonitoringService

@@ -39,10 +39,11 @@ module Network.Google.Resource.YouTubeAnalytics.Groups.List
     , glOnBehalfOfContentOwner
     , glId
     , glPageToken
+    , glFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groups.list@ method which the
 -- 'GroupsList' request conforms to.
@@ -55,8 +56,9 @@ type GroupsListResource =
                QueryParam "onBehalfOfContentOwner" Text :>
                  QueryParam "id" Text :>
                    QueryParam "pageToken" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] GroupListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] GroupListResponse
 
 -- | Returns a collection of groups that match the API request parameters.
 -- For example, you can retrieve all groups that the authenticated user
@@ -64,10 +66,11 @@ type GroupsListResource =
 --
 -- /See:/ 'groupsList' smart constructor.
 data GroupsList = GroupsList'
-    { _glMine                   :: !(Maybe Bool)
+    { _glMine :: !(Maybe Bool)
     , _glOnBehalfOfContentOwner :: !(Maybe Text)
-    , _glId                     :: !(Maybe Text)
-    , _glPageToken              :: !(Maybe Text)
+    , _glId :: !(Maybe Text)
+    , _glPageToken :: !(Maybe Text)
+    , _glFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsList' with the minimum fields required to make a request.
@@ -81,14 +84,17 @@ data GroupsList = GroupsList'
 -- * 'glId'
 --
 -- * 'glPageToken'
+--
+-- * 'glFields'
 groupsList
     :: GroupsList
-groupsList =
+groupsList = 
     GroupsList'
     { _glMine = Nothing
     , _glOnBehalfOfContentOwner = Nothing
     , _glId = Nothing
     , _glPageToken = Nothing
+    , _glFields = Nothing
     }
 
 -- | Set this parameter\'s value to true to instruct the API to only return
@@ -124,6 +130,10 @@ glPageToken :: Lens' GroupsList (Maybe Text)
 glPageToken
   = lens _glPageToken (\ s a -> s{_glPageToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+glFields :: Lens' GroupsList (Maybe Text)
+glFields = lens _glFields (\ s a -> s{_glFields = a})
+
 instance GoogleRequest GroupsList where
         type Rs GroupsList = GroupListResponse
         type Scopes GroupsList =
@@ -134,6 +144,7 @@ instance GoogleRequest GroupsList where
         requestClient GroupsList'{..}
           = go _glMine _glOnBehalfOfContentOwner _glId
               _glPageToken
+              _glFields
               (Just AltJSON)
               youTubeAnalyticsService
           where go

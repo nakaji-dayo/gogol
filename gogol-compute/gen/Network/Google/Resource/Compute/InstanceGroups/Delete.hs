@@ -35,13 +35,15 @@ module Network.Google.Resource.Compute.InstanceGroups.Delete
     , InstanceGroupsDelete
 
     -- * Request Lenses
+    , igdRequestId
     , igdProject
     , igdZone
     , igdInstanceGroup
+    , igdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroups.delete@ method which the
 -- 'InstanceGroupsDelete' request conforms to.
@@ -54,7 +56,9 @@ type InstanceGroupsDeleteResource =
                Capture "zone" Text :>
                  "instanceGroups" :>
                    Capture "instanceGroup" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified instance group. The instances in the group are not
 -- deleted. Note that instance group must not belong to a backend service.
@@ -62,31 +66,53 @@ type InstanceGroupsDeleteResource =
 --
 -- /See:/ 'instanceGroupsDelete' smart constructor.
 data InstanceGroupsDelete = InstanceGroupsDelete'
-    { _igdProject       :: !Text
-    , _igdZone          :: !Text
+    { _igdRequestId :: !(Maybe Text)
+    , _igdProject :: !Text
+    , _igdZone :: !Text
     , _igdInstanceGroup :: !Text
+    , _igdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupsDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'igdRequestId'
+--
 -- * 'igdProject'
 --
 -- * 'igdZone'
 --
 -- * 'igdInstanceGroup'
+--
+-- * 'igdFields'
 instanceGroupsDelete
     :: Text -- ^ 'igdProject'
     -> Text -- ^ 'igdZone'
     -> Text -- ^ 'igdInstanceGroup'
     -> InstanceGroupsDelete
-instanceGroupsDelete pIgdProject_ pIgdZone_ pIgdInstanceGroup_ =
+instanceGroupsDelete pIgdProject_ pIgdZone_ pIgdInstanceGroup_ = 
     InstanceGroupsDelete'
-    { _igdProject = pIgdProject_
+    { _igdRequestId = Nothing
+    , _igdProject = pIgdProject_
     , _igdZone = pIgdZone_
     , _igdInstanceGroup = pIgdInstanceGroup_
+    , _igdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igdRequestId :: Lens' InstanceGroupsDelete (Maybe Text)
+igdRequestId
+  = lens _igdRequestId (\ s a -> s{_igdRequestId = a})
 
 -- | Project ID for this request.
 igdProject :: Lens' InstanceGroupsDelete Text
@@ -103,6 +129,11 @@ igdInstanceGroup
   = lens _igdInstanceGroup
       (\ s a -> s{_igdInstanceGroup = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igdFields :: Lens' InstanceGroupsDelete (Maybe Text)
+igdFields
+  = lens _igdFields (\ s a -> s{_igdFields = a})
+
 instance GoogleRequest InstanceGroupsDelete where
         type Rs InstanceGroupsDelete = Operation
         type Scopes InstanceGroupsDelete =
@@ -110,6 +141,8 @@ instance GoogleRequest InstanceGroupsDelete where
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupsDelete'{..}
           = go _igdProject _igdZone _igdInstanceGroup
+              _igdRequestId
+              _igdFields
               (Just AltJSON)
               computeService
           where go

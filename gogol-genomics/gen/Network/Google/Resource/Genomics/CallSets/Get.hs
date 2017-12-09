@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.CallSets.Get
     , csgUploadType
     , csgBearerToken
     , csgCallSetId
+    , csgFields
     , csgCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.callsets.get@ method which the
 -- 'CallSetsGet' request conforms to.
@@ -61,7 +62,8 @@ type CallSetsGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] CallSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] CallSet
 
 -- | Gets a call set by ID. For the definitions of call sets and other
 -- genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type CallSetsGetResource =
 --
 -- /See:/ 'callSetsGet' smart constructor.
 data CallSetsGet = CallSetsGet'
-    { _csgXgafv          :: !(Maybe Xgafv)
+    { _csgXgafv :: !(Maybe Xgafv)
     , _csgUploadProtocol :: !(Maybe Text)
-    , _csgPp             :: !Bool
-    , _csgAccessToken    :: !(Maybe Text)
-    , _csgUploadType     :: !(Maybe Text)
-    , _csgBearerToken    :: !(Maybe Text)
-    , _csgCallSetId      :: !Text
-    , _csgCallback       :: !(Maybe Text)
+    , _csgPp :: !Bool
+    , _csgAccessToken :: !(Maybe Text)
+    , _csgUploadType :: !(Maybe Text)
+    , _csgBearerToken :: !(Maybe Text)
+    , _csgCallSetId :: !Text
+    , _csgFields :: !(Maybe Text)
+    , _csgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CallSetsGet' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data CallSetsGet = CallSetsGet'
 --
 -- * 'csgCallSetId'
 --
+-- * 'csgFields'
+--
 -- * 'csgCallback'
 callSetsGet
     :: Text -- ^ 'csgCallSetId'
     -> CallSetsGet
-callSetsGet pCsgCallSetId_ =
+callSetsGet pCsgCallSetId_ = 
     CallSetsGet'
     { _csgXgafv = Nothing
     , _csgUploadProtocol = Nothing
@@ -110,6 +115,7 @@ callSetsGet pCsgCallSetId_ =
     , _csgUploadType = Nothing
     , _csgBearerToken = Nothing
     , _csgCallSetId = pCsgCallSetId_
+    , _csgFields = Nothing
     , _csgCallback = Nothing
     }
 
@@ -150,6 +156,11 @@ csgCallSetId :: Lens' CallSetsGet Text
 csgCallSetId
   = lens _csgCallSetId (\ s a -> s{_csgCallSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csgFields :: Lens' CallSetsGet (Maybe Text)
+csgFields
+  = lens _csgFields (\ s a -> s{_csgFields = a})
+
 -- | JSONP
 csgCallback :: Lens' CallSetsGet (Maybe Text)
 csgCallback
@@ -168,6 +179,7 @@ instance GoogleRequest CallSetsGet where
               _csgUploadType
               _csgBearerToken
               _csgCallback
+              _csgFields
               (Just AltJSON)
               genomicsService
           where go

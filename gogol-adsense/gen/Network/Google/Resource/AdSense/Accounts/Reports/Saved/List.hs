@@ -36,10 +36,11 @@ module Network.Google.Resource.AdSense.Accounts.Reports.Saved.List
     , arslAccountId
     , arslPageToken
     , arslMaxResults
+    , arslFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.reports.saved.list@ method which the
 -- 'AccountsReportsSavedList' request conforms to.
@@ -52,15 +53,17 @@ type AccountsReportsSavedListResource =
                "saved" :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] SavedReports
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] SavedReports
 
 -- | List all saved reports in the specified AdSense account.
 --
 -- /See:/ 'accountsReportsSavedList' smart constructor.
 data AccountsReportsSavedList = AccountsReportsSavedList'
-    { _arslAccountId  :: !Text
-    , _arslPageToken  :: !(Maybe Text)
+    { _arslAccountId :: !Text
+    , _arslPageToken :: !(Maybe Text)
     , _arslMaxResults :: !(Maybe (Textual Int32))
+    , _arslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsReportsSavedList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data AccountsReportsSavedList = AccountsReportsSavedList'
 -- * 'arslPageToken'
 --
 -- * 'arslMaxResults'
+--
+-- * 'arslFields'
 accountsReportsSavedList
     :: Text -- ^ 'arslAccountId'
     -> AccountsReportsSavedList
-accountsReportsSavedList pArslAccountId_ =
+accountsReportsSavedList pArslAccountId_ = 
     AccountsReportsSavedList'
     { _arslAccountId = pArslAccountId_
     , _arslPageToken = Nothing
     , _arslMaxResults = Nothing
+    , _arslFields = Nothing
     }
 
 -- | Account to which the saved reports belong.
@@ -104,6 +110,11 @@ arslMaxResults
       (\ s a -> s{_arslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+arslFields :: Lens' AccountsReportsSavedList (Maybe Text)
+arslFields
+  = lens _arslFields (\ s a -> s{_arslFields = a})
+
 instance GoogleRequest AccountsReportsSavedList where
         type Rs AccountsReportsSavedList = SavedReports
         type Scopes AccountsReportsSavedList =
@@ -111,6 +122,7 @@ instance GoogleRequest AccountsReportsSavedList where
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsReportsSavedList'{..}
           = go _arslAccountId _arslPageToken _arslMaxResults
+              _arslFields
               (Just AltJSON)
               adSenseService
           where go

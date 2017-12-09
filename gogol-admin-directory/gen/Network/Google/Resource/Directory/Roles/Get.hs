@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Roles.Get
     -- * Request Lenses
     , rgRoleId
     , rgCustomer
+    , rgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roles.get@ method which the
 -- 'RolesGet' request conforms to.
@@ -50,14 +51,16 @@ type RolesGetResource =
              Capture "customer" Text :>
                "roles" :>
                  Capture "roleId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Role
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Role
 
 -- | Retrieves a role.
 --
 -- /See:/ 'rolesGet' smart constructor.
 data RolesGet = RolesGet'
-    { _rgRoleId   :: !Text
+    { _rgRoleId :: !Text
     , _rgCustomer :: !Text
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesGet' with the minimum fields required to make a request.
@@ -67,24 +70,31 @@ data RolesGet = RolesGet'
 -- * 'rgRoleId'
 --
 -- * 'rgCustomer'
+--
+-- * 'rgFields'
 rolesGet
     :: Text -- ^ 'rgRoleId'
     -> Text -- ^ 'rgCustomer'
     -> RolesGet
-rolesGet pRgRoleId_ pRgCustomer_ =
+rolesGet pRgRoleId_ pRgCustomer_ = 
     RolesGet'
     { _rgRoleId = pRgRoleId_
     , _rgCustomer = pRgCustomer_
+    , _rgFields = Nothing
     }
 
 -- | Immutable ID of the role.
 rgRoleId :: Lens' RolesGet Text
 rgRoleId = lens _rgRoleId (\ s a -> s{_rgRoleId = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 rgCustomer :: Lens' RolesGet Text
 rgCustomer
   = lens _rgCustomer (\ s a -> s{_rgCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' RolesGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
 
 instance GoogleRequest RolesGet where
         type Rs RolesGet = Role
@@ -92,7 +102,7 @@ instance GoogleRequest RolesGet where
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement",
                "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"]
         requestClient RolesGet'{..}
-          = go _rgCustomer _rgRoleId (Just AltJSON)
+          = go _rgCustomer _rgRoleId _rgFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy RolesGetResource)

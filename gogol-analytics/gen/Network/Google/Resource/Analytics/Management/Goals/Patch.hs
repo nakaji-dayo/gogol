@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Goals.Patch
     , mgpProFileId
     , mgpPayload
     , mgpAccountId
+    , mgpFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.goals.patch@ method which the
 -- 'ManagementGoalsPatch' request conforms to.
@@ -57,18 +58,20 @@ type ManagementGoalsPatchResource =
                      Capture "profileId" Text :>
                        "goals" :>
                          Capture "goalId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Goal :> Patch '[JSON] Goal
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Goal :> Patch '[JSON] Goal
 
 -- | Updates an existing goal. This method supports patch semantics.
 --
 -- /See:/ 'managementGoalsPatch' smart constructor.
 data ManagementGoalsPatch = ManagementGoalsPatch'
     { _mgpWebPropertyId :: !Text
-    , _mgpGoalId        :: !Text
-    , _mgpProFileId     :: !Text
-    , _mgpPayload       :: !Goal
-    , _mgpAccountId     :: !Text
+    , _mgpGoalId :: !Text
+    , _mgpProFileId :: !Text
+    , _mgpPayload :: !Goal
+    , _mgpAccountId :: !Text
+    , _mgpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementGoalsPatch' with the minimum fields required to make a request.
@@ -84,6 +87,8 @@ data ManagementGoalsPatch = ManagementGoalsPatch'
 -- * 'mgpPayload'
 --
 -- * 'mgpAccountId'
+--
+-- * 'mgpFields'
 managementGoalsPatch
     :: Text -- ^ 'mgpWebPropertyId'
     -> Text -- ^ 'mgpGoalId'
@@ -91,13 +96,14 @@ managementGoalsPatch
     -> Goal -- ^ 'mgpPayload'
     -> Text -- ^ 'mgpAccountId'
     -> ManagementGoalsPatch
-managementGoalsPatch pMgpWebPropertyId_ pMgpGoalId_ pMgpProFileId_ pMgpPayload_ pMgpAccountId_ =
+managementGoalsPatch pMgpWebPropertyId_ pMgpGoalId_ pMgpProFileId_ pMgpPayload_ pMgpAccountId_ = 
     ManagementGoalsPatch'
     { _mgpWebPropertyId = pMgpWebPropertyId_
     , _mgpGoalId = pMgpGoalId_
     , _mgpProFileId = pMgpProFileId_
     , _mgpPayload = pMgpPayload_
     , _mgpAccountId = pMgpAccountId_
+    , _mgpFields = Nothing
     }
 
 -- | Web property ID to update the goal.
@@ -126,6 +132,11 @@ mgpAccountId :: Lens' ManagementGoalsPatch Text
 mgpAccountId
   = lens _mgpAccountId (\ s a -> s{_mgpAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mgpFields :: Lens' ManagementGoalsPatch (Maybe Text)
+mgpFields
+  = lens _mgpFields (\ s a -> s{_mgpFields = a})
+
 instance GoogleRequest ManagementGoalsPatch where
         type Rs ManagementGoalsPatch = Goal
         type Scopes ManagementGoalsPatch =
@@ -133,6 +144,7 @@ instance GoogleRequest ManagementGoalsPatch where
         requestClient ManagementGoalsPatch'{..}
           = go _mgpAccountId _mgpWebPropertyId _mgpProFileId
               _mgpGoalId
+              _mgpFields
               (Just AltJSON)
               _mgpPayload
               analyticsService

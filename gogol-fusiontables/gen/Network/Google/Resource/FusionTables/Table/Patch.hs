@@ -38,10 +38,11 @@ module Network.Google.Resource.FusionTables.Table.Patch
     , tpPayload
     , tpReplaceViewDefinition
     , tpTableId
+    , tpFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.patch@ method which the
 -- 'TablePatch' request conforms to.
@@ -51,8 +52,9 @@ type TablePatchResource =
          "tables" :>
            Capture "tableId" Text :>
              QueryParam "replaceViewDefinition" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Table :> Patch '[JSON] Table
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Table :> Patch '[JSON] Table
 
 -- | Updates an existing table. Unless explicitly requested, only the name,
 -- description, and attribution will be updated. This method supports patch
@@ -60,9 +62,10 @@ type TablePatchResource =
 --
 -- /See:/ 'tablePatch' smart constructor.
 data TablePatch = TablePatch'
-    { _tpPayload               :: !Table
+    { _tpPayload :: !Table
     , _tpReplaceViewDefinition :: !(Maybe Bool)
-    , _tpTableId               :: !Text
+    , _tpTableId :: !Text
+    , _tpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TablePatch' with the minimum fields required to make a request.
@@ -74,15 +77,18 @@ data TablePatch = TablePatch'
 -- * 'tpReplaceViewDefinition'
 --
 -- * 'tpTableId'
+--
+-- * 'tpFields'
 tablePatch
     :: Table -- ^ 'tpPayload'
     -> Text -- ^ 'tpTableId'
     -> TablePatch
-tablePatch pTpPayload_ pTpTableId_ =
+tablePatch pTpPayload_ pTpTableId_ = 
     TablePatch'
     { _tpPayload = pTpPayload_
     , _tpReplaceViewDefinition = Nothing
     , _tpTableId = pTpTableId_
+    , _tpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -103,12 +109,16 @@ tpTableId :: Lens' TablePatch Text
 tpTableId
   = lens _tpTableId (\ s a -> s{_tpTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpFields :: Lens' TablePatch (Maybe Text)
+tpFields = lens _tpFields (\ s a -> s{_tpFields = a})
+
 instance GoogleRequest TablePatch where
         type Rs TablePatch = Table
         type Scopes TablePatch =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TablePatch'{..}
-          = go _tpTableId _tpReplaceViewDefinition
+          = go _tpTableId _tpReplaceViewDefinition _tpFields
               (Just AltJSON)
               _tpPayload
               fusionTablesService

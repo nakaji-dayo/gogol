@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Entitlements.Get
     , egEntitlementId
     , egEnterpriseId
     , egUserId
+    , egFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.entitlements.get@ method which the
 -- 'EntitlementsGet' request conforms to.
@@ -52,15 +53,17 @@ type EntitlementsGetResource =
                Capture "userId" Text :>
                  "entitlements" :>
                    Capture "entitlementId" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Entitlement
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Entitlement
 
 -- | Retrieves details of an entitlement.
 --
 -- /See:/ 'entitlementsGet' smart constructor.
 data EntitlementsGet = EntitlementsGet'
     { _egEntitlementId :: !Text
-    , _egEnterpriseId  :: !Text
-    , _egUserId        :: !Text
+    , _egEnterpriseId :: !Text
+    , _egUserId :: !Text
+    , _egFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitlementsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data EntitlementsGet = EntitlementsGet'
 -- * 'egEnterpriseId'
 --
 -- * 'egUserId'
+--
+-- * 'egFields'
 entitlementsGet
     :: Text -- ^ 'egEntitlementId'
     -> Text -- ^ 'egEnterpriseId'
     -> Text -- ^ 'egUserId'
     -> EntitlementsGet
-entitlementsGet pEgEntitlementId_ pEgEnterpriseId_ pEgUserId_ =
+entitlementsGet pEgEntitlementId_ pEgEnterpriseId_ pEgUserId_ = 
     EntitlementsGet'
     { _egEntitlementId = pEgEntitlementId_
     , _egEnterpriseId = pEgEnterpriseId_
     , _egUserId = pEgUserId_
+    , _egFields = Nothing
     }
 
 -- | The ID of the entitlement (a product ID), e.g.
@@ -101,12 +107,17 @@ egEnterpriseId
 egUserId :: Lens' EntitlementsGet Text
 egUserId = lens _egUserId (\ s a -> s{_egUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egFields :: Lens' EntitlementsGet (Maybe Text)
+egFields = lens _egFields (\ s a -> s{_egFields = a})
+
 instance GoogleRequest EntitlementsGet where
         type Rs EntitlementsGet = Entitlement
         type Scopes EntitlementsGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EntitlementsGet'{..}
           = go _egEnterpriseId _egUserId _egEntitlementId
+              _egFields
               (Just AltJSON)
               androidEnterpriseService
           where go

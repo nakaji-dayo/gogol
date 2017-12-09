@@ -40,11 +40,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.List
     , ptlUploadType
     , ptlBearerToken
     , ptlProjectId
+    , ptlFields
     , ptlCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.list@ method which the
 -- 'ProjectsTriggersList' request conforms to.
@@ -60,21 +61,23 @@ type ProjectsTriggersListResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] ListBuildTriggersResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] ListBuildTriggersResponse
 
 -- | Lists existing BuildTrigger. This API is experimental.
 --
 -- /See:/ 'projectsTriggersList' smart constructor.
 data ProjectsTriggersList = ProjectsTriggersList'
-    { _ptlXgafv          :: !(Maybe Xgafv)
+    { _ptlXgafv :: !(Maybe Xgafv)
     , _ptlUploadProtocol :: !(Maybe Text)
-    , _ptlPp             :: !Bool
-    , _ptlAccessToken    :: !(Maybe Text)
-    , _ptlUploadType     :: !(Maybe Text)
-    , _ptlBearerToken    :: !(Maybe Text)
-    , _ptlProjectId      :: !Text
-    , _ptlCallback       :: !(Maybe Text)
+    , _ptlPp :: !Bool
+    , _ptlAccessToken :: !(Maybe Text)
+    , _ptlUploadType :: !(Maybe Text)
+    , _ptlBearerToken :: !(Maybe Text)
+    , _ptlProjectId :: !Text
+    , _ptlFields :: !(Maybe Text)
+    , _ptlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTriggersList' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data ProjectsTriggersList = ProjectsTriggersList'
 --
 -- * 'ptlProjectId'
 --
+-- * 'ptlFields'
+--
 -- * 'ptlCallback'
 projectsTriggersList
     :: Text -- ^ 'ptlProjectId'
     -> ProjectsTriggersList
-projectsTriggersList pPtlProjectId_ =
+projectsTriggersList pPtlProjectId_ = 
     ProjectsTriggersList'
     { _ptlXgafv = Nothing
     , _ptlUploadProtocol = Nothing
@@ -108,6 +113,7 @@ projectsTriggersList pPtlProjectId_ =
     , _ptlUploadType = Nothing
     , _ptlBearerToken = Nothing
     , _ptlProjectId = pPtlProjectId_
+    , _ptlFields = Nothing
     , _ptlCallback = Nothing
     }
 
@@ -148,6 +154,11 @@ ptlProjectId :: Lens' ProjectsTriggersList Text
 ptlProjectId
   = lens _ptlProjectId (\ s a -> s{_ptlProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptlFields :: Lens' ProjectsTriggersList (Maybe Text)
+ptlFields
+  = lens _ptlFields (\ s a -> s{_ptlFields = a})
+
 -- | JSONP
 ptlCallback :: Lens' ProjectsTriggersList (Maybe Text)
 ptlCallback
@@ -165,6 +176,7 @@ instance GoogleRequest ProjectsTriggersList where
               _ptlUploadType
               _ptlBearerToken
               _ptlCallback
+              _ptlFields
               (Just AltJSON)
               containerBuilderService
           where go

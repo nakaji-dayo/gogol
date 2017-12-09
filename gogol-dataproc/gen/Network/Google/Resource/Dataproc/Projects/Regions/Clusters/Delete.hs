@@ -42,11 +42,12 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Delete
     , prcdClusterName
     , prcdRegion
     , prcdProjectId
+    , prcdFields
     , prcdCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.clusters.delete@ method which the
 -- 'ProjectsRegionsClustersDelete' request conforms to.
@@ -58,30 +59,32 @@ type ProjectsRegionsClustersDeleteResource =
              Capture "region" Text :>
                "clusters" :>
                  Capture "clusterName" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Delete '[JSON] Operation
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Delete '[JSON] Operation
 
 -- | Deletes a cluster in a project.
 --
 -- /See:/ 'projectsRegionsClustersDelete' smart constructor.
 data ProjectsRegionsClustersDelete = ProjectsRegionsClustersDelete'
-    { _prcdXgafv          :: !(Maybe Text)
+    { _prcdXgafv :: !(Maybe Xgafv)
     , _prcdUploadProtocol :: !(Maybe Text)
-    , _prcdPp             :: !Bool
-    , _prcdAccessToken    :: !(Maybe Text)
-    , _prcdUploadType     :: !(Maybe Text)
-    , _prcdBearerToken    :: !(Maybe Text)
-    , _prcdClusterName    :: !Text
-    , _prcdRegion         :: !Text
-    , _prcdProjectId      :: !Text
-    , _prcdCallback       :: !(Maybe Text)
+    , _prcdPp :: !Bool
+    , _prcdAccessToken :: !(Maybe Text)
+    , _prcdUploadType :: !(Maybe Text)
+    , _prcdBearerToken :: !(Maybe Text)
+    , _prcdClusterName :: !Text
+    , _prcdRegion :: !Text
+    , _prcdProjectId :: !Text
+    , _prcdFields :: !(Maybe Text)
+    , _prcdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsClustersDelete' with the minimum fields required to make a request.
@@ -106,13 +109,15 @@ data ProjectsRegionsClustersDelete = ProjectsRegionsClustersDelete'
 --
 -- * 'prcdProjectId'
 --
+-- * 'prcdFields'
+--
 -- * 'prcdCallback'
 projectsRegionsClustersDelete
     :: Text -- ^ 'prcdClusterName'
     -> Text -- ^ 'prcdRegion'
     -> Text -- ^ 'prcdProjectId'
     -> ProjectsRegionsClustersDelete
-projectsRegionsClustersDelete pPrcdClusterName_ pPrcdRegion_ pPrcdProjectId_ =
+projectsRegionsClustersDelete pPrcdClusterName_ pPrcdRegion_ pPrcdProjectId_ = 
     ProjectsRegionsClustersDelete'
     { _prcdXgafv = Nothing
     , _prcdUploadProtocol = Nothing
@@ -123,11 +128,12 @@ projectsRegionsClustersDelete pPrcdClusterName_ pPrcdRegion_ pPrcdProjectId_ =
     , _prcdClusterName = pPrcdClusterName_
     , _prcdRegion = pPrcdRegion_
     , _prcdProjectId = pPrcdProjectId_
+    , _prcdFields = Nothing
     , _prcdCallback = Nothing
     }
 
 -- | V1 error format.
-prcdXgafv :: Lens' ProjectsRegionsClustersDelete (Maybe Text)
+prcdXgafv :: Lens' ProjectsRegionsClustersDelete (Maybe Xgafv)
 prcdXgafv
   = lens _prcdXgafv (\ s a -> s{_prcdXgafv = a})
 
@@ -159,23 +165,28 @@ prcdBearerToken
   = lens _prcdBearerToken
       (\ s a -> s{_prcdBearerToken = a})
 
--- | [Required] The cluster name.
+-- | Required. The cluster name.
 prcdClusterName :: Lens' ProjectsRegionsClustersDelete Text
 prcdClusterName
   = lens _prcdClusterName
       (\ s a -> s{_prcdClusterName = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prcdRegion :: Lens' ProjectsRegionsClustersDelete Text
 prcdRegion
   = lens _prcdRegion (\ s a -> s{_prcdRegion = a})
 
--- | [Required] The ID of the Google Cloud Platform project that the cluster
+-- | Required. The ID of the Google Cloud Platform project that the cluster
 -- belongs to.
 prcdProjectId :: Lens' ProjectsRegionsClustersDelete Text
 prcdProjectId
   = lens _prcdProjectId
       (\ s a -> s{_prcdProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+prcdFields :: Lens' ProjectsRegionsClustersDelete (Maybe Text)
+prcdFields
+  = lens _prcdFields (\ s a -> s{_prcdFields = a})
 
 -- | JSONP
 prcdCallback :: Lens' ProjectsRegionsClustersDelete (Maybe Text)
@@ -196,6 +207,7 @@ instance GoogleRequest ProjectsRegionsClustersDelete
               _prcdUploadType
               _prcdBearerToken
               _prcdCallback
+              _prcdFields
               (Just AltJSON)
               dataprocService
           where go

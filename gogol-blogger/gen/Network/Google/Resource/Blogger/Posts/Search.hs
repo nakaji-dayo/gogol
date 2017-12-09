@@ -37,10 +37,11 @@ module Network.Google.Resource.Blogger.Posts.Search
     , psBlogId
     , psQ
     , psFetchBodies
+    , psFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.search@ method which the
 -- 'PostsSearch' request conforms to.
@@ -54,16 +55,18 @@ type PostsSearchResource =
                  QueryParam "q" Text :>
                    QueryParam "orderBy" PostsSearchOrderBy :>
                      QueryParam "fetchBodies" Bool :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] PostList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] PostList
 
 -- | Search for a post.
 --
 -- /See:/ 'postsSearch' smart constructor.
 data PostsSearch = PostsSearch'
-    { _psOrderBy     :: !PostsSearchOrderBy
-    , _psBlogId      :: !Text
-    , _psQ           :: !Text
+    { _psOrderBy :: !PostsSearchOrderBy
+    , _psBlogId :: !Text
+    , _psQ :: !Text
     , _psFetchBodies :: !Bool
+    , _psFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsSearch' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data PostsSearch = PostsSearch'
 -- * 'psQ'
 --
 -- * 'psFetchBodies'
+--
+-- * 'psFields'
 postsSearch
     :: Text -- ^ 'psBlogId'
     -> Text -- ^ 'psQ'
     -> PostsSearch
-postsSearch pPsBlogId_ pPsQ_ =
+postsSearch pPsBlogId_ pPsQ_ = 
     PostsSearch'
     { _psOrderBy = PSOBPublished
     , _psBlogId = pPsBlogId_
     , _psQ = pPsQ_
     , _psFetchBodies = True
+    , _psFields = Nothing
     }
 
 -- | Sort search results
@@ -110,6 +116,10 @@ psFetchBodies
   = lens _psFetchBodies
       (\ s a -> s{_psFetchBodies = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psFields :: Lens' PostsSearch (Maybe Text)
+psFields = lens _psFields (\ s a -> s{_psFields = a})
+
 instance GoogleRequest PostsSearch where
         type Rs PostsSearch = PostList
         type Scopes PostsSearch =
@@ -118,6 +128,7 @@ instance GoogleRequest PostsSearch where
         requestClient PostsSearch'{..}
           = go _psBlogId (Just _psQ) (Just _psOrderBy)
               (Just _psFetchBodies)
+              _psFields
               (Just AltJSON)
               bloggerService
           where go

@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.CustomMetrics.List
     , mcmlAccountId
     , mcmlStartIndex
     , mcmlMaxResults
+    , mcmlFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customMetrics.list@ method which the
 -- 'ManagementCustomMetricsList' request conforms to.
@@ -55,16 +56,18 @@ type ManagementCustomMetricsListResource =
                    "customMetrics" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] CustomMetrics
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] CustomMetrics
 
 -- | Lists custom metrics to which the user has access.
 --
 -- /See:/ 'managementCustomMetricsList' smart constructor.
 data ManagementCustomMetricsList = ManagementCustomMetricsList'
     { _mcmlWebPropertyId :: !Text
-    , _mcmlAccountId     :: !Text
-    , _mcmlStartIndex    :: !(Maybe (Textual Int32))
-    , _mcmlMaxResults    :: !(Maybe (Textual Int32))
+    , _mcmlAccountId :: !Text
+    , _mcmlStartIndex :: !(Maybe (Textual Int32))
+    , _mcmlMaxResults :: !(Maybe (Textual Int32))
+    , _mcmlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomMetricsList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data ManagementCustomMetricsList = ManagementCustomMetricsList'
 -- * 'mcmlStartIndex'
 --
 -- * 'mcmlMaxResults'
+--
+-- * 'mcmlFields'
 managementCustomMetricsList
     :: Text -- ^ 'mcmlWebPropertyId'
     -> Text -- ^ 'mcmlAccountId'
     -> ManagementCustomMetricsList
-managementCustomMetricsList pMcmlWebPropertyId_ pMcmlAccountId_ =
+managementCustomMetricsList pMcmlWebPropertyId_ pMcmlAccountId_ = 
     ManagementCustomMetricsList'
     { _mcmlWebPropertyId = pMcmlWebPropertyId_
     , _mcmlAccountId = pMcmlAccountId_
     , _mcmlStartIndex = Nothing
     , _mcmlMaxResults = Nothing
+    , _mcmlFields = Nothing
     }
 
 -- | Web property ID for the custom metrics to retrieve.
@@ -117,6 +123,11 @@ mcmlMaxResults
       (\ s a -> s{_mcmlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mcmlFields :: Lens' ManagementCustomMetricsList (Maybe Text)
+mcmlFields
+  = lens _mcmlFields (\ s a -> s{_mcmlFields = a})
+
 instance GoogleRequest ManagementCustomMetricsList
          where
         type Rs ManagementCustomMetricsList = CustomMetrics
@@ -127,6 +138,7 @@ instance GoogleRequest ManagementCustomMetricsList
           = go _mcmlAccountId _mcmlWebPropertyId
               _mcmlStartIndex
               _mcmlMaxResults
+              _mcmlFields
               (Just AltJSON)
               analyticsService
           where go

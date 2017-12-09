@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -494,6 +494,11 @@ module Network.Google.Books.Types
     , dddwisidieiText
     , dddwisidieiSource
 
+    -- * UserSettingsNotificationRewardExpirations
+    , UserSettingsNotificationRewardExpirations
+    , userSettingsNotificationRewardExpirations
+    , usnreOptedState
+
     -- * DictlayerData
     , DictlayerData
     , dictlayerData
@@ -523,6 +528,7 @@ module Network.Google.Books.Types
     -- * UserSettingsNotification
     , UserSettingsNotification
     , userSettingsNotification
+    , usnRewardExpirations
     , usnMoreFromAuthors
     , usnMoreFromSeries
 
@@ -945,9 +951,9 @@ module Network.Google.Books.Types
     , layItems
     ) where
 
-import           Network.Google.Books.Types.Product
-import           Network.Google.Books.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Books.Types.Product
+import Network.Google.Books.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Books API. This contains the host and root path used as a starting point for constructing service requests.
 booksService :: ServiceConfig

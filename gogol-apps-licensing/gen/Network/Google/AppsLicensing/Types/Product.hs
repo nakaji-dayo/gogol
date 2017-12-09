@@ -17,8 +17,8 @@
 --
 module Network.Google.AppsLicensing.Types.Product where
 
-import           Network.Google.AppsLicensing.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types.Sum
+import Network.Google.Prelude
 
 -- | Template for LicenseAssignment Insert request
 --
@@ -34,7 +34,7 @@ newtype LicenseAssignmentInsert = LicenseAssignmentInsert'
 -- * 'laiUserId'
 licenseAssignmentInsert
     :: LicenseAssignmentInsert
-licenseAssignmentInsert =
+licenseAssignmentInsert = 
     LicenseAssignmentInsert'
     { _laiUserId = Nothing
     }
@@ -58,10 +58,10 @@ instance ToJSON LicenseAssignmentInsert where
 --
 -- /See:/ 'licenseAssignmentList' smart constructor.
 data LicenseAssignmentList = LicenseAssignmentList'
-    { _lalEtag          :: !(Maybe Text)
+    { _lalEtag :: !(Maybe Text)
     , _lalNextPageToken :: !(Maybe Text)
-    , _lalKind          :: !Text
-    , _lalItems         :: !(Maybe [LicenseAssignment])
+    , _lalKind :: !Text
+    , _lalItems :: !(Maybe [LicenseAssignment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentList' with the minimum fields required to make a request.
@@ -77,7 +77,7 @@ data LicenseAssignmentList = LicenseAssignmentList'
 -- * 'lalItems'
 licenseAssignmentList
     :: LicenseAssignmentList
-licenseAssignmentList =
+licenseAssignmentList = 
     LicenseAssignmentList'
     { _lalEtag = Nothing
     , _lalNextPageToken = Nothing
@@ -129,11 +129,13 @@ instance ToJSON LicenseAssignmentList where
 --
 -- /See:/ 'licenseAssignment' smart constructor.
 data LicenseAssignment = LicenseAssignment'
-    { _laEtags     :: !(Maybe Text)
-    , _laKind      :: !Text
-    , _laSKUId     :: !(Maybe Text)
-    , _laUserId    :: !(Maybe Text)
-    , _laSelfLink  :: !(Maybe Text)
+    { _laProductName :: !(Maybe Text)
+    , _laEtags :: !(Maybe Text)
+    , _laSKUName :: !(Maybe Text)
+    , _laKind :: !Text
+    , _laSKUId :: !(Maybe Text)
+    , _laUserId :: !(Maybe Text)
+    , _laSelfLink :: !(Maybe Text)
     , _laProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -141,7 +143,11 @@ data LicenseAssignment = LicenseAssignment'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'laProductName'
+--
 -- * 'laEtags'
+--
+-- * 'laSKUName'
 --
 -- * 'laKind'
 --
@@ -154,9 +160,11 @@ data LicenseAssignment = LicenseAssignment'
 -- * 'laProductId'
 licenseAssignment
     :: LicenseAssignment
-licenseAssignment =
+licenseAssignment = 
     LicenseAssignment'
-    { _laEtags = Nothing
+    { _laProductName = Nothing
+    , _laEtags = Nothing
+    , _laSKUName = Nothing
     , _laKind = "licensing#licenseAssignment"
     , _laSKUId = Nothing
     , _laUserId = Nothing
@@ -164,15 +172,26 @@ licenseAssignment =
     , _laProductId = Nothing
     }
 
+-- | Display Name of the product.
+laProductName :: Lens' LicenseAssignment (Maybe Text)
+laProductName
+  = lens _laProductName
+      (\ s a -> s{_laProductName = a})
+
 -- | ETag of the resource.
 laEtags :: Lens' LicenseAssignment (Maybe Text)
 laEtags = lens _laEtags (\ s a -> s{_laEtags = a})
+
+-- | Display Name of the sku of the product.
+laSKUName :: Lens' LicenseAssignment (Maybe Text)
+laSKUName
+  = lens _laSKUName (\ s a -> s{_laSKUName = a})
 
 -- | Identifies the resource as a LicenseAssignment.
 laKind :: Lens' LicenseAssignment Text
 laKind = lens _laKind (\ s a -> s{_laKind = a})
 
--- | Name of the sku of the product.
+-- | Id of the sku of the product.
 laSKUId :: Lens' LicenseAssignment (Maybe Text)
 laSKUId = lens _laSKUId (\ s a -> s{_laSKUId = a})
 
@@ -185,7 +204,7 @@ laSelfLink :: Lens' LicenseAssignment (Maybe Text)
 laSelfLink
   = lens _laSelfLink (\ s a -> s{_laSelfLink = a})
 
--- | Name of the product.
+-- | Id of the product.
 laProductId :: Lens' LicenseAssignment (Maybe Text)
 laProductId
   = lens _laProductId (\ s a -> s{_laProductId = a})
@@ -195,8 +214,9 @@ instance FromJSON LicenseAssignment where
           = withObject "LicenseAssignment"
               (\ o ->
                  LicenseAssignment' <$>
-                   (o .:? "etags") <*>
-                     (o .:? "kind" .!= "licensing#licenseAssignment")
+                   (o .:? "productName") <*> (o .:? "etags") <*>
+                     (o .:? "skuName")
+                     <*> (o .:? "kind" .!= "licensing#licenseAssignment")
                      <*> (o .:? "skuId")
                      <*> (o .:? "userId")
                      <*> (o .:? "selfLink")
@@ -206,8 +226,10 @@ instance ToJSON LicenseAssignment where
         toJSON LicenseAssignment'{..}
           = object
               (catMaybes
-                 [("etags" .=) <$> _laEtags, Just ("kind" .= _laKind),
-                  ("skuId" .=) <$> _laSKUId,
+                 [("productName" .=) <$> _laProductName,
+                  ("etags" .=) <$> _laEtags,
+                  ("skuName" .=) <$> _laSKUName,
+                  Just ("kind" .= _laKind), ("skuId" .=) <$> _laSKUId,
                   ("userId" .=) <$> _laUserId,
                   ("selfLink" .=) <$> _laSelfLink,
                   ("productId" .=) <$> _laProductId])

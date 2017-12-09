@@ -37,10 +37,11 @@ module Network.Google.Resource.Spectrum.Paws.NotifySpectrumUse
 
     -- * Request Lenses
     , pnsuPayload
+    , pnsuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Spectrum.Types
+import Network.Google.Prelude
+import Network.Google.Spectrum.Types
 
 -- | A resource alias for @spectrum.paws.notifySpectrumUse@ method which the
 -- 'PawsNotifySpectrumUse' request conforms to.
@@ -49,9 +50,10 @@ type PawsNotifySpectrumUseResource =
        "v1explorer" :>
          "paws" :>
            "notifySpectrumUse" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] PawsNotifySpectrumUseRequest :>
-                 Post '[JSON] PawsNotifySpectrumUseResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] PawsNotifySpectrumUseRequest :>
+                   Post '[JSON] PawsNotifySpectrumUseResponse
 
 -- | Notifies the database that the device has selected certain frequency
 -- ranges for transmission. Only to be invoked when required by the
@@ -59,8 +61,9 @@ type PawsNotifySpectrumUseResource =
 -- require notification, so this always yields an UNIMPLEMENTED error.
 --
 -- /See:/ 'pawsNotifySpectrumUse' smart constructor.
-newtype PawsNotifySpectrumUse = PawsNotifySpectrumUse'
-    { _pnsuPayload :: PawsNotifySpectrumUseRequest
+data PawsNotifySpectrumUse = PawsNotifySpectrumUse'
+    { _pnsuPayload :: !PawsNotifySpectrumUseRequest
+    , _pnsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PawsNotifySpectrumUse' with the minimum fields required to make a request.
@@ -68,12 +71,15 @@ newtype PawsNotifySpectrumUse = PawsNotifySpectrumUse'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pnsuPayload'
+--
+-- * 'pnsuFields'
 pawsNotifySpectrumUse
     :: PawsNotifySpectrumUseRequest -- ^ 'pnsuPayload'
     -> PawsNotifySpectrumUse
-pawsNotifySpectrumUse pPnsuPayload_ =
+pawsNotifySpectrumUse pPnsuPayload_ = 
     PawsNotifySpectrumUse'
     { _pnsuPayload = pPnsuPayload_
+    , _pnsuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -81,12 +87,18 @@ pnsuPayload :: Lens' PawsNotifySpectrumUse PawsNotifySpectrumUseRequest
 pnsuPayload
   = lens _pnsuPayload (\ s a -> s{_pnsuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pnsuFields :: Lens' PawsNotifySpectrumUse (Maybe Text)
+pnsuFields
+  = lens _pnsuFields (\ s a -> s{_pnsuFields = a})
+
 instance GoogleRequest PawsNotifySpectrumUse where
         type Rs PawsNotifySpectrumUse =
              PawsNotifySpectrumUseResponse
         type Scopes PawsNotifySpectrumUse = '[]
         requestClient PawsNotifySpectrumUse'{..}
-          = go (Just AltJSON) _pnsuPayload spectrumService
+          = go _pnsuFields (Just AltJSON) _pnsuPayload
+              spectrumService
           where go
                   = buildClient
                       (Proxy :: Proxy PawsNotifySpectrumUseResource)

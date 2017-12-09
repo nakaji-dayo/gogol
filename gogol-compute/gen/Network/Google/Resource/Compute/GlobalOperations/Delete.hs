@@ -35,10 +35,11 @@ module Network.Google.Resource.Compute.GlobalOperations.Delete
     -- * Request Lenses
     , godProject
     , godOperation
+    , godFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalOperations.delete@ method which the
 -- 'GlobalOperationsDelete' request conforms to.
@@ -50,14 +51,16 @@ type GlobalOperationsDeleteResource =
              "global" :>
                "operations" :>
                  Capture "operation" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified Operations resource.
 --
 -- /See:/ 'globalOperationsDelete' smart constructor.
 data GlobalOperationsDelete = GlobalOperationsDelete'
-    { _godProject   :: !Text
+    { _godProject :: !Text
     , _godOperation :: !Text
+    , _godFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalOperationsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data GlobalOperationsDelete = GlobalOperationsDelete'
 -- * 'godProject'
 --
 -- * 'godOperation'
+--
+-- * 'godFields'
 globalOperationsDelete
     :: Text -- ^ 'godProject'
     -> Text -- ^ 'godOperation'
     -> GlobalOperationsDelete
-globalOperationsDelete pGodProject_ pGodOperation_ =
+globalOperationsDelete pGodProject_ pGodOperation_ = 
     GlobalOperationsDelete'
     { _godProject = pGodProject_
     , _godOperation = pGodOperation_
+    , _godFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,13 +93,19 @@ godOperation :: Lens' GlobalOperationsDelete Text
 godOperation
   = lens _godOperation (\ s a -> s{_godOperation = a})
 
+-- | Selector specifying which fields to include in a partial response.
+godFields :: Lens' GlobalOperationsDelete (Maybe Text)
+godFields
+  = lens _godFields (\ s a -> s{_godFields = a})
+
 instance GoogleRequest GlobalOperationsDelete where
         type Rs GlobalOperationsDelete = ()
         type Scopes GlobalOperationsDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient GlobalOperationsDelete'{..}
-          = go _godProject _godOperation (Just AltJSON)
+          = go _godProject _godOperation _godFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

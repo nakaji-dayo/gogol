@@ -17,15 +17,15 @@
 --
 module Network.Google.WebmasterTools.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types.Sum
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types.Sum
 
 -- | Information about the various content types in the sitemap.
 --
 -- /See:/ 'wmxSitemapContent' smart constructor.
 data WmxSitemapContent = WmxSitemapContent'
-    { _wscIndexed   :: !(Maybe (Textual Int64))
-    , _wscType      :: !(Maybe Text)
+    { _wscIndexed :: !(Maybe (Textual Int64))
+    , _wscType :: !(Maybe Text)
     , _wscSubmitted :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -40,7 +40,7 @@ data WmxSitemapContent = WmxSitemapContent'
 -- * 'wscSubmitted'
 wmxSitemapContent
     :: WmxSitemapContent
-wmxSitemapContent =
+wmxSitemapContent = 
     WmxSitemapContent'
     { _wscIndexed = Nothing
     , _wscType = Nothing
@@ -83,7 +83,7 @@ instance ToJSON WmxSitemapContent where
 --
 -- /See:/ 'apidimensionFilterGroup' smart constructor.
 data APIdimensionFilterGroup = APIdimensionFilterGroup'
-    { _afgFilters   :: !(Maybe [APIdimensionFilter])
+    { _afgFilters :: !(Maybe [APIdimensionFilter])
     , _afgGroupType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -96,7 +96,7 @@ data APIdimensionFilterGroup = APIdimensionFilterGroup'
 -- * 'afgGroupType'
 apidimensionFilterGroup
     :: APIdimensionFilterGroup
-apidimensionFilterGroup =
+apidimensionFilterGroup = 
     APIdimensionFilterGroup'
     { _afgFilters = Nothing
     , _afgGroupType = Nothing
@@ -130,7 +130,7 @@ instance ToJSON APIdimensionFilterGroup where
 --
 -- /See:/ 'urlSampleDetails' smart constructor.
 data URLSampleDetails = URLSampleDetails'
-    { _usdLinkedFromURLs     :: !(Maybe [Text])
+    { _usdLinkedFromURLs :: !(Maybe [Text])
     , _usdContainingSitemaps :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -143,7 +143,7 @@ data URLSampleDetails = URLSampleDetails'
 -- * 'usdContainingSitemaps'
 urlSampleDetails
     :: URLSampleDetails
-urlSampleDetails =
+urlSampleDetails = 
     URLSampleDetails'
     { _usdLinkedFromURLs = Nothing
     , _usdContainingSitemaps = Nothing
@@ -187,7 +187,7 @@ instance ToJSON URLSampleDetails where
 -- /See:/ 'urlCrawlErrorCountsPerType' smart constructor.
 data URLCrawlErrorCountsPerType = URLCrawlErrorCountsPerType'
     { _ucecptPlatform :: !(Maybe Text)
-    , _ucecptEntries  :: !(Maybe [URLCrawlErrorCount])
+    , _ucecptEntries :: !(Maybe [URLCrawlErrorCount])
     , _ucecptCategory :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -202,7 +202,7 @@ data URLCrawlErrorCountsPerType = URLCrawlErrorCountsPerType'
 -- * 'ucecptCategory'
 urlCrawlErrorCountsPerType
     :: URLCrawlErrorCountsPerType
-urlCrawlErrorCountsPerType =
+urlCrawlErrorCountsPerType = 
     URLCrawlErrorCountsPerType'
     { _ucecptPlatform = Nothing
     , _ucecptEntries = Nothing
@@ -250,10 +250,10 @@ instance ToJSON URLCrawlErrorCountsPerType where
 -- /See:/ 'apiDataRow' smart constructor.
 data APIDataRow = APIDataRow'
     { _adrImpressions :: !(Maybe (Textual Double))
-    , _adrKeys        :: !(Maybe [Text])
-    , _adrCtr         :: !(Maybe (Textual Double))
-    , _adrClicks      :: !(Maybe (Textual Double))
-    , _adrPosition    :: !(Maybe (Textual Double))
+    , _adrKeys :: !(Maybe [Text])
+    , _adrCtr :: !(Maybe (Textual Double))
+    , _adrClicks :: !(Maybe (Textual Double))
+    , _adrPosition :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'APIDataRow' with the minimum fields required to make a request.
@@ -271,7 +271,7 @@ data APIDataRow = APIDataRow'
 -- * 'adrPosition'
 apiDataRow
     :: APIDataRow
-apiDataRow =
+apiDataRow = 
     APIDataRow'
     { _adrImpressions = Nothing
     , _adrKeys = Nothing
@@ -328,8 +328,8 @@ instance ToJSON APIDataRow where
 --
 -- /See:/ 'apidimensionFilter' smart constructor.
 data APIdimensionFilter = APIdimensionFilter'
-    { _afOperator   :: !(Maybe Text)
-    , _afDimension  :: !(Maybe Text)
+    { _afOperator :: !(Maybe Text)
+    , _afDimension :: !(Maybe Text)
     , _afExpression :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -344,7 +344,7 @@ data APIdimensionFilter = APIdimensionFilter'
 -- * 'afExpression'
 apidimensionFilter
     :: APIdimensionFilter
-apidimensionFilter =
+apidimensionFilter = 
     APIdimensionFilter'
     { _afOperator = Nothing
     , _afDimension = Nothing
@@ -383,7 +383,7 @@ instance ToJSON APIdimensionFilter where
 --
 -- /See:/ 'urlCrawlErrorCount' smart constructor.
 data URLCrawlErrorCount = URLCrawlErrorCount'
-    { _ucecCount     :: !(Maybe (Textual Int64))
+    { _ucecCount :: !(Maybe (Textual Int64))
     , _ucecTimestamp :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -396,7 +396,7 @@ data URLCrawlErrorCount = URLCrawlErrorCount'
 -- * 'ucecTimestamp'
 urlCrawlErrorCount
     :: URLCrawlErrorCount
-urlCrawlErrorCount =
+urlCrawlErrorCount = 
     URLCrawlErrorCount'
     { _ucecCount = Nothing
     , _ucecTimestamp = Nothing
@@ -435,7 +435,7 @@ instance ToJSON URLCrawlErrorCount where
 --
 -- /See:/ 'searchAnalyticsQueryResponse' smart constructor.
 data SearchAnalyticsQueryResponse = SearchAnalyticsQueryResponse'
-    { _saqrRows                    :: !(Maybe [APIDataRow])
+    { _saqrRows :: !(Maybe [APIDataRow])
     , _saqrResponseAggregationType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -448,7 +448,7 @@ data SearchAnalyticsQueryResponse = SearchAnalyticsQueryResponse'
 -- * 'saqrResponseAggregationType'
 searchAnalyticsQueryResponse
     :: SearchAnalyticsQueryResponse
-searchAnalyticsQueryResponse =
+searchAnalyticsQueryResponse = 
     SearchAnalyticsQueryResponse'
     { _saqrRows = Nothing
     , _saqrResponseAggregationType = Nothing
@@ -498,7 +498,7 @@ newtype URLCrawlErrorsSamplesListResponse = URLCrawlErrorsSamplesListResponse'
 -- * 'uceslrURLCrawlErrorSample'
 urlCrawlErrorsSamplesListResponse
     :: URLCrawlErrorsSamplesListResponse
-urlCrawlErrorsSamplesListResponse =
+urlCrawlErrorsSamplesListResponse = 
     URLCrawlErrorsSamplesListResponse'
     { _uceslrURLCrawlErrorSample = Nothing
     }
@@ -542,7 +542,7 @@ newtype URLCrawlErrorsCountsQueryResponse = URLCrawlErrorsCountsQueryResponse'
 -- * 'ucecqrCountPerTypes'
 urlCrawlErrorsCountsQueryResponse
     :: URLCrawlErrorsCountsQueryResponse
-urlCrawlErrorsCountsQueryResponse =
+urlCrawlErrorsCountsQueryResponse = 
     URLCrawlErrorsCountsQueryResponse'
     { _ucecqrCountPerTypes = Nothing
     }
@@ -575,10 +575,10 @@ instance ToJSON URLCrawlErrorsCountsQueryResponse
 --
 -- /See:/ 'urlCrawlErrorsSample' smart constructor.
 data URLCrawlErrorsSample = URLCrawlErrorsSample'
-    { _ucesResponseCode  :: !(Maybe (Textual Int32))
-    , _ucesURLDetails    :: !(Maybe URLSampleDetails)
-    , _ucesLastCrawled   :: !(Maybe DateTime')
-    , _ucesPageURL       :: !(Maybe Text)
+    { _ucesResponseCode :: !(Maybe (Textual Int32))
+    , _ucesURLDetails :: !(Maybe URLSampleDetails)
+    , _ucesLastCrawled :: !(Maybe DateTime')
+    , _ucesPageURL :: !(Maybe Text)
     , _ucesFirstDetected :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -597,7 +597,7 @@ data URLCrawlErrorsSample = URLCrawlErrorsSample'
 -- * 'ucesFirstDetected'
 urlCrawlErrorsSample
     :: URLCrawlErrorsSample
-urlCrawlErrorsSample =
+urlCrawlErrorsSample = 
     URLCrawlErrorsSample'
     { _ucesResponseCode = Nothing
     , _ucesURLDetails = Nothing
@@ -663,15 +663,15 @@ instance ToJSON URLCrawlErrorsSample where
 --
 -- /See:/ 'wmxSitemap' smart constructor.
 data WmxSitemap = WmxSitemap'
-    { _wsContents        :: !(Maybe [WmxSitemapContent])
-    , _wsPath            :: !(Maybe Text)
+    { _wsContents :: !(Maybe [WmxSitemapContent])
+    , _wsPath :: !(Maybe Text)
     , _wsIsSitemapsIndex :: !(Maybe Bool)
-    , _wsLastSubmitted   :: !(Maybe DateTime')
-    , _wsWarnings        :: !(Maybe (Textual Int64))
-    , _wsLastDownloaded  :: !(Maybe DateTime')
-    , _wsIsPending       :: !(Maybe Bool)
-    , _wsType            :: !(Maybe Text)
-    , _wsErrors          :: !(Maybe (Textual Int64))
+    , _wsLastSubmitted :: !(Maybe DateTime')
+    , _wsWarnings :: !(Maybe (Textual Int64))
+    , _wsLastDownloaded :: !(Maybe DateTime')
+    , _wsIsPending :: !(Maybe Bool)
+    , _wsType :: !(Maybe Text)
+    , _wsErrors :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WmxSitemap' with the minimum fields required to make a request.
@@ -697,7 +697,7 @@ data WmxSitemap = WmxSitemap'
 -- * 'wsErrors'
 wmxSitemap
     :: WmxSitemap
-wmxSitemap =
+wmxSitemap = 
     WmxSitemap'
     { _wsContents = Nothing
     , _wsPath = Nothing
@@ -808,7 +808,7 @@ newtype SitemapsListResponse = SitemapsListResponse'
 -- * 'slrSitemap'
 sitemapsListResponse
     :: SitemapsListResponse
-sitemapsListResponse =
+sitemapsListResponse = 
     SitemapsListResponse'
     { _slrSitemap = Nothing
     }
@@ -835,14 +835,14 @@ instance ToJSON SitemapsListResponse where
 --
 -- /See:/ 'searchAnalyticsQueryRequest' smart constructor.
 data SearchAnalyticsQueryRequest = SearchAnalyticsQueryRequest'
-    { _saqrAggregationType       :: !(Maybe Text)
-    , _saqrRowLimit              :: !(Maybe (Textual Int32))
-    , _saqrEndDate               :: !(Maybe Text)
-    , _saqrSearchType            :: !(Maybe Text)
+    { _saqrAggregationType :: !(Maybe Text)
+    , _saqrRowLimit :: !(Maybe (Textual Int32))
+    , _saqrEndDate :: !(Maybe Text)
+    , _saqrSearchType :: !(Maybe Text)
     , _saqrDimensionFilterGroups :: !(Maybe [APIdimensionFilterGroup])
-    , _saqrStartDate             :: !(Maybe Text)
-    , _saqrStartRow              :: !(Maybe (Textual Int32))
-    , _saqrDimensions            :: !(Maybe [Text])
+    , _saqrStartDate :: !(Maybe Text)
+    , _saqrStartRow :: !(Maybe (Textual Int32))
+    , _saqrDimensions :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SearchAnalyticsQueryRequest' with the minimum fields required to make a request.
@@ -866,7 +866,7 @@ data SearchAnalyticsQueryRequest = SearchAnalyticsQueryRequest'
 -- * 'saqrDimensions'
 searchAnalyticsQueryRequest
     :: SearchAnalyticsQueryRequest
-searchAnalyticsQueryRequest =
+searchAnalyticsQueryRequest = 
     SearchAnalyticsQueryRequest'
     { _saqrAggregationType = Nothing
     , _saqrRowLimit = Nothing
@@ -992,7 +992,7 @@ newtype SitesListResponse = SitesListResponse'
 -- * 'slrSiteEntry'
 sitesListResponse
     :: SitesListResponse
-sitesListResponse =
+sitesListResponse = 
     SitesListResponse'
     { _slrSiteEntry = Nothing
     }
@@ -1023,7 +1023,7 @@ instance ToJSON SitesListResponse where
 -- /See:/ 'wmxSite' smart constructor.
 data WmxSite = WmxSite'
     { _wsPermissionLevel :: !(Maybe Text)
-    , _wsSiteURL         :: !(Maybe Text)
+    , _wsSiteURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WmxSite' with the minimum fields required to make a request.
@@ -1035,7 +1035,7 @@ data WmxSite = WmxSite'
 -- * 'wsSiteURL'
 wmxSite
     :: WmxSite
-wmxSite =
+wmxSite = 
     WmxSite'
     { _wsPermissionLevel = Nothing
     , _wsSiteURL = Nothing

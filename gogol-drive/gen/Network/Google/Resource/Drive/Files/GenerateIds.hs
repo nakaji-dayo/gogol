@@ -35,10 +35,11 @@ module Network.Google.Resource.Drive.Files.GenerateIds
     -- * Request Lenses
     , fgiSpace
     , fgiCount
+    , fgiFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.generateIds@ method which the
 -- 'FilesGenerateIds' request conforms to.
@@ -49,7 +50,8 @@ type FilesGenerateIdsResource =
            "generateIds" :>
              QueryParam "space" Text :>
                QueryParam "count" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] GeneratedIds
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] GeneratedIds
 
 -- | Generates a set of file IDs which can be provided in create requests.
 --
@@ -57,6 +59,7 @@ type FilesGenerateIdsResource =
 data FilesGenerateIds = FilesGenerateIds'
     { _fgiSpace :: !Text
     , _fgiCount :: !(Textual Int32)
+    , _fgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesGenerateIds' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ data FilesGenerateIds = FilesGenerateIds'
 -- * 'fgiSpace'
 --
 -- * 'fgiCount'
+--
+-- * 'fgiFields'
 filesGenerateIds
     :: FilesGenerateIds
-filesGenerateIds =
+filesGenerateIds = 
     FilesGenerateIds'
     { _fgiSpace = "drive"
     , _fgiCount = 10
+    , _fgiFields = Nothing
     }
 
 -- | The space in which the IDs can be used to create new files. Supported
@@ -85,6 +91,11 @@ fgiCount
   = lens _fgiCount (\ s a -> s{_fgiCount = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fgiFields :: Lens' FilesGenerateIds (Maybe Text)
+fgiFields
+  = lens _fgiFields (\ s a -> s{_fgiFields = a})
+
 instance GoogleRequest FilesGenerateIds where
         type Rs FilesGenerateIds = GeneratedIds
         type Scopes FilesGenerateIds =
@@ -92,7 +103,8 @@ instance GoogleRequest FilesGenerateIds where
                "https://www.googleapis.com/auth/drive.appdata",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient FilesGenerateIds'{..}
-          = go (Just _fgiSpace) (Just _fgiCount) (Just AltJSON)
+          = go (Just _fgiSpace) (Just _fgiCount) _fgiFields
+              (Just AltJSON)
               driveService
           where go
                   = buildClient

@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.DomainAliases.Get
     -- * Request Lenses
     , dagDomainAliasName
     , dagCustomer
+    , dagFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domainAliases.get@ method which the
 -- 'DomainAliasesGet' request conforms to.
@@ -50,14 +51,16 @@ type DomainAliasesGetResource =
              Capture "customer" Text :>
                "domainaliases" :>
                  Capture "domainAliasName" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] DomainAlias
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] DomainAlias
 
 -- | Retrieves a domain alias of the customer.
 --
 -- /See:/ 'domainAliasesGet' smart constructor.
 data DomainAliasesGet = DomainAliasesGet'
     { _dagDomainAliasName :: !Text
-    , _dagCustomer        :: !Text
+    , _dagCustomer :: !Text
+    , _dagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainAliasesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data DomainAliasesGet = DomainAliasesGet'
 -- * 'dagDomainAliasName'
 --
 -- * 'dagCustomer'
+--
+-- * 'dagFields'
 domainAliasesGet
     :: Text -- ^ 'dagDomainAliasName'
     -> Text -- ^ 'dagCustomer'
     -> DomainAliasesGet
-domainAliasesGet pDagDomainAliasName_ pDagCustomer_ =
+domainAliasesGet pDagDomainAliasName_ pDagCustomer_ = 
     DomainAliasesGet'
     { _dagDomainAliasName = pDagDomainAliasName_
     , _dagCustomer = pDagCustomer_
+    , _dagFields = Nothing
     }
 
 -- | Name of domain alias to be retrieved.
@@ -83,10 +89,15 @@ dagDomainAliasName
   = lens _dagDomainAliasName
       (\ s a -> s{_dagDomainAliasName = a})
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 dagCustomer :: Lens' DomainAliasesGet Text
 dagCustomer
   = lens _dagCustomer (\ s a -> s{_dagCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+dagFields :: Lens' DomainAliasesGet (Maybe Text)
+dagFields
+  = lens _dagFields (\ s a -> s{_dagFields = a})
 
 instance GoogleRequest DomainAliasesGet where
         type Rs DomainAliasesGet = DomainAlias
@@ -94,7 +105,8 @@ instance GoogleRequest DomainAliasesGet where
              '["https://www.googleapis.com/auth/admin.directory.domain",
                "https://www.googleapis.com/auth/admin.directory.domain.readonly"]
         requestClient DomainAliasesGet'{..}
-          = go _dagCustomer _dagDomainAliasName (Just AltJSON)
+          = go _dagCustomer _dagDomainAliasName _dagFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

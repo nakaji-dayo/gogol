@@ -51,11 +51,12 @@ module Network.Google.Resource.Classroom.UserProFiles.GuardianInvitations.Get
     , upfgigUploadType
     , upfgigInvitationId
     , upfgigBearerToken
+    , upfgigFields
     , upfgigCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.userProfiles.guardianInvitations.get@ method which the
 -- 'UserProFilesGuardianInvitationsGet' request conforms to.
@@ -65,15 +66,16 @@ type UserProFilesGuardianInvitationsGetResource =
          Capture "studentId" Text :>
            "guardianInvitations" :>
              Capture "invitationId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] GuardianInvitation
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] GuardianInvitation
 
 -- | Returns a specific guardian invitation. This method returns the
 -- following error codes: * \`PERMISSION_DENIED\` if the requesting user is
@@ -89,15 +91,16 @@ type UserProFilesGuardianInvitationsGetResource =
 --
 -- /See:/ 'userProFilesGuardianInvitationsGet' smart constructor.
 data UserProFilesGuardianInvitationsGet = UserProFilesGuardianInvitationsGet'
-    { _upfgigStudentId      :: !Text
-    , _upfgigXgafv          :: !(Maybe Text)
+    { _upfgigStudentId :: !Text
+    , _upfgigXgafv :: !(Maybe Xgafv)
     , _upfgigUploadProtocol :: !(Maybe Text)
-    , _upfgigPp             :: !Bool
-    , _upfgigAccessToken    :: !(Maybe Text)
-    , _upfgigUploadType     :: !(Maybe Text)
-    , _upfgigInvitationId   :: !Text
-    , _upfgigBearerToken    :: !(Maybe Text)
-    , _upfgigCallback       :: !(Maybe Text)
+    , _upfgigPp :: !Bool
+    , _upfgigAccessToken :: !(Maybe Text)
+    , _upfgigUploadType :: !(Maybe Text)
+    , _upfgigInvitationId :: !Text
+    , _upfgigBearerToken :: !(Maybe Text)
+    , _upfgigFields :: !(Maybe Text)
+    , _upfgigCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFilesGuardianInvitationsGet' with the minimum fields required to make a request.
@@ -120,12 +123,14 @@ data UserProFilesGuardianInvitationsGet = UserProFilesGuardianInvitationsGet'
 --
 -- * 'upfgigBearerToken'
 --
+-- * 'upfgigFields'
+--
 -- * 'upfgigCallback'
 userProFilesGuardianInvitationsGet
     :: Text -- ^ 'upfgigStudentId'
     -> Text -- ^ 'upfgigInvitationId'
     -> UserProFilesGuardianInvitationsGet
-userProFilesGuardianInvitationsGet pUpfgigStudentId_ pUpfgigInvitationId_ =
+userProFilesGuardianInvitationsGet pUpfgigStudentId_ pUpfgigInvitationId_ = 
     UserProFilesGuardianInvitationsGet'
     { _upfgigStudentId = pUpfgigStudentId_
     , _upfgigXgafv = Nothing
@@ -135,6 +140,7 @@ userProFilesGuardianInvitationsGet pUpfgigStudentId_ pUpfgigInvitationId_ =
     , _upfgigUploadType = Nothing
     , _upfgigInvitationId = pUpfgigInvitationId_
     , _upfgigBearerToken = Nothing
+    , _upfgigFields = Nothing
     , _upfgigCallback = Nothing
     }
 
@@ -145,7 +151,7 @@ upfgigStudentId
       (\ s a -> s{_upfgigStudentId = a})
 
 -- | V1 error format.
-upfgigXgafv :: Lens' UserProFilesGuardianInvitationsGet (Maybe Text)
+upfgigXgafv :: Lens' UserProFilesGuardianInvitationsGet (Maybe Xgafv)
 upfgigXgafv
   = lens _upfgigXgafv (\ s a -> s{_upfgigXgafv = a})
 
@@ -183,6 +189,11 @@ upfgigBearerToken
   = lens _upfgigBearerToken
       (\ s a -> s{_upfgigBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+upfgigFields :: Lens' UserProFilesGuardianInvitationsGet (Maybe Text)
+upfgigFields
+  = lens _upfgigFields (\ s a -> s{_upfgigFields = a})
+
 -- | JSONP
 upfgigCallback :: Lens' UserProFilesGuardianInvitationsGet (Maybe Text)
 upfgigCallback
@@ -193,7 +204,9 @@ instance GoogleRequest
          UserProFilesGuardianInvitationsGet where
         type Rs UserProFilesGuardianInvitationsGet =
              GuardianInvitation
-        type Scopes UserProFilesGuardianInvitationsGet = '[]
+        type Scopes UserProFilesGuardianInvitationsGet =
+             '["https://www.googleapis.com/auth/classroom.guardianlinks.students",
+               "https://www.googleapis.com/auth/classroom.guardianlinks.students.readonly"]
         requestClient UserProFilesGuardianInvitationsGet'{..}
           = go _upfgigStudentId _upfgigInvitationId
               _upfgigXgafv
@@ -203,6 +216,7 @@ instance GoogleRequest
               _upfgigUploadType
               _upfgigBearerToken
               _upfgigCallback
+              _upfgigFields
               (Just AltJSON)
               classroomService
           where go

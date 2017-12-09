@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.CustomChannels.Get
     , accgCustomChannelId
     , accgAdClientId
     , accgAccountId
+    , accgFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.customchannels.get@ method which the
 -- 'AccountsCustomChannelsGet' request conforms to.
@@ -52,15 +53,17 @@ type AccountsCustomChannelsGetResource =
                Capture "adClientId" Text :>
                  "customchannels" :>
                    Capture "customChannelId" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] CustomChannel
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] CustomChannel
 
 -- | Get the specified custom channel from the specified ad client.
 --
 -- /See:/ 'accountsCustomChannelsGet' smart constructor.
 data AccountsCustomChannelsGet = AccountsCustomChannelsGet'
     { _accgCustomChannelId :: !Text
-    , _accgAdClientId      :: !Text
-    , _accgAccountId       :: !Text
+    , _accgAdClientId :: !Text
+    , _accgAccountId :: !Text
+    , _accgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsCustomChannelsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data AccountsCustomChannelsGet = AccountsCustomChannelsGet'
 -- * 'accgAdClientId'
 --
 -- * 'accgAccountId'
+--
+-- * 'accgFields'
 accountsCustomChannelsGet
     :: Text -- ^ 'accgCustomChannelId'
     -> Text -- ^ 'accgAdClientId'
     -> Text -- ^ 'accgAccountId'
     -> AccountsCustomChannelsGet
-accountsCustomChannelsGet pAccgCustomChannelId_ pAccgAdClientId_ pAccgAccountId_ =
+accountsCustomChannelsGet pAccgCustomChannelId_ pAccgAdClientId_ pAccgAccountId_ = 
     AccountsCustomChannelsGet'
     { _accgCustomChannelId = pAccgCustomChannelId_
     , _accgAdClientId = pAccgAdClientId_
     , _accgAccountId = pAccgAccountId_
+    , _accgFields = Nothing
     }
 
 -- | Custom channel to retrieve.
@@ -102,6 +108,11 @@ accgAccountId
   = lens _accgAccountId
       (\ s a -> s{_accgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+accgFields :: Lens' AccountsCustomChannelsGet (Maybe Text)
+accgFields
+  = lens _accgFields (\ s a -> s{_accgFields = a})
+
 instance GoogleRequest AccountsCustomChannelsGet
          where
         type Rs AccountsCustomChannelsGet = CustomChannel
@@ -111,6 +122,7 @@ instance GoogleRequest AccountsCustomChannelsGet
         requestClient AccountsCustomChannelsGet'{..}
           = go _accgAccountId _accgAdClientId
               _accgCustomChannelId
+              _accgFields
               (Just AltJSON)
               adExchangeSellerService
           where go

@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates an autoscaler in the specified project using the data included
--- in the request. This method supports patch semantics.
+-- in the request. This method supports PATCH semantics and uses the JSON
+-- merge patch format and processing rules.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.autoscalers.patch@.
 module Network.Google.Resource.Compute.Autoscalers.Patch
@@ -34,14 +35,16 @@ module Network.Google.Resource.Compute.Autoscalers.Patch
     , AutoscalersPatch
 
     -- * Request Lenses
+    , apRequestId
     , apProject
     , apZone
     , apPayload
     , apAutoscaler
+    , apFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.autoscalers.patch@ method which the
 -- 'AutoscalersPatch' request conforms to.
@@ -53,24 +56,31 @@ type AutoscalersPatchResource =
              "zones" :>
                Capture "zone" Text :>
                  "autoscalers" :>
-                   QueryParam "autoscaler" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Autoscaler :> Patch '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "autoscaler" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Autoscaler :> Patch '[JSON] Operation
 
 -- | Updates an autoscaler in the specified project using the data included
--- in the request. This method supports patch semantics.
+-- in the request. This method supports PATCH semantics and uses the JSON
+-- merge patch format and processing rules.
 --
 -- /See:/ 'autoscalersPatch' smart constructor.
 data AutoscalersPatch = AutoscalersPatch'
-    { _apProject    :: !Text
-    , _apZone       :: !Text
-    , _apPayload    :: !Autoscaler
-    , _apAutoscaler :: !Text
+    { _apRequestId :: !(Maybe Text)
+    , _apProject :: !Text
+    , _apZone :: !Text
+    , _apPayload :: !Autoscaler
+    , _apAutoscaler :: !(Maybe Text)
+    , _apFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalersPatch' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'apRequestId'
 --
 -- * 'apProject'
 --
@@ -79,19 +89,36 @@ data AutoscalersPatch = AutoscalersPatch'
 -- * 'apPayload'
 --
 -- * 'apAutoscaler'
+--
+-- * 'apFields'
 autoscalersPatch
     :: Text -- ^ 'apProject'
     -> Text -- ^ 'apZone'
     -> Autoscaler -- ^ 'apPayload'
-    -> Text -- ^ 'apAutoscaler'
     -> AutoscalersPatch
-autoscalersPatch pApProject_ pApZone_ pApPayload_ pApAutoscaler_ =
+autoscalersPatch pApProject_ pApZone_ pApPayload_ = 
     AutoscalersPatch'
-    { _apProject = pApProject_
+    { _apRequestId = Nothing
+    , _apProject = pApProject_
     , _apZone = pApZone_
     , _apPayload = pApPayload_
-    , _apAutoscaler = pApAutoscaler_
+    , _apAutoscaler = Nothing
+    , _apFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+apRequestId :: Lens' AutoscalersPatch (Maybe Text)
+apRequestId
+  = lens _apRequestId (\ s a -> s{_apRequestId = a})
 
 -- | Project ID for this request.
 apProject :: Lens' AutoscalersPatch Text
@@ -107,10 +134,14 @@ apPayload :: Lens' AutoscalersPatch Autoscaler
 apPayload
   = lens _apPayload (\ s a -> s{_apPayload = a})
 
--- | Name of the autoscaler to update.
-apAutoscaler :: Lens' AutoscalersPatch Text
+-- | Name of the autoscaler to patch.
+apAutoscaler :: Lens' AutoscalersPatch (Maybe Text)
 apAutoscaler
   = lens _apAutoscaler (\ s a -> s{_apAutoscaler = a})
+
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' AutoscalersPatch (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
 
 instance GoogleRequest AutoscalersPatch where
         type Rs AutoscalersPatch = Operation
@@ -118,7 +149,8 @@ instance GoogleRequest AutoscalersPatch where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient AutoscalersPatch'{..}
-          = go _apProject _apZone (Just _apAutoscaler)
+          = go _apProject _apZone _apRequestId _apAutoscaler
+              _apFields
               (Just AltJSON)
               _apPayload
               computeService

@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.Update
     , mpfuProFileId
     , mpfuPayload
     , mpfuAccountId
+    , mpfuFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.update@ method which the
 -- 'ManagementProFilesUpdate' request conforms to.
@@ -54,17 +55,19 @@ type ManagementProFilesUpdateResource =
                  Capture "webPropertyId" Text :>
                    "profiles" :>
                      Capture "profileId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ProFile :> Put '[JSON] ProFile
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ProFile :> Put '[JSON] ProFile
 
 -- | Updates an existing view (profile).
 --
 -- /See:/ 'managementProFilesUpdate' smart constructor.
 data ManagementProFilesUpdate = ManagementProFilesUpdate'
     { _mpfuWebPropertyId :: !Text
-    , _mpfuProFileId     :: !Text
-    , _mpfuPayload       :: !ProFile
-    , _mpfuAccountId     :: !Text
+    , _mpfuProFileId :: !Text
+    , _mpfuPayload :: !ProFile
+    , _mpfuAccountId :: !Text
+    , _mpfuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesUpdate' with the minimum fields required to make a request.
@@ -78,18 +81,21 @@ data ManagementProFilesUpdate = ManagementProFilesUpdate'
 -- * 'mpfuPayload'
 --
 -- * 'mpfuAccountId'
+--
+-- * 'mpfuFields'
 managementProFilesUpdate
     :: Text -- ^ 'mpfuWebPropertyId'
     -> Text -- ^ 'mpfuProFileId'
     -> ProFile -- ^ 'mpfuPayload'
     -> Text -- ^ 'mpfuAccountId'
     -> ManagementProFilesUpdate
-managementProFilesUpdate pMpfuWebPropertyId_ pMpfuProFileId_ pMpfuPayload_ pMpfuAccountId_ =
+managementProFilesUpdate pMpfuWebPropertyId_ pMpfuProFileId_ pMpfuPayload_ pMpfuAccountId_ = 
     ManagementProFilesUpdate'
     { _mpfuWebPropertyId = pMpfuWebPropertyId_
     , _mpfuProFileId = pMpfuProFileId_
     , _mpfuPayload = pMpfuPayload_
     , _mpfuAccountId = pMpfuAccountId_
+    , _mpfuFields = Nothing
     }
 
 -- | Web property ID to which the view (profile) belongs
@@ -115,12 +121,18 @@ mpfuAccountId
   = lens _mpfuAccountId
       (\ s a -> s{_mpfuAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfuFields :: Lens' ManagementProFilesUpdate (Maybe Text)
+mpfuFields
+  = lens _mpfuFields (\ s a -> s{_mpfuFields = a})
+
 instance GoogleRequest ManagementProFilesUpdate where
         type Rs ManagementProFilesUpdate = ProFile
         type Scopes ManagementProFilesUpdate =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementProFilesUpdate'{..}
           = go _mpfuAccountId _mpfuWebPropertyId _mpfuProFileId
+              _mpfuFields
               (Just AltJSON)
               _mpfuPayload
               analyticsService

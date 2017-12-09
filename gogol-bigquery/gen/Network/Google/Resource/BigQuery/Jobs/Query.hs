@@ -36,10 +36,11 @@ module Network.Google.Resource.BigQuery.Jobs.Query
     -- * Request Lenses
     , jqPayload
     , jqProjectId
+    , jqFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.query@ method which the
 -- 'JobsQuery' request conforms to.
@@ -49,17 +50,19 @@ type JobsQueryResource =
          "projects" :>
            Capture "projectId" Text :>
              "queries" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] QueryRequest :>
-                   Post '[JSON] QueryResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] QueryRequest :>
+                     Post '[JSON] QueryResponse
 
 -- | Runs a BigQuery SQL query synchronously and returns query results if the
 -- query completes within a specified timeout.
 --
 -- /See:/ 'jobsQuery' smart constructor.
 data JobsQuery = JobsQuery'
-    { _jqPayload   :: !QueryRequest
+    { _jqPayload :: !QueryRequest
     , _jqProjectId :: !Text
+    , _jqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsQuery' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data JobsQuery = JobsQuery'
 -- * 'jqPayload'
 --
 -- * 'jqProjectId'
+--
+-- * 'jqFields'
 jobsQuery
     :: QueryRequest -- ^ 'jqPayload'
     -> Text -- ^ 'jqProjectId'
     -> JobsQuery
-jobsQuery pJqPayload_ pJqProjectId_ =
+jobsQuery pJqPayload_ pJqProjectId_ = 
     JobsQuery'
     { _jqPayload = pJqPayload_
     , _jqProjectId = pJqProjectId_
+    , _jqFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,6 +95,10 @@ jqProjectId :: Lens' JobsQuery Text
 jqProjectId
   = lens _jqProjectId (\ s a -> s{_jqProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jqFields :: Lens' JobsQuery (Maybe Text)
+jqFields = lens _jqFields (\ s a -> s{_jqFields = a})
+
 instance GoogleRequest JobsQuery where
         type Rs JobsQuery = QueryResponse
         type Scopes JobsQuery =
@@ -96,7 +106,7 @@ instance GoogleRequest JobsQuery where
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient JobsQuery'{..}
-          = go _jqProjectId (Just AltJSON) _jqPayload
+          = go _jqProjectId _jqFields (Just AltJSON) _jqPayload
               bigQueryService
           where go
                   = buildClient (Proxy :: Proxy JobsQueryResource)

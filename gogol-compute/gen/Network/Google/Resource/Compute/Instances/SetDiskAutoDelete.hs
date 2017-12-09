@@ -33,15 +33,17 @@ module Network.Google.Resource.Compute.Instances.SetDiskAutoDelete
     , InstancesSetDiskAutoDelete
 
     -- * Request Lenses
+    , isdadRequestId
     , isdadProject
     , isdadAutoDelete
     , isdadZone
     , isdadDeviceName
+    , isdadFields
     , isdadInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.setDiskAutoDelete@ method which the
 -- 'InstancesSetDiskAutoDelete' request conforms to.
@@ -57,22 +59,29 @@ type InstancesSetDiskAutoDeleteResource =
                      "setDiskAutoDelete" :>
                        QueryParam "autoDelete" Bool :>
                          QueryParam "deviceName" Text :>
-                           QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                           QueryParam "requestId" Text :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Post '[JSON] Operation
 
 -- | Sets the auto-delete flag for a disk attached to an instance.
 --
 -- /See:/ 'instancesSetDiskAutoDelete' smart constructor.
 data InstancesSetDiskAutoDelete = InstancesSetDiskAutoDelete'
-    { _isdadProject    :: !Text
+    { _isdadRequestId :: !(Maybe Text)
+    , _isdadProject :: !Text
     , _isdadAutoDelete :: !Bool
-    , _isdadZone       :: !Text
+    , _isdadZone :: !Text
     , _isdadDeviceName :: !Text
-    , _isdadInstance   :: !Text
+    , _isdadFields :: !(Maybe Text)
+    , _isdadInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesSetDiskAutoDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'isdadRequestId'
 --
 -- * 'isdadProject'
 --
@@ -82,6 +91,8 @@ data InstancesSetDiskAutoDelete = InstancesSetDiskAutoDelete'
 --
 -- * 'isdadDeviceName'
 --
+-- * 'isdadFields'
+--
 -- * 'isdadInstance'
 instancesSetDiskAutoDelete
     :: Text -- ^ 'isdadProject'
@@ -90,14 +101,31 @@ instancesSetDiskAutoDelete
     -> Text -- ^ 'isdadDeviceName'
     -> Text -- ^ 'isdadInstance'
     -> InstancesSetDiskAutoDelete
-instancesSetDiskAutoDelete pIsdadProject_ pIsdadAutoDelete_ pIsdadZone_ pIsdadDeviceName_ pIsdadInstance_ =
+instancesSetDiskAutoDelete pIsdadProject_ pIsdadAutoDelete_ pIsdadZone_ pIsdadDeviceName_ pIsdadInstance_ = 
     InstancesSetDiskAutoDelete'
-    { _isdadProject = pIsdadProject_
+    { _isdadRequestId = Nothing
+    , _isdadProject = pIsdadProject_
     , _isdadAutoDelete = pIsdadAutoDelete_
     , _isdadZone = pIsdadZone_
     , _isdadDeviceName = pIsdadDeviceName_
+    , _isdadFields = Nothing
     , _isdadInstance = pIsdadInstance_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+isdadRequestId :: Lens' InstancesSetDiskAutoDelete (Maybe Text)
+isdadRequestId
+  = lens _isdadRequestId
+      (\ s a -> s{_isdadRequestId = a})
 
 -- | Project ID for this request.
 isdadProject :: Lens' InstancesSetDiskAutoDelete Text
@@ -121,6 +149,11 @@ isdadDeviceName
   = lens _isdadDeviceName
       (\ s a -> s{_isdadDeviceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+isdadFields :: Lens' InstancesSetDiskAutoDelete (Maybe Text)
+isdadFields
+  = lens _isdadFields (\ s a -> s{_isdadFields = a})
+
 -- | The instance name.
 isdadInstance :: Lens' InstancesSetDiskAutoDelete Text
 isdadInstance
@@ -137,6 +170,8 @@ instance GoogleRequest InstancesSetDiskAutoDelete
           = go _isdadProject _isdadZone _isdadInstance
               (Just _isdadAutoDelete)
               (Just _isdadDeviceName)
+              _isdadRequestId
+              _isdadFields
               (Just AltJSON)
               computeService
           where go

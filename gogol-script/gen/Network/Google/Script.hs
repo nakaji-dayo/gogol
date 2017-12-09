@@ -13,9 +13,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Executes Google Apps Script projects.
+-- An API for managing and executing Google Apps Script projects.
 --
--- /See:/ <https://developers.google.com/apps-script/execution/rest/v1/scripts/run Google Apps Script Execution API Reference>
+-- /See:/ <https://developers.google.com/apps-script/execution/rest/v1/scripts/run Google Apps Script API Reference>
 module Network.Google.Script
     (
     -- * Service Configuration
@@ -57,8 +57,6 @@ module Network.Google.Script
     , oDone
     , oError
     , oResponse
-    , oName
-    , oMetadata
 
     -- ** ExecutionRequest
     , ExecutionRequest
@@ -79,17 +77,15 @@ module Network.Google.Script
     , ssteFunction
     , ssteLineNumber
 
+    -- ** Xgafv
+    , Xgafv (..)
+
     -- ** ExecutionError
     , ExecutionError
     , executionError
     , eeScriptStackTraceElements
     , eeErrorType
     , eeErrorMessage
-
-    -- ** OperationMetadata
-    , OperationMetadata
-    , operationMetadata
-    , omAddtional
 
     -- ** OperationResponse
     , OperationResponse
@@ -99,17 +95,16 @@ module Network.Google.Script
     -- ** ExecutionResponse
     , ExecutionResponse
     , executionResponse
-    , erStatus
     , erResult
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.Script.Scripts.Run
-import           Network.Google.Script.Types
+import Network.Google.Prelude
+import Network.Google.Resource.Script.Scripts.Run
+import Network.Google.Script.Types
 
 {- $resources
 TODO
 -}
 
--- | Represents the entirety of the methods and resources available for the Google Apps Script Execution API service.
+-- | Represents the entirety of the methods and resources available for the Google Apps Script API service.
 type ScriptAPI = ScriptsRunResource

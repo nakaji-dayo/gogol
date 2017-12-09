@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSense.Accounts.URLChannels.List
     , auclAccountId
     , auclPageToken
     , auclMaxResults
+    , auclFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.urlchannels.list@ method which the
 -- 'AccountsURLChannelsList' request conforms to.
@@ -55,7 +56,8 @@ type AccountsURLChannelsListResource =
                  "urlchannels" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] URLChannels
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] URLChannels
 
 -- | List all URL channels in the specified ad client for the specified
 -- account.
@@ -63,9 +65,10 @@ type AccountsURLChannelsListResource =
 -- /See:/ 'accountsURLChannelsList' smart constructor.
 data AccountsURLChannelsList = AccountsURLChannelsList'
     { _auclAdClientId :: !Text
-    , _auclAccountId  :: !Text
-    , _auclPageToken  :: !(Maybe Text)
+    , _auclAccountId :: !Text
+    , _auclPageToken :: !(Maybe Text)
     , _auclMaxResults :: !(Maybe (Textual Int32))
+    , _auclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsURLChannelsList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data AccountsURLChannelsList = AccountsURLChannelsList'
 -- * 'auclPageToken'
 --
 -- * 'auclMaxResults'
+--
+-- * 'auclFields'
 accountsURLChannelsList
     :: Text -- ^ 'auclAdClientId'
     -> Text -- ^ 'auclAccountId'
     -> AccountsURLChannelsList
-accountsURLChannelsList pAuclAdClientId_ pAuclAccountId_ =
+accountsURLChannelsList pAuclAdClientId_ pAuclAccountId_ = 
     AccountsURLChannelsList'
     { _auclAdClientId = pAuclAdClientId_
     , _auclAccountId = pAuclAccountId_
     , _auclPageToken = Nothing
     , _auclMaxResults = Nothing
+    , _auclFields = Nothing
     }
 
 -- | Ad client for which to list URL channels.
@@ -119,6 +125,11 @@ auclMaxResults
       (\ s a -> s{_auclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+auclFields :: Lens' AccountsURLChannelsList (Maybe Text)
+auclFields
+  = lens _auclFields (\ s a -> s{_auclFields = a})
+
 instance GoogleRequest AccountsURLChannelsList where
         type Rs AccountsURLChannelsList = URLChannels
         type Scopes AccountsURLChannelsList =
@@ -127,6 +138,7 @@ instance GoogleRequest AccountsURLChannelsList where
         requestClient AccountsURLChannelsList'{..}
           = go _auclAccountId _auclAdClientId _auclPageToken
               _auclMaxResults
+              _auclFields
               (Just AltJSON)
               adSenseService
           where go

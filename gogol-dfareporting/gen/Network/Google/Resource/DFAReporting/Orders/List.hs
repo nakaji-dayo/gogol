@@ -43,16 +43,17 @@ module Network.Google.Resource.DFAReporting.Orders.List
     , olSortField
     , olSiteId
     , olMaxResults
+    , olFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.orders.list@ method which the
 -- 'OrdersList' request conforms to.
 type OrdersListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
@@ -65,8 +66,9 @@ type OrdersListResource =
                            QueryParam "sortField" OrdersListSortField :>
                              QueryParams "siteId" (Textual Int64) :>
                                QueryParam "maxResults" (Textual Int32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] OrdersListResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] OrdersListResponse
 
 -- | Retrieves a list of orders, possibly filtered. This method supports
 -- paging.
@@ -74,14 +76,15 @@ type OrdersListResource =
 -- /See:/ 'ordersList' smart constructor.
 data OrdersList = OrdersList'
     { _olSearchString :: !(Maybe Text)
-    , _olIds          :: !(Maybe [Textual Int64])
-    , _olProFileId    :: !(Textual Int64)
-    , _olSortOrder    :: !(Maybe OrdersListSortOrder)
-    , _olPageToken    :: !(Maybe Text)
-    , _olProjectId    :: !(Textual Int64)
-    , _olSortField    :: !(Maybe OrdersListSortField)
-    , _olSiteId       :: !(Maybe [Textual Int64])
-    , _olMaxResults   :: !(Maybe (Textual Int32))
+    , _olIds :: !(Maybe [Textual Int64])
+    , _olProFileId :: !(Textual Int64)
+    , _olSortOrder :: !OrdersListSortOrder
+    , _olPageToken :: !(Maybe Text)
+    , _olProjectId :: !(Textual Int64)
+    , _olSortField :: !OrdersListSortField
+    , _olSiteId :: !(Maybe [Textual Int64])
+    , _olMaxResults :: !(Textual Int32)
+    , _olFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersList' with the minimum fields required to make a request.
@@ -105,21 +108,24 @@ data OrdersList = OrdersList'
 -- * 'olSiteId'
 --
 -- * 'olMaxResults'
+--
+-- * 'olFields'
 ordersList
     :: Int64 -- ^ 'olProFileId'
     -> Int64 -- ^ 'olProjectId'
     -> OrdersList
-ordersList pOlProFileId_ pOlProjectId_ =
+ordersList pOlProFileId_ pOlProjectId_ = 
     OrdersList'
     { _olSearchString = Nothing
     , _olIds = Nothing
     , _olProFileId = _Coerce # pOlProFileId_
-    , _olSortOrder = Nothing
+    , _olSortOrder = OLSOAscending
     , _olPageToken = Nothing
     , _olProjectId = _Coerce # pOlProjectId_
-    , _olSortField = Nothing
+    , _olSortField = OLSFID
     , _olSiteId = Nothing
-    , _olMaxResults = Nothing
+    , _olMaxResults = 1000
+    , _olFields = Nothing
     }
 
 -- | Allows searching for orders by name or ID. Wildcards (*) are allowed.
@@ -145,8 +151,8 @@ olProFileId
   = lens _olProFileId (\ s a -> s{_olProFileId = a}) .
       _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-olSortOrder :: Lens' OrdersList (Maybe OrdersListSortOrder)
+-- | Order of sorted results.
+olSortOrder :: Lens' OrdersList OrdersListSortOrder
 olSortOrder
   = lens _olSortOrder (\ s a -> s{_olSortOrder = a})
 
@@ -162,7 +168,7 @@ olProjectId
       _Coerce
 
 -- | Field by which to sort the list.
-olSortField :: Lens' OrdersList (Maybe OrdersListSortField)
+olSortField :: Lens' OrdersList OrdersListSortField
 olSortField
   = lens _olSortField (\ s a -> s{_olSortField = a})
 
@@ -174,10 +180,14 @@ olSiteId
       . _Coerce
 
 -- | Maximum number of results to return.
-olMaxResults :: Lens' OrdersList (Maybe Int32)
+olMaxResults :: Lens' OrdersList Int32
 olMaxResults
   = lens _olMaxResults (\ s a -> s{_olMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+olFields :: Lens' OrdersList (Maybe Text)
+olFields = lens _olFields (\ s a -> s{_olFields = a})
 
 instance GoogleRequest OrdersList where
         type Rs OrdersList = OrdersListResponse
@@ -186,11 +196,12 @@ instance GoogleRequest OrdersList where
         requestClient OrdersList'{..}
           = go _olProFileId _olProjectId _olSearchString
               (_olIds ^. _Default)
-              _olSortOrder
+              (Just _olSortOrder)
               _olPageToken
-              _olSortField
+              (Just _olSortField)
               (_olSiteId ^. _Default)
-              _olMaxResults
+              (Just _olMaxResults)
+              _olFields
               (Just AltJSON)
               dFAReportingService
           where go

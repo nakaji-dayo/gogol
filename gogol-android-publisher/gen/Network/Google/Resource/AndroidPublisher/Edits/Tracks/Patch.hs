@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Tracks.Patch
     , etptPackageName
     , etptPayload
     , etptEditId
+    , etptFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.tracks.patch@ method which the
 -- 'EditsTracksPatch' request conforms to.
@@ -56,8 +57,9 @@ type EditsTracksPatchResource =
                Capture "editId" Text :>
                  "tracks" :>
                    Capture "track" EditsTracksPatchTrack :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Track :> Patch '[JSON] Track
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Track :> Patch '[JSON] Track
 
 -- | Updates the track configuration for the specified track type. When
 -- halted, the rollout track cannot be updated without adding new APKs, and
@@ -66,10 +68,11 @@ type EditsTracksPatchResource =
 --
 -- /See:/ 'editsTracksPatch' smart constructor.
 data EditsTracksPatch = EditsTracksPatch'
-    { _etptTrack       :: !EditsTracksPatchTrack
+    { _etptTrack :: !EditsTracksPatchTrack
     , _etptPackageName :: !Text
-    , _etptPayload     :: !Track
-    , _etptEditId      :: !Text
+    , _etptPayload :: !Track
+    , _etptEditId :: !Text
+    , _etptFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTracksPatch' with the minimum fields required to make a request.
@@ -83,18 +86,21 @@ data EditsTracksPatch = EditsTracksPatch'
 -- * 'etptPayload'
 --
 -- * 'etptEditId'
+--
+-- * 'etptFields'
 editsTracksPatch
     :: EditsTracksPatchTrack -- ^ 'etptTrack'
     -> Text -- ^ 'etptPackageName'
     -> Track -- ^ 'etptPayload'
     -> Text -- ^ 'etptEditId'
     -> EditsTracksPatch
-editsTracksPatch pEtptTrack_ pEtptPackageName_ pEtptPayload_ pEtptEditId_ =
+editsTracksPatch pEtptTrack_ pEtptPackageName_ pEtptPayload_ pEtptEditId_ = 
     EditsTracksPatch'
     { _etptTrack = pEtptTrack_
     , _etptPackageName = pEtptPackageName_
     , _etptPayload = pEtptPayload_
     , _etptEditId = pEtptEditId_
+    , _etptFields = Nothing
     }
 
 -- | The track type to read or modify.
@@ -119,12 +125,18 @@ etptEditId :: Lens' EditsTracksPatch Text
 etptEditId
   = lens _etptEditId (\ s a -> s{_etptEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etptFields :: Lens' EditsTracksPatch (Maybe Text)
+etptFields
+  = lens _etptFields (\ s a -> s{_etptFields = a})
+
 instance GoogleRequest EditsTracksPatch where
         type Rs EditsTracksPatch = Track
         type Scopes EditsTracksPatch =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTracksPatch'{..}
           = go _etptPackageName _etptEditId _etptTrack
+              _etptFields
               (Just AltJSON)
               _etptPayload
               androidPublisherService

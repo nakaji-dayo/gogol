@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.PageViews.Get
     -- * Request Lenses
     , pvgBlogId
     , pvgRange
+    , pvgFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pageViews.get@ method which the
 -- 'PageViewsGet' request conforms to.
@@ -49,14 +50,16 @@ type PageViewsGetResource =
            Capture "blogId" Text :>
              "pageviews" :>
                QueryParams "range" PageViewsGetRange :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Pageviews
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Pageviews
 
 -- | Retrieve pageview stats for a Blog.
 --
 -- /See:/ 'pageViewsGet' smart constructor.
 data PageViewsGet = PageViewsGet'
     { _pvgBlogId :: !Text
-    , _pvgRange  :: !(Maybe [PageViewsGetRange])
+    , _pvgRange :: !(Maybe [PageViewsGetRange])
+    , _pvgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PageViewsGet' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data PageViewsGet = PageViewsGet'
 -- * 'pvgBlogId'
 --
 -- * 'pvgRange'
+--
+-- * 'pvgFields'
 pageViewsGet
     :: Text -- ^ 'pvgBlogId'
     -> PageViewsGet
-pageViewsGet pPvgBlogId_ =
+pageViewsGet pPvgBlogId_ = 
     PageViewsGet'
     { _pvgBlogId = pPvgBlogId_
     , _pvgRange = Nothing
+    , _pvgFields = Nothing
     }
 
 -- | The ID of the blog to get.
@@ -86,12 +92,17 @@ pvgRange
       _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pvgFields :: Lens' PageViewsGet (Maybe Text)
+pvgFields
+  = lens _pvgFields (\ s a -> s{_pvgFields = a})
+
 instance GoogleRequest PageViewsGet where
         type Rs PageViewsGet = Pageviews
         type Scopes PageViewsGet =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PageViewsGet'{..}
-          = go _pvgBlogId (_pvgRange ^. _Default)
+          = go _pvgBlogId (_pvgRange ^. _Default) _pvgFields
               (Just AltJSON)
               bloggerService
           where go

@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.VPNTunnels.Insert
     , VPNTunnelsInsert
 
     -- * Request Lenses
+    , vtiRequestId
     , vtiProject
     , vtiPayload
     , vtiRegion
+    , vtiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.vpnTunnels.insert@ method which the
 -- 'VPNTunnelsInsert' request conforms to.
@@ -52,39 +54,63 @@ type VPNTunnelsInsertResource =
              "regions" :>
                Capture "region" Text :>
                  "vpnTunnels" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] VPNTunnel :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] VPNTunnel :> Post '[JSON] Operation
 
 -- | Creates a VpnTunnel resource in the specified project and region using
 -- the data included in the request.
 --
 -- /See:/ 'vpnTunnelsInsert' smart constructor.
 data VPNTunnelsInsert = VPNTunnelsInsert'
-    { _vtiProject :: !Text
+    { _vtiRequestId :: !(Maybe Text)
+    , _vtiProject :: !Text
     , _vtiPayload :: !VPNTunnel
-    , _vtiRegion  :: !Text
+    , _vtiRegion :: !Text
+    , _vtiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VPNTunnelsInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'vtiRequestId'
+--
 -- * 'vtiProject'
 --
 -- * 'vtiPayload'
 --
 -- * 'vtiRegion'
+--
+-- * 'vtiFields'
 vpnTunnelsInsert
     :: Text -- ^ 'vtiProject'
     -> VPNTunnel -- ^ 'vtiPayload'
     -> Text -- ^ 'vtiRegion'
     -> VPNTunnelsInsert
-vpnTunnelsInsert pVtiProject_ pVtiPayload_ pVtiRegion_ =
+vpnTunnelsInsert pVtiProject_ pVtiPayload_ pVtiRegion_ = 
     VPNTunnelsInsert'
-    { _vtiProject = pVtiProject_
+    { _vtiRequestId = Nothing
+    , _vtiProject = pVtiProject_
     , _vtiPayload = pVtiPayload_
     , _vtiRegion = pVtiRegion_
+    , _vtiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+vtiRequestId :: Lens' VPNTunnelsInsert (Maybe Text)
+vtiRequestId
+  = lens _vtiRequestId (\ s a -> s{_vtiRequestId = a})
 
 -- | Project ID for this request.
 vtiProject :: Lens' VPNTunnelsInsert Text
@@ -101,13 +127,19 @@ vtiRegion :: Lens' VPNTunnelsInsert Text
 vtiRegion
   = lens _vtiRegion (\ s a -> s{_vtiRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vtiFields :: Lens' VPNTunnelsInsert (Maybe Text)
+vtiFields
+  = lens _vtiFields (\ s a -> s{_vtiFields = a})
+
 instance GoogleRequest VPNTunnelsInsert where
         type Rs VPNTunnelsInsert = Operation
         type Scopes VPNTunnelsInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient VPNTunnelsInsert'{..}
-          = go _vtiProject _vtiRegion (Just AltJSON)
+          = go _vtiProject _vtiRegion _vtiRequestId _vtiFields
+              (Just AltJSON)
               _vtiPayload
               computeService
           where go

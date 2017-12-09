@@ -37,10 +37,11 @@ module Network.Google.Resource.FusionTables.Column.Patch
     , cpPayload
     , cpTableId
     , cpColumnId
+    , cpFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.column.patch@ method which the
 -- 'ColumnPatch' request conforms to.
@@ -51,17 +52,19 @@ type ColumnPatchResource =
            Capture "tableId" Text :>
              "columns" :>
                Capture "columnId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Column :> Patch '[JSON] Column
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Column :> Patch '[JSON] Column
 
 -- | Updates the name or type of an existing column. This method supports
 -- patch semantics.
 --
 -- /See:/ 'columnPatch' smart constructor.
 data ColumnPatch = ColumnPatch'
-    { _cpPayload  :: !Column
-    , _cpTableId  :: !Text
+    { _cpPayload :: !Column
+    , _cpTableId :: !Text
     , _cpColumnId :: !Text
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColumnPatch' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ColumnPatch = ColumnPatch'
 -- * 'cpTableId'
 --
 -- * 'cpColumnId'
+--
+-- * 'cpFields'
 columnPatch
     :: Column -- ^ 'cpPayload'
     -> Text -- ^ 'cpTableId'
     -> Text -- ^ 'cpColumnId'
     -> ColumnPatch
-columnPatch pCpPayload_ pCpTableId_ pCpColumnId_ =
+columnPatch pCpPayload_ pCpTableId_ pCpColumnId_ = 
     ColumnPatch'
     { _cpPayload = pCpPayload_
     , _cpTableId = pCpTableId_
     , _cpColumnId = pCpColumnId_
+    , _cpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -100,12 +106,17 @@ cpColumnId :: Lens' ColumnPatch Text
 cpColumnId
   = lens _cpColumnId (\ s a -> s{_cpColumnId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' ColumnPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest ColumnPatch where
         type Rs ColumnPatch = Column
         type Scopes ColumnPatch =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient ColumnPatch'{..}
-          = go _cpTableId _cpColumnId (Just AltJSON) _cpPayload
+          = go _cpTableId _cpColumnId _cpFields (Just AltJSON)
+              _cpPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy ColumnPatchResource)

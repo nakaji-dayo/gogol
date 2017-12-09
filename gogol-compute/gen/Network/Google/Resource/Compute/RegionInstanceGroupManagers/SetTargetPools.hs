@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.SetTargetPool
     , RegionInstanceGroupManagersSetTargetPools
 
     -- * Request Lenses
+    , rigmstpRequestId
     , rigmstpProject
     , rigmstpInstanceGroupManager
     , rigmstpPayload
     , rigmstpRegion
+    , rigmstpFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.setTargetPools@ method which the
 -- 'RegionInstanceGroupManagersSetTargetPools' request conforms to.
@@ -56,25 +58,31 @@ type RegionInstanceGroupManagersSetTargetPoolsResource
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "setTargetPools" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           RegionInstanceGroupManagersSetTargetPoolsRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON]
+                               RegionInstanceGroupManagersSetTargetPoolsRequest
+                               :> Post '[JSON] Operation
 
 -- | Modifies the target pools to which all new instances in this group are
 -- assigned. Existing instances in the group are not affected.
 --
 -- /See:/ 'regionInstanceGroupManagersSetTargetPools' smart constructor.
 data RegionInstanceGroupManagersSetTargetPools = RegionInstanceGroupManagersSetTargetPools'
-    { _rigmstpProject              :: !Text
+    { _rigmstpRequestId :: !(Maybe Text)
+    , _rigmstpProject :: !Text
     , _rigmstpInstanceGroupManager :: !Text
-    , _rigmstpPayload              :: !RegionInstanceGroupManagersSetTargetPoolsRequest
-    , _rigmstpRegion               :: !Text
+    , _rigmstpPayload :: !RegionInstanceGroupManagersSetTargetPoolsRequest
+    , _rigmstpRegion :: !Text
+    , _rigmstpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersSetTargetPools' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rigmstpRequestId'
 --
 -- * 'rigmstpProject'
 --
@@ -83,19 +91,38 @@ data RegionInstanceGroupManagersSetTargetPools = RegionInstanceGroupManagersSetT
 -- * 'rigmstpPayload'
 --
 -- * 'rigmstpRegion'
+--
+-- * 'rigmstpFields'
 regionInstanceGroupManagersSetTargetPools
     :: Text -- ^ 'rigmstpProject'
     -> Text -- ^ 'rigmstpInstanceGroupManager'
     -> RegionInstanceGroupManagersSetTargetPoolsRequest -- ^ 'rigmstpPayload'
     -> Text -- ^ 'rigmstpRegion'
     -> RegionInstanceGroupManagersSetTargetPools
-regionInstanceGroupManagersSetTargetPools pRigmstpProject_ pRigmstpInstanceGroupManager_ pRigmstpPayload_ pRigmstpRegion_ =
+regionInstanceGroupManagersSetTargetPools pRigmstpProject_ pRigmstpInstanceGroupManager_ pRigmstpPayload_ pRigmstpRegion_ = 
     RegionInstanceGroupManagersSetTargetPools'
-    { _rigmstpProject = pRigmstpProject_
+    { _rigmstpRequestId = Nothing
+    , _rigmstpProject = pRigmstpProject_
     , _rigmstpInstanceGroupManager = pRigmstpInstanceGroupManager_
     , _rigmstpPayload = pRigmstpPayload_
     , _rigmstpRegion = pRigmstpRegion_
+    , _rigmstpFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rigmstpRequestId :: Lens' RegionInstanceGroupManagersSetTargetPools (Maybe Text)
+rigmstpRequestId
+  = lens _rigmstpRequestId
+      (\ s a -> s{_rigmstpRequestId = a})
 
 -- | Project ID for this request.
 rigmstpProject :: Lens' RegionInstanceGroupManagersSetTargetPools Text
@@ -121,6 +148,12 @@ rigmstpRegion
   = lens _rigmstpRegion
       (\ s a -> s{_rigmstpRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmstpFields :: Lens' RegionInstanceGroupManagersSetTargetPools (Maybe Text)
+rigmstpFields
+  = lens _rigmstpFields
+      (\ s a -> s{_rigmstpFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersSetTargetPools where
         type Rs RegionInstanceGroupManagersSetTargetPools =
@@ -133,6 +166,8 @@ instance GoogleRequest
           RegionInstanceGroupManagersSetTargetPools'{..}
           = go _rigmstpProject _rigmstpRegion
               _rigmstpInstanceGroupManager
+              _rigmstpRequestId
+              _rigmstpFields
               (Just AltJSON)
               _rigmstpPayload
               computeService

@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.Projects.Metrics.Update
     , pmuUploadType
     , pmuPayload
     , pmuBearerToken
+    , pmuFields
     , pmuCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.metrics.update@ method which the
 -- 'ProjectsMetricsUpdate' request conforms to.
@@ -59,22 +60,24 @@ type ProjectsMetricsUpdateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] LogMetric :> Put '[JSON] LogMetric
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] LogMetric :> Put '[JSON] LogMetric
 
 -- | Creates or updates a logs-based metric.
 --
 -- /See:/ 'projectsMetricsUpdate' smart constructor.
 data ProjectsMetricsUpdate = ProjectsMetricsUpdate'
-    { _pmuXgafv          :: !(Maybe Xgafv)
+    { _pmuXgafv :: !(Maybe Xgafv)
     , _pmuUploadProtocol :: !(Maybe Text)
-    , _pmuPp             :: !Bool
-    , _pmuAccessToken    :: !(Maybe Text)
-    , _pmuMetricName     :: !Text
-    , _pmuUploadType     :: !(Maybe Text)
-    , _pmuPayload        :: !LogMetric
-    , _pmuBearerToken    :: !(Maybe Text)
-    , _pmuCallback       :: !(Maybe Text)
+    , _pmuPp :: !Bool
+    , _pmuAccessToken :: !(Maybe Text)
+    , _pmuMetricName :: !Text
+    , _pmuUploadType :: !(Maybe Text)
+    , _pmuPayload :: !LogMetric
+    , _pmuBearerToken :: !(Maybe Text)
+    , _pmuFields :: !(Maybe Text)
+    , _pmuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricsUpdate' with the minimum fields required to make a request.
@@ -97,12 +100,14 @@ data ProjectsMetricsUpdate = ProjectsMetricsUpdate'
 --
 -- * 'pmuBearerToken'
 --
+-- * 'pmuFields'
+--
 -- * 'pmuCallback'
 projectsMetricsUpdate
     :: Text -- ^ 'pmuMetricName'
     -> LogMetric -- ^ 'pmuPayload'
     -> ProjectsMetricsUpdate
-projectsMetricsUpdate pPmuMetricName_ pPmuPayload_ =
+projectsMetricsUpdate pPmuMetricName_ pPmuPayload_ = 
     ProjectsMetricsUpdate'
     { _pmuXgafv = Nothing
     , _pmuUploadProtocol = Nothing
@@ -112,6 +117,7 @@ projectsMetricsUpdate pPmuMetricName_ pPmuPayload_ =
     , _pmuUploadType = Nothing
     , _pmuPayload = pPmuPayload_
     , _pmuBearerToken = Nothing
+    , _pmuFields = Nothing
     , _pmuCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ pmuBearerToken
   = lens _pmuBearerToken
       (\ s a -> s{_pmuBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmuFields :: Lens' ProjectsMetricsUpdate (Maybe Text)
+pmuFields
+  = lens _pmuFields (\ s a -> s{_pmuFields = a})
+
 -- | JSONP
 pmuCallback :: Lens' ProjectsMetricsUpdate (Maybe Text)
 pmuCallback
@@ -180,6 +191,7 @@ instance GoogleRequest ProjectsMetricsUpdate where
               _pmuUploadType
               _pmuBearerToken
               _pmuCallback
+              _pmuFields
               (Just AltJSON)
               _pmuPayload
               loggingService

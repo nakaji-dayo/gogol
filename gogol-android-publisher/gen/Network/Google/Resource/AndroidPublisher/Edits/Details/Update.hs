@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Details.Update
     , eduPackageName
     , eduPayload
     , eduEditId
+    , eduFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.details.update@ method which the
 -- 'EditsDetailsUpdate' request conforms to.
@@ -51,16 +52,18 @@ type EditsDetailsUpdateResource =
              "edits" :>
                Capture "editId" Text :>
                  "details" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] AppDetails :> Put '[JSON] AppDetails
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] AppDetails :> Put '[JSON] AppDetails
 
 -- | Updates app details for this edit.
 --
 -- /See:/ 'editsDetailsUpdate' smart constructor.
 data EditsDetailsUpdate = EditsDetailsUpdate'
     { _eduPackageName :: !Text
-    , _eduPayload     :: !AppDetails
-    , _eduEditId      :: !Text
+    , _eduPayload :: !AppDetails
+    , _eduEditId :: !Text
+    , _eduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsDetailsUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data EditsDetailsUpdate = EditsDetailsUpdate'
 -- * 'eduPayload'
 --
 -- * 'eduEditId'
+--
+-- * 'eduFields'
 editsDetailsUpdate
     :: Text -- ^ 'eduPackageName'
     -> AppDetails -- ^ 'eduPayload'
     -> Text -- ^ 'eduEditId'
     -> EditsDetailsUpdate
-editsDetailsUpdate pEduPackageName_ pEduPayload_ pEduEditId_ =
+editsDetailsUpdate pEduPackageName_ pEduPayload_ pEduEditId_ = 
     EditsDetailsUpdate'
     { _eduPackageName = pEduPackageName_
     , _eduPayload = pEduPayload_
     , _eduEditId = pEduEditId_
+    , _eduFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -101,12 +107,18 @@ eduEditId :: Lens' EditsDetailsUpdate Text
 eduEditId
   = lens _eduEditId (\ s a -> s{_eduEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eduFields :: Lens' EditsDetailsUpdate (Maybe Text)
+eduFields
+  = lens _eduFields (\ s a -> s{_eduFields = a})
+
 instance GoogleRequest EditsDetailsUpdate where
         type Rs EditsDetailsUpdate = AppDetails
         type Scopes EditsDetailsUpdate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsDetailsUpdate'{..}
-          = go _eduPackageName _eduEditId (Just AltJSON)
+          = go _eduPackageName _eduEditId _eduFields
+              (Just AltJSON)
               _eduPayload
               androidPublisherService
           where go

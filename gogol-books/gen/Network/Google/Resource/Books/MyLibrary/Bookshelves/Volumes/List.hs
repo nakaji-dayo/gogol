@@ -41,10 +41,11 @@ module Network.Google.Resource.Books.MyLibrary.Bookshelves.Volumes.List
     , mlbvlStartIndex
     , mlbvlMaxResults
     , mlbvlShowPreOrders
+    , mlbvlFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.bookshelves.volumes.list@ method which the
 -- 'MyLibraryBookshelvesVolumesList' request conforms to.
@@ -64,20 +65,22 @@ type MyLibraryBookshelvesVolumesListResource =
                          QueryParam "startIndex" (Textual Word32) :>
                            QueryParam "maxResults" (Textual Word32) :>
                              QueryParam "showPreorders" Bool :>
-                               QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Gets volume information for volumes on a bookshelf.
 --
 -- /See:/ 'myLibraryBookshelvesVolumesList' smart constructor.
 data MyLibraryBookshelvesVolumesList = MyLibraryBookshelvesVolumesList'
-    { _mlbvlCountry       :: !(Maybe Text)
-    , _mlbvlQ             :: !(Maybe Text)
-    , _mlbvlShelf         :: !Text
-    , _mlbvlSource        :: !(Maybe Text)
-    , _mlbvlProjection    :: !(Maybe MyLibraryBookshelvesVolumesListProjection)
-    , _mlbvlStartIndex    :: !(Maybe (Textual Word32))
-    , _mlbvlMaxResults    :: !(Maybe (Textual Word32))
+    { _mlbvlCountry :: !(Maybe Text)
+    , _mlbvlQ :: !(Maybe Text)
+    , _mlbvlShelf :: !Text
+    , _mlbvlSource :: !(Maybe Text)
+    , _mlbvlProjection :: !(Maybe MyLibraryBookshelvesVolumesListProjection)
+    , _mlbvlStartIndex :: !(Maybe (Textual Word32))
+    , _mlbvlMaxResults :: !(Maybe (Textual Word32))
     , _mlbvlShowPreOrders :: !(Maybe Bool)
+    , _mlbvlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryBookshelvesVolumesList' with the minimum fields required to make a request.
@@ -99,10 +102,12 @@ data MyLibraryBookshelvesVolumesList = MyLibraryBookshelvesVolumesList'
 -- * 'mlbvlMaxResults'
 --
 -- * 'mlbvlShowPreOrders'
+--
+-- * 'mlbvlFields'
 myLibraryBookshelvesVolumesList
     :: Text -- ^ 'mlbvlShelf'
     -> MyLibraryBookshelvesVolumesList
-myLibraryBookshelvesVolumesList pMlbvlShelf_ =
+myLibraryBookshelvesVolumesList pMlbvlShelf_ = 
     MyLibraryBookshelvesVolumesList'
     { _mlbvlCountry = Nothing
     , _mlbvlQ = Nothing
@@ -112,6 +117,7 @@ myLibraryBookshelvesVolumesList pMlbvlShelf_ =
     , _mlbvlStartIndex = Nothing
     , _mlbvlMaxResults = Nothing
     , _mlbvlShowPreOrders = Nothing
+    , _mlbvlFields = Nothing
     }
 
 -- | ISO-3166-1 code to override the IP-based location.
@@ -159,6 +165,11 @@ mlbvlShowPreOrders
   = lens _mlbvlShowPreOrders
       (\ s a -> s{_mlbvlShowPreOrders = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlbvlFields :: Lens' MyLibraryBookshelvesVolumesList (Maybe Text)
+mlbvlFields
+  = lens _mlbvlFields (\ s a -> s{_mlbvlFields = a})
+
 instance GoogleRequest
          MyLibraryBookshelvesVolumesList where
         type Rs MyLibraryBookshelvesVolumesList = Volumes
@@ -170,6 +181,7 @@ instance GoogleRequest
               _mlbvlStartIndex
               _mlbvlMaxResults
               _mlbvlShowPreOrders
+              _mlbvlFields
               (Just AltJSON)
               booksService
           where go

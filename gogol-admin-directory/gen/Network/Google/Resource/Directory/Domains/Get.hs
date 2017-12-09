@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Domains.Get
     -- * Request Lenses
     , dgCustomer
     , dgDomainName
+    , dgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domains.get@ method which the
 -- 'DomainsGet' request conforms to.
@@ -50,14 +51,16 @@ type DomainsGetResource =
              Capture "customer" Text :>
                "domains" :>
                  Capture "domainName" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Domains
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Domains
 
 -- | Retrieves a domain of the customer.
 --
 -- /See:/ 'domainsGet' smart constructor.
 data DomainsGet = DomainsGet'
-    { _dgCustomer   :: !Text
+    { _dgCustomer :: !Text
     , _dgDomainName :: !Text
+    , _dgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainsGet' with the minimum fields required to make a request.
@@ -67,17 +70,20 @@ data DomainsGet = DomainsGet'
 -- * 'dgCustomer'
 --
 -- * 'dgDomainName'
+--
+-- * 'dgFields'
 domainsGet
     :: Text -- ^ 'dgCustomer'
     -> Text -- ^ 'dgDomainName'
     -> DomainsGet
-domainsGet pDgCustomer_ pDgDomainName_ =
+domainsGet pDgCustomer_ pDgDomainName_ = 
     DomainsGet'
     { _dgCustomer = pDgCustomer_
     , _dgDomainName = pDgDomainName_
+    , _dgFields = Nothing
     }
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 dgCustomer :: Lens' DomainsGet Text
 dgCustomer
   = lens _dgCustomer (\ s a -> s{_dgCustomer = a})
@@ -87,13 +93,18 @@ dgDomainName :: Lens' DomainsGet Text
 dgDomainName
   = lens _dgDomainName (\ s a -> s{_dgDomainName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgFields :: Lens' DomainsGet (Maybe Text)
+dgFields = lens _dgFields (\ s a -> s{_dgFields = a})
+
 instance GoogleRequest DomainsGet where
         type Rs DomainsGet = Domains
         type Scopes DomainsGet =
              '["https://www.googleapis.com/auth/admin.directory.domain",
                "https://www.googleapis.com/auth/admin.directory.domain.readonly"]
         requestClient DomainsGet'{..}
-          = go _dgCustomer _dgDomainName (Just AltJSON)
+          = go _dgCustomer _dgDomainName _dgFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy DomainsGetResource)

@@ -35,11 +35,13 @@ module Network.Google.Resource.Storage.DefaultObjectAccessControls.List
     -- * Request Lenses
     , doaclIfMetagenerationMatch
     , doaclBucket
+    , doaclUserProject
     , doaclIfMetagenerationNotMatch
+    , doaclFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.defaultObjectAccessControls.list@ method which the
 -- 'DefaultObjectAccessControlsList' request conforms to.
@@ -50,18 +52,22 @@ type DefaultObjectAccessControlsListResource =
            Capture "bucket" Text :>
              "defaultObjectAcl" :>
                QueryParam "ifMetagenerationMatch" (Textual Int64) :>
-                 QueryParam "ifMetagenerationNotMatch" (Textual Int64)
-                   :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ObjectAccessControls
+                 QueryParam "userProject" Text :>
+                   QueryParam "ifMetagenerationNotMatch" (Textual Int64)
+                     :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] ObjectAccessControls
 
 -- | Retrieves default object ACL entries on the specified bucket.
 --
 -- /See:/ 'defaultObjectAccessControlsList' smart constructor.
 data DefaultObjectAccessControlsList = DefaultObjectAccessControlsList'
-    { _doaclIfMetagenerationMatch    :: !(Maybe (Textual Int64))
-    , _doaclBucket                   :: !Text
+    { _doaclIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _doaclBucket :: !Text
+    , _doaclUserProject :: !(Maybe Text)
     , _doaclIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
+    , _doaclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DefaultObjectAccessControlsList' with the minimum fields required to make a request.
@@ -72,15 +78,21 @@ data DefaultObjectAccessControlsList = DefaultObjectAccessControlsList'
 --
 -- * 'doaclBucket'
 --
+-- * 'doaclUserProject'
+--
 -- * 'doaclIfMetagenerationNotMatch'
+--
+-- * 'doaclFields'
 defaultObjectAccessControlsList
     :: Text -- ^ 'doaclBucket'
     -> DefaultObjectAccessControlsList
-defaultObjectAccessControlsList pDoaclBucket_ =
+defaultObjectAccessControlsList pDoaclBucket_ = 
     DefaultObjectAccessControlsList'
     { _doaclIfMetagenerationMatch = Nothing
     , _doaclBucket = pDoaclBucket_
+    , _doaclUserProject = Nothing
     , _doaclIfMetagenerationNotMatch = Nothing
+    , _doaclFields = Nothing
     }
 
 -- | If present, only return default ACL listing if the bucket\'s current
@@ -96,6 +108,13 @@ doaclBucket :: Lens' DefaultObjectAccessControlsList Text
 doaclBucket
   = lens _doaclBucket (\ s a -> s{_doaclBucket = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+doaclUserProject :: Lens' DefaultObjectAccessControlsList (Maybe Text)
+doaclUserProject
+  = lens _doaclUserProject
+      (\ s a -> s{_doaclUserProject = a})
+
 -- | If present, only return default ACL listing if the bucket\'s current
 -- metageneration does not match the given value.
 doaclIfMetagenerationNotMatch :: Lens' DefaultObjectAccessControlsList (Maybe Int64)
@@ -103,6 +122,11 @@ doaclIfMetagenerationNotMatch
   = lens _doaclIfMetagenerationNotMatch
       (\ s a -> s{_doaclIfMetagenerationNotMatch = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+doaclFields :: Lens' DefaultObjectAccessControlsList (Maybe Text)
+doaclFields
+  = lens _doaclFields (\ s a -> s{_doaclFields = a})
 
 instance GoogleRequest
          DefaultObjectAccessControlsList where
@@ -113,7 +137,9 @@ instance GoogleRequest
                "https://www.googleapis.com/auth/devstorage.full_control"]
         requestClient DefaultObjectAccessControlsList'{..}
           = go _doaclBucket _doaclIfMetagenerationMatch
+              _doaclUserProject
               _doaclIfMetagenerationNotMatch
+              _doaclFields
               (Just AltJSON)
               storageService
           where go

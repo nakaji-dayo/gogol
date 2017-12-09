@@ -38,10 +38,11 @@ module Network.Google.Resource.DNS.DNSKeys.Get
     , dkgDNSKeyId
     , dkgManagedZone
     , dkgClientOperationId
+    , dkgFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.dnsKeys.get@ method which the
 -- 'DNSKeysGet' request conforms to.
@@ -56,17 +57,19 @@ type DNSKeysGetResource =
                    Capture "dnsKeyId" Text :>
                      QueryParam "digestType" Text :>
                        QueryParam "clientOperationId" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] DNSKey
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] DNSKey
 
 -- | Fetch the representation of an existing DnsKey.
 --
 -- /See:/ 'dnsKeysGet' smart constructor.
 data DNSKeysGet = DNSKeysGet'
-    { _dkgProject           :: !Text
-    , _dkgDigestType        :: !(Maybe Text)
-    , _dkgDNSKeyId          :: !Text
-    , _dkgManagedZone       :: !Text
+    { _dkgProject :: !Text
+    , _dkgDigestType :: !(Maybe Text)
+    , _dkgDNSKeyId :: !Text
+    , _dkgManagedZone :: !Text
     , _dkgClientOperationId :: !(Maybe Text)
+    , _dkgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DNSKeysGet' with the minimum fields required to make a request.
@@ -82,18 +85,21 @@ data DNSKeysGet = DNSKeysGet'
 -- * 'dkgManagedZone'
 --
 -- * 'dkgClientOperationId'
+--
+-- * 'dkgFields'
 dnsKeysGet
     :: Text -- ^ 'dkgProject'
     -> Text -- ^ 'dkgDNSKeyId'
     -> Text -- ^ 'dkgManagedZone'
     -> DNSKeysGet
-dnsKeysGet pDkgProject_ pDkgDNSKeyId_ pDkgManagedZone_ =
+dnsKeysGet pDkgProject_ pDkgDNSKeyId_ pDkgManagedZone_ = 
     DNSKeysGet'
     { _dkgProject = pDkgProject_
     , _dkgDigestType = Nothing
     , _dkgDNSKeyId = pDkgDNSKeyId_
     , _dkgManagedZone = pDkgManagedZone_
     , _dkgClientOperationId = Nothing
+    , _dkgFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -129,6 +135,11 @@ dkgClientOperationId
   = lens _dkgClientOperationId
       (\ s a -> s{_dkgClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dkgFields :: Lens' DNSKeysGet (Maybe Text)
+dkgFields
+  = lens _dkgFields (\ s a -> s{_dkgFields = a})
+
 instance GoogleRequest DNSKeysGet where
         type Rs DNSKeysGet = DNSKey
         type Scopes DNSKeysGet =
@@ -140,6 +151,7 @@ instance GoogleRequest DNSKeysGet where
           = go _dkgProject _dkgManagedZone _dkgDNSKeyId
               _dkgDigestType
               _dkgClientOperationId
+              _dkgFields
               (Just AltJSON)
               dNSService
           where go

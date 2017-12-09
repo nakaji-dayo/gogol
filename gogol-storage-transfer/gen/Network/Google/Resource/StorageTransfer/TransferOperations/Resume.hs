@@ -41,41 +41,44 @@ module Network.Google.Resource.StorageTransfer.TransferOperations.Resume
     , torPayload
     , torBearerToken
     , torName
+    , torFields
     , torCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferOperations.resume@ method which the
 -- 'TransferOperationsResume' request conforms to.
 type TransferOperationsResumeResource =
      "v1" :>
        CaptureMode "name" "resume" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ResumeTransferOperationRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ResumeTransferOperationRequest :>
+                             Post '[JSON] Empty
 
 -- | Resumes a transfer operation that is paused.
 --
 -- /See:/ 'transferOperationsResume' smart constructor.
 data TransferOperationsResume = TransferOperationsResume'
-    { _torXgafv          :: !(Maybe Text)
+    { _torXgafv :: !(Maybe Xgafv)
     , _torUploadProtocol :: !(Maybe Text)
-    , _torPp             :: !Bool
-    , _torAccessToken    :: !(Maybe Text)
-    , _torUploadType     :: !(Maybe Text)
-    , _torPayload        :: !ResumeTransferOperationRequest
-    , _torBearerToken    :: !(Maybe Text)
-    , _torName           :: !Text
-    , _torCallback       :: !(Maybe Text)
+    , _torPp :: !Bool
+    , _torAccessToken :: !(Maybe Text)
+    , _torUploadType :: !(Maybe Text)
+    , _torPayload :: !ResumeTransferOperationRequest
+    , _torBearerToken :: !(Maybe Text)
+    , _torName :: !Text
+    , _torFields :: !(Maybe Text)
+    , _torCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferOperationsResume' with the minimum fields required to make a request.
@@ -98,12 +101,14 @@ data TransferOperationsResume = TransferOperationsResume'
 --
 -- * 'torName'
 --
+-- * 'torFields'
+--
 -- * 'torCallback'
 transferOperationsResume
     :: ResumeTransferOperationRequest -- ^ 'torPayload'
     -> Text -- ^ 'torName'
     -> TransferOperationsResume
-transferOperationsResume pTorPayload_ pTorName_ =
+transferOperationsResume pTorPayload_ pTorName_ = 
     TransferOperationsResume'
     { _torXgafv = Nothing
     , _torUploadProtocol = Nothing
@@ -113,11 +118,12 @@ transferOperationsResume pTorPayload_ pTorName_ =
     , _torPayload = pTorPayload_
     , _torBearerToken = Nothing
     , _torName = pTorName_
+    , _torFields = Nothing
     , _torCallback = Nothing
     }
 
 -- | V1 error format.
-torXgafv :: Lens' TransferOperationsResume (Maybe Text)
+torXgafv :: Lens' TransferOperationsResume (Maybe Xgafv)
 torXgafv = lens _torXgafv (\ s a -> s{_torXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -157,6 +163,11 @@ torBearerToken
 torName :: Lens' TransferOperationsResume Text
 torName = lens _torName (\ s a -> s{_torName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+torFields :: Lens' TransferOperationsResume (Maybe Text)
+torFields
+  = lens _torFields (\ s a -> s{_torFields = a})
+
 -- | JSONP
 torCallback :: Lens' TransferOperationsResume (Maybe Text)
 torCallback
@@ -173,6 +184,7 @@ instance GoogleRequest TransferOperationsResume where
               _torUploadType
               _torBearerToken
               _torCallback
+              _torFields
               (Just AltJSON)
               _torPayload
               storageTransferService

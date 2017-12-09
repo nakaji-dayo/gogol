@@ -22,9 +22,8 @@
 --
 -- Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.organizations.sinks.create@.
 module Network.Google.Resource.Logging.Organizations.Sinks.Create
@@ -46,11 +45,12 @@ module Network.Google.Resource.Logging.Organizations.Sinks.Create
     , oscUploadType
     , oscPayload
     , oscBearerToken
+    , oscFields
     , oscCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.organizations.sinks.create@ method which the
 -- 'OrganizationsSinksCreate' request conforms to.
@@ -66,27 +66,28 @@ type OrganizationsSinksCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
 
 -- | Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ 'organizationsSinksCreate' smart constructor.
 data OrganizationsSinksCreate = OrganizationsSinksCreate'
-    { _oscParent               :: !Text
-    , _oscXgafv                :: !(Maybe Xgafv)
+    { _oscParent :: !Text
+    , _oscXgafv :: !(Maybe Xgafv)
     , _oscUniqueWriterIdentity :: !(Maybe Bool)
-    , _oscUploadProtocol       :: !(Maybe Text)
-    , _oscPp                   :: !Bool
-    , _oscAccessToken          :: !(Maybe Text)
-    , _oscUploadType           :: !(Maybe Text)
-    , _oscPayload              :: !LogSink
-    , _oscBearerToken          :: !(Maybe Text)
-    , _oscCallback             :: !(Maybe Text)
+    , _oscUploadProtocol :: !(Maybe Text)
+    , _oscPp :: !Bool
+    , _oscAccessToken :: !(Maybe Text)
+    , _oscUploadType :: !(Maybe Text)
+    , _oscPayload :: !LogSink
+    , _oscBearerToken :: !(Maybe Text)
+    , _oscFields :: !(Maybe Text)
+    , _oscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrganizationsSinksCreate' with the minimum fields required to make a request.
@@ -111,12 +112,14 @@ data OrganizationsSinksCreate = OrganizationsSinksCreate'
 --
 -- * 'oscBearerToken'
 --
+-- * 'oscFields'
+--
 -- * 'oscCallback'
 organizationsSinksCreate
     :: Text -- ^ 'oscParent'
     -> LogSink -- ^ 'oscPayload'
     -> OrganizationsSinksCreate
-organizationsSinksCreate pOscParent_ pOscPayload_ =
+organizationsSinksCreate pOscParent_ pOscPayload_ = 
     OrganizationsSinksCreate'
     { _oscParent = pOscParent_
     , _oscXgafv = Nothing
@@ -127,11 +130,13 @@ organizationsSinksCreate pOscParent_ pOscPayload_ =
     , _oscUploadType = Nothing
     , _oscPayload = pOscPayload_
     , _oscBearerToken = Nothing
+    , _oscFields = Nothing
     , _oscCallback = Nothing
     }
 
 -- | Required. The resource in which to create the sink:
 -- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 -- Examples: \"projects\/my-logging-project\",
 -- \"organizations\/123456789\".
 oscParent :: Lens' OrganizationsSinksCreate Text
@@ -145,13 +150,13 @@ oscXgafv = lens _oscXgafv (\ s a -> s{_oscXgafv = a})
 -- | Optional. Determines the kind of IAM identity returned as
 -- writer_identity in the new sink. If this value is omitted or set to
 -- false, and if the sink\'s parent is a project, then the value returned
--- as writer_identity is cloud-logs\'google.com, the same identity used
--- before the addition of writer identities to this API. The sink\'s
--- destination must be in the same project as the sink itself.If this field
--- is set to true, or if the sink is owned by a non-project resource such
--- as an organization, then the value of writer_identity will be a unique
--- service account used only for exports from the new sink. For more
--- information, see writer_identity in LogSink.
+-- as writer_identity is the same group or service account used by
+-- Stackdriver Logging before the addition of writer identities to this
+-- API. The sink\'s destination must be in the same project as the sink
+-- itself.If this field is set to true, or if the sink is owned by a
+-- non-project resource such as an organization, then the value of
+-- writer_identity will be a unique service account used only for exports
+-- from the new sink. For more information, see writer_identity in LogSink.
 oscUniqueWriterIdentity :: Lens' OrganizationsSinksCreate (Maybe Bool)
 oscUniqueWriterIdentity
   = lens _oscUniqueWriterIdentity
@@ -190,6 +195,11 @@ oscBearerToken
   = lens _oscBearerToken
       (\ s a -> s{_oscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+oscFields :: Lens' OrganizationsSinksCreate (Maybe Text)
+oscFields
+  = lens _oscFields (\ s a -> s{_oscFields = a})
+
 -- | JSONP
 oscCallback :: Lens' OrganizationsSinksCreate (Maybe Text)
 oscCallback
@@ -208,6 +218,7 @@ instance GoogleRequest OrganizationsSinksCreate where
               _oscUploadType
               _oscBearerToken
               _oscCallback
+              _oscFields
               (Just AltJSON)
               _oscPayload
               loggingService

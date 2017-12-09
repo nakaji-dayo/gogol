@@ -41,11 +41,12 @@ module Network.Google.Resource.YouTubeReporting.Jobs.Get
     , jgUploadType
     , jgOnBehalfOfContentOwner
     , jgBearerToken
+    , jgFields
     , jgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.jobs.get@ method which the
 -- 'JobsGet' request conforms to.
@@ -61,21 +62,23 @@ type JobsGetResource =
                      QueryParam "onBehalfOfContentOwner" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Job
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Job
 
 -- | Gets a job.
 --
 -- /See:/ 'jobsGet' smart constructor.
 data JobsGet = JobsGet'
-    { _jgXgafv                  :: !(Maybe Xgafv)
-    , _jgJobId                  :: !Text
-    , _jgUploadProtocol         :: !(Maybe Text)
-    , _jgPp                     :: !Bool
-    , _jgAccessToken            :: !(Maybe Text)
-    , _jgUploadType             :: !(Maybe Text)
+    { _jgXgafv :: !(Maybe Xgafv)
+    , _jgJobId :: !Text
+    , _jgUploadProtocol :: !(Maybe Text)
+    , _jgPp :: !Bool
+    , _jgAccessToken :: !(Maybe Text)
+    , _jgUploadType :: !(Maybe Text)
     , _jgOnBehalfOfContentOwner :: !(Maybe Text)
-    , _jgBearerToken            :: !(Maybe Text)
-    , _jgCallback               :: !(Maybe Text)
+    , _jgBearerToken :: !(Maybe Text)
+    , _jgFields :: !(Maybe Text)
+    , _jgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsGet' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data JobsGet = JobsGet'
 --
 -- * 'jgBearerToken'
 --
+-- * 'jgFields'
+--
 -- * 'jgCallback'
 jobsGet
     :: Text -- ^ 'jgJobId'
     -> JobsGet
-jobsGet pJgJobId_ =
+jobsGet pJgJobId_ = 
     JobsGet'
     { _jgXgafv = Nothing
     , _jgJobId = pJgJobId_
@@ -112,6 +117,7 @@ jobsGet pJgJobId_ =
     , _jgUploadType = Nothing
     , _jgOnBehalfOfContentOwner = Nothing
     , _jgBearerToken = Nothing
+    , _jgFields = Nothing
     , _jgCallback = Nothing
     }
 
@@ -157,6 +163,10 @@ jgBearerToken
   = lens _jgBearerToken
       (\ s a -> s{_jgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jgFields :: Lens' JobsGet (Maybe Text)
+jgFields = lens _jgFields (\ s a -> s{_jgFields = a})
+
 -- | JSONP
 jgCallback :: Lens' JobsGet (Maybe Text)
 jgCallback
@@ -174,6 +184,7 @@ instance GoogleRequest JobsGet where
               _jgOnBehalfOfContentOwner
               _jgBearerToken
               _jgCallback
+              _jgFields
               (Just AltJSON)
               youTubeReportingService
           where go

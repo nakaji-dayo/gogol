@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Update
     -- * Request Lenses
     , uPayload
     , uUserKey
+    , uFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.update@ method which the
 -- 'UsersUpdate' request conforms to.
@@ -48,8 +49,9 @@ type UsersUpdateResource =
          "v1" :>
            "users" :>
              Capture "userKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] User :> Put '[JSON] User
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] User :> Put '[JSON] User
 
 -- | update user
 --
@@ -57,6 +59,7 @@ type UsersUpdateResource =
 data UsersUpdate = UsersUpdate'
     { _uPayload :: !User
     , _uUserKey :: !Text
+    , _uFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersUpdate' with the minimum fields required to make a request.
@@ -66,31 +69,38 @@ data UsersUpdate = UsersUpdate'
 -- * 'uPayload'
 --
 -- * 'uUserKey'
+--
+-- * 'uFields'
 usersUpdate
     :: User -- ^ 'uPayload'
     -> Text -- ^ 'uUserKey'
     -> UsersUpdate
-usersUpdate pUPayload_ pUUserKey_ =
+usersUpdate pUPayload_ pUUserKey_ = 
     UsersUpdate'
     { _uPayload = pUPayload_
     , _uUserKey = pUUserKey_
+    , _uFields = Nothing
     }
 
 -- | Multipart request metadata.
 uPayload :: Lens' UsersUpdate User
 uPayload = lens _uPayload (\ s a -> s{_uPayload = a})
 
--- | Email or immutable Id of the user. If Id, it should match with id of
+-- | Email or immutable ID of the user. If ID, it should match with id of
 -- user object
 uUserKey :: Lens' UsersUpdate Text
 uUserKey = lens _uUserKey (\ s a -> s{_uUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+uFields :: Lens' UsersUpdate (Maybe Text)
+uFields = lens _uFields (\ s a -> s{_uFields = a})
 
 instance GoogleRequest UsersUpdate where
         type Rs UsersUpdate = User
         type Scopes UsersUpdate =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersUpdate'{..}
-          = go _uUserKey (Just AltJSON) _uPayload
+          = go _uUserKey _uFields (Just AltJSON) _uPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersUpdateResource)

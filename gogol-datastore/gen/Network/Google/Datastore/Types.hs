@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -29,13 +29,47 @@ module Network.Google.Datastore.Types
     , llLatitude
     , llLongitude
 
+    -- * TransactionOptions
+    , TransactionOptions
+    , transactionOptions
+    , toReadWrite
+    , toReadOnly
+
     -- * PropertyOrderDirection
     , PropertyOrderDirection (..)
+
+    -- * Status
+    , Status
+    , status
+    , sDetails
+    , sCode
+    , sMessage
+
+    -- * GoogleLongrunningOperationMetadata
+    , GoogleLongrunningOperationMetadata
+    , googleLongrunningOperationMetadata
+    , glomAddtional
+
+    -- * ReadWrite
+    , ReadWrite
+    , readWrite
+    , rwPreviousTransaction
+
+    -- * GoogleDatastoreAdminV1beta1ExportEntitiesResponse
+    , GoogleDatastoreAdminV1beta1ExportEntitiesResponse
+    , googleDatastoreAdminV1beta1ExportEntitiesResponse
+    , gdaveerOutputURL
 
     -- * RollbackRequest
     , RollbackRequest
     , rollbackRequest
     , rrTransaction
+
+    -- * ReserveIdsRequest
+    , ReserveIdsRequest
+    , reserveIdsRequest
+    , rirKeys
+    , rirDatabaseId
 
     -- * PartitionId
     , PartitionId
@@ -65,6 +99,7 @@ module Network.Google.Datastore.Types
     -- * BeginTransactionRequest
     , BeginTransactionRequest
     , beginTransactionRequest
+    , btrTransactionOptions
 
     -- * RunQueryRequest
     , RunQueryRequest
@@ -82,14 +117,45 @@ module Network.Google.Datastore.Types
     -- * QueryResultBatchEntityResultType
     , QueryResultBatchEntityResultType (..)
 
+    -- * GoogleDatastoreAdminV1beta1CommonMetadata
+    , GoogleDatastoreAdminV1beta1CommonMetadata
+    , googleDatastoreAdminV1beta1CommonMetadata
+    , gdavcmState
+    , gdavcmStartTime
+    , gdavcmEndTime
+    , gdavcmLabels
+    , gdavcmOperationType
+
+    -- * Empty
+    , Empty
+    , empty
+
     -- * CompositeFilter
     , CompositeFilter
     , compositeFilter
     , cfOp
     , cfFilters
 
+    -- * GoogleDatastoreAdminV1beta1CommonMetadataOperationType
+    , GoogleDatastoreAdminV1beta1CommonMetadataOperationType (..)
+
     -- * QueryResultBatchMoreResults
     , QueryResultBatchMoreResults (..)
+
+    -- * GoogleDatastoreAdminV1beta1ImportEntitiesMetadata
+    , GoogleDatastoreAdminV1beta1ImportEntitiesMetadata
+    , googleDatastoreAdminV1beta1ImportEntitiesMetadata
+    , gdaviemProgressBytes
+    , gdaviemProgressEntities
+    , gdaviemEntityFilter
+    , gdaviemInputURL
+    , gdaviemCommon
+
+    -- * GoogleDatastoreAdminV1beta1Progress
+    , GoogleDatastoreAdminV1beta1Progress
+    , googleDatastoreAdminV1beta1Progress
+    , gdavpWorkCompleted
+    , gdavpWorkEstimated
 
     -- * BeginTransactionResponse
     , BeginTransactionResponse
@@ -141,6 +207,11 @@ module Network.Google.Datastore.Types
 
     -- * ValueNullValue
     , ValueNullValue (..)
+
+    -- * StatusDetailsItem
+    , StatusDetailsItem
+    , statusDetailsItem
+    , sdiAddtional
 
     -- * LookupRequest
     , LookupRequest
@@ -222,11 +293,19 @@ module Network.Google.Datastore.Types
     , kindExpression
     , keName
 
+    -- * GoogleLongrunningOperationResponse
+    , GoogleLongrunningOperationResponse
+    , googleLongrunningOperationResponse
+    , glorAddtional
+
     -- * ReadOptions
     , ReadOptions
     , readOptions
     , roReadConsistency
     , roTransaction
+
+    -- * GoogleDatastoreAdminV1beta1CommonMetadataState
+    , GoogleDatastoreAdminV1beta1CommonMetadataState (..)
 
     -- * RollbackResponse
     , RollbackResponse
@@ -237,11 +316,20 @@ module Network.Google.Datastore.Types
     , projection
     , pProperty
 
+    -- * ReserveIdsResponse
+    , ReserveIdsResponse
+    , reserveIdsResponse
+
     -- * Filter
     , Filter
     , filter'
     , fCompositeFilter
     , fPropertyFilter
+
+    -- * GoogleDatastoreAdminV1beta1CommonMetadataLabels
+    , GoogleDatastoreAdminV1beta1CommonMetadataLabels
+    , googleDatastoreAdminV1beta1CommonMetadataLabels
+    , gdavcmlAddtional
 
     -- * PropertyFilterOp
     , PropertyFilterOp (..)
@@ -256,6 +344,12 @@ module Network.Google.Datastore.Types
     -- * CommitRequestMode
     , CommitRequestMode (..)
 
+    -- * GoogleLongrunningListOperationsResponse
+    , GoogleLongrunningListOperationsResponse
+    , googleLongrunningListOperationsResponse
+    , gllorNextPageToken
+    , gllorOperations
+
     -- * PathElement
     , PathElement
     , pathElement
@@ -269,6 +363,16 @@ module Network.Google.Datastore.Types
     , eKey
     , eProperties
 
+    -- * GoogleDatastoreAdminV1beta1EntityFilter
+    , GoogleDatastoreAdminV1beta1EntityFilter
+    , googleDatastoreAdminV1beta1EntityFilter
+    , gdavefNamespaceIds
+    , gdavefKinds
+
+    -- * ReadOnly
+    , ReadOnly
+    , readOnly
+
     -- * LookupResponse
     , LookupResponse
     , lookupResponse
@@ -276,11 +380,29 @@ module Network.Google.Datastore.Types
     , lrFound
     , lrMissing
 
+    -- * GoogleLongrunningOperation
+    , GoogleLongrunningOperation
+    , googleLongrunningOperation
+    , gloDone
+    , gloError
+    , gloResponse
+    , gloName
+    , gloMetadata
+
     -- * PropertyOrder
     , PropertyOrder
     , propertyOrder
     , poProperty
     , poDirection
+
+    -- * GoogleDatastoreAdminV1beta1ExportEntitiesMetadata
+    , GoogleDatastoreAdminV1beta1ExportEntitiesMetadata
+    , googleDatastoreAdminV1beta1ExportEntitiesMetadata
+    , gdaveemProgressBytes
+    , gdaveemOutputURLPrefix
+    , gdaveemProgressEntities
+    , gdaveemEntityFilter
+    , gdaveemCommon
 
     -- * GqlQueryParameter
     , GqlQueryParameter
@@ -289,9 +411,9 @@ module Network.Google.Datastore.Types
     , gqpValue
     ) where
 
-import           Network.Google.Datastore.Types.Product
-import           Network.Google.Datastore.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types.Product
+import Network.Google.Datastore.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Google Cloud Datastore API. This contains the host and root path used as a starting point for constructing service requests.
 datastoreService :: ServiceConfig

@@ -33,11 +33,12 @@ module Network.Google.Resource.PlusDomains.Comments.Get
     , CommentsGet
 
     -- * Request Lenses
-    , cgCommentId
+    , comCommentId
+    , comFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.comments.get@ method which the
 -- 'CommentsGet' request conforms to.
@@ -46,32 +47,42 @@ type CommentsGetResource =
        "v1" :>
          "comments" :>
            Capture "commentId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Comment
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Comment
 
 -- | Get a comment.
 --
 -- /See:/ 'commentsGet' smart constructor.
-newtype CommentsGet = CommentsGet'
-    { _cgCommentId :: Text
+data CommentsGet = CommentsGet'
+    { _comCommentId :: !Text
+    , _comFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'cgCommentId'
+-- * 'comCommentId'
+--
+-- * 'comFields'
 commentsGet
-    :: Text -- ^ 'cgCommentId'
+    :: Text -- ^ 'comCommentId'
     -> CommentsGet
-commentsGet pCgCommentId_ =
+commentsGet pComCommentId_ = 
     CommentsGet'
-    { _cgCommentId = pCgCommentId_
+    { _comCommentId = pComCommentId_
+    , _comFields = Nothing
     }
 
 -- | The ID of the comment to get.
-cgCommentId :: Lens' CommentsGet Text
-cgCommentId
-  = lens _cgCommentId (\ s a -> s{_cgCommentId = a})
+comCommentId :: Lens' CommentsGet Text
+comCommentId
+  = lens _comCommentId (\ s a -> s{_comCommentId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+comFields :: Lens' CommentsGet (Maybe Text)
+comFields
+  = lens _comFields (\ s a -> s{_comFields = a})
 
 instance GoogleRequest CommentsGet where
         type Rs CommentsGet = Comment
@@ -79,7 +90,8 @@ instance GoogleRequest CommentsGet where
              '["https://www.googleapis.com/auth/plus.login",
                "https://www.googleapis.com/auth/plus.stream.read"]
         requestClient CommentsGet'{..}
-          = go _cgCommentId (Just AltJSON) plusDomainsService
+          = go _comCommentId _comFields (Just AltJSON)
+              plusDomainsService
           where go
                   = buildClient (Proxy :: Proxy CommentsGetResource)
                       mempty

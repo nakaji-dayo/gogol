@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.CreativeGroups.Get
     -- * Request Lenses
     , cgggProFileId
     , cgggId
+    , cgggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeGroups.get@ method which the
 -- 'CreativeGroupsGet' request conforms to.
 type CreativeGroupsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeGroups" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] CreativeGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] CreativeGroup
 
 -- | Gets one creative group by ID.
 --
 -- /See:/ 'creativeGroupsGet' smart constructor.
 data CreativeGroupsGet = CreativeGroupsGet'
     { _cgggProFileId :: !(Textual Int64)
-    , _cgggId        :: !(Textual Int64)
+    , _cgggId :: !(Textual Int64)
+    , _cgggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativeGroupsGet = CreativeGroupsGet'
 -- * 'cgggProFileId'
 --
 -- * 'cgggId'
+--
+-- * 'cgggFields'
 creativeGroupsGet
     :: Int64 -- ^ 'cgggProFileId'
     -> Int64 -- ^ 'cgggId'
     -> CreativeGroupsGet
-creativeGroupsGet pCgggProFileId_ pCgggId_ =
+creativeGroupsGet pCgggProFileId_ pCgggId_ = 
     CreativeGroupsGet'
     { _cgggProFileId = _Coerce # pCgggProFileId_
     , _cgggId = _Coerce # pCgggId_
+    , _cgggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cgggId :: Lens' CreativeGroupsGet Int64
 cgggId
   = lens _cgggId (\ s a -> s{_cgggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cgggFields :: Lens' CreativeGroupsGet (Maybe Text)
+cgggFields
+  = lens _cgggFields (\ s a -> s{_cgggFields = a})
+
 instance GoogleRequest CreativeGroupsGet where
         type Rs CreativeGroupsGet = CreativeGroup
         type Scopes CreativeGroupsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeGroupsGet'{..}
-          = go _cgggProFileId _cgggId (Just AltJSON)
+          = go _cgggProFileId _cgggId _cgggFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

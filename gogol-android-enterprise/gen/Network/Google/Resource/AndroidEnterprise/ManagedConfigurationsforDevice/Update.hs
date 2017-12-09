@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.
     , mcduUserId
     , mcduDeviceId
     , mcduManagedConfigurationForDeviceId
+    , mcduFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsfordevice.update@ method which the
 -- 'ManagedConfigurationsforDeviceUpdate' request conforms to.
@@ -57,20 +58,22 @@ type ManagedConfigurationsforDeviceUpdateResource =
                    Capture "deviceId" Text :>
                      "managedConfigurationsForDevice" :>
                        Capture "managedConfigurationForDeviceId" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ManagedConfiguration :>
-                             Put '[JSON] ManagedConfiguration
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ManagedConfiguration :>
+                               Put '[JSON] ManagedConfiguration
 
 -- | Adds or updates a per-device managed configuration for an app for the
 -- specified device.
 --
 -- /See:/ 'managedConfigurationsforDeviceUpdate' smart constructor.
 data ManagedConfigurationsforDeviceUpdate = ManagedConfigurationsforDeviceUpdate'
-    { _mcduEnterpriseId                    :: !Text
-    , _mcduPayload                         :: !ManagedConfiguration
-    , _mcduUserId                          :: !Text
-    , _mcduDeviceId                        :: !Text
+    { _mcduEnterpriseId :: !Text
+    , _mcduPayload :: !ManagedConfiguration
+    , _mcduUserId :: !Text
+    , _mcduDeviceId :: !Text
     , _mcduManagedConfigurationForDeviceId :: !Text
+    , _mcduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforDeviceUpdate' with the minimum fields required to make a request.
@@ -86,6 +89,8 @@ data ManagedConfigurationsforDeviceUpdate = ManagedConfigurationsforDeviceUpdate
 -- * 'mcduDeviceId'
 --
 -- * 'mcduManagedConfigurationForDeviceId'
+--
+-- * 'mcduFields'
 managedConfigurationsforDeviceUpdate
     :: Text -- ^ 'mcduEnterpriseId'
     -> ManagedConfiguration -- ^ 'mcduPayload'
@@ -93,13 +98,14 @@ managedConfigurationsforDeviceUpdate
     -> Text -- ^ 'mcduDeviceId'
     -> Text -- ^ 'mcduManagedConfigurationForDeviceId'
     -> ManagedConfigurationsforDeviceUpdate
-managedConfigurationsforDeviceUpdate pMcduEnterpriseId_ pMcduPayload_ pMcduUserId_ pMcduDeviceId_ pMcduManagedConfigurationForDeviceId_ =
+managedConfigurationsforDeviceUpdate pMcduEnterpriseId_ pMcduPayload_ pMcduUserId_ pMcduDeviceId_ pMcduManagedConfigurationForDeviceId_ = 
     ManagedConfigurationsforDeviceUpdate'
     { _mcduEnterpriseId = pMcduEnterpriseId_
     , _mcduPayload = pMcduPayload_
     , _mcduUserId = pMcduUserId_
     , _mcduDeviceId = pMcduDeviceId_
     , _mcduManagedConfigurationForDeviceId = pMcduManagedConfigurationForDeviceId_
+    , _mcduFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -131,6 +137,11 @@ mcduManagedConfigurationForDeviceId
       (\ s a ->
          s{_mcduManagedConfigurationForDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcduFields :: Lens' ManagedConfigurationsforDeviceUpdate (Maybe Text)
+mcduFields
+  = lens _mcduFields (\ s a -> s{_mcduFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforDeviceUpdate where
         type Rs ManagedConfigurationsforDeviceUpdate =
@@ -141,6 +152,7 @@ instance GoogleRequest
           ManagedConfigurationsforDeviceUpdate'{..}
           = go _mcduEnterpriseId _mcduUserId _mcduDeviceId
               _mcduManagedConfigurationForDeviceId
+              _mcduFields
               (Just AltJSON)
               _mcduPayload
               androidEnterpriseService

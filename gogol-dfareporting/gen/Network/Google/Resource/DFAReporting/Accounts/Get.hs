@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Accounts.Get
     -- * Request Lenses
     , aggProFileId
     , aggId
+    , aggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
 type AccountsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accounts" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Account
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Account
 
 -- | Gets one account by ID.
 --
 -- /See:/ 'accountsGet' smart constructor.
 data AccountsGet = AccountsGet'
     { _aggProFileId :: !(Textual Int64)
-    , _aggId        :: !(Textual Int64)
+    , _aggId :: !(Textual Int64)
+    , _aggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AccountsGet = AccountsGet'
 -- * 'aggProFileId'
 --
 -- * 'aggId'
+--
+-- * 'aggFields'
 accountsGet
     :: Int64 -- ^ 'aggProFileId'
     -> Int64 -- ^ 'aggId'
     -> AccountsGet
-accountsGet pAggProFileId_ pAggId_ =
+accountsGet pAggProFileId_ pAggId_ = 
     AccountsGet'
     { _aggProFileId = _Coerce # pAggProFileId_
     , _aggId = _Coerce # pAggId_
+    , _aggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ aggId :: Lens' AccountsGet Int64
 aggId
   = lens _aggId (\ s a -> s{_aggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aggFields :: Lens' AccountsGet (Maybe Text)
+aggFields
+  = lens _aggFields (\ s a -> s{_aggFields = a})
+
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
         type Scopes AccountsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountsGet'{..}
-          = go _aggProFileId _aggId (Just AltJSON)
+          = go _aggProFileId _aggId _aggFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)

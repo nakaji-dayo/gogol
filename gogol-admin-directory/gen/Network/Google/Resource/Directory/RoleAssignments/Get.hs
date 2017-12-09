@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.RoleAssignments.Get
     -- * Request Lenses
     , ragCustomer
     , ragRoleAssignmentId
+    , ragFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roleAssignments.get@ method which the
 -- 'RoleAssignmentsGet' request conforms to.
@@ -50,15 +51,17 @@ type RoleAssignmentsGetResource =
              Capture "customer" Text :>
                "roleassignments" :>
                  Capture "roleAssignmentId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] RoleAssignment
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] RoleAssignment
 
 -- | Retrieve a role assignment.
 --
 -- /See:/ 'roleAssignmentsGet' smart constructor.
 data RoleAssignmentsGet = RoleAssignmentsGet'
-    { _ragCustomer         :: !Text
+    { _ragCustomer :: !Text
     , _ragRoleAssignmentId :: !Text
+    , _ragFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignmentsGet' with the minimum fields required to make a request.
@@ -68,17 +71,20 @@ data RoleAssignmentsGet = RoleAssignmentsGet'
 -- * 'ragCustomer'
 --
 -- * 'ragRoleAssignmentId'
+--
+-- * 'ragFields'
 roleAssignmentsGet
     :: Text -- ^ 'ragCustomer'
     -> Text -- ^ 'ragRoleAssignmentId'
     -> RoleAssignmentsGet
-roleAssignmentsGet pRagCustomer_ pRagRoleAssignmentId_ =
+roleAssignmentsGet pRagCustomer_ pRagRoleAssignmentId_ = 
     RoleAssignmentsGet'
     { _ragCustomer = pRagCustomer_
     , _ragRoleAssignmentId = pRagRoleAssignmentId_
+    , _ragFields = Nothing
     }
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 ragCustomer :: Lens' RoleAssignmentsGet Text
 ragCustomer
   = lens _ragCustomer (\ s a -> s{_ragCustomer = a})
@@ -89,13 +95,19 @@ ragRoleAssignmentId
   = lens _ragRoleAssignmentId
       (\ s a -> s{_ragRoleAssignmentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ragFields :: Lens' RoleAssignmentsGet (Maybe Text)
+ragFields
+  = lens _ragFields (\ s a -> s{_ragFields = a})
+
 instance GoogleRequest RoleAssignmentsGet where
         type Rs RoleAssignmentsGet = RoleAssignment
         type Scopes RoleAssignmentsGet =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement",
                "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"]
         requestClient RoleAssignmentsGet'{..}
-          = go _ragCustomer _ragRoleAssignmentId (Just AltJSON)
+          = go _ragCustomer _ragRoleAssignmentId _ragFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

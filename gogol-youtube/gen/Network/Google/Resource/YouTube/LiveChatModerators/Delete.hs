@@ -34,10 +34,11 @@ module Network.Google.Resource.YouTube.LiveChatModerators.Delete
 
     -- * Request Lenses
     , lcmdId
+    , lcmdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatModerators.delete@ method which the
 -- 'LiveChatModeratorsDelete' request conforms to.
@@ -47,13 +48,15 @@ type LiveChatModeratorsDeleteResource =
          "liveChat" :>
            "moderators" :>
              QueryParam "id" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a chat moderator.
 --
 -- /See:/ 'liveChatModeratorsDelete' smart constructor.
-newtype LiveChatModeratorsDelete = LiveChatModeratorsDelete'
-    { _lcmdId :: Text
+data LiveChatModeratorsDelete = LiveChatModeratorsDelete'
+    { _lcmdId :: !Text
+    , _lcmdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatModeratorsDelete' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype LiveChatModeratorsDelete = LiveChatModeratorsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'lcmdId'
+--
+-- * 'lcmdFields'
 liveChatModeratorsDelete
     :: Text -- ^ 'lcmdId'
     -> LiveChatModeratorsDelete
-liveChatModeratorsDelete pLcmdId_ =
+liveChatModeratorsDelete pLcmdId_ = 
     LiveChatModeratorsDelete'
     { _lcmdId = pLcmdId_
+    , _lcmdFields = Nothing
     }
 
 -- | The id parameter identifies the chat moderator to remove. The value
@@ -74,13 +80,19 @@ liveChatModeratorsDelete pLcmdId_ =
 lcmdId :: Lens' LiveChatModeratorsDelete Text
 lcmdId = lens _lcmdId (\ s a -> s{_lcmdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcmdFields :: Lens' LiveChatModeratorsDelete (Maybe Text)
+lcmdFields
+  = lens _lcmdFields (\ s a -> s{_lcmdFields = a})
+
 instance GoogleRequest LiveChatModeratorsDelete where
         type Rs LiveChatModeratorsDelete = ()
         type Scopes LiveChatModeratorsDelete =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatModeratorsDelete'{..}
-          = go (Just _lcmdId) (Just AltJSON) youTubeService
+          = go (Just _lcmdId) _lcmdFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient
                       (Proxy :: Proxy LiveChatModeratorsDeleteResource)

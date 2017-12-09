@@ -41,10 +41,11 @@ module Network.Google.Resource.Blogger.Posts.Update
     , puRevert
     , puPostId
     , puPublish
+    , puFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.update@ method which the
 -- 'PostsUpdate' request conforms to.
@@ -60,21 +61,23 @@ type PostsUpdateResource =
                      QueryParam "maxComments" (Textual Word32) :>
                        QueryParam "revert" Bool :>
                          QueryParam "publish" Bool :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Post' :> Put '[JSON] Post'
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Post' :> Put '[JSON] Post'
 
 -- | Update a post.
 --
 -- /See:/ 'postsUpdate' smart constructor.
 data PostsUpdate = PostsUpdate'
-    { _puFetchBody   :: !Bool
+    { _puFetchBody :: !Bool
     , _puFetchImages :: !(Maybe Bool)
-    , _puBlogId      :: !Text
-    , _puPayload     :: !Post'
+    , _puBlogId :: !Text
+    , _puPayload :: !Post'
     , _puMaxComments :: !(Maybe (Textual Word32))
-    , _puRevert      :: !(Maybe Bool)
-    , _puPostId      :: !Text
-    , _puPublish     :: !(Maybe Bool)
+    , _puRevert :: !(Maybe Bool)
+    , _puPostId :: !Text
+    , _puPublish :: !(Maybe Bool)
+    , _puFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsUpdate' with the minimum fields required to make a request.
@@ -96,12 +99,14 @@ data PostsUpdate = PostsUpdate'
 -- * 'puPostId'
 --
 -- * 'puPublish'
+--
+-- * 'puFields'
 postsUpdate
     :: Text -- ^ 'puBlogId'
     -> Post' -- ^ 'puPayload'
     -> Text -- ^ 'puPostId'
     -> PostsUpdate
-postsUpdate pPuBlogId_ pPuPayload_ pPuPostId_ =
+postsUpdate pPuBlogId_ pPuPayload_ pPuPostId_ = 
     PostsUpdate'
     { _puFetchBody = True
     , _puFetchImages = Nothing
@@ -111,6 +116,7 @@ postsUpdate pPuBlogId_ pPuPayload_ pPuPostId_ =
     , _puRevert = Nothing
     , _puPostId = pPuPostId_
     , _puPublish = Nothing
+    , _puFields = Nothing
     }
 
 -- | Whether the body content of the post is included with the result
@@ -157,6 +163,10 @@ puPublish :: Lens' PostsUpdate (Maybe Bool)
 puPublish
   = lens _puPublish (\ s a -> s{_puPublish = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puFields :: Lens' PostsUpdate (Maybe Text)
+puFields = lens _puFields (\ s a -> s{_puFields = a})
+
 instance GoogleRequest PostsUpdate where
         type Rs PostsUpdate = Post'
         type Scopes PostsUpdate =
@@ -167,6 +177,7 @@ instance GoogleRequest PostsUpdate where
               _puMaxComments
               _puRevert
               _puPublish
+              _puFields
               (Just AltJSON)
               _puPayload
               bloggerService

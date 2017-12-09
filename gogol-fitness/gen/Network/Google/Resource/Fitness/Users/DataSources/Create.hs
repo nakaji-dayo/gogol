@@ -42,10 +42,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.Create
     -- * Request Lenses
     , udscPayload
     , udscUserId
+    , udscFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.create@ method which the
 -- 'UsersDataSourcesCreate' request conforms to.
@@ -55,8 +56,9 @@ type UsersDataSourcesCreateResource =
          "users" :>
            Capture "userId" Text :>
              "dataSources" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DataSource :> Post '[JSON] DataSource
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DataSource :> Post '[JSON] DataSource
 
 -- | Creates a new data source that is unique across all data sources
 -- belonging to this user. The data stream ID field can be omitted and will
@@ -70,7 +72,8 @@ type UsersDataSourcesCreateResource =
 -- /See:/ 'usersDataSourcesCreate' smart constructor.
 data UsersDataSourcesCreate = UsersDataSourcesCreate'
     { _udscPayload :: !DataSource
-    , _udscUserId  :: !Text
+    , _udscUserId :: !Text
+    , _udscFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesCreate' with the minimum fields required to make a request.
@@ -80,14 +83,17 @@ data UsersDataSourcesCreate = UsersDataSourcesCreate'
 -- * 'udscPayload'
 --
 -- * 'udscUserId'
+--
+-- * 'udscFields'
 usersDataSourcesCreate
     :: DataSource -- ^ 'udscPayload'
     -> Text -- ^ 'udscUserId'
     -> UsersDataSourcesCreate
-usersDataSourcesCreate pUdscPayload_ pUdscUserId_ =
+usersDataSourcesCreate pUdscPayload_ pUdscUserId_ = 
     UsersDataSourcesCreate'
     { _udscPayload = pUdscPayload_
     , _udscUserId = pUdscUserId_
+    , _udscFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -100,6 +106,11 @@ udscPayload
 udscUserId :: Lens' UsersDataSourcesCreate Text
 udscUserId
   = lens _udscUserId (\ s a -> s{_udscUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+udscFields :: Lens' UsersDataSourcesCreate (Maybe Text)
+udscFields
+  = lens _udscFields (\ s a -> s{_udscFields = a})
 
 instance GoogleRequest UsersDataSourcesCreate where
         type Rs UsersDataSourcesCreate = DataSource
@@ -114,7 +125,8 @@ instance GoogleRequest UsersDataSourcesCreate where
                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSourcesCreate'{..}
-          = go _udscUserId (Just AltJSON) _udscPayload
+          = go _udscUserId _udscFields (Just AltJSON)
+              _udscPayload
               fitnessService
           where go
                   = buildClient

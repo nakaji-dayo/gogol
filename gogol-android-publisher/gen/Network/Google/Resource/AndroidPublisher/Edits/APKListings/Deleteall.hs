@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.APKListings.Deleteall
     , eapkldaPackageName
     , eapkldaAPKVersionCode
     , eapkldaEditId
+    , eapkldaFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.apklistings.deleteall@ method which the
 -- 'EditsAPKListingsDeleteall' request conforms to.
@@ -53,15 +54,17 @@ type EditsAPKListingsDeleteallResource =
                  "apks" :>
                    Capture "apkVersionCode" (Textual Int32) :>
                      "listings" :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes all the APK-specific localized listings for a specified APK.
 --
 -- /See:/ 'editsAPKListingsDeleteall' smart constructor.
 data EditsAPKListingsDeleteall = EditsAPKListingsDeleteall'
-    { _eapkldaPackageName    :: !Text
+    { _eapkldaPackageName :: !Text
     , _eapkldaAPKVersionCode :: !(Textual Int32)
-    , _eapkldaEditId         :: !Text
+    , _eapkldaEditId :: !Text
+    , _eapkldaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsAPKListingsDeleteall' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data EditsAPKListingsDeleteall = EditsAPKListingsDeleteall'
 -- * 'eapkldaAPKVersionCode'
 --
 -- * 'eapkldaEditId'
+--
+-- * 'eapkldaFields'
 editsAPKListingsDeleteall
     :: Text -- ^ 'eapkldaPackageName'
     -> Int32 -- ^ 'eapkldaAPKVersionCode'
     -> Text -- ^ 'eapkldaEditId'
     -> EditsAPKListingsDeleteall
-editsAPKListingsDeleteall pEapkldaPackageName_ pEapkldaAPKVersionCode_ pEapkldaEditId_ =
+editsAPKListingsDeleteall pEapkldaPackageName_ pEapkldaAPKVersionCode_ pEapkldaEditId_ = 
     EditsAPKListingsDeleteall'
     { _eapkldaPackageName = pEapkldaPackageName_
     , _eapkldaAPKVersionCode = _Coerce # pEapkldaAPKVersionCode_
     , _eapkldaEditId = pEapkldaEditId_
+    , _eapkldaFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -106,6 +112,12 @@ eapkldaEditId
   = lens _eapkldaEditId
       (\ s a -> s{_eapkldaEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eapkldaFields :: Lens' EditsAPKListingsDeleteall (Maybe Text)
+eapkldaFields
+  = lens _eapkldaFields
+      (\ s a -> s{_eapkldaFields = a})
+
 instance GoogleRequest EditsAPKListingsDeleteall
          where
         type Rs EditsAPKListingsDeleteall = ()
@@ -114,6 +126,7 @@ instance GoogleRequest EditsAPKListingsDeleteall
         requestClient EditsAPKListingsDeleteall'{..}
           = go _eapkldaPackageName _eapkldaEditId
               _eapkldaAPKVersionCode
+              _eapkldaFields
               (Just AltJSON)
               androidPublisherService
           where go

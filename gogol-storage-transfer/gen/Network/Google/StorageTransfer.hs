@@ -30,9 +30,6 @@ module Network.Google.StorageTransfer
 
     -- * Resources
 
-    -- ** storagetransfer.getGoogleServiceAccount
-    , module Network.Google.Resource.StorageTransfer.GetGoogleServiceAccount
-
     -- ** storagetransfer.googleServiceAccounts.get
     , module Network.Google.Resource.StorageTransfer.GoogleServiceAccounts.Get
 
@@ -87,6 +84,9 @@ module Network.Google.StorageTransfer
     , listOperationsResponse
     , lorNextPageToken
     , lorOperations
+
+    -- ** TransferOperationStatus
+    , TransferOperationStatus (..)
 
     -- ** Schedule
     , Schedule
@@ -182,11 +182,17 @@ module Network.Google.StorageTransfer
     , gcsData
     , gdBucketName
 
+    -- ** Xgafv
+    , Xgafv (..)
+
     -- ** AwsS3Data
     , AwsS3Data
     , awsS3Data
     , asdBucketName
     , asdAwsAccessKey
+
+    -- ** TransferJobStatus
+    , TransferJobStatus (..)
 
     -- ** HTTPData
     , HTTPData
@@ -262,22 +268,24 @@ module Network.Google.StorageTransfer
     , awsAccessKey
     , aakSecretAccessKey
     , aakAccessKeyId
+
+    -- ** ErrorSummaryErrorCode
+    , ErrorSummaryErrorCode (..)
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.StorageTransfer.GetGoogleServiceAccount
-import           Network.Google.Resource.StorageTransfer.GoogleServiceAccounts.Get
-import           Network.Google.Resource.StorageTransfer.TransferJobs.Create
-import           Network.Google.Resource.StorageTransfer.TransferJobs.Get
-import           Network.Google.Resource.StorageTransfer.TransferJobs.List
-import           Network.Google.Resource.StorageTransfer.TransferJobs.Patch
-import           Network.Google.Resource.StorageTransfer.TransferOperations.Cancel
-import           Network.Google.Resource.StorageTransfer.TransferOperations.Delete
-import           Network.Google.Resource.StorageTransfer.TransferOperations.Get
-import           Network.Google.Resource.StorageTransfer.TransferOperations.List
-import           Network.Google.Resource.StorageTransfer.TransferOperations.Pause
-import           Network.Google.Resource.StorageTransfer.TransferOperations.Resume
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.Resource.StorageTransfer.GoogleServiceAccounts.Get
+import Network.Google.Resource.StorageTransfer.TransferJobs.Create
+import Network.Google.Resource.StorageTransfer.TransferJobs.Get
+import Network.Google.Resource.StorageTransfer.TransferJobs.List
+import Network.Google.Resource.StorageTransfer.TransferJobs.Patch
+import Network.Google.Resource.StorageTransfer.TransferOperations.Cancel
+import Network.Google.Resource.StorageTransfer.TransferOperations.Delete
+import Network.Google.Resource.StorageTransfer.TransferOperations.Get
+import Network.Google.Resource.StorageTransfer.TransferOperations.List
+import Network.Google.Resource.StorageTransfer.TransferOperations.Pause
+import Network.Google.Resource.StorageTransfer.TransferOperations.Resume
+import Network.Google.StorageTransfer.Types
 
 {- $resources
 TODO
@@ -289,7 +297,6 @@ type StorageTransferAPI =
        TransferJobsPatchResource
        :<|> TransferJobsGetResource
        :<|> TransferJobsCreateResource
-       :<|> GetGoogleServiceAccountResource
        :<|> TransferOperationsListResource
        :<|> TransferOperationsGetResource
        :<|> TransferOperationsPauseResource

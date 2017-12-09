@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.SubAccounts.Patch
     , sapProFileId
     , sapPayload
     , sapId
+    , sapFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.subaccounts.patch@ method which the
 -- 'SubAccountsPatch' request conforms to.
 type SubAccountsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "subaccounts" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] SubAccount :>
-                     Patch '[JSON] SubAccount
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] SubAccount :>
+                       Patch '[JSON] SubAccount
 
 -- | Updates an existing subaccount. This method supports patch semantics.
 --
 -- /See:/ 'subAccountsPatch' smart constructor.
 data SubAccountsPatch = SubAccountsPatch'
     { _sapProFileId :: !(Textual Int64)
-    , _sapPayload   :: !SubAccount
-    , _sapId        :: !(Textual Int64)
+    , _sapPayload :: !SubAccount
+    , _sapId :: !(Textual Int64)
+    , _sapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubAccountsPatch' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data SubAccountsPatch = SubAccountsPatch'
 -- * 'sapPayload'
 --
 -- * 'sapId'
+--
+-- * 'sapFields'
 subAccountsPatch
     :: Int64 -- ^ 'sapProFileId'
     -> SubAccount -- ^ 'sapPayload'
     -> Int64 -- ^ 'sapId'
     -> SubAccountsPatch
-subAccountsPatch pSapProFileId_ pSapPayload_ pSapId_ =
+subAccountsPatch pSapProFileId_ pSapPayload_ pSapId_ = 
     SubAccountsPatch'
     { _sapProFileId = _Coerce # pSapProFileId_
     , _sapPayload = pSapPayload_
     , _sapId = _Coerce # pSapId_
+    , _sapFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -100,12 +106,18 @@ sapId :: Lens' SubAccountsPatch Int64
 sapId
   = lens _sapId (\ s a -> s{_sapId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sapFields :: Lens' SubAccountsPatch (Maybe Text)
+sapFields
+  = lens _sapFields (\ s a -> s{_sapFields = a})
+
 instance GoogleRequest SubAccountsPatch where
         type Rs SubAccountsPatch = SubAccount
         type Scopes SubAccountsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SubAccountsPatch'{..}
-          = go _sapProFileId (Just _sapId) (Just AltJSON)
+          = go _sapProFileId (Just _sapId) _sapFields
+              (Just AltJSON)
               _sapPayload
               dFAReportingService
           where go

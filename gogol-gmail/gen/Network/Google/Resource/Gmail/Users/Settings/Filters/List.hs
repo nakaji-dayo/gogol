@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Settings.Filters.List
 
     -- * Request Lenses
     , usflUserId
+    , usflFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.filters.list@ method which the
 -- 'UsersSettingsFiltersList' request conforms to.
@@ -48,14 +49,16 @@ type UsersSettingsFiltersListResource =
            Capture "userId" Text :>
              "settings" :>
                "filters" :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ListFiltersResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ListFiltersResponse
 
 -- | Lists the message filters of a Gmail user.
 --
 -- /See:/ 'usersSettingsFiltersList' smart constructor.
-newtype UsersSettingsFiltersList = UsersSettingsFiltersList'
-    { _usflUserId :: Text
+data UsersSettingsFiltersList = UsersSettingsFiltersList'
+    { _usflUserId :: !Text
+    , _usflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsFiltersList' with the minimum fields required to make a request.
@@ -63,11 +66,14 @@ newtype UsersSettingsFiltersList = UsersSettingsFiltersList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'usflUserId'
+--
+-- * 'usflFields'
 usersSettingsFiltersList
     :: UsersSettingsFiltersList
-usersSettingsFiltersList =
+usersSettingsFiltersList = 
     UsersSettingsFiltersList'
     { _usflUserId = "me"
+    , _usflFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -75,6 +81,11 @@ usersSettingsFiltersList =
 usflUserId :: Lens' UsersSettingsFiltersList Text
 usflUserId
   = lens _usflUserId (\ s a -> s{_usflUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+usflFields :: Lens' UsersSettingsFiltersList (Maybe Text)
+usflFields
+  = lens _usflFields (\ s a -> s{_usflFields = a})
 
 instance GoogleRequest UsersSettingsFiltersList where
         type Rs UsersSettingsFiltersList =
@@ -85,7 +96,8 @@ instance GoogleRequest UsersSettingsFiltersList where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsFiltersList'{..}
-          = go _usflUserId (Just AltJSON) gmailService
+          = go _usflUserId _usflFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsFiltersListResource)

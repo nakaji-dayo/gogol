@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Labels.Get
     -- * Request Lenses
     , ulgUserId
     , ulgId
+    , ulgFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.get@ method which the
 -- 'UsersLabelsGet' request conforms to.
@@ -49,14 +50,16 @@ type UsersLabelsGetResource =
            Capture "userId" Text :>
              "labels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Label
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Label
 
 -- | Gets the specified label.
 --
 -- /See:/ 'usersLabelsGet' smart constructor.
 data UsersLabelsGet = UsersLabelsGet'
     { _ulgUserId :: !Text
-    , _ulgId     :: !Text
+    , _ulgId :: !Text
+    , _ulgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsGet' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data UsersLabelsGet = UsersLabelsGet'
 -- * 'ulgUserId'
 --
 -- * 'ulgId'
+--
+-- * 'ulgFields'
 usersLabelsGet
     :: Text -- ^ 'ulgId'
     -> UsersLabelsGet
-usersLabelsGet pUlgId_ =
+usersLabelsGet pUlgId_ = 
     UsersLabelsGet'
     { _ulgUserId = "me"
     , _ulgId = pUlgId_
+    , _ulgFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -85,6 +91,11 @@ ulgUserId
 ulgId :: Lens' UsersLabelsGet Text
 ulgId = lens _ulgId (\ s a -> s{_ulgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ulgFields :: Lens' UsersLabelsGet (Maybe Text)
+ulgFields
+  = lens _ulgFields (\ s a -> s{_ulgFields = a})
+
 instance GoogleRequest UsersLabelsGet where
         type Rs UsersLabelsGet = Label
         type Scopes UsersLabelsGet =
@@ -94,7 +105,8 @@ instance GoogleRequest UsersLabelsGet where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersLabelsGet'{..}
-          = go _ulgUserId _ulgId (Just AltJSON) gmailService
+          = go _ulgUserId _ulgId _ulgFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient (Proxy :: Proxy UsersLabelsGetResource)
                       mempty

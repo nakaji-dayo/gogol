@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.CreativeGroups.Patch
     , cgpProFileId
     , cgpPayload
     , cgpId
+    , cgpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeGroups.patch@ method which the
 -- 'CreativeGroupsPatch' request conforms to.
 type CreativeGroupsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeGroups" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] CreativeGroup :>
-                     Patch '[JSON] CreativeGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] CreativeGroup :>
+                       Patch '[JSON] CreativeGroup
 
 -- | Updates an existing creative group. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type CreativeGroupsPatchResource =
 -- /See:/ 'creativeGroupsPatch' smart constructor.
 data CreativeGroupsPatch = CreativeGroupsPatch'
     { _cgpProFileId :: !(Textual Int64)
-    , _cgpPayload   :: !CreativeGroup
-    , _cgpId        :: !(Textual Int64)
+    , _cgpPayload :: !CreativeGroup
+    , _cgpId :: !(Textual Int64)
+    , _cgpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data CreativeGroupsPatch = CreativeGroupsPatch'
 -- * 'cgpPayload'
 --
 -- * 'cgpId'
+--
+-- * 'cgpFields'
 creativeGroupsPatch
     :: Int64 -- ^ 'cgpProFileId'
     -> CreativeGroup -- ^ 'cgpPayload'
     -> Int64 -- ^ 'cgpId'
     -> CreativeGroupsPatch
-creativeGroupsPatch pCgpProFileId_ pCgpPayload_ pCgpId_ =
+creativeGroupsPatch pCgpProFileId_ pCgpPayload_ pCgpId_ = 
     CreativeGroupsPatch'
     { _cgpProFileId = _Coerce # pCgpProFileId_
     , _cgpPayload = pCgpPayload_
     , _cgpId = _Coerce # pCgpId_
+    , _cgpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ cgpId :: Lens' CreativeGroupsPatch Int64
 cgpId
   = lens _cgpId (\ s a -> s{_cgpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cgpFields :: Lens' CreativeGroupsPatch (Maybe Text)
+cgpFields
+  = lens _cgpFields (\ s a -> s{_cgpFields = a})
+
 instance GoogleRequest CreativeGroupsPatch where
         type Rs CreativeGroupsPatch = CreativeGroup
         type Scopes CreativeGroupsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeGroupsPatch'{..}
-          = go _cgpProFileId (Just _cgpId) (Just AltJSON)
+          = go _cgpProFileId (Just _cgpId) _cgpFields
+              (Just AltJSON)
               _cgpPayload
               dFAReportingService
           where go

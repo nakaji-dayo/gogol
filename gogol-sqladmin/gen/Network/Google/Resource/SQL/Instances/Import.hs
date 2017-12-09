@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.Instances.Import
     -- * Request Lenses
     , iiProject
     , iiPayload
+    , iiFields
     , iiInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.import@ method which the
 -- 'InstancesImport' request conforms to.
@@ -52,17 +53,19 @@ type InstancesImportResource =
              "instances" :>
                Capture "instance" Text :>
                  "import" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstancesImportRequest :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InstancesImportRequest :>
+                         Post '[JSON] Operation
 
 -- | Imports data into a Cloud SQL instance from a MySQL dump file in Google
 -- Cloud Storage.
 --
 -- /See:/ 'instancesImport' smart constructor.
 data InstancesImport = InstancesImport'
-    { _iiProject  :: !Text
-    , _iiPayload  :: !InstancesImportRequest
+    { _iiProject :: !Text
+    , _iiPayload :: !InstancesImportRequest
+    , _iiFields :: !(Maybe Text)
     , _iiInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -74,16 +77,19 @@ data InstancesImport = InstancesImport'
 --
 -- * 'iiPayload'
 --
+-- * 'iiFields'
+--
 -- * 'iiInstance'
 instancesImport
     :: Text -- ^ 'iiProject'
     -> InstancesImportRequest -- ^ 'iiPayload'
     -> Text -- ^ 'iiInstance'
     -> InstancesImport
-instancesImport pIiProject_ pIiPayload_ pIiInstance_ =
+instancesImport pIiProject_ pIiPayload_ pIiInstance_ = 
     InstancesImport'
     { _iiProject = pIiProject_
     , _iiPayload = pIiPayload_
+    , _iiFields = Nothing
     , _iiInstance = pIiInstance_
     }
 
@@ -97,6 +103,10 @@ iiPayload :: Lens' InstancesImport InstancesImportRequest
 iiPayload
   = lens _iiPayload (\ s a -> s{_iiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iiFields :: Lens' InstancesImport (Maybe Text)
+iiFields = lens _iiFields (\ s a -> s{_iiFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 iiInstance :: Lens' InstancesImport Text
 iiInstance
@@ -107,7 +117,8 @@ instance GoogleRequest InstancesImport where
         type Scopes InstancesImport =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient InstancesImport'{..}
-          = go _iiProject _iiInstance (Just AltJSON) _iiPayload
+          = go _iiProject _iiInstance _iiFields (Just AltJSON)
+              _iiPayload
               sQLAdminService
           where go
                   = buildClient

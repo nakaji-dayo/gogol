@@ -38,10 +38,11 @@ module Network.Google.Resource.Blogger.Posts.Insert
     , posFetchImages
     , posBlogId
     , posPayload
+    , posFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.insert@ method which the
 -- 'PostsInsert' request conforms to.
@@ -54,18 +55,20 @@ type PostsInsertResource =
                QueryParam "fetchBody" Bool :>
                  QueryParam "isDraft" Bool :>
                    QueryParam "fetchImages" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Post' :> Post '[JSON] Post'
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Post' :> Post '[JSON] Post'
 
 -- | Add a post.
 --
 -- /See:/ 'postsInsert' smart constructor.
 data PostsInsert = PostsInsert'
-    { _posFetchBody   :: !Bool
-    , _posIsDraft     :: !(Maybe Bool)
+    { _posFetchBody :: !Bool
+    , _posIsDraft :: !(Maybe Bool)
     , _posFetchImages :: !(Maybe Bool)
-    , _posBlogId      :: !Text
-    , _posPayload     :: !Post'
+    , _posBlogId :: !Text
+    , _posPayload :: !Post'
+    , _posFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsInsert' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data PostsInsert = PostsInsert'
 -- * 'posBlogId'
 --
 -- * 'posPayload'
+--
+-- * 'posFields'
 postsInsert
     :: Text -- ^ 'posBlogId'
     -> Post' -- ^ 'posPayload'
     -> PostsInsert
-postsInsert pPosBlogId_ pPosPayload_ =
+postsInsert pPosBlogId_ pPosPayload_ = 
     PostsInsert'
     { _posFetchBody = True
     , _posIsDraft = Nothing
     , _posFetchImages = Nothing
     , _posBlogId = pPosBlogId_
     , _posPayload = pPosPayload_
+    , _posFields = Nothing
     }
 
 -- | Whether the body content of the post is included with the result
@@ -122,6 +128,11 @@ posPayload :: Lens' PostsInsert Post'
 posPayload
   = lens _posPayload (\ s a -> s{_posPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+posFields :: Lens' PostsInsert (Maybe Text)
+posFields
+  = lens _posFields (\ s a -> s{_posFields = a})
+
 instance GoogleRequest PostsInsert where
         type Rs PostsInsert = Post'
         type Scopes PostsInsert =
@@ -129,6 +140,7 @@ instance GoogleRequest PostsInsert where
         requestClient PostsInsert'{..}
           = go _posBlogId (Just _posFetchBody) _posIsDraft
               _posFetchImages
+              _posFields
               (Just AltJSON)
               _posPayload
               bloggerService

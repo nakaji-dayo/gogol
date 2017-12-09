@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Set the account that will be used to authenticate to the API as the
+-- Sets the account that will be used to authenticate to the API as the
 -- enterprise.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.enterprises.setAccount@.
@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.SetAccount
     -- * Request Lenses
     , esaEnterpriseId
     , esaPayload
+    , esaFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.setAccount@ method which the
 -- 'EnterprisesSetAccount' request conforms to.
@@ -49,17 +50,19 @@ type EnterprisesSetAccountResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "account" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] EnterpriseAccount :>
-                   Put '[JSON] EnterpriseAccount
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] EnterpriseAccount :>
+                     Put '[JSON] EnterpriseAccount
 
--- | Set the account that will be used to authenticate to the API as the
+-- | Sets the account that will be used to authenticate to the API as the
 -- enterprise.
 --
 -- /See:/ 'enterprisesSetAccount' smart constructor.
 data EnterprisesSetAccount = EnterprisesSetAccount'
     { _esaEnterpriseId :: !Text
-    , _esaPayload      :: !EnterpriseAccount
+    , _esaPayload :: !EnterpriseAccount
+    , _esaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesSetAccount' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data EnterprisesSetAccount = EnterprisesSetAccount'
 -- * 'esaEnterpriseId'
 --
 -- * 'esaPayload'
+--
+-- * 'esaFields'
 enterprisesSetAccount
     :: Text -- ^ 'esaEnterpriseId'
     -> EnterpriseAccount -- ^ 'esaPayload'
     -> EnterprisesSetAccount
-enterprisesSetAccount pEsaEnterpriseId_ pEsaPayload_ =
+enterprisesSetAccount pEsaEnterpriseId_ pEsaPayload_ = 
     EnterprisesSetAccount'
     { _esaEnterpriseId = pEsaEnterpriseId_
     , _esaPayload = pEsaPayload_
+    , _esaFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -90,12 +96,18 @@ esaPayload :: Lens' EnterprisesSetAccount EnterpriseAccount
 esaPayload
   = lens _esaPayload (\ s a -> s{_esaPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+esaFields :: Lens' EnterprisesSetAccount (Maybe Text)
+esaFields
+  = lens _esaFields (\ s a -> s{_esaFields = a})
+
 instance GoogleRequest EnterprisesSetAccount where
         type Rs EnterprisesSetAccount = EnterpriseAccount
         type Scopes EnterprisesSetAccount =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesSetAccount'{..}
-          = go _esaEnterpriseId (Just AltJSON) _esaPayload
+          = go _esaEnterpriseId _esaFields (Just AltJSON)
+              _esaPayload
               androidEnterpriseService
           where go
                   = buildClient

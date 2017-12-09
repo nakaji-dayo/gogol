@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.FloodlightActivities.Insert
     -- * Request Lenses
     , faiProFileId
     , faiPayload
+    , faiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightActivities.insert@ method which the
 -- 'FloodlightActivitiesInsert' request conforms to.
 type FloodlightActivitiesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightActivities" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] FloodlightActivity :>
-                   Post '[JSON] FloodlightActivity
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] FloodlightActivity :>
+                     Post '[JSON] FloodlightActivity
 
 -- | Inserts a new floodlight activity.
 --
 -- /See:/ 'floodlightActivitiesInsert' smart constructor.
 data FloodlightActivitiesInsert = FloodlightActivitiesInsert'
     { _faiProFileId :: !(Textual Int64)
-    , _faiPayload   :: !FloodlightActivity
+    , _faiPayload :: !FloodlightActivity
+    , _faiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivitiesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data FloodlightActivitiesInsert = FloodlightActivitiesInsert'
 -- * 'faiProFileId'
 --
 -- * 'faiPayload'
+--
+-- * 'faiFields'
 floodlightActivitiesInsert
     :: Int64 -- ^ 'faiProFileId'
     -> FloodlightActivity -- ^ 'faiPayload'
     -> FloodlightActivitiesInsert
-floodlightActivitiesInsert pFaiProFileId_ pFaiPayload_ =
+floodlightActivitiesInsert pFaiProFileId_ pFaiPayload_ = 
     FloodlightActivitiesInsert'
     { _faiProFileId = _Coerce # pFaiProFileId_
     , _faiPayload = pFaiPayload_
+    , _faiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,6 +94,11 @@ faiPayload :: Lens' FloodlightActivitiesInsert FloodlightActivity
 faiPayload
   = lens _faiPayload (\ s a -> s{_faiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+faiFields :: Lens' FloodlightActivitiesInsert (Maybe Text)
+faiFields
+  = lens _faiFields (\ s a -> s{_faiFields = a})
+
 instance GoogleRequest FloodlightActivitiesInsert
          where
         type Rs FloodlightActivitiesInsert =
@@ -95,7 +106,8 @@ instance GoogleRequest FloodlightActivitiesInsert
         type Scopes FloodlightActivitiesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightActivitiesInsert'{..}
-          = go _faiProFileId (Just AltJSON) _faiPayload
+          = go _faiProFileId _faiFields (Just AltJSON)
+              _faiPayload
               dFAReportingService
           where go
                   = buildClient

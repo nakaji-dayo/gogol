@@ -43,11 +43,12 @@ module Network.Google.Resource.Classroom.Invitations.Get
     , igUploadType
     , igBearerToken
     , igId
+    , igFields
     , igCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.invitations.get@ method which the
 -- 'InvitationsGet' request conforms to.
@@ -55,14 +56,15 @@ type InvitationsGetResource =
      "v1" :>
        "invitations" :>
          Capture "id" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Invitation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Invitation
 
 -- | Returns an invitation. This method returns the following error codes: *
 -- \`PERMISSION_DENIED\` if the requesting user is not permitted to view
@@ -71,14 +73,15 @@ type InvitationsGetResource =
 --
 -- /See:/ 'invitationsGet' smart constructor.
 data InvitationsGet = InvitationsGet'
-    { _igXgafv          :: !(Maybe Text)
+    { _igXgafv :: !(Maybe Xgafv)
     , _igUploadProtocol :: !(Maybe Text)
-    , _igPp             :: !Bool
-    , _igAccessToken    :: !(Maybe Text)
-    , _igUploadType     :: !(Maybe Text)
-    , _igBearerToken    :: !(Maybe Text)
-    , _igId             :: !Text
-    , _igCallback       :: !(Maybe Text)
+    , _igPp :: !Bool
+    , _igAccessToken :: !(Maybe Text)
+    , _igUploadType :: !(Maybe Text)
+    , _igBearerToken :: !(Maybe Text)
+    , _igId :: !Text
+    , _igFields :: !(Maybe Text)
+    , _igCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InvitationsGet' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data InvitationsGet = InvitationsGet'
 --
 -- * 'igId'
 --
+-- * 'igFields'
+--
 -- * 'igCallback'
 invitationsGet
     :: Text -- ^ 'igId'
     -> InvitationsGet
-invitationsGet pIgId_ =
+invitationsGet pIgId_ = 
     InvitationsGet'
     { _igXgafv = Nothing
     , _igUploadProtocol = Nothing
@@ -112,11 +117,12 @@ invitationsGet pIgId_ =
     , _igUploadType = Nothing
     , _igBearerToken = Nothing
     , _igId = pIgId_
+    , _igFields = Nothing
     , _igCallback = Nothing
     }
 
 -- | V1 error format.
-igXgafv :: Lens' InvitationsGet (Maybe Text)
+igXgafv :: Lens' InvitationsGet (Maybe Xgafv)
 igXgafv = lens _igXgafv (\ s a -> s{_igXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -150,6 +156,10 @@ igBearerToken
 igId :: Lens' InvitationsGet Text
 igId = lens _igId (\ s a -> s{_igId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igFields :: Lens' InvitationsGet (Maybe Text)
+igFields = lens _igFields (\ s a -> s{_igFields = a})
+
 -- | JSONP
 igCallback :: Lens' InvitationsGet (Maybe Text)
 igCallback
@@ -166,6 +176,7 @@ instance GoogleRequest InvitationsGet where
               _igUploadType
               _igBearerToken
               _igCallback
+              _igFields
               (Just AltJSON)
               classroomService
           where go

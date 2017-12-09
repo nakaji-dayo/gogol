@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.DiskTypes.Get
     , dtgProject
     , dtgZone
     , dtgDiskType
+    , dtgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.diskTypes.get@ method which the
 -- 'DiskTypesGet' request conforms to.
@@ -53,16 +54,18 @@ type DiskTypesGetResource =
                Capture "zone" Text :>
                  "diskTypes" :>
                    Capture "diskType" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] DiskType
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] DiskType
 
 -- | Returns the specified disk type. Get a list of available disk types by
 -- making a list() request.
 --
 -- /See:/ 'diskTypesGet' smart constructor.
 data DiskTypesGet = DiskTypesGet'
-    { _dtgProject  :: !Text
-    , _dtgZone     :: !Text
+    { _dtgProject :: !Text
+    , _dtgZone :: !Text
     , _dtgDiskType :: !Text
+    , _dtgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DiskTypesGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data DiskTypesGet = DiskTypesGet'
 -- * 'dtgZone'
 --
 -- * 'dtgDiskType'
+--
+-- * 'dtgFields'
 diskTypesGet
     :: Text -- ^ 'dtgProject'
     -> Text -- ^ 'dtgZone'
     -> Text -- ^ 'dtgDiskType'
     -> DiskTypesGet
-diskTypesGet pDtgProject_ pDtgZone_ pDtgDiskType_ =
+diskTypesGet pDtgProject_ pDtgZone_ pDtgDiskType_ = 
     DiskTypesGet'
     { _dtgProject = pDtgProject_
     , _dtgZone = pDtgZone_
     , _dtgDiskType = pDtgDiskType_
+    , _dtgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -100,6 +106,11 @@ dtgDiskType :: Lens' DiskTypesGet Text
 dtgDiskType
   = lens _dtgDiskType (\ s a -> s{_dtgDiskType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dtgFields :: Lens' DiskTypesGet (Maybe Text)
+dtgFields
+  = lens _dtgFields (\ s a -> s{_dtgFields = a})
+
 instance GoogleRequest DiskTypesGet where
         type Rs DiskTypesGet = DiskType
         type Scopes DiskTypesGet =
@@ -107,7 +118,8 @@ instance GoogleRequest DiskTypesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient DiskTypesGet'{..}
-          = go _dtgProject _dtgZone _dtgDiskType (Just AltJSON)
+          = go _dtgProject _dtgZone _dtgDiskType _dtgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy DiskTypesGetResource)

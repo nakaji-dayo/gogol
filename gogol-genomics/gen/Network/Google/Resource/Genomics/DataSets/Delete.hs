@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.DataSets.Delete
     , dsdUploadType
     , dsdBearerToken
     , dsdDataSetId
+    , dsdFields
     , dsdCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.delete@ method which the
 -- 'DataSetsDelete' request conforms to.
@@ -64,7 +65,8 @@ type DataSetsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a dataset and all of its contents (all read group sets,
 -- reference sets, variant sets, call sets, annotation sets, etc.) This is
@@ -75,14 +77,15 @@ type DataSetsDeleteResource =
 --
 -- /See:/ 'dataSetsDelete' smart constructor.
 data DataSetsDelete = DataSetsDelete'
-    { _dsdXgafv          :: !(Maybe Xgafv)
+    { _dsdXgafv :: !(Maybe Xgafv)
     , _dsdUploadProtocol :: !(Maybe Text)
-    , _dsdPp             :: !Bool
-    , _dsdAccessToken    :: !(Maybe Text)
-    , _dsdUploadType     :: !(Maybe Text)
-    , _dsdBearerToken    :: !(Maybe Text)
-    , _dsdDataSetId      :: !Text
-    , _dsdCallback       :: !(Maybe Text)
+    , _dsdPp :: !Bool
+    , _dsdAccessToken :: !(Maybe Text)
+    , _dsdUploadType :: !(Maybe Text)
+    , _dsdBearerToken :: !(Maybe Text)
+    , _dsdDataSetId :: !Text
+    , _dsdFields :: !(Maybe Text)
+    , _dsdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsDelete' with the minimum fields required to make a request.
@@ -103,11 +106,13 @@ data DataSetsDelete = DataSetsDelete'
 --
 -- * 'dsdDataSetId'
 --
+-- * 'dsdFields'
+--
 -- * 'dsdCallback'
 dataSetsDelete
     :: Text -- ^ 'dsdDataSetId'
     -> DataSetsDelete
-dataSetsDelete pDsdDataSetId_ =
+dataSetsDelete pDsdDataSetId_ = 
     DataSetsDelete'
     { _dsdXgafv = Nothing
     , _dsdUploadProtocol = Nothing
@@ -116,6 +121,7 @@ dataSetsDelete pDsdDataSetId_ =
     , _dsdUploadType = Nothing
     , _dsdBearerToken = Nothing
     , _dsdDataSetId = pDsdDataSetId_
+    , _dsdFields = Nothing
     , _dsdCallback = Nothing
     }
 
@@ -156,6 +162,11 @@ dsdDataSetId :: Lens' DataSetsDelete Text
 dsdDataSetId
   = lens _dsdDataSetId (\ s a -> s{_dsdDataSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsdFields :: Lens' DataSetsDelete (Maybe Text)
+dsdFields
+  = lens _dsdFields (\ s a -> s{_dsdFields = a})
+
 -- | JSONP
 dsdCallback :: Lens' DataSetsDelete (Maybe Text)
 dsdCallback
@@ -173,6 +184,7 @@ instance GoogleRequest DataSetsDelete where
               _dsdUploadType
               _dsdBearerToken
               _dsdCallback
+              _dsdFields
               (Just AltJSON)
               genomicsService
           where go

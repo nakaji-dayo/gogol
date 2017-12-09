@@ -43,10 +43,11 @@ module Network.Google.Resource.BigQuery.Jobs.List
     , jlProjectId
     , jlAllUsers
     , jlMaxResults
+    , jlFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.list@ method which the
 -- 'JobsList' request conforms to.
@@ -61,7 +62,8 @@ type JobsListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "allUsers" Bool :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] JobList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] JobList
 
 -- | Lists all jobs that you started in the specified project. Job
 -- information is available for a six month period after creation. The job
@@ -72,11 +74,12 @@ type JobsListResource =
 -- /See:/ 'jobsList' smart constructor.
 data JobsList = JobsList'
     { _jlStateFilter :: !(Maybe [JobsListStateFilter])
-    , _jlProjection  :: !(Maybe JobsListProjection)
-    , _jlPageToken   :: !(Maybe Text)
-    , _jlProjectId   :: !Text
-    , _jlAllUsers    :: !(Maybe Bool)
-    , _jlMaxResults  :: !(Maybe (Textual Word32))
+    , _jlProjection :: !(Maybe JobsListProjection)
+    , _jlPageToken :: !(Maybe Text)
+    , _jlProjectId :: !Text
+    , _jlAllUsers :: !(Maybe Bool)
+    , _jlMaxResults :: !(Maybe (Textual Word32))
+    , _jlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsList' with the minimum fields required to make a request.
@@ -94,10 +97,12 @@ data JobsList = JobsList'
 -- * 'jlAllUsers'
 --
 -- * 'jlMaxResults'
+--
+-- * 'jlFields'
 jobsList
     :: Text -- ^ 'jlProjectId'
     -> JobsList
-jobsList pJlProjectId_ =
+jobsList pJlProjectId_ = 
     JobsList'
     { _jlStateFilter = Nothing
     , _jlProjection = Nothing
@@ -105,6 +110,7 @@ jobsList pJlProjectId_ =
     , _jlProjectId = pJlProjectId_
     , _jlAllUsers = Nothing
     , _jlMaxResults = Nothing
+    , _jlFields = Nothing
     }
 
 -- | Filter for job state
@@ -142,6 +148,10 @@ jlMaxResults
   = lens _jlMaxResults (\ s a -> s{_jlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+jlFields :: Lens' JobsList (Maybe Text)
+jlFields = lens _jlFields (\ s a -> s{_jlFields = a})
+
 instance GoogleRequest JobsList where
         type Rs JobsList = JobList
         type Scopes JobsList =
@@ -154,6 +164,7 @@ instance GoogleRequest JobsList where
               _jlPageToken
               _jlAllUsers
               _jlMaxResults
+              _jlFields
               (Just AltJSON)
               bigQueryService
           where go

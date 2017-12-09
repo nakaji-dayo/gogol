@@ -55,12 +55,13 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.StudentSubmissions.R
     , ccwssrPayload
     , ccwssrBearerToken
     , ccwssrId
+    , ccwssrFields
     , ccwssrCallback
     , ccwssrCourseWorkId
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.studentSubmissions.return@ method which the
 -- 'CoursesCourseWorkStudentSubmissionsReturn' request conforms to.
@@ -73,17 +74,18 @@ type CoursesCourseWorkStudentSubmissionsReturnResource
              Capture "courseWorkId" Text :>
                "studentSubmissions" :>
                  CaptureMode "id" "return" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON]
-                                     ReturnStudentSubmissionRequest
-                                     :> Post '[JSON] Empty
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON]
+                                       ReturnStudentSubmissionRequest
+                                       :> Post '[JSON] Empty
 
 -- | Returns a student submission. Returning a student submission transfers
 -- ownership of attached Drive files to the student and may also update the
@@ -102,17 +104,18 @@ type CoursesCourseWorkStudentSubmissionsReturnResource
 --
 -- /See:/ 'coursesCourseWorkStudentSubmissionsReturn' smart constructor.
 data CoursesCourseWorkStudentSubmissionsReturn = CoursesCourseWorkStudentSubmissionsReturn'
-    { _ccwssrXgafv          :: !(Maybe Text)
+    { _ccwssrXgafv :: !(Maybe Xgafv)
     , _ccwssrUploadProtocol :: !(Maybe Text)
-    , _ccwssrPp             :: !Bool
-    , _ccwssrCourseId       :: !Text
-    , _ccwssrAccessToken    :: !(Maybe Text)
-    , _ccwssrUploadType     :: !(Maybe Text)
-    , _ccwssrPayload        :: !ReturnStudentSubmissionRequest
-    , _ccwssrBearerToken    :: !(Maybe Text)
-    , _ccwssrId             :: !Text
-    , _ccwssrCallback       :: !(Maybe Text)
-    , _ccwssrCourseWorkId   :: !Text
+    , _ccwssrPp :: !Bool
+    , _ccwssrCourseId :: !Text
+    , _ccwssrAccessToken :: !(Maybe Text)
+    , _ccwssrUploadType :: !(Maybe Text)
+    , _ccwssrPayload :: !ReturnStudentSubmissionRequest
+    , _ccwssrBearerToken :: !(Maybe Text)
+    , _ccwssrId :: !Text
+    , _ccwssrFields :: !(Maybe Text)
+    , _ccwssrCallback :: !(Maybe Text)
+    , _ccwssrCourseWorkId :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkStudentSubmissionsReturn' with the minimum fields required to make a request.
@@ -137,6 +140,8 @@ data CoursesCourseWorkStudentSubmissionsReturn = CoursesCourseWorkStudentSubmiss
 --
 -- * 'ccwssrId'
 --
+-- * 'ccwssrFields'
+--
 -- * 'ccwssrCallback'
 --
 -- * 'ccwssrCourseWorkId'
@@ -146,7 +151,7 @@ coursesCourseWorkStudentSubmissionsReturn
     -> Text -- ^ 'ccwssrId'
     -> Text -- ^ 'ccwssrCourseWorkId'
     -> CoursesCourseWorkStudentSubmissionsReturn
-coursesCourseWorkStudentSubmissionsReturn pCcwssrCourseId_ pCcwssrPayload_ pCcwssrId_ pCcwssrCourseWorkId_ =
+coursesCourseWorkStudentSubmissionsReturn pCcwssrCourseId_ pCcwssrPayload_ pCcwssrId_ pCcwssrCourseWorkId_ = 
     CoursesCourseWorkStudentSubmissionsReturn'
     { _ccwssrXgafv = Nothing
     , _ccwssrUploadProtocol = Nothing
@@ -157,12 +162,13 @@ coursesCourseWorkStudentSubmissionsReturn pCcwssrCourseId_ pCcwssrPayload_ pCcws
     , _ccwssrPayload = pCcwssrPayload_
     , _ccwssrBearerToken = Nothing
     , _ccwssrId = pCcwssrId_
+    , _ccwssrFields = Nothing
     , _ccwssrCallback = Nothing
     , _ccwssrCourseWorkId = pCcwssrCourseWorkId_
     }
 
 -- | V1 error format.
-ccwssrXgafv :: Lens' CoursesCourseWorkStudentSubmissionsReturn (Maybe Text)
+ccwssrXgafv :: Lens' CoursesCourseWorkStudentSubmissionsReturn (Maybe Xgafv)
 ccwssrXgafv
   = lens _ccwssrXgafv (\ s a -> s{_ccwssrXgafv = a})
 
@@ -211,6 +217,11 @@ ccwssrBearerToken
 ccwssrId :: Lens' CoursesCourseWorkStudentSubmissionsReturn Text
 ccwssrId = lens _ccwssrId (\ s a -> s{_ccwssrId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwssrFields :: Lens' CoursesCourseWorkStudentSubmissionsReturn (Maybe Text)
+ccwssrFields
+  = lens _ccwssrFields (\ s a -> s{_ccwssrFields = a})
+
 -- | JSONP
 ccwssrCallback :: Lens' CoursesCourseWorkStudentSubmissionsReturn (Maybe Text)
 ccwssrCallback
@@ -240,6 +251,7 @@ instance GoogleRequest
               _ccwssrUploadType
               _ccwssrBearerToken
               _ccwssrCallback
+              _ccwssrFields
               (Just AltJSON)
               _ccwssrPayload
               classroomService

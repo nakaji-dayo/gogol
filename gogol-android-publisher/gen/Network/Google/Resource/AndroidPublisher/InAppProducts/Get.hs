@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.InAppProducts.Get
     -- * Request Lenses
     , iapgPackageName
     , iapgSKU
+    , iapgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.inappproducts.get@ method which the
 -- 'InAppProductsGet' request conforms to.
@@ -49,14 +50,16 @@ type InAppProductsGetResource =
            Capture "packageName" Text :>
              "inappproducts" :>
                Capture "sku" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] InAppProduct
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] InAppProduct
 
 -- | Returns information about the in-app product specified.
 --
 -- /See:/ 'inAppProductsGet' smart constructor.
 data InAppProductsGet = InAppProductsGet'
     { _iapgPackageName :: !Text
-    , _iapgSKU         :: !Text
+    , _iapgSKU :: !Text
+    , _iapgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InAppProductsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data InAppProductsGet = InAppProductsGet'
 -- * 'iapgPackageName'
 --
 -- * 'iapgSKU'
+--
+-- * 'iapgFields'
 inAppProductsGet
     :: Text -- ^ 'iapgPackageName'
     -> Text -- ^ 'iapgSKU'
     -> InAppProductsGet
-inAppProductsGet pIapgPackageName_ pIapgSKU_ =
+inAppProductsGet pIapgPackageName_ pIapgSKU_ = 
     InAppProductsGet'
     { _iapgPackageName = pIapgPackageName_
     , _iapgSKU = pIapgSKU_
+    , _iapgFields = Nothing
     }
 
 iapgPackageName :: Lens' InAppProductsGet Text
@@ -85,12 +91,18 @@ iapgPackageName
 iapgSKU :: Lens' InAppProductsGet Text
 iapgSKU = lens _iapgSKU (\ s a -> s{_iapgSKU = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iapgFields :: Lens' InAppProductsGet (Maybe Text)
+iapgFields
+  = lens _iapgFields (\ s a -> s{_iapgFields = a})
+
 instance GoogleRequest InAppProductsGet where
         type Rs InAppProductsGet = InAppProduct
         type Scopes InAppProductsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient InAppProductsGet'{..}
-          = go _iapgPackageName _iapgSKU (Just AltJSON)
+          = go _iapgPackageName _iapgSKU _iapgFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient

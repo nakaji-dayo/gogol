@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -32,6 +32,8 @@ module Network.Google.ContainerBuilder.Types
     , bsWaitFor
     , bsName
     , bsId
+    , bsSecretEnv
+    , bsVolumes
 
     -- * SourceProvenance
     , SourceProvenance
@@ -52,6 +54,10 @@ module Network.Google.ContainerBuilder.Types
     , sDetails
     , sCode
     , sMessage
+
+    -- * RetryBuildRequest
+    , RetryBuildRequest
+    , retryBuildRequest
 
     -- * ListOperationsResponse
     , ListOperationsResponse
@@ -75,10 +81,16 @@ module Network.Google.ContainerBuilder.Types
     , rImages
     , rBuildStepImages
 
+    -- * BuildTriggerSubstitutions
+    , BuildTriggerSubstitutions
+    , buildTriggerSubstitutions
+    , btsAddtional
+
     -- * RepoSource
     , RepoSource
     , repoSource
     , rsRepoName
+    , rsDir
     , rsCommitSha
     , rsBranchName
     , rsTagName
@@ -97,6 +109,17 @@ module Network.Google.ContainerBuilder.Types
     , Empty
     , empty
 
+    -- * SecretSecretEnv
+    , SecretSecretEnv
+    , secretSecretEnv
+    , sseAddtional
+
+    -- * Volume
+    , Volume
+    , volume
+    , vPath
+    , vName
+
     -- * StatusDetailsItem
     , StatusDetailsItem
     , statusDetailsItem
@@ -108,8 +131,10 @@ module Network.Google.ContainerBuilder.Types
     , bImages
     , bStatus
     , bSourceProvenance
+    , bSubstitutions
     , bLogURL
     , bResults
+    , bSecrets
     , bStartTime
     , bLogsBucket
     , bSteps
@@ -122,11 +147,18 @@ module Network.Google.ContainerBuilder.Types
     , bTimeout
     , bFinishTime
     , bCreateTime
+    , bTags
 
     -- * SourceProvenanceFileHashes
     , SourceProvenanceFileHashes
     , sourceProvenanceFileHashes
     , spfhAddtional
+
+    -- * Secret
+    , Secret
+    , secret
+    , sKmsKeyName
+    , sSecretEnv
 
     -- * CancelBuildRequest
     , CancelBuildRequest
@@ -152,14 +184,25 @@ module Network.Google.ContainerBuilder.Types
     , fileHashes
     , fhFileHash
 
+    -- * BuildSubstitutions
+    , BuildSubstitutions
+    , buildSubstitutions
+    , bsAddtional
+
     -- * Xgafv
     , Xgafv (..)
 
     -- * BuildStatus
     , BuildStatus (..)
 
+    -- * BuildOptionsSubstitutionOption
+    , BuildOptionsSubstitutionOption (..)
+
     -- * HashType
     , HashType (..)
+
+    -- * BuildOptionsLogStreamingOption
+    , BuildOptionsLogStreamingOption (..)
 
     -- * Source
     , Source
@@ -172,6 +215,9 @@ module Network.Google.ContainerBuilder.Types
     , operationMetadata
     , omAddtional
 
+    -- * BuildOptionsMachineType
+    , BuildOptionsMachineType (..)
+
     -- * BuildOperationMetadata
     , BuildOperationMetadata
     , buildOperationMetadata
@@ -180,7 +226,11 @@ module Network.Google.ContainerBuilder.Types
     -- * BuildOptions
     , BuildOptions
     , buildOptions
+    , boDiskSizeGb
+    , boSubstitutionOption
     , boRequestedVerifyOption
+    , boMachineType
+    , boLogStreamingOption
     , boSourceProvenanceHash
 
     -- * OperationResponse
@@ -191,6 +241,7 @@ module Network.Google.ContainerBuilder.Types
     -- * BuildTrigger
     , BuildTrigger
     , buildTrigger
+    , btSubstitutions
     , btDisabled
     , btTriggerTemplate
     , btBuild
@@ -206,9 +257,9 @@ module Network.Google.ContainerBuilder.Types
     , biDigest
     ) where
 
-import           Network.Google.ContainerBuilder.Types.Product
-import           Network.Google.ContainerBuilder.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types.Product
+import Network.Google.ContainerBuilder.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Google Cloud Container Builder API. This contains the host and root path used as a starting point for constructing service requests.
 containerBuilderService :: ServiceConfig

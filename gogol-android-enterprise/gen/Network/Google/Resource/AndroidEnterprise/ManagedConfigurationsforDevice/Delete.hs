@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.
     , mcddUserId
     , mcddDeviceId
     , mcddManagedConfigurationForDeviceId
+    , mcddFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsfordevice.delete@ method which the
 -- 'ManagedConfigurationsforDeviceDelete' request conforms to.
@@ -56,17 +57,19 @@ type ManagedConfigurationsforDeviceDeleteResource =
                    Capture "deviceId" Text :>
                      "managedConfigurationsForDevice" :>
                        Capture "managedConfigurationForDeviceId" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a per-device managed configuration for an app for the specified
 -- device.
 --
 -- /See:/ 'managedConfigurationsforDeviceDelete' smart constructor.
 data ManagedConfigurationsforDeviceDelete = ManagedConfigurationsforDeviceDelete'
-    { _mcddEnterpriseId                    :: !Text
-    , _mcddUserId                          :: !Text
-    , _mcddDeviceId                        :: !Text
+    { _mcddEnterpriseId :: !Text
+    , _mcddUserId :: !Text
+    , _mcddDeviceId :: !Text
     , _mcddManagedConfigurationForDeviceId :: !Text
+    , _mcddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforDeviceDelete' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagedConfigurationsforDeviceDelete = ManagedConfigurationsforDeviceDelete
 -- * 'mcddDeviceId'
 --
 -- * 'mcddManagedConfigurationForDeviceId'
+--
+-- * 'mcddFields'
 managedConfigurationsforDeviceDelete
     :: Text -- ^ 'mcddEnterpriseId'
     -> Text -- ^ 'mcddUserId'
     -> Text -- ^ 'mcddDeviceId'
     -> Text -- ^ 'mcddManagedConfigurationForDeviceId'
     -> ManagedConfigurationsforDeviceDelete
-managedConfigurationsforDeviceDelete pMcddEnterpriseId_ pMcddUserId_ pMcddDeviceId_ pMcddManagedConfigurationForDeviceId_ =
+managedConfigurationsforDeviceDelete pMcddEnterpriseId_ pMcddUserId_ pMcddDeviceId_ pMcddManagedConfigurationForDeviceId_ = 
     ManagedConfigurationsforDeviceDelete'
     { _mcddEnterpriseId = pMcddEnterpriseId_
     , _mcddUserId = pMcddUserId_
     , _mcddDeviceId = pMcddDeviceId_
     , _mcddManagedConfigurationForDeviceId = pMcddManagedConfigurationForDeviceId_
+    , _mcddFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -118,6 +124,11 @@ mcddManagedConfigurationForDeviceId
       (\ s a ->
          s{_mcddManagedConfigurationForDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcddFields :: Lens' ManagedConfigurationsforDeviceDelete (Maybe Text)
+mcddFields
+  = lens _mcddFields (\ s a -> s{_mcddFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforDeviceDelete where
         type Rs ManagedConfigurationsforDeviceDelete = ()
@@ -127,6 +138,7 @@ instance GoogleRequest
           ManagedConfigurationsforDeviceDelete'{..}
           = go _mcddEnterpriseId _mcddUserId _mcddDeviceId
               _mcddManagedConfigurationForDeviceId
+              _mcddFields
               (Just AltJSON)
               androidEnterpriseService
           where go

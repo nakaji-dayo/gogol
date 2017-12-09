@@ -20,9 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Enable a managed service for a project with default setting. Operation
--- google.rpc.Status errors may contain a google.rpc.PreconditionFailure
--- error detail.
+-- Enables a service for a project, so it can be used for the project. See
+-- [Cloud Auth Guide](https:\/\/cloud.google.com\/docs\/authentication) for
+-- more information. Operation
 --
 -- /See:/ <https://cloud.google.com/service-management/ Google Service Management API Reference> for @servicemanagement.services.enable@.
 module Network.Google.Resource.ServiceManagement.Services.Enable
@@ -43,11 +43,12 @@ module Network.Google.Resource.ServiceManagement.Services.Enable
     , sePayload
     , seBearerToken
     , seServiceName
+    , seFields
     , seCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.enable@ method which the
 -- 'ServicesEnable' request conforms to.
@@ -62,25 +63,27 @@ type ServicesEnableResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] EnableServiceRequest :>
-                             Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] EnableServiceRequest :>
+                               Post '[JSON] Operation
 
--- | Enable a managed service for a project with default setting. Operation
--- google.rpc.Status errors may contain a google.rpc.PreconditionFailure
--- error detail.
+-- | Enables a service for a project, so it can be used for the project. See
+-- [Cloud Auth Guide](https:\/\/cloud.google.com\/docs\/authentication) for
+-- more information. Operation
 --
 -- /See:/ 'servicesEnable' smart constructor.
 data ServicesEnable = ServicesEnable'
-    { _seXgafv          :: !(Maybe Xgafv)
+    { _seXgafv :: !(Maybe Xgafv)
     , _seUploadProtocol :: !(Maybe Text)
-    , _sePp             :: !Bool
-    , _seAccessToken    :: !(Maybe Text)
-    , _seUploadType     :: !(Maybe Text)
-    , _sePayload        :: !EnableServiceRequest
-    , _seBearerToken    :: !(Maybe Text)
-    , _seServiceName    :: !Text
-    , _seCallback       :: !(Maybe Text)
+    , _sePp :: !Bool
+    , _seAccessToken :: !(Maybe Text)
+    , _seUploadType :: !(Maybe Text)
+    , _sePayload :: !EnableServiceRequest
+    , _seBearerToken :: !(Maybe Text)
+    , _seServiceName :: !Text
+    , _seFields :: !(Maybe Text)
+    , _seCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesEnable' with the minimum fields required to make a request.
@@ -103,12 +106,14 @@ data ServicesEnable = ServicesEnable'
 --
 -- * 'seServiceName'
 --
+-- * 'seFields'
+--
 -- * 'seCallback'
 servicesEnable
     :: EnableServiceRequest -- ^ 'sePayload'
     -> Text -- ^ 'seServiceName'
     -> ServicesEnable
-servicesEnable pSePayload_ pSeServiceName_ =
+servicesEnable pSePayload_ pSeServiceName_ = 
     ServicesEnable'
     { _seXgafv = Nothing
     , _seUploadProtocol = Nothing
@@ -118,6 +123,7 @@ servicesEnable pSePayload_ pSeServiceName_ =
     , _sePayload = pSePayload_
     , _seBearerToken = Nothing
     , _seServiceName = pSeServiceName_
+    , _seFields = Nothing
     , _seCallback = Nothing
     }
 
@@ -164,6 +170,10 @@ seServiceName
   = lens _seServiceName
       (\ s a -> s{_seServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+seFields :: Lens' ServicesEnable (Maybe Text)
+seFields = lens _seFields (\ s a -> s{_seFields = a})
+
 -- | JSONP
 seCallback :: Lens' ServicesEnable (Maybe Text)
 seCallback
@@ -181,6 +191,7 @@ instance GoogleRequest ServicesEnable where
               _seUploadType
               _seBearerToken
               _seCallback
+              _seFields
               (Just AltJSON)
               _sePayload
               serviceManagementService

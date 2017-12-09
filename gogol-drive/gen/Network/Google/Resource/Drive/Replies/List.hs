@@ -38,10 +38,11 @@ module Network.Google.Resource.Drive.Replies.List
     , rlCommentId
     , rlPageSize
     , rlIncludeDeleted
+    , rlFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.replies.list@ method which the
 -- 'RepliesList' request conforms to.
@@ -56,17 +57,19 @@ type RepliesListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "pageSize" (Textual Int32) :>
                        QueryParam "includeDeleted" Bool :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] ReplyList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] ReplyList
 
 -- | Lists a comment\'s replies.
 --
 -- /See:/ 'repliesList' smart constructor.
 data RepliesList = RepliesList'
-    { _rlPageToken      :: !(Maybe Text)
-    , _rlFileId         :: !Text
-    , _rlCommentId      :: !Text
-    , _rlPageSize       :: !(Textual Int32)
+    { _rlPageToken :: !(Maybe Text)
+    , _rlFileId :: !Text
+    , _rlCommentId :: !Text
+    , _rlPageSize :: !(Textual Int32)
     , _rlIncludeDeleted :: !Bool
+    , _rlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepliesList' with the minimum fields required to make a request.
@@ -82,17 +85,20 @@ data RepliesList = RepliesList'
 -- * 'rlPageSize'
 --
 -- * 'rlIncludeDeleted'
+--
+-- * 'rlFields'
 repliesList
     :: Text -- ^ 'rlFileId'
     -> Text -- ^ 'rlCommentId'
     -> RepliesList
-repliesList pRlFileId_ pRlCommentId_ =
+repliesList pRlFileId_ pRlCommentId_ = 
     RepliesList'
     { _rlPageToken = Nothing
     , _rlFileId = pRlFileId_
     , _rlCommentId = pRlCommentId_
     , _rlPageSize = 20
     , _rlIncludeDeleted = False
+    , _rlFields = Nothing
     }
 
 -- | The token for continuing a previous list request on the next page. This
@@ -124,6 +130,10 @@ rlIncludeDeleted
   = lens _rlIncludeDeleted
       (\ s a -> s{_rlIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rlFields :: Lens' RepliesList (Maybe Text)
+rlFields = lens _rlFields (\ s a -> s{_rlFields = a})
+
 instance GoogleRequest RepliesList where
         type Rs RepliesList = ReplyList
         type Scopes RepliesList =
@@ -134,6 +144,7 @@ instance GoogleRequest RepliesList where
           = go _rlFileId _rlCommentId _rlPageToken
               (Just _rlPageSize)
               (Just _rlIncludeDeleted)
+              _rlFields
               (Just AltJSON)
               driveService
           where go

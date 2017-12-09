@@ -32,40 +32,54 @@ module Network.Google.Resource.DFAReporting.UserProFiles.List
     , userProFilesList
     , UserProFilesList
 
+    -- * Request Lenses
+    , upflFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userProfiles.list@ method which the
 -- 'UserProFilesList' request conforms to.
 type UserProFilesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] UserProFileList
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] UserProFileList
 
 -- | Retrieves list of user profiles for a user.
 --
 -- /See:/ 'userProFilesList' smart constructor.
-data UserProFilesList =
-    UserProFilesList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype UserProFilesList = UserProFilesList'
+    { _upflFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFilesList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'upflFields'
 userProFilesList
     :: UserProFilesList
-userProFilesList = UserProFilesList'
+userProFilesList = 
+    UserProFilesList'
+    { _upflFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+upflFields :: Lens' UserProFilesList (Maybe Text)
+upflFields
+  = lens _upflFields (\ s a -> s{_upflFields = a})
 
 instance GoogleRequest UserProFilesList where
         type Rs UserProFilesList = UserProFileList
         type Scopes UserProFilesList =
              '["https://www.googleapis.com/auth/dfareporting",
                "https://www.googleapis.com/auth/dfatrafficking"]
-        requestClient UserProFilesList'{}
-          = go (Just AltJSON) dFAReportingService
+        requestClient UserProFilesList'{..}
+          = go _upflFields (Just AltJSON) dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy UserProFilesListResource)

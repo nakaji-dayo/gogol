@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.DataSets.Undelete
     , dsuPayload
     , dsuBearerToken
     , dsuDataSetId
+    , dsuFields
     , dsuCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.undelete@ method which the
 -- 'DataSetsUndelete' request conforms to.
@@ -64,9 +65,10 @@ type DataSetsUndeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] UndeleteDataSetRequest :>
-                             Post '[JSON] DataSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] UndeleteDataSetRequest :>
+                               Post '[JSON] DataSet
 
 -- | Undeletes a dataset by restoring a dataset which was deleted via this
 -- API. For the definitions of datasets and other genomics resources, see
@@ -76,15 +78,16 @@ type DataSetsUndeleteResource =
 --
 -- /See:/ 'dataSetsUndelete' smart constructor.
 data DataSetsUndelete = DataSetsUndelete'
-    { _dsuXgafv          :: !(Maybe Xgafv)
+    { _dsuXgafv :: !(Maybe Xgafv)
     , _dsuUploadProtocol :: !(Maybe Text)
-    , _dsuPp             :: !Bool
-    , _dsuAccessToken    :: !(Maybe Text)
-    , _dsuUploadType     :: !(Maybe Text)
-    , _dsuPayload        :: !UndeleteDataSetRequest
-    , _dsuBearerToken    :: !(Maybe Text)
-    , _dsuDataSetId      :: !Text
-    , _dsuCallback       :: !(Maybe Text)
+    , _dsuPp :: !Bool
+    , _dsuAccessToken :: !(Maybe Text)
+    , _dsuUploadType :: !(Maybe Text)
+    , _dsuPayload :: !UndeleteDataSetRequest
+    , _dsuBearerToken :: !(Maybe Text)
+    , _dsuDataSetId :: !Text
+    , _dsuFields :: !(Maybe Text)
+    , _dsuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsUndelete' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data DataSetsUndelete = DataSetsUndelete'
 --
 -- * 'dsuDataSetId'
 --
+-- * 'dsuFields'
+--
 -- * 'dsuCallback'
 dataSetsUndelete
     :: UndeleteDataSetRequest -- ^ 'dsuPayload'
     -> Text -- ^ 'dsuDataSetId'
     -> DataSetsUndelete
-dataSetsUndelete pDsuPayload_ pDsuDataSetId_ =
+dataSetsUndelete pDsuPayload_ pDsuDataSetId_ = 
     DataSetsUndelete'
     { _dsuXgafv = Nothing
     , _dsuUploadProtocol = Nothing
@@ -122,6 +127,7 @@ dataSetsUndelete pDsuPayload_ pDsuDataSetId_ =
     , _dsuPayload = pDsuPayload_
     , _dsuBearerToken = Nothing
     , _dsuDataSetId = pDsuDataSetId_
+    , _dsuFields = Nothing
     , _dsuCallback = Nothing
     }
 
@@ -167,6 +173,11 @@ dsuDataSetId :: Lens' DataSetsUndelete Text
 dsuDataSetId
   = lens _dsuDataSetId (\ s a -> s{_dsuDataSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsuFields :: Lens' DataSetsUndelete (Maybe Text)
+dsuFields
+  = lens _dsuFields (\ s a -> s{_dsuFields = a})
+
 -- | JSONP
 dsuCallback :: Lens' DataSetsUndelete (Maybe Text)
 dsuCallback
@@ -184,6 +195,7 @@ instance GoogleRequest DataSetsUndelete where
               _dsuUploadType
               _dsuBearerToken
               _dsuCallback
+              _dsuFields
               (Just AltJSON)
               _dsuPayload
               genomicsService

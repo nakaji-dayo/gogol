@@ -34,10 +34,11 @@ module Network.Google.Resource.Content.ShippingSettings.Getsupportedcarriers
 
     -- * Request Lenses
     , ssgMerchantId
+    , ssgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.shippingsettings.getsupportedcarriers@ method which the
 -- 'ShippingSettingsGetsupportedcarriers' request conforms to.
@@ -46,15 +47,17 @@ type ShippingSettingsGetsupportedcarriersResource =
        "v2" :>
          Capture "merchantId" (Textual Word64) :>
            "supportedCarriers" :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON]
-                 ShippingSettingsGetSupportedCarriersResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON]
+                   ShippingSettingsGetSupportedCarriersResponse
 
 -- | Retrieves supported carriers and carrier services for an account.
 --
 -- /See:/ 'shippingSettingsGetsupportedcarriers' smart constructor.
-newtype ShippingSettingsGetsupportedcarriers = ShippingSettingsGetsupportedcarriers'
-    { _ssgMerchantId :: Textual Word64
+data ShippingSettingsGetsupportedcarriers = ShippingSettingsGetsupportedcarriers'
+    { _ssgMerchantId :: !(Textual Word64)
+    , _ssgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ShippingSettingsGetsupportedcarriers' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype ShippingSettingsGetsupportedcarriers = ShippingSettingsGetsupportedcarri
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ssgMerchantId'
+--
+-- * 'ssgFields'
 shippingSettingsGetsupportedcarriers
     :: Word64 -- ^ 'ssgMerchantId'
     -> ShippingSettingsGetsupportedcarriers
-shippingSettingsGetsupportedcarriers pSsgMerchantId_ =
+shippingSettingsGetsupportedcarriers pSsgMerchantId_ = 
     ShippingSettingsGetsupportedcarriers'
     { _ssgMerchantId = _Coerce # pSsgMerchantId_
+    , _ssgFields = Nothing
     }
 
 -- | The ID of the account for which to retrieve the supported carriers.
@@ -77,6 +83,11 @@ ssgMerchantId
       (\ s a -> s{_ssgMerchantId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ssgFields :: Lens' ShippingSettingsGetsupportedcarriers (Maybe Text)
+ssgFields
+  = lens _ssgFields (\ s a -> s{_ssgFields = a})
+
 instance GoogleRequest
          ShippingSettingsGetsupportedcarriers where
         type Rs ShippingSettingsGetsupportedcarriers =
@@ -85,7 +96,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/content"]
         requestClient
           ShippingSettingsGetsupportedcarriers'{..}
-          = go _ssgMerchantId (Just AltJSON)
+          = go _ssgMerchantId _ssgFields (Just AltJSON)
               shoppingContentService
           where go
                   = buildClient

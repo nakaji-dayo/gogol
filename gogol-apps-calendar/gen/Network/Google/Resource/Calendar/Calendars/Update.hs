@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.Calendars.Update
     -- * Request Lenses
     , cuCalendarId
     , cuPayload
+    , cuFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.update@ method which the
 -- 'CalendarsUpdate' request conforms to.
@@ -47,15 +48,17 @@ type CalendarsUpdateResource =
        "v3" :>
          "calendars" :>
            Capture "calendarId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Calendar :> Put '[JSON] Calendar
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Calendar :> Put '[JSON] Calendar
 
 -- | Updates metadata for a calendar.
 --
 -- /See:/ 'calendarsUpdate' smart constructor.
 data CalendarsUpdate = CalendarsUpdate'
     { _cuCalendarId :: !Text
-    , _cuPayload    :: !Calendar
+    , _cuPayload :: !Calendar
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsUpdate' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data CalendarsUpdate = CalendarsUpdate'
 -- * 'cuCalendarId'
 --
 -- * 'cuPayload'
+--
+-- * 'cuFields'
 calendarsUpdate
     :: Text -- ^ 'cuCalendarId'
     -> Calendar -- ^ 'cuPayload'
     -> CalendarsUpdate
-calendarsUpdate pCuCalendarId_ pCuPayload_ =
+calendarsUpdate pCuCalendarId_ pCuPayload_ = 
     CalendarsUpdate'
     { _cuCalendarId = pCuCalendarId_
     , _cuPayload = pCuPayload_
+    , _cuFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -87,12 +93,17 @@ cuPayload :: Lens' CalendarsUpdate Calendar
 cuPayload
   = lens _cuPayload (\ s a -> s{_cuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' CalendarsUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest CalendarsUpdate where
         type Rs CalendarsUpdate = Calendar
         type Scopes CalendarsUpdate =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarsUpdate'{..}
-          = go _cuCalendarId (Just AltJSON) _cuPayload
+          = go _cuCalendarId _cuFields (Just AltJSON)
+              _cuPayload
               appsCalendarService
           where go
                   = buildClient

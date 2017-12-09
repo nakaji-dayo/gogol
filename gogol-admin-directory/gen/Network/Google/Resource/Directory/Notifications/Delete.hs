@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Notifications.Delete
     -- * Request Lenses
     , ndCustomer
     , ndNotificationId
+    , ndFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.notifications.delete@ method which the
 -- 'NotificationsDelete' request conforms to.
@@ -50,14 +51,16 @@ type NotificationsDeleteResource =
              Capture "customer" Text :>
                "notifications" :>
                  Capture "notificationId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a notification
 --
 -- /See:/ 'notificationsDelete' smart constructor.
 data NotificationsDelete = NotificationsDelete'
-    { _ndCustomer       :: !Text
+    { _ndCustomer :: !Text
     , _ndNotificationId :: !Text
+    , _ndFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationsDelete' with the minimum fields required to make a request.
@@ -67,18 +70,21 @@ data NotificationsDelete = NotificationsDelete'
 -- * 'ndCustomer'
 --
 -- * 'ndNotificationId'
+--
+-- * 'ndFields'
 notificationsDelete
     :: Text -- ^ 'ndCustomer'
     -> Text -- ^ 'ndNotificationId'
     -> NotificationsDelete
-notificationsDelete pNdCustomer_ pNdNotificationId_ =
+notificationsDelete pNdCustomer_ pNdNotificationId_ = 
     NotificationsDelete'
     { _ndCustomer = pNdCustomer_
     , _ndNotificationId = pNdNotificationId_
+    , _ndFields = Nothing
     }
 
--- | The unique ID for the customer\'s Google account. The customerId is also
--- returned as part of the Users resource.
+-- | The unique ID for the customer\'s G Suite account. The customerId is
+-- also returned as part of the Users resource.
 ndCustomer :: Lens' NotificationsDelete Text
 ndCustomer
   = lens _ndCustomer (\ s a -> s{_ndCustomer = a})
@@ -89,12 +95,17 @@ ndNotificationId
   = lens _ndNotificationId
       (\ s a -> s{_ndNotificationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ndFields :: Lens' NotificationsDelete (Maybe Text)
+ndFields = lens _ndFields (\ s a -> s{_ndFields = a})
+
 instance GoogleRequest NotificationsDelete where
         type Rs NotificationsDelete = ()
         type Scopes NotificationsDelete =
              '["https://www.googleapis.com/auth/admin.directory.notifications"]
         requestClient NotificationsDelete'{..}
-          = go _ndCustomer _ndNotificationId (Just AltJSON)
+          = go _ndCustomer _ndNotificationId _ndFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

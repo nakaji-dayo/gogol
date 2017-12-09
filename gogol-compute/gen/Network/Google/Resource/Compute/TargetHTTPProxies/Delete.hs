@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.TargetHTTPProxies.Delete
     , TargetHTTPProxiesDelete
 
     -- * Request Lenses
+    , thttppdRequestId
     , thttppdProject
     , thttppdTargetHTTPProxy
+    , thttppdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetHttpProxies.delete@ method which the
 -- 'TargetHTTPProxiesDelete' request conforms to.
@@ -50,32 +52,57 @@ type TargetHTTPProxiesDeleteResource =
              "global" :>
                "targetHttpProxies" :>
                  Capture "targetHttpProxy" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified TargetHttpProxy resource.
 --
 -- /See:/ 'targetHTTPProxiesDelete' smart constructor.
 data TargetHTTPProxiesDelete = TargetHTTPProxiesDelete'
-    { _thttppdProject         :: !Text
+    { _thttppdRequestId :: !(Maybe Text)
+    , _thttppdProject :: !Text
     , _thttppdTargetHTTPProxy :: !Text
+    , _thttppdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetHTTPProxiesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'thttppdRequestId'
+--
 -- * 'thttppdProject'
 --
 -- * 'thttppdTargetHTTPProxy'
+--
+-- * 'thttppdFields'
 targetHTTPProxiesDelete
     :: Text -- ^ 'thttppdProject'
     -> Text -- ^ 'thttppdTargetHTTPProxy'
     -> TargetHTTPProxiesDelete
-targetHTTPProxiesDelete pThttppdProject_ pThttppdTargetHTTPProxy_ =
+targetHTTPProxiesDelete pThttppdProject_ pThttppdTargetHTTPProxy_ = 
     TargetHTTPProxiesDelete'
-    { _thttppdProject = pThttppdProject_
+    { _thttppdRequestId = Nothing
+    , _thttppdProject = pThttppdProject_
     , _thttppdTargetHTTPProxy = pThttppdTargetHTTPProxy_
+    , _thttppdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+thttppdRequestId :: Lens' TargetHTTPProxiesDelete (Maybe Text)
+thttppdRequestId
+  = lens _thttppdRequestId
+      (\ s a -> s{_thttppdRequestId = a})
 
 -- | Project ID for this request.
 thttppdProject :: Lens' TargetHTTPProxiesDelete Text
@@ -89,6 +116,12 @@ thttppdTargetHTTPProxy
   = lens _thttppdTargetHTTPProxy
       (\ s a -> s{_thttppdTargetHTTPProxy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+thttppdFields :: Lens' TargetHTTPProxiesDelete (Maybe Text)
+thttppdFields
+  = lens _thttppdFields
+      (\ s a -> s{_thttppdFields = a})
+
 instance GoogleRequest TargetHTTPProxiesDelete where
         type Rs TargetHTTPProxiesDelete = Operation
         type Scopes TargetHTTPProxiesDelete =
@@ -96,6 +129,8 @@ instance GoogleRequest TargetHTTPProxiesDelete where
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetHTTPProxiesDelete'{..}
           = go _thttppdProject _thttppdTargetHTTPProxy
+              _thttppdRequestId
+              _thttppdFields
               (Just AltJSON)
               computeService
           where go

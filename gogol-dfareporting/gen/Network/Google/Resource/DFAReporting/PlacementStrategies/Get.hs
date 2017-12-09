@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.PlacementStrategies.Get
     -- * Request Lenses
     , psgProFileId
     , psgId
+    , psgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementStrategies.get@ method which the
 -- 'PlacementStrategiesGet' request conforms to.
 type PlacementStrategiesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementStrategies" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] PlacementStrategy
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] PlacementStrategy
 
 -- | Gets one placement strategy by ID.
 --
 -- /See:/ 'placementStrategiesGet' smart constructor.
 data PlacementStrategiesGet = PlacementStrategiesGet'
     { _psgProFileId :: !(Textual Int64)
-    , _psgId        :: !(Textual Int64)
+    , _psgId :: !(Textual Int64)
+    , _psgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategiesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PlacementStrategiesGet = PlacementStrategiesGet'
 -- * 'psgProFileId'
 --
 -- * 'psgId'
+--
+-- * 'psgFields'
 placementStrategiesGet
     :: Int64 -- ^ 'psgProFileId'
     -> Int64 -- ^ 'psgId'
     -> PlacementStrategiesGet
-placementStrategiesGet pPsgProFileId_ pPsgId_ =
+placementStrategiesGet pPsgProFileId_ pPsgId_ = 
     PlacementStrategiesGet'
     { _psgProFileId = _Coerce # pPsgProFileId_
     , _psgId = _Coerce # pPsgId_
+    , _psgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ psgId :: Lens' PlacementStrategiesGet Int64
 psgId
   = lens _psgId (\ s a -> s{_psgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+psgFields :: Lens' PlacementStrategiesGet (Maybe Text)
+psgFields
+  = lens _psgFields (\ s a -> s{_psgFields = a})
+
 instance GoogleRequest PlacementStrategiesGet where
         type Rs PlacementStrategiesGet = PlacementStrategy
         type Scopes PlacementStrategiesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementStrategiesGet'{..}
-          = go _psgProFileId _psgId (Just AltJSON)
+          = go _psgProFileId _psgId _psgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

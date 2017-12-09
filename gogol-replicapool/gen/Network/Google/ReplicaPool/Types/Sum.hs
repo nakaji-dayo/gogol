@@ -16,7 +16,7 @@
 --
 module Network.Google.ReplicaPool.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | [Output only] The warning type identifier for this warning.
 data OperationWarningsItemCode

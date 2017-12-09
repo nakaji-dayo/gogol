@@ -38,10 +38,11 @@ module Network.Google.Resource.Webmasters.URLCrawlErrorscounts.Query
     , uceqCategory
     , uceqSiteURL
     , uceqLatestCountsOnly
+    , uceqFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.urlcrawlerrorscounts.query@ method which the
 -- 'URLCrawlErrorscountsQuery' request conforms to.
@@ -59,18 +60,20 @@ type URLCrawlErrorscountsQueryResource =
                      URLCrawlErrorscountsQueryCategory
                      :>
                      QueryParam "latestCountsOnly" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] URLCrawlErrorsCountsQueryResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] URLCrawlErrorsCountsQueryResponse
 
 -- | Retrieves a time series of the number of URL crawl errors per error
 -- category and platform.
 --
 -- /See:/ 'urlCrawlErrorscountsQuery' smart constructor.
 data URLCrawlErrorscountsQuery = URLCrawlErrorscountsQuery'
-    { _uceqPlatform         :: !(Maybe URLCrawlErrorscountsQueryPlatform)
-    , _uceqCategory         :: !(Maybe URLCrawlErrorscountsQueryCategory)
-    , _uceqSiteURL          :: !Text
+    { _uceqPlatform :: !(Maybe URLCrawlErrorscountsQueryPlatform)
+    , _uceqCategory :: !(Maybe URLCrawlErrorscountsQueryCategory)
+    , _uceqSiteURL :: !Text
     , _uceqLatestCountsOnly :: !Bool
+    , _uceqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLCrawlErrorscountsQuery' with the minimum fields required to make a request.
@@ -84,15 +87,18 @@ data URLCrawlErrorscountsQuery = URLCrawlErrorscountsQuery'
 -- * 'uceqSiteURL'
 --
 -- * 'uceqLatestCountsOnly'
+--
+-- * 'uceqFields'
 urlCrawlErrorscountsQuery
     :: Text -- ^ 'uceqSiteURL'
     -> URLCrawlErrorscountsQuery
-urlCrawlErrorscountsQuery pUceqSiteURL_ =
+urlCrawlErrorscountsQuery pUceqSiteURL_ = 
     URLCrawlErrorscountsQuery'
     { _uceqPlatform = Nothing
     , _uceqCategory = Nothing
     , _uceqSiteURL = pUceqSiteURL_
     , _uceqLatestCountsOnly = True
+    , _uceqFields = Nothing
     }
 
 -- | The user agent type (platform) that made the request. For example: web.
@@ -119,6 +125,11 @@ uceqLatestCountsOnly
   = lens _uceqLatestCountsOnly
       (\ s a -> s{_uceqLatestCountsOnly = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uceqFields :: Lens' URLCrawlErrorscountsQuery (Maybe Text)
+uceqFields
+  = lens _uceqFields (\ s a -> s{_uceqFields = a})
+
 instance GoogleRequest URLCrawlErrorscountsQuery
          where
         type Rs URLCrawlErrorscountsQuery =
@@ -129,6 +140,7 @@ instance GoogleRequest URLCrawlErrorscountsQuery
         requestClient URLCrawlErrorscountsQuery'{..}
           = go _uceqSiteURL _uceqPlatform _uceqCategory
               (Just _uceqLatestCountsOnly)
+              _uceqFields
               (Just AltJSON)
               webmasterToolsService
           where go

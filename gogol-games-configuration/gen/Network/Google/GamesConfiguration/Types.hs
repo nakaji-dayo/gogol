@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -122,9 +122,9 @@ module Network.Google.GamesConfiguration.Types
     , lsbTranslations
     ) where
 
-import           Network.Google.GamesConfiguration.Types.Product
-import           Network.Google.GamesConfiguration.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types.Product
+import Network.Google.GamesConfiguration.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1configuration' of the Google Play Game Services Publishing API. This contains the host and root path used as a starting point for constructing service requests.
 gamesConfigurationService :: ServiceConfig

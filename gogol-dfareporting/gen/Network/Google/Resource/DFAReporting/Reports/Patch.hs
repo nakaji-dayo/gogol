@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Reports.Patch
     , rpReportId
     , rpProFileId
     , rpPayload
+    , rpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.patch@ method which the
 -- 'ReportsPatch' request conforms to.
 type ReportsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                Capture "reportId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Report :> Patch '[JSON] Report
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Report :> Patch '[JSON] Report
 
 -- | Updates a report. This method supports patch semantics.
 --
 -- /See:/ 'reportsPatch' smart constructor.
 data ReportsPatch = ReportsPatch'
-    { _rpReportId  :: !(Textual Int64)
+    { _rpReportId :: !(Textual Int64)
     , _rpProFileId :: !(Textual Int64)
-    , _rpPayload   :: !Report
+    , _rpPayload :: !Report
+    , _rpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data ReportsPatch = ReportsPatch'
 -- * 'rpProFileId'
 --
 -- * 'rpPayload'
+--
+-- * 'rpFields'
 reportsPatch
     :: Int64 -- ^ 'rpReportId'
     -> Int64 -- ^ 'rpProFileId'
     -> Report -- ^ 'rpPayload'
     -> ReportsPatch
-reportsPatch pRpReportId_ pRpProFileId_ pRpPayload_ =
+reportsPatch pRpReportId_ pRpProFileId_ pRpPayload_ = 
     ReportsPatch'
     { _rpReportId = _Coerce # pRpReportId_
     , _rpProFileId = _Coerce # pRpProFileId_
     , _rpPayload = pRpPayload_
+    , _rpFields = Nothing
     }
 
 -- | The ID of the report.
@@ -100,12 +106,17 @@ rpPayload :: Lens' ReportsPatch Report
 rpPayload
   = lens _rpPayload (\ s a -> s{_rpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rpFields :: Lens' ReportsPatch (Maybe Text)
+rpFields = lens _rpFields (\ s a -> s{_rpFields = a})
+
 instance GoogleRequest ReportsPatch where
         type Rs ReportsPatch = Report
         type Scopes ReportsPatch =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsPatch'{..}
-          = go _rpProFileId _rpReportId (Just AltJSON)
+          = go _rpProFileId _rpReportId _rpFields
+              (Just AltJSON)
               _rpPayload
               dFAReportingService
           where go

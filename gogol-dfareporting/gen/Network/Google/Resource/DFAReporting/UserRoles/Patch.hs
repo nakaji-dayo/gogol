@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.UserRoles.Patch
     , urpProFileId
     , urpPayload
     , urpId
+    , urpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRoles.patch@ method which the
 -- 'UserRolesPatch' request conforms to.
 type UserRolesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRoles" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] UserRole :> Patch '[JSON] UserRole
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] UserRole :> Patch '[JSON] UserRole
 
 -- | Updates an existing user role. This method supports patch semantics.
 --
 -- /See:/ 'userRolesPatch' smart constructor.
 data UserRolesPatch = UserRolesPatch'
     { _urpProFileId :: !(Textual Int64)
-    , _urpPayload   :: !UserRole
-    , _urpId        :: !(Textual Int64)
+    , _urpPayload :: !UserRole
+    , _urpId :: !(Textual Int64)
+    , _urpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolesPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data UserRolesPatch = UserRolesPatch'
 -- * 'urpPayload'
 --
 -- * 'urpId'
+--
+-- * 'urpFields'
 userRolesPatch
     :: Int64 -- ^ 'urpProFileId'
     -> UserRole -- ^ 'urpPayload'
     -> Int64 -- ^ 'urpId'
     -> UserRolesPatch
-userRolesPatch pUrpProFileId_ pUrpPayload_ pUrpId_ =
+userRolesPatch pUrpProFileId_ pUrpPayload_ pUrpId_ = 
     UserRolesPatch'
     { _urpProFileId = _Coerce # pUrpProFileId_
     , _urpPayload = pUrpPayload_
     , _urpId = _Coerce # pUrpId_
+    , _urpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -99,12 +105,18 @@ urpId :: Lens' UserRolesPatch Int64
 urpId
   = lens _urpId (\ s a -> s{_urpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+urpFields :: Lens' UserRolesPatch (Maybe Text)
+urpFields
+  = lens _urpFields (\ s a -> s{_urpFields = a})
+
 instance GoogleRequest UserRolesPatch where
         type Rs UserRolesPatch = UserRole
         type Scopes UserRolesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserRolesPatch'{..}
-          = go _urpProFileId (Just _urpId) (Just AltJSON)
+          = go _urpProFileId (Just _urpId) _urpFields
+              (Just AltJSON)
               _urpPayload
               dFAReportingService
           where go

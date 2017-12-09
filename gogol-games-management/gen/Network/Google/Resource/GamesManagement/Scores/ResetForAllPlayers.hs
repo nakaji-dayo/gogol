@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Scores.ResetForAllPlayers
 
     -- * Request Lenses
     , srfapLeaderboardId
+    , srfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.scores.resetForAllPlayers@ method which the
 -- 'ScoresResetForAllPlayers' request conforms to.
@@ -50,15 +51,17 @@ type ScoresResetForAllPlayersResource =
            Capture "leaderboardId" Text :>
              "scores" :>
                "resetForAllPlayers" :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets scores for the leaderboard with the given ID for all players.
 -- This method is only available to user accounts for your developer
 -- console. Only draft leaderboards can be reset.
 --
 -- /See:/ 'scoresResetForAllPlayers' smart constructor.
-newtype ScoresResetForAllPlayers = ScoresResetForAllPlayers'
-    { _srfapLeaderboardId :: Text
+data ScoresResetForAllPlayers = ScoresResetForAllPlayers'
+    { _srfapLeaderboardId :: !Text
+    , _srfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresResetForAllPlayers' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype ScoresResetForAllPlayers = ScoresResetForAllPlayers'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'srfapLeaderboardId'
+--
+-- * 'srfapFields'
 scoresResetForAllPlayers
     :: Text -- ^ 'srfapLeaderboardId'
     -> ScoresResetForAllPlayers
-scoresResetForAllPlayers pSrfapLeaderboardId_ =
+scoresResetForAllPlayers pSrfapLeaderboardId_ = 
     ScoresResetForAllPlayers'
     { _srfapLeaderboardId = pSrfapLeaderboardId_
+    , _srfapFields = Nothing
     }
 
 -- | The ID of the leaderboard.
@@ -80,13 +86,18 @@ srfapLeaderboardId
   = lens _srfapLeaderboardId
       (\ s a -> s{_srfapLeaderboardId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+srfapFields :: Lens' ScoresResetForAllPlayers (Maybe Text)
+srfapFields
+  = lens _srfapFields (\ s a -> s{_srfapFields = a})
+
 instance GoogleRequest ScoresResetForAllPlayers where
         type Rs ScoresResetForAllPlayers = ()
         type Scopes ScoresResetForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient ScoresResetForAllPlayers'{..}
-          = go _srfapLeaderboardId (Just AltJSON)
+          = go _srfapLeaderboardId _srfapFields (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient

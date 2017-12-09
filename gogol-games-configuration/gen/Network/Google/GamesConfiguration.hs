@@ -170,21 +170,21 @@ module Network.Google.GamesConfiguration
     , lsbTranslations
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Delete
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Get
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Insert
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.List
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Patch
-import           Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Update
-import           Network.Google.Resource.GamesConfiguration.ImageConfigurations.Upload
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Delete
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Get
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Insert
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.List
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Patch
-import           Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Update
+import Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Delete
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Get
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Insert
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.List
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Patch
+import Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Update
+import Network.Google.Resource.GamesConfiguration.ImageConfigurations.Upload
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Delete
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Get
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Insert
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.List
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Patch
+import Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Update
 
 {- $resources
 TODO

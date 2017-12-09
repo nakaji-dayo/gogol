@@ -34,10 +34,11 @@ module Network.Google.Resource.Tasks.TaskLists.Get
 
     -- * Request Lenses
     , tlgTaskList
+    , tlgFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasklists.get@ method which the
 -- 'TaskListsGet' request conforms to.
@@ -48,13 +49,15 @@ type TaskListsGetResource =
            "@me" :>
              "lists" :>
                Capture "tasklist" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] TaskList
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] TaskList
 
 -- | Returns the authenticated user\'s specified task list.
 --
 -- /See:/ 'taskListsGet' smart constructor.
-newtype TaskListsGet = TaskListsGet'
-    { _tlgTaskList :: Text
+data TaskListsGet = TaskListsGet'
+    { _tlgTaskList :: !Text
+    , _tlgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskListsGet' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype TaskListsGet = TaskListsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tlgTaskList'
+--
+-- * 'tlgFields'
 taskListsGet
     :: Text -- ^ 'tlgTaskList'
     -> TaskListsGet
-taskListsGet pTlgTaskList_ =
+taskListsGet pTlgTaskList_ = 
     TaskListsGet'
     { _tlgTaskList = pTlgTaskList_
+    , _tlgFields = Nothing
     }
 
 -- | Task list identifier.
@@ -75,13 +81,19 @@ tlgTaskList :: Lens' TaskListsGet Text
 tlgTaskList
   = lens _tlgTaskList (\ s a -> s{_tlgTaskList = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlgFields :: Lens' TaskListsGet (Maybe Text)
+tlgFields
+  = lens _tlgFields (\ s a -> s{_tlgFields = a})
+
 instance GoogleRequest TaskListsGet where
         type Rs TaskListsGet = TaskList
         type Scopes TaskListsGet =
              '["https://www.googleapis.com/auth/tasks",
                "https://www.googleapis.com/auth/tasks.readonly"]
         requestClient TaskListsGet'{..}
-          = go _tlgTaskList (Just AltJSON) appsTasksService
+          = go _tlgTaskList _tlgFields (Just AltJSON)
+              appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TaskListsGetResource)
                       mempty

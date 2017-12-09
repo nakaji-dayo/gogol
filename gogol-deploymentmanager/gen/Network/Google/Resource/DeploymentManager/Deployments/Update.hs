@@ -39,11 +39,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.Update
     , duPayload
     , duDeletePolicy
     , duPreview
+    , duFields
     , duDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.update@ method which the
 -- 'DeploymentsUpdate' request conforms to.
@@ -62,8 +63,9 @@ type DeploymentsUpdateResource =
                        DeploymentsUpdateDeletePolicy
                        :>
                        QueryParam "preview" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Deployment :> Put '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Deployment :> Put '[JSON] Operation
 
 -- | Updates a deployment and all of the resources described by the
 -- deployment manifest.
@@ -71,11 +73,12 @@ type DeploymentsUpdateResource =
 -- /See:/ 'deploymentsUpdate' smart constructor.
 data DeploymentsUpdate = DeploymentsUpdate'
     { _duCreatePolicy :: !DeploymentsUpdateCreatePolicy
-    , _duProject      :: !Text
-    , _duPayload      :: !Deployment
+    , _duProject :: !Text
+    , _duPayload :: !Deployment
     , _duDeletePolicy :: !DeploymentsUpdateDeletePolicy
-    , _duPreview      :: !Bool
-    , _duDeployment   :: !Text
+    , _duPreview :: !Bool
+    , _duFields :: !(Maybe Text)
+    , _duDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsUpdate' with the minimum fields required to make a request.
@@ -92,19 +95,22 @@ data DeploymentsUpdate = DeploymentsUpdate'
 --
 -- * 'duPreview'
 --
+-- * 'duFields'
+--
 -- * 'duDeployment'
 deploymentsUpdate
     :: Text -- ^ 'duProject'
     -> Deployment -- ^ 'duPayload'
     -> Text -- ^ 'duDeployment'
     -> DeploymentsUpdate
-deploymentsUpdate pDuProject_ pDuPayload_ pDuDeployment_ =
+deploymentsUpdate pDuProject_ pDuPayload_ pDuDeployment_ = 
     DeploymentsUpdate'
     { _duCreatePolicy = CreateOrAcquire
     , _duProject = pDuProject_
     , _duPayload = pDuPayload_
     , _duDeletePolicy = DUDPDelete'
     , _duPreview = False
+    , _duFields = Nothing
     , _duDeployment = pDuDeployment_
     }
 
@@ -144,6 +150,10 @@ duPreview :: Lens' DeploymentsUpdate Bool
 duPreview
   = lens _duPreview (\ s a -> s{_duPreview = a})
 
+-- | Selector specifying which fields to include in a partial response.
+duFields :: Lens' DeploymentsUpdate (Maybe Text)
+duFields = lens _duFields (\ s a -> s{_duFields = a})
+
 -- | The name of the deployment for this request.
 duDeployment :: Lens' DeploymentsUpdate Text
 duDeployment
@@ -158,6 +168,7 @@ instance GoogleRequest DeploymentsUpdate where
           = go _duProject _duDeployment (Just _duCreatePolicy)
               (Just _duDeletePolicy)
               (Just _duPreview)
+              _duFields
               (Just AltJSON)
               _duPayload
               deploymentManagerService

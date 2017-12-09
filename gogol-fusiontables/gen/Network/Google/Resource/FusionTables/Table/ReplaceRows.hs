@@ -40,10 +40,11 @@ module Network.Google.Resource.FusionTables.Table.ReplaceRows
     , trrDelimiter
     , trrEncoding
     , trrIsStrict
+    , trrFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.replaceRows@ method which the
 -- 'TableReplaceRows' request conforms to.
@@ -58,7 +59,8 @@ type TableReplaceRowsResource =
                    QueryParam "delimiter" Text :>
                      QueryParam "encoding" Text :>
                        QueryParam "isStrict" Bool :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Task
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Task
        :<|>
        "upload" :>
          "fusiontables" :>
@@ -71,9 +73,10 @@ type TableReplaceRowsResource =
                        QueryParam "delimiter" Text :>
                          QueryParam "encoding" Text :>
                            QueryParam "isStrict" Bool :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" AltMedia :>
-                                 AltMedia :> Post '[JSON] Task
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" AltMedia :>
+                                   AltMedia :> Post '[JSON] Task
 
 -- | Replaces rows of an existing table. Current rows remain visible until
 -- all replacement rows are ready.
@@ -81,11 +84,12 @@ type TableReplaceRowsResource =
 -- /See:/ 'tableReplaceRows' smart constructor.
 data TableReplaceRows = TableReplaceRows'
     { _trrStartLine :: !(Maybe (Textual Int32))
-    , _trrEndLine   :: !(Maybe (Textual Int32))
-    , _trrTableId   :: !Text
+    , _trrEndLine :: !(Maybe (Textual Int32))
+    , _trrTableId :: !Text
     , _trrDelimiter :: !(Maybe Text)
-    , _trrEncoding  :: !(Maybe Text)
-    , _trrIsStrict  :: !(Maybe Bool)
+    , _trrEncoding :: !(Maybe Text)
+    , _trrIsStrict :: !(Maybe Bool)
+    , _trrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableReplaceRows' with the minimum fields required to make a request.
@@ -103,10 +107,12 @@ data TableReplaceRows = TableReplaceRows'
 -- * 'trrEncoding'
 --
 -- * 'trrIsStrict'
+--
+-- * 'trrFields'
 tableReplaceRows
     :: Text -- ^ 'trrTableId'
     -> TableReplaceRows
-tableReplaceRows pTrrTableId_ =
+tableReplaceRows pTrrTableId_ = 
     TableReplaceRows'
     { _trrStartLine = Nothing
     , _trrEndLine = Nothing
@@ -114,6 +120,7 @@ tableReplaceRows pTrrTableId_ =
     , _trrDelimiter = Nothing
     , _trrEncoding = Nothing
     , _trrIsStrict = Nothing
+    , _trrFields = Nothing
     }
 
 -- | The index of the first line from which to start importing, inclusive.
@@ -157,6 +164,11 @@ trrIsStrict :: Lens' TableReplaceRows (Maybe Bool)
 trrIsStrict
   = lens _trrIsStrict (\ s a -> s{_trrIsStrict = a})
 
+-- | Selector specifying which fields to include in a partial response.
+trrFields :: Lens' TableReplaceRows (Maybe Text)
+trrFields
+  = lens _trrFields (\ s a -> s{_trrFields = a})
+
 instance GoogleRequest TableReplaceRows where
         type Rs TableReplaceRows = Task
         type Scopes TableReplaceRows =
@@ -166,6 +178,7 @@ instance GoogleRequest TableReplaceRows where
               _trrDelimiter
               _trrEncoding
               _trrIsStrict
+              _trrFields
               (Just AltJSON)
               fusionTablesService
           where go :<|> _
@@ -184,6 +197,7 @@ instance GoogleRequest (MediaUpload TableReplaceRows)
               _trrDelimiter
               _trrEncoding
               _trrIsStrict
+              _trrFields
               (Just AltJSON)
               (Just AltMedia)
               body

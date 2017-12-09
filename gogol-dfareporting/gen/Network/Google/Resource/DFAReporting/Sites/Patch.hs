@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Sites.Patch
     , spProFileId
     , spPayload
     , spId
+    , spFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sites.patch@ method which the
 -- 'SitesPatch' request conforms to.
 type SitesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sites" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Site :> Patch '[JSON] Site
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Site :> Patch '[JSON] Site
 
 -- | Updates an existing site. This method supports patch semantics.
 --
 -- /See:/ 'sitesPatch' smart constructor.
 data SitesPatch = SitesPatch'
     { _spProFileId :: !(Textual Int64)
-    , _spPayload   :: !Site
-    , _spId        :: !(Textual Int64)
+    , _spPayload :: !Site
+    , _spId :: !(Textual Int64)
+    , _spFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data SitesPatch = SitesPatch'
 -- * 'spPayload'
 --
 -- * 'spId'
+--
+-- * 'spFields'
 sitesPatch
     :: Int64 -- ^ 'spProFileId'
     -> Site -- ^ 'spPayload'
     -> Int64 -- ^ 'spId'
     -> SitesPatch
-sitesPatch pSpProFileId_ pSpPayload_ pSpId_ =
+sitesPatch pSpProFileId_ pSpPayload_ pSpId_ = 
     SitesPatch'
     { _spProFileId = _Coerce # pSpProFileId_
     , _spPayload = pSpPayload_
     , _spId = _Coerce # pSpId_
+    , _spFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -98,12 +104,17 @@ spPayload
 spId :: Lens' SitesPatch Int64
 spId = lens _spId (\ s a -> s{_spId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+spFields :: Lens' SitesPatch (Maybe Text)
+spFields = lens _spFields (\ s a -> s{_spFields = a})
+
 instance GoogleRequest SitesPatch where
         type Rs SitesPatch = Site
         type Scopes SitesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SitesPatch'{..}
-          = go _spProFileId (Just _spId) (Just AltJSON)
+          = go _spProFileId (Just _spId) _spFields
+              (Just AltJSON)
               _spPayload
               dFAReportingService
           where go

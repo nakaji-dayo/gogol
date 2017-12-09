@@ -47,10 +47,11 @@ module Network.Google.Resource.AdSense.Accounts.Reports.Generate
     , argStartIndex
     , argUseTimezoneReporting
     , argMaxResults
+    , argFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.reports.generate@ method which the
 -- 'AccountsReportsGenerate' request conforms to.
@@ -71,9 +72,10 @@ type AccountsReportsGenerateResource =
                                QueryParam "startIndex" (Textual Int32) :>
                                  QueryParam "useTimezoneReporting" Bool :>
                                    QueryParam "maxResults" (Textual Int32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON]
-                                         AdsenseReportsGenerateResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON]
+                                           AdsenseReportsGenerateResponse
        :<|>
        "adsense" :>
          "v1.4" :>
@@ -91,8 +93,9 @@ type AccountsReportsGenerateResource =
                                  QueryParam "startIndex" (Textual Int32) :>
                                    QueryParam "useTimezoneReporting" Bool :>
                                      QueryParam "maxResults" (Textual Int32) :>
-                                       QueryParam "alt" AltMedia :>
-                                         Get '[OctetStream] Stream
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltMedia :>
+                                           Get '[OctetStream] Stream
 
 -- | Generate an AdSense report based on the report request sent in the query
 -- parameters. Returns the result as JSON; to retrieve output in CSV format
@@ -100,18 +103,19 @@ type AccountsReportsGenerateResource =
 --
 -- /See:/ 'accountsReportsGenerate' smart constructor.
 data AccountsReportsGenerate = AccountsReportsGenerate'
-    { _argDimension            :: !(Maybe [Text])
-    , _argLocale               :: !(Maybe Text)
-    , _argEndDate              :: !Text
-    , _argStartDate            :: !Text
-    , _argAccountId            :: !Text
-    , _argMetric               :: !(Maybe [Text])
-    , _argCurrency             :: !(Maybe Text)
-    , _argSort                 :: !(Maybe [Text])
-    , _argFilter               :: !(Maybe [Text])
-    , _argStartIndex           :: !(Maybe (Textual Int32))
+    { _argDimension :: !(Maybe [Text])
+    , _argLocale :: !(Maybe Text)
+    , _argEndDate :: !Text
+    , _argStartDate :: !Text
+    , _argAccountId :: !Text
+    , _argMetric :: !(Maybe [Text])
+    , _argCurrency :: !(Maybe Text)
+    , _argSort :: !(Maybe [Text])
+    , _argFilter :: !(Maybe [Text])
+    , _argStartIndex :: !(Maybe (Textual Int32))
     , _argUseTimezoneReporting :: !(Maybe Bool)
-    , _argMaxResults           :: !(Maybe (Textual Int32))
+    , _argMaxResults :: !(Maybe (Textual Int32))
+    , _argFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsReportsGenerate' with the minimum fields required to make a request.
@@ -141,12 +145,14 @@ data AccountsReportsGenerate = AccountsReportsGenerate'
 -- * 'argUseTimezoneReporting'
 --
 -- * 'argMaxResults'
+--
+-- * 'argFields'
 accountsReportsGenerate
     :: Text -- ^ 'argEndDate'
     -> Text -- ^ 'argStartDate'
     -> Text -- ^ 'argAccountId'
     -> AccountsReportsGenerate
-accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ =
+accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ = 
     AccountsReportsGenerate'
     { _argDimension = Nothing
     , _argLocale = Nothing
@@ -160,6 +166,7 @@ accountsReportsGenerate pArgEndDate_ pArgStartDate_ pArgAccountId_ =
     , _argStartIndex = Nothing
     , _argUseTimezoneReporting = Nothing
     , _argMaxResults = Nothing
+    , _argFields = Nothing
     }
 
 -- | Dimensions to base the report on.
@@ -240,6 +247,11 @@ argMaxResults
       (\ s a -> s{_argMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+argFields :: Lens' AccountsReportsGenerate (Maybe Text)
+argFields
+  = lens _argFields (\ s a -> s{_argFields = a})
+
 instance GoogleRequest AccountsReportsGenerate where
         type Rs AccountsReportsGenerate =
              AdsenseReportsGenerateResponse
@@ -258,6 +270,7 @@ instance GoogleRequest AccountsReportsGenerate where
               _argStartIndex
               _argUseTimezoneReporting
               _argMaxResults
+              _argFields
               (Just AltJSON)
               adSenseService
           where go :<|> _
@@ -284,6 +297,7 @@ instance GoogleRequest
               _argStartIndex
               _argUseTimezoneReporting
               _argMaxResults
+              _argFields
               (Just AltMedia)
               adSenseService
           where _ :<|> go

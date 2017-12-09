@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Addresses.Get
     , addProject
     , addAddress
     , addRegion
+    , addFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.addresses.get@ method which the
 -- 'AddressesGet' request conforms to.
@@ -52,7 +53,8 @@ type AddressesGetResource =
                Capture "region" Text :>
                  "addresses" :>
                    Capture "address" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Address
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Address
 
 -- | Returns the specified address resource.
 --
@@ -60,7 +62,8 @@ type AddressesGetResource =
 data AddressesGet = AddressesGet'
     { _addProject :: !Text
     , _addAddress :: !Text
-    , _addRegion  :: !Text
+    , _addRegion :: !Text
+    , _addFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AddressesGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data AddressesGet = AddressesGet'
 -- * 'addAddress'
 --
 -- * 'addRegion'
+--
+-- * 'addFields'
 addressesGet
     :: Text -- ^ 'addProject'
     -> Text -- ^ 'addAddress'
     -> Text -- ^ 'addRegion'
     -> AddressesGet
-addressesGet pAddProject_ pAddAddress_ pAddRegion_ =
+addressesGet pAddProject_ pAddAddress_ pAddRegion_ = 
     AddressesGet'
     { _addProject = pAddProject_
     , _addAddress = pAddAddress_
     , _addRegion = pAddRegion_
+    , _addFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -99,6 +105,11 @@ addRegion :: Lens' AddressesGet Text
 addRegion
   = lens _addRegion (\ s a -> s{_addRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+addFields :: Lens' AddressesGet (Maybe Text)
+addFields
+  = lens _addFields (\ s a -> s{_addFields = a})
+
 instance GoogleRequest AddressesGet where
         type Rs AddressesGet = Address
         type Scopes AddressesGet =
@@ -106,7 +117,7 @@ instance GoogleRequest AddressesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient AddressesGet'{..}
-          = go _addProject _addRegion _addAddress
+          = go _addProject _addRegion _addAddress _addFields
               (Just AltJSON)
               computeService
           where go

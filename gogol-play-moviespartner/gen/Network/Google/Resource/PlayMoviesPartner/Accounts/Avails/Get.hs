@@ -41,11 +41,12 @@ module Network.Google.Resource.PlayMoviesPartner.Accounts.Avails.Get
     , aagAvailId
     , aagAccountId
     , aagBearerToken
+    , aagFields
     , aagCallback
     ) where
 
-import           Network.Google.PlayMoviesPartner.Types
-import           Network.Google.Prelude
+import Network.Google.PlayMoviesPartner.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @playmoviespartner.accounts.avails.get@ method which the
 -- 'AccountsAvailsGet' request conforms to.
@@ -55,28 +56,30 @@ type AccountsAvailsGetResource =
          Capture "accountId" Text :>
            "avails" :>
              Capture "availId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Avail
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Avail
 
 -- | Get an Avail given its avail group id and avail id.
 --
 -- /See:/ 'accountsAvailsGet' smart constructor.
 data AccountsAvailsGet = AccountsAvailsGet'
-    { _aagXgafv          :: !(Maybe Text)
+    { _aagXgafv :: !(Maybe Xgafv)
     , _aagUploadProtocol :: !(Maybe Text)
-    , _aagPp             :: !Bool
-    , _aagAccessToken    :: !(Maybe Text)
-    , _aagUploadType     :: !(Maybe Text)
-    , _aagAvailId        :: !Text
-    , _aagAccountId      :: !Text
-    , _aagBearerToken    :: !(Maybe Text)
-    , _aagCallback       :: !(Maybe Text)
+    , _aagPp :: !Bool
+    , _aagAccessToken :: !(Maybe Text)
+    , _aagUploadType :: !(Maybe Text)
+    , _aagAvailId :: !Text
+    , _aagAccountId :: !Text
+    , _aagBearerToken :: !(Maybe Text)
+    , _aagFields :: !(Maybe Text)
+    , _aagCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAvailsGet' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data AccountsAvailsGet = AccountsAvailsGet'
 --
 -- * 'aagBearerToken'
 --
+-- * 'aagFields'
+--
 -- * 'aagCallback'
 accountsAvailsGet
     :: Text -- ^ 'aagAvailId'
     -> Text -- ^ 'aagAccountId'
     -> AccountsAvailsGet
-accountsAvailsGet pAagAvailId_ pAagAccountId_ =
+accountsAvailsGet pAagAvailId_ pAagAccountId_ = 
     AccountsAvailsGet'
     { _aagXgafv = Nothing
     , _aagUploadProtocol = Nothing
@@ -114,11 +119,12 @@ accountsAvailsGet pAagAvailId_ pAagAccountId_ =
     , _aagAvailId = pAagAvailId_
     , _aagAccountId = pAagAccountId_
     , _aagBearerToken = Nothing
+    , _aagFields = Nothing
     , _aagCallback = Nothing
     }
 
 -- | V1 error format.
-aagXgafv :: Lens' AccountsAvailsGet (Maybe Text)
+aagXgafv :: Lens' AccountsAvailsGet (Maybe Xgafv)
 aagXgafv = lens _aagXgafv (\ s a -> s{_aagXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -159,6 +165,11 @@ aagBearerToken
   = lens _aagBearerToken
       (\ s a -> s{_aagBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aagFields :: Lens' AccountsAvailsGet (Maybe Text)
+aagFields
+  = lens _aagFields (\ s a -> s{_aagFields = a})
+
 -- | JSONP
 aagCallback :: Lens' AccountsAvailsGet (Maybe Text)
 aagCallback
@@ -176,6 +187,7 @@ instance GoogleRequest AccountsAvailsGet where
               _aagUploadType
               _aagBearerToken
               _aagCallback
+              _aagFields
               (Just AltJSON)
               playMoviesPartnerService
           where go

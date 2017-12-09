@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Rooms.ResetForAllPlayers
     , roomsResetForAllPlayers
     , RoomsResetForAllPlayers
 
+    -- * Request Lenses
+    , rrfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.rooms.resetForAllPlayers@ method which the
 -- 'RoomsResetForAllPlayers' request conforms to.
@@ -46,30 +48,43 @@ type RoomsResetForAllPlayersResource =
        "v1management" :>
          "rooms" :>
            "resetForAllPlayers" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Deletes rooms where the only room participants are from whitelisted
 -- tester accounts for your application. This method is only available to
 -- user accounts for your developer console.
 --
 -- /See:/ 'roomsResetForAllPlayers' smart constructor.
-data RoomsResetForAllPlayers =
-    RoomsResetForAllPlayers'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype RoomsResetForAllPlayers = RoomsResetForAllPlayers'
+    { _rrfapFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsResetForAllPlayers' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rrfapFields'
 roomsResetForAllPlayers
     :: RoomsResetForAllPlayers
-roomsResetForAllPlayers = RoomsResetForAllPlayers'
+roomsResetForAllPlayers = 
+    RoomsResetForAllPlayers'
+    { _rrfapFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+rrfapFields :: Lens' RoomsResetForAllPlayers (Maybe Text)
+rrfapFields
+  = lens _rrfapFields (\ s a -> s{_rrfapFields = a})
 
 instance GoogleRequest RoomsResetForAllPlayers where
         type Rs RoomsResetForAllPlayers = ()
         type Scopes RoomsResetForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient RoomsResetForAllPlayers'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient RoomsResetForAllPlayers'{..}
+          = go _rrfapFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy RoomsResetForAllPlayersResource)

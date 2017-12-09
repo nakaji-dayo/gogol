@@ -56,11 +56,12 @@ module Network.Google.Resource.Genomics.Reads.Search
     , reaUploadType
     , reaPayload
     , reaBearerToken
+    , reaFields
     , reaCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.reads.search@ method which the
 -- 'ReadsSearch' request conforms to.
@@ -75,9 +76,10 @@ type ReadsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchReadsRequest :>
-                             Post '[JSON] SearchReadsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchReadsRequest :>
+                               Post '[JSON] SearchReadsResponse
 
 -- | Gets a list of reads for one or more read group sets. For the
 -- definitions of read group sets and other genomics resources, see
@@ -99,14 +101,15 @@ type ReadsSearchResource =
 --
 -- /See:/ 'readsSearch' smart constructor.
 data ReadsSearch = ReadsSearch'
-    { _reaXgafv          :: !(Maybe Xgafv)
+    { _reaXgafv :: !(Maybe Xgafv)
     , _reaUploadProtocol :: !(Maybe Text)
-    , _reaPp             :: !Bool
-    , _reaAccessToken    :: !(Maybe Text)
-    , _reaUploadType     :: !(Maybe Text)
-    , _reaPayload        :: !SearchReadsRequest
-    , _reaBearerToken    :: !(Maybe Text)
-    , _reaCallback       :: !(Maybe Text)
+    , _reaPp :: !Bool
+    , _reaAccessToken :: !(Maybe Text)
+    , _reaUploadType :: !(Maybe Text)
+    , _reaPayload :: !SearchReadsRequest
+    , _reaBearerToken :: !(Maybe Text)
+    , _reaFields :: !(Maybe Text)
+    , _reaCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadsSearch' with the minimum fields required to make a request.
@@ -127,11 +130,13 @@ data ReadsSearch = ReadsSearch'
 --
 -- * 'reaBearerToken'
 --
+-- * 'reaFields'
+--
 -- * 'reaCallback'
 readsSearch
     :: SearchReadsRequest -- ^ 'reaPayload'
     -> ReadsSearch
-readsSearch pReaPayload_ =
+readsSearch pReaPayload_ = 
     ReadsSearch'
     { _reaXgafv = Nothing
     , _reaUploadProtocol = Nothing
@@ -140,6 +145,7 @@ readsSearch pReaPayload_ =
     , _reaUploadType = Nothing
     , _reaPayload = pReaPayload_
     , _reaBearerToken = Nothing
+    , _reaFields = Nothing
     , _reaCallback = Nothing
     }
 
@@ -180,6 +186,11 @@ reaBearerToken
   = lens _reaBearerToken
       (\ s a -> s{_reaBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+reaFields :: Lens' ReadsSearch (Maybe Text)
+reaFields
+  = lens _reaFields (\ s a -> s{_reaFields = a})
+
 -- | JSONP
 reaCallback :: Lens' ReadsSearch (Maybe Text)
 reaCallback
@@ -197,6 +208,7 @@ instance GoogleRequest ReadsSearch where
               _reaUploadType
               _reaBearerToken
               _reaCallback
+              _reaFields
               (Just AltJSON)
               _reaPayload
               genomicsService

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSenseHost.CustomChannels.Insert
     -- * Request Lenses
     , cciPayload
     , cciAdClientId
+    , cciFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.customchannels.insert@ method which the
 -- 'CustomChannelsInsert' request conforms to.
@@ -48,16 +49,18 @@ type CustomChannelsInsertResource =
          "adclients" :>
            Capture "adClientId" Text :>
              "customchannels" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CustomChannel :>
-                   Post '[JSON] CustomChannel
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CustomChannel :>
+                     Post '[JSON] CustomChannel
 
 -- | Add a new custom channel to the host AdSense account.
 --
 -- /See:/ 'customChannelsInsert' smart constructor.
 data CustomChannelsInsert = CustomChannelsInsert'
-    { _cciPayload    :: !CustomChannel
+    { _cciPayload :: !CustomChannel
     , _cciAdClientId :: !Text
+    , _cciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CustomChannelsInsert = CustomChannelsInsert'
 -- * 'cciPayload'
 --
 -- * 'cciAdClientId'
+--
+-- * 'cciFields'
 customChannelsInsert
     :: CustomChannel -- ^ 'cciPayload'
     -> Text -- ^ 'cciAdClientId'
     -> CustomChannelsInsert
-customChannelsInsert pCciPayload_ pCciAdClientId_ =
+customChannelsInsert pCciPayload_ pCciAdClientId_ = 
     CustomChannelsInsert'
     { _cciPayload = pCciPayload_
     , _cciAdClientId = pCciAdClientId_
+    , _cciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,12 +94,18 @@ cciAdClientId
   = lens _cciAdClientId
       (\ s a -> s{_cciAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cciFields :: Lens' CustomChannelsInsert (Maybe Text)
+cciFields
+  = lens _cciFields (\ s a -> s{_cciFields = a})
+
 instance GoogleRequest CustomChannelsInsert where
         type Rs CustomChannelsInsert = CustomChannel
         type Scopes CustomChannelsInsert =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient CustomChannelsInsert'{..}
-          = go _cciAdClientId (Just AltJSON) _cciPayload
+          = go _cciAdClientId _cciFields (Just AltJSON)
+              _cciPayload
               adSenseHostService
           where go
                   = buildClient

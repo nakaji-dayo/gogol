@@ -34,10 +34,11 @@ module Network.Google.Resource.QPXExpress.Trips.Search
 
     -- * Request Lenses
     , tsPayload
+    , tsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.QPXExpress.Types
+import Network.Google.Prelude
+import Network.Google.QPXExpress.Types
 
 -- | A resource alias for @qpxExpress.trips.search@ method which the
 -- 'TripsSearch' request conforms to.
@@ -46,15 +47,17 @@ type TripsSearchResource =
        "v1" :>
          "trips" :>
            "search" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] TripsSearchRequest :>
-                 Post '[JSON] TripsSearchResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] TripsSearchRequest :>
+                   Post '[JSON] TripsSearchResponse
 
 -- | Returns a list of flights.
 --
 -- /See:/ 'tripsSearch' smart constructor.
-newtype TripsSearch = TripsSearch'
-    { _tsPayload :: TripsSearchRequest
+data TripsSearch = TripsSearch'
+    { _tsPayload :: !TripsSearchRequest
+    , _tsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TripsSearch' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype TripsSearch = TripsSearch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tsPayload'
+--
+-- * 'tsFields'
 tripsSearch
     :: TripsSearchRequest -- ^ 'tsPayload'
     -> TripsSearch
-tripsSearch pTsPayload_ =
+tripsSearch pTsPayload_ = 
     TripsSearch'
     { _tsPayload = pTsPayload_
+    , _tsFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,11 +81,16 @@ tsPayload :: Lens' TripsSearch TripsSearchRequest
 tsPayload
   = lens _tsPayload (\ s a -> s{_tsPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tsFields :: Lens' TripsSearch (Maybe Text)
+tsFields = lens _tsFields (\ s a -> s{_tsFields = a})
+
 instance GoogleRequest TripsSearch where
         type Rs TripsSearch = TripsSearchResponse
         type Scopes TripsSearch = '[]
         requestClient TripsSearch'{..}
-          = go (Just AltJSON) _tsPayload qPXExpressService
+          = go _tsFields (Just AltJSON) _tsPayload
+              qPXExpressService
           where go
                   = buildClient (Proxy :: Proxy TripsSearchResource)
                       mempty

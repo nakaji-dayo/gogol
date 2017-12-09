@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Groups.Aliases.List
 
     -- * Request Lenses
     , galGroupKey
+    , galFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.aliases.list@ method which the
 -- 'GroupsAliasesList' request conforms to.
@@ -48,13 +49,15 @@ type GroupsAliasesListResource =
            "groups" :>
              Capture "groupKey" Text :>
                "aliases" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Aliases
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Aliases
 
 -- | List all aliases for a group
 --
 -- /See:/ 'groupsAliasesList' smart constructor.
-newtype GroupsAliasesList = GroupsAliasesList'
-    { _galGroupKey :: Text
+data GroupsAliasesList = GroupsAliasesList'
+    { _galGroupKey :: !Text
+    , _galFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsAliasesList' with the minimum fields required to make a request.
@@ -62,18 +65,26 @@ newtype GroupsAliasesList = GroupsAliasesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'galGroupKey'
+--
+-- * 'galFields'
 groupsAliasesList
     :: Text -- ^ 'galGroupKey'
     -> GroupsAliasesList
-groupsAliasesList pGalGroupKey_ =
+groupsAliasesList pGalGroupKey_ = 
     GroupsAliasesList'
     { _galGroupKey = pGalGroupKey_
+    , _galFields = Nothing
     }
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 galGroupKey :: Lens' GroupsAliasesList Text
 galGroupKey
   = lens _galGroupKey (\ s a -> s{_galGroupKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+galFields :: Lens' GroupsAliasesList (Maybe Text)
+galFields
+  = lens _galFields (\ s a -> s{_galFields = a})
 
 instance GoogleRequest GroupsAliasesList where
         type Rs GroupsAliasesList = Aliases
@@ -81,7 +92,8 @@ instance GoogleRequest GroupsAliasesList where
              '["https://www.googleapis.com/auth/admin.directory.group",
                "https://www.googleapis.com/auth/admin.directory.group.readonly"]
         requestClient GroupsAliasesList'{..}
-          = go _galGroupKey (Just AltJSON) directoryService
+          = go _galGroupKey _galFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient
                       (Proxy :: Proxy GroupsAliasesListResource)

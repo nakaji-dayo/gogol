@@ -39,10 +39,11 @@ module Network.Google.Resource.BigQuery.DataSets.List
     , dslPageToken
     , dslProjectId
     , dslMaxResults
+    , dslFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.list@ method which the
 -- 'DataSetsList' request conforms to.
@@ -56,18 +57,20 @@ type DataSetsListResource =
                  QueryParam "filter" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] DataSetList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] DataSetList
 
 -- | Lists all datasets in the specified project to which you have been
 -- granted the READER dataset role.
 --
 -- /See:/ 'dataSetsList' smart constructor.
 data DataSetsList = DataSetsList'
-    { _dslAll        :: !(Maybe Bool)
-    , _dslFilter     :: !(Maybe Text)
-    , _dslPageToken  :: !(Maybe Text)
-    , _dslProjectId  :: !Text
+    { _dslAll :: !(Maybe Bool)
+    , _dslFilter :: !(Maybe Text)
+    , _dslPageToken :: !(Maybe Text)
+    , _dslProjectId :: !Text
     , _dslMaxResults :: !(Maybe (Textual Word32))
+    , _dslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data DataSetsList = DataSetsList'
 -- * 'dslProjectId'
 --
 -- * 'dslMaxResults'
+--
+-- * 'dslFields'
 dataSetsList
     :: Text -- ^ 'dslProjectId'
     -> DataSetsList
-dataSetsList pDslProjectId_ =
+dataSetsList pDslProjectId_ = 
     DataSetsList'
     { _dslAll = Nothing
     , _dslFilter = Nothing
     , _dslPageToken = Nothing
     , _dslProjectId = pDslProjectId_
     , _dslMaxResults = Nothing
+    , _dslFields = Nothing
     }
 
 -- | Whether to list all datasets, including hidden ones
@@ -125,6 +131,11 @@ dslMaxResults
       (\ s a -> s{_dslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dslFields :: Lens' DataSetsList (Maybe Text)
+dslFields
+  = lens _dslFields (\ s a -> s{_dslFields = a})
+
 instance GoogleRequest DataSetsList where
         type Rs DataSetsList = DataSetList
         type Scopes DataSetsList =
@@ -134,6 +145,7 @@ instance GoogleRequest DataSetsList where
         requestClient DataSetsList'{..}
           = go _dslProjectId _dslAll _dslFilter _dslPageToken
               _dslMaxResults
+              _dslFields
               (Just AltJSON)
               bigQueryService
           where go

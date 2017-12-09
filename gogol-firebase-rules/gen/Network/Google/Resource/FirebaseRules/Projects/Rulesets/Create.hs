@@ -45,11 +45,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Rulesets.Create
     , prcPayload
     , prcBearerToken
     , prcName
+    , prcFields
     , prcCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.rulesets.create@ method which the
 -- 'ProjectsRulesetsCreate' request conforms to.
@@ -64,8 +65,9 @@ type ProjectsRulesetsCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Ruleset :> Post '[JSON] Ruleset
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Ruleset :> Post '[JSON] Ruleset
 
 -- | Create a \`Ruleset\` from \`Source\`. The \`Ruleset\` is given a unique
 -- generated name which is returned to the caller. \`Source\` containing
@@ -75,15 +77,16 @@ type ProjectsRulesetsCreateResource =
 --
 -- /See:/ 'projectsRulesetsCreate' smart constructor.
 data ProjectsRulesetsCreate = ProjectsRulesetsCreate'
-    { _prcXgafv          :: !(Maybe Xgafv)
+    { _prcXgafv :: !(Maybe Xgafv)
     , _prcUploadProtocol :: !(Maybe Text)
-    , _prcPp             :: !Bool
-    , _prcAccessToken    :: !(Maybe Text)
-    , _prcUploadType     :: !(Maybe Text)
-    , _prcPayload        :: !Ruleset
-    , _prcBearerToken    :: !(Maybe Text)
-    , _prcName           :: !Text
-    , _prcCallback       :: !(Maybe Text)
+    , _prcPp :: !Bool
+    , _prcAccessToken :: !(Maybe Text)
+    , _prcUploadType :: !(Maybe Text)
+    , _prcPayload :: !Ruleset
+    , _prcBearerToken :: !(Maybe Text)
+    , _prcName :: !Text
+    , _prcFields :: !(Maybe Text)
+    , _prcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRulesetsCreate' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data ProjectsRulesetsCreate = ProjectsRulesetsCreate'
 --
 -- * 'prcName'
 --
+-- * 'prcFields'
+--
 -- * 'prcCallback'
 projectsRulesetsCreate
     :: Ruleset -- ^ 'prcPayload'
     -> Text -- ^ 'prcName'
     -> ProjectsRulesetsCreate
-projectsRulesetsCreate pPrcPayload_ pPrcName_ =
+projectsRulesetsCreate pPrcPayload_ pPrcName_ = 
     ProjectsRulesetsCreate'
     { _prcXgafv = Nothing
     , _prcUploadProtocol = Nothing
@@ -121,6 +126,7 @@ projectsRulesetsCreate pPrcPayload_ pPrcName_ =
     , _prcPayload = pPrcPayload_
     , _prcBearerToken = Nothing
     , _prcName = pPrcName_
+    , _prcFields = Nothing
     , _prcCallback = Nothing
     }
 
@@ -166,6 +172,11 @@ prcBearerToken
 prcName :: Lens' ProjectsRulesetsCreate Text
 prcName = lens _prcName (\ s a -> s{_prcName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prcFields :: Lens' ProjectsRulesetsCreate (Maybe Text)
+prcFields
+  = lens _prcFields (\ s a -> s{_prcFields = a})
+
 -- | JSONP
 prcCallback :: Lens' ProjectsRulesetsCreate (Maybe Text)
 prcCallback
@@ -183,6 +194,7 @@ instance GoogleRequest ProjectsRulesetsCreate where
               _prcUploadType
               _prcBearerToken
               _prcCallback
+              _prcFields
               (Just AltJSON)
               _prcPayload
               firebaseRulesService

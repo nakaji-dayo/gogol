@@ -43,11 +43,12 @@ module Network.Google.Resource.Genomics.Annotations.Update
     , auPayload
     , auBearerToken
     , auAnnotationId
+    , auFields
     , auCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotations.update@ method which the
 -- 'AnnotationsUpdate' request conforms to.
@@ -63,25 +64,27 @@ type AnnotationsUpdateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Annotation :>
-                               Put '[JSON] Annotation
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Annotation :>
+                                 Put '[JSON] Annotation
 
 -- | Updates an annotation. Caller must have WRITE permission for the
 -- associated dataset.
 --
 -- /See:/ 'annotationsUpdate' smart constructor.
 data AnnotationsUpdate = AnnotationsUpdate'
-    { _auXgafv          :: !(Maybe Xgafv)
+    { _auXgafv :: !(Maybe Xgafv)
     , _auUploadProtocol :: !(Maybe Text)
-    , _auUpdateMask     :: !(Maybe FieldMask)
-    , _auPp             :: !Bool
-    , _auAccessToken    :: !(Maybe Text)
-    , _auUploadType     :: !(Maybe Text)
-    , _auPayload        :: !Annotation
-    , _auBearerToken    :: !(Maybe Text)
-    , _auAnnotationId   :: !Text
-    , _auCallback       :: !(Maybe Text)
+    , _auUpdateMask :: !(Maybe FieldMask)
+    , _auPp :: !Bool
+    , _auAccessToken :: !(Maybe Text)
+    , _auUploadType :: !(Maybe Text)
+    , _auPayload :: !Annotation
+    , _auBearerToken :: !(Maybe Text)
+    , _auAnnotationId :: !Text
+    , _auFields :: !(Maybe Text)
+    , _auCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsUpdate' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data AnnotationsUpdate = AnnotationsUpdate'
 --
 -- * 'auAnnotationId'
 --
+-- * 'auFields'
+--
 -- * 'auCallback'
 annotationsUpdate
     :: Annotation -- ^ 'auPayload'
     -> Text -- ^ 'auAnnotationId'
     -> AnnotationsUpdate
-annotationsUpdate pAuPayload_ pAuAnnotationId_ =
+annotationsUpdate pAuPayload_ pAuAnnotationId_ = 
     AnnotationsUpdate'
     { _auXgafv = Nothing
     , _auUploadProtocol = Nothing
@@ -122,6 +127,7 @@ annotationsUpdate pAuPayload_ pAuAnnotationId_ =
     , _auPayload = pAuPayload_
     , _auBearerToken = Nothing
     , _auAnnotationId = pAuAnnotationId_
+    , _auFields = Nothing
     , _auCallback = Nothing
     }
 
@@ -174,6 +180,10 @@ auAnnotationId
   = lens _auAnnotationId
       (\ s a -> s{_auAnnotationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+auFields :: Lens' AnnotationsUpdate (Maybe Text)
+auFields = lens _auFields (\ s a -> s{_auFields = a})
+
 -- | JSONP
 auCallback :: Lens' AnnotationsUpdate (Maybe Text)
 auCallback
@@ -192,6 +202,7 @@ instance GoogleRequest AnnotationsUpdate where
               _auUploadType
               _auBearerToken
               _auCallback
+              _auFields
               (Just AltJSON)
               _auPayload
               genomicsService

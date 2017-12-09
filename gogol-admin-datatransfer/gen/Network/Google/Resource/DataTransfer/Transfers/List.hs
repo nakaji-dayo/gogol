@@ -40,10 +40,11 @@ module Network.Google.Resource.DataTransfer.Transfers.List
     , tlCustomerId
     , tlPageToken
     , tlMaxResults
+    , tlFields
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datatransfer.transfers.list@ method which the
 -- 'TransfersList' request conforms to.
@@ -58,20 +59,22 @@ type TransfersListResource =
                    QueryParam "customerId" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] DataTransfersListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] DataTransfersListResponse
 
 -- | Lists the transfers for a customer by source user, destination user, or
 -- status.
 --
 -- /See:/ 'transfersList' smart constructor.
 data TransfersList = TransfersList'
-    { _tlStatus         :: !(Maybe Text)
+    { _tlStatus :: !(Maybe Text)
     , _tlOldOwnerUserId :: !(Maybe Text)
     , _tlNewOwnerUserId :: !(Maybe Text)
-    , _tlCustomerId     :: !(Maybe Text)
-    , _tlPageToken      :: !(Maybe Text)
-    , _tlMaxResults     :: !(Maybe (Textual Int32))
+    , _tlCustomerId :: !(Maybe Text)
+    , _tlPageToken :: !(Maybe Text)
+    , _tlMaxResults :: !(Maybe (Textual Int32))
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransfersList' with the minimum fields required to make a request.
@@ -89,9 +92,11 @@ data TransfersList = TransfersList'
 -- * 'tlPageToken'
 --
 -- * 'tlMaxResults'
+--
+-- * 'tlFields'
 transfersList
     :: TransfersList
-transfersList =
+transfersList = 
     TransfersList'
     { _tlStatus = Nothing
     , _tlOldOwnerUserId = Nothing
@@ -99,6 +104,7 @@ transfersList =
     , _tlCustomerId = Nothing
     , _tlPageToken = Nothing
     , _tlMaxResults = Nothing
+    , _tlFields = Nothing
     }
 
 -- | Status of the transfer.
@@ -133,6 +139,10 @@ tlMaxResults
   = lens _tlMaxResults (\ s a -> s{_tlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TransfersList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TransfersList where
         type Rs TransfersList = DataTransfersListResponse
         type Scopes TransfersList =
@@ -143,6 +153,7 @@ instance GoogleRequest TransfersList where
               _tlCustomerId
               _tlPageToken
               _tlMaxResults
+              _tlFields
               (Just AltJSON)
               dataTransferService
           where go

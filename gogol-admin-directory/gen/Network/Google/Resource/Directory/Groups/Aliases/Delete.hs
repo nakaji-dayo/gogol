@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Groups.Aliases.Delete
     -- * Request Lenses
     , gadGroupKey
     , gadAlias
+    , gadFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.aliases.delete@ method which the
 -- 'GroupsAliasesDelete' request conforms to.
@@ -50,14 +51,16 @@ type GroupsAliasesDeleteResource =
              Capture "groupKey" Text :>
                "aliases" :>
                  Capture "alias" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Remove a alias for the group
 --
 -- /See:/ 'groupsAliasesDelete' smart constructor.
 data GroupsAliasesDelete = GroupsAliasesDelete'
     { _gadGroupKey :: !Text
-    , _gadAlias    :: !Text
+    , _gadAlias :: !Text
+    , _gadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsAliasesDelete' with the minimum fields required to make a request.
@@ -67,17 +70,20 @@ data GroupsAliasesDelete = GroupsAliasesDelete'
 -- * 'gadGroupKey'
 --
 -- * 'gadAlias'
+--
+-- * 'gadFields'
 groupsAliasesDelete
     :: Text -- ^ 'gadGroupKey'
     -> Text -- ^ 'gadAlias'
     -> GroupsAliasesDelete
-groupsAliasesDelete pGadGroupKey_ pGadAlias_ =
+groupsAliasesDelete pGadGroupKey_ pGadAlias_ = 
     GroupsAliasesDelete'
     { _gadGroupKey = pGadGroupKey_
     , _gadAlias = pGadAlias_
+    , _gadFields = Nothing
     }
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 gadGroupKey :: Lens' GroupsAliasesDelete Text
 gadGroupKey
   = lens _gadGroupKey (\ s a -> s{_gadGroupKey = a})
@@ -86,12 +92,17 @@ gadGroupKey
 gadAlias :: Lens' GroupsAliasesDelete Text
 gadAlias = lens _gadAlias (\ s a -> s{_gadAlias = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gadFields :: Lens' GroupsAliasesDelete (Maybe Text)
+gadFields
+  = lens _gadFields (\ s a -> s{_gadFields = a})
+
 instance GoogleRequest GroupsAliasesDelete where
         type Rs GroupsAliasesDelete = ()
         type Scopes GroupsAliasesDelete =
              '["https://www.googleapis.com/auth/admin.directory.group"]
         requestClient GroupsAliasesDelete'{..}
-          = go _gadGroupKey _gadAlias (Just AltJSON)
+          = go _gadGroupKey _gadAlias _gadFields (Just AltJSON)
               directoryService
           where go
                   = buildClient

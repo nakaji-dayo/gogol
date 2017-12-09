@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Reviews.Get
     , rgReviewId
     , rgPackageName
     , rgTranslationLanguage
+    , rgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.reviews.get@ method which the
 -- 'ReviewsGet' request conforms to.
@@ -51,15 +52,17 @@ type ReviewsGetResource =
              "reviews" :>
                Capture "reviewId" Text :>
                  QueryParam "translationLanguage" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Review
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Review
 
 -- | Returns a single review.
 --
 -- /See:/ 'reviewsGet' smart constructor.
 data ReviewsGet = ReviewsGet'
-    { _rgReviewId            :: !Text
-    , _rgPackageName         :: !Text
+    { _rgReviewId :: !Text
+    , _rgPackageName :: !Text
     , _rgTranslationLanguage :: !(Maybe Text)
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReviewsGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data ReviewsGet = ReviewsGet'
 -- * 'rgPackageName'
 --
 -- * 'rgTranslationLanguage'
+--
+-- * 'rgFields'
 reviewsGet
     :: Text -- ^ 'rgReviewId'
     -> Text -- ^ 'rgPackageName'
     -> ReviewsGet
-reviewsGet pRgReviewId_ pRgPackageName_ =
+reviewsGet pRgReviewId_ pRgPackageName_ = 
     ReviewsGet'
     { _rgReviewId = pRgReviewId_
     , _rgPackageName = pRgPackageName_
     , _rgTranslationLanguage = Nothing
+    , _rgFields = Nothing
     }
 
 rgReviewId :: Lens' ReviewsGet Text
@@ -98,6 +104,10 @@ rgTranslationLanguage
   = lens _rgTranslationLanguage
       (\ s a -> s{_rgTranslationLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ReviewsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest ReviewsGet where
         type Rs ReviewsGet = Review
         type Scopes ReviewsGet =
@@ -105,6 +115,7 @@ instance GoogleRequest ReviewsGet where
         requestClient ReviewsGet'{..}
           = go _rgPackageName _rgReviewId
               _rgTranslationLanguage
+              _rgFields
               (Just AltJSON)
               androidPublisherService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.Get
     , rigmgProject
     , rigmgInstanceGroupManager
     , rigmgRegion
+    , rigmgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.get@ method which the
 -- 'RegionInstanceGroupManagersGet' request conforms to.
@@ -52,16 +53,18 @@ type RegionInstanceGroupManagersGetResource =
                Capture "region" Text :>
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] InstanceGroupManager
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] InstanceGroupManager
 
 -- | Returns all of the details about the specified managed instance group.
 --
 -- /See:/ 'regionInstanceGroupManagersGet' smart constructor.
 data RegionInstanceGroupManagersGet = RegionInstanceGroupManagersGet'
-    { _rigmgProject              :: !Text
+    { _rigmgProject :: !Text
     , _rigmgInstanceGroupManager :: !Text
-    , _rigmgRegion               :: !Text
+    , _rigmgRegion :: !Text
+    , _rigmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data RegionInstanceGroupManagersGet = RegionInstanceGroupManagersGet'
 -- * 'rigmgInstanceGroupManager'
 --
 -- * 'rigmgRegion'
+--
+-- * 'rigmgFields'
 regionInstanceGroupManagersGet
     :: Text -- ^ 'rigmgProject'
     -> Text -- ^ 'rigmgInstanceGroupManager'
     -> Text -- ^ 'rigmgRegion'
     -> RegionInstanceGroupManagersGet
-regionInstanceGroupManagersGet pRigmgProject_ pRigmgInstanceGroupManager_ pRigmgRegion_ =
+regionInstanceGroupManagersGet pRigmgProject_ pRigmgInstanceGroupManager_ pRigmgRegion_ = 
     RegionInstanceGroupManagersGet'
     { _rigmgProject = pRigmgProject_
     , _rigmgInstanceGroupManager = pRigmgInstanceGroupManager_
     , _rigmgRegion = pRigmgRegion_
+    , _rigmgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ rigmgRegion :: Lens' RegionInstanceGroupManagersGet Text
 rigmgRegion
   = lens _rigmgRegion (\ s a -> s{_rigmgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmgFields :: Lens' RegionInstanceGroupManagersGet (Maybe Text)
+rigmgFields
+  = lens _rigmgFields (\ s a -> s{_rigmgFields = a})
+
 instance GoogleRequest RegionInstanceGroupManagersGet
          where
         type Rs RegionInstanceGroupManagersGet =
@@ -112,6 +123,7 @@ instance GoogleRequest RegionInstanceGroupManagersGet
         requestClient RegionInstanceGroupManagersGet'{..}
           = go _rigmgProject _rigmgRegion
               _rigmgInstanceGroupManager
+              _rigmgFields
               (Just AltJSON)
               computeService
           where go

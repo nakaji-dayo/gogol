@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTubeAnalytics.Groups.Update
     -- * Request Lenses
     , guPayload
     , guOnBehalfOfContentOwner
+    , guFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groups.update@ method which the
 -- 'GroupsUpdate' request conforms to.
@@ -48,15 +49,17 @@ type GroupsUpdateResource =
          "v1" :>
            "groups" :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Group :> Put '[JSON] Group
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Group :> Put '[JSON] Group
 
 -- | Modifies a group. For example, you could change a group\'s title.
 --
 -- /See:/ 'groupsUpdate' smart constructor.
 data GroupsUpdate = GroupsUpdate'
-    { _guPayload                :: !Group
+    { _guPayload :: !Group
     , _guOnBehalfOfContentOwner :: !(Maybe Text)
+    , _guFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsUpdate' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data GroupsUpdate = GroupsUpdate'
 -- * 'guPayload'
 --
 -- * 'guOnBehalfOfContentOwner'
+--
+-- * 'guFields'
 groupsUpdate
     :: Group -- ^ 'guPayload'
     -> GroupsUpdate
-groupsUpdate pGuPayload_ =
+groupsUpdate pGuPayload_ = 
     GroupsUpdate'
     { _guPayload = pGuPayload_
     , _guOnBehalfOfContentOwner = Nothing
+    , _guFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -95,13 +101,18 @@ guOnBehalfOfContentOwner
   = lens _guOnBehalfOfContentOwner
       (\ s a -> s{_guOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+guFields :: Lens' GroupsUpdate (Maybe Text)
+guFields = lens _guFields (\ s a -> s{_guFields = a})
+
 instance GoogleRequest GroupsUpdate where
         type Rs GroupsUpdate = Group
         type Scopes GroupsUpdate =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient GroupsUpdate'{..}
-          = go _guOnBehalfOfContentOwner (Just AltJSON)
+          = go _guOnBehalfOfContentOwner _guFields
+              (Just AltJSON)
               _guPayload
               youTubeAnalyticsService
           where go

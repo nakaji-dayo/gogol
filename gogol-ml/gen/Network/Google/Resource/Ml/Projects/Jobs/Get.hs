@@ -22,7 +22,7 @@
 --
 -- Describes a job.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.jobs.get@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.jobs.get@.
 module Network.Google.Resource.Ml.Projects.Jobs.Get
     (
     -- * REST Resource
@@ -40,16 +40,17 @@ module Network.Google.Resource.Ml.Projects.Jobs.Get
     , pjgUploadType
     , pjgBearerToken
     , pjgName
+    , pjgFields
     , pjgCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.jobs.get@ method which the
 -- 'ProjectsJobsGet' request conforms to.
 type ProjectsJobsGetResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "name" Text :>
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
@@ -58,21 +59,23 @@ type ProjectsJobsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] GoogleCloudMlV1beta1__Job
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] GoogleCloudMlV1__Job
 
 -- | Describes a job.
 --
 -- /See:/ 'projectsJobsGet' smart constructor.
 data ProjectsJobsGet = ProjectsJobsGet'
-    { _pjgXgafv          :: !(Maybe Xgafv)
+    { _pjgXgafv :: !(Maybe Xgafv)
     , _pjgUploadProtocol :: !(Maybe Text)
-    , _pjgPp             :: !Bool
-    , _pjgAccessToken    :: !(Maybe Text)
-    , _pjgUploadType     :: !(Maybe Text)
-    , _pjgBearerToken    :: !(Maybe Text)
-    , _pjgName           :: !Text
-    , _pjgCallback       :: !(Maybe Text)
+    , _pjgPp :: !Bool
+    , _pjgAccessToken :: !(Maybe Text)
+    , _pjgUploadType :: !(Maybe Text)
+    , _pjgBearerToken :: !(Maybe Text)
+    , _pjgName :: !Text
+    , _pjgFields :: !(Maybe Text)
+    , _pjgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsJobsGet' with the minimum fields required to make a request.
@@ -93,11 +96,13 @@ data ProjectsJobsGet = ProjectsJobsGet'
 --
 -- * 'pjgName'
 --
+-- * 'pjgFields'
+--
 -- * 'pjgCallback'
 projectsJobsGet
     :: Text -- ^ 'pjgName'
     -> ProjectsJobsGet
-projectsJobsGet pPjgName_ =
+projectsJobsGet pPjgName_ = 
     ProjectsJobsGet'
     { _pjgXgafv = Nothing
     , _pjgUploadProtocol = Nothing
@@ -106,6 +111,7 @@ projectsJobsGet pPjgName_ =
     , _pjgUploadType = Nothing
     , _pjgBearerToken = Nothing
     , _pjgName = pPjgName_
+    , _pjgFields = Nothing
     , _pjgCallback = Nothing
     }
 
@@ -141,10 +147,14 @@ pjgBearerToken
   = lens _pjgBearerToken
       (\ s a -> s{_pjgBearerToken = a})
 
--- | Required. The name of the job to get the description of. Authorization:
--- requires \`Viewer\` role on the parent project.
+-- | Required. The name of the job to get the description of.
 pjgName :: Lens' ProjectsJobsGet Text
 pjgName = lens _pjgName (\ s a -> s{_pjgName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pjgFields :: Lens' ProjectsJobsGet (Maybe Text)
+pjgFields
+  = lens _pjgFields (\ s a -> s{_pjgFields = a})
 
 -- | JSONP
 pjgCallback :: Lens' ProjectsJobsGet (Maybe Text)
@@ -152,7 +162,7 @@ pjgCallback
   = lens _pjgCallback (\ s a -> s{_pjgCallback = a})
 
 instance GoogleRequest ProjectsJobsGet where
-        type Rs ProjectsJobsGet = GoogleCloudMlV1beta1__Job
+        type Rs ProjectsJobsGet = GoogleCloudMlV1__Job
         type Scopes ProjectsJobsGet =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient ProjectsJobsGet'{..}
@@ -162,6 +172,7 @@ instance GoogleRequest ProjectsJobsGet where
               _pjgUploadType
               _pjgBearerToken
               _pjgCallback
+              _pjgFields
               (Just AltJSON)
               machineLearningService
           where go

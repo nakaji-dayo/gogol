@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Patch
     , sppPageId
     , sppPayload
     , sppClusterId
+    , sppFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.patch@ method which the
 -- 'StorelayoutclustersPatch' request conforms to.
@@ -54,18 +55,20 @@ type StorelayoutclustersPatchResource =
                  Capture "pageId" Text :>
                    "clusters" :>
                      Capture "clusterId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] StoreCluster :>
-                           Patch '[JSON] StoreCluster
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] StoreCluster :>
+                             Patch '[JSON] StoreCluster
 
 -- | Updates a cluster. This method supports patch semantics.
 --
 -- /See:/ 'storelayoutclustersPatch' smart constructor.
 data StorelayoutclustersPatch = StorelayoutclustersPatch'
     { _sppEnterpriseId :: !Text
-    , _sppPageId       :: !Text
-    , _sppPayload      :: !StoreCluster
-    , _sppClusterId    :: !Text
+    , _sppPageId :: !Text
+    , _sppPayload :: !StoreCluster
+    , _sppClusterId :: !Text
+    , _sppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersPatch' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data StorelayoutclustersPatch = StorelayoutclustersPatch'
 -- * 'sppPayload'
 --
 -- * 'sppClusterId'
+--
+-- * 'sppFields'
 storelayoutclustersPatch
     :: Text -- ^ 'sppEnterpriseId'
     -> Text -- ^ 'sppPageId'
     -> StoreCluster -- ^ 'sppPayload'
     -> Text -- ^ 'sppClusterId'
     -> StorelayoutclustersPatch
-storelayoutclustersPatch pSppEnterpriseId_ pSppPageId_ pSppPayload_ pSppClusterId_ =
+storelayoutclustersPatch pSppEnterpriseId_ pSppPageId_ pSppPayload_ pSppClusterId_ = 
     StorelayoutclustersPatch'
     { _sppEnterpriseId = pSppEnterpriseId_
     , _sppPageId = pSppPageId_
     , _sppPayload = pSppPayload_
     , _sppClusterId = pSppClusterId_
+    , _sppFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -114,12 +120,18 @@ sppClusterId :: Lens' StorelayoutclustersPatch Text
 sppClusterId
   = lens _sppClusterId (\ s a -> s{_sppClusterId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sppFields :: Lens' StorelayoutclustersPatch (Maybe Text)
+sppFields
+  = lens _sppFields (\ s a -> s{_sppFields = a})
+
 instance GoogleRequest StorelayoutclustersPatch where
         type Rs StorelayoutclustersPatch = StoreCluster
         type Scopes StorelayoutclustersPatch =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersPatch'{..}
           = go _sppEnterpriseId _sppPageId _sppClusterId
+              _sppFields
               (Just AltJSON)
               _sppPayload
               androidEnterpriseService

@@ -35,10 +35,11 @@ module Network.Google.Resource.URLShortener.URL.List
     -- * Request Lenses
     , ulStartToken
     , ulProjection
+    , ulFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.URLShortener.Types
+import Network.Google.Prelude
+import Network.Google.URLShortener.Types
 
 -- | A resource alias for @urlshortener.url.list@ method which the
 -- 'URLList' request conforms to.
@@ -49,7 +50,8 @@ type URLListResource =
            "history" :>
              QueryParam "start-token" Text :>
                QueryParam "projection" URLListProjection :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] URLHistory
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] URLHistory
 
 -- | Retrieves a list of URLs shortened by a user.
 --
@@ -57,6 +59,7 @@ type URLListResource =
 data URLList = URLList'
     { _ulStartToken :: !(Maybe Text)
     , _ulProjection :: !(Maybe URLListProjection)
+    , _ulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLList' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ data URLList = URLList'
 -- * 'ulStartToken'
 --
 -- * 'ulProjection'
+--
+-- * 'ulFields'
 urlList
     :: URLList
-urlList =
+urlList = 
     URLList'
     { _ulStartToken = Nothing
     , _ulProjection = Nothing
+    , _ulFields = Nothing
     }
 
 -- | Token for requesting successive pages of results.
@@ -84,12 +90,17 @@ ulProjection :: Lens' URLList (Maybe URLListProjection)
 ulProjection
   = lens _ulProjection (\ s a -> s{_ulProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ulFields :: Lens' URLList (Maybe Text)
+ulFields = lens _ulFields (\ s a -> s{_ulFields = a})
+
 instance GoogleRequest URLList where
         type Rs URLList = URLHistory
         type Scopes URLList =
              '["https://www.googleapis.com/auth/urlshortener"]
         requestClient URLList'{..}
-          = go _ulStartToken _ulProjection (Just AltJSON)
+          = go _ulStartToken _ulProjection _ulFields
+              (Just AltJSON)
               uRLShortenerService
           where go
                   = buildClient (Proxy :: Proxy URLListResource) mempty

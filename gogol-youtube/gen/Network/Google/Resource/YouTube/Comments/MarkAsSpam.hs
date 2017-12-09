@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Comments.MarkAsSpam
 
     -- * Request Lenses
     , cmasId
+    , cmasFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.markAsSpam@ method which the
 -- 'CommentsMarkAsSpam' request conforms to.
@@ -48,14 +49,16 @@ type CommentsMarkAsSpamResource =
          "comments" :>
            "markAsSpam" :>
              QueryParam "id" Text :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Expresses the caller\'s opinion that one or more comments should be
 -- flagged as spam.
 --
 -- /See:/ 'commentsMarkAsSpam' smart constructor.
-newtype CommentsMarkAsSpam = CommentsMarkAsSpam'
-    { _cmasId :: Text
+data CommentsMarkAsSpam = CommentsMarkAsSpam'
+    { _cmasId :: !Text
+    , _cmasFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsMarkAsSpam' with the minimum fields required to make a request.
@@ -63,12 +66,15 @@ newtype CommentsMarkAsSpam = CommentsMarkAsSpam'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cmasId'
+--
+-- * 'cmasFields'
 commentsMarkAsSpam
     :: Text -- ^ 'cmasId'
     -> CommentsMarkAsSpam
-commentsMarkAsSpam pCmasId_ =
+commentsMarkAsSpam pCmasId_ = 
     CommentsMarkAsSpam'
     { _cmasId = pCmasId_
+    , _cmasFields = Nothing
     }
 
 -- | The id parameter specifies a comma-separated list of IDs of comments
@@ -76,12 +82,18 @@ commentsMarkAsSpam pCmasId_ =
 cmasId :: Lens' CommentsMarkAsSpam Text
 cmasId = lens _cmasId (\ s a -> s{_cmasId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cmasFields :: Lens' CommentsMarkAsSpam (Maybe Text)
+cmasFields
+  = lens _cmasFields (\ s a -> s{_cmasFields = a})
+
 instance GoogleRequest CommentsMarkAsSpam where
         type Rs CommentsMarkAsSpam = ()
         type Scopes CommentsMarkAsSpam =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentsMarkAsSpam'{..}
-          = go (Just _cmasId) (Just AltJSON) youTubeService
+          = go (Just _cmasId) _cmasFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient
                       (Proxy :: Proxy CommentsMarkAsSpamResource)

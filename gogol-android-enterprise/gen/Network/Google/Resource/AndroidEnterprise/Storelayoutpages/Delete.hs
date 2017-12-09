@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Delete
     -- * Request Lenses
     , sdEnterpriseId
     , sdPageId
+    , sdFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutpages.delete@ method which the
 -- 'StorelayoutpagesDelete' request conforms to.
@@ -50,14 +51,16 @@ type StorelayoutpagesDeleteResource =
              "storeLayout" :>
                "pages" :>
                  Capture "pageId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a store page.
 --
 -- /See:/ 'storelayoutpagesDelete' smart constructor.
 data StorelayoutpagesDelete = StorelayoutpagesDelete'
     { _sdEnterpriseId :: !Text
-    , _sdPageId       :: !Text
+    , _sdPageId :: !Text
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutpagesDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data StorelayoutpagesDelete = StorelayoutpagesDelete'
 -- * 'sdEnterpriseId'
 --
 -- * 'sdPageId'
+--
+-- * 'sdFields'
 storelayoutpagesDelete
     :: Text -- ^ 'sdEnterpriseId'
     -> Text -- ^ 'sdPageId'
     -> StorelayoutpagesDelete
-storelayoutpagesDelete pSdEnterpriseId_ pSdPageId_ =
+storelayoutpagesDelete pSdEnterpriseId_ pSdPageId_ = 
     StorelayoutpagesDelete'
     { _sdEnterpriseId = pSdEnterpriseId_
     , _sdPageId = pSdPageId_
+    , _sdFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -87,12 +93,17 @@ sdEnterpriseId
 sdPageId :: Lens' StorelayoutpagesDelete Text
 sdPageId = lens _sdPageId (\ s a -> s{_sdPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' StorelayoutpagesDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest StorelayoutpagesDelete where
         type Rs StorelayoutpagesDelete = ()
         type Scopes StorelayoutpagesDelete =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutpagesDelete'{..}
-          = go _sdEnterpriseId _sdPageId (Just AltJSON)
+          = go _sdEnterpriseId _sdPageId _sdFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

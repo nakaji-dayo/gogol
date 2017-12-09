@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Revisions.Get
     , rggAcknowledgeAbuse
     , rggFileId
     , rggRevisionId
+    , rggFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.revisions.get@ method which the
 -- 'RevisionsGet' request conforms to.
@@ -51,7 +52,8 @@ type RevisionsGetResource =
              "revisions" :>
                Capture "revisionId" Text :>
                  QueryParam "acknowledgeAbuse" Bool :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Revision
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Revision
        :<|>
        "drive" :>
          "v3" :>
@@ -60,16 +62,18 @@ type RevisionsGetResource =
                "revisions" :>
                  Capture "revisionId" Text :>
                    QueryParam "acknowledgeAbuse" Bool :>
-                     QueryParam "alt" AltMedia :>
-                       Get '[OctetStream] Stream
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltMedia :>
+                         Get '[OctetStream] Stream
 
 -- | Gets a revision\'s metadata or content by ID.
 --
 -- /See:/ 'revisionsGet' smart constructor.
 data RevisionsGet = RevisionsGet'
     { _rggAcknowledgeAbuse :: !Bool
-    , _rggFileId           :: !Text
-    , _rggRevisionId       :: !Text
+    , _rggFileId :: !Text
+    , _rggRevisionId :: !Text
+    , _rggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionsGet' with the minimum fields required to make a request.
@@ -81,15 +85,18 @@ data RevisionsGet = RevisionsGet'
 -- * 'rggFileId'
 --
 -- * 'rggRevisionId'
+--
+-- * 'rggFields'
 revisionsGet
     :: Text -- ^ 'rggFileId'
     -> Text -- ^ 'rggRevisionId'
     -> RevisionsGet
-revisionsGet pRggFileId_ pRggRevisionId_ =
+revisionsGet pRggFileId_ pRggRevisionId_ = 
     RevisionsGet'
     { _rggAcknowledgeAbuse = False
     , _rggFileId = pRggFileId_
     , _rggRevisionId = pRggRevisionId_
+    , _rggFields = Nothing
     }
 
 -- | Whether the user is acknowledging the risk of downloading known malware
@@ -110,6 +117,11 @@ rggRevisionId
   = lens _rggRevisionId
       (\ s a -> s{_rggRevisionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rggFields :: Lens' RevisionsGet (Maybe Text)
+rggFields
+  = lens _rggFields (\ s a -> s{_rggFields = a})
+
 instance GoogleRequest RevisionsGet where
         type Rs RevisionsGet = Revision
         type Scopes RevisionsGet =
@@ -123,6 +135,7 @@ instance GoogleRequest RevisionsGet where
         requestClient RevisionsGet'{..}
           = go _rggFileId _rggRevisionId
               (Just _rggAcknowledgeAbuse)
+              _rggFields
               (Just AltJSON)
               driveService
           where go :<|> _
@@ -137,6 +150,7 @@ instance GoogleRequest (MediaDownload RevisionsGet)
         requestClient (MediaDownload RevisionsGet'{..})
           = go _rggFileId _rggRevisionId
               (Just _rggAcknowledgeAbuse)
+              _rggFields
               (Just AltMedia)
               driveService
           where _ :<|> go

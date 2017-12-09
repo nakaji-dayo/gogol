@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Timeline.Attachments.Delete
     -- * Request Lenses
     , tadItemId
     , tadAttachmentId
+    , tadFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.attachments.delete@ method which the
 -- 'TimelineAttachmentsDelete' request conforms to.
@@ -49,14 +50,16 @@ type TimelineAttachmentsDeleteResource =
            Capture "itemId" Text :>
              "attachments" :>
                Capture "attachmentId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an attachment from a timeline item.
 --
 -- /See:/ 'timelineAttachmentsDelete' smart constructor.
 data TimelineAttachmentsDelete = TimelineAttachmentsDelete'
-    { _tadItemId       :: !Text
+    { _tadItemId :: !Text
     , _tadAttachmentId :: !Text
+    , _tadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineAttachmentsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TimelineAttachmentsDelete = TimelineAttachmentsDelete'
 -- * 'tadItemId'
 --
 -- * 'tadAttachmentId'
+--
+-- * 'tadFields'
 timelineAttachmentsDelete
     :: Text -- ^ 'tadItemId'
     -> Text -- ^ 'tadAttachmentId'
     -> TimelineAttachmentsDelete
-timelineAttachmentsDelete pTadItemId_ pTadAttachmentId_ =
+timelineAttachmentsDelete pTadItemId_ pTadAttachmentId_ = 
     TimelineAttachmentsDelete'
     { _tadItemId = pTadItemId_
     , _tadAttachmentId = pTadAttachmentId_
+    , _tadFields = Nothing
     }
 
 -- | The ID of the timeline item the attachment belongs to.
@@ -87,13 +93,19 @@ tadAttachmentId
   = lens _tadAttachmentId
       (\ s a -> s{_tadAttachmentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tadFields :: Lens' TimelineAttachmentsDelete (Maybe Text)
+tadFields
+  = lens _tadFields (\ s a -> s{_tadFields = a})
+
 instance GoogleRequest TimelineAttachmentsDelete
          where
         type Rs TimelineAttachmentsDelete = ()
         type Scopes TimelineAttachmentsDelete =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineAttachmentsDelete'{..}
-          = go _tadItemId _tadAttachmentId (Just AltJSON)
+          = go _tadItemId _tadAttachmentId _tadFields
+              (Just AltJSON)
               mirrorService
           where go
                   = buildClient

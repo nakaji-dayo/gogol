@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.Quests.List
     , qlPageToken
     , qlPlayerId
     , qlMaxResults
+    , qlFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.quests.list@ method which the
 -- 'QuestsList' request conforms to.
@@ -56,8 +57,9 @@ type QuestsListResource =
                  QueryParam "language" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] QuestListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] QuestListResponse
 
 -- | Get a list of quests for your application and the currently
 -- authenticated player.
@@ -65,10 +67,11 @@ type QuestsListResource =
 -- /See:/ 'questsList' smart constructor.
 data QuestsList = QuestsList'
     { _qlConsistencyToken :: !(Maybe (Textual Int64))
-    , _qlLanguage         :: !(Maybe Text)
-    , _qlPageToken        :: !(Maybe Text)
-    , _qlPlayerId         :: !Text
-    , _qlMaxResults       :: !(Maybe (Textual Int32))
+    , _qlLanguage :: !(Maybe Text)
+    , _qlPageToken :: !(Maybe Text)
+    , _qlPlayerId :: !Text
+    , _qlMaxResults :: !(Maybe (Textual Int32))
+    , _qlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsList' with the minimum fields required to make a request.
@@ -84,16 +87,19 @@ data QuestsList = QuestsList'
 -- * 'qlPlayerId'
 --
 -- * 'qlMaxResults'
+--
+-- * 'qlFields'
 questsList
     :: Text -- ^ 'qlPlayerId'
     -> QuestsList
-questsList pQlPlayerId_ =
+questsList pQlPlayerId_ = 
     QuestsList'
     { _qlConsistencyToken = Nothing
     , _qlLanguage = Nothing
     , _qlPageToken = Nothing
     , _qlPlayerId = pQlPlayerId_
     , _qlMaxResults = Nothing
+    , _qlFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -128,6 +134,10 @@ qlMaxResults
   = lens _qlMaxResults (\ s a -> s{_qlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+qlFields :: Lens' QuestsList (Maybe Text)
+qlFields = lens _qlFields (\ s a -> s{_qlFields = a})
+
 instance GoogleRequest QuestsList where
         type Rs QuestsList = QuestListResponse
         type Scopes QuestsList =
@@ -137,6 +147,7 @@ instance GoogleRequest QuestsList where
           = go _qlPlayerId _qlConsistencyToken _qlLanguage
               _qlPageToken
               _qlMaxResults
+              _qlFields
               (Just AltJSON)
               gamesService
           where go

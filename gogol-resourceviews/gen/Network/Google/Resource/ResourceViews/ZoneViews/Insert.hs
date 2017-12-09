@@ -36,10 +36,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.Insert
     , zviProject
     , zviZone
     , zviPayload
+    , zviFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.insert@ method which the
 -- 'ZoneViewsInsert' request conforms to.
@@ -51,17 +52,19 @@ type ZoneViewsInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "resourceViews" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ResourceView :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ResourceView :>
+                         Post '[JSON] Operation
 
 -- | Create a resource view.
 --
 -- /See:/ 'zoneViewsInsert' smart constructor.
 data ZoneViewsInsert = ZoneViewsInsert'
     { _zviProject :: !Text
-    , _zviZone    :: !Text
+    , _zviZone :: !Text
     , _zviPayload :: !ResourceView
+    , _zviFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsInsert' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ZoneViewsInsert = ZoneViewsInsert'
 -- * 'zviZone'
 --
 -- * 'zviPayload'
+--
+-- * 'zviFields'
 zoneViewsInsert
     :: Text -- ^ 'zviProject'
     -> Text -- ^ 'zviZone'
     -> ResourceView -- ^ 'zviPayload'
     -> ZoneViewsInsert
-zoneViewsInsert pZviProject_ pZviZone_ pZviPayload_ =
+zoneViewsInsert pZviProject_ pZviZone_ pZviPayload_ = 
     ZoneViewsInsert'
     { _zviProject = pZviProject_
     , _zviZone = pZviZone_
     , _zviPayload = pZviPayload_
+    , _zviFields = Nothing
     }
 
 -- | The project name of the resource view.
@@ -99,6 +105,11 @@ zviPayload :: Lens' ZoneViewsInsert ResourceView
 zviPayload
   = lens _zviPayload (\ s a -> s{_zviPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zviFields :: Lens' ZoneViewsInsert (Maybe Text)
+zviFields
+  = lens _zviFields (\ s a -> s{_zviFields = a})
+
 instance GoogleRequest ZoneViewsInsert where
         type Rs ZoneViewsInsert = Operation
         type Scopes ZoneViewsInsert =
@@ -106,7 +117,8 @@ instance GoogleRequest ZoneViewsInsert where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient ZoneViewsInsert'{..}
-          = go _zviProject _zviZone (Just AltJSON) _zviPayload
+          = go _zviProject _zviZone _zviFields (Just AltJSON)
+              _zviPayload
               resourceViewsService
           where go
                   = buildClient

@@ -44,10 +44,11 @@ module Network.Google.Resource.AdSenseHost.Reports.Generate
     , rgFilter
     , rgStartIndex
     , rgMaxResults
+    , rgFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.reports.generate@ method which the
 -- 'ReportsGenerate' request conforms to.
@@ -64,7 +65,8 @@ type ReportsGenerateResource =
                        QueryParams "filter" Text :>
                          QueryParam "startIndex" (Textual Word32) :>
                            QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Report
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Report
 
 -- | Generate an AdSense report based on the report request sent in the query
 -- parameters. Returns the result as JSON; to retrieve output in CSV format
@@ -72,15 +74,16 @@ type ReportsGenerateResource =
 --
 -- /See:/ 'reportsGenerate' smart constructor.
 data ReportsGenerate = ReportsGenerate'
-    { _rgDimension  :: !(Maybe [Text])
-    , _rgLocale     :: !(Maybe Text)
-    , _rgEndDate    :: !Text
-    , _rgStartDate  :: !Text
-    , _rgMetric     :: !(Maybe [Text])
-    , _rgSort       :: !(Maybe [Text])
-    , _rgFilter     :: !(Maybe [Text])
+    { _rgDimension :: !(Maybe [Text])
+    , _rgLocale :: !(Maybe Text)
+    , _rgEndDate :: !Text
+    , _rgStartDate :: !Text
+    , _rgMetric :: !(Maybe [Text])
+    , _rgSort :: !(Maybe [Text])
+    , _rgFilter :: !(Maybe [Text])
     , _rgStartIndex :: !(Maybe (Textual Word32))
     , _rgMaxResults :: !(Maybe (Textual Word32))
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsGenerate' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ReportsGenerate = ReportsGenerate'
 -- * 'rgStartIndex'
 --
 -- * 'rgMaxResults'
+--
+-- * 'rgFields'
 reportsGenerate
     :: Text -- ^ 'rgEndDate'
     -> Text -- ^ 'rgStartDate'
     -> ReportsGenerate
-reportsGenerate pRgEndDate_ pRgStartDate_ =
+reportsGenerate pRgEndDate_ pRgStartDate_ = 
     ReportsGenerate'
     { _rgDimension = Nothing
     , _rgLocale = Nothing
@@ -119,6 +124,7 @@ reportsGenerate pRgEndDate_ pRgStartDate_ =
     , _rgFilter = Nothing
     , _rgStartIndex = Nothing
     , _rgMaxResults = Nothing
+    , _rgFields = Nothing
     }
 
 -- | Dimensions to base the report on.
@@ -178,6 +184,10 @@ rgMaxResults
   = lens _rgMaxResults (\ s a -> s{_rgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ReportsGenerate (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest ReportsGenerate where
         type Rs ReportsGenerate = Report
         type Scopes ReportsGenerate =
@@ -191,6 +201,7 @@ instance GoogleRequest ReportsGenerate where
               (_rgFilter ^. _Default)
               _rgStartIndex
               _rgMaxResults
+              _rgFields
               (Just AltJSON)
               adSenseHostService
           where go

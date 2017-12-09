@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.Insert
     , mpffliProFileId
     , mpffliPayload
     , mpffliAccountId
+    , mpffliFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.insert@ method which the
 -- 'ManagementProFileFilterLinksInsert' request conforms to.
@@ -55,18 +56,20 @@ type ManagementProFileFilterLinksInsertResource =
                    "profiles" :>
                      Capture "profileId" Text :>
                        "profileFilterLinks" :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ProFileFilterLink :>
-                             Post '[JSON] ProFileFilterLink
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ProFileFilterLink :>
+                               Post '[JSON] ProFileFilterLink
 
 -- | Create a new profile filter link.
 --
 -- /See:/ 'managementProFileFilterLinksInsert' smart constructor.
 data ManagementProFileFilterLinksInsert = ManagementProFileFilterLinksInsert'
     { _mpffliWebPropertyId :: !Text
-    , _mpffliProFileId     :: !Text
-    , _mpffliPayload       :: !ProFileFilterLink
-    , _mpffliAccountId     :: !Text
+    , _mpffliProFileId :: !Text
+    , _mpffliPayload :: !ProFileFilterLink
+    , _mpffliAccountId :: !Text
+    , _mpffliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksInsert' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementProFileFilterLinksInsert = ManagementProFileFilterLinksInsert'
 -- * 'mpffliPayload'
 --
 -- * 'mpffliAccountId'
+--
+-- * 'mpffliFields'
 managementProFileFilterLinksInsert
     :: Text -- ^ 'mpffliWebPropertyId'
     -> Text -- ^ 'mpffliProFileId'
     -> ProFileFilterLink -- ^ 'mpffliPayload'
     -> Text -- ^ 'mpffliAccountId'
     -> ManagementProFileFilterLinksInsert
-managementProFileFilterLinksInsert pMpffliWebPropertyId_ pMpffliProFileId_ pMpffliPayload_ pMpffliAccountId_ =
+managementProFileFilterLinksInsert pMpffliWebPropertyId_ pMpffliProFileId_ pMpffliPayload_ pMpffliAccountId_ = 
     ManagementProFileFilterLinksInsert'
     { _mpffliWebPropertyId = pMpffliWebPropertyId_
     , _mpffliProFileId = pMpffliProFileId_
     , _mpffliPayload = pMpffliPayload_
     , _mpffliAccountId = pMpffliAccountId_
+    , _mpffliFields = Nothing
     }
 
 -- | Web property Id to create profile filter link for.
@@ -118,6 +124,11 @@ mpffliAccountId
   = lens _mpffliAccountId
       (\ s a -> s{_mpffliAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpffliFields :: Lens' ManagementProFileFilterLinksInsert (Maybe Text)
+mpffliFields
+  = lens _mpffliFields (\ s a -> s{_mpffliFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksInsert where
         type Rs ManagementProFileFilterLinksInsert =
@@ -127,6 +138,7 @@ instance GoogleRequest
         requestClient ManagementProFileFilterLinksInsert'{..}
           = go _mpffliAccountId _mpffliWebPropertyId
               _mpffliProFileId
+              _mpffliFields
               (Just AltJSON)
               _mpffliPayload
               analyticsService

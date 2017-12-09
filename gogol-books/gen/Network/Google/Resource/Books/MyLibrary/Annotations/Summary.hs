@@ -35,10 +35,11 @@ module Network.Google.Resource.Books.MyLibrary.Annotations.Summary
     -- * Request Lenses
     , mlasLayerIds
     , mlasVolumeId
+    , mlasFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.annotations.summary@ method which the
 -- 'MyLibraryAnnotationsSummary' request conforms to.
@@ -50,8 +51,9 @@ type MyLibraryAnnotationsSummaryResource =
              "summary" :>
                QueryParams "layerIds" Text :>
                  QueryParam "volumeId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Post '[JSON] AnnotationsSummary
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Post '[JSON] AnnotationsSummary
 
 -- | Gets the summary of specified layers.
 --
@@ -59,6 +61,7 @@ type MyLibraryAnnotationsSummaryResource =
 data MyLibraryAnnotationsSummary = MyLibraryAnnotationsSummary'
     { _mlasLayerIds :: ![Text]
     , _mlasVolumeId :: !Text
+    , _mlasFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryAnnotationsSummary' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MyLibraryAnnotationsSummary = MyLibraryAnnotationsSummary'
 -- * 'mlasLayerIds'
 --
 -- * 'mlasVolumeId'
+--
+-- * 'mlasFields'
 myLibraryAnnotationsSummary
     :: [Text] -- ^ 'mlasLayerIds'
     -> Text -- ^ 'mlasVolumeId'
     -> MyLibraryAnnotationsSummary
-myLibraryAnnotationsSummary pMlasLayerIds_ pMlasVolumeId_ =
+myLibraryAnnotationsSummary pMlasLayerIds_ pMlasVolumeId_ = 
     MyLibraryAnnotationsSummary'
     { _mlasLayerIds = _Coerce # pMlasLayerIds_
     , _mlasVolumeId = pMlasVolumeId_
+    , _mlasFields = Nothing
     }
 
 -- | Array of layer IDs to get the summary for.
@@ -89,6 +95,11 @@ mlasVolumeId :: Lens' MyLibraryAnnotationsSummary Text
 mlasVolumeId
   = lens _mlasVolumeId (\ s a -> s{_mlasVolumeId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlasFields :: Lens' MyLibraryAnnotationsSummary (Maybe Text)
+mlasFields
+  = lens _mlasFields (\ s a -> s{_mlasFields = a})
+
 instance GoogleRequest MyLibraryAnnotationsSummary
          where
         type Rs MyLibraryAnnotationsSummary =
@@ -96,7 +107,7 @@ instance GoogleRequest MyLibraryAnnotationsSummary
         type Scopes MyLibraryAnnotationsSummary =
              '["https://www.googleapis.com/auth/books"]
         requestClient MyLibraryAnnotationsSummary'{..}
-          = go _mlasLayerIds (Just _mlasVolumeId)
+          = go _mlasLayerIds (Just _mlasVolumeId) _mlasFields
               (Just AltJSON)
               booksService
           where go

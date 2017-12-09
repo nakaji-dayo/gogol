@@ -40,10 +40,11 @@ module Network.Google.Resource.Calendar.Events.Patch
     , epSupportsAttachments
     , epAlwaysIncludeEmail
     , epEventId
+    , epFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.patch@ method which the
 -- 'EventsPatch' request conforms to.
@@ -58,20 +59,22 @@ type EventsPatchResource =
                    QueryParam "sendNotifications" Bool :>
                      QueryParam "supportsAttachments" Bool :>
                        QueryParam "alwaysIncludeEmail" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Event :> Patch '[JSON] Event
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Event :> Patch '[JSON] Event
 
 -- | Updates an event. This method supports patch semantics.
 --
 -- /See:/ 'eventsPatch' smart constructor.
 data EventsPatch = EventsPatch'
-    { _epCalendarId          :: !Text
-    , _epPayload             :: !Event
-    , _epMaxAttendees        :: !(Maybe (Textual Int32))
-    , _epSendNotifications   :: !(Maybe Bool)
+    { _epCalendarId :: !Text
+    , _epPayload :: !Event
+    , _epMaxAttendees :: !(Maybe (Textual Int32))
+    , _epSendNotifications :: !(Maybe Bool)
     , _epSupportsAttachments :: !(Maybe Bool)
-    , _epAlwaysIncludeEmail  :: !(Maybe Bool)
-    , _epEventId             :: !Text
+    , _epAlwaysIncludeEmail :: !(Maybe Bool)
+    , _epEventId :: !Text
+    , _epFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsPatch' with the minimum fields required to make a request.
@@ -91,12 +94,14 @@ data EventsPatch = EventsPatch'
 -- * 'epAlwaysIncludeEmail'
 --
 -- * 'epEventId'
+--
+-- * 'epFields'
 eventsPatch
     :: Text -- ^ 'epCalendarId'
     -> Event -- ^ 'epPayload'
     -> Text -- ^ 'epEventId'
     -> EventsPatch
-eventsPatch pEpCalendarId_ pEpPayload_ pEpEventId_ =
+eventsPatch pEpCalendarId_ pEpPayload_ pEpEventId_ = 
     EventsPatch'
     { _epCalendarId = pEpCalendarId_
     , _epPayload = pEpPayload_
@@ -105,6 +110,7 @@ eventsPatch pEpCalendarId_ pEpPayload_ pEpEventId_ =
     , _epSupportsAttachments = Nothing
     , _epAlwaysIncludeEmail = Nothing
     , _epEventId = pEpEventId_
+    , _epFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -158,6 +164,10 @@ epEventId :: Lens' EventsPatch Text
 epEventId
   = lens _epEventId (\ s a -> s{_epEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+epFields :: Lens' EventsPatch (Maybe Text)
+epFields = lens _epFields (\ s a -> s{_epFields = a})
+
 instance GoogleRequest EventsPatch where
         type Rs EventsPatch = Event
         type Scopes EventsPatch =
@@ -167,6 +177,7 @@ instance GoogleRequest EventsPatch where
               _epSendNotifications
               _epSupportsAttachments
               _epAlwaysIncludeEmail
+              _epFields
               (Just AltJSON)
               _epPayload
               appsCalendarService

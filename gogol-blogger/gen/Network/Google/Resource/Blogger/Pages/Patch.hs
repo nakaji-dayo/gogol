@@ -38,10 +38,11 @@ module Network.Google.Resource.Blogger.Pages.Patch
     , ppPayload
     , ppRevert
     , ppPublish
+    , ppFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.patch@ method which the
 -- 'PagesPatch' request conforms to.
@@ -54,18 +55,20 @@ type PagesPatchResource =
                Capture "pageId" Text :>
                  QueryParam "revert" Bool :>
                    QueryParam "publish" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Page :> Patch '[JSON] Page
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Page :> Patch '[JSON] Page
 
 -- | Update a page. This method supports patch semantics.
 --
 -- /See:/ 'pagesPatch' smart constructor.
 data PagesPatch = PagesPatch'
-    { _ppBlogId  :: !Text
-    , _ppPageId  :: !Text
+    { _ppBlogId :: !Text
+    , _ppPageId :: !Text
     , _ppPayload :: !Page
-    , _ppRevert  :: !(Maybe Bool)
+    , _ppRevert :: !(Maybe Bool)
     , _ppPublish :: !(Maybe Bool)
+    , _ppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesPatch' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data PagesPatch = PagesPatch'
 -- * 'ppRevert'
 --
 -- * 'ppPublish'
+--
+-- * 'ppFields'
 pagesPatch
     :: Text -- ^ 'ppBlogId'
     -> Text -- ^ 'ppPageId'
     -> Page -- ^ 'ppPayload'
     -> PagesPatch
-pagesPatch pPpBlogId_ pPpPageId_ pPpPayload_ =
+pagesPatch pPpBlogId_ pPpPageId_ pPpPayload_ = 
     PagesPatch'
     { _ppBlogId = pPpBlogId_
     , _ppPageId = pPpPageId_
     , _ppPayload = pPpPayload_
     , _ppRevert = Nothing
     , _ppPublish = Nothing
+    , _ppFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -119,12 +125,17 @@ ppPublish :: Lens' PagesPatch (Maybe Bool)
 ppPublish
   = lens _ppPublish (\ s a -> s{_ppPublish = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ppFields :: Lens' PagesPatch (Maybe Text)
+ppFields = lens _ppFields (\ s a -> s{_ppFields = a})
+
 instance GoogleRequest PagesPatch where
         type Rs PagesPatch = Page
         type Scopes PagesPatch =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesPatch'{..}
           = go _ppBlogId _ppPageId _ppRevert _ppPublish
+              _ppFields
               (Just AltJSON)
               _ppPayload
               bloggerService

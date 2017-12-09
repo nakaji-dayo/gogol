@@ -44,11 +44,12 @@ module Network.Google.Resource.AppEngine.Apps.Repair
     , arPayload
     , arBearerToken
     , arAppsId
+    , arFields
     , arCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.repair@ method which the
 -- 'AppsRepair' request conforms to.
@@ -56,16 +57,17 @@ type AppsRepairResource =
      "v1" :>
        "apps" :>
          CaptureMode "appsId" "repair" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] RepairApplicationRequest :>
-                             Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] RepairApplicationRequest :>
+                               Post '[JSON] Operation
 
 -- | Recreates the required App Engine features for the specified App Engine
 -- application, for example a Cloud Storage bucket or App Engine service
@@ -74,15 +76,16 @@ type AppsRepairResource =
 --
 -- /See:/ 'appsRepair' smart constructor.
 data AppsRepair = AppsRepair'
-    { _arXgafv          :: !(Maybe Text)
+    { _arXgafv :: !(Maybe Xgafv)
     , _arUploadProtocol :: !(Maybe Text)
-    , _arPp             :: !Bool
-    , _arAccessToken    :: !(Maybe Text)
-    , _arUploadType     :: !(Maybe Text)
-    , _arPayload        :: !RepairApplicationRequest
-    , _arBearerToken    :: !(Maybe Text)
-    , _arAppsId         :: !Text
-    , _arCallback       :: !(Maybe Text)
+    , _arPp :: !Bool
+    , _arAccessToken :: !(Maybe Text)
+    , _arUploadType :: !(Maybe Text)
+    , _arPayload :: !RepairApplicationRequest
+    , _arBearerToken :: !(Maybe Text)
+    , _arAppsId :: !Text
+    , _arFields :: !(Maybe Text)
+    , _arCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsRepair' with the minimum fields required to make a request.
@@ -105,12 +108,14 @@ data AppsRepair = AppsRepair'
 --
 -- * 'arAppsId'
 --
+-- * 'arFields'
+--
 -- * 'arCallback'
 appsRepair
     :: RepairApplicationRequest -- ^ 'arPayload'
     -> Text -- ^ 'arAppsId'
     -> AppsRepair
-appsRepair pArPayload_ pArAppsId_ =
+appsRepair pArPayload_ pArAppsId_ = 
     AppsRepair'
     { _arXgafv = Nothing
     , _arUploadProtocol = Nothing
@@ -120,11 +125,12 @@ appsRepair pArPayload_ pArAppsId_ =
     , _arPayload = pArPayload_
     , _arBearerToken = Nothing
     , _arAppsId = pArAppsId_
+    , _arFields = Nothing
     , _arCallback = Nothing
     }
 
 -- | V1 error format.
-arXgafv :: Lens' AppsRepair (Maybe Text)
+arXgafv :: Lens' AppsRepair (Maybe Xgafv)
 arXgafv = lens _arXgafv (\ s a -> s{_arXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -164,6 +170,10 @@ arBearerToken
 arAppsId :: Lens' AppsRepair Text
 arAppsId = lens _arAppsId (\ s a -> s{_arAppsId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+arFields :: Lens' AppsRepair (Maybe Text)
+arFields = lens _arFields (\ s a -> s{_arFields = a})
+
 -- | JSONP
 arCallback :: Lens' AppsRepair (Maybe Text)
 arCallback
@@ -180,6 +190,7 @@ instance GoogleRequest AppsRepair where
               _arUploadType
               _arBearerToken
               _arCallback
+              _arFields
               (Just AltJSON)
               _arPayload
               appEngineService

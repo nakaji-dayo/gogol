@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves or modifies multiple orders in a single request. This method
--- can only be called for non-multi-client accounts.
+-- Retrieves or modifies multiple orders in a single request.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.custombatch@.
 module Network.Google.Resource.Content.Orders.Custombatch
@@ -35,10 +34,11 @@ module Network.Google.Resource.Content.Orders.Custombatch
 
     -- * Request Lenses
     , ocPayload
+    , ocFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.custombatch@ method which the
 -- 'OrdersCustombatch' request conforms to.
@@ -47,16 +47,17 @@ type OrdersCustombatchResource =
        "v2" :>
          "orders" :>
            "batch" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] OrdersCustomBatchRequest :>
-                 Post '[JSON] OrdersCustomBatchResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] OrdersCustomBatchRequest :>
+                   Post '[JSON] OrdersCustomBatchResponse
 
--- | Retrieves or modifies multiple orders in a single request. This method
--- can only be called for non-multi-client accounts.
+-- | Retrieves or modifies multiple orders in a single request.
 --
 -- /See:/ 'ordersCustombatch' smart constructor.
-newtype OrdersCustombatch = OrdersCustombatch'
-    { _ocPayload :: OrdersCustomBatchRequest
+data OrdersCustombatch = OrdersCustombatch'
+    { _ocPayload :: !OrdersCustomBatchRequest
+    , _ocFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersCustombatch' with the minimum fields required to make a request.
@@ -64,12 +65,15 @@ newtype OrdersCustombatch = OrdersCustombatch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ocPayload'
+--
+-- * 'ocFields'
 ordersCustombatch
     :: OrdersCustomBatchRequest -- ^ 'ocPayload'
     -> OrdersCustombatch
-ordersCustombatch pOcPayload_ =
+ordersCustombatch pOcPayload_ = 
     OrdersCustombatch'
     { _ocPayload = pOcPayload_
+    , _ocFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -77,12 +81,17 @@ ocPayload :: Lens' OrdersCustombatch OrdersCustomBatchRequest
 ocPayload
   = lens _ocPayload (\ s a -> s{_ocPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ocFields :: Lens' OrdersCustombatch (Maybe Text)
+ocFields = lens _ocFields (\ s a -> s{_ocFields = a})
+
 instance GoogleRequest OrdersCustombatch where
         type Rs OrdersCustombatch = OrdersCustomBatchResponse
         type Scopes OrdersCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersCustombatch'{..}
-          = go (Just AltJSON) _ocPayload shoppingContentService
+          = go _ocFields (Just AltJSON) _ocPayload
+              shoppingContentService
           where go
                   = buildClient
                       (Proxy :: Proxy OrdersCustombatchResource)

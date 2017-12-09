@@ -37,10 +37,11 @@ module Network.Google.Resource.DeploymentManager.Deployments.SetIAMPolicy
     , dsipProject
     , dsipPayload
     , dsipResource
+    , dsipFields
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.setIamPolicy@ method which the
 -- 'DeploymentsSetIAMPolicy' request conforms to.
@@ -53,17 +54,19 @@ type DeploymentsSetIAMPolicyResource =
                "deployments" :>
                  Capture "resource" Text :>
                    "setIamPolicy" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Policy :> Post '[JSON] Policy
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Policy :> Post '[JSON] Policy
 
 -- | Sets the access control policy on the specified resource. Replaces any
 -- existing policy.
 --
 -- /See:/ 'deploymentsSetIAMPolicy' smart constructor.
 data DeploymentsSetIAMPolicy = DeploymentsSetIAMPolicy'
-    { _dsipProject  :: !Text
-    , _dsipPayload  :: !Policy
+    { _dsipProject :: !Text
+    , _dsipPayload :: !Policy
     , _dsipResource :: !Text
+    , _dsipFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsSetIAMPolicy' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data DeploymentsSetIAMPolicy = DeploymentsSetIAMPolicy'
 -- * 'dsipPayload'
 --
 -- * 'dsipResource'
+--
+-- * 'dsipFields'
 deploymentsSetIAMPolicy
     :: Text -- ^ 'dsipProject'
     -> Policy -- ^ 'dsipPayload'
     -> Text -- ^ 'dsipResource'
     -> DeploymentsSetIAMPolicy
-deploymentsSetIAMPolicy pDsipProject_ pDsipPayload_ pDsipResource_ =
+deploymentsSetIAMPolicy pDsipProject_ pDsipPayload_ pDsipResource_ = 
     DeploymentsSetIAMPolicy'
     { _dsipProject = pDsipProject_
     , _dsipPayload = pDsipPayload_
     , _dsipResource = pDsipResource_
+    , _dsipFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -102,13 +108,19 @@ dsipResource :: Lens' DeploymentsSetIAMPolicy Text
 dsipResource
   = lens _dsipResource (\ s a -> s{_dsipResource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsipFields :: Lens' DeploymentsSetIAMPolicy (Maybe Text)
+dsipFields
+  = lens _dsipFields (\ s a -> s{_dsipFields = a})
+
 instance GoogleRequest DeploymentsSetIAMPolicy where
         type Rs DeploymentsSetIAMPolicy = Policy
         type Scopes DeploymentsSetIAMPolicy =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsSetIAMPolicy'{..}
-          = go _dsipProject _dsipResource (Just AltJSON)
+          = go _dsipProject _dsipResource _dsipFields
+              (Just AltJSON)
               _dsipPayload
               deploymentManagerService
           where go

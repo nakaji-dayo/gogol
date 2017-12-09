@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.List
     , pslBearerToken
     , pslPageToken
     , pslPageSize
+    , pslFields
     , pslCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.list@ method which the
 -- 'ProjectsSubscriptionsList' request conforms to.
@@ -63,23 +64,25 @@ type ProjectsSubscriptionsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListSubscriptionsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListSubscriptionsResponse
 
 -- | Lists matching subscriptions.
 --
 -- /See:/ 'projectsSubscriptionsList' smart constructor.
 data ProjectsSubscriptionsList = ProjectsSubscriptionsList'
-    { _pslXgafv          :: !(Maybe Xgafv)
+    { _pslXgafv :: !(Maybe Xgafv)
     , _pslUploadProtocol :: !(Maybe Text)
-    , _pslProject        :: !Text
-    , _pslPp             :: !Bool
-    , _pslAccessToken    :: !(Maybe Text)
-    , _pslUploadType     :: !(Maybe Text)
-    , _pslBearerToken    :: !(Maybe Text)
-    , _pslPageToken      :: !(Maybe Text)
-    , _pslPageSize       :: !(Maybe (Textual Int32))
-    , _pslCallback       :: !(Maybe Text)
+    , _pslProject :: !Text
+    , _pslPp :: !Bool
+    , _pslAccessToken :: !(Maybe Text)
+    , _pslUploadType :: !(Maybe Text)
+    , _pslBearerToken :: !(Maybe Text)
+    , _pslPageToken :: !(Maybe Text)
+    , _pslPageSize :: !(Maybe (Textual Int32))
+    , _pslFields :: !(Maybe Text)
+    , _pslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ProjectsSubscriptionsList = ProjectsSubscriptionsList'
 --
 -- * 'pslPageSize'
 --
+-- * 'pslFields'
+--
 -- * 'pslCallback'
 projectsSubscriptionsList
     :: Text -- ^ 'pslProject'
     -> ProjectsSubscriptionsList
-projectsSubscriptionsList pPslProject_ =
+projectsSubscriptionsList pPslProject_ = 
     ProjectsSubscriptionsList'
     { _pslXgafv = Nothing
     , _pslUploadProtocol = Nothing
@@ -119,6 +124,7 @@ projectsSubscriptionsList pPslProject_ =
     , _pslBearerToken = Nothing
     , _pslPageToken = Nothing
     , _pslPageSize = Nothing
+    , _pslFields = Nothing
     , _pslCallback = Nothing
     }
 
@@ -173,6 +179,11 @@ pslPageSize
   = lens _pslPageSize (\ s a -> s{_pslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pslFields :: Lens' ProjectsSubscriptionsList (Maybe Text)
+pslFields
+  = lens _pslFields (\ s a -> s{_pslFields = a})
+
 -- | JSONP
 pslCallback :: Lens' ProjectsSubscriptionsList (Maybe Text)
 pslCallback
@@ -194,6 +205,7 @@ instance GoogleRequest ProjectsSubscriptionsList
               _pslPageToken
               _pslPageSize
               _pslCallback
+              _pslFields
               (Just AltJSON)
               pubSubService
           where go

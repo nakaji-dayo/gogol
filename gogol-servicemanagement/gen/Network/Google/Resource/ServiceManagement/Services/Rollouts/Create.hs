@@ -47,11 +47,12 @@ module Network.Google.Resource.ServiceManagement.Services.Rollouts.Create
     , srcPayload
     , srcBearerToken
     , srcServiceName
+    , srcFields
     , srcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.rollouts.create@ method which the
 -- 'ServicesRolloutsCreate' request conforms to.
@@ -67,8 +68,9 @@ type ServicesRolloutsCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Rollout :> Post '[JSON] Operation
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Rollout :> Post '[JSON] Operation
 
 -- | Creates a new service configuration rollout. Based on rollout, the
 -- Google Service Management will roll out the service configurations to
@@ -80,15 +82,16 @@ type ServicesRolloutsCreateResource =
 --
 -- /See:/ 'servicesRolloutsCreate' smart constructor.
 data ServicesRolloutsCreate = ServicesRolloutsCreate'
-    { _srcXgafv          :: !(Maybe Xgafv)
+    { _srcXgafv :: !(Maybe Xgafv)
     , _srcUploadProtocol :: !(Maybe Text)
-    , _srcPp             :: !Bool
-    , _srcAccessToken    :: !(Maybe Text)
-    , _srcUploadType     :: !(Maybe Text)
-    , _srcPayload        :: !Rollout
-    , _srcBearerToken    :: !(Maybe Text)
-    , _srcServiceName    :: !Text
-    , _srcCallback       :: !(Maybe Text)
+    , _srcPp :: !Bool
+    , _srcAccessToken :: !(Maybe Text)
+    , _srcUploadType :: !(Maybe Text)
+    , _srcPayload :: !Rollout
+    , _srcBearerToken :: !(Maybe Text)
+    , _srcServiceName :: !Text
+    , _srcFields :: !(Maybe Text)
+    , _srcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesRolloutsCreate' with the minimum fields required to make a request.
@@ -111,12 +114,14 @@ data ServicesRolloutsCreate = ServicesRolloutsCreate'
 --
 -- * 'srcServiceName'
 --
+-- * 'srcFields'
+--
 -- * 'srcCallback'
 servicesRolloutsCreate
     :: Rollout -- ^ 'srcPayload'
     -> Text -- ^ 'srcServiceName'
     -> ServicesRolloutsCreate
-servicesRolloutsCreate pSrcPayload_ pSrcServiceName_ =
+servicesRolloutsCreate pSrcPayload_ pSrcServiceName_ = 
     ServicesRolloutsCreate'
     { _srcXgafv = Nothing
     , _srcUploadProtocol = Nothing
@@ -126,6 +131,7 @@ servicesRolloutsCreate pSrcPayload_ pSrcServiceName_ =
     , _srcPayload = pSrcPayload_
     , _srcBearerToken = Nothing
     , _srcServiceName = pSrcServiceName_
+    , _srcFields = Nothing
     , _srcCallback = Nothing
     }
 
@@ -174,6 +180,11 @@ srcServiceName
   = lens _srcServiceName
       (\ s a -> s{_srcServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+srcFields :: Lens' ServicesRolloutsCreate (Maybe Text)
+srcFields
+  = lens _srcFields (\ s a -> s{_srcFields = a})
+
 -- | JSONP
 srcCallback :: Lens' ServicesRolloutsCreate (Maybe Text)
 srcCallback
@@ -191,6 +202,7 @@ instance GoogleRequest ServicesRolloutsCreate where
               _srcUploadType
               _srcBearerToken
               _srcCallback
+              _srcFields
               (Just AltJSON)
               _srcPayload
               serviceManagementService

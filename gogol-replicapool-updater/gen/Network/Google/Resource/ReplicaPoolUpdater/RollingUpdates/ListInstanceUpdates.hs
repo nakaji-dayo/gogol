@@ -39,10 +39,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.ListInstanceUpd
     , ruliuFilter
     , ruliuPageToken
     , ruliuMaxResults
+    , ruliuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.listInstanceUpdates@ method which the
 -- 'RollingUpdatesListInstanceUpdates' request conforms to.
@@ -59,19 +60,21 @@ type RollingUpdatesListInstanceUpdatesResource =
                        QueryParam "filter" Text :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] InstanceUpdateList
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] InstanceUpdateList
 
 -- | Lists the current status for each instance within a given update.
 --
 -- /See:/ 'rollingUpdatesListInstanceUpdates' smart constructor.
 data RollingUpdatesListInstanceUpdates = RollingUpdatesListInstanceUpdates'
     { _ruliuRollingUpdate :: !Text
-    , _ruliuProject       :: !Text
-    , _ruliuZone          :: !Text
-    , _ruliuFilter        :: !(Maybe Text)
-    , _ruliuPageToken     :: !(Maybe Text)
-    , _ruliuMaxResults    :: !(Textual Word32)
+    , _ruliuProject :: !Text
+    , _ruliuZone :: !Text
+    , _ruliuFilter :: !(Maybe Text)
+    , _ruliuPageToken :: !(Maybe Text)
+    , _ruliuMaxResults :: !(Textual Word32)
+    , _ruliuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesListInstanceUpdates' with the minimum fields required to make a request.
@@ -89,12 +92,14 @@ data RollingUpdatesListInstanceUpdates = RollingUpdatesListInstanceUpdates'
 -- * 'ruliuPageToken'
 --
 -- * 'ruliuMaxResults'
+--
+-- * 'ruliuFields'
 rollingUpdatesListInstanceUpdates
     :: Text -- ^ 'ruliuRollingUpdate'
     -> Text -- ^ 'ruliuProject'
     -> Text -- ^ 'ruliuZone'
     -> RollingUpdatesListInstanceUpdates
-rollingUpdatesListInstanceUpdates pRuliuRollingUpdate_ pRuliuProject_ pRuliuZone_ =
+rollingUpdatesListInstanceUpdates pRuliuRollingUpdate_ pRuliuProject_ pRuliuZone_ = 
     RollingUpdatesListInstanceUpdates'
     { _ruliuRollingUpdate = pRuliuRollingUpdate_
     , _ruliuProject = pRuliuProject_
@@ -102,6 +107,7 @@ rollingUpdatesListInstanceUpdates pRuliuRollingUpdate_ pRuliuProject_ pRuliuZone
     , _ruliuFilter = Nothing
     , _ruliuPageToken = Nothing
     , _ruliuMaxResults = 500
+    , _ruliuFields = Nothing
     }
 
 -- | The name of the update.
@@ -140,6 +146,11 @@ ruliuMaxResults
       (\ s a -> s{_ruliuMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ruliuFields :: Lens' RollingUpdatesListInstanceUpdates (Maybe Text)
+ruliuFields
+  = lens _ruliuFields (\ s a -> s{_ruliuFields = a})
+
 instance GoogleRequest
          RollingUpdatesListInstanceUpdates where
         type Rs RollingUpdatesListInstanceUpdates =
@@ -154,6 +165,7 @@ instance GoogleRequest
               _ruliuFilter
               _ruliuPageToken
               (Just _ruliuMaxResults)
+              _ruliuFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

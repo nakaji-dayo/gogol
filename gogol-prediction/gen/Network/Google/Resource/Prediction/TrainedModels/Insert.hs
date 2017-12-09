@@ -35,10 +35,11 @@ module Network.Google.Resource.Prediction.TrainedModels.Insert
     -- * Request Lenses
     , tmiProject
     , tmiPayload
+    , tmiFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.insert@ method which the
 -- 'TrainedModelsInsert' request conforms to.
@@ -48,8 +49,9 @@ type TrainedModelsInsertResource =
          "projects" :>
            Capture "project" Text :>
              "trainedmodels" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Insert :> Post '[JSON] Insert2
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Insert :> Post '[JSON] Insert2
 
 -- | Train a Prediction API model.
 --
@@ -57,6 +59,7 @@ type TrainedModelsInsertResource =
 data TrainedModelsInsert = TrainedModelsInsert'
     { _tmiProject :: !Text
     , _tmiPayload :: !Insert
+    , _tmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TrainedModelsInsert = TrainedModelsInsert'
 -- * 'tmiProject'
 --
 -- * 'tmiPayload'
+--
+-- * 'tmiFields'
 trainedModelsInsert
     :: Text -- ^ 'tmiProject'
     -> Insert -- ^ 'tmiPayload'
     -> TrainedModelsInsert
-trainedModelsInsert pTmiProject_ pTmiPayload_ =
+trainedModelsInsert pTmiProject_ pTmiPayload_ = 
     TrainedModelsInsert'
     { _tmiProject = pTmiProject_
     , _tmiPayload = pTmiPayload_
+    , _tmiFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -86,6 +92,11 @@ tmiPayload :: Lens' TrainedModelsInsert Insert
 tmiPayload
   = lens _tmiPayload (\ s a -> s{_tmiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tmiFields :: Lens' TrainedModelsInsert (Maybe Text)
+tmiFields
+  = lens _tmiFields (\ s a -> s{_tmiFields = a})
+
 instance GoogleRequest TrainedModelsInsert where
         type Rs TrainedModelsInsert = Insert2
         type Scopes TrainedModelsInsert =
@@ -95,7 +106,8 @@ instance GoogleRequest TrainedModelsInsert where
                "https://www.googleapis.com/auth/devstorage.read_write",
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsInsert'{..}
-          = go _tmiProject (Just AltJSON) _tmiPayload
+          = go _tmiProject _tmiFields (Just AltJSON)
+              _tmiPayload
               predictionService
           where go
                   = buildClient

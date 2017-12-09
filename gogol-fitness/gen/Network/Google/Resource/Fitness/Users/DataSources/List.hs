@@ -38,10 +38,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.List
     -- * Request Lenses
     , udslDataTypeName
     , udslUserId
+    , udslFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.list@ method which the
 -- 'UsersDataSourcesList' request conforms to.
@@ -52,8 +53,9 @@ type UsersDataSourcesListResource =
            Capture "userId" Text :>
              "dataSources" :>
                QueryParams "dataTypeName" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] ListDataSourcesResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] ListDataSourcesResponse
 
 -- | Lists all data sources that are visible to the developer, using the
 -- OAuth scopes provided. The list is not exhaustive; the user may have
@@ -63,7 +65,8 @@ type UsersDataSourcesListResource =
 -- /See:/ 'usersDataSourcesList' smart constructor.
 data UsersDataSourcesList = UsersDataSourcesList'
     { _udslDataTypeName :: !(Maybe [Text])
-    , _udslUserId       :: !Text
+    , _udslUserId :: !Text
+    , _udslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesList' with the minimum fields required to make a request.
@@ -73,13 +76,16 @@ data UsersDataSourcesList = UsersDataSourcesList'
 -- * 'udslDataTypeName'
 --
 -- * 'udslUserId'
+--
+-- * 'udslFields'
 usersDataSourcesList
     :: Text -- ^ 'udslUserId'
     -> UsersDataSourcesList
-usersDataSourcesList pUdslUserId_ =
+usersDataSourcesList pUdslUserId_ = 
     UsersDataSourcesList'
     { _udslDataTypeName = Nothing
     , _udslUserId = pUdslUserId_
+    , _udslFields = Nothing
     }
 
 -- | The names of data types to include in the list. If not specified, all
@@ -96,6 +102,11 @@ udslDataTypeName
 udslUserId :: Lens' UsersDataSourcesList Text
 udslUserId
   = lens _udslUserId (\ s a -> s{_udslUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+udslFields :: Lens' UsersDataSourcesList (Maybe Text)
+udslFields
+  = lens _udslFields (\ s a -> s{_udslFields = a})
 
 instance GoogleRequest UsersDataSourcesList where
         type Rs UsersDataSourcesList =
@@ -121,6 +132,7 @@ instance GoogleRequest UsersDataSourcesList where
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSourcesList'{..}
           = go _udslUserId (_udslDataTypeName ^. _Default)
+              _udslFields
               (Just AltJSON)
               fitnessService
           where go

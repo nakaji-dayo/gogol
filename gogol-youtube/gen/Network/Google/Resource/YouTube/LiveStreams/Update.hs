@@ -39,10 +39,11 @@ module Network.Google.Resource.YouTube.LiveStreams.Update
     , lsuPayload
     , lsuOnBehalfOfContentOwner
     , lsuOnBehalfOfContentOwnerChannel
+    , lsuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveStreams.update@ method which the
 -- 'LiveStreamsUpdate' request conforms to.
@@ -53,8 +54,9 @@ type LiveStreamsUpdateResource =
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] LiveStream :> Put '[JSON] LiveStream
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] LiveStream :> Put '[JSON] LiveStream
 
 -- | Updates a video stream. If the properties that you want to change cannot
 -- be updated, then you need to create a new stream with the proper
@@ -62,10 +64,11 @@ type LiveStreamsUpdateResource =
 --
 -- /See:/ 'liveStreamsUpdate' smart constructor.
 data LiveStreamsUpdate = LiveStreamsUpdate'
-    { _lsuPart                          :: !Text
-    , _lsuPayload                       :: !LiveStream
-    , _lsuOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lsuPart :: !Text
+    , _lsuPayload :: !LiveStream
+    , _lsuOnBehalfOfContentOwner :: !(Maybe Text)
     , _lsuOnBehalfOfContentOwnerChannel :: !(Maybe Text)
+    , _lsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveStreamsUpdate' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data LiveStreamsUpdate = LiveStreamsUpdate'
 -- * 'lsuOnBehalfOfContentOwner'
 --
 -- * 'lsuOnBehalfOfContentOwnerChannel'
+--
+-- * 'lsuFields'
 liveStreamsUpdate
     :: Text -- ^ 'lsuPart'
     -> LiveStream -- ^ 'lsuPayload'
     -> LiveStreamsUpdate
-liveStreamsUpdate pLsuPart_ pLsuPayload_ =
+liveStreamsUpdate pLsuPart_ pLsuPayload_ = 
     LiveStreamsUpdate'
     { _lsuPart = pLsuPart_
     , _lsuPayload = pLsuPayload_
     , _lsuOnBehalfOfContentOwner = Nothing
     , _lsuOnBehalfOfContentOwnerChannel = Nothing
+    , _lsuFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -143,6 +149,11 @@ lsuOnBehalfOfContentOwnerChannel
   = lens _lsuOnBehalfOfContentOwnerChannel
       (\ s a -> s{_lsuOnBehalfOfContentOwnerChannel = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lsuFields :: Lens' LiveStreamsUpdate (Maybe Text)
+lsuFields
+  = lens _lsuFields (\ s a -> s{_lsuFields = a})
+
 instance GoogleRequest LiveStreamsUpdate where
         type Rs LiveStreamsUpdate = LiveStream
         type Scopes LiveStreamsUpdate =
@@ -151,6 +162,7 @@ instance GoogleRequest LiveStreamsUpdate where
         requestClient LiveStreamsUpdate'{..}
           = go (Just _lsuPart) _lsuOnBehalfOfContentOwner
               _lsuOnBehalfOfContentOwnerChannel
+              _lsuFields
               (Just AltJSON)
               _lsuPayload
               youTubeService

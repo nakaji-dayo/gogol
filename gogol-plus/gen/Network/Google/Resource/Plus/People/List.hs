@@ -38,10 +38,11 @@ module Network.Google.Resource.Plus.People.List
     , plUserId
     , plPageToken
     , plMaxResults
+    , plFields
     ) where
 
-import           Network.Google.Plus.Types
-import           Network.Google.Prelude
+import Network.Google.Plus.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plus.people.list@ method which the
 -- 'PeopleList' request conforms to.
@@ -55,17 +56,19 @@ type PeopleListResource =
                  QueryParam "orderBy" PeopleListOrderBy :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
 
 -- | List all of the people in the specified collection.
 --
 -- /See:/ 'peopleList' smart constructor.
 data PeopleList = PeopleList'
-    { _plOrderBy    :: !(Maybe PeopleListOrderBy)
+    { _plOrderBy :: !(Maybe PeopleListOrderBy)
     , _plCollection :: !PeopleListCollection
-    , _plUserId     :: !Text
-    , _plPageToken  :: !(Maybe Text)
+    , _plUserId :: !Text
+    , _plPageToken :: !(Maybe Text)
     , _plMaxResults :: !(Textual Word32)
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleList' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data PeopleList = PeopleList'
 -- * 'plPageToken'
 --
 -- * 'plMaxResults'
+--
+-- * 'plFields'
 peopleList
     :: PeopleListCollection -- ^ 'plCollection'
     -> Text -- ^ 'plUserId'
     -> PeopleList
-peopleList pPlCollection_ pPlUserId_ =
+peopleList pPlCollection_ pPlUserId_ = 
     PeopleList'
     { _plOrderBy = Nothing
     , _plCollection = pPlCollection_
     , _plUserId = pPlUserId_
     , _plPageToken = Nothing
     , _plMaxResults = 100
+    , _plFields = Nothing
     }
 
 -- | The order to return people in.
@@ -124,6 +130,10 @@ plMaxResults
   = lens _plMaxResults (\ s a -> s{_plMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' PeopleList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 instance GoogleRequest PeopleList where
         type Rs PeopleList = PeopleFeed
         type Scopes PeopleList =
@@ -132,6 +142,7 @@ instance GoogleRequest PeopleList where
         requestClient PeopleList'{..}
           = go _plUserId _plCollection _plOrderBy _plPageToken
               (Just _plMaxResults)
+              _plFields
               (Just AltJSON)
               plusService
           where go

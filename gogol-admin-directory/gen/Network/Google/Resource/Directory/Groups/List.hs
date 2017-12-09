@@ -38,10 +38,11 @@ module Network.Google.Resource.Directory.Groups.List
     , glPageToken
     , glUserKey
     , glMaxResults
+    , glFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.list@ method which the
 -- 'GroupsList' request conforms to.
@@ -55,17 +56,19 @@ type GroupsListResource =
                  QueryParam "pageToken" Text :>
                    QueryParam "userKey" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Groups
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Groups
 
 -- | Retrieve all groups in a domain (paginated)
 --
 -- /See:/ 'groupsList' smart constructor.
 data GroupsList = GroupsList'
-    { _glDomain     :: !(Maybe Text)
-    , _glCustomer   :: !(Maybe Text)
-    , _glPageToken  :: !(Maybe Text)
-    , _glUserKey    :: !(Maybe Text)
+    { _glDomain :: !(Maybe Text)
+    , _glCustomer :: !(Maybe Text)
+    , _glPageToken :: !(Maybe Text)
+    , _glUserKey :: !(Maybe Text)
     , _glMaxResults :: !(Maybe (Textual Int32))
+    , _glFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsList' with the minimum fields required to make a request.
@@ -81,15 +84,18 @@ data GroupsList = GroupsList'
 -- * 'glUserKey'
 --
 -- * 'glMaxResults'
+--
+-- * 'glFields'
 groupsList
     :: GroupsList
-groupsList =
+groupsList = 
     GroupsList'
     { _glDomain = Nothing
     , _glCustomer = Nothing
     , _glPageToken = Nothing
     , _glUserKey = Nothing
     , _glMaxResults = Nothing
+    , _glFields = Nothing
     }
 
 -- | Name of the domain. Fill this field to get groups from only this domain.
@@ -97,8 +103,8 @@ groupsList =
 glDomain :: Lens' GroupsList (Maybe Text)
 glDomain = lens _glDomain (\ s a -> s{_glDomain = a})
 
--- | Immutable id of the Google Apps account. In case of multi-domain, to
--- fetch all groups for a customer, fill this field instead of domain.
+-- | Immutable ID of the G Suite account. In case of multi-domain, to fetch
+-- all groups for a customer, fill this field instead of domain.
 glCustomer :: Lens' GroupsList (Maybe Text)
 glCustomer
   = lens _glCustomer (\ s a -> s{_glCustomer = a})
@@ -108,8 +114,8 @@ glPageToken :: Lens' GroupsList (Maybe Text)
 glPageToken
   = lens _glPageToken (\ s a -> s{_glPageToken = a})
 
--- | Email or immutable Id of the user if only those groups are to be listed,
--- the given user is a member of. If Id, it should match with id of user
+-- | Email or immutable ID of the user if only those groups are to be listed,
+-- the given user is a member of. If ID, it should match with id of user
 -- object
 glUserKey :: Lens' GroupsList (Maybe Text)
 glUserKey
@@ -121,6 +127,10 @@ glMaxResults
   = lens _glMaxResults (\ s a -> s{_glMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+glFields :: Lens' GroupsList (Maybe Text)
+glFields = lens _glFields (\ s a -> s{_glFields = a})
+
 instance GoogleRequest GroupsList where
         type Rs GroupsList = Groups
         type Scopes GroupsList =
@@ -129,6 +139,7 @@ instance GoogleRequest GroupsList where
         requestClient GroupsList'{..}
           = go _glDomain _glCustomer _glPageToken _glUserKey
               _glMaxResults
+              _glFields
               (Just AltJSON)
               directoryService
           where go

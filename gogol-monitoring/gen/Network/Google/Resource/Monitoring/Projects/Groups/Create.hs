@@ -42,11 +42,12 @@ module Network.Google.Resource.Monitoring.Projects.Groups.Create
     , pgcPayload
     , pgcBearerToken
     , pgcName
+    , pgcFields
     , pgcCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.groups.create@ method which the
 -- 'ProjectsGroupsCreate' request conforms to.
@@ -62,23 +63,25 @@ type ProjectsGroupsCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Group :> Post '[JSON] Group
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Group :> Post '[JSON] Group
 
 -- | Creates a new group.
 --
 -- /See:/ 'projectsGroupsCreate' smart constructor.
 data ProjectsGroupsCreate = ProjectsGroupsCreate'
-    { _pgcXgafv          :: !(Maybe Xgafv)
-    , _pgcValidateOnly   :: !(Maybe Bool)
+    { _pgcXgafv :: !(Maybe Xgafv)
+    , _pgcValidateOnly :: !(Maybe Bool)
     , _pgcUploadProtocol :: !(Maybe Text)
-    , _pgcPp             :: !Bool
-    , _pgcAccessToken    :: !(Maybe Text)
-    , _pgcUploadType     :: !(Maybe Text)
-    , _pgcPayload        :: !Group
-    , _pgcBearerToken    :: !(Maybe Text)
-    , _pgcName           :: !Text
-    , _pgcCallback       :: !(Maybe Text)
+    , _pgcPp :: !Bool
+    , _pgcAccessToken :: !(Maybe Text)
+    , _pgcUploadType :: !(Maybe Text)
+    , _pgcPayload :: !Group
+    , _pgcBearerToken :: !(Maybe Text)
+    , _pgcName :: !Text
+    , _pgcFields :: !(Maybe Text)
+    , _pgcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGroupsCreate' with the minimum fields required to make a request.
@@ -103,12 +106,14 @@ data ProjectsGroupsCreate = ProjectsGroupsCreate'
 --
 -- * 'pgcName'
 --
+-- * 'pgcFields'
+--
 -- * 'pgcCallback'
 projectsGroupsCreate
     :: Group -- ^ 'pgcPayload'
     -> Text -- ^ 'pgcName'
     -> ProjectsGroupsCreate
-projectsGroupsCreate pPgcPayload_ pPgcName_ =
+projectsGroupsCreate pPgcPayload_ pPgcName_ = 
     ProjectsGroupsCreate'
     { _pgcXgafv = Nothing
     , _pgcValidateOnly = Nothing
@@ -119,6 +124,7 @@ projectsGroupsCreate pPgcPayload_ pPgcName_ =
     , _pgcPayload = pPgcPayload_
     , _pgcBearerToken = Nothing
     , _pgcName = pPgcName_
+    , _pgcFields = Nothing
     , _pgcCallback = Nothing
     }
 
@@ -170,6 +176,11 @@ pgcBearerToken
 pgcName :: Lens' ProjectsGroupsCreate Text
 pgcName = lens _pgcName (\ s a -> s{_pgcName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgcFields :: Lens' ProjectsGroupsCreate (Maybe Text)
+pgcFields
+  = lens _pgcFields (\ s a -> s{_pgcFields = a})
+
 -- | JSONP
 pgcCallback :: Lens' ProjectsGroupsCreate (Maybe Text)
 pgcCallback
@@ -188,6 +199,7 @@ instance GoogleRequest ProjectsGroupsCreate where
               _pgcUploadType
               _pgcBearerToken
               _pgcCallback
+              _pgcFields
               (Just AltJSON)
               _pgcPayload
               monitoringService

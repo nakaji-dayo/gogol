@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.URLMaps.Get
     -- * Request Lenses
     , umgURLMap
     , umgProject
+    , umgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.urlMaps.get@ method which the
 -- 'URLMapsGet' request conforms to.
@@ -51,15 +52,17 @@ type URLMapsGetResource =
              "global" :>
                "urlMaps" :>
                  Capture "urlMap" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] URLMap
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] URLMap
 
 -- | Returns the specified UrlMap resource. Get a list of available URL maps
 -- by making a list() request.
 --
 -- /See:/ 'urlMapsGet' smart constructor.
 data URLMapsGet = URLMapsGet'
-    { _umgURLMap  :: !Text
+    { _umgURLMap :: !Text
     , _umgProject :: !Text
+    , _umgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLMapsGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data URLMapsGet = URLMapsGet'
 -- * 'umgURLMap'
 --
 -- * 'umgProject'
+--
+-- * 'umgFields'
 urlMapsGet
     :: Text -- ^ 'umgURLMap'
     -> Text -- ^ 'umgProject'
     -> URLMapsGet
-urlMapsGet pUmgURLMap_ pUmgProject_ =
+urlMapsGet pUmgURLMap_ pUmgProject_ = 
     URLMapsGet'
     { _umgURLMap = pUmgURLMap_
     , _umgProject = pUmgProject_
+    , _umgFields = Nothing
     }
 
 -- | Name of the UrlMap resource to return.
@@ -89,6 +95,11 @@ umgProject :: Lens' URLMapsGet Text
 umgProject
   = lens _umgProject (\ s a -> s{_umgProject = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umgFields :: Lens' URLMapsGet (Maybe Text)
+umgFields
+  = lens _umgFields (\ s a -> s{_umgFields = a})
+
 instance GoogleRequest URLMapsGet where
         type Rs URLMapsGet = URLMap
         type Scopes URLMapsGet =
@@ -96,7 +107,7 @@ instance GoogleRequest URLMapsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient URLMapsGet'{..}
-          = go _umgProject _umgURLMap (Just AltJSON)
+          = go _umgProject _umgURLMap _umgFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy URLMapsGetResource)

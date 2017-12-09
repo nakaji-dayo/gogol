@@ -200,20 +200,20 @@ module Network.Google.ReplicaPool
     , owiMessage
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.AbandonInstances
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Delete
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.DeleteInstances
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Get
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Insert
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.List
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.RecreateInstances
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Resize
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetInstanceTemplate
-import           Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetTargetPools
-import           Network.Google.Resource.ReplicaPool.ZoneOperations.Get
-import           Network.Google.Resource.ReplicaPool.ZoneOperations.List
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.AbandonInstances
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Delete
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.DeleteInstances
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Get
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Insert
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.List
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.RecreateInstances
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Resize
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetInstanceTemplate
+import Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetTargetPools
+import Network.Google.Resource.ReplicaPool.ZoneOperations.Get
+import Network.Google.Resource.ReplicaPool.ZoneOperations.List
 
 {- $resources
 TODO

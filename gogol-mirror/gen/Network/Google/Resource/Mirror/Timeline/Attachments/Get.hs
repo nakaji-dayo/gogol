@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Timeline.Attachments.Get
     -- * Request Lenses
     , tagItemId
     , tagAttachmentId
+    , tagFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.attachments.get@ method which the
 -- 'TimelineAttachmentsGet' request conforms to.
@@ -49,7 +50,8 @@ type TimelineAttachmentsGetResource =
            Capture "itemId" Text :>
              "attachments" :>
                Capture "attachmentId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Attachment
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Attachment
        :<|>
        "mirror" :>
          "v1" :>
@@ -57,15 +59,17 @@ type TimelineAttachmentsGetResource =
              Capture "itemId" Text :>
                "attachments" :>
                  Capture "attachmentId" Text :>
-                   QueryParam "alt" AltMedia :>
-                     Get '[OctetStream] Stream
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Get '[OctetStream] Stream
 
 -- | Retrieves an attachment on a timeline item by item ID and attachment ID.
 --
 -- /See:/ 'timelineAttachmentsGet' smart constructor.
 data TimelineAttachmentsGet = TimelineAttachmentsGet'
-    { _tagItemId       :: !Text
+    { _tagItemId :: !Text
     , _tagAttachmentId :: !Text
+    , _tagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineAttachmentsGet' with the minimum fields required to make a request.
@@ -75,14 +79,17 @@ data TimelineAttachmentsGet = TimelineAttachmentsGet'
 -- * 'tagItemId'
 --
 -- * 'tagAttachmentId'
+--
+-- * 'tagFields'
 timelineAttachmentsGet
     :: Text -- ^ 'tagItemId'
     -> Text -- ^ 'tagAttachmentId'
     -> TimelineAttachmentsGet
-timelineAttachmentsGet pTagItemId_ pTagAttachmentId_ =
+timelineAttachmentsGet pTagItemId_ pTagAttachmentId_ = 
     TimelineAttachmentsGet'
     { _tagItemId = pTagItemId_
     , _tagAttachmentId = pTagAttachmentId_
+    , _tagFields = Nothing
     }
 
 -- | The ID of the timeline item the attachment belongs to.
@@ -96,12 +103,18 @@ tagAttachmentId
   = lens _tagAttachmentId
       (\ s a -> s{_tagAttachmentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tagFields :: Lens' TimelineAttachmentsGet (Maybe Text)
+tagFields
+  = lens _tagFields (\ s a -> s{_tagFields = a})
+
 instance GoogleRequest TimelineAttachmentsGet where
         type Rs TimelineAttachmentsGet = Attachment
         type Scopes TimelineAttachmentsGet =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineAttachmentsGet'{..}
-          = go _tagItemId _tagAttachmentId (Just AltJSON)
+          = go _tagItemId _tagAttachmentId _tagFields
+              (Just AltJSON)
               mirrorService
           where go :<|> _
                   = buildClient
@@ -116,7 +129,8 @@ instance GoogleRequest
              Scopes TimelineAttachmentsGet
         requestClient
           (MediaDownload TimelineAttachmentsGet'{..})
-          = go _tagItemId _tagAttachmentId (Just AltMedia)
+          = go _tagItemId _tagAttachmentId _tagFields
+              (Just AltMedia)
               mirrorService
           where _ :<|> go
                   = buildClient

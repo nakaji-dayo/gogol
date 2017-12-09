@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.GetAvailableProductSet
     -- * Request Lenses
     , ugapsEnterpriseId
     , ugapsUserId
+    , ugapsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.getAvailableProductSet@ method which the
 -- 'UsersGetAvailableProductSet' request conforms to.
@@ -50,14 +51,16 @@ type UsersGetAvailableProductSetResource =
              "users" :>
                Capture "userId" Text :>
                  "availableProductSet" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] ProductSet
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] ProductSet
 
 -- | Retrieves the set of products a user is entitled to access.
 --
 -- /See:/ 'usersGetAvailableProductSet' smart constructor.
 data UsersGetAvailableProductSet = UsersGetAvailableProductSet'
     { _ugapsEnterpriseId :: !Text
-    , _ugapsUserId       :: !Text
+    , _ugapsUserId :: !Text
+    , _ugapsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGetAvailableProductSet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersGetAvailableProductSet = UsersGetAvailableProductSet'
 -- * 'ugapsEnterpriseId'
 --
 -- * 'ugapsUserId'
+--
+-- * 'ugapsFields'
 usersGetAvailableProductSet
     :: Text -- ^ 'ugapsEnterpriseId'
     -> Text -- ^ 'ugapsUserId'
     -> UsersGetAvailableProductSet
-usersGetAvailableProductSet pUgapsEnterpriseId_ pUgapsUserId_ =
+usersGetAvailableProductSet pUgapsEnterpriseId_ pUgapsUserId_ = 
     UsersGetAvailableProductSet'
     { _ugapsEnterpriseId = pUgapsEnterpriseId_
     , _ugapsUserId = pUgapsUserId_
+    , _ugapsFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -88,13 +94,19 @@ ugapsUserId :: Lens' UsersGetAvailableProductSet Text
 ugapsUserId
   = lens _ugapsUserId (\ s a -> s{_ugapsUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugapsFields :: Lens' UsersGetAvailableProductSet (Maybe Text)
+ugapsFields
+  = lens _ugapsFields (\ s a -> s{_ugapsFields = a})
+
 instance GoogleRequest UsersGetAvailableProductSet
          where
         type Rs UsersGetAvailableProductSet = ProductSet
         type Scopes UsersGetAvailableProductSet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersGetAvailableProductSet'{..}
-          = go _ugapsEnterpriseId _ugapsUserId (Just AltJSON)
+          = go _ugapsEnterpriseId _ugapsUserId _ugapsFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

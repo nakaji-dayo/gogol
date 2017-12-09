@@ -36,10 +36,11 @@ module Network.Google.Resource.DNS.ManagedZones.Delete
     , mzdProject
     , mzdManagedZone
     , mzdClientOperationId
+    , mzdFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.delete@ method which the
 -- 'ManagedZonesDelete' request conforms to.
@@ -51,16 +52,18 @@ type ManagedZonesDeleteResource =
              "managedZones" :>
                Capture "managedZone" Text :>
                  QueryParam "clientOperationId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Delete '[JSON] ManagedZonesDeleteResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Delete '[JSON] ManagedZonesDeleteResponse
 
 -- | Delete a previously created ManagedZone.
 --
 -- /See:/ 'managedZonesDelete' smart constructor.
 data ManagedZonesDelete = ManagedZonesDelete'
-    { _mzdProject           :: !Text
-    , _mzdManagedZone       :: !Text
+    { _mzdProject :: !Text
+    , _mzdManagedZone :: !Text
     , _mzdClientOperationId :: !(Maybe Text)
+    , _mzdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesDelete' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data ManagedZonesDelete = ManagedZonesDelete'
 -- * 'mzdManagedZone'
 --
 -- * 'mzdClientOperationId'
+--
+-- * 'mzdFields'
 managedZonesDelete
     :: Text -- ^ 'mzdProject'
     -> Text -- ^ 'mzdManagedZone'
     -> ManagedZonesDelete
-managedZonesDelete pMzdProject_ pMzdManagedZone_ =
+managedZonesDelete pMzdProject_ pMzdManagedZone_ = 
     ManagedZonesDelete'
     { _mzdProject = pMzdProject_
     , _mzdManagedZone = pMzdManagedZone_
     , _mzdClientOperationId = Nothing
+    , _mzdFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -103,6 +109,11 @@ mzdClientOperationId
   = lens _mzdClientOperationId
       (\ s a -> s{_mzdClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzdFields :: Lens' ManagedZonesDelete (Maybe Text)
+mzdFields
+  = lens _mzdFields (\ s a -> s{_mzdFields = a})
+
 instance GoogleRequest ManagedZonesDelete where
         type Rs ManagedZonesDelete =
              ManagedZonesDeleteResponse
@@ -112,6 +123,7 @@ instance GoogleRequest ManagedZonesDelete where
         requestClient ManagedZonesDelete'{..}
           = go _mzdProject _mzdManagedZone
               _mzdClientOperationId
+              _mzdFields
               (Just AltJSON)
               dNSService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceDeals.Insert
     -- * Request Lenses
     , mdiPayload
     , mdiProposalId
+    , mdiFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacedeals.insert@ method which the
 -- 'MarketplaceDealsInsert' request conforms to.
@@ -49,16 +50,18 @@ type MarketplaceDealsInsertResource =
            Capture "proposalId" Text :>
              "deals" :>
                "insert" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AddOrderDealsRequest :>
-                     Post '[JSON] AddOrderDealsResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AddOrderDealsRequest :>
+                       Post '[JSON] AddOrderDealsResponse
 
 -- | Add new deals for the specified proposal
 --
 -- /See:/ 'marketplaceDealsInsert' smart constructor.
 data MarketplaceDealsInsert = MarketplaceDealsInsert'
-    { _mdiPayload    :: !AddOrderDealsRequest
+    { _mdiPayload :: !AddOrderDealsRequest
     , _mdiProposalId :: !Text
+    , _mdiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceDealsInsert' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MarketplaceDealsInsert = MarketplaceDealsInsert'
 -- * 'mdiPayload'
 --
 -- * 'mdiProposalId'
+--
+-- * 'mdiFields'
 marketplaceDealsInsert
     :: AddOrderDealsRequest -- ^ 'mdiPayload'
     -> Text -- ^ 'mdiProposalId'
     -> MarketplaceDealsInsert
-marketplaceDealsInsert pMdiPayload_ pMdiProposalId_ =
+marketplaceDealsInsert pMdiPayload_ pMdiProposalId_ = 
     MarketplaceDealsInsert'
     { _mdiPayload = pMdiPayload_
     , _mdiProposalId = pMdiProposalId_
+    , _mdiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,13 +95,19 @@ mdiProposalId
   = lens _mdiProposalId
       (\ s a -> s{_mdiProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdiFields :: Lens' MarketplaceDealsInsert (Maybe Text)
+mdiFields
+  = lens _mdiFields (\ s a -> s{_mdiFields = a})
+
 instance GoogleRequest MarketplaceDealsInsert where
         type Rs MarketplaceDealsInsert =
              AddOrderDealsResponse
         type Scopes MarketplaceDealsInsert =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceDealsInsert'{..}
-          = go _mdiProposalId (Just AltJSON) _mdiPayload
+          = go _mdiProposalId _mdiFields (Just AltJSON)
+              _mdiPayload
               adExchangeBuyerService
           where go
                   = buildClient

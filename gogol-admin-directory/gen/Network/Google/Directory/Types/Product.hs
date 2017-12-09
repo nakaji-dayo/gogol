@@ -17,17 +17,126 @@
 --
 module Network.Google.Directory.Types.Product where
 
-import           Network.Google.Directory.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Directory.Types.Sum
+import Network.Google.Prelude
+
+-- | JSON template for a location entry.
+--
+-- /See:/ 'userLocation' smart constructor.
+data UserLocation = UserLocation'
+    { _ulArea :: !(Maybe Text)
+    , _ulBuildingId :: !(Maybe Text)
+    , _ulDeskCode :: !(Maybe Text)
+    , _ulFloorName :: !(Maybe Text)
+    , _ulType :: !(Maybe Text)
+    , _ulCustomType :: !(Maybe Text)
+    , _ulFloorSection :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserLocation' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ulArea'
+--
+-- * 'ulBuildingId'
+--
+-- * 'ulDeskCode'
+--
+-- * 'ulFloorName'
+--
+-- * 'ulType'
+--
+-- * 'ulCustomType'
+--
+-- * 'ulFloorSection'
+userLocation
+    :: UserLocation
+userLocation = 
+    UserLocation'
+    { _ulArea = Nothing
+    , _ulBuildingId = Nothing
+    , _ulDeskCode = Nothing
+    , _ulFloorName = Nothing
+    , _ulType = Nothing
+    , _ulCustomType = Nothing
+    , _ulFloorSection = Nothing
+    }
+
+-- | Textual location. This is most useful for display purposes to concisely
+-- describe the location. For example, \"Mountain View, CA\", \"Near
+-- Seattle\", \"US-NYC-9TH 9A209A\".
+ulArea :: Lens' UserLocation (Maybe Text)
+ulArea = lens _ulArea (\ s a -> s{_ulArea = a})
+
+-- | Building Identifier.
+ulBuildingId :: Lens' UserLocation (Maybe Text)
+ulBuildingId
+  = lens _ulBuildingId (\ s a -> s{_ulBuildingId = a})
+
+-- | Most specific textual code of individual desk location.
+ulDeskCode :: Lens' UserLocation (Maybe Text)
+ulDeskCode
+  = lens _ulDeskCode (\ s a -> s{_ulDeskCode = a})
+
+-- | Floor name\/number.
+ulFloorName :: Lens' UserLocation (Maybe Text)
+ulFloorName
+  = lens _ulFloorName (\ s a -> s{_ulFloorName = a})
+
+-- | Each entry can have a type which indicates standard types of that entry.
+-- For example location could be of types default and desk. In addition to
+-- standard type, an entry can have a custom type and can give it any name.
+-- Such types should have \"custom\" as type and also have a customType
+-- value.
+ulType :: Lens' UserLocation (Maybe Text)
+ulType = lens _ulType (\ s a -> s{_ulType = a})
+
+-- | Custom Type.
+ulCustomType :: Lens' UserLocation (Maybe Text)
+ulCustomType
+  = lens _ulCustomType (\ s a -> s{_ulCustomType = a})
+
+-- | Floor section. More specific location within the floor. For example, if
+-- a floor is divided into sections \"A\", \"B\", and \"C\", this field
+-- would identify one of those values.
+ulFloorSection :: Lens' UserLocation (Maybe Text)
+ulFloorSection
+  = lens _ulFloorSection
+      (\ s a -> s{_ulFloorSection = a})
+
+instance FromJSON UserLocation where
+        parseJSON
+          = withObject "UserLocation"
+              (\ o ->
+                 UserLocation' <$>
+                   (o .:? "area") <*> (o .:? "buildingId") <*>
+                     (o .:? "deskCode")
+                     <*> (o .:? "floorName")
+                     <*> (o .:? "type")
+                     <*> (o .:? "customType")
+                     <*> (o .:? "floorSection"))
+
+instance ToJSON UserLocation where
+        toJSON UserLocation'{..}
+          = object
+              (catMaybes
+                 [("area" .=) <$> _ulArea,
+                  ("buildingId" .=) <$> _ulBuildingId,
+                  ("deskCode" .=) <$> _ulDeskCode,
+                  ("floorName" .=) <$> _ulFloorName,
+                  ("type" .=) <$> _ulType,
+                  ("customType" .=) <$> _ulCustomType,
+                  ("floorSection" .=) <$> _ulFloorSection])
 
 -- | JSON template for verification codes in Directory API.
 --
 -- /See:/ 'verificationCode' smart constructor.
 data VerificationCode = VerificationCode'
     { _vcVerificationCode :: !(Maybe Text)
-    , _vcEtag             :: !(Maybe Text)
-    , _vcKind             :: !Text
-    , _vcUserId           :: !(Maybe Text)
+    , _vcEtag :: !(Maybe Text)
+    , _vcKind :: !Text
+    , _vcUserId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VerificationCode' with the minimum fields required to make a request.
@@ -43,7 +152,7 @@ data VerificationCode = VerificationCode'
 -- * 'vcUserId'
 verificationCode
     :: VerificationCode
-verificationCode =
+verificationCode = 
     VerificationCode'
     { _vcVerificationCode = Nothing
     , _vcEtag = Nothing
@@ -88,19 +197,75 @@ instance ToJSON VerificationCode where
                   ("etag" .=) <$> _vcEtag, Just ("kind" .= _vcKind),
                   ("userId" .=) <$> _vcUserId])
 
+-- | JSON template for Feature object in Directory API.
+--
+-- /See:/ 'feature' smart constructor.
+data Feature = Feature'
+    { _fEtags :: !(Maybe Text)
+    , _fKind :: !Text
+    , _fName :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Feature' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'fEtags'
+--
+-- * 'fKind'
+--
+-- * 'fName'
+feature
+    :: Feature
+feature = 
+    Feature'
+    { _fEtags = Nothing
+    , _fKind = "admin#directory#resources#features#Feature"
+    , _fName = Nothing
+    }
+
+-- | ETag of the resource.
+fEtags :: Lens' Feature (Maybe Text)
+fEtags = lens _fEtags (\ s a -> s{_fEtags = a})
+
+-- | Kind of resource this is.
+fKind :: Lens' Feature Text
+fKind = lens _fKind (\ s a -> s{_fKind = a})
+
+-- | The name of the feature.
+fName :: Lens' Feature (Maybe Text)
+fName = lens _fName (\ s a -> s{_fName = a})
+
+instance FromJSON Feature where
+        parseJSON
+          = withObject "Feature"
+              (\ o ->
+                 Feature' <$>
+                   (o .:? "etags") <*>
+                     (o .:? "kind" .!=
+                        "admin#directory#resources#features#Feature")
+                     <*> (o .:? "name"))
+
+instance ToJSON Feature where
+        toJSON Feature'{..}
+          = object
+              (catMaybes
+                 [("etags" .=) <$> _fEtags, Just ("kind" .= _fKind),
+                  ("name" .=) <$> _fName])
+
 -- | JSON template for Org Unit resource in Directory API.
 --
 -- /See:/ 'orgUnit' smart constructor.
 data OrgUnit = OrgUnit'
-    { _ouEtag              :: !(Maybe Text)
+    { _ouEtag :: !(Maybe Text)
     , _ouParentOrgUnitPath :: !(Maybe Text)
-    , _ouKind              :: !Text
-    , _ouOrgUnitPath       :: !(Maybe Text)
-    , _ouName              :: !(Maybe Text)
-    , _ouBlockInheritance  :: !(Maybe Bool)
-    , _ouParentOrgUnitId   :: !(Maybe Text)
-    , _ouDescription       :: !(Maybe Text)
-    , _ouOrgUnitId         :: !(Maybe Text)
+    , _ouKind :: !Text
+    , _ouOrgUnitPath :: !(Maybe Text)
+    , _ouName :: !(Maybe Text)
+    , _ouBlockInheritance :: !(Maybe Bool)
+    , _ouParentOrgUnitId :: !(Maybe Text)
+    , _ouDescription :: !(Maybe Text)
+    , _ouOrgUnitId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnit' with the minimum fields required to make a request.
@@ -126,7 +291,7 @@ data OrgUnit = OrgUnit'
 -- * 'ouOrgUnitId'
 orgUnit
     :: OrgUnit
-orgUnit =
+orgUnit = 
     OrgUnit'
     { _ouEtag = Nothing
     , _ouParentOrgUnitPath = Nothing
@@ -229,7 +394,7 @@ newtype UserMakeAdmin = UserMakeAdmin'
 -- * 'umaStatus'
 userMakeAdmin
     :: UserMakeAdmin
-userMakeAdmin =
+userMakeAdmin = 
     UserMakeAdmin'
     { _umaStatus = Nothing
     }
@@ -252,7 +417,7 @@ instance ToJSON UserMakeAdmin where
 --
 -- /See:/ 'userAbout' smart constructor.
 data UserAbout = UserAbout'
-    { _uaValue       :: !(Maybe Text)
+    { _uaValue :: !(Maybe Text)
     , _uaContentType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -265,7 +430,7 @@ data UserAbout = UserAbout'
 -- * 'uaContentType'
 userAbout
     :: UserAbout
-userAbout =
+userAbout = 
     UserAbout'
     { _uaValue = Nothing
     , _uaContentType = Nothing
@@ -301,8 +466,8 @@ instance ToJSON UserAbout where
 --
 -- /See:/ 'privileges' smart constructor.
 data Privileges = Privileges'
-    { _pEtag  :: !(Maybe Text)
-    , _pKind  :: !Text
+    { _pEtag :: !(Maybe Text)
+    , _pKind :: !Text
     , _pItems :: !(Maybe [Privilege])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -317,7 +482,7 @@ data Privileges = Privileges'
 -- * 'pItems'
 privileges
     :: Privileges
-privileges =
+privileges = 
     Privileges'
     { _pEtag = Nothing
     , _pKind = "admin#directory#privileges"
@@ -358,10 +523,10 @@ instance ToJSON Privileges where
 --
 -- /See:/ 'groups' smart constructor.
 data Groups = Groups'
-    { _gGroups        :: !(Maybe [Group])
-    , _gEtag          :: !(Maybe Text)
+    { _gGroups :: !(Maybe [Group])
+    , _gEtag :: !(Maybe Text)
     , _gNextPageToken :: !(Maybe Text)
-    , _gKind          :: !Text
+    , _gKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Groups' with the minimum fields required to make a request.
@@ -377,7 +542,7 @@ data Groups = Groups'
 -- * 'gKind'
 groups
     :: Groups
-groups =
+groups = 
     Groups'
     { _gGroups = Nothing
     , _gEtag = Nothing
@@ -427,10 +592,10 @@ instance ToJSON Groups where
 --
 -- /See:/ 'roleAssignments' smart constructor.
 data RoleAssignments = RoleAssignments'
-    { _raEtag          :: !(Maybe Text)
+    { _raEtag :: !(Maybe Text)
     , _raNextPageToken :: !(Maybe Text)
-    , _raKind          :: !Text
-    , _raItems         :: !(Maybe [RoleAssignment])
+    , _raKind :: !Text
+    , _raItems :: !(Maybe [RoleAssignment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignments' with the minimum fields required to make a request.
@@ -446,7 +611,7 @@ data RoleAssignments = RoleAssignments'
 -- * 'raItems'
 roleAssignments
     :: RoleAssignments
-roleAssignments =
+roleAssignments = 
     RoleAssignments'
     { _raEtag = Nothing
     , _raNextPageToken = Nothing
@@ -495,12 +660,12 @@ instance ToJSON RoleAssignments where
 --
 -- /See:/ 'privilege' smart constructor.
 data Privilege = Privilege'
-    { _priEtag            :: !(Maybe Text)
-    , _priIsOuScopable    :: !(Maybe Bool)
-    , _priKind            :: !Text
-    , _priServiceName     :: !(Maybe Text)
-    , _priServiceId       :: !(Maybe Text)
-    , _priPrivilegeName   :: !(Maybe Text)
+    { _priEtag :: !(Maybe Text)
+    , _priIsOuScopable :: !(Maybe Bool)
+    , _priKind :: !Text
+    , _priServiceName :: !(Maybe Text)
+    , _priServiceId :: !(Maybe Text)
+    , _priPrivilegeName :: !(Maybe Text)
     , _priChildPrivileges :: !(Maybe [Privilege])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -523,7 +688,7 @@ data Privilege = Privilege'
 -- * 'priChildPrivileges'
 privilege
     :: Privilege
-privilege =
+privilege = 
     Privilege'
     { _priEtag = Nothing
     , _priIsOuScopable = Nothing
@@ -603,10 +768,10 @@ instance ToJSON Privilege where
 --
 -- /See:/ 'roles' smart constructor.
 data Roles = Roles'
-    { _rEtag          :: !(Maybe Text)
+    { _rEtag :: !(Maybe Text)
     , _rNextPageToken :: !(Maybe Text)
-    , _rKind          :: !Text
-    , _rItems         :: !(Maybe [Role])
+    , _rKind :: !Text
+    , _rItems :: !(Maybe [Role])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Roles' with the minimum fields required to make a request.
@@ -622,7 +787,7 @@ data Roles = Roles'
 -- * 'rItems'
 roles
     :: Roles
-roles =
+roles = 
     Roles'
     { _rEtag = Nothing
     , _rNextPageToken = Nothing
@@ -670,18 +835,18 @@ instance ToJSON Roles where
 --
 -- /See:/ 'userAddress' smart constructor.
 data UserAddress = UserAddress'
-    { _uaStreetAddress      :: !(Maybe Text)
-    , _uaPoBox              :: !(Maybe Text)
-    , _uaCountry            :: !(Maybe Text)
-    , _uaPostalCode         :: !(Maybe Text)
-    , _uaFormatted          :: !(Maybe Text)
-    , _uaExtendedAddress    :: !(Maybe Text)
-    , _uaLocality           :: !(Maybe Text)
-    , _uaPrimary            :: !(Maybe Bool)
-    , _uaCountryCode        :: !(Maybe Text)
-    , _uaRegion             :: !(Maybe Text)
-    , _uaType               :: !(Maybe Text)
-    , _uaCustomType         :: !(Maybe Text)
+    { _uaStreetAddress :: !(Maybe Text)
+    , _uaPoBox :: !(Maybe Text)
+    , _uaCountry :: !(Maybe Text)
+    , _uaPostalCode :: !(Maybe Text)
+    , _uaFormatted :: !(Maybe Text)
+    , _uaExtendedAddress :: !(Maybe Text)
+    , _uaLocality :: !(Maybe Text)
+    , _uaPrimary :: !(Maybe Bool)
+    , _uaCountryCode :: !(Maybe Text)
+    , _uaRegion :: !(Maybe Text)
+    , _uaType :: !(Maybe Text)
+    , _uaCustomType :: !(Maybe Text)
     , _uaSourceIsStructured :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -716,7 +881,7 @@ data UserAddress = UserAddress'
 -- * 'uaSourceIsStructured'
 userAddress
     :: UserAddress
-userAddress =
+userAddress = 
     UserAddress'
     { _uaStreetAddress = Nothing
     , _uaPoBox = Nothing
@@ -846,14 +1011,14 @@ instance ToJSON UserAddress where
 -- /See:/ 'customerPostalAddress' smart constructor.
 data CustomerPostalAddress = CustomerPostalAddress'
     { _cpaOrganizationName :: !(Maybe Text)
-    , _cpaPostalCode       :: !(Maybe Text)
-    , _cpaAddressLine1     :: !(Maybe Text)
-    , _cpaLocality         :: !(Maybe Text)
-    , _cpaContactName      :: !(Maybe Text)
-    , _cpaAddressLine2     :: !(Maybe Text)
-    , _cpaCountryCode      :: !(Maybe Text)
-    , _cpaRegion           :: !(Maybe Text)
-    , _cpaAddressLine3     :: !(Maybe Text)
+    , _cpaPostalCode :: !(Maybe Text)
+    , _cpaAddressLine1 :: !(Maybe Text)
+    , _cpaLocality :: !(Maybe Text)
+    , _cpaContactName :: !(Maybe Text)
+    , _cpaAddressLine2 :: !(Maybe Text)
+    , _cpaCountryCode :: !(Maybe Text)
+    , _cpaRegion :: !(Maybe Text)
+    , _cpaAddressLine3 :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomerPostalAddress' with the minimum fields required to make a request.
@@ -879,7 +1044,7 @@ data CustomerPostalAddress = CustomerPostalAddress'
 -- * 'cpaAddressLine3'
 customerPostalAddress
     :: CustomerPostalAddress
-customerPostalAddress =
+customerPostalAddress = 
     CustomerPostalAddress'
     { _cpaOrganizationName = Nothing
     , _cpaPostalCode = Nothing
@@ -982,13 +1147,13 @@ instance ToJSON CustomerPostalAddress where
 --
 -- /See:/ 'roleAssignment' smart constructor.
 data RoleAssignment = RoleAssignment'
-    { _rolEtag             :: !(Maybe Text)
-    , _rolScopeType        :: !(Maybe Text)
-    , _rolKind             :: !Text
-    , _rolAssignedTo       :: !(Maybe Text)
-    , _rolRoleId           :: !(Maybe (Textual Int64))
+    { _rolEtag :: !(Maybe Text)
+    , _rolScopeType :: !(Maybe Text)
+    , _rolKind :: !Text
+    , _rolAssignedTo :: !(Maybe Text)
+    , _rolRoleId :: !(Maybe (Textual Int64))
     , _rolRoleAssignmentId :: !(Maybe (Textual Int64))
-    , _rolOrgUnitId        :: !(Maybe Text)
+    , _rolOrgUnitId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignment' with the minimum fields required to make a request.
@@ -1010,7 +1175,7 @@ data RoleAssignment = RoleAssignment'
 -- * 'rolOrgUnitId'
 roleAssignment
     :: RoleAssignment
-roleAssignment =
+roleAssignment = 
     RoleAssignment'
     { _rolEtag = Nothing
     , _rolScopeType = Nothing
@@ -1089,16 +1254,16 @@ instance ToJSON RoleAssignment where
 --
 -- /See:/ 'group'' smart constructor.
 data Group = Group'
-    { _groEmail              :: !(Maybe Text)
-    , _groEtag               :: !(Maybe Text)
+    { _groEmail :: !(Maybe Text)
+    , _groEtag :: !(Maybe Text)
     , _groDirectMembersCount :: !(Maybe (Textual Int64))
-    , _groKind               :: !Text
-    , _groAliases            :: !(Maybe [Text])
+    , _groKind :: !Text
+    , _groAliases :: !(Maybe [Text])
     , _groNonEditableAliases :: !(Maybe [Text])
-    , _groName               :: !(Maybe Text)
-    , _groAdminCreated       :: !(Maybe Bool)
-    , _groId                 :: !(Maybe Text)
-    , _groDescription        :: !(Maybe Text)
+    , _groName :: !(Maybe Text)
+    , _groAdminCreated :: !(Maybe Bool)
+    , _groId :: !(Maybe Text)
+    , _groDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Group' with the minimum fields required to make a request.
@@ -1126,7 +1291,7 @@ data Group = Group'
 -- * 'groDescription'
 group'
     :: Group
-group' =
+group' = 
     Group'
     { _groEmail = Nothing
     , _groEtag = Nothing
@@ -1228,31 +1393,32 @@ instance ToJSON Group where
 --
 -- /See:/ 'chromeOSDevice' smart constructor.
 data ChromeOSDevice = ChromeOSDevice'
-    { _codStatus             :: !(Maybe Text)
-    , _codEtag               :: !(Maybe Text)
-    , _codAnnotatedUser      :: !(Maybe Text)
-    , _codPlatformVersion    :: !(Maybe Text)
-    , _codLastSync           :: !(Maybe DateTime')
-    , _codActiveTimeRanges   :: !(Maybe [ChromeOSDeviceActiveTimeRangesItem])
-    , _codKind               :: !Text
+    { _codStatus :: !(Maybe Text)
+    , _codEtag :: !(Maybe Text)
+    , _codAnnotatedUser :: !(Maybe Text)
+    , _codPlatformVersion :: !(Maybe Text)
+    , _codLastSync :: !(Maybe DateTime')
+    , _codActiveTimeRanges :: !(Maybe [ChromeOSDeviceActiveTimeRangesItem])
+    , _codKind :: !Text
     , _codEthernetMACAddress :: !(Maybe Text)
     , _codLastEnrollmentTime :: !(Maybe DateTime')
-    , _codAnnotatedLocation  :: !(Maybe Text)
-    , _codMACAddress         :: !(Maybe Text)
-    , _codOrgUnitPath        :: !(Maybe Text)
-    , _codRecentUsers        :: !(Maybe [ChromeOSDeviceRecentUsersItem])
-    , _codSupportEndDate     :: !(Maybe DateTime')
-    , _codModel              :: !(Maybe Text)
-    , _codWillAutoRenew      :: !(Maybe Bool)
-    , _codMeid               :: !(Maybe Text)
-    , _codDeviceId           :: !(Maybe Text)
-    , _codBootMode           :: !(Maybe Text)
-    , _codOrderNumber        :: !(Maybe Text)
-    , _codAnnotatedAssetId   :: !(Maybe Text)
-    , _codNotes              :: !(Maybe Text)
-    , _codSerialNumber       :: !(Maybe Text)
-    , _codFirmwareVersion    :: !(Maybe Text)
-    , _codOSVersion          :: !(Maybe Text)
+    , _codAnnotatedLocation :: !(Maybe Text)
+    , _codMACAddress :: !(Maybe Text)
+    , _codOrgUnitPath :: !(Maybe Text)
+    , _codRecentUsers :: !(Maybe [ChromeOSDeviceRecentUsersItem])
+    , _codSupportEndDate :: !(Maybe DateTime')
+    , _codModel :: !(Maybe Text)
+    , _codWillAutoRenew :: !(Maybe Bool)
+    , _codMeid :: !(Maybe Text)
+    , _codDeviceFiles :: !(Maybe [ChromeOSDeviceDeviceFilesItem])
+    , _codDeviceId :: !(Maybe Text)
+    , _codBootMode :: !(Maybe Text)
+    , _codOrderNumber :: !(Maybe Text)
+    , _codAnnotatedAssetId :: !(Maybe Text)
+    , _codNotes :: !(Maybe Text)
+    , _codSerialNumber :: !(Maybe Text)
+    , _codFirmwareVersion :: !(Maybe Text)
+    , _codOSVersion :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeOSDevice' with the minimum fields required to make a request.
@@ -1293,6 +1459,8 @@ data ChromeOSDevice = ChromeOSDevice'
 --
 -- * 'codMeid'
 --
+-- * 'codDeviceFiles'
+--
 -- * 'codDeviceId'
 --
 -- * 'codBootMode'
@@ -1310,7 +1478,7 @@ data ChromeOSDevice = ChromeOSDevice'
 -- * 'codOSVersion'
 chromeOSDevice
     :: ChromeOSDevice
-chromeOSDevice =
+chromeOSDevice = 
     ChromeOSDevice'
     { _codStatus = Nothing
     , _codEtag = Nothing
@@ -1329,6 +1497,7 @@ chromeOSDevice =
     , _codModel = Nothing
     , _codWillAutoRenew = Nothing
     , _codMeid = Nothing
+    , _codDeviceFiles = Nothing
     , _codDeviceId = Nothing
     , _codBootMode = Nothing
     , _codOrderNumber = Nothing
@@ -1361,7 +1530,7 @@ codPlatformVersion
       (\ s a -> s{_codPlatformVersion = a})
 
 -- | Date and time the device was last synchronized with the policy settings
--- in the Google Apps administrator control panel (Read-only)
+-- in the G Suite administrator control panel (Read-only)
 codLastSync :: Lens' ChromeOSDevice (Maybe UTCTime)
 codLastSync
   = lens _codLastSync (\ s a -> s{_codLastSync = a}) .
@@ -1441,6 +1610,14 @@ codWillAutoRenew
 codMeid :: Lens' ChromeOSDevice (Maybe Text)
 codMeid = lens _codMeid (\ s a -> s{_codMeid = a})
 
+-- | List of device files to download (Read-only)
+codDeviceFiles :: Lens' ChromeOSDevice [ChromeOSDeviceDeviceFilesItem]
+codDeviceFiles
+  = lens _codDeviceFiles
+      (\ s a -> s{_codDeviceFiles = a})
+      . _Default
+      . _Coerce
+
 -- | Unique identifier of Chrome OS Device (Read-only)
 codDeviceId :: Lens' ChromeOSDevice (Maybe Text)
 codDeviceId
@@ -1506,6 +1683,7 @@ instance FromJSON ChromeOSDevice where
                      <*> (o .:? "model")
                      <*> (o .:? "willAutoRenew")
                      <*> (o .:? "meid")
+                     <*> (o .:? "deviceFiles" .!= mempty)
                      <*> (o .:? "deviceId")
                      <*> (o .:? "bootMode")
                      <*> (o .:? "orderNumber")
@@ -1536,6 +1714,7 @@ instance ToJSON ChromeOSDevice where
                   ("model" .=) <$> _codModel,
                   ("willAutoRenew" .=) <$> _codWillAutoRenew,
                   ("meid" .=) <$> _codMeid,
+                  ("deviceFiles" .=) <$> _codDeviceFiles,
                   ("deviceId" .=) <$> _codDeviceId,
                   ("bootMode" .=) <$> _codBootMode,
                   ("orderNumber" .=) <$> _codOrderNumber,
@@ -1549,11 +1728,11 @@ instance ToJSON ChromeOSDevice where
 --
 -- /See:/ 'users' smart constructor.
 data Users = Users'
-    { _uEtag          :: !(Maybe Text)
+    { _uEtag :: !(Maybe Text)
     , _uNextPageToken :: !(Maybe Text)
-    , _uUsers         :: !(Maybe [User])
-    , _uKind          :: !Text
-    , _uTriggerEvent  :: !(Maybe Text)
+    , _uUsers :: !(Maybe [User])
+    , _uKind :: !Text
+    , _uTriggerEvent :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Users' with the minimum fields required to make a request.
@@ -1571,7 +1750,7 @@ data Users = Users'
 -- * 'uTriggerEvent'
 users
     :: Users
-users =
+users = 
     Users'
     { _uEtag = Nothing
     , _uNextPageToken = Nothing
@@ -1630,12 +1809,12 @@ instance ToJSON Users where
 -- /See:/ 'asp' smart constructor.
 data Asp = Asp'
     { _aCreationTime :: !(Maybe (Textual Int64))
-    , _aEtag         :: !(Maybe Text)
-    , _aCodeId       :: !(Maybe (Textual Int32))
-    , _aKind         :: !Text
-    , _aName         :: !(Maybe Text)
+    , _aEtag :: !(Maybe Text)
+    , _aCodeId :: !(Maybe (Textual Int32))
+    , _aKind :: !Text
+    , _aName :: !(Maybe Text)
     , _aLastTimeUsed :: !(Maybe (Textual Int64))
-    , _aUserKey      :: !(Maybe Text)
+    , _aUserKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Asp' with the minimum fields required to make a request.
@@ -1657,7 +1836,7 @@ data Asp = Asp'
 -- * 'aUserKey'
 asp
     :: Asp
-asp =
+asp = 
     Asp'
     { _aCreationTime = Nothing
     , _aEtag = Nothing
@@ -1731,9 +1910,9 @@ instance ToJSON Asp where
 --
 -- /See:/ 'schemas' smart constructor.
 data Schemas = Schemas'
-    { _sEtag    :: !(Maybe Text)
+    { _sEtag :: !(Maybe Text)
     , _sSchemas :: !(Maybe [Schema])
-    , _sKind    :: !Text
+    , _sKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Schemas' with the minimum fields required to make a request.
@@ -1747,7 +1926,7 @@ data Schemas = Schemas'
 -- * 'sKind'
 schemas
     :: Schemas
-schemas =
+schemas = 
     Schemas'
     { _sEtag = Nothing
     , _sSchemas = Nothing
@@ -1785,18 +1964,89 @@ instance ToJSON Schemas where
                   ("schemas" .=) <$> _sSchemas,
                   Just ("kind" .= _sKind)])
 
+--
+-- /See:/ 'chromeOSDeviceDeviceFilesItem' smart constructor.
+data ChromeOSDeviceDeviceFilesItem = ChromeOSDeviceDeviceFilesItem'
+    { _coddfiName :: !(Maybe Text)
+    , _coddfiDownloadURL :: !(Maybe Text)
+    , _coddfiType :: !(Maybe Text)
+    , _coddfiCreateTime :: !(Maybe DateTime')
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ChromeOSDeviceDeviceFilesItem' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'coddfiName'
+--
+-- * 'coddfiDownloadURL'
+--
+-- * 'coddfiType'
+--
+-- * 'coddfiCreateTime'
+chromeOSDeviceDeviceFilesItem
+    :: ChromeOSDeviceDeviceFilesItem
+chromeOSDeviceDeviceFilesItem = 
+    ChromeOSDeviceDeviceFilesItem'
+    { _coddfiName = Nothing
+    , _coddfiDownloadURL = Nothing
+    , _coddfiType = Nothing
+    , _coddfiCreateTime = Nothing
+    }
+
+-- | File name
+coddfiName :: Lens' ChromeOSDeviceDeviceFilesItem (Maybe Text)
+coddfiName
+  = lens _coddfiName (\ s a -> s{_coddfiName = a})
+
+-- | File downlod URL
+coddfiDownloadURL :: Lens' ChromeOSDeviceDeviceFilesItem (Maybe Text)
+coddfiDownloadURL
+  = lens _coddfiDownloadURL
+      (\ s a -> s{_coddfiDownloadURL = a})
+
+-- | File type
+coddfiType :: Lens' ChromeOSDeviceDeviceFilesItem (Maybe Text)
+coddfiType
+  = lens _coddfiType (\ s a -> s{_coddfiType = a})
+
+-- | Date and time the file was created
+coddfiCreateTime :: Lens' ChromeOSDeviceDeviceFilesItem (Maybe UTCTime)
+coddfiCreateTime
+  = lens _coddfiCreateTime
+      (\ s a -> s{_coddfiCreateTime = a})
+      . mapping _DateTime
+
+instance FromJSON ChromeOSDeviceDeviceFilesItem where
+        parseJSON
+          = withObject "ChromeOSDeviceDeviceFilesItem"
+              (\ o ->
+                 ChromeOSDeviceDeviceFilesItem' <$>
+                   (o .:? "name") <*> (o .:? "downloadUrl") <*>
+                     (o .:? "type")
+                     <*> (o .:? "createTime"))
+
+instance ToJSON ChromeOSDeviceDeviceFilesItem where
+        toJSON ChromeOSDeviceDeviceFilesItem'{..}
+          = object
+              (catMaybes
+                 [("name" .=) <$> _coddfiName,
+                  ("downloadUrl" .=) <$> _coddfiDownloadURL,
+                  ("type" .=) <$> _coddfiType,
+                  ("createTime" .=) <$> _coddfiCreateTime])
+
 -- | Template for a notification resource.
 --
 -- /See:/ 'notification' smart constructor.
 data Notification = Notification'
-    { _nSubject        :: !(Maybe Text)
-    , _nEtag           :: !(Maybe Text)
-    , _nKind           :: !Text
-    , _nBody           :: !(Maybe Text)
-    , _nFromAddress    :: !(Maybe Text)
-    , _nIsUnread       :: !(Maybe Bool)
+    { _nSubject :: !(Maybe Text)
+    , _nEtag :: !(Maybe Text)
+    , _nKind :: !Text
+    , _nBody :: !(Maybe Text)
+    , _nFromAddress :: !(Maybe Text)
+    , _nIsUnread :: !(Maybe Bool)
     , _nNotificationId :: !(Maybe Text)
-    , _nSendTime       :: !(Maybe DateTime')
+    , _nSendTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Notification' with the minimum fields required to make a request.
@@ -1820,7 +2070,7 @@ data Notification = Notification'
 -- * 'nSendTime'
 notification
     :: Notification
-notification =
+notification = 
     Notification'
     { _nSubject = Nothing
     , _nEtag = Nothing
@@ -1898,12 +2148,12 @@ instance ToJSON Notification where
 --
 -- /See:/ 'userIm' smart constructor.
 data UserIm = UserIm'
-    { _uiIm             :: !(Maybe Text)
-    , _uiProtocol       :: !(Maybe Text)
-    , _uiPrimary        :: !(Maybe Bool)
+    { _uiIm :: !(Maybe Text)
+    , _uiProtocol :: !(Maybe Text)
+    , _uiPrimary :: !(Maybe Bool)
     , _uiCustomProtocol :: !(Maybe Text)
-    , _uiType           :: !(Maybe Text)
-    , _uiCustomType     :: !(Maybe Text)
+    , _uiType :: !(Maybe Text)
+    , _uiCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserIm' with the minimum fields required to make a request.
@@ -1923,7 +2173,7 @@ data UserIm = UserIm'
 -- * 'uiCustomType'
 userIm
     :: UserIm
-userIm =
+userIm = 
     UserIm'
     { _uiIm = Nothing
     , _uiProtocol = Nothing
@@ -1995,8 +2245,8 @@ instance ToJSON UserIm where
 --
 -- /See:/ 'tokens' smart constructor.
 data Tokens = Tokens'
-    { _tEtag  :: !(Maybe Text)
-    , _tKind  :: !Text
+    { _tEtag :: !(Maybe Text)
+    , _tKind :: !Text
     , _tItems :: !(Maybe [Token])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2011,7 +2261,7 @@ data Tokens = Tokens'
 -- * 'tItems'
 tokens
     :: Tokens
-tokens =
+tokens = 
     Tokens'
     { _tEtag = Nothing
     , _tKind = "admin#directory#tokenList"
@@ -2063,7 +2313,7 @@ newtype UserCustomSchemas = UserCustomSchemas'
 userCustomSchemas
     :: HashMap Text UserCustomProperties -- ^ 'ucsAddtional'
     -> UserCustomSchemas
-userCustomSchemas pUcsAddtional_ =
+userCustomSchemas pUcsAddtional_ = 
     UserCustomSchemas'
     { _ucsAddtional = _Coerce # pUcsAddtional_
     }
@@ -2081,12 +2331,71 @@ instance FromJSON UserCustomSchemas where
 instance ToJSON UserCustomSchemas where
         toJSON = toJSON . _ucsAddtional
 
+-- | JSON template for a keyword entry.
+--
+-- /See:/ 'userKeyword' smart constructor.
+data UserKeyword = UserKeyword'
+    { _ukValue :: !(Maybe Text)
+    , _ukType :: !(Maybe Text)
+    , _ukCustomType :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserKeyword' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ukValue'
+--
+-- * 'ukType'
+--
+-- * 'ukCustomType'
+userKeyword
+    :: UserKeyword
+userKeyword = 
+    UserKeyword'
+    { _ukValue = Nothing
+    , _ukType = Nothing
+    , _ukCustomType = Nothing
+    }
+
+-- | Keyword.
+ukValue :: Lens' UserKeyword (Maybe Text)
+ukValue = lens _ukValue (\ s a -> s{_ukValue = a})
+
+-- | Each entry can have a type which indicates standard type of that entry.
+-- For example, keyword could be of type occupation or outlook. In addition
+-- to the standard type, an entry can have a custom type and can give it
+-- any name. Such types should have the CUSTOM value as type and also have
+-- a customType value.
+ukType :: Lens' UserKeyword (Maybe Text)
+ukType = lens _ukType (\ s a -> s{_ukType = a})
+
+-- | Custom Type.
+ukCustomType :: Lens' UserKeyword (Maybe Text)
+ukCustomType
+  = lens _ukCustomType (\ s a -> s{_ukCustomType = a})
+
+instance FromJSON UserKeyword where
+        parseJSON
+          = withObject "UserKeyword"
+              (\ o ->
+                 UserKeyword' <$>
+                   (o .:? "value") <*> (o .:? "type") <*>
+                     (o .:? "customType"))
+
+instance ToJSON UserKeyword where
+        toJSON UserKeyword'{..}
+          = object
+              (catMaybes
+                 [("value" .=) <$> _ukValue, ("type" .=) <$> _ukType,
+                  ("customType" .=) <$> _ukCustomType])
+
 -- | JSON response template to list domain aliases in Directory API.
 --
 -- /See:/ 'domainAliases' smart constructor.
 data DomainAliases = DomainAliases'
-    { _daEtag          :: !(Maybe Text)
-    , _daKind          :: !Text
+    { _daEtag :: !(Maybe Text)
+    , _daKind :: !Text
     , _daDomainAliases :: !(Maybe [DomainAlias])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2101,7 +2410,7 @@ data DomainAliases = DomainAliases'
 -- * 'daDomainAliases'
 domainAliases
     :: DomainAliases
-domainAliases =
+domainAliases = 
     DomainAliases'
     { _daEtag = Nothing
     , _daKind = "admin#directory#domainAliases"
@@ -2144,8 +2453,8 @@ instance ToJSON DomainAliases where
 --
 -- /See:/ 'aliases' smart constructor.
 data Aliases = Aliases'
-    { _aliEtag    :: !(Maybe Text)
-    , _aliKind    :: !Text
+    { _aliEtag :: !(Maybe Text)
+    , _aliKind :: !Text
     , _aliAliases :: !(Maybe [JSONValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2160,7 +2469,7 @@ data Aliases = Aliases'
 -- * 'aliAliases'
 aliases
     :: Aliases
-aliases =
+aliases = 
     Aliases'
     { _aliEtag = Nothing
     , _aliKind = "admin#directory#aliases"
@@ -2202,13 +2511,21 @@ instance ToJSON Aliases where
 --
 -- /See:/ 'calendarResource' smart constructor.
 data CalendarResource = CalendarResource'
-    { _crEtags               :: !(Maybe Text)
-    , _crResourceId          :: !(Maybe Text)
-    , _crResourceType        :: !(Maybe Text)
-    , _crResourceName        :: !(Maybe Text)
-    , _crKind                :: !Text
-    , _crResourceEmail       :: !(Maybe Text)
+    { _crEtags :: !(Maybe Text)
+    , _crResourceId :: !(Maybe Text)
+    , _crResourceType :: !(Maybe Text)
+    , _crResourceName :: !(Maybe Text)
+    , _crKind :: !Text
+    , _crBuildingId :: !(Maybe Text)
+    , _crFeatureInstances :: !(Maybe JSONValue)
+    , _crResourceEmail :: !(Maybe Text)
+    , _crCapacity :: !(Maybe (Textual Int32))
     , _crResourceDescription :: !(Maybe Text)
+    , _crFloorName :: !(Maybe Text)
+    , _crGeneratedResourceName :: !(Maybe Text)
+    , _crResourceCategory :: !(Maybe Text)
+    , _crFloorSection :: !(Maybe Text)
+    , _crUserVisibleDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarResource' with the minimum fields required to make a request.
@@ -2225,20 +2542,44 @@ data CalendarResource = CalendarResource'
 --
 -- * 'crKind'
 --
+-- * 'crBuildingId'
+--
+-- * 'crFeatureInstances'
+--
 -- * 'crResourceEmail'
 --
+-- * 'crCapacity'
+--
 -- * 'crResourceDescription'
+--
+-- * 'crFloorName'
+--
+-- * 'crGeneratedResourceName'
+--
+-- * 'crResourceCategory'
+--
+-- * 'crFloorSection'
+--
+-- * 'crUserVisibleDescription'
 calendarResource
     :: CalendarResource
-calendarResource =
+calendarResource = 
     CalendarResource'
     { _crEtags = Nothing
     , _crResourceId = Nothing
     , _crResourceType = Nothing
     , _crResourceName = Nothing
     , _crKind = "admin#directory#resources#calendars#CalendarResource"
+    , _crBuildingId = Nothing
+    , _crFeatureInstances = Nothing
     , _crResourceEmail = Nothing
+    , _crCapacity = Nothing
     , _crResourceDescription = Nothing
+    , _crFloorName = Nothing
+    , _crGeneratedResourceName = Nothing
+    , _crResourceCategory = Nothing
+    , _crFloorSection = Nothing
+    , _crUserVisibleDescription = Nothing
     }
 
 -- | ETag of the resource.
@@ -2250,14 +2591,16 @@ crResourceId :: Lens' CalendarResource (Maybe Text)
 crResourceId
   = lens _crResourceId (\ s a -> s{_crResourceId = a})
 
--- | The type of the calendar resource. Used for grouping resources in the
+-- | The type of the calendar resource, intended for non-room resources. The
+-- type of the calendar resource. Used for grouping resources in the
 -- calendar user interface.
 crResourceType :: Lens' CalendarResource (Maybe Text)
 crResourceType
   = lens _crResourceType
       (\ s a -> s{_crResourceType = a})
 
--- | The name of the calendar resource. For example, Training Room 1A
+-- | The name of the calendar resource. For example, \"Training Room 1A\".
+-- The name of the calendar resource. For example, Training Room 1A
 crResourceName :: Lens' CalendarResource (Maybe Text)
 crResourceName
   = lens _crResourceName
@@ -2268,18 +2611,68 @@ crResourceName
 crKind :: Lens' CalendarResource Text
 crKind = lens _crKind (\ s a -> s{_crKind = a})
 
+-- | Unique ID for the building a resource is located in.
+crBuildingId :: Lens' CalendarResource (Maybe Text)
+crBuildingId
+  = lens _crBuildingId (\ s a -> s{_crBuildingId = a})
+
+crFeatureInstances :: Lens' CalendarResource (Maybe JSONValue)
+crFeatureInstances
+  = lens _crFeatureInstances
+      (\ s a -> s{_crFeatureInstances = a})
+
 -- | The read-only email ID for the calendar resource. Generated as part of
--- creating a new calendar resource.
+-- creating a new calendar resource. The read-only email for the calendar
+-- resource. Generated as part of creating a new calendar resource.
 crResourceEmail :: Lens' CalendarResource (Maybe Text)
 crResourceEmail
   = lens _crResourceEmail
       (\ s a -> s{_crResourceEmail = a})
 
--- | The brief description of the calendar resource.
+-- | Capacity of a resource, number of seats in a room.
+crCapacity :: Lens' CalendarResource (Maybe Int32)
+crCapacity
+  = lens _crCapacity (\ s a -> s{_crCapacity = a}) .
+      mapping _Coerce
+
+-- | Description of the resource, visible only to admins. The brief
+-- description of the calendar resource.
 crResourceDescription :: Lens' CalendarResource (Maybe Text)
 crResourceDescription
   = lens _crResourceDescription
       (\ s a -> s{_crResourceDescription = a})
+
+-- | Name of the floor a resource is located on.
+crFloorName :: Lens' CalendarResource (Maybe Text)
+crFloorName
+  = lens _crFloorName (\ s a -> s{_crFloorName = a})
+
+-- | The read-only auto-generated name of the calendar resource which
+-- includes metadata about the resource such as building name, floor,
+-- capacity, etc. For example, \"NYC-2-Training Room 1A (16)\".
+crGeneratedResourceName :: Lens' CalendarResource (Maybe Text)
+crGeneratedResourceName
+  = lens _crGeneratedResourceName
+      (\ s a -> s{_crGeneratedResourceName = a})
+
+-- | The category of the calendar resource. Either CONFERENCE_ROOM or OTHER.
+-- Legacy data is set to CATEGORY_UNKNOWN.
+crResourceCategory :: Lens' CalendarResource (Maybe Text)
+crResourceCategory
+  = lens _crResourceCategory
+      (\ s a -> s{_crResourceCategory = a})
+
+-- | Name of the section within a floor a resource is located in.
+crFloorSection :: Lens' CalendarResource (Maybe Text)
+crFloorSection
+  = lens _crFloorSection
+      (\ s a -> s{_crFloorSection = a})
+
+-- | Description of the resource, visible to users and admins.
+crUserVisibleDescription :: Lens' CalendarResource (Maybe Text)
+crUserVisibleDescription
+  = lens _crUserVisibleDescription
+      (\ s a -> s{_crUserVisibleDescription = a})
 
 instance FromJSON CalendarResource where
         parseJSON
@@ -2292,8 +2685,16 @@ instance FromJSON CalendarResource where
                      <*>
                      (o .:? "kind" .!=
                         "admin#directory#resources#calendars#CalendarResource")
+                     <*> (o .:? "buildingId")
+                     <*> (o .:? "featureInstances")
                      <*> (o .:? "resourceEmail")
-                     <*> (o .:? "resourceDescription"))
+                     <*> (o .:? "capacity")
+                     <*> (o .:? "resourceDescription")
+                     <*> (o .:? "floorName")
+                     <*> (o .:? "generatedResourceName")
+                     <*> (o .:? "resourceCategory")
+                     <*> (o .:? "floorSection")
+                     <*> (o .:? "userVisibleDescription"))
 
 instance ToJSON CalendarResource where
         toJSON CalendarResource'{..}
@@ -2304,9 +2705,19 @@ instance ToJSON CalendarResource where
                   ("resourceType" .=) <$> _crResourceType,
                   ("resourceName" .=) <$> _crResourceName,
                   Just ("kind" .= _crKind),
+                  ("buildingId" .=) <$> _crBuildingId,
+                  ("featureInstances" .=) <$> _crFeatureInstances,
                   ("resourceEmail" .=) <$> _crResourceEmail,
+                  ("capacity" .=) <$> _crCapacity,
                   ("resourceDescription" .=) <$>
-                    _crResourceDescription])
+                    _crResourceDescription,
+                  ("floorName" .=) <$> _crFloorName,
+                  ("generatedResourceName" .=) <$>
+                    _crGeneratedResourceName,
+                  ("resourceCategory" .=) <$> _crResourceCategory,
+                  ("floorSection" .=) <$> _crFloorSection,
+                  ("userVisibleDescription" .=) <$>
+                    _crUserVisibleDescription])
 
 -- | JSON request template to undelete a user in Directory API.
 --
@@ -2322,7 +2733,7 @@ newtype UserUndelete = UserUndelete'
 -- * 'uuOrgUnitPath'
 userUndelete
     :: UserUndelete
-userUndelete =
+userUndelete = 
     UserUndelete'
     { _uuOrgUnitPath = Nothing
     }
@@ -2347,10 +2758,10 @@ instance ToJSON UserUndelete where
 --
 -- /See:/ 'members' smart constructor.
 data Members = Members'
-    { _mEtag          :: !(Maybe Text)
+    { _mEtag :: !(Maybe Text)
     , _mNextPageToken :: !(Maybe Text)
-    , _mKind          :: !Text
-    , _mMembers       :: !(Maybe [Member])
+    , _mKind :: !Text
+    , _mMembers :: !(Maybe [Member])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Members' with the minimum fields required to make a request.
@@ -2366,7 +2777,7 @@ data Members = Members'
 -- * 'mMembers'
 members
     :: Members
-members =
+members = 
     Members'
     { _mEtag = Nothing
     , _mNextPageToken = Nothing
@@ -2418,15 +2829,15 @@ instance ToJSON Members where
 -- /See:/ 'channel' smart constructor.
 data Channel = Channel'
     { _cResourceURI :: !(Maybe Text)
-    , _cResourceId  :: !(Maybe Text)
-    , _cKind        :: !Text
-    , _cExpiration  :: !(Maybe (Textual Int64))
-    , _cToken       :: !(Maybe Text)
-    , _cAddress     :: !(Maybe Text)
-    , _cPayload     :: !(Maybe Bool)
-    , _cParams      :: !(Maybe ChannelParams)
-    , _cId          :: !(Maybe Text)
-    , _cType        :: !(Maybe Text)
+    , _cResourceId :: !(Maybe Text)
+    , _cKind :: !Text
+    , _cExpiration :: !(Maybe (Textual Int64))
+    , _cToken :: !(Maybe Text)
+    , _cAddress :: !(Maybe Text)
+    , _cPayload :: !(Maybe Bool)
+    , _cParams :: !(Maybe ChannelParams)
+    , _cId :: !(Maybe Text)
+    , _cType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Channel' with the minimum fields required to make a request.
@@ -2454,7 +2865,7 @@ data Channel = Channel'
 -- * 'cType'
 channel
     :: Channel
-channel =
+channel = 
     Channel'
     { _cResourceURI = Nothing
     , _cResourceId = Nothing
@@ -2550,9 +2961,9 @@ instance ToJSON Channel where
 --
 -- /See:/ 'mobileDevices' smart constructor.
 data MobileDevices = MobileDevices'
-    { _mdEtag          :: !(Maybe Text)
+    { _mdEtag :: !(Maybe Text)
     , _mdNextPageToken :: !(Maybe Text)
-    , _mdKind          :: !Text
+    , _mdKind :: !Text
     , _mdMobileDevices :: !(Maybe [MobileDevice])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2569,7 +2980,7 @@ data MobileDevices = MobileDevices'
 -- * 'mdMobileDevices'
 mobileDevices
     :: MobileDevices
-mobileDevices =
+mobileDevices = 
     MobileDevices'
     { _mdEtag = Nothing
     , _mdNextPageToken = Nothing
@@ -2621,14 +3032,14 @@ instance ToJSON MobileDevices where
 --
 -- /See:/ 'token' smart constructor.
 data Token = Token'
-    { _tokClientId    :: !(Maybe Text)
-    , _tokEtag        :: !(Maybe Text)
+    { _tokClientId :: !(Maybe Text)
+    , _tokEtag :: !(Maybe Text)
     , _tokDisplayText :: !(Maybe Text)
-    , _tokKind        :: !Text
-    , _tokScopes      :: !(Maybe [Text])
-    , _tokNATiveApp   :: !(Maybe Bool)
-    , _tokAnonymous   :: !(Maybe Bool)
-    , _tokUserKey     :: !(Maybe Text)
+    , _tokKind :: !Text
+    , _tokScopes :: !(Maybe [Text])
+    , _tokNATiveApp :: !(Maybe Bool)
+    , _tokAnonymous :: !(Maybe Bool)
+    , _tokUserKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Token' with the minimum fields required to make a request.
@@ -2652,7 +3063,7 @@ data Token = Token'
 -- * 'tokUserKey'
 token
     :: Token
-token =
+token = 
     Token'
     { _tokClientId = Nothing
     , _tokEtag = Nothing
@@ -2737,8 +3148,8 @@ instance ToJSON Token where
 --
 -- /See:/ 'userName' smart constructor.
 data UserName = UserName'
-    { _unGivenName  :: !(Maybe Text)
-    , _unFullName   :: !(Maybe Text)
+    { _unGivenName :: !(Maybe Text)
+    , _unFullName :: !(Maybe Text)
     , _unFamilyName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2753,7 +3164,7 @@ data UserName = UserName'
 -- * 'unFamilyName'
 userName
     :: UserName
-userName =
+userName = 
     UserName'
     { _unGivenName = Nothing
     , _unFullName = Nothing
@@ -2795,7 +3206,7 @@ instance ToJSON UserName where
 -- /See:/ 'chromeOSDeviceRecentUsersItem' smart constructor.
 data ChromeOSDeviceRecentUsersItem = ChromeOSDeviceRecentUsersItem'
     { _codruiEmail :: !(Maybe Text)
-    , _codruiType  :: !(Maybe Text)
+    , _codruiType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeOSDeviceRecentUsersItem' with the minimum fields required to make a request.
@@ -2807,7 +3218,7 @@ data ChromeOSDeviceRecentUsersItem = ChromeOSDeviceRecentUsersItem'
 -- * 'codruiType'
 chromeOSDeviceRecentUsersItem
     :: ChromeOSDeviceRecentUsersItem
-chromeOSDeviceRecentUsersItem =
+chromeOSDeviceRecentUsersItem = 
     ChromeOSDeviceRecentUsersItem'
     { _codruiEmail = Nothing
     , _codruiType = Nothing
@@ -2841,11 +3252,11 @@ instance ToJSON ChromeOSDeviceRecentUsersItem where
 --
 -- /See:/ 'domainAlias' smart constructor.
 data DomainAlias = DomainAlias'
-    { _dCreationTime     :: !(Maybe (Textual Int64))
-    , _dEtag             :: !(Maybe Text)
-    , _dKind             :: !Text
-    , _dVerified         :: !(Maybe Bool)
-    , _dDomainAliasName  :: !(Maybe Text)
+    { _dCreationTime :: !(Maybe (Textual Int64))
+    , _dEtag :: !(Maybe Text)
+    , _dKind :: !Text
+    , _dVerified :: !(Maybe Bool)
+    , _dDomainAliasName :: !(Maybe Text)
     , _dParentDomainName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2866,7 +3277,7 @@ data DomainAlias = DomainAlias'
 -- * 'dParentDomainName'
 domainAlias
     :: DomainAlias
-domainAlias =
+domainAlias = 
     DomainAlias'
     { _dCreationTime = Nothing
     , _dEtag = Nothing
@@ -2930,14 +3341,74 @@ instance ToJSON DomainAlias where
                   ("domainAliasName" .=) <$> _dDomainAliasName,
                   ("parentDomainName" .=) <$> _dParentDomainName])
 
+--
+-- /See:/ 'userGender' smart constructor.
+data UserGender = UserGender'
+    { _ugAddressMeAs :: !(Maybe Text)
+    , _ugCustomGender :: !(Maybe Text)
+    , _ugType :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserGender' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ugAddressMeAs'
+--
+-- * 'ugCustomGender'
+--
+-- * 'ugType'
+userGender
+    :: UserGender
+userGender = 
+    UserGender'
+    { _ugAddressMeAs = Nothing
+    , _ugCustomGender = Nothing
+    , _ugType = Nothing
+    }
+
+-- | AddressMeAs. A human-readable string containing the proper way to refer
+-- to the profile owner by humans, for example \"he\/him\/his\" or
+-- \"they\/them\/their\".
+ugAddressMeAs :: Lens' UserGender (Maybe Text)
+ugAddressMeAs
+  = lens _ugAddressMeAs
+      (\ s a -> s{_ugAddressMeAs = a})
+
+-- | Custom gender.
+ugCustomGender :: Lens' UserGender (Maybe Text)
+ugCustomGender
+  = lens _ugCustomGender
+      (\ s a -> s{_ugCustomGender = a})
+
+-- | Gender.
+ugType :: Lens' UserGender (Maybe Text)
+ugType = lens _ugType (\ s a -> s{_ugType = a})
+
+instance FromJSON UserGender where
+        parseJSON
+          = withObject "UserGender"
+              (\ o ->
+                 UserGender' <$>
+                   (o .:? "addressMeAs") <*> (o .:? "customGender") <*>
+                     (o .:? "type"))
+
+instance ToJSON UserGender where
+        toJSON UserGender'{..}
+          = object
+              (catMaybes
+                 [("addressMeAs" .=) <$> _ugAddressMeAs,
+                  ("customGender" .=) <$> _ugCustomGender,
+                  ("type" .=) <$> _ugType])
+
 -- | JSON template for Alias object in Directory API.
 --
 -- /See:/ 'alias' smart constructor.
 data Alias = Alias'
-    { _aaEtag         :: !(Maybe Text)
-    , _aaKind         :: !Text
-    , _aaAlias        :: !(Maybe Text)
-    , _aaId           :: !(Maybe Text)
+    { _aaEtag :: !(Maybe Text)
+    , _aaKind :: !Text
+    , _aaAlias :: !(Maybe Text)
+    , _aaId :: !(Maybe Text)
     , _aaPrimaryEmail :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2956,7 +3427,7 @@ data Alias = Alias'
 -- * 'aaPrimaryEmail'
 alias
     :: Alias
-alias =
+alias = 
     Alias'
     { _aaEtag = Nothing
     , _aaKind = "admin#directory#alias"
@@ -3010,11 +3481,11 @@ instance ToJSON Alias where
 --
 -- /See:/ 'schema' smart constructor.
 data Schema = Schema'
-    { _schEtag       :: !(Maybe Text)
-    , _schKind       :: !Text
+    { _schEtag :: !(Maybe Text)
+    , _schKind :: !Text
     , _schSchemaName :: !(Maybe Text)
-    , _schSchemaId   :: !(Maybe Text)
-    , _schFields     :: !(Maybe [SchemaFieldSpec])
+    , _schSchemaId :: !(Maybe Text)
+    , _schFields :: !(Maybe [SchemaFieldSpec])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Schema' with the minimum fields required to make a request.
@@ -3032,7 +3503,7 @@ data Schema = Schema'
 -- * 'schFields'
 schema
     :: Schema
-schema =
+schema = 
     Schema'
     { _schEtag = Nothing
     , _schKind = "admin#directory#schema"
@@ -3087,47 +3558,93 @@ instance ToJSON Schema where
                   ("schemaId" .=) <$> _schSchemaId,
                   ("fields" .=) <$> _schFields])
 
+-- | JSON request template for moving ChromeOs Device to given OU in
+-- Directory Devices API.
+--
+-- /See:/ 'chromeOSMoveDevicesToOu' smart constructor.
+newtype ChromeOSMoveDevicesToOu = ChromeOSMoveDevicesToOu'
+    { _comdtoDeviceIds :: Maybe [Text]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ChromeOSMoveDevicesToOu' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'comdtoDeviceIds'
+chromeOSMoveDevicesToOu
+    :: ChromeOSMoveDevicesToOu
+chromeOSMoveDevicesToOu = 
+    ChromeOSMoveDevicesToOu'
+    { _comdtoDeviceIds = Nothing
+    }
+
+-- | ChromeOs Devices to be moved to OU
+comdtoDeviceIds :: Lens' ChromeOSMoveDevicesToOu [Text]
+comdtoDeviceIds
+  = lens _comdtoDeviceIds
+      (\ s a -> s{_comdtoDeviceIds = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ChromeOSMoveDevicesToOu where
+        parseJSON
+          = withObject "ChromeOSMoveDevicesToOu"
+              (\ o ->
+                 ChromeOSMoveDevicesToOu' <$>
+                   (o .:? "deviceIds" .!= mempty))
+
+instance ToJSON ChromeOSMoveDevicesToOu where
+        toJSON ChromeOSMoveDevicesToOu'{..}
+          = object
+              (catMaybes [("deviceIds" .=) <$> _comdtoDeviceIds])
+
 -- | JSON template for User object in Directory API.
 --
 -- /See:/ 'user' smart constructor.
 data User = User'
-    { _useCreationTime               :: !(Maybe DateTime')
-    , _useLastLoginTime              :: !(Maybe DateTime')
-    , _useThumbnailPhotoEtag         :: !(Maybe Text)
-    , _useEtag                       :: !(Maybe Text)
-    , _useIPWhiteListed              :: !(Maybe Bool)
-    , _useRelations                  :: !(Maybe JSONValue)
-    , _useHashFunction               :: !(Maybe Text)
-    , _useKind                       :: !Text
-    , _useChangePasswordAtNextLogin  :: !(Maybe Bool)
-    , _useWebsites                   :: !(Maybe JSONValue)
-    , _useAddresses                  :: !(Maybe JSONValue)
-    , _useAliases                    :: !(Maybe [Text])
-    , _useThumbnailPhotoURL          :: !(Maybe Text)
-    , _useExternalIds                :: !(Maybe JSONValue)
-    , _useSuspended                  :: !(Maybe Bool)
-    , _useAgreedToTerms              :: !(Maybe Bool)
-    , _useDeletionTime               :: !(Maybe DateTime')
-    , _useNonEditableAliases         :: !(Maybe [Text])
-    , _useOrgUnitPath                :: !(Maybe Text)
-    , _useCustomerId                 :: !(Maybe Text)
+    { _useCreationTime :: !(Maybe DateTime')
+    , _useLastLoginTime :: !(Maybe DateTime')
+    , _useThumbnailPhotoEtag :: !(Maybe Text)
+    , _useEtag :: !(Maybe Text)
+    , _usePosixAccounts :: !(Maybe JSONValue)
+    , _useIPWhiteListed :: !(Maybe Bool)
+    , _useRelations :: !(Maybe JSONValue)
+    , _useSSHPublicKeys :: !(Maybe JSONValue)
+    , _useHashFunction :: !(Maybe Text)
+    , _useKind :: !Text
+    , _useChangePasswordAtNextLogin :: !(Maybe Bool)
+    , _useWebsites :: !(Maybe JSONValue)
+    , _useAddresses :: !(Maybe JSONValue)
+    , _useAliases :: !(Maybe [Text])
+    , _useThumbnailPhotoURL :: !(Maybe Text)
+    , _useExternalIds :: !(Maybe JSONValue)
+    , _useSuspended :: !(Maybe Bool)
+    , _useAgreedToTerms :: !(Maybe Bool)
+    , _useDeletionTime :: !(Maybe DateTime')
+    , _useNonEditableAliases :: !(Maybe [Text])
+    , _useOrgUnitPath :: !(Maybe Text)
+    , _useCustomerId :: !(Maybe Text)
+    , _useLanguages :: !(Maybe JSONValue)
     , _useIncludeInGlobalAddressList :: !(Maybe Bool)
-    , _usePhones                     :: !(Maybe JSONValue)
-    , _useName                       :: !(Maybe UserName)
-    , _usePassword                   :: !(Maybe Text)
-    , _useEmails                     :: !(Maybe JSONValue)
-    , _useIms                        :: !(Maybe JSONValue)
-    , _useIsAdmin                    :: !(Maybe Bool)
-    , _useIsEnrolledIn2Sv            :: !(Maybe Bool)
-    , _useId                         :: !(Maybe Text)
-    , _useOrganizations              :: !(Maybe JSONValue)
-    , _usePrimaryEmail               :: !(Maybe Text)
-    , _useIsEnforcedIn2Sv            :: !(Maybe Bool)
-    , _useNotes                      :: !(Maybe JSONValue)
-    , _useIsDelegatedAdmin           :: !(Maybe Bool)
-    , _useIsMailboxSetup             :: !(Maybe Bool)
-    , _useCustomSchemas              :: !(Maybe UserCustomSchemas)
-    , _useSuspensionReason           :: !(Maybe Text)
+    , _useGender :: !(Maybe JSONValue)
+    , _usePhones :: !(Maybe JSONValue)
+    , _useName :: !(Maybe UserName)
+    , _usePassword :: !(Maybe Text)
+    , _useEmails :: !(Maybe JSONValue)
+    , _useIms :: !(Maybe JSONValue)
+    , _useKeywords :: !(Maybe JSONValue)
+    , _useIsAdmin :: !(Maybe Bool)
+    , _useIsEnrolledIn2Sv :: !(Maybe Bool)
+    , _useId :: !(Maybe Text)
+    , _useOrganizations :: !(Maybe JSONValue)
+    , _usePrimaryEmail :: !(Maybe Text)
+    , _useIsEnforcedIn2Sv :: !(Maybe Bool)
+    , _useNotes :: !(Maybe JSONValue)
+    , _useIsDelegatedAdmin :: !(Maybe Bool)
+    , _useLocations :: !(Maybe JSONValue)
+    , _useIsMailboxSetup :: !(Maybe Bool)
+    , _useCustomSchemas :: !(Maybe UserCustomSchemas)
+    , _useSuspensionReason :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'User' with the minimum fields required to make a request.
@@ -3142,9 +3659,13 @@ data User = User'
 --
 -- * 'useEtag'
 --
+-- * 'usePosixAccounts'
+--
 -- * 'useIPWhiteListed'
 --
 -- * 'useRelations'
+--
+-- * 'useSSHPublicKeys'
 --
 -- * 'useHashFunction'
 --
@@ -3174,7 +3695,11 @@ data User = User'
 --
 -- * 'useCustomerId'
 --
+-- * 'useLanguages'
+--
 -- * 'useIncludeInGlobalAddressList'
+--
+-- * 'useGender'
 --
 -- * 'usePhones'
 --
@@ -3185,6 +3710,8 @@ data User = User'
 -- * 'useEmails'
 --
 -- * 'useIms'
+--
+-- * 'useKeywords'
 --
 -- * 'useIsAdmin'
 --
@@ -3202,6 +3729,8 @@ data User = User'
 --
 -- * 'useIsDelegatedAdmin'
 --
+-- * 'useLocations'
+--
 -- * 'useIsMailboxSetup'
 --
 -- * 'useCustomSchemas'
@@ -3209,14 +3738,16 @@ data User = User'
 -- * 'useSuspensionReason'
 user
     :: User
-user =
+user = 
     User'
     { _useCreationTime = Nothing
     , _useLastLoginTime = Nothing
     , _useThumbnailPhotoEtag = Nothing
     , _useEtag = Nothing
+    , _usePosixAccounts = Nothing
     , _useIPWhiteListed = Nothing
     , _useRelations = Nothing
+    , _useSSHPublicKeys = Nothing
     , _useHashFunction = Nothing
     , _useKind = "admin#directory#user"
     , _useChangePasswordAtNextLogin = Nothing
@@ -3231,12 +3762,15 @@ user =
     , _useNonEditableAliases = Nothing
     , _useOrgUnitPath = Nothing
     , _useCustomerId = Nothing
+    , _useLanguages = Nothing
     , _useIncludeInGlobalAddressList = Nothing
+    , _useGender = Nothing
     , _usePhones = Nothing
     , _useName = Nothing
     , _usePassword = Nothing
     , _useEmails = Nothing
     , _useIms = Nothing
+    , _useKeywords = Nothing
     , _useIsAdmin = Nothing
     , _useIsEnrolledIn2Sv = Nothing
     , _useId = Nothing
@@ -3245,12 +3779,13 @@ user =
     , _useIsEnforcedIn2Sv = Nothing
     , _useNotes = Nothing
     , _useIsDelegatedAdmin = Nothing
+    , _useLocations = Nothing
     , _useIsMailboxSetup = Nothing
     , _useCustomSchemas = Nothing
     , _useSuspensionReason = Nothing
     }
 
--- | User\'s Google account creation time. (Read-only)
+-- | User\'s G Suite account creation time. (Read-only)
 useCreationTime :: Lens' User (Maybe UTCTime)
 useCreationTime
   = lens _useCreationTime
@@ -3274,6 +3809,11 @@ useThumbnailPhotoEtag
 useEtag :: Lens' User (Maybe Text)
 useEtag = lens _useEtag (\ s a -> s{_useEtag = a})
 
+usePosixAccounts :: Lens' User (Maybe JSONValue)
+usePosixAccounts
+  = lens _usePosixAccounts
+      (\ s a -> s{_usePosixAccounts = a})
+
 -- | Boolean indicating if ip is whitelisted
 useIPWhiteListed :: Lens' User (Maybe Bool)
 useIPWhiteListed
@@ -3283,6 +3823,11 @@ useIPWhiteListed
 useRelations :: Lens' User (Maybe JSONValue)
 useRelations
   = lens _useRelations (\ s a -> s{_useRelations = a})
+
+useSSHPublicKeys :: Lens' User (Maybe JSONValue)
+useSSHPublicKeys
+  = lens _useSSHPublicKeys
+      (\ s a -> s{_useSSHPublicKeys = a})
 
 -- | Hash function name for password. Supported are MD5, SHA-1 and crypt
 useHashFunction :: Lens' User (Maybe Text)
@@ -3363,11 +3908,19 @@ useCustomerId
   = lens _useCustomerId
       (\ s a -> s{_useCustomerId = a})
 
+useLanguages :: Lens' User (Maybe JSONValue)
+useLanguages
+  = lens _useLanguages (\ s a -> s{_useLanguages = a})
+
 -- | Boolean indicating if user is included in Global Address List
 useIncludeInGlobalAddressList :: Lens' User (Maybe Bool)
 useIncludeInGlobalAddressList
   = lens _useIncludeInGlobalAddressList
       (\ s a -> s{_useIncludeInGlobalAddressList = a})
+
+useGender :: Lens' User (Maybe JSONValue)
+useGender
+  = lens _useGender (\ s a -> s{_useGender = a})
 
 usePhones :: Lens' User (Maybe JSONValue)
 usePhones
@@ -3388,6 +3941,10 @@ useEmails
 
 useIms :: Lens' User (Maybe JSONValue)
 useIms = lens _useIms (\ s a -> s{_useIms = a})
+
+useKeywords :: Lens' User (Maybe JSONValue)
+useKeywords
+  = lens _useKeywords (\ s a -> s{_useKeywords = a})
 
 -- | Boolean indicating if the user is admin (Read-only)
 useIsAdmin :: Lens' User (Maybe Bool)
@@ -3430,6 +3987,10 @@ useIsDelegatedAdmin
   = lens _useIsDelegatedAdmin
       (\ s a -> s{_useIsDelegatedAdmin = a})
 
+useLocations :: Lens' User (Maybe JSONValue)
+useLocations
+  = lens _useLocations (\ s a -> s{_useLocations = a})
+
 -- | Is mailbox setup (Read-only)
 useIsMailboxSetup :: Lens' User (Maybe Bool)
 useIsMailboxSetup
@@ -3456,8 +4017,10 @@ instance FromJSON User where
                    (o .:? "creationTime") <*> (o .:? "lastLoginTime")
                      <*> (o .:? "thumbnailPhotoEtag")
                      <*> (o .:? "etag")
+                     <*> (o .:? "posixAccounts")
                      <*> (o .:? "ipWhitelisted")
                      <*> (o .:? "relations")
+                     <*> (o .:? "sshPublicKeys")
                      <*> (o .:? "hashFunction")
                      <*> (o .:? "kind" .!= "admin#directory#user")
                      <*> (o .:? "changePasswordAtNextLogin")
@@ -3472,12 +4035,15 @@ instance FromJSON User where
                      <*> (o .:? "nonEditableAliases" .!= mempty)
                      <*> (o .:? "orgUnitPath")
                      <*> (o .:? "customerId")
+                     <*> (o .:? "languages")
                      <*> (o .:? "includeInGlobalAddressList")
+                     <*> (o .:? "gender")
                      <*> (o .:? "phones")
                      <*> (o .:? "name")
                      <*> (o .:? "password")
                      <*> (o .:? "emails")
                      <*> (o .:? "ims")
+                     <*> (o .:? "keywords")
                      <*> (o .:? "isAdmin")
                      <*> (o .:? "isEnrolledIn2Sv")
                      <*> (o .:? "id")
@@ -3486,6 +4052,7 @@ instance FromJSON User where
                      <*> (o .:? "isEnforcedIn2Sv")
                      <*> (o .:? "notes")
                      <*> (o .:? "isDelegatedAdmin")
+                     <*> (o .:? "locations")
                      <*> (o .:? "isMailboxSetup")
                      <*> (o .:? "customSchemas")
                      <*> (o .:? "suspensionReason"))
@@ -3498,8 +4065,10 @@ instance ToJSON User where
                   ("lastLoginTime" .=) <$> _useLastLoginTime,
                   ("thumbnailPhotoEtag" .=) <$> _useThumbnailPhotoEtag,
                   ("etag" .=) <$> _useEtag,
+                  ("posixAccounts" .=) <$> _usePosixAccounts,
                   ("ipWhitelisted" .=) <$> _useIPWhiteListed,
                   ("relations" .=) <$> _useRelations,
+                  ("sshPublicKeys" .=) <$> _useSSHPublicKeys,
                   ("hashFunction" .=) <$> _useHashFunction,
                   Just ("kind" .= _useKind),
                   ("changePasswordAtNextLogin" .=) <$>
@@ -3515,12 +4084,15 @@ instance ToJSON User where
                   ("nonEditableAliases" .=) <$> _useNonEditableAliases,
                   ("orgUnitPath" .=) <$> _useOrgUnitPath,
                   ("customerId" .=) <$> _useCustomerId,
+                  ("languages" .=) <$> _useLanguages,
                   ("includeInGlobalAddressList" .=) <$>
                     _useIncludeInGlobalAddressList,
+                  ("gender" .=) <$> _useGender,
                   ("phones" .=) <$> _usePhones,
                   ("name" .=) <$> _useName,
                   ("password" .=) <$> _usePassword,
                   ("emails" .=) <$> _useEmails, ("ims" .=) <$> _useIms,
+                  ("keywords" .=) <$> _useKeywords,
                   ("isAdmin" .=) <$> _useIsAdmin,
                   ("isEnrolledIn2Sv" .=) <$> _useIsEnrolledIn2Sv,
                   ("id" .=) <$> _useId,
@@ -3529,6 +4101,7 @@ instance ToJSON User where
                   ("isEnforcedIn2Sv" .=) <$> _useIsEnforcedIn2Sv,
                   ("notes" .=) <$> _useNotes,
                   ("isDelegatedAdmin" .=) <$> _useIsDelegatedAdmin,
+                  ("locations" .=) <$> _useLocations,
                   ("isMailboxSetup" .=) <$> _useIsMailboxSetup,
                   ("customSchemas" .=) <$> _useCustomSchemas,
                   ("suspensionReason" .=) <$> _useSuspensionReason])
@@ -3538,7 +4111,7 @@ instance ToJSON User where
 --
 -- /See:/ 'chromeOSDeviceAction' smart constructor.
 data ChromeOSDeviceAction = ChromeOSDeviceAction'
-    { _codaAction            :: !(Maybe Text)
+    { _codaAction :: !(Maybe Text)
     , _codaDeprovisionReason :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3551,7 +4124,7 @@ data ChromeOSDeviceAction = ChromeOSDeviceAction'
 -- * 'codaDeprovisionReason'
 chromeOSDeviceAction
     :: ChromeOSDeviceAction
-chromeOSDeviceAction =
+chromeOSDeviceAction = 
     ChromeOSDeviceAction'
     { _codaAction = Nothing
     , _codaDeprovisionReason = Nothing
@@ -3585,14 +4158,14 @@ instance ToJSON ChromeOSDeviceAction where
 --
 -- /See:/ 'role'' smart constructor.
 data Role = Role'
-    { _rrEtag             :: !(Maybe Text)
-    , _rrKind             :: !Text
-    , _rrRoleName         :: !(Maybe Text)
-    , _rrIsSystemRole     :: !(Maybe Bool)
-    , _rrRoleId           :: !(Maybe (Textual Int64))
-    , _rrRoleDescription  :: !(Maybe Text)
+    { _rrEtag :: !(Maybe Text)
+    , _rrKind :: !Text
+    , _rrRoleName :: !(Maybe Text)
+    , _rrIsSystemRole :: !(Maybe Bool)
+    , _rrRoleId :: !(Maybe (Textual Int64))
+    , _rrRoleDescription :: !(Maybe Text)
     , _rrIsSuperAdminRole :: !(Maybe Bool)
-    , _rrRolePrivileges   :: !(Maybe [RoleRolePrivilegesItem])
+    , _rrRolePrivileges :: !(Maybe [RoleRolePrivilegesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Role' with the minimum fields required to make a request.
@@ -3616,7 +4189,7 @@ data Role = Role'
 -- * 'rrRolePrivileges'
 role'
     :: Role
-role' =
+role' = 
     Role'
     { _rrEtag = Nothing
     , _rrKind = "admin#directory#role"
@@ -3703,15 +4276,15 @@ instance ToJSON Role where
 --
 -- /See:/ 'customer' smart constructor.
 data Customer = Customer'
-    { _cusEtag                 :: !(Maybe Text)
-    , _cusKind                 :: !Text
-    , _cusAlternateEmail       :: !(Maybe Text)
-    , _cusCustomerDomain       :: !(Maybe Text)
-    , _cusPhoneNumber          :: !(Maybe Text)
-    , _cusLanguage             :: !(Maybe Text)
-    , _cusId                   :: !(Maybe Text)
+    { _cusEtag :: !(Maybe Text)
+    , _cusKind :: !Text
+    , _cusAlternateEmail :: !(Maybe Text)
+    , _cusCustomerDomain :: !(Maybe Text)
+    , _cusPhoneNumber :: !(Maybe Text)
+    , _cusLanguage :: !(Maybe Text)
+    , _cusId :: !(Maybe Text)
     , _cusCustomerCreationTime :: !(Maybe DateTime')
-    , _cusPostalAddress        :: !(Maybe CustomerPostalAddress)
+    , _cusPostalAddress :: !(Maybe CustomerPostalAddress)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Customer' with the minimum fields required to make a request.
@@ -3737,7 +4310,7 @@ data Customer = Customer'
 -- * 'cusPostalAddress'
 customer
     :: Customer
-customer =
+customer = 
     Customer'
     { _cusEtag = Nothing
     , _cusKind = "admin#directory#customer"
@@ -3783,7 +4356,7 @@ cusLanguage :: Lens' Customer (Maybe Text)
 cusLanguage
   = lens _cusLanguage (\ s a -> s{_cusLanguage = a})
 
--- | The unique ID for the customer\'s Google account. (Readonly)
+-- | The unique ID for the customer\'s G Suite account. (Readonly)
 cusId :: Lens' Customer (Maybe Text)
 cusId = lens _cusId (\ s a -> s{_cusId = a})
 
@@ -3836,7 +4409,7 @@ data MobileDeviceApplicationsItem = MobileDeviceApplicationsItem'
     , _mdaiVersionName :: !(Maybe Text)
     , _mdaiPackageName :: !(Maybe Text)
     , _mdaiDisplayName :: !(Maybe Text)
-    , _mdaiPermission  :: !(Maybe [Text])
+    , _mdaiPermission :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDeviceApplicationsItem' with the minimum fields required to make a request.
@@ -3854,7 +4427,7 @@ data MobileDeviceApplicationsItem = MobileDeviceApplicationsItem'
 -- * 'mdaiPermission'
 mobileDeviceApplicationsItem
     :: MobileDeviceApplicationsItem
-mobileDeviceApplicationsItem =
+mobileDeviceApplicationsItem = 
     MobileDeviceApplicationsItem'
     { _mdaiVersionCode = Nothing
     , _mdaiVersionName = Nothing
@@ -3921,8 +4494,8 @@ instance ToJSON MobileDeviceApplicationsItem where
 --
 -- /See:/ 'orgUnits' smart constructor.
 data OrgUnits = OrgUnits'
-    { _oEtag              :: !(Maybe Text)
-    , _oKind              :: !Text
+    { _oEtag :: !(Maybe Text)
+    , _oKind :: !Text
     , _oOrganizationUnits :: !(Maybe [OrgUnit])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3937,7 +4510,7 @@ data OrgUnits = OrgUnits'
 -- * 'oOrganizationUnits'
 orgUnits
     :: OrgUnits
-orgUnits =
+orgUnits = 
     OrgUnits'
     { _oEtag = Nothing
     , _oKind = "admin#directory#orgUnits"
@@ -3976,13 +4549,74 @@ instance ToJSON OrgUnits where
                  [("etag" .=) <$> _oEtag, Just ("kind" .= _oKind),
                   ("organizationUnits" .=) <$> _oOrganizationUnits])
 
+-- | JSON template for a POSIX account entry.
+--
+-- /See:/ 'userSSHPublicKey' smart constructor.
+data UserSSHPublicKey = UserSSHPublicKey'
+    { _uspkFingerprint :: !(Maybe Text)
+    , _uspkKey :: !(Maybe Text)
+    , _uspkExpirationTimeUsec :: !(Maybe (Textual Int64))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserSSHPublicKey' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uspkFingerprint'
+--
+-- * 'uspkKey'
+--
+-- * 'uspkExpirationTimeUsec'
+userSSHPublicKey
+    :: UserSSHPublicKey
+userSSHPublicKey = 
+    UserSSHPublicKey'
+    { _uspkFingerprint = Nothing
+    , _uspkKey = Nothing
+    , _uspkExpirationTimeUsec = Nothing
+    }
+
+-- | A SHA-256 fingerprint of the SSH public key. (Read-only)
+uspkFingerprint :: Lens' UserSSHPublicKey (Maybe Text)
+uspkFingerprint
+  = lens _uspkFingerprint
+      (\ s a -> s{_uspkFingerprint = a})
+
+-- | An SSH public key.
+uspkKey :: Lens' UserSSHPublicKey (Maybe Text)
+uspkKey = lens _uspkKey (\ s a -> s{_uspkKey = a})
+
+-- | An expiration time in microseconds since epoch.
+uspkExpirationTimeUsec :: Lens' UserSSHPublicKey (Maybe Int64)
+uspkExpirationTimeUsec
+  = lens _uspkExpirationTimeUsec
+      (\ s a -> s{_uspkExpirationTimeUsec = a})
+      . mapping _Coerce
+
+instance FromJSON UserSSHPublicKey where
+        parseJSON
+          = withObject "UserSSHPublicKey"
+              (\ o ->
+                 UserSSHPublicKey' <$>
+                   (o .:? "fingerprint") <*> (o .:? "key") <*>
+                     (o .:? "expirationTimeUsec"))
+
+instance ToJSON UserSSHPublicKey where
+        toJSON UserSSHPublicKey'{..}
+          = object
+              (catMaybes
+                 [("fingerprint" .=) <$> _uspkFingerprint,
+                  ("key" .=) <$> _uspkKey,
+                  ("expirationTimeUsec" .=) <$>
+                    _uspkExpirationTimeUsec])
+
 -- | JSON response template for List verification codes operation in
 -- Directory API.
 --
 -- /See:/ 'verificationCodes' smart constructor.
 data VerificationCodes = VerificationCodes'
-    { _vEtag  :: !(Maybe Text)
-    , _vKind  :: !Text
+    { _vEtag :: !(Maybe Text)
+    , _vKind :: !Text
     , _vItems :: !(Maybe [VerificationCode])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3997,7 +4631,7 @@ data VerificationCodes = VerificationCodes'
 -- * 'vItems'
 verificationCodes
     :: VerificationCodes
-verificationCodes =
+verificationCodes = 
     VerificationCodes'
     { _vEtag = Nothing
     , _vKind = "admin#directory#verificationCodesList"
@@ -4040,8 +4674,8 @@ instance ToJSON VerificationCodes where
 --
 -- /See:/ 'userRelation' smart constructor.
 data UserRelation = UserRelation'
-    { _urValue      :: !(Maybe Text)
-    , _urType       :: !(Maybe Text)
+    { _urValue :: !(Maybe Text)
+    , _urType :: !(Maybe Text)
     , _urCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4056,7 +4690,7 @@ data UserRelation = UserRelation'
 -- * 'urCustomType'
 userRelation
     :: UserRelation
-userRelation =
+userRelation = 
     UserRelation'
     { _urValue = Nothing
     , _urType = Nothing
@@ -4092,6 +4726,77 @@ instance ToJSON UserRelation where
                  [("value" .=) <$> _urValue, ("type" .=) <$> _urType,
                   ("customType" .=) <$> _urCustomType])
 
+-- | JSON template for Trusted Apps response object of a user in Directory
+-- API.
+--
+-- /See:/ 'trustedApps' smart constructor.
+data TrustedApps = TrustedApps'
+    { _taEtag :: !(Maybe Text)
+    , _taNextPageToken :: !(Maybe Text)
+    , _taKind :: !Text
+    , _taTrustedApps :: !(Maybe [TrustedAppId])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TrustedApps' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'taEtag'
+--
+-- * 'taNextPageToken'
+--
+-- * 'taKind'
+--
+-- * 'taTrustedApps'
+trustedApps
+    :: TrustedApps
+trustedApps = 
+    TrustedApps'
+    { _taEtag = Nothing
+    , _taNextPageToken = Nothing
+    , _taKind = "admin#directory#trustedapplist"
+    , _taTrustedApps = Nothing
+    }
+
+-- | ETag of the resource.
+taEtag :: Lens' TrustedApps (Maybe Text)
+taEtag = lens _taEtag (\ s a -> s{_taEtag = a})
+
+taNextPageToken :: Lens' TrustedApps (Maybe Text)
+taNextPageToken
+  = lens _taNextPageToken
+      (\ s a -> s{_taNextPageToken = a})
+
+-- | Identifies the resource as trusted apps response.
+taKind :: Lens' TrustedApps Text
+taKind = lens _taKind (\ s a -> s{_taKind = a})
+
+-- | Trusted Apps list.
+taTrustedApps :: Lens' TrustedApps [TrustedAppId]
+taTrustedApps
+  = lens _taTrustedApps
+      (\ s a -> s{_taTrustedApps = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON TrustedApps where
+        parseJSON
+          = withObject "TrustedApps"
+              (\ o ->
+                 TrustedApps' <$>
+                   (o .:? "etag") <*> (o .:? "nextPageToken") <*>
+                     (o .:? "kind" .!= "admin#directory#trustedapplist")
+                     <*> (o .:? "trustedApps" .!= mempty))
+
+instance ToJSON TrustedApps where
+        toJSON TrustedApps'{..}
+          = object
+              (catMaybes
+                 [("etag" .=) <$> _taEtag,
+                  ("nextPageToken" .=) <$> _taNextPageToken,
+                  Just ("kind" .= _taKind),
+                  ("trustedApps" .=) <$> _taTrustedApps])
+
 -- | Additional parameters controlling delivery channel behavior. Optional.
 --
 -- /See:/ 'channelParams' smart constructor.
@@ -4107,7 +4812,7 @@ newtype ChannelParams = ChannelParams'
 channelParams
     :: HashMap Text Text -- ^ 'cpAddtional'
     -> ChannelParams
-channelParams pCpAddtional_ =
+channelParams pCpAddtional_ = 
     ChannelParams'
     { _cpAddtional = _Coerce # pCpAddtional_
     }
@@ -4130,16 +4835,17 @@ instance ToJSON ChannelParams where
 --
 -- /See:/ 'userOrganization' smart constructor.
 data UserOrganization = UserOrganization'
-    { _uoDePartment  :: !(Maybe Text)
-    , _uoLocation    :: !(Maybe Text)
-    , _uoCostCenter  :: !(Maybe Text)
-    , _uoDomain      :: !(Maybe Text)
-    , _uoSymbol      :: !(Maybe Text)
-    , _uoPrimary     :: !(Maybe Bool)
-    , _uoName        :: !(Maybe Text)
-    , _uoTitle       :: !(Maybe Text)
-    , _uoType        :: !(Maybe Text)
-    , _uoCustomType  :: !(Maybe Text)
+    { _uoDePartment :: !(Maybe Text)
+    , _uoLocation :: !(Maybe Text)
+    , _uoCostCenter :: !(Maybe Text)
+    , _uoDomain :: !(Maybe Text)
+    , _uoSymbol :: !(Maybe Text)
+    , _uoPrimary :: !(Maybe Bool)
+    , _uoName :: !(Maybe Text)
+    , _uoFullTimeEquivalent :: !(Maybe (Textual Int32))
+    , _uoTitle :: !(Maybe Text)
+    , _uoType :: !(Maybe Text)
+    , _uoCustomType :: !(Maybe Text)
     , _uoDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4161,6 +4867,8 @@ data UserOrganization = UserOrganization'
 --
 -- * 'uoName'
 --
+-- * 'uoFullTimeEquivalent'
+--
 -- * 'uoTitle'
 --
 -- * 'uoType'
@@ -4170,7 +4878,7 @@ data UserOrganization = UserOrganization'
 -- * 'uoDescription'
 userOrganization
     :: UserOrganization
-userOrganization =
+userOrganization = 
     UserOrganization'
     { _uoDePartment = Nothing
     , _uoLocation = Nothing
@@ -4179,6 +4887,7 @@ userOrganization =
     , _uoSymbol = Nothing
     , _uoPrimary = Nothing
     , _uoName = Nothing
+    , _uoFullTimeEquivalent = Nothing
     , _uoTitle = Nothing
     , _uoType = Nothing
     , _uoCustomType = Nothing
@@ -4217,6 +4926,14 @@ uoPrimary
 uoName :: Lens' UserOrganization (Maybe Text)
 uoName = lens _uoName (\ s a -> s{_uoName = a})
 
+-- | The full-time equivalent percent within the organization (100000 =
+-- 100%).
+uoFullTimeEquivalent :: Lens' UserOrganization (Maybe Int32)
+uoFullTimeEquivalent
+  = lens _uoFullTimeEquivalent
+      (\ s a -> s{_uoFullTimeEquivalent = a})
+      . mapping _Coerce
+
 -- | Title (designation) of the user in the organization.
 uoTitle :: Lens' UserOrganization (Maybe Text)
 uoTitle = lens _uoTitle (\ s a -> s{_uoTitle = a})
@@ -4251,6 +4968,7 @@ instance FromJSON UserOrganization where
                      <*> (o .:? "symbol")
                      <*> (o .:? "primary")
                      <*> (o .:? "name")
+                     <*> (o .:? "fullTimeEquivalent")
                      <*> (o .:? "title")
                      <*> (o .:? "type")
                      <*> (o .:? "customType")
@@ -4266,8 +4984,9 @@ instance ToJSON UserOrganization where
                   ("domain" .=) <$> _uoDomain,
                   ("symbol" .=) <$> _uoSymbol,
                   ("primary" .=) <$> _uoPrimary,
-                  ("name" .=) <$> _uoName, ("title" .=) <$> _uoTitle,
-                  ("type" .=) <$> _uoType,
+                  ("name" .=) <$> _uoName,
+                  ("fullTimeEquivalent" .=) <$> _uoFullTimeEquivalent,
+                  ("title" .=) <$> _uoTitle, ("type" .=) <$> _uoType,
                   ("customType" .=) <$> _uoCustomType,
                   ("description" .=) <$> _uoDescription])
 
@@ -4275,9 +4994,9 @@ instance ToJSON UserOrganization where
 --
 -- /See:/ 'userWebsite' smart constructor.
 data UserWebsite = UserWebsite'
-    { _uwValue      :: !(Maybe Text)
-    , _uwPrimary    :: !(Maybe Bool)
-    , _uwType       :: !(Maybe Text)
+    { _uwValue :: !(Maybe Text)
+    , _uwPrimary :: !(Maybe Bool)
+    , _uwType :: !(Maybe Text)
     , _uwCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4294,7 +5013,7 @@ data UserWebsite = UserWebsite'
 -- * 'uwCustomType'
 userWebsite
     :: UserWebsite
-userWebsite =
+userWebsite = 
     UserWebsite'
     { _uwValue = Nothing
     , _uwPrimary = Nothing
@@ -4345,7 +5064,7 @@ instance ToJSON UserWebsite where
 --
 -- /See:/ 'chromeOSDeviceActiveTimeRangesItem' smart constructor.
 data ChromeOSDeviceActiveTimeRangesItem = ChromeOSDeviceActiveTimeRangesItem'
-    { _codatriDate       :: !(Maybe Date')
+    { _codatriDate :: !(Maybe Date')
     , _codatriActiveTime :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4358,7 +5077,7 @@ data ChromeOSDeviceActiveTimeRangesItem = ChromeOSDeviceActiveTimeRangesItem'
 -- * 'codatriActiveTime'
 chromeOSDeviceActiveTimeRangesItem
     :: ChromeOSDeviceActiveTimeRangesItem
-chromeOSDeviceActiveTimeRangesItem =
+chromeOSDeviceActiveTimeRangesItem = 
     ChromeOSDeviceActiveTimeRangesItem'
     { _codatriDate = Nothing
     , _codatriActiveTime = Nothing
@@ -4397,9 +5116,9 @@ instance ToJSON ChromeOSDeviceActiveTimeRangesItem
 --
 -- /See:/ 'userEmail' smart constructor.
 data UserEmail = UserEmail'
-    { _ueAddress    :: !(Maybe Text)
-    , _uePrimary    :: !(Maybe Bool)
-    , _ueType       :: !(Maybe Text)
+    { _ueAddress :: !(Maybe Text)
+    , _uePrimary :: !(Maybe Bool)
+    , _ueType :: !(Maybe Text)
     , _ueCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4416,7 +5135,7 @@ data UserEmail = UserEmail'
 -- * 'ueCustomType'
 userEmail
     :: UserEmail
-userEmail =
+userEmail = 
     UserEmail'
     { _ueAddress = Nothing
     , _uePrimary = Nothing
@@ -4470,9 +5189,9 @@ instance ToJSON UserEmail where
 --
 -- /See:/ 'userPhone' smart constructor.
 data UserPhone = UserPhone'
-    { _upValue      :: !(Maybe Text)
-    , _upPrimary    :: !(Maybe Bool)
-    , _upType       :: !(Maybe Text)
+    { _upValue :: !(Maybe Text)
+    , _upPrimary :: !(Maybe Bool)
+    , _upType :: !(Maybe Text)
     , _upCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4489,7 +5208,7 @@ data UserPhone = UserPhone'
 -- * 'upCustomType'
 userPhone
     :: UserPhone
-userPhone =
+userPhone = 
     UserPhone'
     { _upValue = Nothing
     , _upPrimary = Nothing
@@ -4541,13 +5260,13 @@ instance ToJSON UserPhone where
 --
 -- /See:/ 'userPhoto' smart constructor.
 data UserPhoto = UserPhoto'
-    { _upPhotoData    :: !(Maybe Bytes)
-    , _upEtag         :: !(Maybe Text)
-    , _upHeight       :: !(Maybe (Textual Int32))
-    , _upKind         :: !Text
-    , _upWidth        :: !(Maybe (Textual Int32))
-    , _upMimeType     :: !(Maybe Text)
-    , _upId           :: !(Maybe Text)
+    { _upPhotoData :: !(Maybe Bytes)
+    , _upEtag :: !(Maybe Text)
+    , _upHeight :: !(Maybe (Textual Int32))
+    , _upKind :: !Text
+    , _upWidth :: !(Maybe (Textual Int32))
+    , _upMimeType :: !(Maybe Text)
+    , _upId :: !(Maybe Text)
     , _upPrimaryEmail :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4572,7 +5291,7 @@ data UserPhoto = UserPhoto'
 -- * 'upPrimaryEmail'
 userPhoto
     :: UserPhoto
-userPhoto =
+userPhoto = 
     UserPhoto'
     { _upPhotoData = Nothing
     , _upEtag = Nothing
@@ -4648,50 +5367,207 @@ instance ToJSON UserPhoto where
                   ("mimeType" .=) <$> _upMimeType, ("id" .=) <$> _upId,
                   ("primaryEmail" .=) <$> _upPrimaryEmail])
 
+-- | JSON template for a POSIX account entry. Description of the field
+-- family: go\/fbs-posix.
+--
+-- /See:/ 'userPosixAccount' smart constructor.
+data UserPosixAccount = UserPosixAccount'
+    { _upaGecos :: !(Maybe Text)
+    , _upaUid :: !(Maybe (Textual Word64))
+    , _upaUsername :: !(Maybe Text)
+    , _upaShell :: !(Maybe Text)
+    , _upaPrimary :: !(Maybe Bool)
+    , _upaAccountId :: !(Maybe Text)
+    , _upaGid :: !(Maybe (Textual Word64))
+    , _upaSystemId :: !(Maybe Text)
+    , _upaHomeDirectory :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserPosixAccount' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'upaGecos'
+--
+-- * 'upaUid'
+--
+-- * 'upaUsername'
+--
+-- * 'upaShell'
+--
+-- * 'upaPrimary'
+--
+-- * 'upaAccountId'
+--
+-- * 'upaGid'
+--
+-- * 'upaSystemId'
+--
+-- * 'upaHomeDirectory'
+userPosixAccount
+    :: UserPosixAccount
+userPosixAccount = 
+    UserPosixAccount'
+    { _upaGecos = Nothing
+    , _upaUid = Nothing
+    , _upaUsername = Nothing
+    , _upaShell = Nothing
+    , _upaPrimary = Nothing
+    , _upaAccountId = Nothing
+    , _upaGid = Nothing
+    , _upaSystemId = Nothing
+    , _upaHomeDirectory = Nothing
+    }
+
+-- | The GECOS (user information) for this account.
+upaGecos :: Lens' UserPosixAccount (Maybe Text)
+upaGecos = lens _upaGecos (\ s a -> s{_upaGecos = a})
+
+-- | The POSIX compliant user ID.
+upaUid :: Lens' UserPosixAccount (Maybe Word64)
+upaUid
+  = lens _upaUid (\ s a -> s{_upaUid = a}) .
+      mapping _Coerce
+
+-- | The username of the account.
+upaUsername :: Lens' UserPosixAccount (Maybe Text)
+upaUsername
+  = lens _upaUsername (\ s a -> s{_upaUsername = a})
+
+-- | The path to the login shell for this account.
+upaShell :: Lens' UserPosixAccount (Maybe Text)
+upaShell = lens _upaShell (\ s a -> s{_upaShell = a})
+
+-- | If this is user\'s primary account within the SystemId.
+upaPrimary :: Lens' UserPosixAccount (Maybe Bool)
+upaPrimary
+  = lens _upaPrimary (\ s a -> s{_upaPrimary = a})
+
+-- | A POSIX account field identifier. (Read-only)
+upaAccountId :: Lens' UserPosixAccount (Maybe Text)
+upaAccountId
+  = lens _upaAccountId (\ s a -> s{_upaAccountId = a})
+
+-- | The default group ID.
+upaGid :: Lens' UserPosixAccount (Maybe Word64)
+upaGid
+  = lens _upaGid (\ s a -> s{_upaGid = a}) .
+      mapping _Coerce
+
+-- | System identifier for which account Username or Uid apply to.
+upaSystemId :: Lens' UserPosixAccount (Maybe Text)
+upaSystemId
+  = lens _upaSystemId (\ s a -> s{_upaSystemId = a})
+
+-- | The path to the home directory for this account.
+upaHomeDirectory :: Lens' UserPosixAccount (Maybe Text)
+upaHomeDirectory
+  = lens _upaHomeDirectory
+      (\ s a -> s{_upaHomeDirectory = a})
+
+instance FromJSON UserPosixAccount where
+        parseJSON
+          = withObject "UserPosixAccount"
+              (\ o ->
+                 UserPosixAccount' <$>
+                   (o .:? "gecos") <*> (o .:? "uid") <*>
+                     (o .:? "username")
+                     <*> (o .:? "shell")
+                     <*> (o .:? "primary")
+                     <*> (o .:? "accountId")
+                     <*> (o .:? "gid")
+                     <*> (o .:? "systemId")
+                     <*> (o .:? "homeDirectory"))
+
+instance ToJSON UserPosixAccount where
+        toJSON UserPosixAccount'{..}
+          = object
+              (catMaybes
+                 [("gecos" .=) <$> _upaGecos, ("uid" .=) <$> _upaUid,
+                  ("username" .=) <$> _upaUsername,
+                  ("shell" .=) <$> _upaShell,
+                  ("primary" .=) <$> _upaPrimary,
+                  ("accountId" .=) <$> _upaAccountId,
+                  ("gid" .=) <$> _upaGid,
+                  ("systemId" .=) <$> _upaSystemId,
+                  ("homeDirectory" .=) <$> _upaHomeDirectory])
+
+-- | JSON template for a \"feature instance\".
+--
+-- /See:/ 'featureInstance' smart constructor.
+newtype FeatureInstance = FeatureInstance'
+    { _fiFeature :: Maybe Feature
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'FeatureInstance' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'fiFeature'
+featureInstance
+    :: FeatureInstance
+featureInstance = 
+    FeatureInstance'
+    { _fiFeature = Nothing
+    }
+
+fiFeature :: Lens' FeatureInstance (Maybe Feature)
+fiFeature
+  = lens _fiFeature (\ s a -> s{_fiFeature = a})
+
+instance FromJSON FeatureInstance where
+        parseJSON
+          = withObject "FeatureInstance"
+              (\ o -> FeatureInstance' <$> (o .:? "feature"))
+
+instance ToJSON FeatureInstance where
+        toJSON FeatureInstance'{..}
+          = object (catMaybes [("feature" .=) <$> _fiFeature])
+
 -- | JSON template for Mobile Device resource in Directory API.
 --
 -- /See:/ 'mobileDevice' smart constructor.
 data MobileDevice = MobileDevice'
-    { _mobEmail                          :: !(Maybe [Text])
-    , _mobStatus                         :: !(Maybe Text)
-    , _mobPrivilege                      :: !(Maybe Text)
-    , _mobEtag                           :: !(Maybe Text)
-    , _mobResourceId                     :: !(Maybe Text)
-    , _mobManufacturer                   :: !(Maybe Text)
-    , _mobBuildNumber                    :: !(Maybe Text)
+    { _mobEmail :: !(Maybe [Text])
+    , _mobStatus :: !(Maybe Text)
+    , _mobPrivilege :: !(Maybe Text)
+    , _mobEtag :: !(Maybe Text)
+    , _mobResourceId :: !(Maybe Text)
+    , _mobManufacturer :: !(Maybe Text)
+    , _mobBuildNumber :: !(Maybe Text)
     , _mobManagedAccountIsOnOwnerProFile :: !(Maybe Bool)
-    , _mobLastSync                       :: !(Maybe DateTime')
-    , _mobOtherAccountsInfo              :: !(Maybe [Text])
-    , _mobKind                           :: !Text
-    , _mobAdbStatus                      :: !(Maybe Bool)
-    , _mobReleaseVersion                 :: !(Maybe Text)
-    , _mobBrand                          :: !(Maybe Text)
-    , _mobSecurityPatchLevel             :: !(Maybe (Textual Int64))
-    , _mobNetworkOperator                :: !(Maybe Text)
-    , _mobKernelVersion                  :: !(Maybe Text)
-    , _mobOS                             :: !(Maybe Text)
-    , _mobName                           :: !(Maybe [Text])
-    , _mobModel                          :: !(Maybe Text)
-    , _mobDeveloperOptionsStatus         :: !(Maybe Bool)
-    , _mobUnknownSourcesStatus           :: !(Maybe Bool)
-    , _mobMeid                           :: !(Maybe Text)
-    , _mobBootLoaderVersion              :: !(Maybe Text)
-    , _mobDeviceId                       :: !(Maybe Text)
-    , _mobFirstSync                      :: !(Maybe DateTime')
-    , _mobUserAgent                      :: !(Maybe Text)
-    , _mobImei                           :: !(Maybe Text)
-    , _mobType                           :: !(Maybe Text)
-    , _mobWifiMACAddress                 :: !(Maybe Text)
-    , _mobEncryptionStatus               :: !(Maybe Text)
-    , _mobSerialNumber                   :: !(Maybe Text)
-    , _mobDevicePasswordStatus           :: !(Maybe Text)
-    , _mobHardwareId                     :: !(Maybe Text)
-    , _mobBasebandVersion                :: !(Maybe Text)
-    , _mobSupportsWorkProFile            :: !(Maybe Bool)
-    , _mobHardware                       :: !(Maybe Text)
-    , _mobDeviceCompromisedStatus        :: !(Maybe Text)
-    , _mobApplications                   :: !(Maybe [MobileDeviceApplicationsItem])
-    , _mobDefaultLanguage                :: !(Maybe Text)
+    , _mobLastSync :: !(Maybe DateTime')
+    , _mobOtherAccountsInfo :: !(Maybe [Text])
+    , _mobKind :: !Text
+    , _mobAdbStatus :: !(Maybe Bool)
+    , _mobReleaseVersion :: !(Maybe Text)
+    , _mobBrand :: !(Maybe Text)
+    , _mobSecurityPatchLevel :: !(Maybe (Textual Int64))
+    , _mobNetworkOperator :: !(Maybe Text)
+    , _mobKernelVersion :: !(Maybe Text)
+    , _mobOS :: !(Maybe Text)
+    , _mobName :: !(Maybe [Text])
+    , _mobModel :: !(Maybe Text)
+    , _mobDeveloperOptionsStatus :: !(Maybe Bool)
+    , _mobUnknownSourcesStatus :: !(Maybe Bool)
+    , _mobMeid :: !(Maybe Text)
+    , _mobBootLoaderVersion :: !(Maybe Text)
+    , _mobDeviceId :: !(Maybe Text)
+    , _mobFirstSync :: !(Maybe DateTime')
+    , _mobUserAgent :: !(Maybe Text)
+    , _mobImei :: !(Maybe Text)
+    , _mobType :: !(Maybe Text)
+    , _mobWifiMACAddress :: !(Maybe Text)
+    , _mobEncryptionStatus :: !(Maybe Text)
+    , _mobSerialNumber :: !(Maybe Text)
+    , _mobDevicePasswordStatus :: !(Maybe Text)
+    , _mobHardwareId :: !(Maybe Text)
+    , _mobBasebandVersion :: !(Maybe Text)
+    , _mobSupportsWorkProFile :: !(Maybe Bool)
+    , _mobHardware :: !(Maybe Text)
+    , _mobDeviceCompromisedStatus :: !(Maybe Text)
+    , _mobApplications :: !(Maybe [MobileDeviceApplicationsItem])
+    , _mobDefaultLanguage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDevice' with the minimum fields required to make a request.
@@ -4779,7 +5655,7 @@ data MobileDevice = MobileDevice'
 -- * 'mobDefaultLanguage'
 mobileDevice
     :: MobileDevice
-mobileDevice =
+mobileDevice = 
     MobileDevice'
     { _mobEmail = Nothing
     , _mobStatus = Nothing
@@ -4870,7 +5746,7 @@ mobManagedAccountIsOnOwnerProFile
       (\ s a -> s{_mobManagedAccountIsOnOwnerProFile = a})
 
 -- | Date and time the device was last synchronized with the policy settings
--- in the Google Apps administrator control panel (Read-only)
+-- in the G Suite administrator control panel (Read-only)
 mobLastSync :: Lens' MobileDevice (Maybe UTCTime)
 mobLastSync
   = lens _mobLastSync (\ s a -> s{_mobLastSync = a}) .
@@ -4964,7 +5840,7 @@ mobDeviceId
   = lens _mobDeviceId (\ s a -> s{_mobDeviceId = a})
 
 -- | Date and time the device was first synchronized with the policy settings
--- in the Google Apps administrator control panel (Read-only)
+-- in the G Suite administrator control panel (Read-only)
 mobFirstSync :: Lens' MobileDevice (Maybe UTCTime)
 mobFirstSync
   = lens _mobFirstSync (\ s a -> s{_mobFirstSync = a})
@@ -5148,13 +6024,13 @@ instance ToJSON MobileDevice where
 --
 -- /See:/ 'member' smart constructor.
 data Member = Member'
-    { _memEmail  :: !(Maybe Text)
+    { _memEmail :: !(Maybe Text)
     , _memStatus :: !(Maybe Text)
-    , _memEtag   :: !(Maybe Text)
-    , _memKind   :: !Text
-    , _memRole   :: !(Maybe Text)
-    , _memId     :: !(Maybe Text)
-    , _memType   :: !(Maybe Text)
+    , _memEtag :: !(Maybe Text)
+    , _memKind :: !Text
+    , _memRole :: !(Maybe Text)
+    , _memId :: !(Maybe Text)
+    , _memType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Member' with the minimum fields required to make a request.
@@ -5176,7 +6052,7 @@ data Member = Member'
 -- * 'memType'
 member
     :: Member
-member =
+member = 
     Member'
     { _memEmail = Nothing
     , _memStatus = Nothing
@@ -5239,6 +6115,136 @@ instance ToJSON Member where
                   ("role" .=) <$> _memRole, ("id" .=) <$> _memId,
                   ("type" .=) <$> _memType])
 
+-- | JSON template for App Access Collections Resource object in Directory
+-- API.
+--
+-- /See:/ 'appAccessCollections' smart constructor.
+data AppAccessCollections = AppAccessCollections'
+    { _aacEtag :: !(Maybe Text)
+    , _aacResourceId :: !(Maybe (Textual Int64))
+    , _aacEnforceSettingsForAndroidDrive :: !(Maybe Bool)
+    , _aacResourceName :: !(Maybe Text)
+    , _aacKind :: !Text
+    , _aacTrustDomainOwnedApps :: !(Maybe Bool)
+    , _aacBlockedAPIAccessBuckets :: !(Maybe [Text])
+    , _aacErrorMessage :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AppAccessCollections' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'aacEtag'
+--
+-- * 'aacResourceId'
+--
+-- * 'aacEnforceSettingsForAndroidDrive'
+--
+-- * 'aacResourceName'
+--
+-- * 'aacKind'
+--
+-- * 'aacTrustDomainOwnedApps'
+--
+-- * 'aacBlockedAPIAccessBuckets'
+--
+-- * 'aacErrorMessage'
+appAccessCollections
+    :: AppAccessCollections
+appAccessCollections = 
+    AppAccessCollections'
+    { _aacEtag = Nothing
+    , _aacResourceId = Nothing
+    , _aacEnforceSettingsForAndroidDrive = Nothing
+    , _aacResourceName = Nothing
+    , _aacKind = "admin#directory#appaccesscollection"
+    , _aacTrustDomainOwnedApps = Nothing
+    , _aacBlockedAPIAccessBuckets = Nothing
+    , _aacErrorMessage = Nothing
+    }
+
+-- | ETag of the resource.
+aacEtag :: Lens' AppAccessCollections (Maybe Text)
+aacEtag = lens _aacEtag (\ s a -> s{_aacEtag = a})
+
+-- | Unique ID of app access collection. (Readonly)
+aacResourceId :: Lens' AppAccessCollections (Maybe Int64)
+aacResourceId
+  = lens _aacResourceId
+      (\ s a -> s{_aacResourceId = a})
+      . mapping _Coerce
+
+-- | Boolean to indicate whether to enforce app access settings on Android
+-- Drive or not.
+aacEnforceSettingsForAndroidDrive :: Lens' AppAccessCollections (Maybe Bool)
+aacEnforceSettingsForAndroidDrive
+  = lens _aacEnforceSettingsForAndroidDrive
+      (\ s a -> s{_aacEnforceSettingsForAndroidDrive = a})
+
+-- | Resource name given by the customer while creating\/updating. Should be
+-- unique under given customer.
+aacResourceName :: Lens' AppAccessCollections (Maybe Text)
+aacResourceName
+  = lens _aacResourceName
+      (\ s a -> s{_aacResourceName = a})
+
+-- | Identifies the resource as an app access collection. Value:
+-- admin#directory#appaccesscollection
+aacKind :: Lens' AppAccessCollections Text
+aacKind = lens _aacKind (\ s a -> s{_aacKind = a})
+
+-- | Boolean that indicates whether to trust domain owned apps.
+aacTrustDomainOwnedApps :: Lens' AppAccessCollections (Maybe Bool)
+aacTrustDomainOwnedApps
+  = lens _aacTrustDomainOwnedApps
+      (\ s a -> s{_aacTrustDomainOwnedApps = a})
+
+-- | List of blocked api access buckets.
+aacBlockedAPIAccessBuckets :: Lens' AppAccessCollections [Text]
+aacBlockedAPIAccessBuckets
+  = lens _aacBlockedAPIAccessBuckets
+      (\ s a -> s{_aacBlockedAPIAccessBuckets = a})
+      . _Default
+      . _Coerce
+
+-- | Error message provided by the Admin that will be shown to the user when
+-- an app is blocked.
+aacErrorMessage :: Lens' AppAccessCollections (Maybe Text)
+aacErrorMessage
+  = lens _aacErrorMessage
+      (\ s a -> s{_aacErrorMessage = a})
+
+instance FromJSON AppAccessCollections where
+        parseJSON
+          = withObject "AppAccessCollections"
+              (\ o ->
+                 AppAccessCollections' <$>
+                   (o .:? "etag") <*> (o .:? "resourceId") <*>
+                     (o .:? "enforceSettingsForAndroidDrive")
+                     <*> (o .:? "resourceName")
+                     <*>
+                     (o .:? "kind" .!=
+                        "admin#directory#appaccesscollection")
+                     <*> (o .:? "trustDomainOwnedApps")
+                     <*> (o .:? "blockedApiAccessBuckets" .!= mempty)
+                     <*> (o .:? "errorMessage"))
+
+instance ToJSON AppAccessCollections where
+        toJSON AppAccessCollections'{..}
+          = object
+              (catMaybes
+                 [("etag" .=) <$> _aacEtag,
+                  ("resourceId" .=) <$> _aacResourceId,
+                  ("enforceSettingsForAndroidDrive" .=) <$>
+                    _aacEnforceSettingsForAndroidDrive,
+                  ("resourceName" .=) <$> _aacResourceName,
+                  Just ("kind" .= _aacKind),
+                  ("trustDomainOwnedApps" .=) <$>
+                    _aacTrustDomainOwnedApps,
+                  ("blockedApiAccessBuckets" .=) <$>
+                    _aacBlockedAPIAccessBuckets,
+                  ("errorMessage" .=) <$> _aacErrorMessage])
+
 -- | JSON template for a set of custom properties (i.e. all fields in a
 -- particular schema)
 --
@@ -5255,7 +6261,7 @@ newtype UserCustomProperties = UserCustomProperties'
 userCustomProperties
     :: HashMap Text JSONValue -- ^ 'ucpAddtional'
     -> UserCustomProperties
-userCustomProperties pUcpAddtional_ =
+userCustomProperties pUcpAddtional_ = 
     UserCustomProperties'
     { _ucpAddtional = _Coerce # pUcpAddtional_
     }
@@ -5274,17 +6280,69 @@ instance FromJSON UserCustomProperties where
 instance ToJSON UserCustomProperties where
         toJSON = toJSON . _ucpAddtional
 
+-- | JSON template for a language entry.
+--
+-- /See:/ 'userLanguage' smart constructor.
+data UserLanguage = UserLanguage'
+    { _ulLanguageCode :: !(Maybe Text)
+    , _ulCustomLanguage :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserLanguage' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ulLanguageCode'
+--
+-- * 'ulCustomLanguage'
+userLanguage
+    :: UserLanguage
+userLanguage = 
+    UserLanguage'
+    { _ulLanguageCode = Nothing
+    , _ulCustomLanguage = Nothing
+    }
+
+-- | Language Code. Should be used for storing Google III LanguageCode string
+-- representation for language. Illegal values cause SchemaException.
+ulLanguageCode :: Lens' UserLanguage (Maybe Text)
+ulLanguageCode
+  = lens _ulLanguageCode
+      (\ s a -> s{_ulLanguageCode = a})
+
+-- | Other language. User can provide own language name if there is no
+-- corresponding Google III language code. If this is set LanguageCode
+-- can\'t be set
+ulCustomLanguage :: Lens' UserLanguage (Maybe Text)
+ulCustomLanguage
+  = lens _ulCustomLanguage
+      (\ s a -> s{_ulCustomLanguage = a})
+
+instance FromJSON UserLanguage where
+        parseJSON
+          = withObject "UserLanguage"
+              (\ o ->
+                 UserLanguage' <$>
+                   (o .:? "languageCode") <*> (o .:? "customLanguage"))
+
+instance ToJSON UserLanguage where
+        toJSON UserLanguage'{..}
+          = object
+              (catMaybes
+                 [("languageCode" .=) <$> _ulLanguageCode,
+                  ("customLanguage" .=) <$> _ulCustomLanguage])
+
 -- | JSON template for Domain object in Directory API.
 --
 -- /See:/ 'domains' smart constructor.
 data Domains = Domains'
-    { _domCreationTime  :: !(Maybe (Textual Int64))
-    , _domEtag          :: !(Maybe Text)
-    , _domKind          :: !Text
+    { _domCreationTime :: !(Maybe (Textual Int64))
+    , _domEtag :: !(Maybe Text)
+    , _domKind :: !Text
     , _domDomainAliases :: !(Maybe [DomainAlias])
-    , _domVerified      :: !(Maybe Bool)
-    , _domDomainName    :: !(Maybe Text)
-    , _domIsPrimary     :: !(Maybe Bool)
+    , _domVerified :: !(Maybe Bool)
+    , _domDomainName :: !(Maybe Text)
+    , _domIsPrimary :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Domains' with the minimum fields required to make a request.
@@ -5306,7 +6364,7 @@ data Domains = Domains'
 -- * 'domIsPrimary'
 domains
     :: Domains
-domains =
+domains = 
     Domains'
     { _domCreationTime = Nothing
     , _domEtag = Nothing
@@ -5384,10 +6442,10 @@ instance ToJSON Domains where
 --
 -- /See:/ 'calendarResources' smart constructor.
 data CalendarResources = CalendarResources'
-    { _crsEtag          :: !(Maybe Text)
+    { _crsEtag :: !(Maybe Text)
     , _crsNextPageToken :: !(Maybe Text)
-    , _crsKind          :: !Text
-    , _crsItems         :: !(Maybe [CalendarResource])
+    , _crsKind :: !Text
+    , _crsItems :: !(Maybe [CalendarResource])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarResources' with the minimum fields required to make a request.
@@ -5403,7 +6461,7 @@ data CalendarResources = CalendarResources'
 -- * 'crsItems'
 calendarResources
     :: CalendarResources
-calendarResources =
+calendarResources = 
     CalendarResources'
     { _crsEtag = Nothing
     , _crsNextPageToken = Nothing
@@ -5457,10 +6515,10 @@ instance ToJSON CalendarResources where
 --
 -- /See:/ 'notifications' smart constructor.
 data Notifications = Notifications'
-    { _notEtag                     :: !(Maybe Text)
-    , _notNextPageToken            :: !(Maybe Text)
-    , _notKind                     :: !Text
-    , _notItems                    :: !(Maybe [Notification])
+    { _notEtag :: !(Maybe Text)
+    , _notNextPageToken :: !(Maybe Text)
+    , _notKind :: !Text
+    , _notItems :: !(Maybe [Notification])
     , _notUnreadNotificationsCount :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5479,7 +6537,7 @@ data Notifications = Notifications'
 -- * 'notUnreadNotificationsCount'
 notifications
     :: Notifications
-notifications =
+notifications = 
     Notifications'
     { _notEtag = Nothing
     , _notNextPageToken = Nothing
@@ -5556,7 +6614,7 @@ data SchemaFieldSpecNumericIndexingSpec = SchemaFieldSpecNumericIndexingSpec'
 -- * 'sfsnisMinValue'
 schemaFieldSpecNumericIndexingSpec
     :: SchemaFieldSpecNumericIndexingSpec
-schemaFieldSpecNumericIndexingSpec =
+schemaFieldSpecNumericIndexingSpec = 
     SchemaFieldSpecNumericIndexingSpec'
     { _sfsnisMaxValue = Nothing
     , _sfsnisMinValue = Nothing
@@ -5611,7 +6669,7 @@ newtype MobileDeviceAction = MobileDeviceAction'
 -- * 'mdaAction'
 mobileDeviceAction
     :: MobileDeviceAction
-mobileDeviceAction =
+mobileDeviceAction = 
     MobileDeviceAction'
     { _mdaAction = Nothing
     }
@@ -5634,15 +6692,15 @@ instance ToJSON MobileDeviceAction where
 --
 -- /See:/ 'schemaFieldSpec' smart constructor.
 data SchemaFieldSpec = SchemaFieldSpec'
-    { _sfsEtag                :: !(Maybe Text)
-    , _sfsKind                :: !Text
+    { _sfsEtag :: !(Maybe Text)
+    , _sfsKind :: !Text
     , _sfsNumericIndexingSpec :: !(Maybe SchemaFieldSpecNumericIndexingSpec)
-    , _sfsReadAccessType      :: !Text
-    , _sfsFieldId             :: !(Maybe Text)
-    , _sfsIndexed             :: !Bool
-    , _sfsFieldType           :: !(Maybe Text)
-    , _sfsFieldName           :: !(Maybe Text)
-    , _sfsMultiValued         :: !(Maybe Bool)
+    , _sfsReadAccessType :: !Text
+    , _sfsFieldId :: !(Maybe Text)
+    , _sfsIndexed :: !Bool
+    , _sfsFieldType :: !(Maybe Text)
+    , _sfsFieldName :: !(Maybe Text)
+    , _sfsMultiValued :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SchemaFieldSpec' with the minimum fields required to make a request.
@@ -5668,7 +6726,7 @@ data SchemaFieldSpec = SchemaFieldSpec'
 -- * 'sfsMultiValued'
 schemaFieldSpec
     :: SchemaFieldSpec
-schemaFieldSpec =
+schemaFieldSpec = 
     SchemaFieldSpec'
     { _sfsEtag = Nothing
     , _sfsKind = "admin#directory#schema#fieldspec"
@@ -5764,9 +6822,9 @@ instance ToJSON SchemaFieldSpec where
 --
 -- /See:/ 'chromeOSDevices' smart constructor.
 data ChromeOSDevices = ChromeOSDevices'
-    { _cosdEtag            :: !(Maybe Text)
-    , _cosdNextPageToken   :: !(Maybe Text)
-    , _cosdKind            :: !Text
+    { _cosdEtag :: !(Maybe Text)
+    , _cosdNextPageToken :: !(Maybe Text)
+    , _cosdKind :: !Text
     , _cosdChromeosDevices :: !(Maybe [ChromeOSDevice])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5783,7 +6841,7 @@ data ChromeOSDevices = ChromeOSDevices'
 -- * 'cosdChromeosDevices'
 chromeOSDevices
     :: ChromeOSDevices
-chromeOSDevices =
+chromeOSDevices = 
     ChromeOSDevices'
     { _cosdEtag = Nothing
     , _cosdNextPageToken = Nothing
@@ -5831,12 +6889,128 @@ instance ToJSON ChromeOSDevices where
                   Just ("kind" .= _cosdKind),
                   ("chromeosdevices" .=) <$> _cosdChromeosDevices])
 
+-- | JSON template for Has Member response in Directory API.
+--
+-- /See:/ 'membersHasMember' smart constructor.
+newtype MembersHasMember = MembersHasMember'
+    { _mhmIsMember :: Maybe Bool
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'MembersHasMember' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mhmIsMember'
+membersHasMember
+    :: MembersHasMember
+membersHasMember = 
+    MembersHasMember'
+    { _mhmIsMember = Nothing
+    }
+
+-- | Identifies whether given user is a member or not.
+mhmIsMember :: Lens' MembersHasMember (Maybe Bool)
+mhmIsMember
+  = lens _mhmIsMember (\ s a -> s{_mhmIsMember = a})
+
+instance FromJSON MembersHasMember where
+        parseJSON
+          = withObject "MembersHasMember"
+              (\ o -> MembersHasMember' <$> (o .:? "isMember"))
+
+instance ToJSON MembersHasMember where
+        toJSON MembersHasMember'{..}
+          = object
+              (catMaybes [("isMember" .=) <$> _mhmIsMember])
+
+-- | JSON template for Trusted App Ids Resource object in Directory API.
+--
+-- /See:/ 'trustedAppId' smart constructor.
+data TrustedAppId = TrustedAppId'
+    { _taiCertificateHashSHA256 :: !(Maybe Text)
+    , _taiEtag :: !(Maybe Text)
+    , _taiKind :: !Text
+    , _taiCertificateHashSHA1 :: !(Maybe Text)
+    , _taiAndroidPackageName :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TrustedAppId' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'taiCertificateHashSHA256'
+--
+-- * 'taiEtag'
+--
+-- * 'taiKind'
+--
+-- * 'taiCertificateHashSHA1'
+--
+-- * 'taiAndroidPackageName'
+trustedAppId
+    :: TrustedAppId
+trustedAppId = 
+    TrustedAppId'
+    { _taiCertificateHashSHA256 = Nothing
+    , _taiEtag = Nothing
+    , _taiKind = "admin#directory#trustedappid"
+    , _taiCertificateHashSHA1 = Nothing
+    , _taiAndroidPackageName = Nothing
+    }
+
+-- | SHA256 signature of the app certificate.
+taiCertificateHashSHA256 :: Lens' TrustedAppId (Maybe Text)
+taiCertificateHashSHA256
+  = lens _taiCertificateHashSHA256
+      (\ s a -> s{_taiCertificateHashSHA256 = a})
+
+taiEtag :: Lens' TrustedAppId (Maybe Text)
+taiEtag = lens _taiEtag (\ s a -> s{_taiEtag = a})
+
+-- | Identifies the resource as a trusted AppId.
+taiKind :: Lens' TrustedAppId Text
+taiKind = lens _taiKind (\ s a -> s{_taiKind = a})
+
+-- | SHA1 signature of the app certificate.
+taiCertificateHashSHA1 :: Lens' TrustedAppId (Maybe Text)
+taiCertificateHashSHA1
+  = lens _taiCertificateHashSHA1
+      (\ s a -> s{_taiCertificateHashSHA1 = a})
+
+-- | Android package name.
+taiAndroidPackageName :: Lens' TrustedAppId (Maybe Text)
+taiAndroidPackageName
+  = lens _taiAndroidPackageName
+      (\ s a -> s{_taiAndroidPackageName = a})
+
+instance FromJSON TrustedAppId where
+        parseJSON
+          = withObject "TrustedAppId"
+              (\ o ->
+                 TrustedAppId' <$>
+                   (o .:? "certificateHashSHA256") <*> (o .:? "etag")
+                     <*> (o .:? "kind" .!= "admin#directory#trustedappid")
+                     <*> (o .:? "certificateHashSHA1")
+                     <*> (o .:? "androidPackageName"))
+
+instance ToJSON TrustedAppId where
+        toJSON TrustedAppId'{..}
+          = object
+              (catMaybes
+                 [("certificateHashSHA256" .=) <$>
+                    _taiCertificateHashSHA256,
+                  ("etag" .=) <$> _taiEtag, Just ("kind" .= _taiKind),
+                  ("certificateHashSHA1" .=) <$>
+                    _taiCertificateHashSHA1,
+                  ("androidPackageName" .=) <$>
+                    _taiAndroidPackageName])
+
 -- | JSON template for an externalId entry.
 --
 -- /See:/ 'userExternalId' smart constructor.
 data UserExternalId = UserExternalId'
-    { _ueiValue      :: !(Maybe Text)
-    , _ueiType       :: !(Maybe Text)
+    { _ueiValue :: !(Maybe Text)
+    , _ueiType :: !(Maybe Text)
     , _ueiCustomType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5851,7 +7025,7 @@ data UserExternalId = UserExternalId'
 -- * 'ueiCustomType'
 userExternalId
     :: UserExternalId
-userExternalId =
+userExternalId = 
     UserExternalId'
     { _ueiValue = Nothing
     , _ueiType = Nothing
@@ -5891,8 +7065,8 @@ instance ToJSON UserExternalId where
 --
 -- /See:/ 'asps' smart constructor.
 data Asps = Asps'
-    { _aspEtag  :: !(Maybe Text)
-    , _aspKind  :: !Text
+    { _aspEtag :: !(Maybe Text)
+    , _aspKind :: !Text
     , _aspItems :: !(Maybe [Asp])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5907,7 +7081,7 @@ data Asps = Asps'
 -- * 'aspItems'
 asps
     :: Asps
-asps =
+asps = 
     Asps'
     { _aspEtag = Nothing
     , _aspKind = "admin#directory#aspList"
@@ -5948,7 +7122,7 @@ instance ToJSON Asps where
 --
 -- /See:/ 'roleRolePrivilegesItem' smart constructor.
 data RoleRolePrivilegesItem = RoleRolePrivilegesItem'
-    { _rrpiServiceId     :: !(Maybe Text)
+    { _rrpiServiceId :: !(Maybe Text)
     , _rrpiPrivilegeName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5961,7 +7135,7 @@ data RoleRolePrivilegesItem = RoleRolePrivilegesItem'
 -- * 'rrpiPrivilegeName'
 roleRolePrivilegesItem
     :: RoleRolePrivilegesItem
-roleRolePrivilegesItem =
+roleRolePrivilegesItem = 
     RoleRolePrivilegesItem'
     { _rrpiServiceId = Nothing
     , _rrpiPrivilegeName = Nothing
@@ -5997,8 +7171,8 @@ instance ToJSON RoleRolePrivilegesItem where
 --
 -- /See:/ 'domains2' smart constructor.
 data Domains2 = Domains2'
-    { _ddEtag    :: !(Maybe Text)
-    , _ddKind    :: !Text
+    { _ddEtag :: !(Maybe Text)
+    , _ddKind :: !Text
     , _ddDomains :: !(Maybe [Domains])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6013,7 +7187,7 @@ data Domains2 = Domains2'
 -- * 'ddDomains'
 domains2
     :: Domains2
-domains2 =
+domains2 = 
     Domains2'
     { _ddEtag = Nothing
     , _ddKind = "admin#directory#domains"

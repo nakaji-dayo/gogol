@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Settings.GetImap
 
     -- * Request Lenses
     , usgiUserId
+    , usgiFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.getImap@ method which the
 -- 'UsersSettingsGetImap' request conforms to.
@@ -48,13 +49,15 @@ type UsersSettingsGetImapResource =
            Capture "userId" Text :>
              "settings" :>
                "imap" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] ImapSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] ImapSettings
 
 -- | Gets IMAP settings.
 --
 -- /See:/ 'usersSettingsGetImap' smart constructor.
-newtype UsersSettingsGetImap = UsersSettingsGetImap'
-    { _usgiUserId :: Text
+data UsersSettingsGetImap = UsersSettingsGetImap'
+    { _usgiUserId :: !Text
+    , _usgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsGetImap' with the minimum fields required to make a request.
@@ -62,11 +65,14 @@ newtype UsersSettingsGetImap = UsersSettingsGetImap'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'usgiUserId'
+--
+-- * 'usgiFields'
 usersSettingsGetImap
     :: UsersSettingsGetImap
-usersSettingsGetImap =
+usersSettingsGetImap = 
     UsersSettingsGetImap'
     { _usgiUserId = "me"
+    , _usgiFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -74,6 +80,11 @@ usersSettingsGetImap =
 usgiUserId :: Lens' UsersSettingsGetImap Text
 usgiUserId
   = lens _usgiUserId (\ s a -> s{_usgiUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+usgiFields :: Lens' UsersSettingsGetImap (Maybe Text)
+usgiFields
+  = lens _usgiFields (\ s a -> s{_usgiFields = a})
 
 instance GoogleRequest UsersSettingsGetImap where
         type Rs UsersSettingsGetImap = ImapSettings
@@ -83,7 +94,8 @@ instance GoogleRequest UsersSettingsGetImap where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsGetImap'{..}
-          = go _usgiUserId (Just AltJSON) gmailService
+          = go _usgiUserId _usgiFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsGetImapResource)

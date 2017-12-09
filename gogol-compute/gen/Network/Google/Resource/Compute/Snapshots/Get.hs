@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Snapshots.Get
     -- * Request Lenses
     , sggSnapshot
     , sggProject
+    , sggFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.snapshots.get@ method which the
 -- 'SnapshotsGet' request conforms to.
@@ -51,7 +52,8 @@ type SnapshotsGetResource =
              "global" :>
                "snapshots" :>
                  Capture "snapshot" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Snapshot
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Snapshot
 
 -- | Returns the specified Snapshot resource. Get a list of available
 -- snapshots by making a list() request.
@@ -59,7 +61,8 @@ type SnapshotsGetResource =
 -- /See:/ 'snapshotsGet' smart constructor.
 data SnapshotsGet = SnapshotsGet'
     { _sggSnapshot :: !Text
-    , _sggProject  :: !Text
+    , _sggProject :: !Text
+    , _sggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SnapshotsGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data SnapshotsGet = SnapshotsGet'
 -- * 'sggSnapshot'
 --
 -- * 'sggProject'
+--
+-- * 'sggFields'
 snapshotsGet
     :: Text -- ^ 'sggSnapshot'
     -> Text -- ^ 'sggProject'
     -> SnapshotsGet
-snapshotsGet pSggSnapshot_ pSggProject_ =
+snapshotsGet pSggSnapshot_ pSggProject_ = 
     SnapshotsGet'
     { _sggSnapshot = pSggSnapshot_
     , _sggProject = pSggProject_
+    , _sggFields = Nothing
     }
 
 -- | Name of the Snapshot resource to return.
@@ -89,6 +95,11 @@ sggProject :: Lens' SnapshotsGet Text
 sggProject
   = lens _sggProject (\ s a -> s{_sggProject = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sggFields :: Lens' SnapshotsGet (Maybe Text)
+sggFields
+  = lens _sggFields (\ s a -> s{_sggFields = a})
+
 instance GoogleRequest SnapshotsGet where
         type Rs SnapshotsGet = Snapshot
         type Scopes SnapshotsGet =
@@ -96,7 +107,8 @@ instance GoogleRequest SnapshotsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient SnapshotsGet'{..}
-          = go _sggProject _sggSnapshot (Just AltJSON)
+          = go _sggProject _sggSnapshot _sggFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy SnapshotsGetResource)

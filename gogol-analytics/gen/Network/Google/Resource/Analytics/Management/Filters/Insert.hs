@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.Filters.Insert
     -- * Request Lenses
     , mfiPayload
     , mfiAccountId
+    , mfiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.filters.insert@ method which the
 -- 'ManagementFiltersInsert' request conforms to.
@@ -49,15 +50,17 @@ type ManagementFiltersInsertResource =
            "accounts" :>
              Capture "accountId" Text :>
                "filters" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Filter :> Post '[JSON] Filter
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Filter :> Post '[JSON] Filter
 
 -- | Create a new filter.
 --
 -- /See:/ 'managementFiltersInsert' smart constructor.
 data ManagementFiltersInsert = ManagementFiltersInsert'
-    { _mfiPayload   :: !Filter
+    { _mfiPayload :: !Filter
     , _mfiAccountId :: !Text
+    , _mfiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementFiltersInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ManagementFiltersInsert = ManagementFiltersInsert'
 -- * 'mfiPayload'
 --
 -- * 'mfiAccountId'
+--
+-- * 'mfiFields'
 managementFiltersInsert
     :: Filter -- ^ 'mfiPayload'
     -> Text -- ^ 'mfiAccountId'
     -> ManagementFiltersInsert
-managementFiltersInsert pMfiPayload_ pMfiAccountId_ =
+managementFiltersInsert pMfiPayload_ pMfiAccountId_ = 
     ManagementFiltersInsert'
     { _mfiPayload = pMfiPayload_
     , _mfiAccountId = pMfiAccountId_
+    , _mfiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,12 +93,18 @@ mfiAccountId :: Lens' ManagementFiltersInsert Text
 mfiAccountId
   = lens _mfiAccountId (\ s a -> s{_mfiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mfiFields :: Lens' ManagementFiltersInsert (Maybe Text)
+mfiFields
+  = lens _mfiFields (\ s a -> s{_mfiFields = a})
+
 instance GoogleRequest ManagementFiltersInsert where
         type Rs ManagementFiltersInsert = Filter
         type Scopes ManagementFiltersInsert =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementFiltersInsert'{..}
-          = go _mfiAccountId (Just AltJSON) _mfiPayload
+          = go _mfiAccountId _mfiFields (Just AltJSON)
+              _mfiPayload
               analyticsService
           where go
                   = buildClient

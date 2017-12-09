@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Customers.Get
 
     -- * Request Lenses
     , cgCustomerKey
+    , cgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.customers.get@ method which the
 -- 'CustomersGet' request conforms to.
@@ -47,13 +48,15 @@ type CustomersGetResource =
          "v1" :>
            "customers" :>
              Capture "customerKey" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Customer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Customer
 
 -- | Retrieves a customer.
 --
 -- /See:/ 'customersGet' smart constructor.
-newtype CustomersGet = CustomersGet'
-    { _cgCustomerKey :: Text
+data CustomersGet = CustomersGet'
+    { _cgCustomerKey :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomersGet' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype CustomersGet = CustomersGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cgCustomerKey'
+--
+-- * 'cgFields'
 customersGet
     :: Text -- ^ 'cgCustomerKey'
     -> CustomersGet
-customersGet pCgCustomerKey_ =
+customersGet pCgCustomerKey_ = 
     CustomersGet'
     { _cgCustomerKey = pCgCustomerKey_
+    , _cgFields = Nothing
     }
 
 -- | Id of the customer to be retrieved
@@ -75,13 +81,18 @@ cgCustomerKey
   = lens _cgCustomerKey
       (\ s a -> s{_cgCustomerKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CustomersGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CustomersGet where
         type Rs CustomersGet = Customer
         type Scopes CustomersGet =
              '["https://www.googleapis.com/auth/admin.directory.customer",
                "https://www.googleapis.com/auth/admin.directory.customer.readonly"]
         requestClient CustomersGet'{..}
-          = go _cgCustomerKey (Just AltJSON) directoryService
+          = go _cgCustomerKey _cgFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy CustomersGetResource)
                       mempty

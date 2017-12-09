@@ -42,27 +42,29 @@ module Network.Google.Resource.Partners.ClientMessages.Log
     , cmlUploadType
     , cmlPayload
     , cmlBearerToken
+    , cmlFields
     , cmlCallback
     ) where
 
-import           Network.Google.Partners.Types
-import           Network.Google.Prelude
+import Network.Google.Partners.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @partners.clientMessages.log@ method which the
 -- 'ClientMessagesLog' request conforms to.
 type ClientMessagesLogResource =
      "v2" :>
        "clientMessages:log" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] LogMessageRequest :>
-                           Post '[JSON] LogMessageResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] LogMessageRequest :>
+                             Post '[JSON] LogMessageResponse
 
 -- | Logs a generic message from the client, such as \`Failed to render
 -- component\`, \`Profile page is running slow\`, \`More than 500 users
@@ -70,14 +72,15 @@ type ClientMessagesLogResource =
 --
 -- /See:/ 'clientMessagesLog' smart constructor.
 data ClientMessagesLog = ClientMessagesLog'
-    { _cmlXgafv          :: !(Maybe Text)
+    { _cmlXgafv :: !(Maybe Xgafv)
     , _cmlUploadProtocol :: !(Maybe Text)
-    , _cmlPp             :: !Bool
-    , _cmlAccessToken    :: !(Maybe Text)
-    , _cmlUploadType     :: !(Maybe Text)
-    , _cmlPayload        :: !LogMessageRequest
-    , _cmlBearerToken    :: !(Maybe Text)
-    , _cmlCallback       :: !(Maybe Text)
+    , _cmlPp :: !Bool
+    , _cmlAccessToken :: !(Maybe Text)
+    , _cmlUploadType :: !(Maybe Text)
+    , _cmlPayload :: !LogMessageRequest
+    , _cmlBearerToken :: !(Maybe Text)
+    , _cmlFields :: !(Maybe Text)
+    , _cmlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ClientMessagesLog' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data ClientMessagesLog = ClientMessagesLog'
 --
 -- * 'cmlBearerToken'
 --
+-- * 'cmlFields'
+--
 -- * 'cmlCallback'
 clientMessagesLog
     :: LogMessageRequest -- ^ 'cmlPayload'
     -> ClientMessagesLog
-clientMessagesLog pCmlPayload_ =
+clientMessagesLog pCmlPayload_ = 
     ClientMessagesLog'
     { _cmlXgafv = Nothing
     , _cmlUploadProtocol = Nothing
@@ -111,11 +116,12 @@ clientMessagesLog pCmlPayload_ =
     , _cmlUploadType = Nothing
     , _cmlPayload = pCmlPayload_
     , _cmlBearerToken = Nothing
+    , _cmlFields = Nothing
     , _cmlCallback = Nothing
     }
 
 -- | V1 error format.
-cmlXgafv :: Lens' ClientMessagesLog (Maybe Text)
+cmlXgafv :: Lens' ClientMessagesLog (Maybe Xgafv)
 cmlXgafv = lens _cmlXgafv (\ s a -> s{_cmlXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -151,6 +157,11 @@ cmlBearerToken
   = lens _cmlBearerToken
       (\ s a -> s{_cmlBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cmlFields :: Lens' ClientMessagesLog (Maybe Text)
+cmlFields
+  = lens _cmlFields (\ s a -> s{_cmlFields = a})
+
 -- | JSONP
 cmlCallback :: Lens' ClientMessagesLog (Maybe Text)
 cmlCallback
@@ -165,6 +176,7 @@ instance GoogleRequest ClientMessagesLog where
               _cmlUploadType
               _cmlBearerToken
               _cmlCallback
+              _cmlFields
               (Just AltJSON)
               _cmlPayload
               partnersService

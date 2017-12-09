@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.GrouplicenseUsers.List
     -- * Request Lenses
     , gulEnterpriseId
     , gulGroupLicenseId
+    , gulFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.grouplicenseusers.list@ method which the
 -- 'GrouplicenseUsersList' request conforms to.
@@ -51,16 +52,18 @@ type GrouplicenseUsersListResource =
              "groupLicenses" :>
                Capture "groupLicenseId" Text :>
                  "users" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] GroupLicenseUsersListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] GroupLicenseUsersListResponse
 
 -- | Retrieves the IDs of the users who have been granted entitlements under
 -- the license.
 --
 -- /See:/ 'grouplicenseUsersList' smart constructor.
 data GrouplicenseUsersList = GrouplicenseUsersList'
-    { _gulEnterpriseId   :: !Text
+    { _gulEnterpriseId :: !Text
     , _gulGroupLicenseId :: !Text
+    , _gulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GrouplicenseUsersList' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data GrouplicenseUsersList = GrouplicenseUsersList'
 -- * 'gulEnterpriseId'
 --
 -- * 'gulGroupLicenseId'
+--
+-- * 'gulFields'
 grouplicenseUsersList
     :: Text -- ^ 'gulEnterpriseId'
     -> Text -- ^ 'gulGroupLicenseId'
     -> GrouplicenseUsersList
-grouplicenseUsersList pGulEnterpriseId_ pGulGroupLicenseId_ =
+grouplicenseUsersList pGulEnterpriseId_ pGulGroupLicenseId_ = 
     GrouplicenseUsersList'
     { _gulEnterpriseId = pGulEnterpriseId_
     , _gulGroupLicenseId = pGulGroupLicenseId_
+    , _gulFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -93,13 +99,18 @@ gulGroupLicenseId
   = lens _gulGroupLicenseId
       (\ s a -> s{_gulGroupLicenseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gulFields :: Lens' GrouplicenseUsersList (Maybe Text)
+gulFields
+  = lens _gulFields (\ s a -> s{_gulFields = a})
+
 instance GoogleRequest GrouplicenseUsersList where
         type Rs GrouplicenseUsersList =
              GroupLicenseUsersListResponse
         type Scopes GrouplicenseUsersList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient GrouplicenseUsersList'{..}
-          = go _gulEnterpriseId _gulGroupLicenseId
+          = go _gulEnterpriseId _gulGroupLicenseId _gulFields
               (Just AltJSON)
               androidEnterpriseService
           where go

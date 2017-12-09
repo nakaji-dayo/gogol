@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.RoleAssignments.Delete
     -- * Request Lenses
     , radCustomer
     , radRoleAssignmentId
+    , radFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roleAssignments.delete@ method which the
 -- 'RoleAssignmentsDelete' request conforms to.
@@ -50,14 +51,16 @@ type RoleAssignmentsDeleteResource =
              Capture "customer" Text :>
                "roleassignments" :>
                  Capture "roleAssignmentId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a role assignment.
 --
 -- /See:/ 'roleAssignmentsDelete' smart constructor.
 data RoleAssignmentsDelete = RoleAssignmentsDelete'
-    { _radCustomer         :: !Text
+    { _radCustomer :: !Text
     , _radRoleAssignmentId :: !Text
+    , _radFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoleAssignmentsDelete' with the minimum fields required to make a request.
@@ -67,17 +70,20 @@ data RoleAssignmentsDelete = RoleAssignmentsDelete'
 -- * 'radCustomer'
 --
 -- * 'radRoleAssignmentId'
+--
+-- * 'radFields'
 roleAssignmentsDelete
     :: Text -- ^ 'radCustomer'
     -> Text -- ^ 'radRoleAssignmentId'
     -> RoleAssignmentsDelete
-roleAssignmentsDelete pRadCustomer_ pRadRoleAssignmentId_ =
+roleAssignmentsDelete pRadCustomer_ pRadRoleAssignmentId_ = 
     RoleAssignmentsDelete'
     { _radCustomer = pRadCustomer_
     , _radRoleAssignmentId = pRadRoleAssignmentId_
+    , _radFields = Nothing
     }
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 radCustomer :: Lens' RoleAssignmentsDelete Text
 radCustomer
   = lens _radCustomer (\ s a -> s{_radCustomer = a})
@@ -88,12 +94,18 @@ radRoleAssignmentId
   = lens _radRoleAssignmentId
       (\ s a -> s{_radRoleAssignmentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+radFields :: Lens' RoleAssignmentsDelete (Maybe Text)
+radFields
+  = lens _radFields (\ s a -> s{_radFields = a})
+
 instance GoogleRequest RoleAssignmentsDelete where
         type Rs RoleAssignmentsDelete = ()
         type Scopes RoleAssignmentsDelete =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
         requestClient RoleAssignmentsDelete'{..}
-          = go _radCustomer _radRoleAssignmentId (Just AltJSON)
+          = go _radCustomer _radRoleAssignmentId _radFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

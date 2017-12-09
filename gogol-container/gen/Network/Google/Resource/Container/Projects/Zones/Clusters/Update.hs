@@ -43,11 +43,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.Update
     , pzcuBearerToken
     , pzcuClusterId
     , pzcuProjectId
+    , pzcuFields
     , pzcuCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.update@ method which the
 -- 'ProjectsZonesClustersUpdate' request conforms to.
@@ -59,32 +60,34 @@ type ProjectsZonesClustersUpdateResource =
              Capture "zone" Text :>
                "clusters" :>
                  Capture "clusterId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] UpdateClusterRequest :>
-                                     Put '[JSON] Operation
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] UpdateClusterRequest :>
+                                       Put '[JSON] Operation
 
 -- | Updates the settings of a specific cluster.
 --
 -- /See:/ 'projectsZonesClustersUpdate' smart constructor.
 data ProjectsZonesClustersUpdate = ProjectsZonesClustersUpdate'
-    { _pzcuXgafv          :: !(Maybe Text)
+    { _pzcuXgafv :: !(Maybe Xgafv)
     , _pzcuUploadProtocol :: !(Maybe Text)
-    , _pzcuPp             :: !Bool
-    , _pzcuAccessToken    :: !(Maybe Text)
-    , _pzcuUploadType     :: !(Maybe Text)
-    , _pzcuZone           :: !Text
-    , _pzcuPayload        :: !UpdateClusterRequest
-    , _pzcuBearerToken    :: !(Maybe Text)
-    , _pzcuClusterId      :: !Text
-    , _pzcuProjectId      :: !Text
-    , _pzcuCallback       :: !(Maybe Text)
+    , _pzcuPp :: !Bool
+    , _pzcuAccessToken :: !(Maybe Text)
+    , _pzcuUploadType :: !(Maybe Text)
+    , _pzcuZone :: !Text
+    , _pzcuPayload :: !UpdateClusterRequest
+    , _pzcuBearerToken :: !(Maybe Text)
+    , _pzcuClusterId :: !Text
+    , _pzcuProjectId :: !Text
+    , _pzcuFields :: !(Maybe Text)
+    , _pzcuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersUpdate' with the minimum fields required to make a request.
@@ -111,6 +114,8 @@ data ProjectsZonesClustersUpdate = ProjectsZonesClustersUpdate'
 --
 -- * 'pzcuProjectId'
 --
+-- * 'pzcuFields'
+--
 -- * 'pzcuCallback'
 projectsZonesClustersUpdate
     :: Text -- ^ 'pzcuZone'
@@ -118,7 +123,7 @@ projectsZonesClustersUpdate
     -> Text -- ^ 'pzcuClusterId'
     -> Text -- ^ 'pzcuProjectId'
     -> ProjectsZonesClustersUpdate
-projectsZonesClustersUpdate pPzcuZone_ pPzcuPayload_ pPzcuClusterId_ pPzcuProjectId_ =
+projectsZonesClustersUpdate pPzcuZone_ pPzcuPayload_ pPzcuClusterId_ pPzcuProjectId_ = 
     ProjectsZonesClustersUpdate'
     { _pzcuXgafv = Nothing
     , _pzcuUploadProtocol = Nothing
@@ -130,11 +135,12 @@ projectsZonesClustersUpdate pPzcuZone_ pPzcuPayload_ pPzcuClusterId_ pPzcuProjec
     , _pzcuBearerToken = Nothing
     , _pzcuClusterId = pPzcuClusterId_
     , _pzcuProjectId = pPzcuProjectId_
+    , _pzcuFields = Nothing
     , _pzcuCallback = Nothing
     }
 
 -- | V1 error format.
-pzcuXgafv :: Lens' ProjectsZonesClustersUpdate (Maybe Text)
+pzcuXgafv :: Lens' ProjectsZonesClustersUpdate (Maybe Xgafv)
 pzcuXgafv
   = lens _pzcuXgafv (\ s a -> s{_pzcuXgafv = a})
 
@@ -189,6 +195,11 @@ pzcuProjectId
   = lens _pzcuProjectId
       (\ s a -> s{_pzcuProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcuFields :: Lens' ProjectsZonesClustersUpdate (Maybe Text)
+pzcuFields
+  = lens _pzcuFields (\ s a -> s{_pzcuFields = a})
+
 -- | JSONP
 pzcuCallback :: Lens' ProjectsZonesClustersUpdate (Maybe Text)
 pzcuCallback
@@ -208,6 +219,7 @@ instance GoogleRequest ProjectsZonesClustersUpdate
               _pzcuUploadType
               _pzcuBearerToken
               _pzcuCallback
+              _pzcuFields
               (Just AltJSON)
               _pzcuPayload
               containerService

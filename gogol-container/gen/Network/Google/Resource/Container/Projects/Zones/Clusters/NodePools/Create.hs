@@ -43,11 +43,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Creat
     , pzcnpcBearerToken
     , pzcnpcClusterId
     , pzcnpcProjectId
+    , pzcnpcFields
     , pzcnpcCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.nodePools.create@ method which the
 -- 'ProjectsZonesClustersNodePoolsCreate' request conforms to.
@@ -60,32 +61,34 @@ type ProjectsZonesClustersNodePoolsCreateResource =
                "clusters" :>
                  Capture "clusterId" Text :>
                    "nodePools" :>
-                     QueryParam "$.xgafv" Text :>
+                     QueryParam "$.xgafv" Xgafv :>
                        QueryParam "upload_protocol" Text :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] CreateNodePoolRequest :>
-                                       Post '[JSON] Operation
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       ReqBody '[JSON] CreateNodePoolRequest :>
+                                         Post '[JSON] Operation
 
 -- | Creates a node pool for a cluster.
 --
 -- /See:/ 'projectsZonesClustersNodePoolsCreate' smart constructor.
 data ProjectsZonesClustersNodePoolsCreate = ProjectsZonesClustersNodePoolsCreate'
-    { _pzcnpcXgafv          :: !(Maybe Text)
+    { _pzcnpcXgafv :: !(Maybe Xgafv)
     , _pzcnpcUploadProtocol :: !(Maybe Text)
-    , _pzcnpcPp             :: !Bool
-    , _pzcnpcAccessToken    :: !(Maybe Text)
-    , _pzcnpcUploadType     :: !(Maybe Text)
-    , _pzcnpcZone           :: !Text
-    , _pzcnpcPayload        :: !CreateNodePoolRequest
-    , _pzcnpcBearerToken    :: !(Maybe Text)
-    , _pzcnpcClusterId      :: !Text
-    , _pzcnpcProjectId      :: !Text
-    , _pzcnpcCallback       :: !(Maybe Text)
+    , _pzcnpcPp :: !Bool
+    , _pzcnpcAccessToken :: !(Maybe Text)
+    , _pzcnpcUploadType :: !(Maybe Text)
+    , _pzcnpcZone :: !Text
+    , _pzcnpcPayload :: !CreateNodePoolRequest
+    , _pzcnpcBearerToken :: !(Maybe Text)
+    , _pzcnpcClusterId :: !Text
+    , _pzcnpcProjectId :: !Text
+    , _pzcnpcFields :: !(Maybe Text)
+    , _pzcnpcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersNodePoolsCreate' with the minimum fields required to make a request.
@@ -112,6 +115,8 @@ data ProjectsZonesClustersNodePoolsCreate = ProjectsZonesClustersNodePoolsCreate
 --
 -- * 'pzcnpcProjectId'
 --
+-- * 'pzcnpcFields'
+--
 -- * 'pzcnpcCallback'
 projectsZonesClustersNodePoolsCreate
     :: Text -- ^ 'pzcnpcZone'
@@ -119,7 +124,7 @@ projectsZonesClustersNodePoolsCreate
     -> Text -- ^ 'pzcnpcClusterId'
     -> Text -- ^ 'pzcnpcProjectId'
     -> ProjectsZonesClustersNodePoolsCreate
-projectsZonesClustersNodePoolsCreate pPzcnpcZone_ pPzcnpcPayload_ pPzcnpcClusterId_ pPzcnpcProjectId_ =
+projectsZonesClustersNodePoolsCreate pPzcnpcZone_ pPzcnpcPayload_ pPzcnpcClusterId_ pPzcnpcProjectId_ = 
     ProjectsZonesClustersNodePoolsCreate'
     { _pzcnpcXgafv = Nothing
     , _pzcnpcUploadProtocol = Nothing
@@ -131,11 +136,12 @@ projectsZonesClustersNodePoolsCreate pPzcnpcZone_ pPzcnpcPayload_ pPzcnpcCluster
     , _pzcnpcBearerToken = Nothing
     , _pzcnpcClusterId = pPzcnpcClusterId_
     , _pzcnpcProjectId = pPzcnpcProjectId_
+    , _pzcnpcFields = Nothing
     , _pzcnpcCallback = Nothing
     }
 
 -- | V1 error format.
-pzcnpcXgafv :: Lens' ProjectsZonesClustersNodePoolsCreate (Maybe Text)
+pzcnpcXgafv :: Lens' ProjectsZonesClustersNodePoolsCreate (Maybe Xgafv)
 pzcnpcXgafv
   = lens _pzcnpcXgafv (\ s a -> s{_pzcnpcXgafv = a})
 
@@ -192,6 +198,11 @@ pzcnpcProjectId
   = lens _pzcnpcProjectId
       (\ s a -> s{_pzcnpcProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcnpcFields :: Lens' ProjectsZonesClustersNodePoolsCreate (Maybe Text)
+pzcnpcFields
+  = lens _pzcnpcFields (\ s a -> s{_pzcnpcFields = a})
+
 -- | JSONP
 pzcnpcCallback :: Lens' ProjectsZonesClustersNodePoolsCreate (Maybe Text)
 pzcnpcCallback
@@ -214,6 +225,7 @@ instance GoogleRequest
               _pzcnpcUploadType
               _pzcnpcBearerToken
               _pzcnpcCallback
+              _pzcnpcFields
               (Just AltJSON)
               _pzcnpcPayload
               containerService

@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.RegionAutoscalers.List
     , ralRegion
     , ralPageToken
     , ralMaxResults
+    , ralFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionAutoscalers.list@ method which the
 -- 'RegionAutoscalersList' request conforms to.
@@ -58,19 +59,21 @@ type RegionAutoscalersListResource =
                      QueryParam "filter" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] RegionAutoscalerList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] RegionAutoscalerList
 
 -- | Retrieves a list of autoscalers contained within the specified region.
 --
 -- /See:/ 'regionAutoscalersList' smart constructor.
 data RegionAutoscalersList = RegionAutoscalersList'
-    { _ralOrderBy    :: !(Maybe Text)
-    , _ralProject    :: !Text
-    , _ralFilter     :: !(Maybe Text)
-    , _ralRegion     :: !Text
-    , _ralPageToken  :: !(Maybe Text)
+    { _ralOrderBy :: !(Maybe Text)
+    , _ralProject :: !Text
+    , _ralFilter :: !(Maybe Text)
+    , _ralRegion :: !Text
+    , _ralPageToken :: !(Maybe Text)
     , _ralMaxResults :: !(Textual Word32)
+    , _ralFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionAutoscalersList' with the minimum fields required to make a request.
@@ -88,11 +91,13 @@ data RegionAutoscalersList = RegionAutoscalersList'
 -- * 'ralPageToken'
 --
 -- * 'ralMaxResults'
+--
+-- * 'ralFields'
 regionAutoscalersList
     :: Text -- ^ 'ralProject'
     -> Text -- ^ 'ralRegion'
     -> RegionAutoscalersList
-regionAutoscalersList pRalProject_ pRalRegion_ =
+regionAutoscalersList pRalProject_ pRalRegion_ = 
     RegionAutoscalersList'
     { _ralOrderBy = Nothing
     , _ralProject = pRalProject_
@@ -100,6 +105,7 @@ regionAutoscalersList pRalProject_ pRalRegion_ =
     , _ralRegion = pRalRegion_
     , _ralPageToken = Nothing
     , _ralMaxResults = 500
+    , _ralFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -119,26 +125,25 @@ ralProject :: Lens' RegionAutoscalersList Text
 ralProject
   = lens _ralProject (\ s a -> s{_ralProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 ralFilter :: Lens' RegionAutoscalersList (Maybe Text)
 ralFilter
   = lens _ralFilter (\ s a -> s{_ralFilter = a})
@@ -157,12 +162,18 @@ ralPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 ralMaxResults :: Lens' RegionAutoscalersList Word32
 ralMaxResults
   = lens _ralMaxResults
       (\ s a -> s{_ralMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+ralFields :: Lens' RegionAutoscalersList (Maybe Text)
+ralFields
+  = lens _ralFields (\ s a -> s{_ralFields = a})
 
 instance GoogleRequest RegionAutoscalersList where
         type Rs RegionAutoscalersList = RegionAutoscalerList
@@ -174,6 +185,7 @@ instance GoogleRequest RegionAutoscalersList where
           = go _ralProject _ralRegion _ralOrderBy _ralFilter
               _ralPageToken
               (Just _ralMaxResults)
+              _ralFields
               (Just AltJSON)
               computeService
           where go

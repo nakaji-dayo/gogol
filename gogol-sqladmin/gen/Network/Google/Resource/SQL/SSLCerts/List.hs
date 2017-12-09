@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.SSLCerts.List
 
     -- * Request Lenses
     , sclProject
+    , sclFields
     , sclInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.sslCerts.list@ method which the
 -- 'SSLCertsList' request conforms to.
@@ -50,14 +51,16 @@ type SSLCertsListResource =
              "instances" :>
                Capture "instance" Text :>
                  "sslCerts" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] SSLCertsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] SSLCertsListResponse
 
 -- | Lists all of the current SSL certificates for the instance.
 --
 -- /See:/ 'sslCertsList' smart constructor.
 data SSLCertsList = SSLCertsList'
-    { _sclProject  :: !Text
+    { _sclProject :: !Text
+    , _sclFields :: !(Maybe Text)
     , _sclInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -67,14 +70,17 @@ data SSLCertsList = SSLCertsList'
 --
 -- * 'sclProject'
 --
+-- * 'sclFields'
+--
 -- * 'sclInstance'
 sslCertsList
     :: Text -- ^ 'sclProject'
     -> Text -- ^ 'sclInstance'
     -> SSLCertsList
-sslCertsList pSclProject_ pSclInstance_ =
+sslCertsList pSclProject_ pSclInstance_ = 
     SSLCertsList'
     { _sclProject = pSclProject_
+    , _sclFields = Nothing
     , _sclInstance = pSclInstance_
     }
 
@@ -82,6 +88,11 @@ sslCertsList pSclProject_ pSclInstance_ =
 sclProject :: Lens' SSLCertsList Text
 sclProject
   = lens _sclProject (\ s a -> s{_sclProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sclFields :: Lens' SSLCertsList (Maybe Text)
+sclFields
+  = lens _sclFields (\ s a -> s{_sclFields = a})
 
 -- | Cloud SQL instance ID. This does not include the project ID.
 sclInstance :: Lens' SSLCertsList Text
@@ -94,7 +105,8 @@ instance GoogleRequest SSLCertsList where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient SSLCertsList'{..}
-          = go _sclProject _sclInstance (Just AltJSON)
+          = go _sclProject _sclInstance _sclFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy SSLCertsListResource)

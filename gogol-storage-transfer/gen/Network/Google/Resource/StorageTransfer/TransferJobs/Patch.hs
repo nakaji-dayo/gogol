@@ -43,27 +43,29 @@ module Network.Google.Resource.StorageTransfer.TransferJobs.Patch
     , tjpUploadType
     , tjpPayload
     , tjpBearerToken
+    , tjpFields
     , tjpCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferJobs.patch@ method which the
 -- 'TransferJobsPatch' request conforms to.
 type TransferJobsPatchResource =
      "v1" :>
        Capture "jobName" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] UpdateTransferJobRequest :>
-                           Patch '[JSON] TransferJob
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] UpdateTransferJobRequest :>
+                             Patch '[JSON] TransferJob
 
 -- | Updates a transfer job. Updating a job\'s transfer spec does not affect
 -- transfer operations that are running already. Updating the scheduling of
@@ -71,15 +73,16 @@ type TransferJobsPatchResource =
 --
 -- /See:/ 'transferJobsPatch' smart constructor.
 data TransferJobsPatch = TransferJobsPatch'
-    { _tjpXgafv          :: !(Maybe Text)
+    { _tjpXgafv :: !(Maybe Xgafv)
     , _tjpUploadProtocol :: !(Maybe Text)
-    , _tjpPp             :: !Bool
-    , _tjpAccessToken    :: !(Maybe Text)
-    , _tjpJobName        :: !Text
-    , _tjpUploadType     :: !(Maybe Text)
-    , _tjpPayload        :: !UpdateTransferJobRequest
-    , _tjpBearerToken    :: !(Maybe Text)
-    , _tjpCallback       :: !(Maybe Text)
+    , _tjpPp :: !Bool
+    , _tjpAccessToken :: !(Maybe Text)
+    , _tjpJobName :: !Text
+    , _tjpUploadType :: !(Maybe Text)
+    , _tjpPayload :: !UpdateTransferJobRequest
+    , _tjpBearerToken :: !(Maybe Text)
+    , _tjpFields :: !(Maybe Text)
+    , _tjpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferJobsPatch' with the minimum fields required to make a request.
@@ -102,12 +105,14 @@ data TransferJobsPatch = TransferJobsPatch'
 --
 -- * 'tjpBearerToken'
 --
+-- * 'tjpFields'
+--
 -- * 'tjpCallback'
 transferJobsPatch
     :: Text -- ^ 'tjpJobName'
     -> UpdateTransferJobRequest -- ^ 'tjpPayload'
     -> TransferJobsPatch
-transferJobsPatch pTjpJobName_ pTjpPayload_ =
+transferJobsPatch pTjpJobName_ pTjpPayload_ = 
     TransferJobsPatch'
     { _tjpXgafv = Nothing
     , _tjpUploadProtocol = Nothing
@@ -117,11 +122,12 @@ transferJobsPatch pTjpJobName_ pTjpPayload_ =
     , _tjpUploadType = Nothing
     , _tjpPayload = pTjpPayload_
     , _tjpBearerToken = Nothing
+    , _tjpFields = Nothing
     , _tjpCallback = Nothing
     }
 
 -- | V1 error format.
-tjpXgafv :: Lens' TransferJobsPatch (Maybe Text)
+tjpXgafv :: Lens' TransferJobsPatch (Maybe Xgafv)
 tjpXgafv = lens _tjpXgafv (\ s a -> s{_tjpXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -162,6 +168,11 @@ tjpBearerToken
   = lens _tjpBearerToken
       (\ s a -> s{_tjpBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tjpFields :: Lens' TransferJobsPatch (Maybe Text)
+tjpFields
+  = lens _tjpFields (\ s a -> s{_tjpFields = a})
+
 -- | JSONP
 tjpCallback :: Lens' TransferJobsPatch (Maybe Text)
 tjpCallback
@@ -178,6 +189,7 @@ instance GoogleRequest TransferJobsPatch where
               _tjpUploadType
               _tjpBearerToken
               _tjpCallback
+              _tjpFields
               (Just AltJSON)
               _tjpPayload
               storageTransferService

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Reports.Get
     -- * Request Lenses
     , rgReportId
     , rgProFileId
+    , rgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.get@ method which the
 -- 'ReportsGet' request conforms to.
 type ReportsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                Capture "reportId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Report
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Report
 
 -- | Retrieves a report by its ID.
 --
 -- /See:/ 'reportsGet' smart constructor.
 data ReportsGet = ReportsGet'
-    { _rgReportId  :: !(Textual Int64)
+    { _rgReportId :: !(Textual Int64)
     , _rgProFileId :: !(Textual Int64)
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ReportsGet = ReportsGet'
 -- * 'rgReportId'
 --
 -- * 'rgProFileId'
+--
+-- * 'rgFields'
 reportsGet
     :: Int64 -- ^ 'rgReportId'
     -> Int64 -- ^ 'rgProFileId'
     -> ReportsGet
-reportsGet pRgReportId_ pRgProFileId_ =
+reportsGet pRgReportId_ pRgProFileId_ = 
     ReportsGet'
     { _rgReportId = _Coerce # pRgReportId_
     , _rgProFileId = _Coerce # pRgProFileId_
+    , _rgFields = Nothing
     }
 
 -- | The ID of the report.
@@ -88,12 +94,17 @@ rgProFileId
   = lens _rgProFileId (\ s a -> s{_rgProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ReportsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest ReportsGet where
         type Rs ReportsGet = Report
         type Scopes ReportsGet =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsGet'{..}
-          = go _rgProFileId _rgReportId (Just AltJSON)
+          = go _rgProFileId _rgReportId _rgFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy ReportsGetResource)

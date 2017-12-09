@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Instances.StopReplica
 
     -- * Request Lenses
     , isrProject
+    , isrFields
     , isrInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.stopReplica@ method which the
 -- 'InstancesStopReplica' request conforms to.
@@ -50,13 +51,15 @@ type InstancesStopReplicaResource =
              "instances" :>
                Capture "instance" Text :>
                  "stopReplica" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Stops the replication in the read replica instance.
 --
 -- /See:/ 'instancesStopReplica' smart constructor.
 data InstancesStopReplica = InstancesStopReplica'
-    { _isrProject  :: !Text
+    { _isrProject :: !Text
+    , _isrFields :: !(Maybe Text)
     , _isrInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -66,14 +69,17 @@ data InstancesStopReplica = InstancesStopReplica'
 --
 -- * 'isrProject'
 --
+-- * 'isrFields'
+--
 -- * 'isrInstance'
 instancesStopReplica
     :: Text -- ^ 'isrProject'
     -> Text -- ^ 'isrInstance'
     -> InstancesStopReplica
-instancesStopReplica pIsrProject_ pIsrInstance_ =
+instancesStopReplica pIsrProject_ pIsrInstance_ = 
     InstancesStopReplica'
     { _isrProject = pIsrProject_
+    , _isrFields = Nothing
     , _isrInstance = pIsrInstance_
     }
 
@@ -81,6 +87,11 @@ instancesStopReplica pIsrProject_ pIsrInstance_ =
 isrProject :: Lens' InstancesStopReplica Text
 isrProject
   = lens _isrProject (\ s a -> s{_isrProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+isrFields :: Lens' InstancesStopReplica (Maybe Text)
+isrFields
+  = lens _isrFields (\ s a -> s{_isrFields = a})
 
 -- | Cloud SQL read replica instance name.
 isrInstance :: Lens' InstancesStopReplica Text
@@ -93,7 +104,8 @@ instance GoogleRequest InstancesStopReplica where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesStopReplica'{..}
-          = go _isrProject _isrInstance (Just AltJSON)
+          = go _isrProject _isrInstance _isrFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

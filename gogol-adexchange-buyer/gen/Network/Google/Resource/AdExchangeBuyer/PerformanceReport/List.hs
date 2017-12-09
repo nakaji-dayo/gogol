@@ -38,10 +38,11 @@ module Network.Google.Resource.AdExchangeBuyer.PerformanceReport.List
     , prlEndDateTime
     , prlMaxResults
     , prlStartDateTime
+    , prlFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.performanceReport.list@ method which the
 -- 'PerformanceReportList'' request conforms to.
@@ -54,18 +55,20 @@ type PerformanceReportListResource =
                QueryParam "startDateTime" Text :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] PerformanceReportList
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] PerformanceReportList
 
 -- | Retrieves the authenticated user\'s list of performance metrics.
 --
 -- /See:/ 'performanceReportList'' smart constructor.
 data PerformanceReportList' = PerformanceReportList''
-    { _prlAccountId     :: !(Textual Int64)
-    , _prlPageToken     :: !(Maybe Text)
-    , _prlEndDateTime   :: !Text
-    , _prlMaxResults    :: !(Maybe (Textual Word32))
+    { _prlAccountId :: !(Textual Int64)
+    , _prlPageToken :: !(Maybe Text)
+    , _prlEndDateTime :: !Text
+    , _prlMaxResults :: !(Maybe (Textual Word32))
     , _prlStartDateTime :: !Text
+    , _prlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PerformanceReportList'' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data PerformanceReportList' = PerformanceReportList''
 -- * 'prlMaxResults'
 --
 -- * 'prlStartDateTime'
+--
+-- * 'prlFields'
 performanceReportList'
     :: Int64 -- ^ 'prlAccountId'
     -> Text -- ^ 'prlEndDateTime'
     -> Text -- ^ 'prlStartDateTime'
     -> PerformanceReportList'
-performanceReportList' pPrlAccountId_ pPrlEndDateTime_ pPrlStartDateTime_ =
+performanceReportList' pPrlAccountId_ pPrlEndDateTime_ pPrlStartDateTime_ = 
     PerformanceReportList''
     { _prlAccountId = _Coerce # pPrlAccountId_
     , _prlPageToken = Nothing
     , _prlEndDateTime = pPrlEndDateTime_
     , _prlMaxResults = Nothing
     , _prlStartDateTime = pPrlStartDateTime_
+    , _prlFields = Nothing
     }
 
 -- | The account id to get the reports.
@@ -128,6 +134,11 @@ prlStartDateTime
   = lens _prlStartDateTime
       (\ s a -> s{_prlStartDateTime = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prlFields :: Lens' PerformanceReportList' (Maybe Text)
+prlFields
+  = lens _prlFields (\ s a -> s{_prlFields = a})
+
 instance GoogleRequest PerformanceReportList' where
         type Rs PerformanceReportList' =
              PerformanceReportList
@@ -138,6 +149,7 @@ instance GoogleRequest PerformanceReportList' where
               (Just _prlStartDateTime)
               _prlPageToken
               _prlMaxResults
+              _prlFields
               (Just AltJSON)
               adExchangeBuyerService
           where go

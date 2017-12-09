@@ -36,10 +36,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.Delete
     -- * Request Lenses
     , udsdDataSourceId
     , udsdUserId
+    , udsdFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.delete@ method which the
 -- 'UsersDataSourcesDelete' request conforms to.
@@ -50,7 +51,8 @@ type UsersDataSourcesDeleteResource =
            Capture "userId" Text :>
              "dataSources" :>
                Capture "dataSourceId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] DataSource
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] DataSource
 
 -- | Deletes the specified data source. The request will fail if the data
 -- source contains any data points.
@@ -58,7 +60,8 @@ type UsersDataSourcesDeleteResource =
 -- /See:/ 'usersDataSourcesDelete' smart constructor.
 data UsersDataSourcesDelete = UsersDataSourcesDelete'
     { _udsdDataSourceId :: !Text
-    , _udsdUserId       :: !Text
+    , _udsdUserId :: !Text
+    , _udsdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesDelete' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data UsersDataSourcesDelete = UsersDataSourcesDelete'
 -- * 'udsdDataSourceId'
 --
 -- * 'udsdUserId'
+--
+-- * 'udsdFields'
 usersDataSourcesDelete
     :: Text -- ^ 'udsdDataSourceId'
     -> Text -- ^ 'udsdUserId'
     -> UsersDataSourcesDelete
-usersDataSourcesDelete pUdsdDataSourceId_ pUdsdUserId_ =
+usersDataSourcesDelete pUdsdDataSourceId_ pUdsdUserId_ = 
     UsersDataSourcesDelete'
     { _udsdDataSourceId = pUdsdDataSourceId_
     , _udsdUserId = pUdsdUserId_
+    , _udsdFields = Nothing
     }
 
 -- | The data stream ID of the data source to delete.
@@ -90,6 +96,11 @@ udsdUserId :: Lens' UsersDataSourcesDelete Text
 udsdUserId
   = lens _udsdUserId (\ s a -> s{_udsdUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udsdFields :: Lens' UsersDataSourcesDelete (Maybe Text)
+udsdFields
+  = lens _udsdFields (\ s a -> s{_udsdFields = a})
+
 instance GoogleRequest UsersDataSourcesDelete where
         type Rs UsersDataSourcesDelete = DataSource
         type Scopes UsersDataSourcesDelete =
@@ -103,7 +114,8 @@ instance GoogleRequest UsersDataSourcesDelete where
                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSourcesDelete'{..}
-          = go _udsdUserId _udsdDataSourceId (Just AltJSON)
+          = go _udsdUserId _udsdDataSourceId _udsdFields
+              (Just AltJSON)
               fitnessService
           where go
                   = buildClient

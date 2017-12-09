@@ -46,10 +46,11 @@ module Network.Google.Resource.YouTube.Videos.List
     , vlId
     , vlPageToken
     , vlMaxResults
+    , vlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.list@ method which the
 -- 'VideosList' request conforms to.
@@ -70,26 +71,28 @@ type VideosListResource =
                                QueryParam "id" Text :>
                                  QueryParam "pageToken" Text :>
                                    QueryParam "maxResults" (Textual Word32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] VideoListResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] VideoListResponse
 
 -- | Returns a list of videos that match the API request parameters.
 --
 -- /See:/ 'videosList' smart constructor.
 data VideosList = VideosList'
-    { _vlChart                  :: !(Maybe VideosListChart)
-    , _vlPart                   :: !Text
-    , _vlRegionCode             :: !(Maybe Text)
-    , _vlLocale                 :: !(Maybe Text)
-    , _vlMyRating               :: !(Maybe VideosListMyRating)
-    , _vlMaxHeight              :: !(Maybe (Textual Word32))
-    , _vlHl                     :: !(Maybe Text)
+    { _vlChart :: !(Maybe VideosListChart)
+    , _vlPart :: !Text
+    , _vlRegionCode :: !(Maybe Text)
+    , _vlLocale :: !(Maybe Text)
+    , _vlMyRating :: !(Maybe VideosListMyRating)
+    , _vlMaxHeight :: !(Maybe (Textual Word32))
+    , _vlHl :: !(Maybe Text)
     , _vlOnBehalfOfContentOwner :: !(Maybe Text)
-    , _vlVideoCategoryId        :: !Text
-    , _vlMaxWidth               :: !(Maybe (Textual Word32))
-    , _vlId                     :: !(Maybe Text)
-    , _vlPageToken              :: !(Maybe Text)
-    , _vlMaxResults             :: !(Textual Word32)
+    , _vlVideoCategoryId :: !Text
+    , _vlMaxWidth :: !(Maybe (Textual Word32))
+    , _vlId :: !(Maybe Text)
+    , _vlPageToken :: !(Maybe Text)
+    , _vlMaxResults :: !(Textual Word32)
+    , _vlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosList' with the minimum fields required to make a request.
@@ -121,10 +124,12 @@ data VideosList = VideosList'
 -- * 'vlPageToken'
 --
 -- * 'vlMaxResults'
+--
+-- * 'vlFields'
 videosList
     :: Text -- ^ 'vlPart'
     -> VideosList
-videosList pVlPart_ =
+videosList pVlPart_ = 
     VideosList'
     { _vlChart = Nothing
     , _vlPart = pVlPart_
@@ -139,6 +144,7 @@ videosList pVlPart_ =
     , _vlId = Nothing
     , _vlPageToken = Nothing
     , _vlMaxResults = 5
+    , _vlFields = Nothing
     }
 
 -- | The chart parameter identifies the chart that you want to retrieve.
@@ -249,6 +255,10 @@ vlMaxResults
   = lens _vlMaxResults (\ s a -> s{_vlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+vlFields :: Lens' VideosList (Maybe Text)
+vlFields = lens _vlFields (\ s a -> s{_vlFields = a})
+
 instance GoogleRequest VideosList where
         type Rs VideosList = VideoListResponse
         type Scopes VideosList =
@@ -267,6 +277,7 @@ instance GoogleRequest VideosList where
               _vlId
               _vlPageToken
               (Just _vlMaxResults)
+              _vlFields
               (Just AltJSON)
               youTubeService
           where go

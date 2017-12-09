@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.Disks.AggregatedList
     , dalFilter
     , dalPageToken
     , dalMaxResults
+    , dalFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.disks.aggregatedList@ method which the
 -- 'DisksAggregatedList' request conforms to.
@@ -56,18 +57,20 @@ type DisksAggregatedListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] DiskAggregatedList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] DiskAggregatedList
 
 -- | Retrieves an aggregated list of persistent disks.
 --
 -- /See:/ 'disksAggregatedList' smart constructor.
 data DisksAggregatedList = DisksAggregatedList'
-    { _dalOrderBy    :: !(Maybe Text)
-    , _dalProject    :: !Text
-    , _dalFilter     :: !(Maybe Text)
-    , _dalPageToken  :: !(Maybe Text)
+    { _dalOrderBy :: !(Maybe Text)
+    , _dalProject :: !Text
+    , _dalFilter :: !(Maybe Text)
+    , _dalPageToken :: !(Maybe Text)
     , _dalMaxResults :: !(Textual Word32)
+    , _dalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DisksAggregatedList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data DisksAggregatedList = DisksAggregatedList'
 -- * 'dalPageToken'
 --
 -- * 'dalMaxResults'
+--
+-- * 'dalFields'
 disksAggregatedList
     :: Text -- ^ 'dalProject'
     -> DisksAggregatedList
-disksAggregatedList pDalProject_ =
+disksAggregatedList pDalProject_ = 
     DisksAggregatedList'
     { _dalOrderBy = Nothing
     , _dalProject = pDalProject_
     , _dalFilter = Nothing
     , _dalPageToken = Nothing
     , _dalMaxResults = 500
+    , _dalFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -112,26 +118,25 @@ dalProject :: Lens' DisksAggregatedList Text
 dalProject
   = lens _dalProject (\ s a -> s{_dalProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 dalFilter :: Lens' DisksAggregatedList (Maybe Text)
 dalFilter
   = lens _dalFilter (\ s a -> s{_dalFilter = a})
@@ -145,12 +150,18 @@ dalPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 dalMaxResults :: Lens' DisksAggregatedList Word32
 dalMaxResults
   = lens _dalMaxResults
       (\ s a -> s{_dalMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+dalFields :: Lens' DisksAggregatedList (Maybe Text)
+dalFields
+  = lens _dalFields (\ s a -> s{_dalFields = a})
 
 instance GoogleRequest DisksAggregatedList where
         type Rs DisksAggregatedList = DiskAggregatedList
@@ -161,6 +172,7 @@ instance GoogleRequest DisksAggregatedList where
         requestClient DisksAggregatedList'{..}
           = go _dalProject _dalOrderBy _dalFilter _dalPageToken
               (Just _dalMaxResults)
+              _dalFields
               (Just AltJSON)
               computeService
           where go

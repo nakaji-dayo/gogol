@@ -17,8 +17,8 @@
 --
 module Network.Google.AppsActivity.Types.Product where
 
-import           Network.Google.AppsActivity.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppsActivity.Types.Sum
+import Network.Google.Prelude
 
 -- | Contains information about a parent object. For example, a folder in
 -- Drive is a parent for all files within it.
@@ -26,8 +26,8 @@ import           Network.Google.Prelude
 -- /See:/ 'parent' smart constructor.
 data Parent = Parent'
     { _pIsRoot :: !(Maybe Bool)
-    , _pId     :: !(Maybe Text)
-    , _pTitle  :: !(Maybe Text)
+    , _pId :: !(Maybe Text)
+    , _pTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Parent' with the minimum fields required to make a request.
@@ -41,7 +41,7 @@ data Parent = Parent'
 -- * 'pTitle'
 parent
     :: Parent
-parent =
+parent = 
     Parent'
     { _pIsRoot = Nothing
     , _pId = Nothing
@@ -89,7 +89,7 @@ newtype Photo = Photo'
 -- * 'pURL'
 photo
     :: Photo
-photo =
+photo = 
     Photo'
     { _pURL = Nothing
     }
@@ -111,15 +111,15 @@ instance ToJSON Photo where
 --
 -- /See:/ 'event' smart constructor.
 data Event = Event'
-    { _ePrimaryEventType     :: !(Maybe EventPrimaryEventType)
-    , _eUser                 :: !(Maybe User)
-    , _eEventTimeMillis      :: !(Maybe (Textual Word64))
-    , _eRename               :: !(Maybe Rename)
-    , _eFromUserDeletion     :: !(Maybe Bool)
+    { _ePrimaryEventType :: !(Maybe EventPrimaryEventType)
+    , _eUser :: !(Maybe User)
+    , _eEventTimeMillis :: !(Maybe (Textual Word64))
+    , _eRename :: !(Maybe Rename)
+    , _eFromUserDeletion :: !(Maybe Bool)
     , _eAdditionalEventTypes :: !(Maybe [EventAdditionalEventTypesItem])
-    , _ePermissionChanges    :: !(Maybe [PermissionChange])
-    , _eTarget               :: !(Maybe Target)
-    , _eMove                 :: !(Maybe Move)
+    , _ePermissionChanges :: !(Maybe [PermissionChange])
+    , _eTarget :: !(Maybe Target)
+    , _eMove :: !(Maybe Move)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Event' with the minimum fields required to make a request.
@@ -145,7 +145,7 @@ data Event = Event'
 -- * 'eMove'
 event
     :: Event
-event =
+event = 
     Event'
     { _ePrimaryEventType = Nothing
     , _eUser = Nothing
@@ -249,7 +249,7 @@ instance ToJSON Event where
 -- /See:/ 'listActivitiesResponse' smart constructor.
 data ListActivitiesResponse = ListActivitiesResponse'
     { _larNextPageToken :: !(Maybe Text)
-    , _larActivities    :: !(Maybe [Activity])
+    , _larActivities :: !(Maybe [Activity])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListActivitiesResponse' with the minimum fields required to make a request.
@@ -261,7 +261,7 @@ data ListActivitiesResponse = ListActivitiesResponse'
 -- * 'larActivities'
 listActivitiesResponse
     :: ListActivitiesResponse
-listActivitiesResponse =
+listActivitiesResponse = 
     ListActivitiesResponse'
     { _larNextPageToken = Nothing
     , _larActivities = Nothing
@@ -301,7 +301,7 @@ instance ToJSON ListActivitiesResponse where
 --
 -- /See:/ 'permissionChange' smart constructor.
 data PermissionChange = PermissionChange'
-    { _pcAddedPermissions   :: !(Maybe [Permission])
+    { _pcAddedPermissions :: !(Maybe [Permission])
     , _pcRemovedPermissions :: !(Maybe [Permission])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -314,7 +314,7 @@ data PermissionChange = PermissionChange'
 -- * 'pcRemovedPermissions'
 permissionChange
     :: PermissionChange
-permissionChange =
+permissionChange = 
     PermissionChange'
     { _pcAddedPermissions = Nothing
     , _pcRemovedPermissions = Nothing
@@ -355,10 +355,10 @@ instance ToJSON PermissionChange where
 --
 -- /See:/ 'user' smart constructor.
 data User = User'
-    { _uPhoto        :: !(Maybe Photo)
-    , _uIsDeleted    :: !(Maybe Bool)
-    , _uName         :: !(Maybe Text)
-    , _uIsMe         :: !(Maybe Bool)
+    { _uPhoto :: !(Maybe Photo)
+    , _uIsDeleted :: !(Maybe Bool)
+    , _uName :: !(Maybe Text)
+    , _uIsMe :: !(Maybe Bool)
     , _uPermissionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -377,7 +377,7 @@ data User = User'
 -- * 'uPermissionId'
 user
     :: User
-user =
+user = 
     User'
     { _uPhoto = Nothing
     , _uIsDeleted = Nothing
@@ -438,7 +438,7 @@ instance ToJSON User where
 --
 -- /See:/ 'activity' smart constructor.
 data Activity = Activity'
-    { _aSingleEvents  :: !(Maybe [Event])
+    { _aSingleEvents :: !(Maybe [Event])
     , _aCombinedEvent :: !(Maybe Event)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -451,7 +451,7 @@ data Activity = Activity'
 -- * 'aCombinedEvent'
 activity
     :: Activity
-activity =
+activity = 
     Activity'
     { _aSingleEvents = Nothing
     , _aCombinedEvent = Nothing
@@ -503,7 +503,7 @@ data Rename = Rename'
 -- * 'rOldTitle'
 rename
     :: Rename
-rename =
+rename = 
     Rename'
     { _rNewTitle = Nothing
     , _rOldTitle = Nothing
@@ -539,11 +539,11 @@ instance ToJSON Rename where
 --
 -- /See:/ 'permission' smart constructor.
 data Permission = Permission'
-    { _pWithLink     :: !(Maybe Bool)
-    , _pUser         :: !(Maybe User)
-    , _pRole         :: !(Maybe PermissionRole)
-    , _pName         :: !(Maybe Text)
-    , _pType         :: !(Maybe PermissionType)
+    { _pWithLink :: !(Maybe Bool)
+    , _pUser :: !(Maybe User)
+    , _pRole :: !(Maybe PermissionRole)
+    , _pName :: !(Maybe Text)
+    , _pType :: !(Maybe PermissionType)
     , _pPermissionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -564,7 +564,7 @@ data Permission = Permission'
 -- * 'pPermissionId'
 permission
     :: Permission
-permission =
+permission = 
     Permission'
     { _pWithLink = Nothing
     , _pUser = Nothing
@@ -628,8 +628,8 @@ instance ToJSON Permission where
 -- /See:/ 'target' smart constructor.
 data Target = Target'
     { _tMimeType :: !(Maybe Text)
-    , _tName     :: !(Maybe Text)
-    , _tId       :: !(Maybe Text)
+    , _tName :: !(Maybe Text)
+    , _tId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Target' with the minimum fields required to make a request.
@@ -643,7 +643,7 @@ data Target = Target'
 -- * 'tId'
 target
     :: Target
-target =
+target = 
     Target'
     { _tMimeType = Nothing
     , _tName = Nothing
@@ -685,7 +685,7 @@ instance ToJSON Target where
 --
 -- /See:/ 'move' smart constructor.
 data Move = Move'
-    { _mAddedParents   :: !(Maybe [Parent])
+    { _mAddedParents :: !(Maybe [Parent])
     , _mRemovedParents :: !(Maybe [Parent])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -698,7 +698,7 @@ data Move = Move'
 -- * 'mRemovedParents'
 move
     :: Move
-move =
+move = 
     Move'
     { _mAddedParents = Nothing
     , _mRemovedParents = Nothing

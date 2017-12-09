@@ -40,10 +40,11 @@ module Network.Google.Resource.Games.Achievements.List
     , alPageToken
     , alPlayerId
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.list@ method which the
 -- 'AchievementsList' request conforms to.
@@ -58,20 +59,22 @@ type AchievementsListResource =
                    QueryParam "language" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] PlayerAchievementListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] PlayerAchievementListResponse
 
 -- | Lists the progress for all your application\'s achievements for the
 -- currently authenticated player.
 --
 -- /See:/ 'achievementsList' smart constructor.
 data AchievementsList = AchievementsList'
-    { _alState            :: !(Maybe AchievementsListState)
+    { _alState :: !(Maybe AchievementsListState)
     , _alConsistencyToken :: !(Maybe (Textual Int64))
-    , _alLanguage         :: !(Maybe Text)
-    , _alPageToken        :: !(Maybe Text)
-    , _alPlayerId         :: !Text
-    , _alMaxResults       :: !(Maybe (Textual Int32))
+    , _alLanguage :: !(Maybe Text)
+    , _alPageToken :: !(Maybe Text)
+    , _alPlayerId :: !Text
+    , _alMaxResults :: !(Maybe (Textual Int32))
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsList' with the minimum fields required to make a request.
@@ -89,10 +92,12 @@ data AchievementsList = AchievementsList'
 -- * 'alPlayerId'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 achievementsList
     :: Text -- ^ 'alPlayerId'
     -> AchievementsList
-achievementsList pAlPlayerId_ =
+achievementsList pAlPlayerId_ = 
     AchievementsList'
     { _alState = Nothing
     , _alConsistencyToken = Nothing
@@ -100,6 +105,7 @@ achievementsList pAlPlayerId_ =
     , _alPageToken = Nothing
     , _alPlayerId = pAlPlayerId_
     , _alMaxResults = Nothing
+    , _alFields = Nothing
     }
 
 -- | Tells the server to return only achievements with the specified state.
@@ -138,6 +144,10 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' AchievementsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest AchievementsList where
         type Rs AchievementsList =
              PlayerAchievementListResponse
@@ -149,6 +159,7 @@ instance GoogleRequest AchievementsList where
               _alLanguage
               _alPageToken
               _alMaxResults
+              _alFields
               (Just AltJSON)
               gamesService
           where go

@@ -39,10 +39,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.List
     , rulFilter
     , rulPageToken
     , rulMaxResults
+    , rulFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.list@ method which the
 -- 'RollingUpdatesList' request conforms to.
@@ -57,19 +58,21 @@ type RollingUpdatesListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] RollingUpdateList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] RollingUpdateList
 
 -- | Lists recent updates for a given managed instance group, in reverse
 -- chronological order and paginated format.
 --
 -- /See:/ 'rollingUpdatesList' smart constructor.
 data RollingUpdatesList = RollingUpdatesList'
-    { _rulProject    :: !Text
-    , _rulZone       :: !Text
-    , _rulFilter     :: !(Maybe Text)
-    , _rulPageToken  :: !(Maybe Text)
+    { _rulProject :: !Text
+    , _rulZone :: !Text
+    , _rulFilter :: !(Maybe Text)
+    , _rulPageToken :: !(Maybe Text)
     , _rulMaxResults :: !(Textual Word32)
+    , _rulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesList' with the minimum fields required to make a request.
@@ -85,17 +88,20 @@ data RollingUpdatesList = RollingUpdatesList'
 -- * 'rulPageToken'
 --
 -- * 'rulMaxResults'
+--
+-- * 'rulFields'
 rollingUpdatesList
     :: Text -- ^ 'rulProject'
     -> Text -- ^ 'rulZone'
     -> RollingUpdatesList
-rollingUpdatesList pRulProject_ pRulZone_ =
+rollingUpdatesList pRulProject_ pRulZone_ = 
     RollingUpdatesList'
     { _rulProject = pRulProject_
     , _rulZone = pRulZone_
     , _rulFilter = Nothing
     , _rulPageToken = Nothing
     , _rulMaxResults = 500
+    , _rulFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -126,6 +132,11 @@ rulMaxResults
       (\ s a -> s{_rulMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rulFields :: Lens' RollingUpdatesList (Maybe Text)
+rulFields
+  = lens _rulFields (\ s a -> s{_rulFields = a})
+
 instance GoogleRequest RollingUpdatesList where
         type Rs RollingUpdatesList = RollingUpdateList
         type Scopes RollingUpdatesList =
@@ -136,6 +147,7 @@ instance GoogleRequest RollingUpdatesList where
         requestClient RollingUpdatesList'{..}
           = go _rulProject _rulZone _rulFilter _rulPageToken
               (Just _rulMaxResults)
+              _rulFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

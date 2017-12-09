@@ -40,11 +40,12 @@ module Network.Google.Resource.Logging.BillingAccounts.Sinks.Get
     , basgUploadType
     , basgBearerToken
     , basgSinkName
+    , basgFields
     , basgCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.billingAccounts.sinks.get@ method which the
 -- 'BillingAccountsSinksGet' request conforms to.
@@ -58,20 +59,22 @@ type BillingAccountsSinksGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] LogSink
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] LogSink
 
 -- | Gets a sink.
 --
 -- /See:/ 'billingAccountsSinksGet' smart constructor.
 data BillingAccountsSinksGet = BillingAccountsSinksGet'
-    { _basgXgafv          :: !(Maybe Xgafv)
+    { _basgXgafv :: !(Maybe Xgafv)
     , _basgUploadProtocol :: !(Maybe Text)
-    , _basgPp             :: !Bool
-    , _basgAccessToken    :: !(Maybe Text)
-    , _basgUploadType     :: !(Maybe Text)
-    , _basgBearerToken    :: !(Maybe Text)
-    , _basgSinkName       :: !Text
-    , _basgCallback       :: !(Maybe Text)
+    , _basgPp :: !Bool
+    , _basgAccessToken :: !(Maybe Text)
+    , _basgUploadType :: !(Maybe Text)
+    , _basgBearerToken :: !(Maybe Text)
+    , _basgSinkName :: !Text
+    , _basgFields :: !(Maybe Text)
+    , _basgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsSinksGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data BillingAccountsSinksGet = BillingAccountsSinksGet'
 --
 -- * 'basgSinkName'
 --
+-- * 'basgFields'
+--
 -- * 'basgCallback'
 billingAccountsSinksGet
     :: Text -- ^ 'basgSinkName'
     -> BillingAccountsSinksGet
-billingAccountsSinksGet pBasgSinkName_ =
+billingAccountsSinksGet pBasgSinkName_ = 
     BillingAccountsSinksGet'
     { _basgXgafv = Nothing
     , _basgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ billingAccountsSinksGet pBasgSinkName_ =
     , _basgUploadType = Nothing
     , _basgBearerToken = Nothing
     , _basgSinkName = pBasgSinkName_
+    , _basgFields = Nothing
     , _basgCallback = Nothing
     }
 
@@ -141,13 +147,20 @@ basgBearerToken
   = lens _basgBearerToken
       (\ s a -> s{_basgBearerToken = a})
 
--- | Required. The parent resource name of the sink:
+-- | Required. The resource name of the sink:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
 -- \"projects\/my-project-id\/sinks\/my-sink-id\".
 basgSinkName :: Lens' BillingAccountsSinksGet Text
 basgSinkName
   = lens _basgSinkName (\ s a -> s{_basgSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+basgFields :: Lens' BillingAccountsSinksGet (Maybe Text)
+basgFields
+  = lens _basgFields (\ s a -> s{_basgFields = a})
 
 -- | JSONP
 basgCallback :: Lens' BillingAccountsSinksGet (Maybe Text)
@@ -168,6 +181,7 @@ instance GoogleRequest BillingAccountsSinksGet where
               _basgUploadType
               _basgBearerToken
               _basgCallback
+              _basgFields
               (Just AltJSON)
               loggingService
           where go

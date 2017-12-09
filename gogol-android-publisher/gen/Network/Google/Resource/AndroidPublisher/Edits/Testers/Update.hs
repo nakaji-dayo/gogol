@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Testers.Update
     , etutPackageName
     , etutPayload
     , etutEditId
+    , etutFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.testers.update@ method which the
 -- 'EditsTestersUpdate' request conforms to.
@@ -51,16 +52,18 @@ type EditsTestersUpdateResource =
                Capture "editId" Text :>
                  "testers" :>
                    Capture "track" EditsTestersUpdateTrack :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Testers :> Put '[JSON] Testers
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Testers :> Put '[JSON] Testers
 
 --
 -- /See:/ 'editsTestersUpdate' smart constructor.
 data EditsTestersUpdate = EditsTestersUpdate'
-    { _etutTrack       :: !EditsTestersUpdateTrack
+    { _etutTrack :: !EditsTestersUpdateTrack
     , _etutPackageName :: !Text
-    , _etutPayload     :: !Testers
-    , _etutEditId      :: !Text
+    , _etutPayload :: !Testers
+    , _etutEditId :: !Text
+    , _etutFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTestersUpdate' with the minimum fields required to make a request.
@@ -74,18 +77,21 @@ data EditsTestersUpdate = EditsTestersUpdate'
 -- * 'etutPayload'
 --
 -- * 'etutEditId'
+--
+-- * 'etutFields'
 editsTestersUpdate
     :: EditsTestersUpdateTrack -- ^ 'etutTrack'
     -> Text -- ^ 'etutPackageName'
     -> Testers -- ^ 'etutPayload'
     -> Text -- ^ 'etutEditId'
     -> EditsTestersUpdate
-editsTestersUpdate pEtutTrack_ pEtutPackageName_ pEtutPayload_ pEtutEditId_ =
+editsTestersUpdate pEtutTrack_ pEtutPackageName_ pEtutPayload_ pEtutEditId_ = 
     EditsTestersUpdate'
     { _etutTrack = pEtutTrack_
     , _etutPackageName = pEtutPackageName_
     , _etutPayload = pEtutPayload_
     , _etutEditId = pEtutEditId_
+    , _etutFields = Nothing
     }
 
 etutTrack :: Lens' EditsTestersUpdate EditsTestersUpdateTrack
@@ -109,12 +115,18 @@ etutEditId :: Lens' EditsTestersUpdate Text
 etutEditId
   = lens _etutEditId (\ s a -> s{_etutEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etutFields :: Lens' EditsTestersUpdate (Maybe Text)
+etutFields
+  = lens _etutFields (\ s a -> s{_etutFields = a})
+
 instance GoogleRequest EditsTestersUpdate where
         type Rs EditsTestersUpdate = Testers
         type Scopes EditsTestersUpdate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTestersUpdate'{..}
           = go _etutPackageName _etutEditId _etutTrack
+              _etutFields
               (Just AltJSON)
               _etutPayload
               androidPublisherService

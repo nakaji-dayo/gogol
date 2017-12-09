@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.Entitlements.Patch
     , epPayload
     , epInstall
     , epUserId
+    , epFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.entitlements.patch@ method which the
 -- 'EntitlementsPatch' request conforms to.
@@ -56,9 +57,10 @@ type EntitlementsPatchResource =
                  "entitlements" :>
                    Capture "entitlementId" Text :>
                      QueryParam "install" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Entitlement :>
-                           Patch '[JSON] Entitlement
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Entitlement :>
+                             Patch '[JSON] Entitlement
 
 -- | Adds or updates an entitlement to an app for a user. This method
 -- supports patch semantics.
@@ -66,10 +68,11 @@ type EntitlementsPatchResource =
 -- /See:/ 'entitlementsPatch' smart constructor.
 data EntitlementsPatch = EntitlementsPatch'
     { _epEntitlementId :: !Text
-    , _epEnterpriseId  :: !Text
-    , _epPayload       :: !Entitlement
-    , _epInstall       :: !(Maybe Bool)
-    , _epUserId        :: !Text
+    , _epEnterpriseId :: !Text
+    , _epPayload :: !Entitlement
+    , _epInstall :: !(Maybe Bool)
+    , _epUserId :: !Text
+    , _epFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitlementsPatch' with the minimum fields required to make a request.
@@ -85,19 +88,22 @@ data EntitlementsPatch = EntitlementsPatch'
 -- * 'epInstall'
 --
 -- * 'epUserId'
+--
+-- * 'epFields'
 entitlementsPatch
     :: Text -- ^ 'epEntitlementId'
     -> Text -- ^ 'epEnterpriseId'
     -> Entitlement -- ^ 'epPayload'
     -> Text -- ^ 'epUserId'
     -> EntitlementsPatch
-entitlementsPatch pEpEntitlementId_ pEpEnterpriseId_ pEpPayload_ pEpUserId_ =
+entitlementsPatch pEpEntitlementId_ pEpEnterpriseId_ pEpPayload_ pEpUserId_ = 
     EntitlementsPatch'
     { _epEntitlementId = pEpEntitlementId_
     , _epEnterpriseId = pEpEnterpriseId_
     , _epPayload = pEpPayload_
     , _epInstall = Nothing
     , _epUserId = pEpUserId_
+    , _epFields = Nothing
     }
 
 -- | The ID of the entitlement (a product ID), e.g.
@@ -130,6 +136,10 @@ epInstall
 epUserId :: Lens' EntitlementsPatch Text
 epUserId = lens _epUserId (\ s a -> s{_epUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+epFields :: Lens' EntitlementsPatch (Maybe Text)
+epFields = lens _epFields (\ s a -> s{_epFields = a})
+
 instance GoogleRequest EntitlementsPatch where
         type Rs EntitlementsPatch = Entitlement
         type Scopes EntitlementsPatch =
@@ -137,6 +147,7 @@ instance GoogleRequest EntitlementsPatch where
         requestClient EntitlementsPatch'{..}
           = go _epEnterpriseId _epUserId _epEntitlementId
               _epInstall
+              _epFields
               (Just AltJSON)
               _epPayload
               androidEnterpriseService

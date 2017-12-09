@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -31,9 +31,33 @@ module Network.Google.FirebaseRules.Types
     , spColumn
     , spFileName
 
+    -- * TestCase
+    , TestCase
+    , testCase
+    , tcResource
+    , tcExpectation
+    , tcFunctionMocks
+    , tcRequest
+
     -- * Empty
     , Empty
     , empty
+
+    -- * FunctionMock
+    , FunctionMock
+    , functionMock
+    , fmArgs
+    , fmFunction
+    , fmResult
+
+    -- * TestResultState
+    , TestResultState (..)
+
+    -- * FunctionCall
+    , FunctionCall
+    , functionCall
+    , fcArgs
+    , fcFunction
 
     -- * ListReleasesResponse
     , ListReleasesResponse
@@ -41,9 +65,16 @@ module Network.Google.FirebaseRules.Types
     , lrrNextPageToken
     , lrrReleases
 
+    -- * Result
+    , Result
+    , result
+    , rValue
+    , rUndefined
+
     -- * TestRulesetResponse
     , TestRulesetResponse
     , testRulesetResponse
+    , trrTestResults
     , trrIssues
 
     -- * Release
@@ -54,12 +85,35 @@ module Network.Google.FirebaseRules.Types
     , rName
     , rCreateTime
 
+    -- * Arg
+    , Arg
+    , arg
+    , aAnyValue
+    , aExactValue
+
     -- * Ruleset
     , Ruleset
     , ruleset
     , rulName
     , rulSource
     , rulCreateTime
+
+    -- * GetReleaseExecutableResponse
+    , GetReleaseExecutableResponse
+    , getReleaseExecutableResponse
+    , grerExecutable
+    , grerRulesetName
+    , grerUpdateTime
+    , grerExecutableVersion
+    , grerLanguage
+
+    -- * TestResult
+    , TestResult
+    , testResult
+    , trState
+    , trFunctionCalls
+    , trErrorPosition
+    , trDebugMessages
 
     -- * Xgafv
     , Xgafv (..)
@@ -72,10 +126,19 @@ module Network.Google.FirebaseRules.Types
     , source
     , sFiles
 
+    -- * TestCaseExpectation
+    , TestCaseExpectation (..)
+
+    -- * TestSuite
+    , TestSuite
+    , testSuite
+    , tsTestCases
+
     -- * TestRulesetRequest
     , TestRulesetRequest
     , testRulesetRequest
     , trrSource
+    , trrTestSuite
 
     -- * File
     , File
@@ -83,6 +146,12 @@ module Network.Google.FirebaseRules.Types
     , fFingerprint
     , fContent
     , fName
+
+    -- * GetReleaseExecutableResponseExecutableVersion
+    , GetReleaseExecutableResponseExecutableVersion (..)
+
+    -- * GetReleaseExecutableResponseLanguage
+    , GetReleaseExecutableResponseLanguage (..)
 
     -- * ListRulesetsResponse
     , ListRulesetsResponse
@@ -96,11 +165,17 @@ module Network.Google.FirebaseRules.Types
     , iSourcePosition
     , iSeverity
     , iDescription
+
+    -- * UpdateReleaseRequest
+    , UpdateReleaseRequest
+    , updateReleaseRequest
+    , urrUpdateMask
+    , urrRelease
     ) where
 
-import           Network.Google.FirebaseRules.Types.Product
-import           Network.Google.FirebaseRules.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types.Product
+import Network.Google.FirebaseRules.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Firebase Rules API. This contains the host and root path used as a starting point for constructing service requests.
 firebaseRulesService :: ServiceConfig

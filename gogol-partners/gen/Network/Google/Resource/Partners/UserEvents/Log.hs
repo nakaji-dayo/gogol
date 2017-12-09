@@ -40,40 +40,43 @@ module Network.Google.Resource.Partners.UserEvents.Log
     , uelUploadType
     , uelPayload
     , uelBearerToken
+    , uelFields
     , uelCallback
     ) where
 
-import           Network.Google.Partners.Types
-import           Network.Google.Prelude
+import Network.Google.Partners.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @partners.userEvents.log@ method which the
 -- 'UserEventsLog' request conforms to.
 type UserEventsLogResource =
      "v2" :>
        "userEvents:log" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] LogUserEventRequest :>
-                           Post '[JSON] LogUserEventResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] LogUserEventRequest :>
+                             Post '[JSON] LogUserEventResponse
 
 -- | Logs a user event.
 --
 -- /See:/ 'userEventsLog' smart constructor.
 data UserEventsLog = UserEventsLog'
-    { _uelXgafv          :: !(Maybe Text)
+    { _uelXgafv :: !(Maybe Xgafv)
     , _uelUploadProtocol :: !(Maybe Text)
-    , _uelPp             :: !Bool
-    , _uelAccessToken    :: !(Maybe Text)
-    , _uelUploadType     :: !(Maybe Text)
-    , _uelPayload        :: !LogUserEventRequest
-    , _uelBearerToken    :: !(Maybe Text)
-    , _uelCallback       :: !(Maybe Text)
+    , _uelPp :: !Bool
+    , _uelAccessToken :: !(Maybe Text)
+    , _uelUploadType :: !(Maybe Text)
+    , _uelPayload :: !LogUserEventRequest
+    , _uelBearerToken :: !(Maybe Text)
+    , _uelFields :: !(Maybe Text)
+    , _uelCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserEventsLog' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data UserEventsLog = UserEventsLog'
 --
 -- * 'uelBearerToken'
 --
+-- * 'uelFields'
+--
 -- * 'uelCallback'
 userEventsLog
     :: LogUserEventRequest -- ^ 'uelPayload'
     -> UserEventsLog
-userEventsLog pUelPayload_ =
+userEventsLog pUelPayload_ = 
     UserEventsLog'
     { _uelXgafv = Nothing
     , _uelUploadProtocol = Nothing
@@ -107,11 +112,12 @@ userEventsLog pUelPayload_ =
     , _uelUploadType = Nothing
     , _uelPayload = pUelPayload_
     , _uelBearerToken = Nothing
+    , _uelFields = Nothing
     , _uelCallback = Nothing
     }
 
 -- | V1 error format.
-uelXgafv :: Lens' UserEventsLog (Maybe Text)
+uelXgafv :: Lens' UserEventsLog (Maybe Xgafv)
 uelXgafv = lens _uelXgafv (\ s a -> s{_uelXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -147,6 +153,11 @@ uelBearerToken
   = lens _uelBearerToken
       (\ s a -> s{_uelBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uelFields :: Lens' UserEventsLog (Maybe Text)
+uelFields
+  = lens _uelFields (\ s a -> s{_uelFields = a})
+
 -- | JSONP
 uelCallback :: Lens' UserEventsLog (Maybe Text)
 uelCallback
@@ -161,6 +172,7 @@ instance GoogleRequest UserEventsLog where
               _uelUploadType
               _uelBearerToken
               _uelCallback
+              _uelFields
               (Just AltJSON)
               _uelPayload
               partnersService

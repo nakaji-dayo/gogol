@@ -149,9 +149,6 @@ module Network.Google.AndroidPublisher
     -- ** androidpublisher.entitlements.list
     , module Network.Google.Resource.AndroidPublisher.Entitlements.List
 
-    -- ** androidpublisher.inappproducts.batch
-    , module Network.Google.Resource.AndroidPublisher.InAppProducts.Batch
-
     -- ** androidpublisher.inappproducts.delete
     , module Network.Google.Resource.AndroidPublisher.InAppProducts.Delete
 
@@ -207,11 +204,6 @@ module Network.Google.AndroidPublisher
     , inAppProductListings
     , iaplAddtional
 
-    -- ** InAppProductsUpdateResponse
-    , InAppProductsUpdateResponse
-    , inAppProductsUpdateResponse
-    , iapurInAppProduct
-
     -- ** EditsImagesDeleteallImageType
     , EditsImagesDeleteallImageType (..)
 
@@ -234,14 +226,6 @@ module Network.Google.AndroidPublisher
     , iURL
     , iSha1
     , iId
-
-    -- ** InAppProductsBatchRequestEntry
-    , InAppProductsBatchRequestEntry
-    , inAppProductsBatchRequestEntry
-    , iapbreMethodName
-    , iapbreInAppProductsinsertrequest
-    , iapbreInAppProductsupdaterequest
-    , iapbreBatchId
 
     -- ** InAppProductListing
     , InAppProductListing
@@ -356,6 +340,7 @@ module Network.Google.AndroidPublisher
     , ppKind
     , ppPurchaseTimeMillis
     , ppDeveloperPayload
+    , ppOrderId
 
     -- ** ReviewsListResponse
     , ReviewsListResponse
@@ -378,6 +363,7 @@ module Network.Google.AndroidPublisher
     -- ** SubscriptionPurchase
     , SubscriptionPurchase
     , subscriptionPurchase
+    , spUserCancellationTimeMillis
     , spPaymentState
     , spKind
     , spExpiryTimeMillis
@@ -388,6 +374,7 @@ module Network.Google.AndroidPublisher
     , spDeveloperPayload
     , spPriceAmountMicros
     , spStartTimeMillis
+    , spOrderId
 
     -- ** AppDetails
     , AppDetails
@@ -401,11 +388,6 @@ module Network.Google.AndroidPublisher
     , InAppProductPrices
     , inAppProductPrices
     , iAppAddtional
-
-    -- ** InAppProductsBatchRequest
-    , InAppProductsBatchRequest
-    , inAppProductsBatchRequest
-    , iapbrEntrys
 
     -- ** ExternallyHostedAPK
     , ExternallyHostedAPK
@@ -498,11 +480,6 @@ module Network.Google.AndroidPublisher
     , rAuthorName
     , rComments
 
-    -- ** InAppProductsInsertResponse
-    , InAppProductsInsertResponse
-    , inAppProductsInsertResponse
-    , iapirInAppProduct
-
     -- ** APKsAddExternallyHostedResponse
     , APKsAddExternallyHostedResponse
     , aPKsAddExternallyHostedResponse
@@ -564,13 +541,6 @@ module Network.Google.AndroidPublisher
     , iapListings
     , iapDefaultLanguage
 
-    -- ** InAppProductsBatchResponseEntry
-    , InAppProductsBatchResponseEntry
-    , inAppProductsBatchResponseEntry
-    , iInAppProductsupdateresponse
-    , iInAppProductsinsertresponse
-    , iBatchId
-
     -- ** Price
     , Price
     , price
@@ -584,6 +554,7 @@ module Network.Google.AndroidPublisher
     , APKBinary
     , aPKBinary
     , apkbSha1
+    , apkbSha256
 
     -- ** APKsListResponse
     , APKsListResponse
@@ -613,11 +584,6 @@ module Network.Google.AndroidPublisher
     , aPKsAddExternallyHostedRequest
     , aExternallyHostedAPK
 
-    -- ** InAppProductsInsertRequest
-    , InAppProductsInsertRequest
-    , inAppProductsInsertRequest
-    , iInAppProduct
-
     -- ** EntitlementsListResponse
     , EntitlementsListResponse
     , entitlementsListResponse
@@ -633,11 +599,6 @@ module Network.Google.AndroidPublisher
 
     -- ** EditsTestersUpdateTrack
     , EditsTestersUpdateTrack (..)
-
-    -- ** InAppProductsUpdateRequest
-    , InAppProductsUpdateRequest
-    , inAppProductsUpdateRequest
-    , inInAppProduct
 
     -- ** Timestamp
     , Timestamp
@@ -666,73 +627,66 @@ module Network.Google.AndroidPublisher
     , eProductType
     , eToken
     , eProductId
-
-    -- ** InAppProductsBatchResponse
-    , InAppProductsBatchResponse
-    , inAppProductsBatchResponse
-    , iEntrys
-    , iKind
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.Delete
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.Deleteall
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.List
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.APKListings.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.APKs.Addexternallyhosted
-import           Network.Google.Resource.AndroidPublisher.Edits.APKs.List
-import           Network.Google.Resource.AndroidPublisher.Edits.APKs.Upload
-import           Network.Google.Resource.AndroidPublisher.Edits.Commit
-import           Network.Google.Resource.AndroidPublisher.Edits.Delete
-import           Network.Google.Resource.AndroidPublisher.Edits.DeobfuscationFiles.Upload
-import           Network.Google.Resource.AndroidPublisher.Edits.Details.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.Details.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.Details.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Upload
-import           Network.Google.Resource.AndroidPublisher.Edits.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.Images.Delete
-import           Network.Google.Resource.AndroidPublisher.Edits.Images.Deleteall
-import           Network.Google.Resource.AndroidPublisher.Edits.Images.List
-import           Network.Google.Resource.AndroidPublisher.Edits.Images.Upload
-import           Network.Google.Resource.AndroidPublisher.Edits.Insert
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.Delete
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.Deleteall
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.List
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.Listings.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.Testers.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.Testers.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.Testers.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.Tracks.Get
-import           Network.Google.Resource.AndroidPublisher.Edits.Tracks.List
-import           Network.Google.Resource.AndroidPublisher.Edits.Tracks.Patch
-import           Network.Google.Resource.AndroidPublisher.Edits.Tracks.Update
-import           Network.Google.Resource.AndroidPublisher.Edits.Validate
-import           Network.Google.Resource.AndroidPublisher.Entitlements.List
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Batch
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Delete
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Get
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Insert
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.List
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Patch
-import           Network.Google.Resource.AndroidPublisher.InAppProducts.Update
-import           Network.Google.Resource.AndroidPublisher.Purchases.Products.Get
-import           Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Cancel
-import           Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Defer
-import           Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Get
-import           Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Refund
-import           Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Revoke
-import           Network.Google.Resource.AndroidPublisher.Purchases.Voidedpurchases.List
-import           Network.Google.Resource.AndroidPublisher.Reviews.Get
-import           Network.Google.Resource.AndroidPublisher.Reviews.List
-import           Network.Google.Resource.AndroidPublisher.Reviews.Reply
+import Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.Delete
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.Deleteall
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.Get
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.List
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.APKListings.Update
+import Network.Google.Resource.AndroidPublisher.Edits.APKs.Addexternallyhosted
+import Network.Google.Resource.AndroidPublisher.Edits.APKs.List
+import Network.Google.Resource.AndroidPublisher.Edits.APKs.Upload
+import Network.Google.Resource.AndroidPublisher.Edits.Commit
+import Network.Google.Resource.AndroidPublisher.Edits.Delete
+import Network.Google.Resource.AndroidPublisher.Edits.DeobfuscationFiles.Upload
+import Network.Google.Resource.AndroidPublisher.Edits.Details.Get
+import Network.Google.Resource.AndroidPublisher.Edits.Details.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.Details.Update
+import Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Get
+import Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Update
+import Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Upload
+import Network.Google.Resource.AndroidPublisher.Edits.Get
+import Network.Google.Resource.AndroidPublisher.Edits.Images.Delete
+import Network.Google.Resource.AndroidPublisher.Edits.Images.Deleteall
+import Network.Google.Resource.AndroidPublisher.Edits.Images.List
+import Network.Google.Resource.AndroidPublisher.Edits.Images.Upload
+import Network.Google.Resource.AndroidPublisher.Edits.Insert
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.Delete
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.Deleteall
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.Get
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.List
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.Listings.Update
+import Network.Google.Resource.AndroidPublisher.Edits.Testers.Get
+import Network.Google.Resource.AndroidPublisher.Edits.Testers.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.Testers.Update
+import Network.Google.Resource.AndroidPublisher.Edits.Tracks.Get
+import Network.Google.Resource.AndroidPublisher.Edits.Tracks.List
+import Network.Google.Resource.AndroidPublisher.Edits.Tracks.Patch
+import Network.Google.Resource.AndroidPublisher.Edits.Tracks.Update
+import Network.Google.Resource.AndroidPublisher.Edits.Validate
+import Network.Google.Resource.AndroidPublisher.Entitlements.List
+import Network.Google.Resource.AndroidPublisher.InAppProducts.Delete
+import Network.Google.Resource.AndroidPublisher.InAppProducts.Get
+import Network.Google.Resource.AndroidPublisher.InAppProducts.Insert
+import Network.Google.Resource.AndroidPublisher.InAppProducts.List
+import Network.Google.Resource.AndroidPublisher.InAppProducts.Patch
+import Network.Google.Resource.AndroidPublisher.InAppProducts.Update
+import Network.Google.Resource.AndroidPublisher.Purchases.Products.Get
+import Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Cancel
+import Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Defer
+import Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Get
+import Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Refund
+import Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Revoke
+import Network.Google.Resource.AndroidPublisher.Purchases.Voidedpurchases.List
+import Network.Google.Resource.AndroidPublisher.Reviews.Get
+import Network.Google.Resource.AndroidPublisher.Reviews.List
+import Network.Google.Resource.AndroidPublisher.Reviews.Reply
 
 {- $resources
 TODO
@@ -740,9 +694,8 @@ TODO
 
 -- | Represents the entirety of the methods and resources available for the Google Play Developer API service.
 type AndroidPublisherAPI =
-     InAppProductsBatchResource :<|>
-       InAppProductsInsertResource
-       :<|> InAppProductsListResource
+     InAppProductsInsertResource :<|>
+       InAppProductsListResource
        :<|> InAppProductsPatchResource
        :<|> InAppProductsGetResource
        :<|> InAppProductsDeleteResource

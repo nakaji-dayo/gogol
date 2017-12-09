@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.Insert
     , mpfiWebPropertyId
     , mpfiPayload
     , mpfiAccountId
+    , mpfiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.insert@ method which the
 -- 'ManagementProFilesInsert' request conforms to.
@@ -52,16 +53,18 @@ type ManagementProFilesInsertResource =
                "webproperties" :>
                  Capture "webPropertyId" Text :>
                    "profiles" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] ProFile :> Post '[JSON] ProFile
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] ProFile :> Post '[JSON] ProFile
 
 -- | Create a new view (profile).
 --
 -- /See:/ 'managementProFilesInsert' smart constructor.
 data ManagementProFilesInsert = ManagementProFilesInsert'
     { _mpfiWebPropertyId :: !Text
-    , _mpfiPayload       :: !ProFile
-    , _mpfiAccountId     :: !Text
+    , _mpfiPayload :: !ProFile
+    , _mpfiAccountId :: !Text
+    , _mpfiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesInsert' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementProFilesInsert = ManagementProFilesInsert'
 -- * 'mpfiPayload'
 --
 -- * 'mpfiAccountId'
+--
+-- * 'mpfiFields'
 managementProFilesInsert
     :: Text -- ^ 'mpfiWebPropertyId'
     -> ProFile -- ^ 'mpfiPayload'
     -> Text -- ^ 'mpfiAccountId'
     -> ManagementProFilesInsert
-managementProFilesInsert pMpfiWebPropertyId_ pMpfiPayload_ pMpfiAccountId_ =
+managementProFilesInsert pMpfiWebPropertyId_ pMpfiPayload_ pMpfiAccountId_ = 
     ManagementProFilesInsert'
     { _mpfiWebPropertyId = pMpfiWebPropertyId_
     , _mpfiPayload = pMpfiPayload_
     , _mpfiAccountId = pMpfiAccountId_
+    , _mpfiFields = Nothing
     }
 
 -- | Web property ID to create the view (profile) for.
@@ -102,12 +108,18 @@ mpfiAccountId
   = lens _mpfiAccountId
       (\ s a -> s{_mpfiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfiFields :: Lens' ManagementProFilesInsert (Maybe Text)
+mpfiFields
+  = lens _mpfiFields (\ s a -> s{_mpfiFields = a})
+
 instance GoogleRequest ManagementProFilesInsert where
         type Rs ManagementProFilesInsert = ProFile
         type Scopes ManagementProFilesInsert =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementProFilesInsert'{..}
-          = go _mpfiAccountId _mpfiWebPropertyId (Just AltJSON)
+          = go _mpfiAccountId _mpfiWebPropertyId _mpfiFields
+              (Just AltJSON)
               _mpfiPayload
               analyticsService
           where go

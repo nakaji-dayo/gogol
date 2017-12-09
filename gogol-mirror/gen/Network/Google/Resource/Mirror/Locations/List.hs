@@ -32,10 +32,12 @@ module Network.Google.Resource.Mirror.Locations.List
     , locationsList
     , LocationsList
 
+    -- * Request Lenses
+    , llFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.locations.list@ method which the
 -- 'LocationsList' request conforms to.
@@ -43,29 +45,40 @@ type LocationsListResource =
      "mirror" :>
        "v1" :>
          "locations" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] LocationsListResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] LocationsListResponse
 
 -- | Retrieves a list of locations for the user.
 --
 -- /See:/ 'locationsList' smart constructor.
-data LocationsList =
-    LocationsList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype LocationsList = LocationsList'
+    { _llFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LocationsList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'llFields'
 locationsList
     :: LocationsList
-locationsList = LocationsList'
+locationsList = 
+    LocationsList'
+    { _llFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+llFields :: Lens' LocationsList (Maybe Text)
+llFields = lens _llFields (\ s a -> s{_llFields = a})
 
 instance GoogleRequest LocationsList where
         type Rs LocationsList = LocationsListResponse
         type Scopes LocationsList =
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
-        requestClient LocationsList'{}
-          = go (Just AltJSON) mirrorService
+        requestClient LocationsList'{..}
+          = go _llFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy LocationsListResource)
                       mempty

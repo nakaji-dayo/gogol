@@ -35,10 +35,11 @@ module Network.Google.Resource.Drive.Comments.Delete
     -- * Request Lenses
     , cdFileId
     , cdCommentId
+    , cdFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.comments.delete@ method which the
 -- 'CommentsDelete' request conforms to.
@@ -49,14 +50,16 @@ type CommentsDeleteResource =
            Capture "fileId" Text :>
              "comments" :>
                Capture "commentId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a comment.
 --
 -- /See:/ 'commentsDelete' smart constructor.
 data CommentsDelete = CommentsDelete'
-    { _cdFileId    :: !Text
+    { _cdFileId :: !Text
     , _cdCommentId :: !Text
+    , _cdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CommentsDelete = CommentsDelete'
 -- * 'cdFileId'
 --
 -- * 'cdCommentId'
+--
+-- * 'cdFields'
 commentsDelete
     :: Text -- ^ 'cdFileId'
     -> Text -- ^ 'cdCommentId'
     -> CommentsDelete
-commentsDelete pCdFileId_ pCdCommentId_ =
+commentsDelete pCdFileId_ pCdCommentId_ = 
     CommentsDelete'
     { _cdFileId = pCdFileId_
     , _cdCommentId = pCdCommentId_
+    , _cdFields = Nothing
     }
 
 -- | The ID of the file.
@@ -85,13 +91,17 @@ cdCommentId :: Lens' CommentsDelete Text
 cdCommentId
   = lens _cdCommentId (\ s a -> s{_cdCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' CommentsDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 instance GoogleRequest CommentsDelete where
         type Rs CommentsDelete = ()
         type Scopes CommentsDelete =
              '["https://www.googleapis.com/auth/drive",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient CommentsDelete'{..}
-          = go _cdFileId _cdCommentId (Just AltJSON)
+          = go _cdFileId _cdCommentId _cdFields (Just AltJSON)
               driveService
           where go
                   = buildClient (Proxy :: Proxy CommentsDeleteResource)

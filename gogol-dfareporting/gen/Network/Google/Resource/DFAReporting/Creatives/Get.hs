@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Creatives.Get
     -- * Request Lenses
     , ccProFileId
     , ccId
+    , ccFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creatives.get@ method which the
 -- 'CreativesGet' request conforms to.
 type CreativesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creatives" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Creative
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Creative
 
 -- | Gets one creative by ID.
 --
 -- /See:/ 'creativesGet' smart constructor.
 data CreativesGet = CreativesGet'
     { _ccProFileId :: !(Textual Int64)
-    , _ccId        :: !(Textual Int64)
+    , _ccId :: !(Textual Int64)
+    , _ccFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativesGet = CreativesGet'
 -- * 'ccProFileId'
 --
 -- * 'ccId'
+--
+-- * 'ccFields'
 creativesGet
     :: Int64 -- ^ 'ccProFileId'
     -> Int64 -- ^ 'ccId'
     -> CreativesGet
-creativesGet pCcProFileId_ pCcId_ =
+creativesGet pCcProFileId_ pCcId_ = 
     CreativesGet'
     { _ccProFileId = _Coerce # pCcProFileId_
     , _ccId = _Coerce # pCcId_
+    , _ccFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -86,12 +92,16 @@ ccProFileId
 ccId :: Lens' CreativesGet Int64
 ccId = lens _ccId (\ s a -> s{_ccId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ccFields :: Lens' CreativesGet (Maybe Text)
+ccFields = lens _ccFields (\ s a -> s{_ccFields = a})
+
 instance GoogleRequest CreativesGet where
         type Rs CreativesGet = Creative
         type Scopes CreativesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativesGet'{..}
-          = go _ccProFileId _ccId (Just AltJSON)
+          = go _ccProFileId _ccId _ccFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy CreativesGetResource)

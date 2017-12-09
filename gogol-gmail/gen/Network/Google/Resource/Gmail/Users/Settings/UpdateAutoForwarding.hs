@@ -22,7 +22,8 @@
 --
 -- Updates the auto-forwarding setting for the specified account. A
 -- verified forwarding address must be specified when auto-forwarding is
--- enabled.
+-- enabled. This method is only available to service account clients that
+-- have been delegated domain-wide authority.
 --
 -- /See:/ <https://developers.google.com/gmail/api/ Gmail API Reference> for @gmail.users.settings.updateAutoForwarding@.
 module Network.Google.Resource.Gmail.Users.Settings.UpdateAutoForwarding
@@ -37,10 +38,11 @@ module Network.Google.Resource.Gmail.Users.Settings.UpdateAutoForwarding
     -- * Request Lenses
     , usuafPayload
     , usuafUserId
+    , usuafFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.updateAutoForwarding@ method which the
 -- 'UsersSettingsUpdateAutoForwarding' request conforms to.
@@ -51,18 +53,21 @@ type UsersSettingsUpdateAutoForwardingResource =
            Capture "userId" Text :>
              "settings" :>
                "autoForwarding" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AutoForwarding :>
-                     Put '[JSON] AutoForwarding
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AutoForwarding :>
+                       Put '[JSON] AutoForwarding
 
 -- | Updates the auto-forwarding setting for the specified account. A
 -- verified forwarding address must be specified when auto-forwarding is
--- enabled.
+-- enabled. This method is only available to service account clients that
+-- have been delegated domain-wide authority.
 --
 -- /See:/ 'usersSettingsUpdateAutoForwarding' smart constructor.
 data UsersSettingsUpdateAutoForwarding = UsersSettingsUpdateAutoForwarding'
     { _usuafPayload :: !AutoForwarding
-    , _usuafUserId  :: !Text
+    , _usuafUserId :: !Text
+    , _usuafFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsUpdateAutoForwarding' with the minimum fields required to make a request.
@@ -72,13 +77,16 @@ data UsersSettingsUpdateAutoForwarding = UsersSettingsUpdateAutoForwarding'
 -- * 'usuafPayload'
 --
 -- * 'usuafUserId'
+--
+-- * 'usuafFields'
 usersSettingsUpdateAutoForwarding
     :: AutoForwarding -- ^ 'usuafPayload'
     -> UsersSettingsUpdateAutoForwarding
-usersSettingsUpdateAutoForwarding pUsuafPayload_ =
+usersSettingsUpdateAutoForwarding pUsuafPayload_ = 
     UsersSettingsUpdateAutoForwarding'
     { _usuafPayload = pUsuafPayload_
     , _usuafUserId = "me"
+    , _usuafFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -92,6 +100,11 @@ usuafUserId :: Lens' UsersSettingsUpdateAutoForwarding Text
 usuafUserId
   = lens _usuafUserId (\ s a -> s{_usuafUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usuafFields :: Lens' UsersSettingsUpdateAutoForwarding (Maybe Text)
+usuafFields
+  = lens _usuafFields (\ s a -> s{_usuafFields = a})
+
 instance GoogleRequest
          UsersSettingsUpdateAutoForwarding where
         type Rs UsersSettingsUpdateAutoForwarding =
@@ -99,7 +112,8 @@ instance GoogleRequest
         type Scopes UsersSettingsUpdateAutoForwarding =
              '["https://www.googleapis.com/auth/gmail.settings.sharing"]
         requestClient UsersSettingsUpdateAutoForwarding'{..}
-          = go _usuafUserId (Just AltJSON) _usuafPayload
+          = go _usuafUserId _usuafFields (Just AltJSON)
+              _usuafPayload
               gmailService
           where go
                   = buildClient

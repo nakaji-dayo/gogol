@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Task.Delete
     -- * Request Lenses
     , tdTaskId
     , tdTableId
+    , tdFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.task.delete@ method which the
 -- 'TaskDelete' request conforms to.
@@ -50,15 +51,17 @@ type TaskDeleteResource =
            Capture "tableId" Text :>
              "tasks" :>
                Capture "taskId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a specific task by its ID, unless that task has already started
 -- running.
 --
 -- /See:/ 'taskDelete' smart constructor.
 data TaskDelete = TaskDelete'
-    { _tdTaskId  :: !Text
+    { _tdTaskId :: !Text
     , _tdTableId :: !Text
+    , _tdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskDelete' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data TaskDelete = TaskDelete'
 -- * 'tdTaskId'
 --
 -- * 'tdTableId'
+--
+-- * 'tdFields'
 taskDelete
     :: Text -- ^ 'tdTaskId'
     -> Text -- ^ 'tdTableId'
     -> TaskDelete
-taskDelete pTdTaskId_ pTdTableId_ =
+taskDelete pTdTaskId_ pTdTableId_ = 
     TaskDelete'
     { _tdTaskId = pTdTaskId_
     , _tdTableId = pTdTableId_
+    , _tdFields = Nothing
     }
 
 -- | The identifier of the task to delete.
@@ -87,12 +93,16 @@ tdTableId :: Lens' TaskDelete Text
 tdTableId
   = lens _tdTableId (\ s a -> s{_tdTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdFields :: Lens' TaskDelete (Maybe Text)
+tdFields = lens _tdFields (\ s a -> s{_tdFields = a})
+
 instance GoogleRequest TaskDelete where
         type Rs TaskDelete = ()
         type Scopes TaskDelete =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TaskDelete'{..}
-          = go _tdTableId _tdTaskId (Just AltJSON)
+          = go _tdTableId _tdTaskId _tdFields (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TaskDeleteResource)

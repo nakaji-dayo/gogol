@@ -38,16 +38,17 @@ module Network.Google.Resource.DFAReporting.Cities.List
     , citNamePrefix
     , citCountryDartIds
     , citDartIds
+    , citFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.cities.list@ method which the
 -- 'CitiesList' request conforms to.
 type CitiesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "cities" :>
@@ -55,18 +56,20 @@ type CitiesListResource =
                  QueryParam "namePrefix" Text :>
                    QueryParams "countryDartIds" (Textual Int64) :>
                      QueryParams "dartIds" (Textual Int64) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CitiesListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CitiesListResponse
 
 -- | Retrieves a list of cities, possibly filtered.
 --
 -- /See:/ 'citiesList' smart constructor.
 data CitiesList = CitiesList'
-    { _citRegionDartIds  :: !(Maybe [Textual Int64])
-    , _citProFileId      :: !(Textual Int64)
-    , _citNamePrefix     :: !(Maybe Text)
+    { _citRegionDartIds :: !(Maybe [Textual Int64])
+    , _citProFileId :: !(Textual Int64)
+    , _citNamePrefix :: !(Maybe Text)
     , _citCountryDartIds :: !(Maybe [Textual Int64])
-    , _citDartIds        :: !(Maybe [Textual Int64])
+    , _citDartIds :: !(Maybe [Textual Int64])
+    , _citFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CitiesList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data CitiesList = CitiesList'
 -- * 'citCountryDartIds'
 --
 -- * 'citDartIds'
+--
+-- * 'citFields'
 citiesList
     :: Int64 -- ^ 'citProFileId'
     -> CitiesList
-citiesList pCitProFileId_ =
+citiesList pCitProFileId_ = 
     CitiesList'
     { _citRegionDartIds = Nothing
     , _citProFileId = _Coerce # pCitProFileId_
     , _citNamePrefix = Nothing
     , _citCountryDartIds = Nothing
     , _citDartIds = Nothing
+    , _citFields = Nothing
     }
 
 -- | Select only cities from these regions.
@@ -129,6 +135,11 @@ citDartIds
       _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+citFields :: Lens' CitiesList (Maybe Text)
+citFields
+  = lens _citFields (\ s a -> s{_citFields = a})
+
 instance GoogleRequest CitiesList where
         type Rs CitiesList = CitiesListResponse
         type Scopes CitiesList =
@@ -138,6 +149,7 @@ instance GoogleRequest CitiesList where
               _citNamePrefix
               (_citCountryDartIds ^. _Default)
               (_citDartIds ^. _Default)
+              _citFields
               (Just AltJSON)
               dFAReportingService
           where go

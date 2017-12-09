@@ -42,26 +42,28 @@ module Network.Google.Resource.CloudBilling.BillingAccounts.Get
     , bagUploadType
     , bagBearerToken
     , bagName
+    , bagFields
     , bagCallback
     ) where
 
-import           Network.Google.Billing.Types
-import           Network.Google.Prelude
+import Network.Google.Billing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbilling.billingAccounts.get@ method which the
 -- 'BillingAccountsGet' request conforms to.
 type BillingAccountsGetResource =
      "v1" :>
        Capture "name" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] BillingAccount
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] BillingAccount
 
 -- | Gets information about a billing account. The current authenticated user
 -- must be an [owner of the billing
@@ -69,14 +71,15 @@ type BillingAccountsGetResource =
 --
 -- /See:/ 'billingAccountsGet' smart constructor.
 data BillingAccountsGet = BillingAccountsGet'
-    { _bagXgafv          :: !(Maybe Text)
+    { _bagXgafv :: !(Maybe Xgafv)
     , _bagUploadProtocol :: !(Maybe Text)
-    , _bagPp             :: !Bool
-    , _bagAccessToken    :: !(Maybe Text)
-    , _bagUploadType     :: !(Maybe Text)
-    , _bagBearerToken    :: !(Maybe Text)
-    , _bagName           :: !Text
-    , _bagCallback       :: !(Maybe Text)
+    , _bagPp :: !Bool
+    , _bagAccessToken :: !(Maybe Text)
+    , _bagUploadType :: !(Maybe Text)
+    , _bagBearerToken :: !(Maybe Text)
+    , _bagName :: !Text
+    , _bagFields :: !(Maybe Text)
+    , _bagCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsGet' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data BillingAccountsGet = BillingAccountsGet'
 --
 -- * 'bagName'
 --
+-- * 'bagFields'
+--
 -- * 'bagCallback'
 billingAccountsGet
     :: Text -- ^ 'bagName'
     -> BillingAccountsGet
-billingAccountsGet pBagName_ =
+billingAccountsGet pBagName_ = 
     BillingAccountsGet'
     { _bagXgafv = Nothing
     , _bagUploadProtocol = Nothing
@@ -110,11 +115,12 @@ billingAccountsGet pBagName_ =
     , _bagUploadType = Nothing
     , _bagBearerToken = Nothing
     , _bagName = pBagName_
+    , _bagFields = Nothing
     , _bagCallback = Nothing
     }
 
 -- | V1 error format.
-bagXgafv :: Lens' BillingAccountsGet (Maybe Text)
+bagXgafv :: Lens' BillingAccountsGet (Maybe Xgafv)
 bagXgafv = lens _bagXgafv (\ s a -> s{_bagXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -150,6 +156,11 @@ bagBearerToken
 bagName :: Lens' BillingAccountsGet Text
 bagName = lens _bagName (\ s a -> s{_bagName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bagFields :: Lens' BillingAccountsGet (Maybe Text)
+bagFields
+  = lens _bagFields (\ s a -> s{_bagFields = a})
+
 -- | JSONP
 bagCallback :: Lens' BillingAccountsGet (Maybe Text)
 bagCallback
@@ -166,6 +177,7 @@ instance GoogleRequest BillingAccountsGet where
               _bagUploadType
               _bagBearerToken
               _bagCallback
+              _bagFields
               (Just AltJSON)
               billingService
           where go

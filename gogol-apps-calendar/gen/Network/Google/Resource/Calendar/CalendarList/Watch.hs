@@ -40,10 +40,11 @@ module Network.Google.Resource.Calendar.CalendarList.Watch
     , clwShowHidden
     , clwPageToken
     , clwMaxResults
+    , clwFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendarList.watch@ method which the
 -- 'CalendarListWatch' request conforms to.
@@ -62,20 +63,22 @@ type CalendarListWatchResource =
                        QueryParam "showHidden" Bool :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :>
-                               ReqBody '[JSON] Channel :> Post '[JSON] Channel
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON] Channel :> Post '[JSON] Channel
 
 -- | Watch for changes to CalendarList resources.
 --
 -- /See:/ 'calendarListWatch' smart constructor.
 data CalendarListWatch = CalendarListWatch'
-    { _clwSyncToken     :: !(Maybe Text)
+    { _clwSyncToken :: !(Maybe Text)
     , _clwMinAccessRole :: !(Maybe CalendarListWatchMinAccessRole)
-    , _clwShowDeleted   :: !(Maybe Bool)
-    , _clwPayload       :: !Channel
-    , _clwShowHidden    :: !(Maybe Bool)
-    , _clwPageToken     :: !(Maybe Text)
-    , _clwMaxResults    :: !(Maybe (Textual Int32))
+    , _clwShowDeleted :: !(Maybe Bool)
+    , _clwPayload :: !Channel
+    , _clwShowHidden :: !(Maybe Bool)
+    , _clwPageToken :: !(Maybe Text)
+    , _clwMaxResults :: !(Maybe (Textual Int32))
+    , _clwFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarListWatch' with the minimum fields required to make a request.
@@ -95,10 +98,12 @@ data CalendarListWatch = CalendarListWatch'
 -- * 'clwPageToken'
 --
 -- * 'clwMaxResults'
+--
+-- * 'clwFields'
 calendarListWatch
     :: Channel -- ^ 'clwPayload'
     -> CalendarListWatch
-calendarListWatch pClwPayload_ =
+calendarListWatch pClwPayload_ = 
     CalendarListWatch'
     { _clwSyncToken = Nothing
     , _clwMinAccessRole = Nothing
@@ -107,6 +112,7 @@ calendarListWatch pClwPayload_ =
     , _clwShowHidden = Nothing
     , _clwPageToken = Nothing
     , _clwMaxResults = Nothing
+    , _clwFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -165,6 +171,11 @@ clwMaxResults
       (\ s a -> s{_clwMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clwFields :: Lens' CalendarListWatch (Maybe Text)
+clwFields
+  = lens _clwFields (\ s a -> s{_clwFields = a})
+
 instance GoogleRequest CalendarListWatch where
         type Rs CalendarListWatch = Channel
         type Scopes CalendarListWatch =
@@ -175,6 +186,7 @@ instance GoogleRequest CalendarListWatch where
               _clwShowHidden
               _clwPageToken
               _clwMaxResults
+              _clwFields
               (Just AltJSON)
               _clwPayload
               appsCalendarService

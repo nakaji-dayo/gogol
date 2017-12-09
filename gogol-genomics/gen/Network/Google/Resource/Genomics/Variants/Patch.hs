@@ -46,11 +46,12 @@ module Network.Google.Resource.Genomics.Variants.Patch
     , vpPayload
     , vpBearerToken
     , vpVariantId
+    , vpFields
     , vpCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variants.patch@ method which the
 -- 'VariantsPatch' request conforms to.
@@ -66,8 +67,9 @@ type VariantsPatchResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Variant :> Patch '[JSON] Variant
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Variant :> Patch '[JSON] Variant
 
 -- | Updates a variant. For the definitions of variants and other genomics
 -- resources, see [Fundamentals of Google
@@ -77,16 +79,17 @@ type VariantsPatchResource =
 --
 -- /See:/ 'variantsPatch' smart constructor.
 data VariantsPatch = VariantsPatch'
-    { _vpXgafv          :: !(Maybe Xgafv)
+    { _vpXgafv :: !(Maybe Xgafv)
     , _vpUploadProtocol :: !(Maybe Text)
-    , _vpUpdateMask     :: !(Maybe FieldMask)
-    , _vpPp             :: !Bool
-    , _vpAccessToken    :: !(Maybe Text)
-    , _vpUploadType     :: !(Maybe Text)
-    , _vpPayload        :: !Variant
-    , _vpBearerToken    :: !(Maybe Text)
-    , _vpVariantId      :: !Text
-    , _vpCallback       :: !(Maybe Text)
+    , _vpUpdateMask :: !(Maybe FieldMask)
+    , _vpPp :: !Bool
+    , _vpAccessToken :: !(Maybe Text)
+    , _vpUploadType :: !(Maybe Text)
+    , _vpPayload :: !Variant
+    , _vpBearerToken :: !(Maybe Text)
+    , _vpVariantId :: !Text
+    , _vpFields :: !(Maybe Text)
+    , _vpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantsPatch' with the minimum fields required to make a request.
@@ -111,12 +114,14 @@ data VariantsPatch = VariantsPatch'
 --
 -- * 'vpVariantId'
 --
+-- * 'vpFields'
+--
 -- * 'vpCallback'
 variantsPatch
     :: Variant -- ^ 'vpPayload'
     -> Text -- ^ 'vpVariantId'
     -> VariantsPatch
-variantsPatch pVpPayload_ pVpVariantId_ =
+variantsPatch pVpPayload_ pVpVariantId_ = 
     VariantsPatch'
     { _vpXgafv = Nothing
     , _vpUploadProtocol = Nothing
@@ -127,6 +132,7 @@ variantsPatch pVpPayload_ pVpVariantId_ =
     , _vpPayload = pVpPayload_
     , _vpBearerToken = Nothing
     , _vpVariantId = pVpVariantId_
+    , _vpFields = Nothing
     , _vpCallback = Nothing
     }
 
@@ -178,6 +184,10 @@ vpVariantId :: Lens' VariantsPatch Text
 vpVariantId
   = lens _vpVariantId (\ s a -> s{_vpVariantId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vpFields :: Lens' VariantsPatch (Maybe Text)
+vpFields = lens _vpFields (\ s a -> s{_vpFields = a})
+
 -- | JSONP
 vpCallback :: Lens' VariantsPatch (Maybe Text)
 vpCallback
@@ -196,6 +206,7 @@ instance GoogleRequest VariantsPatch where
               _vpUploadType
               _vpBearerToken
               _vpCallback
+              _vpFields
               (Just AltJSON)
               _vpPayload
               genomicsService

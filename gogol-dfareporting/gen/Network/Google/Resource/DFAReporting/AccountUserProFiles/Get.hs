@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AccountUserProFiles.Get
     -- * Request Lenses
     , aupfgProFileId
     , aupfgId
+    , aupfgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountUserProfiles.get@ method which the
 -- 'AccountUserProFilesGet' request conforms to.
 type AccountUserProFilesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountUserProfiles" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccountUserProFile
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccountUserProFile
 
 -- | Gets one account user profile by ID.
 --
 -- /See:/ 'accountUserProFilesGet' smart constructor.
 data AccountUserProFilesGet = AccountUserProFilesGet'
     { _aupfgProFileId :: !(Textual Int64)
-    , _aupfgId        :: !(Textual Int64)
+    , _aupfgId :: !(Textual Int64)
+    , _aupfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AccountUserProFilesGet = AccountUserProFilesGet'
 -- * 'aupfgProFileId'
 --
 -- * 'aupfgId'
+--
+-- * 'aupfgFields'
 accountUserProFilesGet
     :: Int64 -- ^ 'aupfgProFileId'
     -> Int64 -- ^ 'aupfgId'
     -> AccountUserProFilesGet
-accountUserProFilesGet pAupfgProFileId_ pAupfgId_ =
+accountUserProFilesGet pAupfgProFileId_ pAupfgId_ = 
     AccountUserProFilesGet'
     { _aupfgProFileId = _Coerce # pAupfgProFileId_
     , _aupfgId = _Coerce # pAupfgId_
+    , _aupfgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,12 +95,18 @@ aupfgId :: Lens' AccountUserProFilesGet Int64
 aupfgId
   = lens _aupfgId (\ s a -> s{_aupfgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aupfgFields :: Lens' AccountUserProFilesGet (Maybe Text)
+aupfgFields
+  = lens _aupfgFields (\ s a -> s{_aupfgFields = a})
+
 instance GoogleRequest AccountUserProFilesGet where
         type Rs AccountUserProFilesGet = AccountUserProFile
         type Scopes AccountUserProFilesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountUserProFilesGet'{..}
-          = go _aupfgProFileId _aupfgId (Just AltJSON)
+          = go _aupfgProFileId _aupfgId _aupfgFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

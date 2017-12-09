@@ -33,15 +33,17 @@ module Network.Google.Resource.Compute.Instances.DeleteAccessConfig
     , InstancesDeleteAccessConfig
 
     -- * Request Lenses
+    , idacRequestId
     , idacProject
     , idacNetworkInterface
     , idacZone
     , idacAccessConfig
+    , idacFields
     , idacInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.deleteAccessConfig@ method which the
 -- 'InstancesDeleteAccessConfig' request conforms to.
@@ -57,22 +59,29 @@ type InstancesDeleteAccessConfigResource =
                      "deleteAccessConfig" :>
                        QueryParam "accessConfig" Text :>
                          QueryParam "networkInterface" Text :>
-                           QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                           QueryParam "requestId" Text :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Post '[JSON] Operation
 
 -- | Deletes an access config from an instance\'s network interface.
 --
 -- /See:/ 'instancesDeleteAccessConfig' smart constructor.
 data InstancesDeleteAccessConfig = InstancesDeleteAccessConfig'
-    { _idacProject          :: !Text
+    { _idacRequestId :: !(Maybe Text)
+    , _idacProject :: !Text
     , _idacNetworkInterface :: !Text
-    , _idacZone             :: !Text
-    , _idacAccessConfig     :: !Text
-    , _idacInstance         :: !Text
+    , _idacZone :: !Text
+    , _idacAccessConfig :: !Text
+    , _idacFields :: !(Maybe Text)
+    , _idacInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesDeleteAccessConfig' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'idacRequestId'
 --
 -- * 'idacProject'
 --
@@ -82,6 +91,8 @@ data InstancesDeleteAccessConfig = InstancesDeleteAccessConfig'
 --
 -- * 'idacAccessConfig'
 --
+-- * 'idacFields'
+--
 -- * 'idacInstance'
 instancesDeleteAccessConfig
     :: Text -- ^ 'idacProject'
@@ -90,14 +101,31 @@ instancesDeleteAccessConfig
     -> Text -- ^ 'idacAccessConfig'
     -> Text -- ^ 'idacInstance'
     -> InstancesDeleteAccessConfig
-instancesDeleteAccessConfig pIdacProject_ pIdacNetworkInterface_ pIdacZone_ pIdacAccessConfig_ pIdacInstance_ =
+instancesDeleteAccessConfig pIdacProject_ pIdacNetworkInterface_ pIdacZone_ pIdacAccessConfig_ pIdacInstance_ = 
     InstancesDeleteAccessConfig'
-    { _idacProject = pIdacProject_
+    { _idacRequestId = Nothing
+    , _idacProject = pIdacProject_
     , _idacNetworkInterface = pIdacNetworkInterface_
     , _idacZone = pIdacZone_
     , _idacAccessConfig = pIdacAccessConfig_
+    , _idacFields = Nothing
     , _idacInstance = pIdacInstance_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+idacRequestId :: Lens' InstancesDeleteAccessConfig (Maybe Text)
+idacRequestId
+  = lens _idacRequestId
+      (\ s a -> s{_idacRequestId = a})
 
 -- | Project ID for this request.
 idacProject :: Lens' InstancesDeleteAccessConfig Text
@@ -120,6 +148,11 @@ idacAccessConfig
   = lens _idacAccessConfig
       (\ s a -> s{_idacAccessConfig = a})
 
+-- | Selector specifying which fields to include in a partial response.
+idacFields :: Lens' InstancesDeleteAccessConfig (Maybe Text)
+idacFields
+  = lens _idacFields (\ s a -> s{_idacFields = a})
+
 -- | The instance name for this request.
 idacInstance :: Lens' InstancesDeleteAccessConfig Text
 idacInstance
@@ -135,6 +168,8 @@ instance GoogleRequest InstancesDeleteAccessConfig
           = go _idacProject _idacZone _idacInstance
               (Just _idacAccessConfig)
               (Just _idacNetworkInterface)
+              _idacRequestId
+              _idacFields
               (Just AltJSON)
               computeService
           where go

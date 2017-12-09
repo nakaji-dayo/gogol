@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Delete
     -- * Request Lenses
     , sadKeyId
     , sadEnterpriseId
+    , sadFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.serviceaccountkeys.delete@ method which the
 -- 'ServiceAccountkeysDelete' request conforms to.
@@ -53,7 +54,8 @@ type ServiceAccountkeysDeleteResource =
            Capture "enterpriseId" Text :>
              "serviceAccountKeys" :>
                Capture "keyId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes and invalidates the specified credentials for the service
 -- account associated with this enterprise. The calling service account
@@ -63,8 +65,9 @@ type ServiceAccountkeysDeleteResource =
 --
 -- /See:/ 'serviceAccountkeysDelete' smart constructor.
 data ServiceAccountkeysDelete = ServiceAccountkeysDelete'
-    { _sadKeyId        :: !Text
+    { _sadKeyId :: !Text
     , _sadEnterpriseId :: !Text
+    , _sadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServiceAccountkeysDelete' with the minimum fields required to make a request.
@@ -74,14 +77,17 @@ data ServiceAccountkeysDelete = ServiceAccountkeysDelete'
 -- * 'sadKeyId'
 --
 -- * 'sadEnterpriseId'
+--
+-- * 'sadFields'
 serviceAccountkeysDelete
     :: Text -- ^ 'sadKeyId'
     -> Text -- ^ 'sadEnterpriseId'
     -> ServiceAccountkeysDelete
-serviceAccountkeysDelete pSadKeyId_ pSadEnterpriseId_ =
+serviceAccountkeysDelete pSadKeyId_ pSadEnterpriseId_ = 
     ServiceAccountkeysDelete'
     { _sadKeyId = pSadKeyId_
     , _sadEnterpriseId = pSadEnterpriseId_
+    , _sadFields = Nothing
     }
 
 -- | The ID of the key.
@@ -94,12 +100,18 @@ sadEnterpriseId
   = lens _sadEnterpriseId
       (\ s a -> s{_sadEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sadFields :: Lens' ServiceAccountkeysDelete (Maybe Text)
+sadFields
+  = lens _sadFields (\ s a -> s{_sadFields = a})
+
 instance GoogleRequest ServiceAccountkeysDelete where
         type Rs ServiceAccountkeysDelete = ()
         type Scopes ServiceAccountkeysDelete =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ServiceAccountkeysDelete'{..}
-          = go _sadEnterpriseId _sadKeyId (Just AltJSON)
+          = go _sadEnterpriseId _sadKeyId _sadFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

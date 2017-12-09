@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Goals.Get
     , mggGoalId
     , mggProFileId
     , mggAccountId
+    , mggFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.goals.get@ method which the
 -- 'ManagementGoalsGet' request conforms to.
@@ -56,16 +57,18 @@ type ManagementGoalsGetResource =
                      Capture "profileId" Text :>
                        "goals" :>
                          Capture "goalId" Text :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Goal
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Goal
 
 -- | Gets a goal to which the user has access.
 --
 -- /See:/ 'managementGoalsGet' smart constructor.
 data ManagementGoalsGet = ManagementGoalsGet'
     { _mggWebPropertyId :: !Text
-    , _mggGoalId        :: !Text
-    , _mggProFileId     :: !Text
-    , _mggAccountId     :: !Text
+    , _mggGoalId :: !Text
+    , _mggProFileId :: !Text
+    , _mggAccountId :: !Text
+    , _mggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementGoalsGet' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementGoalsGet = ManagementGoalsGet'
 -- * 'mggProFileId'
 --
 -- * 'mggAccountId'
+--
+-- * 'mggFields'
 managementGoalsGet
     :: Text -- ^ 'mggWebPropertyId'
     -> Text -- ^ 'mggGoalId'
     -> Text -- ^ 'mggProFileId'
     -> Text -- ^ 'mggAccountId'
     -> ManagementGoalsGet
-managementGoalsGet pMggWebPropertyId_ pMggGoalId_ pMggProFileId_ pMggAccountId_ =
+managementGoalsGet pMggWebPropertyId_ pMggGoalId_ pMggProFileId_ pMggAccountId_ = 
     ManagementGoalsGet'
     { _mggWebPropertyId = pMggWebPropertyId_
     , _mggGoalId = pMggGoalId_
     , _mggProFileId = pMggProFileId_
     , _mggAccountId = pMggAccountId_
+    , _mggFields = Nothing
     }
 
 -- | Web property ID to retrieve the goal for.
@@ -114,6 +120,11 @@ mggAccountId :: Lens' ManagementGoalsGet Text
 mggAccountId
   = lens _mggAccountId (\ s a -> s{_mggAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mggFields :: Lens' ManagementGoalsGet (Maybe Text)
+mggFields
+  = lens _mggFields (\ s a -> s{_mggFields = a})
+
 instance GoogleRequest ManagementGoalsGet where
         type Rs ManagementGoalsGet = Goal
         type Scopes ManagementGoalsGet =
@@ -122,6 +133,7 @@ instance GoogleRequest ManagementGoalsGet where
         requestClient ManagementGoalsGet'{..}
           = go _mggAccountId _mggWebPropertyId _mggProFileId
               _mggGoalId
+              _mggFields
               (Just AltJSON)
               analyticsService
           where go

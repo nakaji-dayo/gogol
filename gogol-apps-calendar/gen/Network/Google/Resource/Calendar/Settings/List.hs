@@ -36,10 +36,11 @@ module Network.Google.Resource.Calendar.Settings.List
     , slSyncToken
     , slPageToken
     , slMaxResults
+    , slFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.settings.list@ method which the
 -- 'SettingsList' request conforms to.
@@ -52,15 +53,17 @@ type SettingsListResource =
                QueryParam "syncToken" Text :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Settings
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Settings
 
 -- | Returns all user settings for the authenticated user.
 --
 -- /See:/ 'settingsList' smart constructor.
 data SettingsList = SettingsList'
-    { _slSyncToken  :: !(Maybe Text)
-    , _slPageToken  :: !(Maybe Text)
+    { _slSyncToken :: !(Maybe Text)
+    , _slPageToken :: !(Maybe Text)
     , _slMaxResults :: !(Maybe (Textual Int32))
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SettingsList' with the minimum fields required to make a request.
@@ -72,13 +75,16 @@ data SettingsList = SettingsList'
 -- * 'slPageToken'
 --
 -- * 'slMaxResults'
+--
+-- * 'slFields'
 settingsList
     :: SettingsList
-settingsList =
+settingsList = 
     SettingsList'
     { _slSyncToken = Nothing
     , _slPageToken = Nothing
     , _slMaxResults = Nothing
+    , _slFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -105,6 +111,10 @@ slMaxResults
   = lens _slMaxResults (\ s a -> s{_slMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SettingsList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SettingsList where
         type Rs SettingsList = Settings
         type Scopes SettingsList =
@@ -112,6 +122,7 @@ instance GoogleRequest SettingsList where
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient SettingsList'{..}
           = go _slSyncToken _slPageToken _slMaxResults
+              _slFields
               (Just AltJSON)
               appsCalendarService
           where go

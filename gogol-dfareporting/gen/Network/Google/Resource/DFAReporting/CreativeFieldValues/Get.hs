@@ -36,32 +36,35 @@ module Network.Google.Resource.DFAReporting.CreativeFieldValues.Get
     , cfvgCreativeFieldId
     , cfvgProFileId
     , cfvgId
+    , cfvgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFieldValues.get@ method which the
 -- 'CreativeFieldValuesGet' request conforms to.
 type CreativeFieldValuesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "creativeFieldId" (Textual Int64) :>
                  "creativeFieldValues" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] CreativeFieldValue
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] CreativeFieldValue
 
 -- | Gets one creative field value by ID.
 --
 -- /See:/ 'creativeFieldValuesGet' smart constructor.
 data CreativeFieldValuesGet = CreativeFieldValuesGet'
     { _cfvgCreativeFieldId :: !(Textual Int64)
-    , _cfvgProFileId       :: !(Textual Int64)
-    , _cfvgId              :: !(Textual Int64)
+    , _cfvgProFileId :: !(Textual Int64)
+    , _cfvgId :: !(Textual Int64)
+    , _cfvgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValuesGet' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CreativeFieldValuesGet = CreativeFieldValuesGet'
 -- * 'cfvgProFileId'
 --
 -- * 'cfvgId'
+--
+-- * 'cfvgFields'
 creativeFieldValuesGet
     :: Int64 -- ^ 'cfvgCreativeFieldId'
     -> Int64 -- ^ 'cfvgProFileId'
     -> Int64 -- ^ 'cfvgId'
     -> CreativeFieldValuesGet
-creativeFieldValuesGet pCfvgCreativeFieldId_ pCfvgProFileId_ pCfvgId_ =
+creativeFieldValuesGet pCfvgCreativeFieldId_ pCfvgProFileId_ pCfvgId_ = 
     CreativeFieldValuesGet'
     { _cfvgCreativeFieldId = _Coerce # pCfvgCreativeFieldId_
     , _cfvgProFileId = _Coerce # pCfvgProFileId_
     , _cfvgId = _Coerce # pCfvgId_
+    , _cfvgFields = Nothing
     }
 
 -- | Creative field ID for this creative field value.
@@ -104,12 +110,18 @@ cfvgId :: Lens' CreativeFieldValuesGet Int64
 cfvgId
   = lens _cfvgId (\ s a -> s{_cfvgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfvgFields :: Lens' CreativeFieldValuesGet (Maybe Text)
+cfvgFields
+  = lens _cfvgFields (\ s a -> s{_cfvgFields = a})
+
 instance GoogleRequest CreativeFieldValuesGet where
         type Rs CreativeFieldValuesGet = CreativeFieldValue
         type Scopes CreativeFieldValuesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldValuesGet'{..}
           = go _cfvgProFileId _cfvgCreativeFieldId _cfvgId
+              _cfvgFields
               (Just AltJSON)
               dFAReportingService
           where go

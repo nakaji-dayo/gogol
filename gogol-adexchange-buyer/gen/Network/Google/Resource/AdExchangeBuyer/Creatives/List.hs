@@ -40,10 +40,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.List
     , clPageToken
     , clDealsStatusFilter
     , clMaxResults
+    , clFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.list@ method which the
 -- 'CreativesList'' request conforms to.
@@ -61,19 +62,21 @@ type CreativesListResource =
                      CreativesListDealsStatusFilter
                      :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] CreativesList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] CreativesList
 
 -- | Retrieves a list of the authenticated user\'s active creatives. A
 -- creative will be available 30-40 minutes after submission.
 --
 -- /See:/ 'creativesList'' smart constructor.
 data CreativesList' = CreativesList''
-    { _clBuyerCreativeId         :: !(Maybe [Text])
+    { _clBuyerCreativeId :: !(Maybe [Text])
     , _clOpenAuctionStatusFilter :: !(Maybe CreativesListOpenAuctionStatusFilter)
-    , _clAccountId               :: !(Maybe [Textual Int32])
-    , _clPageToken               :: !(Maybe Text)
-    , _clDealsStatusFilter       :: !(Maybe CreativesListDealsStatusFilter)
-    , _clMaxResults              :: !(Maybe (Textual Word32))
+    , _clAccountId :: !(Maybe [Textual Int32])
+    , _clPageToken :: !(Maybe Text)
+    , _clDealsStatusFilter :: !(Maybe CreativesListDealsStatusFilter)
+    , _clMaxResults :: !(Maybe (Textual Word32))
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesList'' with the minimum fields required to make a request.
@@ -91,9 +94,11 @@ data CreativesList' = CreativesList''
 -- * 'clDealsStatusFilter'
 --
 -- * 'clMaxResults'
+--
+-- * 'clFields'
 creativesList'
     :: CreativesList'
-creativesList' =
+creativesList' = 
     CreativesList''
     { _clBuyerCreativeId = Nothing
     , _clOpenAuctionStatusFilter = Nothing
@@ -101,6 +106,7 @@ creativesList' =
     , _clPageToken = Nothing
     , _clDealsStatusFilter = Nothing
     , _clMaxResults = Nothing
+    , _clFields = Nothing
     }
 
 -- | When specified, only creatives for the given buyer creative ids are
@@ -147,6 +153,10 @@ clMaxResults
   = lens _clMaxResults (\ s a -> s{_clMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' CreativesList' (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 instance GoogleRequest CreativesList' where
         type Rs CreativesList' = CreativesList
         type Scopes CreativesList' =
@@ -158,6 +168,7 @@ instance GoogleRequest CreativesList' where
               _clPageToken
               _clDealsStatusFilter
               _clMaxResults
+              _clFields
               (Just AltJSON)
               adExchangeBuyerService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Tasks.TaskLists.List
     -- * Request Lenses
     , tllPageToken
     , tllMaxResults
+    , tllFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasklists.list@ method which the
 -- 'TaskListsList' request conforms to.
@@ -50,14 +51,16 @@ type TaskListsListResource =
              "lists" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int64) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] TaskLists
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] TaskLists
 
 -- | Returns all the authenticated user\'s task lists.
 --
 -- /See:/ 'taskListsList' smart constructor.
 data TaskListsList = TaskListsList'
-    { _tllPageToken  :: !(Maybe Text)
+    { _tllPageToken :: !(Maybe Text)
     , _tllMaxResults :: !(Maybe (Textual Int64))
+    , _tllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskListsList' with the minimum fields required to make a request.
@@ -67,12 +70,15 @@ data TaskListsList = TaskListsList'
 -- * 'tllPageToken'
 --
 -- * 'tllMaxResults'
+--
+-- * 'tllFields'
 taskListsList
     :: TaskListsList
-taskListsList =
+taskListsList = 
     TaskListsList'
     { _tllPageToken = Nothing
     , _tllMaxResults = Nothing
+    , _tllFields = Nothing
     }
 
 -- | Token specifying the result page to return. Optional.
@@ -88,13 +94,19 @@ tllMaxResults
       (\ s a -> s{_tllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tllFields :: Lens' TaskListsList (Maybe Text)
+tllFields
+  = lens _tllFields (\ s a -> s{_tllFields = a})
+
 instance GoogleRequest TaskListsList where
         type Rs TaskListsList = TaskLists
         type Scopes TaskListsList =
              '["https://www.googleapis.com/auth/tasks",
                "https://www.googleapis.com/auth/tasks.readonly"]
         requestClient TaskListsList'{..}
-          = go _tllPageToken _tllMaxResults (Just AltJSON)
+          = go _tllPageToken _tllMaxResults _tllFields
+              (Just AltJSON)
               appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TaskListsListResource)

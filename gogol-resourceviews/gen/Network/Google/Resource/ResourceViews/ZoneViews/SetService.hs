@@ -37,10 +37,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.SetService
     , zvssProject
     , zvssZone
     , zvssPayload
+    , zvssFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.setService@ method which the
 -- 'ZoneViewsSetService' request conforms to.
@@ -54,18 +55,20 @@ type ZoneViewsSetServiceResource =
                  "resourceViews" :>
                    Capture "resourceView" Text :>
                      "setService" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ZoneViewsSetServiceRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ZoneViewsSetServiceRequest :>
+                             Post '[JSON] Operation
 
 -- | Update the service information of a resource view or a resource.
 --
 -- /See:/ 'zoneViewsSetService' smart constructor.
 data ZoneViewsSetService = ZoneViewsSetService'
     { _zvssResourceView :: !Text
-    , _zvssProject      :: !Text
-    , _zvssZone         :: !Text
-    , _zvssPayload      :: !ZoneViewsSetServiceRequest
+    , _zvssProject :: !Text
+    , _zvssZone :: !Text
+    , _zvssPayload :: !ZoneViewsSetServiceRequest
+    , _zvssFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsSetService' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ZoneViewsSetService = ZoneViewsSetService'
 -- * 'zvssZone'
 --
 -- * 'zvssPayload'
+--
+-- * 'zvssFields'
 zoneViewsSetService
     :: Text -- ^ 'zvssResourceView'
     -> Text -- ^ 'zvssProject'
     -> Text -- ^ 'zvssZone'
     -> ZoneViewsSetServiceRequest -- ^ 'zvssPayload'
     -> ZoneViewsSetService
-zoneViewsSetService pZvssResourceView_ pZvssProject_ pZvssZone_ pZvssPayload_ =
+zoneViewsSetService pZvssResourceView_ pZvssProject_ pZvssZone_ pZvssPayload_ = 
     ZoneViewsSetService'
     { _zvssResourceView = pZvssResourceView_
     , _zvssProject = pZvssProject_
     , _zvssZone = pZvssZone_
     , _zvssPayload = pZvssPayload_
+    , _zvssFields = Nothing
     }
 
 -- | The name of the resource view.
@@ -113,6 +119,11 @@ zvssPayload :: Lens' ZoneViewsSetService ZoneViewsSetServiceRequest
 zvssPayload
   = lens _zvssPayload (\ s a -> s{_zvssPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zvssFields :: Lens' ZoneViewsSetService (Maybe Text)
+zvssFields
+  = lens _zvssFields (\ s a -> s{_zvssFields = a})
+
 instance GoogleRequest ZoneViewsSetService where
         type Rs ZoneViewsSetService = Operation
         type Scopes ZoneViewsSetService =
@@ -121,6 +132,7 @@ instance GoogleRequest ZoneViewsSetService where
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient ZoneViewsSetService'{..}
           = go _zvssProject _zvssZone _zvssResourceView
+              _zvssFields
               (Just AltJSON)
               _zvssPayload
               resourceViewsService

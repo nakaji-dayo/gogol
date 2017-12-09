@@ -33,11 +33,12 @@ module Network.Google.Resource.Webmasters.Sites.Get
     , SitesGet
 
     -- * Request Lenses
-    , sitSiteURL
+    , sggSiteURL
+    , sggFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sites.get@ method which the
 -- 'SitesGet' request conforms to.
@@ -46,33 +47,43 @@ type SitesGetResource =
        "v3" :>
          "sites" :>
            Capture "siteUrl" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] WmxSite
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] WmxSite
 
 -- | Retrieves information about specific site.
 --
 -- /See:/ 'sitesGet' smart constructor.
-newtype SitesGet = SitesGet'
-    { _sitSiteURL :: Text
+data SitesGet = SitesGet'
+    { _sggSiteURL :: !Text
+    , _sggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'sitSiteURL'
+-- * 'sggSiteURL'
+--
+-- * 'sggFields'
 sitesGet
-    :: Text -- ^ 'sitSiteURL'
+    :: Text -- ^ 'sggSiteURL'
     -> SitesGet
-sitesGet pSitSiteURL_ =
+sitesGet pSggSiteURL_ = 
     SitesGet'
-    { _sitSiteURL = pSitSiteURL_
+    { _sggSiteURL = pSggSiteURL_
+    , _sggFields = Nothing
     }
 
 -- | The URI of the property as defined in Search Console. Examples:
 -- http:\/\/www.example.com\/ or android-app:\/\/com.example\/
-sitSiteURL :: Lens' SitesGet Text
-sitSiteURL
-  = lens _sitSiteURL (\ s a -> s{_sitSiteURL = a})
+sggSiteURL :: Lens' SitesGet Text
+sggSiteURL
+  = lens _sggSiteURL (\ s a -> s{_sggSiteURL = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sggFields :: Lens' SitesGet (Maybe Text)
+sggFields
+  = lens _sggFields (\ s a -> s{_sggFields = a})
 
 instance GoogleRequest SitesGet where
         type Rs SitesGet = WmxSite
@@ -80,7 +91,8 @@ instance GoogleRequest SitesGet where
              '["https://www.googleapis.com/auth/webmasters",
                "https://www.googleapis.com/auth/webmasters.readonly"]
         requestClient SitesGet'{..}
-          = go _sitSiteURL (Just AltJSON) webmasterToolsService
+          = go _sggSiteURL _sggFields (Just AltJSON)
+              webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitesGetResource)
                       mempty

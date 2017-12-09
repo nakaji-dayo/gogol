@@ -36,10 +36,11 @@ module Network.Google.Resource.Spectrum.Paws.GetSpectrum
 
     -- * Request Lenses
     , pgsPayload
+    , pgsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Spectrum.Types
+import Network.Google.Prelude
+import Network.Google.Spectrum.Types
 
 -- | A resource alias for @spectrum.paws.getSpectrum@ method which the
 -- 'PawsGetSpectrum' request conforms to.
@@ -48,17 +49,19 @@ type PawsGetSpectrumResource =
        "v1explorer" :>
          "paws" :>
            "getSpectrum" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] PawsGetSpectrumRequest :>
-                 Post '[JSON] PawsGetSpectrumResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] PawsGetSpectrumRequest :>
+                   Post '[JSON] PawsGetSpectrumResponse
 
 -- | Requests information about the available spectrum for a device at a
 -- location. Requests from a fixed-mode device must include owner
 -- information so the device can be registered with the database.
 --
 -- /See:/ 'pawsGetSpectrum' smart constructor.
-newtype PawsGetSpectrum = PawsGetSpectrum'
-    { _pgsPayload :: PawsGetSpectrumRequest
+data PawsGetSpectrum = PawsGetSpectrum'
+    { _pgsPayload :: !PawsGetSpectrumRequest
+    , _pgsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PawsGetSpectrum' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype PawsGetSpectrum = PawsGetSpectrum'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pgsPayload'
+--
+-- * 'pgsFields'
 pawsGetSpectrum
     :: PawsGetSpectrumRequest -- ^ 'pgsPayload'
     -> PawsGetSpectrum
-pawsGetSpectrum pPgsPayload_ =
+pawsGetSpectrum pPgsPayload_ = 
     PawsGetSpectrum'
     { _pgsPayload = pPgsPayload_
+    , _pgsFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -79,11 +85,17 @@ pgsPayload :: Lens' PawsGetSpectrum PawsGetSpectrumRequest
 pgsPayload
   = lens _pgsPayload (\ s a -> s{_pgsPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgsFields :: Lens' PawsGetSpectrum (Maybe Text)
+pgsFields
+  = lens _pgsFields (\ s a -> s{_pgsFields = a})
+
 instance GoogleRequest PawsGetSpectrum where
         type Rs PawsGetSpectrum = PawsGetSpectrumResponse
         type Scopes PawsGetSpectrum = '[]
         requestClient PawsGetSpectrum'{..}
-          = go (Just AltJSON) _pgsPayload spectrumService
+          = go _pgsFields (Just AltJSON) _pgsPayload
+              spectrumService
           where go
                   = buildClient
                       (Proxy :: Proxy PawsGetSpectrumResource)

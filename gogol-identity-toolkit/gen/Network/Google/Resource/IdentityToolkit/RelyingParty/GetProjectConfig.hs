@@ -35,10 +35,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.GetProjectConfig
     -- * Request Lenses
     , rpgpcDelegatedProjectNumber
     , rpgpcProjectNumber
+    , rpgpcFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.getProjectConfig@ method which the
 -- 'RelyingPartyGetProjectConfig' request conforms to.
@@ -49,16 +50,18 @@ type RelyingPartyGetProjectConfigResource =
            "getProjectConfig" :>
              QueryParam "delegatedProjectNumber" Text :>
                QueryParam "projectNumber" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON]
-                     IdentitytoolkitRelyingPartyGetProjectConfigResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON]
+                       IdentitytoolkitRelyingPartyGetProjectConfigResponse
 
 -- | Get project configuration.
 --
 -- /See:/ 'relyingPartyGetProjectConfig' smart constructor.
 data RelyingPartyGetProjectConfig = RelyingPartyGetProjectConfig'
     { _rpgpcDelegatedProjectNumber :: !(Maybe Text)
-    , _rpgpcProjectNumber          :: !(Maybe Text)
+    , _rpgpcProjectNumber :: !(Maybe Text)
+    , _rpgpcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyGetProjectConfig' with the minimum fields required to make a request.
@@ -68,12 +71,15 @@ data RelyingPartyGetProjectConfig = RelyingPartyGetProjectConfig'
 -- * 'rpgpcDelegatedProjectNumber'
 --
 -- * 'rpgpcProjectNumber'
+--
+-- * 'rpgpcFields'
 relyingPartyGetProjectConfig
     :: RelyingPartyGetProjectConfig
-relyingPartyGetProjectConfig =
+relyingPartyGetProjectConfig = 
     RelyingPartyGetProjectConfig'
     { _rpgpcDelegatedProjectNumber = Nothing
     , _rpgpcProjectNumber = Nothing
+    , _rpgpcFields = Nothing
     }
 
 -- | Delegated GCP project number of the request.
@@ -88,6 +94,11 @@ rpgpcProjectNumber
   = lens _rpgpcProjectNumber
       (\ s a -> s{_rpgpcProjectNumber = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rpgpcFields :: Lens' RelyingPartyGetProjectConfig (Maybe Text)
+rpgpcFields
+  = lens _rpgpcFields (\ s a -> s{_rpgpcFields = a})
+
 instance GoogleRequest RelyingPartyGetProjectConfig
          where
         type Rs RelyingPartyGetProjectConfig =
@@ -96,6 +107,7 @@ instance GoogleRequest RelyingPartyGetProjectConfig
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyGetProjectConfig'{..}
           = go _rpgpcDelegatedProjectNumber _rpgpcProjectNumber
+              _rpgpcFields
               (Just AltJSON)
               identityToolkitService
           where go

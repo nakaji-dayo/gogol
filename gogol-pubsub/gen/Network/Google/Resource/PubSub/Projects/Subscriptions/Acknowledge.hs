@@ -46,11 +46,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.Acknowledge
     , psaPayload
     , psaBearerToken
     , psaSubscription
+    , psaFields
     , psaCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.acknowledge@ method which the
 -- 'ProjectsSubscriptionsAcknowledge' request conforms to.
@@ -64,9 +65,10 @@ type ProjectsSubscriptionsAcknowledgeResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AcknowledgeRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AcknowledgeRequest :>
+                             Post '[JSON] Empty
 
 -- | Acknowledges the messages associated with the \`ack_ids\` in the
 -- \`AcknowledgeRequest\`. The Pub\/Sub system can remove the relevant
@@ -77,15 +79,16 @@ type ProjectsSubscriptionsAcknowledgeResource =
 --
 -- /See:/ 'projectsSubscriptionsAcknowledge' smart constructor.
 data ProjectsSubscriptionsAcknowledge = ProjectsSubscriptionsAcknowledge'
-    { _psaXgafv          :: !(Maybe Xgafv)
+    { _psaXgafv :: !(Maybe Xgafv)
     , _psaUploadProtocol :: !(Maybe Text)
-    , _psaPp             :: !Bool
-    , _psaAccessToken    :: !(Maybe Text)
-    , _psaUploadType     :: !(Maybe Text)
-    , _psaPayload        :: !AcknowledgeRequest
-    , _psaBearerToken    :: !(Maybe Text)
-    , _psaSubscription   :: !Text
-    , _psaCallback       :: !(Maybe Text)
+    , _psaPp :: !Bool
+    , _psaAccessToken :: !(Maybe Text)
+    , _psaUploadType :: !(Maybe Text)
+    , _psaPayload :: !AcknowledgeRequest
+    , _psaBearerToken :: !(Maybe Text)
+    , _psaSubscription :: !Text
+    , _psaFields :: !(Maybe Text)
+    , _psaCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsAcknowledge' with the minimum fields required to make a request.
@@ -108,12 +111,14 @@ data ProjectsSubscriptionsAcknowledge = ProjectsSubscriptionsAcknowledge'
 --
 -- * 'psaSubscription'
 --
+-- * 'psaFields'
+--
 -- * 'psaCallback'
 projectsSubscriptionsAcknowledge
     :: AcknowledgeRequest -- ^ 'psaPayload'
     -> Text -- ^ 'psaSubscription'
     -> ProjectsSubscriptionsAcknowledge
-projectsSubscriptionsAcknowledge pPsaPayload_ pPsaSubscription_ =
+projectsSubscriptionsAcknowledge pPsaPayload_ pPsaSubscription_ = 
     ProjectsSubscriptionsAcknowledge'
     { _psaXgafv = Nothing
     , _psaUploadProtocol = Nothing
@@ -123,6 +128,7 @@ projectsSubscriptionsAcknowledge pPsaPayload_ pPsaSubscription_ =
     , _psaPayload = pPsaPayload_
     , _psaBearerToken = Nothing
     , _psaSubscription = pPsaSubscription_
+    , _psaFields = Nothing
     , _psaCallback = Nothing
     }
 
@@ -170,6 +176,11 @@ psaSubscription
   = lens _psaSubscription
       (\ s a -> s{_psaSubscription = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psaFields :: Lens' ProjectsSubscriptionsAcknowledge (Maybe Text)
+psaFields
+  = lens _psaFields (\ s a -> s{_psaFields = a})
+
 -- | JSONP
 psaCallback :: Lens' ProjectsSubscriptionsAcknowledge (Maybe Text)
 psaCallback
@@ -188,6 +199,7 @@ instance GoogleRequest
               _psaUploadType
               _psaBearerToken
               _psaCallback
+              _psaFields
               (Just AltJSON)
               _psaPayload
               pubSubService

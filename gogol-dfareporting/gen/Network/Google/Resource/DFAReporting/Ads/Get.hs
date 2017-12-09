@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Ads.Get
     -- * Request Lenses
     , adsProFileId
     , adsId
+    , adsFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.ads.get@ method which the
 -- 'AdsGet' request conforms to.
 type AdsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "ads" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Ad
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Ad
 
 -- | Gets one ad by ID.
 --
 -- /See:/ 'adsGet' smart constructor.
 data AdsGet = AdsGet'
     { _adsProFileId :: !(Textual Int64)
-    , _adsId        :: !(Textual Int64)
+    , _adsId :: !(Textual Int64)
+    , _adsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdsGet = AdsGet'
 -- * 'adsProFileId'
 --
 -- * 'adsId'
+--
+-- * 'adsFields'
 adsGet
     :: Int64 -- ^ 'adsProFileId'
     -> Int64 -- ^ 'adsId'
     -> AdsGet
-adsGet pAdsProFileId_ pAdsId_ =
+adsGet pAdsProFileId_ pAdsId_ = 
     AdsGet'
     { _adsProFileId = _Coerce # pAdsProFileId_
     , _adsId = _Coerce # pAdsId_
+    , _adsFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ adsId :: Lens' AdsGet Int64
 adsId
   = lens _adsId (\ s a -> s{_adsId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+adsFields :: Lens' AdsGet (Maybe Text)
+adsFields
+  = lens _adsFields (\ s a -> s{_adsFields = a})
+
 instance GoogleRequest AdsGet where
         type Rs AdsGet = Ad
         type Scopes AdsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdsGet'{..}
-          = go _adsProFileId _adsId (Just AltJSON)
+          = go _adsProFileId _adsId _adsFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy AdsGetResource) mempty

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.SubAccounts.Insert
     -- * Request Lenses
     , saiProFileId
     , saiPayload
+    , saiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.subaccounts.insert@ method which the
 -- 'SubAccountsInsert' request conforms to.
 type SubAccountsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "subaccounts" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] SubAccount :> Post '[JSON] SubAccount
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] SubAccount :> Post '[JSON] SubAccount
 
 -- | Inserts a new subaccount.
 --
 -- /See:/ 'subAccountsInsert' smart constructor.
 data SubAccountsInsert = SubAccountsInsert'
     { _saiProFileId :: !(Textual Int64)
-    , _saiPayload   :: !SubAccount
+    , _saiPayload :: !SubAccount
+    , _saiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubAccountsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SubAccountsInsert = SubAccountsInsert'
 -- * 'saiProFileId'
 --
 -- * 'saiPayload'
+--
+-- * 'saiFields'
 subAccountsInsert
     :: Int64 -- ^ 'saiProFileId'
     -> SubAccount -- ^ 'saiPayload'
     -> SubAccountsInsert
-subAccountsInsert pSaiProFileId_ pSaiPayload_ =
+subAccountsInsert pSaiProFileId_ pSaiPayload_ = 
     SubAccountsInsert'
     { _saiProFileId = _Coerce # pSaiProFileId_
     , _saiPayload = pSaiPayload_
+    , _saiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ saiPayload :: Lens' SubAccountsInsert SubAccount
 saiPayload
   = lens _saiPayload (\ s a -> s{_saiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+saiFields :: Lens' SubAccountsInsert (Maybe Text)
+saiFields
+  = lens _saiFields (\ s a -> s{_saiFields = a})
+
 instance GoogleRequest SubAccountsInsert where
         type Rs SubAccountsInsert = SubAccount
         type Scopes SubAccountsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SubAccountsInsert'{..}
-          = go _saiProFileId (Just AltJSON) _saiPayload
+          = go _saiProFileId _saiFields (Just AltJSON)
+              _saiPayload
               dFAReportingService
           where go
                   = buildClient

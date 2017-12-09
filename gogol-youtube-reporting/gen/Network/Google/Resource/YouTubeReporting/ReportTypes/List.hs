@@ -43,11 +43,12 @@ module Network.Google.Resource.YouTubeReporting.ReportTypes.List
     , rtlBearerToken
     , rtlPageToken
     , rtlPageSize
+    , rtlFields
     , rtlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.reportTypes.list@ method which the
 -- 'ReportTypesList' request conforms to.
@@ -65,24 +66,26 @@ type ReportTypesListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListReportTypesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListReportTypesResponse
 
 -- | Lists report types.
 --
 -- /See:/ 'reportTypesList' smart constructor.
 data ReportTypesList = ReportTypesList'
-    { _rtlXgafv                  :: !(Maybe Xgafv)
-    , _rtlUploadProtocol         :: !(Maybe Text)
-    , _rtlPp                     :: !Bool
-    , _rtlAccessToken            :: !(Maybe Text)
-    , _rtlUploadType             :: !(Maybe Text)
-    , _rtlIncludeSystemManaged   :: !(Maybe Bool)
+    { _rtlXgafv :: !(Maybe Xgafv)
+    , _rtlUploadProtocol :: !(Maybe Text)
+    , _rtlPp :: !Bool
+    , _rtlAccessToken :: !(Maybe Text)
+    , _rtlUploadType :: !(Maybe Text)
+    , _rtlIncludeSystemManaged :: !(Maybe Bool)
     , _rtlOnBehalfOfContentOwner :: !(Maybe Text)
-    , _rtlBearerToken            :: !(Maybe Text)
-    , _rtlPageToken              :: !(Maybe Text)
-    , _rtlPageSize               :: !(Maybe (Textual Int32))
-    , _rtlCallback               :: !(Maybe Text)
+    , _rtlBearerToken :: !(Maybe Text)
+    , _rtlPageToken :: !(Maybe Text)
+    , _rtlPageSize :: !(Maybe (Textual Int32))
+    , _rtlFields :: !(Maybe Text)
+    , _rtlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportTypesList' with the minimum fields required to make a request.
@@ -109,10 +112,12 @@ data ReportTypesList = ReportTypesList'
 --
 -- * 'rtlPageSize'
 --
+-- * 'rtlFields'
+--
 -- * 'rtlCallback'
 reportTypesList
     :: ReportTypesList
-reportTypesList =
+reportTypesList = 
     ReportTypesList'
     { _rtlXgafv = Nothing
     , _rtlUploadProtocol = Nothing
@@ -124,6 +129,7 @@ reportTypesList =
     , _rtlBearerToken = Nothing
     , _rtlPageToken = Nothing
     , _rtlPageSize = Nothing
+    , _rtlFields = Nothing
     , _rtlCallback = Nothing
     }
 
@@ -189,6 +195,11 @@ rtlPageSize
   = lens _rtlPageSize (\ s a -> s{_rtlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rtlFields :: Lens' ReportTypesList (Maybe Text)
+rtlFields
+  = lens _rtlFields (\ s a -> s{_rtlFields = a})
+
 -- | JSONP
 rtlCallback :: Lens' ReportTypesList (Maybe Text)
 rtlCallback
@@ -209,6 +220,7 @@ instance GoogleRequest ReportTypesList where
               _rtlPageToken
               _rtlPageSize
               _rtlCallback
+              _rtlFields
               (Just AltJSON)
               youTubeReportingService
           where go

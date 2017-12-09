@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Achievements.ResetAll
     , achievementsResetAll
     , AchievementsResetAll
 
+    -- * Request Lenses
+    , araFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.achievements.resetAll@ method which the
 -- 'AchievementsResetAll' request conforms to.
@@ -46,23 +48,35 @@ type AchievementsResetAllResource =
        "v1management" :>
          "achievements" :>
            "reset" :>
-             QueryParam "alt" AltJSON :>
-               Post '[JSON] AchievementResetAllResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Post '[JSON] AchievementResetAllResponse
 
 -- | Resets all achievements for the currently authenticated player for your
 -- application. This method is only accessible to whitelisted tester
 -- accounts for your application.
 --
 -- /See:/ 'achievementsResetAll' smart constructor.
-data AchievementsResetAll =
-    AchievementsResetAll'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype AchievementsResetAll = AchievementsResetAll'
+    { _araFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsResetAll' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'araFields'
 achievementsResetAll
     :: AchievementsResetAll
-achievementsResetAll = AchievementsResetAll'
+achievementsResetAll = 
+    AchievementsResetAll'
+    { _araFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+araFields :: Lens' AchievementsResetAll (Maybe Text)
+araFields
+  = lens _araFields (\ s a -> s{_araFields = a})
 
 instance GoogleRequest AchievementsResetAll where
         type Rs AchievementsResetAll =
@@ -70,8 +84,8 @@ instance GoogleRequest AchievementsResetAll where
         type Scopes AchievementsResetAll =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient AchievementsResetAll'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient AchievementsResetAll'{..}
+          = go _araFields (Just AltJSON) gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy AchievementsResetAllResource)

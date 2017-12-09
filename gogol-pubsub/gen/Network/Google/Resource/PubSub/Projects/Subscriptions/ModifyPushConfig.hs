@@ -46,11 +46,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.ModifyPushConfig
     , psmpcPayload
     , psmpcBearerToken
     , psmpcSubscription
+    , psmpcFields
     , psmpcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.modifyPushConfig@ method which the
 -- 'ProjectsSubscriptionsModifyPushConfig' request conforms to.
@@ -64,9 +65,10 @@ type ProjectsSubscriptionsModifyPushConfigResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ModifyPushConfigRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ModifyPushConfigRequest :>
+                             Post '[JSON] Empty
 
 -- | Modifies the \`PushConfig\` for a specified subscription. This may be
 -- used to change a push subscription to a pull one (signified by an empty
@@ -77,15 +79,16 @@ type ProjectsSubscriptionsModifyPushConfigResource =
 --
 -- /See:/ 'projectsSubscriptionsModifyPushConfig' smart constructor.
 data ProjectsSubscriptionsModifyPushConfig = ProjectsSubscriptionsModifyPushConfig'
-    { _psmpcXgafv          :: !(Maybe Xgafv)
+    { _psmpcXgafv :: !(Maybe Xgafv)
     , _psmpcUploadProtocol :: !(Maybe Text)
-    , _psmpcPp             :: !Bool
-    , _psmpcAccessToken    :: !(Maybe Text)
-    , _psmpcUploadType     :: !(Maybe Text)
-    , _psmpcPayload        :: !ModifyPushConfigRequest
-    , _psmpcBearerToken    :: !(Maybe Text)
-    , _psmpcSubscription   :: !Text
-    , _psmpcCallback       :: !(Maybe Text)
+    , _psmpcPp :: !Bool
+    , _psmpcAccessToken :: !(Maybe Text)
+    , _psmpcUploadType :: !(Maybe Text)
+    , _psmpcPayload :: !ModifyPushConfigRequest
+    , _psmpcBearerToken :: !(Maybe Text)
+    , _psmpcSubscription :: !Text
+    , _psmpcFields :: !(Maybe Text)
+    , _psmpcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsModifyPushConfig' with the minimum fields required to make a request.
@@ -108,12 +111,14 @@ data ProjectsSubscriptionsModifyPushConfig = ProjectsSubscriptionsModifyPushConf
 --
 -- * 'psmpcSubscription'
 --
+-- * 'psmpcFields'
+--
 -- * 'psmpcCallback'
 projectsSubscriptionsModifyPushConfig
     :: ModifyPushConfigRequest -- ^ 'psmpcPayload'
     -> Text -- ^ 'psmpcSubscription'
     -> ProjectsSubscriptionsModifyPushConfig
-projectsSubscriptionsModifyPushConfig pPsmpcPayload_ pPsmpcSubscription_ =
+projectsSubscriptionsModifyPushConfig pPsmpcPayload_ pPsmpcSubscription_ = 
     ProjectsSubscriptionsModifyPushConfig'
     { _psmpcXgafv = Nothing
     , _psmpcUploadProtocol = Nothing
@@ -123,6 +128,7 @@ projectsSubscriptionsModifyPushConfig pPsmpcPayload_ pPsmpcSubscription_ =
     , _psmpcPayload = pPsmpcPayload_
     , _psmpcBearerToken = Nothing
     , _psmpcSubscription = pPsmpcSubscription_
+    , _psmpcFields = Nothing
     , _psmpcCallback = Nothing
     }
 
@@ -171,6 +177,11 @@ psmpcSubscription
   = lens _psmpcSubscription
       (\ s a -> s{_psmpcSubscription = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psmpcFields :: Lens' ProjectsSubscriptionsModifyPushConfig (Maybe Text)
+psmpcFields
+  = lens _psmpcFields (\ s a -> s{_psmpcFields = a})
+
 -- | JSONP
 psmpcCallback :: Lens' ProjectsSubscriptionsModifyPushConfig (Maybe Text)
 psmpcCallback
@@ -192,6 +203,7 @@ instance GoogleRequest
               _psmpcUploadType
               _psmpcBearerToken
               _psmpcCallback
+              _psmpcFields
               (Just AltJSON)
               _psmpcPayload
               pubSubService

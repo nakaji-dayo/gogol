@@ -54,16 +54,17 @@ module Network.Google.Resource.DFAReporting.PlacementGroups.List
     , pglArchived
     , pglMaxResults
     , pglMinEndDate
+    , pglFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementGroups.list@ method which the
 -- 'PlacementGroupsList' request conforms to.
 type PlacementGroupsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementGroups" :>
@@ -99,9 +100,11 @@ type PlacementGroupsListResource =
                                                    :>
                                                    QueryParam "minEndDate" Text
                                                      :>
-                                                     QueryParam "alt" AltJSON :>
-                                                       Get '[JSON]
-                                                         PlacementGroupsListResponse
+                                                     QueryParam "fields" Text :>
+                                                       QueryParam "alt" AltJSON
+                                                         :>
+                                                         Get '[JSON]
+                                                           PlacementGroupsListResponse
 
 -- | Retrieves a list of placement groups, possibly filtered. This method
 -- supports paging.
@@ -109,25 +112,26 @@ type PlacementGroupsListResource =
 -- /See:/ 'placementGroupsList' smart constructor.
 data PlacementGroupsList = PlacementGroupsList'
     { _pglPlacementStrategyIds :: !(Maybe [Textual Int64])
-    , _pglContentCategoryIds   :: !(Maybe [Textual Int64])
-    , _pglMaxEndDate           :: !(Maybe Text)
-    , _pglCampaignIds          :: !(Maybe [Textual Int64])
-    , _pglPricingTypes         :: !(Maybe [PlacementGroupsListPricingTypes])
-    , _pglSearchString         :: !(Maybe Text)
-    , _pglIds                  :: !(Maybe [Textual Int64])
-    , _pglProFileId            :: !(Textual Int64)
-    , _pglPlacementGroupType   :: !(Maybe PlacementGroupsListPlacementGroupType)
-    , _pglDirectorySiteIds     :: !(Maybe [Textual Int64])
-    , _pglSortOrder            :: !(Maybe PlacementGroupsListSortOrder)
-    , _pglSiteIds              :: !(Maybe [Textual Int64])
-    , _pglPageToken            :: !(Maybe Text)
-    , _pglSortField            :: !(Maybe PlacementGroupsListSortField)
-    , _pglMaxStartDate         :: !(Maybe Text)
-    , _pglAdvertiserIds        :: !(Maybe [Textual Int64])
-    , _pglMinStartDate         :: !(Maybe Text)
-    , _pglArchived             :: !(Maybe Bool)
-    , _pglMaxResults           :: !(Maybe (Textual Int32))
-    , _pglMinEndDate           :: !(Maybe Text)
+    , _pglContentCategoryIds :: !(Maybe [Textual Int64])
+    , _pglMaxEndDate :: !(Maybe Text)
+    , _pglCampaignIds :: !(Maybe [Textual Int64])
+    , _pglPricingTypes :: !(Maybe [PlacementGroupsListPricingTypes])
+    , _pglSearchString :: !(Maybe Text)
+    , _pglIds :: !(Maybe [Textual Int64])
+    , _pglProFileId :: !(Textual Int64)
+    , _pglPlacementGroupType :: !(Maybe PlacementGroupsListPlacementGroupType)
+    , _pglDirectorySiteIds :: !(Maybe [Textual Int64])
+    , _pglSortOrder :: !PlacementGroupsListSortOrder
+    , _pglSiteIds :: !(Maybe [Textual Int64])
+    , _pglPageToken :: !(Maybe Text)
+    , _pglSortField :: !PlacementGroupsListSortField
+    , _pglMaxStartDate :: !(Maybe Text)
+    , _pglAdvertiserIds :: !(Maybe [Textual Int64])
+    , _pglMinStartDate :: !(Maybe Text)
+    , _pglArchived :: !(Maybe Bool)
+    , _pglMaxResults :: !(Textual Int32)
+    , _pglMinEndDate :: !(Maybe Text)
+    , _pglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroupsList' with the minimum fields required to make a request.
@@ -173,10 +177,12 @@ data PlacementGroupsList = PlacementGroupsList'
 -- * 'pglMaxResults'
 --
 -- * 'pglMinEndDate'
+--
+-- * 'pglFields'
 placementGroupsList
     :: Int64 -- ^ 'pglProFileId'
     -> PlacementGroupsList
-placementGroupsList pPglProFileId_ =
+placementGroupsList pPglProFileId_ = 
     PlacementGroupsList'
     { _pglPlacementStrategyIds = Nothing
     , _pglContentCategoryIds = Nothing
@@ -188,16 +194,17 @@ placementGroupsList pPglProFileId_ =
     , _pglProFileId = _Coerce # pPglProFileId_
     , _pglPlacementGroupType = Nothing
     , _pglDirectorySiteIds = Nothing
-    , _pglSortOrder = Nothing
+    , _pglSortOrder = PGLSOAscending
     , _pglSiteIds = Nothing
     , _pglPageToken = Nothing
-    , _pglSortField = Nothing
+    , _pglSortField = PGLSFID
     , _pglMaxStartDate = Nothing
     , _pglAdvertiserIds = Nothing
     , _pglMinStartDate = Nothing
     , _pglArchived = Nothing
-    , _pglMaxResults = Nothing
+    , _pglMaxResults = 800
     , _pglMinEndDate = Nothing
+    , _pglFields = Nothing
     }
 
 -- | Select only placement groups that are associated with these placement
@@ -287,8 +294,8 @@ pglDirectorySiteIds
       . _Default
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-pglSortOrder :: Lens' PlacementGroupsList (Maybe PlacementGroupsListSortOrder)
+-- | Order of sorted results.
+pglSortOrder :: Lens' PlacementGroupsList PlacementGroupsListSortOrder
 pglSortOrder
   = lens _pglSortOrder (\ s a -> s{_pglSortOrder = a})
 
@@ -305,7 +312,7 @@ pglPageToken
   = lens _pglPageToken (\ s a -> s{_pglPageToken = a})
 
 -- | Field by which to sort the list.
-pglSortField :: Lens' PlacementGroupsList (Maybe PlacementGroupsListSortField)
+pglSortField :: Lens' PlacementGroupsList PlacementGroupsListSortField
 pglSortField
   = lens _pglSortField (\ s a -> s{_pglSortField = a})
 
@@ -340,11 +347,11 @@ pglArchived
   = lens _pglArchived (\ s a -> s{_pglArchived = a})
 
 -- | Maximum number of results to return.
-pglMaxResults :: Lens' PlacementGroupsList (Maybe Int32)
+pglMaxResults :: Lens' PlacementGroupsList Int32
 pglMaxResults
   = lens _pglMaxResults
       (\ s a -> s{_pglMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
 
 -- | Select only placements or placement groups whose end date is on or after
 -- the specified minEndDate. The date should be formatted as
@@ -353,6 +360,11 @@ pglMinEndDate :: Lens' PlacementGroupsList (Maybe Text)
 pglMinEndDate
   = lens _pglMinEndDate
       (\ s a -> s{_pglMinEndDate = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pglFields :: Lens' PlacementGroupsList (Maybe Text)
+pglFields
+  = lens _pglFields (\ s a -> s{_pglFields = a})
 
 instance GoogleRequest PlacementGroupsList where
         type Rs PlacementGroupsList =
@@ -370,16 +382,17 @@ instance GoogleRequest PlacementGroupsList where
               (_pglIds ^. _Default)
               _pglPlacementGroupType
               (_pglDirectorySiteIds ^. _Default)
-              _pglSortOrder
+              (Just _pglSortOrder)
               (_pglSiteIds ^. _Default)
               _pglPageToken
-              _pglSortField
+              (Just _pglSortField)
               _pglMaxStartDate
               (_pglAdvertiserIds ^. _Default)
               _pglMinStartDate
               _pglArchived
-              _pglMaxResults
+              (Just _pglMaxResults)
               _pglMinEndDate
+              _pglFields
               (Just AltJSON)
               dFAReportingService
           where go

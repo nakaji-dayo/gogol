@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Contacts.Patch
     -- * Request Lenses
     , cpPayload
     , cpId
+    , cpFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.contacts.patch@ method which the
 -- 'ContactsPatch' request conforms to.
@@ -47,15 +48,17 @@ type ContactsPatchResource =
        "v1" :>
          "contacts" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Contact :> Patch '[JSON] Contact
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Contact :> Patch '[JSON] Contact
 
 -- | Updates a contact in place. This method supports patch semantics.
 --
 -- /See:/ 'contactsPatch' smart constructor.
 data ContactsPatch = ContactsPatch'
     { _cpPayload :: !Contact
-    , _cpId      :: !Text
+    , _cpId :: !Text
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactsPatch' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data ContactsPatch = ContactsPatch'
 -- * 'cpPayload'
 --
 -- * 'cpId'
+--
+-- * 'cpFields'
 contactsPatch
     :: Contact -- ^ 'cpPayload'
     -> Text -- ^ 'cpId'
     -> ContactsPatch
-contactsPatch pCpPayload_ pCpId_ =
+contactsPatch pCpPayload_ pCpId_ = 
     ContactsPatch'
     { _cpPayload = pCpPayload_
     , _cpId = pCpId_
+    , _cpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -84,12 +90,17 @@ cpPayload
 cpId :: Lens' ContactsPatch Text
 cpId = lens _cpId (\ s a -> s{_cpId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' ContactsPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest ContactsPatch where
         type Rs ContactsPatch = Contact
         type Scopes ContactsPatch =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient ContactsPatch'{..}
-          = go _cpId (Just AltJSON) _cpPayload mirrorService
+          = go _cpId _cpFields (Just AltJSON) _cpPayload
+              mirrorService
           where go
                   = buildClient (Proxy :: Proxy ContactsPatchResource)
                       mempty

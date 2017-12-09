@@ -41,10 +41,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.GetAppRestrictionsSche
     , pgarsEnterpriseId
     , pgarsLanguage
     , pgarsProductId
+    , pgarsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.getAppRestrictionsSchema@ method which the
 -- 'ProductsGetAppRestrictionsSchema' request conforms to.
@@ -57,8 +58,9 @@ type ProductsGetAppRestrictionsSchemaResource =
                Capture "productId" Text :>
                  "appRestrictionsSchema" :>
                    QueryParam "language" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] AppRestrictionsSchema
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] AppRestrictionsSchema
 
 -- | Retrieves the schema that defines the configurable properties for this
 -- product. All products have a schema, but this schema may be empty if no
@@ -70,8 +72,9 @@ type ProductsGetAppRestrictionsSchemaResource =
 -- /See:/ 'productsGetAppRestrictionsSchema' smart constructor.
 data ProductsGetAppRestrictionsSchema = ProductsGetAppRestrictionsSchema'
     { _pgarsEnterpriseId :: !Text
-    , _pgarsLanguage     :: !(Maybe Text)
-    , _pgarsProductId    :: !Text
+    , _pgarsLanguage :: !(Maybe Text)
+    , _pgarsProductId :: !Text
+    , _pgarsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGetAppRestrictionsSchema' with the minimum fields required to make a request.
@@ -83,15 +86,18 @@ data ProductsGetAppRestrictionsSchema = ProductsGetAppRestrictionsSchema'
 -- * 'pgarsLanguage'
 --
 -- * 'pgarsProductId'
+--
+-- * 'pgarsFields'
 productsGetAppRestrictionsSchema
     :: Text -- ^ 'pgarsEnterpriseId'
     -> Text -- ^ 'pgarsProductId'
     -> ProductsGetAppRestrictionsSchema
-productsGetAppRestrictionsSchema pPgarsEnterpriseId_ pPgarsProductId_ =
+productsGetAppRestrictionsSchema pPgarsEnterpriseId_ pPgarsProductId_ = 
     ProductsGetAppRestrictionsSchema'
     { _pgarsEnterpriseId = pPgarsEnterpriseId_
     , _pgarsLanguage = Nothing
     , _pgarsProductId = pPgarsProductId_
+    , _pgarsFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -113,6 +119,11 @@ pgarsProductId
   = lens _pgarsProductId
       (\ s a -> s{_pgarsProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgarsFields :: Lens' ProductsGetAppRestrictionsSchema (Maybe Text)
+pgarsFields
+  = lens _pgarsFields (\ s a -> s{_pgarsFields = a})
+
 instance GoogleRequest
          ProductsGetAppRestrictionsSchema where
         type Rs ProductsGetAppRestrictionsSchema =
@@ -122,6 +133,7 @@ instance GoogleRequest
         requestClient ProductsGetAppRestrictionsSchema'{..}
           = go _pgarsEnterpriseId _pgarsProductId
               _pgarsLanguage
+              _pgarsFields
               (Just AltJSON)
               androidEnterpriseService
           where go

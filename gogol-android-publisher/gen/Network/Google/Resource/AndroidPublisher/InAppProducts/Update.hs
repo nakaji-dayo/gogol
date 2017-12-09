@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.InAppProducts.Update
     , iapuPackageName
     , iapuPayload
     , iapuSKU
+    , iapuFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.inappproducts.update@ method which the
 -- 'InAppProductsUpdate' request conforms to.
@@ -52,18 +53,20 @@ type InAppProductsUpdateResource =
              "inappproducts" :>
                Capture "sku" Text :>
                  QueryParam "autoConvertMissingPrices" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InAppProduct :>
-                       Put '[JSON] InAppProduct
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InAppProduct :>
+                         Put '[JSON] InAppProduct
 
 -- | Updates the details of an in-app product.
 --
 -- /See:/ 'inAppProductsUpdate' smart constructor.
 data InAppProductsUpdate = InAppProductsUpdate'
     { _iapuAutoConvertMissingPrices :: !(Maybe Bool)
-    , _iapuPackageName              :: !Text
-    , _iapuPayload                  :: !InAppProduct
-    , _iapuSKU                      :: !Text
+    , _iapuPackageName :: !Text
+    , _iapuPayload :: !InAppProduct
+    , _iapuSKU :: !Text
+    , _iapuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InAppProductsUpdate' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data InAppProductsUpdate = InAppProductsUpdate'
 -- * 'iapuPayload'
 --
 -- * 'iapuSKU'
+--
+-- * 'iapuFields'
 inAppProductsUpdate
     :: Text -- ^ 'iapuPackageName'
     -> InAppProduct -- ^ 'iapuPayload'
     -> Text -- ^ 'iapuSKU'
     -> InAppProductsUpdate
-inAppProductsUpdate pIapuPackageName_ pIapuPayload_ pIapuSKU_ =
+inAppProductsUpdate pIapuPackageName_ pIapuPayload_ pIapuSKU_ = 
     InAppProductsUpdate'
     { _iapuAutoConvertMissingPrices = Nothing
     , _iapuPackageName = pIapuPackageName_
     , _iapuPayload = pIapuPayload_
     , _iapuSKU = pIapuSKU_
+    , _iapuFields = Nothing
     }
 
 -- | If true the prices for all regions targeted by the parent app that
@@ -115,6 +121,11 @@ iapuPayload
 iapuSKU :: Lens' InAppProductsUpdate Text
 iapuSKU = lens _iapuSKU (\ s a -> s{_iapuSKU = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iapuFields :: Lens' InAppProductsUpdate (Maybe Text)
+iapuFields
+  = lens _iapuFields (\ s a -> s{_iapuFields = a})
+
 instance GoogleRequest InAppProductsUpdate where
         type Rs InAppProductsUpdate = InAppProduct
         type Scopes InAppProductsUpdate =
@@ -122,6 +133,7 @@ instance GoogleRequest InAppProductsUpdate where
         requestClient InAppProductsUpdate'{..}
           = go _iapuPackageName _iapuSKU
               _iapuAutoConvertMissingPrices
+              _iapuFields
               (Just AltJSON)
               _iapuPayload
               androidPublisherService

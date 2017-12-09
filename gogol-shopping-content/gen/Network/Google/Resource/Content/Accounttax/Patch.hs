@@ -20,10 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the tax settings of the account. This method can only be called
--- for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account. This method supports patch semantics.
+-- Updates the tax settings of the account. This method supports patch
+-- semantics.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounttax.patch@.
 module Network.Google.Resource.Content.Accounttax.Patch
@@ -40,10 +38,11 @@ module Network.Google.Resource.Content.Accounttax.Patch
     , appPayload
     , appAccountId
     , appDryRun
+    , appFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounttax.patch@ method which the
 -- 'AccounttaxPatch' request conforms to.
@@ -54,21 +53,21 @@ type AccounttaxPatchResource =
            "accounttax" :>
              Capture "accountId" (Textual Word64) :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AccountTax :>
-                     Patch '[JSON] AccountTax
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AccountTax :>
+                       Patch '[JSON] AccountTax
 
--- | Updates the tax settings of the account. This method can only be called
--- for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account. This method supports patch semantics.
+-- | Updates the tax settings of the account. This method supports patch
+-- semantics.
 --
 -- /See:/ 'accounttaxPatch' smart constructor.
 data AccounttaxPatch = AccounttaxPatch'
     { _appMerchantId :: !(Textual Word64)
-    , _appPayload    :: !AccountTax
-    , _appAccountId  :: !(Textual Word64)
-    , _appDryRun     :: !(Maybe Bool)
+    , _appPayload :: !AccountTax
+    , _appAccountId :: !(Textual Word64)
+    , _appDryRun :: !(Maybe Bool)
+    , _appFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccounttaxPatch' with the minimum fields required to make a request.
@@ -82,20 +81,25 @@ data AccounttaxPatch = AccounttaxPatch'
 -- * 'appAccountId'
 --
 -- * 'appDryRun'
+--
+-- * 'appFields'
 accounttaxPatch
     :: Word64 -- ^ 'appMerchantId'
     -> AccountTax -- ^ 'appPayload'
     -> Word64 -- ^ 'appAccountId'
     -> AccounttaxPatch
-accounttaxPatch pAppMerchantId_ pAppPayload_ pAppAccountId_ =
+accounttaxPatch pAppMerchantId_ pAppPayload_ pAppAccountId_ = 
     AccounttaxPatch'
     { _appMerchantId = _Coerce # pAppMerchantId_
     , _appPayload = pAppPayload_
     , _appAccountId = _Coerce # pAppAccountId_
     , _appDryRun = Nothing
+    , _appFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
 appMerchantId :: Lens' AccounttaxPatch Word64
 appMerchantId
   = lens _appMerchantId
@@ -118,12 +122,18 @@ appDryRun :: Lens' AccounttaxPatch (Maybe Bool)
 appDryRun
   = lens _appDryRun (\ s a -> s{_appDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+appFields :: Lens' AccounttaxPatch (Maybe Text)
+appFields
+  = lens _appFields (\ s a -> s{_appFields = a})
+
 instance GoogleRequest AccounttaxPatch where
         type Rs AccounttaxPatch = AccountTax
         type Scopes AccounttaxPatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccounttaxPatch'{..}
           = go _appMerchantId _appAccountId _appDryRun
+              _appFields
               (Just AltJSON)
               _appPayload
               shoppingContentService

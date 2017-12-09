@@ -41,11 +41,12 @@ module Network.Google.Resource.Slides.Presentations.Pages.Get
     , ppgUploadType
     , ppgPresentationId
     , ppgBearerToken
+    , ppgFields
     , ppgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Slides.Types
+import Network.Google.Prelude
+import Network.Google.Slides.Types
 
 -- | A resource alias for @slides.presentations.pages.get@ method which the
 -- 'PresentationsPagesGet' request conforms to.
@@ -62,21 +63,23 @@ type PresentationsPagesGetResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Page
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Page
 
 -- | Gets the latest version of the specified page in the presentation.
 --
 -- /See:/ 'presentationsPagesGet' smart constructor.
 data PresentationsPagesGet = PresentationsPagesGet'
-    { _ppgXgafv          :: !(Maybe Xgafv)
+    { _ppgXgafv :: !(Maybe Xgafv)
     , _ppgUploadProtocol :: !(Maybe Text)
-    , _ppgPp             :: !Bool
-    , _ppgAccessToken    :: !(Maybe Text)
-    , _ppgPageObjectId   :: !Text
-    , _ppgUploadType     :: !(Maybe Text)
+    , _ppgPp :: !Bool
+    , _ppgAccessToken :: !(Maybe Text)
+    , _ppgPageObjectId :: !Text
+    , _ppgUploadType :: !(Maybe Text)
     , _ppgPresentationId :: !Text
-    , _ppgBearerToken    :: !(Maybe Text)
-    , _ppgCallback       :: !(Maybe Text)
+    , _ppgBearerToken :: !(Maybe Text)
+    , _ppgFields :: !(Maybe Text)
+    , _ppgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PresentationsPagesGet' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data PresentationsPagesGet = PresentationsPagesGet'
 --
 -- * 'ppgBearerToken'
 --
+-- * 'ppgFields'
+--
 -- * 'ppgCallback'
 presentationsPagesGet
     :: Text -- ^ 'ppgPageObjectId'
     -> Text -- ^ 'ppgPresentationId'
     -> PresentationsPagesGet
-presentationsPagesGet pPpgPageObjectId_ pPpgPresentationId_ =
+presentationsPagesGet pPpgPageObjectId_ pPpgPresentationId_ = 
     PresentationsPagesGet'
     { _ppgXgafv = Nothing
     , _ppgUploadProtocol = Nothing
@@ -114,6 +119,7 @@ presentationsPagesGet pPpgPageObjectId_ pPpgPresentationId_ =
     , _ppgUploadType = Nothing
     , _ppgPresentationId = pPpgPresentationId_
     , _ppgBearerToken = Nothing
+    , _ppgFields = Nothing
     , _ppgCallback = Nothing
     }
 
@@ -161,6 +167,11 @@ ppgBearerToken
   = lens _ppgBearerToken
       (\ s a -> s{_ppgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ppgFields :: Lens' PresentationsPagesGet (Maybe Text)
+ppgFields
+  = lens _ppgFields (\ s a -> s{_ppgFields = a})
+
 -- | JSONP
 ppgCallback :: Lens' PresentationsPagesGet (Maybe Text)
 ppgCallback
@@ -181,6 +192,7 @@ instance GoogleRequest PresentationsPagesGet where
               _ppgUploadType
               _ppgBearerToken
               _ppgCallback
+              _ppgFields
               (Just AltJSON)
               slidesService
           where go

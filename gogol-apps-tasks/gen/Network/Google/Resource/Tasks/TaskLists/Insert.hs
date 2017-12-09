@@ -35,10 +35,11 @@ module Network.Google.Resource.Tasks.TaskLists.Insert
 
     -- * Request Lenses
     , tliPayload
+    , tliFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasklists.insert@ method which the
 -- 'TaskListsInsert' request conforms to.
@@ -48,15 +49,17 @@ type TaskListsInsertResource =
          "users" :>
            "@me" :>
              "lists" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] TaskList :> Post '[JSON] TaskList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] TaskList :> Post '[JSON] TaskList
 
 -- | Creates a new task list and adds it to the authenticated user\'s task
 -- lists.
 --
 -- /See:/ 'taskListsInsert' smart constructor.
-newtype TaskListsInsert = TaskListsInsert'
-    { _tliPayload :: TaskList
+data TaskListsInsert = TaskListsInsert'
+    { _tliPayload :: !TaskList
+    , _tliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskListsInsert' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype TaskListsInsert = TaskListsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tliPayload'
+--
+-- * 'tliFields'
 taskListsInsert
     :: TaskList -- ^ 'tliPayload'
     -> TaskListsInsert
-taskListsInsert pTliPayload_ =
+taskListsInsert pTliPayload_ = 
     TaskListsInsert'
     { _tliPayload = pTliPayload_
+    , _tliFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -77,12 +83,18 @@ tliPayload :: Lens' TaskListsInsert TaskList
 tliPayload
   = lens _tliPayload (\ s a -> s{_tliPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tliFields :: Lens' TaskListsInsert (Maybe Text)
+tliFields
+  = lens _tliFields (\ s a -> s{_tliFields = a})
+
 instance GoogleRequest TaskListsInsert where
         type Rs TaskListsInsert = TaskList
         type Scopes TaskListsInsert =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TaskListsInsert'{..}
-          = go (Just AltJSON) _tliPayload appsTasksService
+          = go _tliFields (Just AltJSON) _tliPayload
+              appsTasksService
           where go
                   = buildClient
                       (Proxy :: Proxy TaskListsInsertResource)

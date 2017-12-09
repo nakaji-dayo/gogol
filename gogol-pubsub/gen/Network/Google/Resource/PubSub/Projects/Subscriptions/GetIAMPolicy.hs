@@ -41,11 +41,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.GetIAMPolicy
     , psgiampUploadType
     , psgiampBearerToken
     , psgiampResource
+    , psgiampFields
     , psgiampCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.getIamPolicy@ method which the
 -- 'ProjectsSubscriptionsGetIAMPolicy' request conforms to.
@@ -59,21 +60,23 @@ type ProjectsSubscriptionsGetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Policy
 
 -- | Gets the access control policy for a resource. Returns an empty policy
 -- if the resource exists and does not have a policy set.
 --
 -- /See:/ 'projectsSubscriptionsGetIAMPolicy' smart constructor.
 data ProjectsSubscriptionsGetIAMPolicy = ProjectsSubscriptionsGetIAMPolicy'
-    { _psgiampXgafv          :: !(Maybe Xgafv)
+    { _psgiampXgafv :: !(Maybe Xgafv)
     , _psgiampUploadProtocol :: !(Maybe Text)
-    , _psgiampPp             :: !Bool
-    , _psgiampAccessToken    :: !(Maybe Text)
-    , _psgiampUploadType     :: !(Maybe Text)
-    , _psgiampBearerToken    :: !(Maybe Text)
-    , _psgiampResource       :: !Text
-    , _psgiampCallback       :: !(Maybe Text)
+    , _psgiampPp :: !Bool
+    , _psgiampAccessToken :: !(Maybe Text)
+    , _psgiampUploadType :: !(Maybe Text)
+    , _psgiampBearerToken :: !(Maybe Text)
+    , _psgiampResource :: !Text
+    , _psgiampFields :: !(Maybe Text)
+    , _psgiampCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsGetIAMPolicy' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data ProjectsSubscriptionsGetIAMPolicy = ProjectsSubscriptionsGetIAMPolicy'
 --
 -- * 'psgiampResource'
 --
+-- * 'psgiampFields'
+--
 -- * 'psgiampCallback'
 projectsSubscriptionsGetIAMPolicy
     :: Text -- ^ 'psgiampResource'
     -> ProjectsSubscriptionsGetIAMPolicy
-projectsSubscriptionsGetIAMPolicy pPsgiampResource_ =
+projectsSubscriptionsGetIAMPolicy pPsgiampResource_ = 
     ProjectsSubscriptionsGetIAMPolicy'
     { _psgiampXgafv = Nothing
     , _psgiampUploadProtocol = Nothing
@@ -107,6 +112,7 @@ projectsSubscriptionsGetIAMPolicy pPsgiampResource_ =
     , _psgiampUploadType = Nothing
     , _psgiampBearerToken = Nothing
     , _psgiampResource = pPsgiampResource_
+    , _psgiampFields = Nothing
     , _psgiampCallback = Nothing
     }
 
@@ -144,13 +150,18 @@ psgiampBearerToken
   = lens _psgiampBearerToken
       (\ s a -> s{_psgiampBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being requested.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being requested. See the
+-- operation documentation for the appropriate value for this field.
 psgiampResource :: Lens' ProjectsSubscriptionsGetIAMPolicy Text
 psgiampResource
   = lens _psgiampResource
       (\ s a -> s{_psgiampResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psgiampFields :: Lens' ProjectsSubscriptionsGetIAMPolicy (Maybe Text)
+psgiampFields
+  = lens _psgiampFields
+      (\ s a -> s{_psgiampFields = a})
 
 -- | JSONP
 psgiampCallback :: Lens' ProjectsSubscriptionsGetIAMPolicy (Maybe Text)
@@ -172,6 +183,7 @@ instance GoogleRequest
               _psgiampUploadType
               _psgiampBearerToken
               _psgiampCallback
+              _psgiampFields
               (Just AltJSON)
               pubSubService
           where go

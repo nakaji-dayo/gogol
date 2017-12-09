@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.RemarketingAudience.Patch
     , mrapPayload
     , mrapAccountId
     , mrapRemarketingAudienceId
+    , mrapFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.remarketingAudience.patch@ method which the
 -- 'ManagementRemarketingAudiencePatch' request conforms to.
@@ -55,19 +56,21 @@ type ManagementRemarketingAudiencePatchResource =
                  Capture "webPropertyId" Text :>
                    "remarketingAudiences" :>
                      Capture "remarketingAudienceId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] RemarketingAudience :>
-                           Patch '[JSON] RemarketingAudience
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] RemarketingAudience :>
+                             Patch '[JSON] RemarketingAudience
 
 -- | Updates an existing remarketing audience. This method supports patch
 -- semantics.
 --
 -- /See:/ 'managementRemarketingAudiencePatch' smart constructor.
 data ManagementRemarketingAudiencePatch = ManagementRemarketingAudiencePatch'
-    { _mrapWebPropertyId         :: !Text
-    , _mrapPayload               :: !RemarketingAudience
-    , _mrapAccountId             :: !Text
+    { _mrapWebPropertyId :: !Text
+    , _mrapPayload :: !RemarketingAudience
+    , _mrapAccountId :: !Text
     , _mrapRemarketingAudienceId :: !Text
+    , _mrapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementRemarketingAudiencePatch' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data ManagementRemarketingAudiencePatch = ManagementRemarketingAudiencePatch'
 -- * 'mrapAccountId'
 --
 -- * 'mrapRemarketingAudienceId'
+--
+-- * 'mrapFields'
 managementRemarketingAudiencePatch
     :: Text -- ^ 'mrapWebPropertyId'
     -> RemarketingAudience -- ^ 'mrapPayload'
     -> Text -- ^ 'mrapAccountId'
     -> Text -- ^ 'mrapRemarketingAudienceId'
     -> ManagementRemarketingAudiencePatch
-managementRemarketingAudiencePatch pMrapWebPropertyId_ pMrapPayload_ pMrapAccountId_ pMrapRemarketingAudienceId_ =
+managementRemarketingAudiencePatch pMrapWebPropertyId_ pMrapPayload_ pMrapAccountId_ pMrapRemarketingAudienceId_ = 
     ManagementRemarketingAudiencePatch'
     { _mrapWebPropertyId = pMrapWebPropertyId_
     , _mrapPayload = pMrapPayload_
     , _mrapAccountId = pMrapAccountId_
     , _mrapRemarketingAudienceId = pMrapRemarketingAudienceId_
+    , _mrapFields = Nothing
     }
 
 -- | The web property ID of the remarketing audience to update.
@@ -118,6 +124,11 @@ mrapRemarketingAudienceId
   = lens _mrapRemarketingAudienceId
       (\ s a -> s{_mrapRemarketingAudienceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mrapFields :: Lens' ManagementRemarketingAudiencePatch (Maybe Text)
+mrapFields
+  = lens _mrapFields (\ s a -> s{_mrapFields = a})
+
 instance GoogleRequest
          ManagementRemarketingAudiencePatch where
         type Rs ManagementRemarketingAudiencePatch =
@@ -127,6 +138,7 @@ instance GoogleRequest
         requestClient ManagementRemarketingAudiencePatch'{..}
           = go _mrapAccountId _mrapWebPropertyId
               _mrapRemarketingAudienceId
+              _mrapFields
               (Just AltJSON)
               _mrapPayload
               analyticsService

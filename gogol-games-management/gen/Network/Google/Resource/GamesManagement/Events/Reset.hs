@@ -37,10 +37,11 @@ module Network.Google.Resource.GamesManagement.Events.Reset
 
     -- * Request Lenses
     , erEventId
+    , erFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.events.reset@ method which the
 -- 'EventsReset' request conforms to.
@@ -50,7 +51,8 @@ type EventsResetResource =
          "events" :>
            Capture "eventId" Text :>
              "reset" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets all player progress on the event with the given ID for the
 -- currently authenticated player. This method is only accessible to
@@ -58,8 +60,9 @@ type EventsResetResource =
 -- player that use the event will also be reset.
 --
 -- /See:/ 'eventsReset' smart constructor.
-newtype EventsReset = EventsReset'
-    { _erEventId :: Text
+data EventsReset = EventsReset'
+    { _erEventId :: !Text
+    , _erFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsReset' with the minimum fields required to make a request.
@@ -67,12 +70,15 @@ newtype EventsReset = EventsReset'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'erEventId'
+--
+-- * 'erFields'
 eventsReset
     :: Text -- ^ 'erEventId'
     -> EventsReset
-eventsReset pErEventId_ =
+eventsReset pErEventId_ = 
     EventsReset'
     { _erEventId = pErEventId_
+    , _erFields = Nothing
     }
 
 -- | The ID of the event.
@@ -80,13 +86,18 @@ erEventId :: Lens' EventsReset Text
 erEventId
   = lens _erEventId (\ s a -> s{_erEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+erFields :: Lens' EventsReset (Maybe Text)
+erFields = lens _erFields (\ s a -> s{_erFields = a})
+
 instance GoogleRequest EventsReset where
         type Rs EventsReset = ()
         type Scopes EventsReset =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient EventsReset'{..}
-          = go _erEventId (Just AltJSON) gamesManagementService
+          = go _erEventId _erFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy EventsResetResource)
                       mempty

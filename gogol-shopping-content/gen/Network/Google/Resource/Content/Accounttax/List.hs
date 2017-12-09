@@ -21,7 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Lists the tax settings of the sub-accounts in your Merchant Center
--- account. This method can only be called for multi-client accounts.
+-- account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounttax.list@.
 module Network.Google.Resource.Content.Accounttax.List
@@ -37,10 +37,11 @@ module Network.Google.Resource.Content.Accounttax.List
     , allMerchantId
     , allPageToken
     , allMaxResults
+    , allFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounttax.list@ method which the
 -- 'AccounttaxList' request conforms to.
@@ -51,17 +52,19 @@ type AccounttaxListResource =
            "accounttax" :>
              QueryParam "pageToken" Text :>
                QueryParam "maxResults" (Textual Word32) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccounttaxListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccounttaxListResponse
 
 -- | Lists the tax settings of the sub-accounts in your Merchant Center
--- account. This method can only be called for multi-client accounts.
+-- account.
 --
 -- /See:/ 'accounttaxList' smart constructor.
 data AccounttaxList = AccounttaxList'
     { _allMerchantId :: !(Textual Word64)
-    , _allPageToken  :: !(Maybe Text)
+    , _allPageToken :: !(Maybe Text)
     , _allMaxResults :: !(Maybe (Textual Word32))
+    , _allFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccounttaxList' with the minimum fields required to make a request.
@@ -73,17 +76,20 @@ data AccounttaxList = AccounttaxList'
 -- * 'allPageToken'
 --
 -- * 'allMaxResults'
+--
+-- * 'allFields'
 accounttaxList
     :: Word64 -- ^ 'allMerchantId'
     -> AccounttaxList
-accounttaxList pAllMerchantId_ =
+accounttaxList pAllMerchantId_ = 
     AccounttaxList'
     { _allMerchantId = _Coerce # pAllMerchantId_
     , _allPageToken = Nothing
     , _allMaxResults = Nothing
+    , _allFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. This must be a multi-client account.
 allMerchantId :: Lens' AccounttaxList Word64
 allMerchantId
   = lens _allMerchantId
@@ -103,12 +109,18 @@ allMaxResults
       (\ s a -> s{_allMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+allFields :: Lens' AccounttaxList (Maybe Text)
+allFields
+  = lens _allFields (\ s a -> s{_allFields = a})
+
 instance GoogleRequest AccounttaxList where
         type Rs AccounttaxList = AccounttaxListResponse
         type Scopes AccounttaxList =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccounttaxList'{..}
           = go _allMerchantId _allPageToken _allMaxResults
+              _allFields
               (Just AltJSON)
               shoppingContentService
           where go

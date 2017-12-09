@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Instances.Restart
 
     -- * Request Lenses
     , irProject
+    , irFields
     , irInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.restart@ method which the
 -- 'InstancesRestart' request conforms to.
@@ -50,13 +51,15 @@ type InstancesRestartResource =
              "instances" :>
                Capture "instance" Text :>
                  "restart" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Restarts a Cloud SQL instance.
 --
 -- /See:/ 'instancesRestart' smart constructor.
 data InstancesRestart = InstancesRestart'
-    { _irProject  :: !Text
+    { _irProject :: !Text
+    , _irFields :: !(Maybe Text)
     , _irInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -66,14 +69,17 @@ data InstancesRestart = InstancesRestart'
 --
 -- * 'irProject'
 --
+-- * 'irFields'
+--
 -- * 'irInstance'
 instancesRestart
     :: Text -- ^ 'irProject'
     -> Text -- ^ 'irInstance'
     -> InstancesRestart
-instancesRestart pIrProject_ pIrInstance_ =
+instancesRestart pIrProject_ pIrInstance_ = 
     InstancesRestart'
     { _irProject = pIrProject_
+    , _irFields = Nothing
     , _irInstance = pIrInstance_
     }
 
@@ -81,6 +87,10 @@ instancesRestart pIrProject_ pIrInstance_ =
 irProject :: Lens' InstancesRestart Text
 irProject
   = lens _irProject (\ s a -> s{_irProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+irFields :: Lens' InstancesRestart (Maybe Text)
+irFields = lens _irFields (\ s a -> s{_irFields = a})
 
 -- | Cloud SQL instance ID. This does not include the project ID.
 irInstance :: Lens' InstancesRestart Text
@@ -93,7 +103,7 @@ instance GoogleRequest InstancesRestart where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesRestart'{..}
-          = go _irProject _irInstance (Just AltJSON)
+          = go _irProject _irInstance _irFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Sizes.Get
     -- * Request Lenses
     , sgProFileId
     , sgId
+    , sgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sizes.get@ method which the
 -- 'SizesGet' request conforms to.
 type SizesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sizes" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Size
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Size
 
 -- | Gets one size by ID.
 --
 -- /See:/ 'sizesGet' smart constructor.
 data SizesGet = SizesGet'
     { _sgProFileId :: !(Textual Int64)
-    , _sgId        :: !(Textual Int64)
+    , _sgId :: !(Textual Int64)
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SizesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SizesGet = SizesGet'
 -- * 'sgProFileId'
 --
 -- * 'sgId'
+--
+-- * 'sgFields'
 sizesGet
     :: Int64 -- ^ 'sgProFileId'
     -> Int64 -- ^ 'sgId'
     -> SizesGet
-sizesGet pSgProFileId_ pSgId_ =
+sizesGet pSgProFileId_ pSgId_ = 
     SizesGet'
     { _sgProFileId = _Coerce # pSgProFileId_
     , _sgId = _Coerce # pSgId_
+    , _sgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -86,12 +92,16 @@ sgProFileId
 sgId :: Lens' SizesGet Int64
 sgId = lens _sgId (\ s a -> s{_sgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SizesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SizesGet where
         type Rs SizesGet = Size
         type Scopes SizesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SizesGet'{..}
-          = go _sgProFileId _sgId (Just AltJSON)
+          = go _sgProFileId _sgId _sgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy SizesGetResource)

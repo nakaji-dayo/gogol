@@ -43,11 +43,12 @@ module Network.Google.Resource.Dataflow.Projects.Jobs.GetMetrics
     , pjgmUploadType
     , pjgmBearerToken
     , pjgmProjectId
+    , pjgmFields
     , pjgmCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.jobs.getMetrics@ method which the
 -- 'ProjectsJobsGetMetrics' request conforms to.
@@ -58,33 +59,35 @@ type ProjectsJobsGetMetricsResource =
            "jobs" :>
              Capture "jobId" Text :>
                "metrics" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "location" Text :>
-                       QueryParam "startTime" Text :>
+                       QueryParam "startTime" DateTime' :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] JobMetrics
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] JobMetrics
 
 -- | Request the job status.
 --
 -- /See:/ 'projectsJobsGetMetrics' smart constructor.
 data ProjectsJobsGetMetrics = ProjectsJobsGetMetrics'
-    { _pjgmXgafv          :: !(Maybe Text)
-    , _pjgmJobId          :: !Text
+    { _pjgmXgafv :: !(Maybe Xgafv)
+    , _pjgmJobId :: !Text
     , _pjgmUploadProtocol :: !(Maybe Text)
-    , _pjgmLocation       :: !(Maybe Text)
-    , _pjgmStartTime      :: !(Maybe Text)
-    , _pjgmPp             :: !Bool
-    , _pjgmAccessToken    :: !(Maybe Text)
-    , _pjgmUploadType     :: !(Maybe Text)
-    , _pjgmBearerToken    :: !(Maybe Text)
-    , _pjgmProjectId      :: !Text
-    , _pjgmCallback       :: !(Maybe Text)
+    , _pjgmLocation :: !(Maybe Text)
+    , _pjgmStartTime :: !(Maybe DateTime')
+    , _pjgmPp :: !Bool
+    , _pjgmAccessToken :: !(Maybe Text)
+    , _pjgmUploadType :: !(Maybe Text)
+    , _pjgmBearerToken :: !(Maybe Text)
+    , _pjgmProjectId :: !Text
+    , _pjgmFields :: !(Maybe Text)
+    , _pjgmCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsJobsGetMetrics' with the minimum fields required to make a request.
@@ -111,12 +114,14 @@ data ProjectsJobsGetMetrics = ProjectsJobsGetMetrics'
 --
 -- * 'pjgmProjectId'
 --
+-- * 'pjgmFields'
+--
 -- * 'pjgmCallback'
 projectsJobsGetMetrics
     :: Text -- ^ 'pjgmJobId'
     -> Text -- ^ 'pjgmProjectId'
     -> ProjectsJobsGetMetrics
-projectsJobsGetMetrics pPjgmJobId_ pPjgmProjectId_ =
+projectsJobsGetMetrics pPjgmJobId_ pPjgmProjectId_ = 
     ProjectsJobsGetMetrics'
     { _pjgmXgafv = Nothing
     , _pjgmJobId = pPjgmJobId_
@@ -128,11 +133,12 @@ projectsJobsGetMetrics pPjgmJobId_ pPjgmProjectId_ =
     , _pjgmUploadType = Nothing
     , _pjgmBearerToken = Nothing
     , _pjgmProjectId = pPjgmProjectId_
+    , _pjgmFields = Nothing
     , _pjgmCallback = Nothing
     }
 
 -- | V1 error format.
-pjgmXgafv :: Lens' ProjectsJobsGetMetrics (Maybe Text)
+pjgmXgafv :: Lens' ProjectsJobsGetMetrics (Maybe Xgafv)
 pjgmXgafv
   = lens _pjgmXgafv (\ s a -> s{_pjgmXgafv = a})
 
@@ -154,10 +160,11 @@ pjgmLocation
 
 -- | Return only metric data that has changed since this time. Default is to
 -- return all information about all metrics for the job.
-pjgmStartTime :: Lens' ProjectsJobsGetMetrics (Maybe Text)
+pjgmStartTime :: Lens' ProjectsJobsGetMetrics (Maybe UTCTime)
 pjgmStartTime
   = lens _pjgmStartTime
       (\ s a -> s{_pjgmStartTime = a})
+      . mapping _DateTime
 
 -- | Pretty-print response.
 pjgmPp :: Lens' ProjectsJobsGetMetrics Bool
@@ -187,6 +194,11 @@ pjgmProjectId
   = lens _pjgmProjectId
       (\ s a -> s{_pjgmProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pjgmFields :: Lens' ProjectsJobsGetMetrics (Maybe Text)
+pjgmFields
+  = lens _pjgmFields (\ s a -> s{_pjgmFields = a})
+
 -- | JSONP
 pjgmCallback :: Lens' ProjectsJobsGetMetrics (Maybe Text)
 pjgmCallback
@@ -196,6 +208,8 @@ instance GoogleRequest ProjectsJobsGetMetrics where
         type Rs ProjectsJobsGetMetrics = JobMetrics
         type Scopes ProjectsJobsGetMetrics =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsJobsGetMetrics'{..}
           = go _pjgmProjectId _pjgmJobId _pjgmXgafv
@@ -207,6 +221,7 @@ instance GoogleRequest ProjectsJobsGetMetrics where
               _pjgmUploadType
               _pjgmBearerToken
               _pjgmCallback
+              _pjgmFields
               (Just AltJSON)
               dataflowService
           where go

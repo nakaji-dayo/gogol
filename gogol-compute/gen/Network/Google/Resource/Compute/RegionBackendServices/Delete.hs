@@ -33,13 +33,15 @@ module Network.Google.Resource.Compute.RegionBackendServices.Delete
     , RegionBackendServicesDelete
 
     -- * Request Lenses
+    , rbsdRequestId
     , rbsdProject
     , rbsdRegion
+    , rbsdFields
     , rbsdBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionBackendServices.delete@ method which the
 -- 'RegionBackendServicesDelete' request conforms to.
@@ -52,14 +54,18 @@ type RegionBackendServicesDeleteResource =
                Capture "region" Text :>
                  "backendServices" :>
                    Capture "backendService" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified regional BackendService resource.
 --
 -- /See:/ 'regionBackendServicesDelete' smart constructor.
 data RegionBackendServicesDelete = RegionBackendServicesDelete'
-    { _rbsdProject        :: !Text
-    , _rbsdRegion         :: !Text
+    { _rbsdRequestId :: !(Maybe Text)
+    , _rbsdProject :: !Text
+    , _rbsdRegion :: !Text
+    , _rbsdFields :: !(Maybe Text)
     , _rbsdBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -67,9 +73,13 @@ data RegionBackendServicesDelete = RegionBackendServicesDelete'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'rbsdRequestId'
+--
 -- * 'rbsdProject'
 --
 -- * 'rbsdRegion'
+--
+-- * 'rbsdFields'
 --
 -- * 'rbsdBackendService'
 regionBackendServicesDelete
@@ -77,12 +87,29 @@ regionBackendServicesDelete
     -> Text -- ^ 'rbsdRegion'
     -> Text -- ^ 'rbsdBackendService'
     -> RegionBackendServicesDelete
-regionBackendServicesDelete pRbsdProject_ pRbsdRegion_ pRbsdBackendService_ =
+regionBackendServicesDelete pRbsdProject_ pRbsdRegion_ pRbsdBackendService_ = 
     RegionBackendServicesDelete'
-    { _rbsdProject = pRbsdProject_
+    { _rbsdRequestId = Nothing
+    , _rbsdProject = pRbsdProject_
     , _rbsdRegion = pRbsdRegion_
+    , _rbsdFields = Nothing
     , _rbsdBackendService = pRbsdBackendService_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rbsdRequestId :: Lens' RegionBackendServicesDelete (Maybe Text)
+rbsdRequestId
+  = lens _rbsdRequestId
+      (\ s a -> s{_rbsdRequestId = a})
 
 -- | Project ID for this request.
 rbsdProject :: Lens' RegionBackendServicesDelete Text
@@ -93,6 +120,11 @@ rbsdProject
 rbsdRegion :: Lens' RegionBackendServicesDelete Text
 rbsdRegion
   = lens _rbsdRegion (\ s a -> s{_rbsdRegion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rbsdFields :: Lens' RegionBackendServicesDelete (Maybe Text)
+rbsdFields
+  = lens _rbsdFields (\ s a -> s{_rbsdFields = a})
 
 -- | Name of the BackendService resource to delete.
 rbsdBackendService :: Lens' RegionBackendServicesDelete Text
@@ -108,6 +140,8 @@ instance GoogleRequest RegionBackendServicesDelete
                "https://www.googleapis.com/auth/compute"]
         requestClient RegionBackendServicesDelete'{..}
           = go _rbsdProject _rbsdRegion _rbsdBackendService
+              _rbsdRequestId
+              _rbsdFields
               (Just AltJSON)
               computeService
           where go

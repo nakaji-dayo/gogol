@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.CustomDimensions.Insert
     , mcdiWebPropertyId
     , mcdiPayload
     , mcdiAccountId
+    , mcdiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDimensions.insert@ method which the
 -- 'ManagementCustomDimensionsInsert' request conforms to.
@@ -52,17 +53,19 @@ type ManagementCustomDimensionsInsertResource =
                "webproperties" :>
                  Capture "webPropertyId" Text :>
                    "customDimensions" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] CustomDimension :>
-                         Post '[JSON] CustomDimension
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] CustomDimension :>
+                           Post '[JSON] CustomDimension
 
 -- | Create a new custom dimension.
 --
 -- /See:/ 'managementCustomDimensionsInsert' smart constructor.
 data ManagementCustomDimensionsInsert = ManagementCustomDimensionsInsert'
     { _mcdiWebPropertyId :: !Text
-    , _mcdiPayload       :: !CustomDimension
-    , _mcdiAccountId     :: !Text
+    , _mcdiPayload :: !CustomDimension
+    , _mcdiAccountId :: !Text
+    , _mcdiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDimensionsInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementCustomDimensionsInsert = ManagementCustomDimensionsInsert'
 -- * 'mcdiPayload'
 --
 -- * 'mcdiAccountId'
+--
+-- * 'mcdiFields'
 managementCustomDimensionsInsert
     :: Text -- ^ 'mcdiWebPropertyId'
     -> CustomDimension -- ^ 'mcdiPayload'
     -> Text -- ^ 'mcdiAccountId'
     -> ManagementCustomDimensionsInsert
-managementCustomDimensionsInsert pMcdiWebPropertyId_ pMcdiPayload_ pMcdiAccountId_ =
+managementCustomDimensionsInsert pMcdiWebPropertyId_ pMcdiPayload_ pMcdiAccountId_ = 
     ManagementCustomDimensionsInsert'
     { _mcdiWebPropertyId = pMcdiWebPropertyId_
     , _mcdiPayload = pMcdiPayload_
     , _mcdiAccountId = pMcdiAccountId_
+    , _mcdiFields = Nothing
     }
 
 -- | Web property ID for the custom dimension to create.
@@ -103,6 +109,11 @@ mcdiAccountId
   = lens _mcdiAccountId
       (\ s a -> s{_mcdiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdiFields :: Lens' ManagementCustomDimensionsInsert (Maybe Text)
+mcdiFields
+  = lens _mcdiFields (\ s a -> s{_mcdiFields = a})
+
 instance GoogleRequest
          ManagementCustomDimensionsInsert where
         type Rs ManagementCustomDimensionsInsert =
@@ -110,7 +121,8 @@ instance GoogleRequest
         type Scopes ManagementCustomDimensionsInsert =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementCustomDimensionsInsert'{..}
-          = go _mcdiAccountId _mcdiWebPropertyId (Just AltJSON)
+          = go _mcdiAccountId _mcdiWebPropertyId _mcdiFields
+              (Just AltJSON)
               _mcdiPayload
               analyticsService
           where go

@@ -16,7 +16,7 @@
 --
 module Network.Google.DeploymentManager.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Sets the policy to use for creating new resources.
 data DeploymentsUpdateCreatePolicy

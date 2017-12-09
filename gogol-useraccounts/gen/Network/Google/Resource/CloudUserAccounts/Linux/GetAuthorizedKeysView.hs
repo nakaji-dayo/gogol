@@ -37,11 +37,12 @@ module Network.Google.Resource.CloudUserAccounts.Linux.GetAuthorizedKeysView
     , lgakvZone
     , lgakvUser
     , lgakvLogin
+    , lgakvFields
     , lgakvInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.linux.getAuthorizedKeysView@ method which the
 -- 'LinuxGetAuthorizedKeysView' request conforms to.
@@ -56,17 +57,19 @@ type LinuxGetAuthorizedKeysViewResource =
                    Capture "user" Text :>
                      QueryParam "instance" Text :>
                        QueryParam "login" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           Post '[JSON] LinuxGetAuthorizedKeysViewResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Post '[JSON] LinuxGetAuthorizedKeysViewResponse
 
 -- | Returns a list of authorized public keys for a specific user account.
 --
 -- /See:/ 'linuxGetAuthorizedKeysView' smart constructor.
 data LinuxGetAuthorizedKeysView = LinuxGetAuthorizedKeysView'
-    { _lgakvProject  :: !Text
-    , _lgakvZone     :: !Text
-    , _lgakvUser     :: !Text
-    , _lgakvLogin    :: !(Maybe Bool)
+    { _lgakvProject :: !Text
+    , _lgakvZone :: !Text
+    , _lgakvUser :: !Text
+    , _lgakvLogin :: !(Maybe Bool)
+    , _lgakvFields :: !(Maybe Text)
     , _lgakvInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -82,6 +85,8 @@ data LinuxGetAuthorizedKeysView = LinuxGetAuthorizedKeysView'
 --
 -- * 'lgakvLogin'
 --
+-- * 'lgakvFields'
+--
 -- * 'lgakvInstance'
 linuxGetAuthorizedKeysView
     :: Text -- ^ 'lgakvProject'
@@ -89,12 +94,13 @@ linuxGetAuthorizedKeysView
     -> Text -- ^ 'lgakvUser'
     -> Text -- ^ 'lgakvInstance'
     -> LinuxGetAuthorizedKeysView
-linuxGetAuthorizedKeysView pLgakvProject_ pLgakvZone_ pLgakvUser_ pLgakvInstance_ =
+linuxGetAuthorizedKeysView pLgakvProject_ pLgakvZone_ pLgakvUser_ pLgakvInstance_ = 
     LinuxGetAuthorizedKeysView'
     { _lgakvProject = pLgakvProject_
     , _lgakvZone = pLgakvZone_
     , _lgakvUser = pLgakvUser_
     , _lgakvLogin = Nothing
+    , _lgakvFields = Nothing
     , _lgakvInstance = pLgakvInstance_
     }
 
@@ -119,6 +125,11 @@ lgakvLogin :: Lens' LinuxGetAuthorizedKeysView (Maybe Bool)
 lgakvLogin
   = lens _lgakvLogin (\ s a -> s{_lgakvLogin = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lgakvFields :: Lens' LinuxGetAuthorizedKeysView (Maybe Text)
+lgakvFields
+  = lens _lgakvFields (\ s a -> s{_lgakvFields = a})
+
 -- | The fully-qualified URL of the virtual machine requesting the view.
 lgakvInstance :: Lens' LinuxGetAuthorizedKeysView Text
 lgakvInstance
@@ -138,6 +149,7 @@ instance GoogleRequest LinuxGetAuthorizedKeysView
           = go _lgakvProject _lgakvZone _lgakvUser
               (Just _lgakvInstance)
               _lgakvLogin
+              _lgakvFields
               (Just AltJSON)
               userAccountsService
           where go

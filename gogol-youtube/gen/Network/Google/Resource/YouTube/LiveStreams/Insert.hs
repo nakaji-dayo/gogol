@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.LiveStreams.Insert
     , lsiPayload
     , lsiOnBehalfOfContentOwner
     , lsiOnBehalfOfContentOwnerChannel
+    , lsiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveStreams.insert@ method which the
 -- 'LiveStreamsInsert' request conforms to.
@@ -52,18 +53,20 @@ type LiveStreamsInsertResource =
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] LiveStream :> Post '[JSON] LiveStream
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] LiveStream :> Post '[JSON] LiveStream
 
 -- | Creates a video stream. The stream enables you to send your video to
 -- YouTube, which can then broadcast the video to your audience.
 --
 -- /See:/ 'liveStreamsInsert' smart constructor.
 data LiveStreamsInsert = LiveStreamsInsert'
-    { _lsiPart                          :: !Text
-    , _lsiPayload                       :: !LiveStream
-    , _lsiOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lsiPart :: !Text
+    , _lsiPayload :: !LiveStream
+    , _lsiOnBehalfOfContentOwner :: !(Maybe Text)
     , _lsiOnBehalfOfContentOwnerChannel :: !(Maybe Text)
+    , _lsiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveStreamsInsert' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data LiveStreamsInsert = LiveStreamsInsert'
 -- * 'lsiOnBehalfOfContentOwner'
 --
 -- * 'lsiOnBehalfOfContentOwnerChannel'
+--
+-- * 'lsiFields'
 liveStreamsInsert
     :: Text -- ^ 'lsiPart'
     -> LiveStream -- ^ 'lsiPayload'
     -> LiveStreamsInsert
-liveStreamsInsert pLsiPart_ pLsiPayload_ =
+liveStreamsInsert pLsiPart_ pLsiPayload_ = 
     LiveStreamsInsert'
     { _lsiPart = pLsiPart_
     , _lsiPayload = pLsiPayload_
     , _lsiOnBehalfOfContentOwner = Nothing
     , _lsiOnBehalfOfContentOwnerChannel = Nothing
+    , _lsiFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -137,6 +143,11 @@ lsiOnBehalfOfContentOwnerChannel
   = lens _lsiOnBehalfOfContentOwnerChannel
       (\ s a -> s{_lsiOnBehalfOfContentOwnerChannel = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lsiFields :: Lens' LiveStreamsInsert (Maybe Text)
+lsiFields
+  = lens _lsiFields (\ s a -> s{_lsiFields = a})
+
 instance GoogleRequest LiveStreamsInsert where
         type Rs LiveStreamsInsert = LiveStream
         type Scopes LiveStreamsInsert =
@@ -145,6 +156,7 @@ instance GoogleRequest LiveStreamsInsert where
         requestClient LiveStreamsInsert'{..}
           = go (Just _lsiPart) _lsiOnBehalfOfContentOwner
               _lsiOnBehalfOfContentOwnerChannel
+              _lsiFields
               (Just AltJSON)
               _lsiPayload
               youTubeService

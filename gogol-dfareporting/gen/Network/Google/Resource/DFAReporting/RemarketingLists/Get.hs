@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.RemarketingLists.Get
     -- * Request Lenses
     , rlgProFileId
     , rlgId
+    , rlgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingLists.get@ method which the
 -- 'RemarketingListsGet' request conforms to.
 type RemarketingListsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingLists" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] RemarketingList
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] RemarketingList
 
 -- | Gets one remarketing list by ID.
 --
 -- /See:/ 'remarketingListsGet' smart constructor.
 data RemarketingListsGet = RemarketingListsGet'
     { _rlgProFileId :: !(Textual Int64)
-    , _rlgId        :: !(Textual Int64)
+    , _rlgId :: !(Textual Int64)
+    , _rlgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data RemarketingListsGet = RemarketingListsGet'
 -- * 'rlgProFileId'
 --
 -- * 'rlgId'
+--
+-- * 'rlgFields'
 remarketingListsGet
     :: Int64 -- ^ 'rlgProFileId'
     -> Int64 -- ^ 'rlgId'
     -> RemarketingListsGet
-remarketingListsGet pRlgProFileId_ pRlgId_ =
+remarketingListsGet pRlgProFileId_ pRlgId_ = 
     RemarketingListsGet'
     { _rlgProFileId = _Coerce # pRlgProFileId_
     , _rlgId = _Coerce # pRlgId_
+    , _rlgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ rlgId :: Lens' RemarketingListsGet Int64
 rlgId
   = lens _rlgId (\ s a -> s{_rlgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlgFields :: Lens' RemarketingListsGet (Maybe Text)
+rlgFields
+  = lens _rlgFields (\ s a -> s{_rlgFields = a})
+
 instance GoogleRequest RemarketingListsGet where
         type Rs RemarketingListsGet = RemarketingList
         type Scopes RemarketingListsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListsGet'{..}
-          = go _rlgProFileId _rlgId (Just AltJSON)
+          = go _rlgProFileId _rlgId _rlgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

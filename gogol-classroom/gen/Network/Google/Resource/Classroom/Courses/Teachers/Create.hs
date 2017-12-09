@@ -49,11 +49,12 @@ module Network.Google.Resource.Classroom.Courses.Teachers.Create
     , ctcUploadType
     , ctcPayload
     , ctcBearerToken
+    , ctcFields
     , ctcCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.teachers.create@ method which the
 -- 'CoursesTeachersCreate' request conforms to.
@@ -62,15 +63,16 @@ type CoursesTeachersCreateResource =
        "courses" :>
          Capture "courseId" Text :>
            "teachers" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Teacher :> Post '[JSON] Teacher
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Teacher :> Post '[JSON] Teacher
 
 -- | Creates a teacher of a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
@@ -84,15 +86,16 @@ type CoursesTeachersCreateResource =
 --
 -- /See:/ 'coursesTeachersCreate' smart constructor.
 data CoursesTeachersCreate = CoursesTeachersCreate'
-    { _ctcXgafv          :: !(Maybe Text)
+    { _ctcXgafv :: !(Maybe Xgafv)
     , _ctcUploadProtocol :: !(Maybe Text)
-    , _ctcPp             :: !Bool
-    , _ctcCourseId       :: !Text
-    , _ctcAccessToken    :: !(Maybe Text)
-    , _ctcUploadType     :: !(Maybe Text)
-    , _ctcPayload        :: !Teacher
-    , _ctcBearerToken    :: !(Maybe Text)
-    , _ctcCallback       :: !(Maybe Text)
+    , _ctcPp :: !Bool
+    , _ctcCourseId :: !Text
+    , _ctcAccessToken :: !(Maybe Text)
+    , _ctcUploadType :: !(Maybe Text)
+    , _ctcPayload :: !Teacher
+    , _ctcBearerToken :: !(Maybe Text)
+    , _ctcFields :: !(Maybe Text)
+    , _ctcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesTeachersCreate' with the minimum fields required to make a request.
@@ -115,12 +118,14 @@ data CoursesTeachersCreate = CoursesTeachersCreate'
 --
 -- * 'ctcBearerToken'
 --
+-- * 'ctcFields'
+--
 -- * 'ctcCallback'
 coursesTeachersCreate
     :: Text -- ^ 'ctcCourseId'
     -> Teacher -- ^ 'ctcPayload'
     -> CoursesTeachersCreate
-coursesTeachersCreate pCtcCourseId_ pCtcPayload_ =
+coursesTeachersCreate pCtcCourseId_ pCtcPayload_ = 
     CoursesTeachersCreate'
     { _ctcXgafv = Nothing
     , _ctcUploadProtocol = Nothing
@@ -130,11 +135,12 @@ coursesTeachersCreate pCtcCourseId_ pCtcPayload_ =
     , _ctcUploadType = Nothing
     , _ctcPayload = pCtcPayload_
     , _ctcBearerToken = Nothing
+    , _ctcFields = Nothing
     , _ctcCallback = Nothing
     }
 
 -- | V1 error format.
-ctcXgafv :: Lens' CoursesTeachersCreate (Maybe Text)
+ctcXgafv :: Lens' CoursesTeachersCreate (Maybe Xgafv)
 ctcXgafv = lens _ctcXgafv (\ s a -> s{_ctcXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -176,6 +182,11 @@ ctcBearerToken
   = lens _ctcBearerToken
       (\ s a -> s{_ctcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ctcFields :: Lens' CoursesTeachersCreate (Maybe Text)
+ctcFields
+  = lens _ctcFields (\ s a -> s{_ctcFields = a})
+
 -- | JSONP
 ctcCallback :: Lens' CoursesTeachersCreate (Maybe Text)
 ctcCallback
@@ -194,6 +205,7 @@ instance GoogleRequest CoursesTeachersCreate where
               _ctcUploadType
               _ctcBearerToken
               _ctcCallback
+              _ctcFields
               (Just AltJSON)
               _ctcPayload
               classroomService

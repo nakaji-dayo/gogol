@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Rooms.Create
     , rcConsistencyToken
     , rcPayload
     , rcLanguage
+    , rcFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.rooms.create@ method which the
 -- 'RoomsCreate' request conforms to.
@@ -51,9 +52,10 @@ type RoomsCreateResource =
            "create" :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] RoomCreateRequest :>
-                     Post '[JSON] Room
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] RoomCreateRequest :>
+                       Post '[JSON] Room
 
 -- | Create a room. For internal use by the Games SDK only. Calling this
 -- method directly is unsupported.
@@ -61,8 +63,9 @@ type RoomsCreateResource =
 -- /See:/ 'roomsCreate' smart constructor.
 data RoomsCreate = RoomsCreate'
     { _rcConsistencyToken :: !(Maybe (Textual Int64))
-    , _rcPayload          :: !RoomCreateRequest
-    , _rcLanguage         :: !(Maybe Text)
+    , _rcPayload :: !RoomCreateRequest
+    , _rcLanguage :: !(Maybe Text)
+    , _rcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsCreate' with the minimum fields required to make a request.
@@ -74,14 +77,17 @@ data RoomsCreate = RoomsCreate'
 -- * 'rcPayload'
 --
 -- * 'rcLanguage'
+--
+-- * 'rcFields'
 roomsCreate
     :: RoomCreateRequest -- ^ 'rcPayload'
     -> RoomsCreate
-roomsCreate pRcPayload_ =
+roomsCreate pRcPayload_ = 
     RoomsCreate'
     { _rcConsistencyToken = Nothing
     , _rcPayload = pRcPayload_
     , _rcLanguage = Nothing
+    , _rcFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -101,13 +107,18 @@ rcLanguage :: Lens' RoomsCreate (Maybe Text)
 rcLanguage
   = lens _rcLanguage (\ s a -> s{_rcLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rcFields :: Lens' RoomsCreate (Maybe Text)
+rcFields = lens _rcFields (\ s a -> s{_rcFields = a})
+
 instance GoogleRequest RoomsCreate where
         type Rs RoomsCreate = Room
         type Scopes RoomsCreate =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RoomsCreate'{..}
-          = go _rcConsistencyToken _rcLanguage (Just AltJSON)
+          = go _rcConsistencyToken _rcLanguage _rcFields
+              (Just AltJSON)
               _rcPayload
               gamesService
           where go

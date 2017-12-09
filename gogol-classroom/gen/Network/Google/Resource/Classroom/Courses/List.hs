@@ -21,10 +21,12 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Returns a list of courses that the requesting user is permitted to view,
--- restricted to those that match the request. This method returns the
--- following error codes: * \`PERMISSION_DENIED\` for access errors. *
--- \`INVALID_ARGUMENT\` if the query argument is malformed. * \`NOT_FOUND\`
--- if any users specified in the query arguments do not exist.
+-- restricted to those that match the request. Returned courses are ordered
+-- by creation time, with the most recently created coming first. This
+-- method returns the following error codes: * \`PERMISSION_DENIED\` for
+-- access errors. * \`INVALID_ARGUMENT\` if the query argument is
+-- malformed. * \`NOT_FOUND\` if any users specified in the query arguments
+-- do not exist.
 --
 -- /See:/ <https://developers.google.com/classroom/ Google Classroom API Reference> for @classroom.courses.list@.
 module Network.Google.Resource.Classroom.Courses.List
@@ -48,11 +50,12 @@ module Network.Google.Resource.Classroom.Courses.List
     , clPageToken
     , clPageSize
     , clCourseStates
+    , clFields
     , clCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.list@ method which the
 -- 'CoursesList' request conforms to.
@@ -60,7 +63,7 @@ type CoursesListResource =
      "v1" :>
        "courses" :>
          QueryParam "studentId" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -71,29 +74,33 @@ type CoursesListResource =
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParams "courseStates" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ListCoursesResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ListCoursesResponse
 
 -- | Returns a list of courses that the requesting user is permitted to view,
--- restricted to those that match the request. This method returns the
--- following error codes: * \`PERMISSION_DENIED\` for access errors. *
--- \`INVALID_ARGUMENT\` if the query argument is malformed. * \`NOT_FOUND\`
--- if any users specified in the query arguments do not exist.
+-- restricted to those that match the request. Returned courses are ordered
+-- by creation time, with the most recently created coming first. This
+-- method returns the following error codes: * \`PERMISSION_DENIED\` for
+-- access errors. * \`INVALID_ARGUMENT\` if the query argument is
+-- malformed. * \`NOT_FOUND\` if any users specified in the query arguments
+-- do not exist.
 --
 -- /See:/ 'coursesList' smart constructor.
 data CoursesList = CoursesList'
-    { _clStudentId      :: !(Maybe Text)
-    , _clXgafv          :: !(Maybe Text)
+    { _clStudentId :: !(Maybe Text)
+    , _clXgafv :: !(Maybe Xgafv)
     , _clUploadProtocol :: !(Maybe Text)
-    , _clPp             :: !Bool
-    , _clAccessToken    :: !(Maybe Text)
-    , _clUploadType     :: !(Maybe Text)
-    , _clTeacherId      :: !(Maybe Text)
-    , _clBearerToken    :: !(Maybe Text)
-    , _clPageToken      :: !(Maybe Text)
-    , _clPageSize       :: !(Maybe (Textual Int32))
-    , _clCourseStates   :: !(Maybe [Text])
-    , _clCallback       :: !(Maybe Text)
+    , _clPp :: !Bool
+    , _clAccessToken :: !(Maybe Text)
+    , _clUploadType :: !(Maybe Text)
+    , _clTeacherId :: !(Maybe Text)
+    , _clBearerToken :: !(Maybe Text)
+    , _clPageToken :: !(Maybe Text)
+    , _clPageSize :: !(Maybe (Textual Int32))
+    , _clCourseStates :: !(Maybe [Text])
+    , _clFields :: !(Maybe Text)
+    , _clCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesList' with the minimum fields required to make a request.
@@ -122,10 +129,12 @@ data CoursesList = CoursesList'
 --
 -- * 'clCourseStates'
 --
+-- * 'clFields'
+--
 -- * 'clCallback'
 coursesList
     :: CoursesList
-coursesList =
+coursesList = 
     CoursesList'
     { _clStudentId = Nothing
     , _clXgafv = Nothing
@@ -138,6 +147,7 @@ coursesList =
     , _clPageToken = Nothing
     , _clPageSize = Nothing
     , _clCourseStates = Nothing
+    , _clFields = Nothing
     , _clCallback = Nothing
     }
 
@@ -150,7 +160,7 @@ clStudentId
   = lens _clStudentId (\ s a -> s{_clStudentId = a})
 
 -- | V1 error format.
-clXgafv :: Lens' CoursesList (Maybe Text)
+clXgafv :: Lens' CoursesList (Maybe Xgafv)
 clXgafv = lens _clXgafv (\ s a -> s{_clXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -203,13 +213,18 @@ clPageSize
   = lens _clPageSize (\ s a -> s{_clPageSize = a}) .
       mapping _Coerce
 
--- | Restricts returned courses to those in one of the specified states
+-- | Restricts returned courses to those in one of the specified states The
+-- default value is ACTIVE, ARCHIVED, PROVISIONED, DECLINED.
 clCourseStates :: Lens' CoursesList [Text]
 clCourseStates
   = lens _clCourseStates
       (\ s a -> s{_clCourseStates = a})
       . _Default
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' CoursesList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
 
 -- | JSONP
 clCallback :: Lens' CoursesList (Maybe Text)
@@ -232,6 +247,7 @@ instance GoogleRequest CoursesList where
               _clPageSize
               (_clCourseStates ^. _Default)
               _clCallback
+              _clFields
               (Just AltJSON)
               classroomService
           where go

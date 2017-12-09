@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the products in your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- Lists the products in your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.products.list@.
 module Network.Google.Resource.Content.Products.List
@@ -38,10 +37,11 @@ module Network.Google.Resource.Content.Products.List
     , proIncludeInvalidInsertedItems
     , proPageToken
     , proMaxResults
+    , proFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.products.list@ method which the
 -- 'ProductsList' request conforms to.
@@ -53,18 +53,19 @@ type ProductsListResource =
              QueryParam "includeInvalidInsertedItems" Bool :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ProductsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ProductsListResponse
 
--- | Lists the products in your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- | Lists the products in your Merchant Center account.
 --
 -- /See:/ 'productsList' smart constructor.
 data ProductsList = ProductsList'
-    { _proMerchantId                  :: !(Textual Word64)
+    { _proMerchantId :: !(Textual Word64)
     , _proIncludeInvalidInsertedItems :: !(Maybe Bool)
-    , _proPageToken                   :: !(Maybe Text)
-    , _proMaxResults                  :: !(Maybe (Textual Word32))
+    , _proPageToken :: !(Maybe Text)
+    , _proMaxResults :: !(Maybe (Textual Word32))
+    , _proFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsList' with the minimum fields required to make a request.
@@ -78,18 +79,22 @@ data ProductsList = ProductsList'
 -- * 'proPageToken'
 --
 -- * 'proMaxResults'
+--
+-- * 'proFields'
 productsList
     :: Word64 -- ^ 'proMerchantId'
     -> ProductsList
-productsList pProMerchantId_ =
+productsList pProMerchantId_ = 
     ProductsList'
     { _proMerchantId = _Coerce # pProMerchantId_
     , _proIncludeInvalidInsertedItems = Nothing
     , _proPageToken = Nothing
     , _proMaxResults = Nothing
+    , _proFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that contains the products. This account cannot be
+-- a multi-client account.
 proMerchantId :: Lens' ProductsList Word64
 proMerchantId
   = lens _proMerchantId
@@ -117,6 +122,11 @@ proMaxResults
       (\ s a -> s{_proMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+proFields :: Lens' ProductsList (Maybe Text)
+proFields
+  = lens _proFields (\ s a -> s{_proFields = a})
+
 instance GoogleRequest ProductsList where
         type Rs ProductsList = ProductsListResponse
         type Scopes ProductsList =
@@ -125,6 +135,7 @@ instance GoogleRequest ProductsList where
           = go _proMerchantId _proIncludeInvalidInsertedItems
               _proPageToken
               _proMaxResults
+              _proFields
               (Just AltJSON)
               shoppingContentService
           where go

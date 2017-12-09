@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Template.Patch
     , tppTemplateId
     , tppPayload
     , tppTableId
+    , tppFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.template.patch@ method which the
 -- 'TemplatePatch' request conforms to.
@@ -50,16 +51,18 @@ type TemplatePatchResource =
            Capture "tableId" Text :>
              "templates" :>
                Capture "templateId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Template :> Patch '[JSON] Template
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Template :> Patch '[JSON] Template
 
 -- | Updates an existing template. This method supports patch semantics.
 --
 -- /See:/ 'templatePatch' smart constructor.
 data TemplatePatch = TemplatePatch'
     { _tppTemplateId :: !(Textual Int32)
-    , _tppPayload    :: !Template
-    , _tppTableId    :: !Text
+    , _tppPayload :: !Template
+    , _tppTableId :: !Text
+    , _tppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TemplatePatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data TemplatePatch = TemplatePatch'
 -- * 'tppPayload'
 --
 -- * 'tppTableId'
+--
+-- * 'tppFields'
 templatePatch
     :: Int32 -- ^ 'tppTemplateId'
     -> Template -- ^ 'tppPayload'
     -> Text -- ^ 'tppTableId'
     -> TemplatePatch
-templatePatch pTppTemplateId_ pTppPayload_ pTppTableId_ =
+templatePatch pTppTemplateId_ pTppPayload_ pTppTableId_ = 
     TemplatePatch'
     { _tppTemplateId = _Coerce # pTppTemplateId_
     , _tppPayload = pTppPayload_
     , _tppTableId = pTppTableId_
+    , _tppFields = Nothing
     }
 
 -- | Identifier for the template that is being updated
@@ -100,12 +106,18 @@ tppTableId :: Lens' TemplatePatch Text
 tppTableId
   = lens _tppTableId (\ s a -> s{_tppTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tppFields :: Lens' TemplatePatch (Maybe Text)
+tppFields
+  = lens _tppFields (\ s a -> s{_tppFields = a})
+
 instance GoogleRequest TemplatePatch where
         type Rs TemplatePatch = Template
         type Scopes TemplatePatch =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TemplatePatch'{..}
-          = go _tppTableId _tppTemplateId (Just AltJSON)
+          = go _tppTableId _tppTemplateId _tppFields
+              (Just AltJSON)
               _tppPayload
               fusionTablesService
           where go

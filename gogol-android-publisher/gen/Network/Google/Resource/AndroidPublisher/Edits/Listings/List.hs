@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Listings.List
     -- * Request Lenses
     , ellPackageName
     , ellEditId
+    , ellFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.listings.list@ method which the
 -- 'EditsListingsList' request conforms to.
@@ -50,15 +51,17 @@ type EditsListingsListResource =
              "edits" :>
                Capture "editId" Text :>
                  "listings" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ListingsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ListingsListResponse
 
 -- | Returns all of the localized store listings attached to this edit.
 --
 -- /See:/ 'editsListingsList' smart constructor.
 data EditsListingsList = EditsListingsList'
     { _ellPackageName :: !Text
-    , _ellEditId      :: !Text
+    , _ellEditId :: !Text
+    , _ellFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsListingsList' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data EditsListingsList = EditsListingsList'
 -- * 'ellPackageName'
 --
 -- * 'ellEditId'
+--
+-- * 'ellFields'
 editsListingsList
     :: Text -- ^ 'ellPackageName'
     -> Text -- ^ 'ellEditId'
     -> EditsListingsList
-editsListingsList pEllPackageName_ pEllEditId_ =
+editsListingsList pEllPackageName_ pEllEditId_ = 
     EditsListingsList'
     { _ellPackageName = pEllPackageName_
     , _ellEditId = pEllEditId_
+    , _ellFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -90,12 +96,18 @@ ellEditId :: Lens' EditsListingsList Text
 ellEditId
   = lens _ellEditId (\ s a -> s{_ellEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ellFields :: Lens' EditsListingsList (Maybe Text)
+ellFields
+  = lens _ellFields (\ s a -> s{_ellFields = a})
+
 instance GoogleRequest EditsListingsList where
         type Rs EditsListingsList = ListingsListResponse
         type Scopes EditsListingsList =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsListingsList'{..}
-          = go _ellPackageName _ellEditId (Just AltJSON)
+          = go _ellPackageName _ellEditId _ellFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient

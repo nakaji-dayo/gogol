@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.
     , mcdlEnterpriseId
     , mcdlUserId
     , mcdlDeviceId
+    , mcdlFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsfordevice.list@ method which the
 -- 'ManagedConfigurationsforDeviceList' request conforms to.
@@ -54,9 +55,10 @@ type ManagedConfigurationsforDeviceListResource =
                  "devices" :>
                    Capture "deviceId" Text :>
                      "managedConfigurationsForDevice" :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON]
-                           ManagedConfigurationsForDeviceListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON]
+                             ManagedConfigurationsForDeviceListResponse
 
 -- | Lists all the per-device managed configurations for the specified
 -- device. Only the ID is set.
@@ -64,8 +66,9 @@ type ManagedConfigurationsforDeviceListResource =
 -- /See:/ 'managedConfigurationsforDeviceList' smart constructor.
 data ManagedConfigurationsforDeviceList = ManagedConfigurationsforDeviceList'
     { _mcdlEnterpriseId :: !Text
-    , _mcdlUserId       :: !Text
-    , _mcdlDeviceId     :: !Text
+    , _mcdlUserId :: !Text
+    , _mcdlDeviceId :: !Text
+    , _mcdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforDeviceList' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data ManagedConfigurationsforDeviceList = ManagedConfigurationsforDeviceList'
 -- * 'mcdlUserId'
 --
 -- * 'mcdlDeviceId'
+--
+-- * 'mcdlFields'
 managedConfigurationsforDeviceList
     :: Text -- ^ 'mcdlEnterpriseId'
     -> Text -- ^ 'mcdlUserId'
     -> Text -- ^ 'mcdlDeviceId'
     -> ManagedConfigurationsforDeviceList
-managedConfigurationsforDeviceList pMcdlEnterpriseId_ pMcdlUserId_ pMcdlDeviceId_ =
+managedConfigurationsforDeviceList pMcdlEnterpriseId_ pMcdlUserId_ pMcdlDeviceId_ = 
     ManagedConfigurationsforDeviceList'
     { _mcdlEnterpriseId = pMcdlEnterpriseId_
     , _mcdlUserId = pMcdlUserId_
     , _mcdlDeviceId = pMcdlDeviceId_
+    , _mcdlFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -105,6 +111,11 @@ mcdlDeviceId :: Lens' ManagedConfigurationsforDeviceList Text
 mcdlDeviceId
   = lens _mcdlDeviceId (\ s a -> s{_mcdlDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdlFields :: Lens' ManagedConfigurationsforDeviceList (Maybe Text)
+mcdlFields
+  = lens _mcdlFields (\ s a -> s{_mcdlFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforDeviceList where
         type Rs ManagedConfigurationsforDeviceList =
@@ -113,6 +124,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ManagedConfigurationsforDeviceList'{..}
           = go _mcdlEnterpriseId _mcdlUserId _mcdlDeviceId
+              _mcdlFields
               (Just AltJSON)
               androidEnterpriseService
           where go

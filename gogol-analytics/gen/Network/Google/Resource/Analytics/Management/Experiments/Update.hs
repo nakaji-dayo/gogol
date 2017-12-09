@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.Update
     , meuPayload
     , meuAccountId
     , meuExperimentId
+    , meuFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.update@ method which the
 -- 'ManagementExperimentsUpdate' request conforms to.
@@ -57,19 +58,21 @@ type ManagementExperimentsUpdateResource =
                      Capture "profileId" Text :>
                        "experiments" :>
                          Capture "experimentId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Experiment :>
-                               Put '[JSON] Experiment
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Experiment :>
+                                 Put '[JSON] Experiment
 
 -- | Update an existing experiment.
 --
 -- /See:/ 'managementExperimentsUpdate' smart constructor.
 data ManagementExperimentsUpdate = ManagementExperimentsUpdate'
     { _meuWebPropertyId :: !Text
-    , _meuProFileId     :: !Text
-    , _meuPayload       :: !Experiment
-    , _meuAccountId     :: !Text
-    , _meuExperimentId  :: !Text
+    , _meuProFileId :: !Text
+    , _meuPayload :: !Experiment
+    , _meuAccountId :: !Text
+    , _meuExperimentId :: !Text
+    , _meuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsUpdate' with the minimum fields required to make a request.
@@ -85,6 +88,8 @@ data ManagementExperimentsUpdate = ManagementExperimentsUpdate'
 -- * 'meuAccountId'
 --
 -- * 'meuExperimentId'
+--
+-- * 'meuFields'
 managementExperimentsUpdate
     :: Text -- ^ 'meuWebPropertyId'
     -> Text -- ^ 'meuProFileId'
@@ -92,13 +97,14 @@ managementExperimentsUpdate
     -> Text -- ^ 'meuAccountId'
     -> Text -- ^ 'meuExperimentId'
     -> ManagementExperimentsUpdate
-managementExperimentsUpdate pMeuWebPropertyId_ pMeuProFileId_ pMeuPayload_ pMeuAccountId_ pMeuExperimentId_ =
+managementExperimentsUpdate pMeuWebPropertyId_ pMeuProFileId_ pMeuPayload_ pMeuAccountId_ pMeuExperimentId_ = 
     ManagementExperimentsUpdate'
     { _meuWebPropertyId = pMeuWebPropertyId_
     , _meuProFileId = pMeuProFileId_
     , _meuPayload = pMeuPayload_
     , _meuAccountId = pMeuAccountId_
     , _meuExperimentId = pMeuExperimentId_
+    , _meuFields = Nothing
     }
 
 -- | Web property ID of the experiment to update.
@@ -128,6 +134,11 @@ meuExperimentId
   = lens _meuExperimentId
       (\ s a -> s{_meuExperimentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+meuFields :: Lens' ManagementExperimentsUpdate (Maybe Text)
+meuFields
+  = lens _meuFields (\ s a -> s{_meuFields = a})
+
 instance GoogleRequest ManagementExperimentsUpdate
          where
         type Rs ManagementExperimentsUpdate = Experiment
@@ -137,6 +148,7 @@ instance GoogleRequest ManagementExperimentsUpdate
         requestClient ManagementExperimentsUpdate'{..}
           = go _meuAccountId _meuWebPropertyId _meuProFileId
               _meuExperimentId
+              _meuFields
               (Just AltJSON)
               _meuPayload
               analyticsService

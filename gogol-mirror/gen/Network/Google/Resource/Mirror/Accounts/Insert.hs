@@ -37,10 +37,11 @@ module Network.Google.Resource.Mirror.Accounts.Insert
     , aiPayload
     , aiUserToken
     , aiAccountType
+    , aiFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.accounts.insert@ method which the
 -- 'AccountsInsert' request conforms to.
@@ -51,17 +52,19 @@ type AccountsInsertResource =
            Capture "userToken" Text :>
              Capture "accountType" Text :>
                Capture "accountName" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Account :> Post '[JSON] Account
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Account :> Post '[JSON] Account
 
 -- | Inserts a new account for a user
 --
 -- /See:/ 'accountsInsert' smart constructor.
 data AccountsInsert = AccountsInsert'
     { _aiAccountName :: !Text
-    , _aiPayload     :: !Account
-    , _aiUserToken   :: !Text
+    , _aiPayload :: !Account
+    , _aiUserToken :: !Text
     , _aiAccountType :: !Text
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsInsert' with the minimum fields required to make a request.
@@ -75,18 +78,21 @@ data AccountsInsert = AccountsInsert'
 -- * 'aiUserToken'
 --
 -- * 'aiAccountType'
+--
+-- * 'aiFields'
 accountsInsert
     :: Text -- ^ 'aiAccountName'
     -> Account -- ^ 'aiPayload'
     -> Text -- ^ 'aiUserToken'
     -> Text -- ^ 'aiAccountType'
     -> AccountsInsert
-accountsInsert pAiAccountName_ pAiPayload_ pAiUserToken_ pAiAccountType_ =
+accountsInsert pAiAccountName_ pAiPayload_ pAiUserToken_ pAiAccountType_ = 
     AccountsInsert'
     { _aiAccountName = pAiAccountName_
     , _aiPayload = pAiPayload_
     , _aiUserToken = pAiUserToken_
     , _aiAccountType = pAiAccountType_
+    , _aiFields = Nothing
     }
 
 -- | The name of the account to be passed to the Android Account Manager.
@@ -111,11 +117,16 @@ aiAccountType
   = lens _aiAccountType
       (\ s a -> s{_aiAccountType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' AccountsInsert (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest AccountsInsert where
         type Rs AccountsInsert = Account
         type Scopes AccountsInsert = '[]
         requestClient AccountsInsert'{..}
           = go _aiUserToken _aiAccountType _aiAccountName
+              _aiFields
               (Just AltJSON)
               _aiPayload
               mirrorService

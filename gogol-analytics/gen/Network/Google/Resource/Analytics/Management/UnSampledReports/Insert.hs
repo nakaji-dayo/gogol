@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.UnSampledReports.Insert
     , musriProFileId
     , musriPayload
     , musriAccountId
+    , musriFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.unsampledReports.insert@ method which the
 -- 'ManagementUnSampledReportsInsert' request conforms to.
@@ -55,18 +56,20 @@ type ManagementUnSampledReportsInsertResource =
                    "profiles" :>
                      Capture "profileId" Text :>
                        "unsampledReports" :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] UnSampledReport :>
-                             Post '[JSON] UnSampledReport
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] UnSampledReport :>
+                               Post '[JSON] UnSampledReport
 
 -- | Create a new unsampled report.
 --
 -- /See:/ 'managementUnSampledReportsInsert' smart constructor.
 data ManagementUnSampledReportsInsert = ManagementUnSampledReportsInsert'
     { _musriWebPropertyId :: !Text
-    , _musriProFileId     :: !Text
-    , _musriPayload       :: !UnSampledReport
-    , _musriAccountId     :: !Text
+    , _musriProFileId :: !Text
+    , _musriPayload :: !UnSampledReport
+    , _musriAccountId :: !Text
+    , _musriFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUnSampledReportsInsert' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementUnSampledReportsInsert = ManagementUnSampledReportsInsert'
 -- * 'musriPayload'
 --
 -- * 'musriAccountId'
+--
+-- * 'musriFields'
 managementUnSampledReportsInsert
     :: Text -- ^ 'musriWebPropertyId'
     -> Text -- ^ 'musriProFileId'
     -> UnSampledReport -- ^ 'musriPayload'
     -> Text -- ^ 'musriAccountId'
     -> ManagementUnSampledReportsInsert
-managementUnSampledReportsInsert pMusriWebPropertyId_ pMusriProFileId_ pMusriPayload_ pMusriAccountId_ =
+managementUnSampledReportsInsert pMusriWebPropertyId_ pMusriProFileId_ pMusriPayload_ pMusriAccountId_ = 
     ManagementUnSampledReportsInsert'
     { _musriWebPropertyId = pMusriWebPropertyId_
     , _musriProFileId = pMusriProFileId_
     , _musriPayload = pMusriPayload_
     , _musriAccountId = pMusriAccountId_
+    , _musriFields = Nothing
     }
 
 -- | Web property ID to create the unsampled report for.
@@ -117,6 +123,11 @@ musriAccountId
   = lens _musriAccountId
       (\ s a -> s{_musriAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+musriFields :: Lens' ManagementUnSampledReportsInsert (Maybe Text)
+musriFields
+  = lens _musriFields (\ s a -> s{_musriFields = a})
+
 instance GoogleRequest
          ManagementUnSampledReportsInsert where
         type Rs ManagementUnSampledReportsInsert =
@@ -127,6 +138,7 @@ instance GoogleRequest
         requestClient ManagementUnSampledReportsInsert'{..}
           = go _musriAccountId _musriWebPropertyId
               _musriProFileId
+              _musriFields
               (Just AltJSON)
               _musriPayload
               analyticsService

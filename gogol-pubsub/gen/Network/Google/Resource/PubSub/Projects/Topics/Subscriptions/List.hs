@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the name of the subscriptions for this topic.
+-- Lists the names of the subscriptions on this topic.
 --
 -- /See:/ <https://cloud.google.com/pubsub/docs Google Cloud Pub/Sub API Reference> for @pubsub.projects.topics.subscriptions.list@.
 module Network.Google.Resource.PubSub.Projects.Topics.Subscriptions.List
@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.Subscriptions.List
     , ptslBearerToken
     , ptslPageToken
     , ptslPageSize
+    , ptslFields
     , ptslCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.subscriptions.list@ method which the
 -- 'ProjectsTopicsSubscriptionsList' request conforms to.
@@ -63,23 +64,25 @@ type ProjectsTopicsSubscriptionsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListTopicSubscriptionsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListTopicSubscriptionsResponse
 
--- | Lists the name of the subscriptions for this topic.
+-- | Lists the names of the subscriptions on this topic.
 --
 -- /See:/ 'projectsTopicsSubscriptionsList' smart constructor.
 data ProjectsTopicsSubscriptionsList = ProjectsTopicsSubscriptionsList'
-    { _ptslXgafv          :: !(Maybe Xgafv)
+    { _ptslXgafv :: !(Maybe Xgafv)
     , _ptslUploadProtocol :: !(Maybe Text)
-    , _ptslPp             :: !Bool
-    , _ptslAccessToken    :: !(Maybe Text)
-    , _ptslUploadType     :: !(Maybe Text)
-    , _ptslTopic          :: !Text
-    , _ptslBearerToken    :: !(Maybe Text)
-    , _ptslPageToken      :: !(Maybe Text)
-    , _ptslPageSize       :: !(Maybe (Textual Int32))
-    , _ptslCallback       :: !(Maybe Text)
+    , _ptslPp :: !Bool
+    , _ptslAccessToken :: !(Maybe Text)
+    , _ptslUploadType :: !(Maybe Text)
+    , _ptslTopic :: !Text
+    , _ptslBearerToken :: !(Maybe Text)
+    , _ptslPageToken :: !(Maybe Text)
+    , _ptslPageSize :: !(Maybe (Textual Int32))
+    , _ptslFields :: !(Maybe Text)
+    , _ptslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsSubscriptionsList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data ProjectsTopicsSubscriptionsList = ProjectsTopicsSubscriptionsList'
 --
 -- * 'ptslPageSize'
 --
+-- * 'ptslFields'
+--
 -- * 'ptslCallback'
 projectsTopicsSubscriptionsList
     :: Text -- ^ 'ptslTopic'
     -> ProjectsTopicsSubscriptionsList
-projectsTopicsSubscriptionsList pPtslTopic_ =
+projectsTopicsSubscriptionsList pPtslTopic_ = 
     ProjectsTopicsSubscriptionsList'
     { _ptslXgafv = Nothing
     , _ptslUploadProtocol = Nothing
@@ -119,6 +124,7 @@ projectsTopicsSubscriptionsList pPtslTopic_ =
     , _ptslBearerToken = Nothing
     , _ptslPageToken = Nothing
     , _ptslPageSize = Nothing
+    , _ptslFields = Nothing
     , _ptslCallback = Nothing
     }
 
@@ -176,6 +182,11 @@ ptslPageSize
   = lens _ptslPageSize (\ s a -> s{_ptslPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ptslFields :: Lens' ProjectsTopicsSubscriptionsList (Maybe Text)
+ptslFields
+  = lens _ptslFields (\ s a -> s{_ptslFields = a})
+
 -- | JSONP
 ptslCallback :: Lens' ProjectsTopicsSubscriptionsList (Maybe Text)
 ptslCallback
@@ -197,6 +208,7 @@ instance GoogleRequest
               _ptslPageToken
               _ptslPageSize
               _ptslCallback
+              _ptslFields
               (Just AltJSON)
               pubSubService
           where go

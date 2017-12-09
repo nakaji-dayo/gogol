@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.Get
 
     -- * Request Lenses
     , agAccountId
+    , agFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
@@ -46,13 +47,15 @@ type AccountsGetResource =
        "v2.0" :>
          "accounts" :>
            Capture "accountId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Account
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Account
 
 -- | Get information about the selected Ad Exchange account.
 --
 -- /See:/ 'accountsGet' smart constructor.
-newtype AccountsGet = AccountsGet'
-    { _agAccountId :: Text
+data AccountsGet = AccountsGet'
+    { _agAccountId :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype AccountsGet = AccountsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'agAccountId'
+--
+-- * 'agFields'
 accountsGet
     :: Text -- ^ 'agAccountId'
     -> AccountsGet
-accountsGet pAgAccountId_ =
+accountsGet pAgAccountId_ = 
     AccountsGet'
     { _agAccountId = pAgAccountId_
+    , _agFields = Nothing
     }
 
 -- | Account to get information about. Tip: \'myaccount\' is a valid ID.
@@ -73,13 +79,17 @@ agAccountId :: Lens' AccountsGet Text
 agAccountId
   = lens _agAccountId (\ s a -> s{_agAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AccountsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
         type Scopes AccountsGet =
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsGet'{..}
-          = go _agAccountId (Just AltJSON)
+          = go _agAccountId _agFields (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)

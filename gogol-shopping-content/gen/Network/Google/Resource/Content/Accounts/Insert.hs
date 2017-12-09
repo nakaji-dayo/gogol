@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Creates a Merchant Center sub-account. This method can only be called
--- for multi-client accounts.
+-- Creates a Merchant Center sub-account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounts.insert@.
 module Network.Google.Resource.Content.Accounts.Insert
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Accounts.Insert
     , aMerchantId
     , aPayload
     , aDryRun
+    , aFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounts.insert@ method which the
 -- 'AccountsInsert' request conforms to.
@@ -50,17 +50,18 @@ type AccountsInsertResource =
          Capture "merchantId" (Textual Word64) :>
            "accounts" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Account :> Post '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Account :> Post '[JSON] Account
 
--- | Creates a Merchant Center sub-account. This method can only be called
--- for multi-client accounts.
+-- | Creates a Merchant Center sub-account.
 --
 -- /See:/ 'accountsInsert' smart constructor.
 data AccountsInsert = AccountsInsert'
     { _aMerchantId :: !(Textual Word64)
-    , _aPayload    :: !Account
-    , _aDryRun     :: !(Maybe Bool)
+    , _aPayload :: !Account
+    , _aDryRun :: !(Maybe Bool)
+    , _aFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsInsert' with the minimum fields required to make a request.
@@ -72,18 +73,21 @@ data AccountsInsert = AccountsInsert'
 -- * 'aPayload'
 --
 -- * 'aDryRun'
+--
+-- * 'aFields'
 accountsInsert
     :: Word64 -- ^ 'aMerchantId'
     -> Account -- ^ 'aPayload'
     -> AccountsInsert
-accountsInsert pAMerchantId_ pAPayload_ =
+accountsInsert pAMerchantId_ pAPayload_ = 
     AccountsInsert'
     { _aMerchantId = _Coerce # pAMerchantId_
     , _aPayload = pAPayload_
     , _aDryRun = Nothing
+    , _aFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. This must be a multi-client account.
 aMerchantId :: Lens' AccountsInsert Word64
 aMerchantId
   = lens _aMerchantId (\ s a -> s{_aMerchantId = a}) .
@@ -97,12 +101,17 @@ aPayload = lens _aPayload (\ s a -> s{_aPayload = a})
 aDryRun :: Lens' AccountsInsert (Maybe Bool)
 aDryRun = lens _aDryRun (\ s a -> s{_aDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aFields :: Lens' AccountsInsert (Maybe Text)
+aFields = lens _aFields (\ s a -> s{_aFields = a})
+
 instance GoogleRequest AccountsInsert where
         type Rs AccountsInsert = Account
         type Scopes AccountsInsert =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccountsInsert'{..}
-          = go _aMerchantId _aDryRun (Just AltJSON) _aPayload
+          = go _aMerchantId _aDryRun _aFields (Just AltJSON)
+              _aPayload
               shoppingContentService
           where go
                   = buildClient (Proxy :: Proxy AccountsInsertResource)

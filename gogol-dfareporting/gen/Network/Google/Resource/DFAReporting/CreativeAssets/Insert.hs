@@ -36,45 +36,49 @@ module Network.Google.Resource.DFAReporting.CreativeAssets.Insert
     , caiAdvertiserId
     , caiProFileId
     , caiPayload
+    , caiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeAssets.insert@ method which the
 -- 'CreativeAssetsInsert' request conforms to.
 type CreativeAssetsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeAssets" :>
                Capture "advertiserId" (Textual Int64) :>
                  "creativeAssets" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CreativeAssetMetadata :>
-                       Post '[JSON] CreativeAssetMetadata
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CreativeAssetMetadata :>
+                         Post '[JSON] CreativeAssetMetadata
        :<|>
        "upload" :>
          "dfareporting" :>
-           "v2.7" :>
+           "v3.0" :>
              "userprofiles" :>
                Capture "profileId" (Textual Int64) :>
                  "creativeAssets" :>
                    Capture "advertiserId" (Textual Int64) :>
                      "creativeAssets" :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" Multipart :>
-                           MultipartRelated '[JSON] CreativeAssetMetadata :>
-                             Post '[JSON] CreativeAssetMetadata
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" Multipart :>
+                             MultipartRelated '[JSON] CreativeAssetMetadata :>
+                               Post '[JSON] CreativeAssetMetadata
 
 -- | Inserts a new creative asset.
 --
 -- /See:/ 'creativeAssetsInsert' smart constructor.
 data CreativeAssetsInsert = CreativeAssetsInsert'
     { _caiAdvertiserId :: !(Textual Int64)
-    , _caiProFileId    :: !(Textual Int64)
-    , _caiPayload      :: !CreativeAssetMetadata
+    , _caiProFileId :: !(Textual Int64)
+    , _caiPayload :: !CreativeAssetMetadata
+    , _caiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeAssetsInsert' with the minimum fields required to make a request.
@@ -86,16 +90,19 @@ data CreativeAssetsInsert = CreativeAssetsInsert'
 -- * 'caiProFileId'
 --
 -- * 'caiPayload'
+--
+-- * 'caiFields'
 creativeAssetsInsert
     :: Int64 -- ^ 'caiAdvertiserId'
     -> Int64 -- ^ 'caiProFileId'
     -> CreativeAssetMetadata -- ^ 'caiPayload'
     -> CreativeAssetsInsert
-creativeAssetsInsert pCaiAdvertiserId_ pCaiProFileId_ pCaiPayload_ =
+creativeAssetsInsert pCaiAdvertiserId_ pCaiProFileId_ pCaiPayload_ = 
     CreativeAssetsInsert'
     { _caiAdvertiserId = _Coerce # pCaiAdvertiserId_
     , _caiProFileId = _Coerce # pCaiProFileId_
     , _caiPayload = pCaiPayload_
+    , _caiFields = Nothing
     }
 
 -- | Advertiser ID of this creative. This is a required field.
@@ -116,12 +123,18 @@ caiPayload :: Lens' CreativeAssetsInsert CreativeAssetMetadata
 caiPayload
   = lens _caiPayload (\ s a -> s{_caiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+caiFields :: Lens' CreativeAssetsInsert (Maybe Text)
+caiFields
+  = lens _caiFields (\ s a -> s{_caiFields = a})
+
 instance GoogleRequest CreativeAssetsInsert where
         type Rs CreativeAssetsInsert = CreativeAssetMetadata
         type Scopes CreativeAssetsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeAssetsInsert'{..}
-          = go _caiProFileId _caiAdvertiserId (Just AltJSON)
+          = go _caiProFileId _caiAdvertiserId _caiFields
+              (Just AltJSON)
               _caiPayload
               dFAReportingService
           where go :<|> _
@@ -137,7 +150,8 @@ instance GoogleRequest
              Scopes CreativeAssetsInsert
         requestClient
           (MediaUpload CreativeAssetsInsert'{..} body)
-          = go _caiProFileId _caiAdvertiserId (Just AltJSON)
+          = go _caiProFileId _caiAdvertiserId _caiFields
+              (Just AltJSON)
               (Just Multipart)
               _caiPayload
               body

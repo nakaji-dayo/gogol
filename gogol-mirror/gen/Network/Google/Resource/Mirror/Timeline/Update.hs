@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Timeline.Update
     -- * Request Lenses
     , tuPayload
     , tuId
+    , tuFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.update@ method which the
 -- 'TimelineUpdate' request conforms to.
@@ -47,26 +48,29 @@ type TimelineUpdateResource =
        "v1" :>
          "timeline" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] TimelineItem :>
-                 Put '[JSON] TimelineItem
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] TimelineItem :>
+                   Put '[JSON] TimelineItem
        :<|>
        "upload" :>
          "mirror" :>
            "v1" :>
              "timeline" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :>
-                   QueryParam "uploadType" Multipart :>
-                     MultipartRelated '[JSON] TimelineItem :>
-                       Put '[JSON] TimelineItem
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     QueryParam "uploadType" Multipart :>
+                       MultipartRelated '[JSON] TimelineItem :>
+                         Put '[JSON] TimelineItem
 
 -- | Updates a timeline item in place.
 --
 -- /See:/ 'timelineUpdate' smart constructor.
 data TimelineUpdate = TimelineUpdate'
     { _tuPayload :: !TimelineItem
-    , _tuId      :: !Text
+    , _tuId :: !Text
+    , _tuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineUpdate' with the minimum fields required to make a request.
@@ -76,14 +80,17 @@ data TimelineUpdate = TimelineUpdate'
 -- * 'tuPayload'
 --
 -- * 'tuId'
+--
+-- * 'tuFields'
 timelineUpdate
     :: TimelineItem -- ^ 'tuPayload'
     -> Text -- ^ 'tuId'
     -> TimelineUpdate
-timelineUpdate pTuPayload_ pTuId_ =
+timelineUpdate pTuPayload_ pTuId_ = 
     TimelineUpdate'
     { _tuPayload = pTuPayload_
     , _tuId = pTuId_
+    , _tuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -95,13 +102,18 @@ tuPayload
 tuId :: Lens' TimelineUpdate Text
 tuId = lens _tuId (\ s a -> s{_tuId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tuFields :: Lens' TimelineUpdate (Maybe Text)
+tuFields = lens _tuFields (\ s a -> s{_tuFields = a})
+
 instance GoogleRequest TimelineUpdate where
         type Rs TimelineUpdate = TimelineItem
         type Scopes TimelineUpdate =
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineUpdate'{..}
-          = go _tuId (Just AltJSON) _tuPayload mirrorService
+          = go _tuId _tuFields (Just AltJSON) _tuPayload
+              mirrorService
           where go :<|> _
                   = buildClient (Proxy :: Proxy TimelineUpdateResource)
                       mempty
@@ -112,7 +124,8 @@ instance GoogleRequest (MediaUpload TimelineUpdate)
         type Scopes (MediaUpload TimelineUpdate) =
              Scopes TimelineUpdate
         requestClient (MediaUpload TimelineUpdate'{..} body)
-          = go _tuId (Just AltJSON) (Just Multipart) _tuPayload
+          = go _tuId _tuFields (Just AltJSON) (Just Multipart)
+              _tuPayload
               body
               mirrorService
           where _ :<|> go

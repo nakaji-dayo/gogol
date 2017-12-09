@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Entitlements.List
     , elStartIndex
     , elProductId
     , elMaxResults
+    , elFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.entitlements.list@ method which the
 -- 'EntitlementsList' request conforms to.
@@ -55,18 +56,20 @@ type EntitlementsListResource =
                  QueryParam "startIndex" (Textual Word32) :>
                    QueryParam "productId" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] EntitlementsListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] EntitlementsListResponse
 
 -- | Lists the user\'s current inapp item or subscription entitlements
 --
 -- /See:/ 'entitlementsList' smart constructor.
 data EntitlementsList = EntitlementsList'
     { _elPackageName :: !Text
-    , _elToken       :: !(Maybe Text)
-    , _elStartIndex  :: !(Maybe (Textual Word32))
-    , _elProductId   :: !(Maybe Text)
-    , _elMaxResults  :: !(Maybe (Textual Word32))
+    , _elToken :: !(Maybe Text)
+    , _elStartIndex :: !(Maybe (Textual Word32))
+    , _elProductId :: !(Maybe Text)
+    , _elMaxResults :: !(Maybe (Textual Word32))
+    , _elFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitlementsList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data EntitlementsList = EntitlementsList'
 -- * 'elProductId'
 --
 -- * 'elMaxResults'
+--
+-- * 'elFields'
 entitlementsList
     :: Text -- ^ 'elPackageName'
     -> EntitlementsList
-entitlementsList pElPackageName_ =
+entitlementsList pElPackageName_ = 
     EntitlementsList'
     { _elPackageName = pElPackageName_
     , _elToken = Nothing
     , _elStartIndex = Nothing
     , _elProductId = Nothing
     , _elMaxResults = Nothing
+    , _elFields = Nothing
     }
 
 -- | The package name of the application the inapp product was sold in (for
@@ -120,6 +126,10 @@ elMaxResults
   = lens _elMaxResults (\ s a -> s{_elMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+elFields :: Lens' EntitlementsList (Maybe Text)
+elFields = lens _elFields (\ s a -> s{_elFields = a})
+
 instance GoogleRequest EntitlementsList where
         type Rs EntitlementsList = EntitlementsListResponse
         type Scopes EntitlementsList = '[]
@@ -127,6 +137,7 @@ instance GoogleRequest EntitlementsList where
           = go _elPackageName _elToken _elStartIndex
               _elProductId
               _elMaxResults
+              _elFields
               (Just AltJSON)
               androidPublisherService
           where go

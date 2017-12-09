@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.Routers.Preview
     , rppRouter
     , rppPayload
     , rppRegion
+    , rppFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.preview@ method which the
 -- 'RoutersPreview' request conforms to.
@@ -55,9 +56,10 @@ type RoutersPreviewResource =
                  "routers" :>
                    Capture "router" Text :>
                      "preview" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Router :>
-                           Post '[JSON] RoutersPreviewResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Router :>
+                             Post '[JSON] RoutersPreviewResponse
 
 -- | Preview fields auto-generated during router create and update
 -- operations. Calling this method does NOT create or update the router.
@@ -65,9 +67,10 @@ type RoutersPreviewResource =
 -- /See:/ 'routersPreview' smart constructor.
 data RoutersPreview = RoutersPreview'
     { _rppProject :: !Text
-    , _rppRouter  :: !Text
+    , _rppRouter :: !Text
     , _rppPayload :: !Router
-    , _rppRegion  :: !Text
+    , _rppRegion :: !Text
+    , _rppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersPreview' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data RoutersPreview = RoutersPreview'
 -- * 'rppPayload'
 --
 -- * 'rppRegion'
+--
+-- * 'rppFields'
 routersPreview
     :: Text -- ^ 'rppProject'
     -> Text -- ^ 'rppRouter'
     -> Router -- ^ 'rppPayload'
     -> Text -- ^ 'rppRegion'
     -> RoutersPreview
-routersPreview pRppProject_ pRppRouter_ pRppPayload_ pRppRegion_ =
+routersPreview pRppProject_ pRppRouter_ pRppPayload_ pRppRegion_ = 
     RoutersPreview'
     { _rppProject = pRppProject_
     , _rppRouter = pRppRouter_
     , _rppPayload = pRppPayload_
     , _rppRegion = pRppRegion_
+    , _rppFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -115,6 +121,11 @@ rppRegion :: Lens' RoutersPreview Text
 rppRegion
   = lens _rppRegion (\ s a -> s{_rppRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rppFields :: Lens' RoutersPreview (Maybe Text)
+rppFields
+  = lens _rppFields (\ s a -> s{_rppFields = a})
+
 instance GoogleRequest RoutersPreview where
         type Rs RoutersPreview = RoutersPreviewResponse
         type Scopes RoutersPreview =
@@ -122,7 +133,8 @@ instance GoogleRequest RoutersPreview where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RoutersPreview'{..}
-          = go _rppProject _rppRegion _rppRouter (Just AltJSON)
+          = go _rppProject _rppRegion _rppRouter _rppFields
+              (Just AltJSON)
               _rppPayload
               computeService
           where go

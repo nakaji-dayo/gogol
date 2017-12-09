@@ -41,11 +41,12 @@ module Network.Google.Resource.Partners.Companies.Leads.Create
     , clcUploadType
     , clcPayload
     , clcBearerToken
+    , clcFields
     , clcCallback
     ) where
 
-import           Network.Google.Partners.Types
-import           Network.Google.Prelude
+import Network.Google.Partners.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @partners.companies.leads.create@ method which the
 -- 'CompaniesLeadsCreate' request conforms to.
@@ -54,30 +55,32 @@ type CompaniesLeadsCreateResource =
        "companies" :>
          Capture "companyId" Text :>
            "leads" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] CreateLeadRequest :>
-                               Post '[JSON] CreateLeadResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] CreateLeadRequest :>
+                                 Post '[JSON] CreateLeadResponse
 
 -- | Creates an advertiser lead for the given company ID.
 --
 -- /See:/ 'companiesLeadsCreate' smart constructor.
 data CompaniesLeadsCreate = CompaniesLeadsCreate'
-    { _clcXgafv          :: !(Maybe Text)
+    { _clcXgafv :: !(Maybe Xgafv)
     , _clcUploadProtocol :: !(Maybe Text)
-    , _clcCompanyId      :: !Text
-    , _clcPp             :: !Bool
-    , _clcAccessToken    :: !(Maybe Text)
-    , _clcUploadType     :: !(Maybe Text)
-    , _clcPayload        :: !CreateLeadRequest
-    , _clcBearerToken    :: !(Maybe Text)
-    , _clcCallback       :: !(Maybe Text)
+    , _clcCompanyId :: !Text
+    , _clcPp :: !Bool
+    , _clcAccessToken :: !(Maybe Text)
+    , _clcUploadType :: !(Maybe Text)
+    , _clcPayload :: !CreateLeadRequest
+    , _clcBearerToken :: !(Maybe Text)
+    , _clcFields :: !(Maybe Text)
+    , _clcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CompaniesLeadsCreate' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data CompaniesLeadsCreate = CompaniesLeadsCreate'
 --
 -- * 'clcBearerToken'
 --
+-- * 'clcFields'
+--
 -- * 'clcCallback'
 companiesLeadsCreate
     :: Text -- ^ 'clcCompanyId'
     -> CreateLeadRequest -- ^ 'clcPayload'
     -> CompaniesLeadsCreate
-companiesLeadsCreate pClcCompanyId_ pClcPayload_ =
+companiesLeadsCreate pClcCompanyId_ pClcPayload_ = 
     CompaniesLeadsCreate'
     { _clcXgafv = Nothing
     , _clcUploadProtocol = Nothing
@@ -115,11 +120,12 @@ companiesLeadsCreate pClcCompanyId_ pClcPayload_ =
     , _clcUploadType = Nothing
     , _clcPayload = pClcPayload_
     , _clcBearerToken = Nothing
+    , _clcFields = Nothing
     , _clcCallback = Nothing
     }
 
 -- | V1 error format.
-clcXgafv :: Lens' CompaniesLeadsCreate (Maybe Text)
+clcXgafv :: Lens' CompaniesLeadsCreate (Maybe Xgafv)
 clcXgafv = lens _clcXgafv (\ s a -> s{_clcXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -160,6 +166,11 @@ clcBearerToken
   = lens _clcBearerToken
       (\ s a -> s{_clcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+clcFields :: Lens' CompaniesLeadsCreate (Maybe Text)
+clcFields
+  = lens _clcFields (\ s a -> s{_clcFields = a})
+
 -- | JSONP
 clcCallback :: Lens' CompaniesLeadsCreate (Maybe Text)
 clcCallback
@@ -175,6 +186,7 @@ instance GoogleRequest CompaniesLeadsCreate where
               _clcUploadType
               _clcBearerToken
               _clcCallback
+              _clcFields
               (Just AltJSON)
               _clcPayload
               partnersService

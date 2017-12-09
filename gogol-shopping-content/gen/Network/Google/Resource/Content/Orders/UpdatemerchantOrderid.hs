@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the merchant order ID for a given order. This method can only be
--- called for non-multi-client accounts.
+-- Updates the merchant order ID for a given order.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.updatemerchantorderid@.
 module Network.Google.Resource.Content.Orders.UpdatemerchantOrderid
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.UpdatemerchantOrderid
     , ouoMerchantId
     , ouoPayload
     , ouoOrderId
+    , ouoFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.updatemerchantorderid@ method which the
 -- 'OrdersUpdatemerchantOrderid' request conforms to.
@@ -51,18 +51,19 @@ type OrdersUpdatemerchantOrderidResource =
            "orders" :>
              Capture "orderId" Text :>
                "updateMerchantOrderId" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrdersUpdateMerchantOrderIdRequest :>
-                     Post '[JSON] OrdersUpdateMerchantOrderIdResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrdersUpdateMerchantOrderIdRequest :>
+                       Post '[JSON] OrdersUpdateMerchantOrderIdResponse
 
--- | Updates the merchant order ID for a given order. This method can only be
--- called for non-multi-client accounts.
+-- | Updates the merchant order ID for a given order.
 --
 -- /See:/ 'ordersUpdatemerchantOrderid' smart constructor.
 data OrdersUpdatemerchantOrderid = OrdersUpdatemerchantOrderid'
     { _ouoMerchantId :: !(Textual Word64)
-    , _ouoPayload    :: !OrdersUpdateMerchantOrderIdRequest
-    , _ouoOrderId    :: !Text
+    , _ouoPayload :: !OrdersUpdateMerchantOrderIdRequest
+    , _ouoOrderId :: !Text
+    , _ouoFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersUpdatemerchantOrderid' with the minimum fields required to make a request.
@@ -74,19 +75,23 @@ data OrdersUpdatemerchantOrderid = OrdersUpdatemerchantOrderid'
 -- * 'ouoPayload'
 --
 -- * 'ouoOrderId'
+--
+-- * 'ouoFields'
 ordersUpdatemerchantOrderid
     :: Word64 -- ^ 'ouoMerchantId'
     -> OrdersUpdateMerchantOrderIdRequest -- ^ 'ouoPayload'
     -> Text -- ^ 'ouoOrderId'
     -> OrdersUpdatemerchantOrderid
-ordersUpdatemerchantOrderid pOuoMerchantId_ pOuoPayload_ pOuoOrderId_ =
+ordersUpdatemerchantOrderid pOuoMerchantId_ pOuoPayload_ pOuoOrderId_ = 
     OrdersUpdatemerchantOrderid'
     { _ouoMerchantId = _Coerce # pOuoMerchantId_
     , _ouoPayload = pOuoPayload_
     , _ouoOrderId = pOuoOrderId_
+    , _ouoFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 ouoMerchantId :: Lens' OrdersUpdatemerchantOrderid Word64
 ouoMerchantId
   = lens _ouoMerchantId
@@ -103,6 +108,11 @@ ouoOrderId :: Lens' OrdersUpdatemerchantOrderid Text
 ouoOrderId
   = lens _ouoOrderId (\ s a -> s{_ouoOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ouoFields :: Lens' OrdersUpdatemerchantOrderid (Maybe Text)
+ouoFields
+  = lens _ouoFields (\ s a -> s{_ouoFields = a})
+
 instance GoogleRequest OrdersUpdatemerchantOrderid
          where
         type Rs OrdersUpdatemerchantOrderid =
@@ -110,7 +120,8 @@ instance GoogleRequest OrdersUpdatemerchantOrderid
         type Scopes OrdersUpdatemerchantOrderid =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersUpdatemerchantOrderid'{..}
-          = go _ouoMerchantId _ouoOrderId (Just AltJSON)
+          = go _ouoMerchantId _ouoOrderId _ouoFields
+              (Just AltJSON)
               _ouoPayload
               shoppingContentService
           where go

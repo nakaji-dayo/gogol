@@ -37,10 +37,11 @@ module Network.Google.Resource.Calendar.Events.Move
     , emCalendarId
     , emSendNotifications
     , emEventId
+    , emFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.move@ method which the
 -- 'EventsMove' request conforms to.
@@ -54,16 +55,18 @@ type EventsMoveResource =
                  "move" :>
                    QueryParam "destination" Text :>
                      QueryParam "sendNotifications" Bool :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Event
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Event
 
 -- | Moves an event to another calendar, i.e. changes an event\'s organizer.
 --
 -- /See:/ 'eventsMove' smart constructor.
 data EventsMove = EventsMove'
-    { _emDestination       :: !Text
-    , _emCalendarId        :: !Text
+    { _emDestination :: !Text
+    , _emCalendarId :: !Text
     , _emSendNotifications :: !(Maybe Bool)
-    , _emEventId           :: !Text
+    , _emEventId :: !Text
+    , _emFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsMove' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data EventsMove = EventsMove'
 -- * 'emSendNotifications'
 --
 -- * 'emEventId'
+--
+-- * 'emFields'
 eventsMove
     :: Text -- ^ 'emDestination'
     -> Text -- ^ 'emCalendarId'
     -> Text -- ^ 'emEventId'
     -> EventsMove
-eventsMove pEmDestination_ pEmCalendarId_ pEmEventId_ =
+eventsMove pEmDestination_ pEmCalendarId_ pEmEventId_ = 
     EventsMove'
     { _emDestination = pEmDestination_
     , _emCalendarId = pEmCalendarId_
     , _emSendNotifications = Nothing
     , _emEventId = pEmEventId_
+    , _emFields = Nothing
     }
 
 -- | Calendar identifier of the target calendar where the event is to be
@@ -115,6 +121,10 @@ emEventId :: Lens' EventsMove Text
 emEventId
   = lens _emEventId (\ s a -> s{_emEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+emFields :: Lens' EventsMove (Maybe Text)
+emFields = lens _emFields (\ s a -> s{_emFields = a})
+
 instance GoogleRequest EventsMove where
         type Rs EventsMove = Event
         type Scopes EventsMove =
@@ -122,6 +132,7 @@ instance GoogleRequest EventsMove where
         requestClient EventsMove'{..}
           = go _emCalendarId _emEventId (Just _emDestination)
               _emSendNotifications
+              _emFields
               (Just AltJSON)
               appsCalendarService
           where go

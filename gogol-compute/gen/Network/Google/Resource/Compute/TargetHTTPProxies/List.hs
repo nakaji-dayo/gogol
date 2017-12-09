@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.TargetHTTPProxies.List
     , thttpplFilter
     , thttpplPageToken
     , thttpplMaxResults
+    , thttpplFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetHttpProxies.list@ method which the
 -- 'TargetHTTPProxiesList' request conforms to.
@@ -57,19 +58,21 @@ type TargetHTTPProxiesListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] TargetHTTPProxyList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] TargetHTTPProxyList
 
 -- | Retrieves the list of TargetHttpProxy resources available to the
 -- specified project.
 --
 -- /See:/ 'targetHTTPProxiesList' smart constructor.
 data TargetHTTPProxiesList = TargetHTTPProxiesList'
-    { _thttpplOrderBy    :: !(Maybe Text)
-    , _thttpplProject    :: !Text
-    , _thttpplFilter     :: !(Maybe Text)
-    , _thttpplPageToken  :: !(Maybe Text)
+    { _thttpplOrderBy :: !(Maybe Text)
+    , _thttpplProject :: !Text
+    , _thttpplFilter :: !(Maybe Text)
+    , _thttpplPageToken :: !(Maybe Text)
     , _thttpplMaxResults :: !(Textual Word32)
+    , _thttpplFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetHTTPProxiesList' with the minimum fields required to make a request.
@@ -85,16 +88,19 @@ data TargetHTTPProxiesList = TargetHTTPProxiesList'
 -- * 'thttpplPageToken'
 --
 -- * 'thttpplMaxResults'
+--
+-- * 'thttpplFields'
 targetHTTPProxiesList
     :: Text -- ^ 'thttpplProject'
     -> TargetHTTPProxiesList
-targetHTTPProxiesList pThttpplProject_ =
+targetHTTPProxiesList pThttpplProject_ = 
     TargetHTTPProxiesList'
     { _thttpplOrderBy = Nothing
     , _thttpplProject = pThttpplProject_
     , _thttpplFilter = Nothing
     , _thttpplPageToken = Nothing
     , _thttpplMaxResults = 500
+    , _thttpplFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -116,26 +122,25 @@ thttpplProject
   = lens _thttpplProject
       (\ s a -> s{_thttpplProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 thttpplFilter :: Lens' TargetHTTPProxiesList (Maybe Text)
 thttpplFilter
   = lens _thttpplFilter
@@ -151,12 +156,19 @@ thttpplPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 thttpplMaxResults :: Lens' TargetHTTPProxiesList Word32
 thttpplMaxResults
   = lens _thttpplMaxResults
       (\ s a -> s{_thttpplMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+thttpplFields :: Lens' TargetHTTPProxiesList (Maybe Text)
+thttpplFields
+  = lens _thttpplFields
+      (\ s a -> s{_thttpplFields = a})
 
 instance GoogleRequest TargetHTTPProxiesList where
         type Rs TargetHTTPProxiesList = TargetHTTPProxyList
@@ -168,6 +180,7 @@ instance GoogleRequest TargetHTTPProxiesList where
           = go _thttpplProject _thttpplOrderBy _thttpplFilter
               _thttpplPageToken
               (Just _thttpplMaxResults)
+              _thttpplFields
               (Just AltJSON)
               computeService
           where go

@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists all the debuggees that the user can set breakpoints to.
+-- Lists all the debuggees that the user has access to.
 --
 -- /See:/ <http://cloud.google.com/debugger Stackdriver Debugger API Reference> for @clouddebugger.debugger.debuggees.list@.
 module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.List
@@ -42,11 +42,12 @@ module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.List
     , ddlUploadType
     , ddlBearerToken
     , ddlClientVersion
+    , ddlFields
     , ddlCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.debugger.debuggees.list@ method which the
 -- 'DebuggerDebuggeesList' request conforms to.
@@ -64,23 +65,25 @@ type DebuggerDebuggeesListResource =
                          QueryParam "bearer_token" Text :>
                            QueryParam "clientVersion" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListDebuggeesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListDebuggeesResponse
 
--- | Lists all the debuggees that the user can set breakpoints to.
+-- | Lists all the debuggees that the user has access to.
 --
 -- /See:/ 'debuggerDebuggeesList' smart constructor.
 data DebuggerDebuggeesList = DebuggerDebuggeesList'
-    { _ddlXgafv           :: !(Maybe Xgafv)
+    { _ddlXgafv :: !(Maybe Xgafv)
     , _ddlIncludeInactive :: !(Maybe Bool)
-    , _ddlUploadProtocol  :: !(Maybe Text)
-    , _ddlProject         :: !(Maybe Text)
-    , _ddlPp              :: !Bool
-    , _ddlAccessToken     :: !(Maybe Text)
-    , _ddlUploadType      :: !(Maybe Text)
-    , _ddlBearerToken     :: !(Maybe Text)
-    , _ddlClientVersion   :: !(Maybe Text)
-    , _ddlCallback        :: !(Maybe Text)
+    , _ddlUploadProtocol :: !(Maybe Text)
+    , _ddlProject :: !(Maybe Text)
+    , _ddlPp :: !Bool
+    , _ddlAccessToken :: !(Maybe Text)
+    , _ddlUploadType :: !(Maybe Text)
+    , _ddlBearerToken :: !(Maybe Text)
+    , _ddlClientVersion :: !(Maybe Text)
+    , _ddlFields :: !(Maybe Text)
+    , _ddlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DebuggerDebuggeesList' with the minimum fields required to make a request.
@@ -105,10 +108,12 @@ data DebuggerDebuggeesList = DebuggerDebuggeesList'
 --
 -- * 'ddlClientVersion'
 --
+-- * 'ddlFields'
+--
 -- * 'ddlCallback'
 debuggerDebuggeesList
     :: DebuggerDebuggeesList
-debuggerDebuggeesList =
+debuggerDebuggeesList = 
     DebuggerDebuggeesList'
     { _ddlXgafv = Nothing
     , _ddlIncludeInactive = Nothing
@@ -119,6 +124,7 @@ debuggerDebuggeesList =
     , _ddlUploadType = Nothing
     , _ddlBearerToken = Nothing
     , _ddlClientVersion = Nothing
+    , _ddlFields = Nothing
     , _ddlCallback = Nothing
     }
 
@@ -166,12 +172,17 @@ ddlBearerToken
   = lens _ddlBearerToken
       (\ s a -> s{_ddlBearerToken = a})
 
--- | The client version making the call. Following: \`domain\/type\/version\`
+-- | The client version making the call. Schema: \`domain\/type\/version\`
 -- (e.g., \`google.com\/intellij\/v1\`).
 ddlClientVersion :: Lens' DebuggerDebuggeesList (Maybe Text)
 ddlClientVersion
   = lens _ddlClientVersion
       (\ s a -> s{_ddlClientVersion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ddlFields :: Lens' DebuggerDebuggeesList (Maybe Text)
+ddlFields
+  = lens _ddlFields (\ s a -> s{_ddlFields = a})
 
 -- | JSONP
 ddlCallback :: Lens' DebuggerDebuggeesList (Maybe Text)
@@ -192,6 +203,7 @@ instance GoogleRequest DebuggerDebuggeesList where
               _ddlBearerToken
               _ddlClientVersion
               _ddlCallback
+              _ddlFields
               (Just AltJSON)
               debuggerService
           where go

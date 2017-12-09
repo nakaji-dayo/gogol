@@ -38,10 +38,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Update
     , tuPayload
     , tuTask
     , tuNewLeaseSeconds
+    , tuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.update@ method which the
 -- 'TasksUpdate' request conforms to.
@@ -55,18 +56,20 @@ type TasksUpdateResource =
                  "tasks" :>
                    Capture "task" Text :>
                      QueryParam "newLeaseSeconds" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Task :> Post '[JSON] Task
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Task :> Post '[JSON] Task
 
 -- | Update tasks that are leased out of a TaskQueue.
 --
 -- /See:/ 'tasksUpdate' smart constructor.
 data TasksUpdate = TasksUpdate'
-    { _tuTaskQueue       :: !Text
-    , _tuProject         :: !Text
-    , _tuPayload         :: !Task
-    , _tuTask            :: !Text
+    { _tuTaskQueue :: !Text
+    , _tuProject :: !Text
+    , _tuPayload :: !Task
+    , _tuTask :: !Text
     , _tuNewLeaseSeconds :: !(Textual Int32)
+    , _tuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksUpdate' with the minimum fields required to make a request.
@@ -82,6 +85,8 @@ data TasksUpdate = TasksUpdate'
 -- * 'tuTask'
 --
 -- * 'tuNewLeaseSeconds'
+--
+-- * 'tuFields'
 tasksUpdate
     :: Text -- ^ 'tuTaskQueue'
     -> Text -- ^ 'tuProject'
@@ -89,13 +94,14 @@ tasksUpdate
     -> Text -- ^ 'tuTask'
     -> Int32 -- ^ 'tuNewLeaseSeconds'
     -> TasksUpdate
-tasksUpdate pTuTaskQueue_ pTuProject_ pTuPayload_ pTuTask_ pTuNewLeaseSeconds_ =
+tasksUpdate pTuTaskQueue_ pTuProject_ pTuPayload_ pTuTask_ pTuNewLeaseSeconds_ = 
     TasksUpdate'
     { _tuTaskQueue = pTuTaskQueue_
     , _tuProject = pTuProject_
     , _tuPayload = pTuPayload_
     , _tuTask = pTuTask_
     , _tuNewLeaseSeconds = _Coerce # pTuNewLeaseSeconds_
+    , _tuFields = Nothing
     }
 
 tuTaskQueue :: Lens' TasksUpdate Text
@@ -122,6 +128,10 @@ tuNewLeaseSeconds
       (\ s a -> s{_tuNewLeaseSeconds = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tuFields :: Lens' TasksUpdate (Maybe Text)
+tuFields = lens _tuFields (\ s a -> s{_tuFields = a})
+
 instance GoogleRequest TasksUpdate where
         type Rs TasksUpdate = Task
         type Scopes TasksUpdate =
@@ -130,6 +140,7 @@ instance GoogleRequest TasksUpdate where
         requestClient TasksUpdate'{..}
           = go _tuProject _tuTaskQueue _tuTask
               (Just _tuNewLeaseSeconds)
+              _tuFields
               (Just AltJSON)
               _tuPayload
               taskQueueService

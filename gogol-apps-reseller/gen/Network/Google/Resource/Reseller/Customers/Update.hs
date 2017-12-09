@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Update a customer resource if one it exists and is owned by the
--- reseller.
+-- Update a customer account\'s settings.
 --
 -- /See:/ <https://developers.google.com/google-apps/reseller/ Enterprise Apps Reseller API Reference> for @reseller.customers.update@.
 module Network.Google.Resource.Reseller.Customers.Update
@@ -36,10 +35,11 @@ module Network.Google.Resource.Reseller.Customers.Update
     -- * Request Lenses
     , cuPayload
     , cuCustomerId
+    , cuFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.customers.update@ method which the
 -- 'CustomersUpdate' request conforms to.
@@ -49,16 +49,17 @@ type CustomersUpdateResource =
          "v1" :>
            "customers" :>
              Capture "customerId" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Customer :> Put '[JSON] Customer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Customer :> Put '[JSON] Customer
 
--- | Update a customer resource if one it exists and is owned by the
--- reseller.
+-- | Update a customer account\'s settings.
 --
 -- /See:/ 'customersUpdate' smart constructor.
 data CustomersUpdate = CustomersUpdate'
-    { _cuPayload    :: !Customer
+    { _cuPayload :: !Customer
     , _cuCustomerId :: !Text
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomersUpdate' with the minimum fields required to make a request.
@@ -68,14 +69,17 @@ data CustomersUpdate = CustomersUpdate'
 -- * 'cuPayload'
 --
 -- * 'cuCustomerId'
+--
+-- * 'cuFields'
 customersUpdate
     :: Customer -- ^ 'cuPayload'
     -> Text -- ^ 'cuCustomerId'
     -> CustomersUpdate
-customersUpdate pCuPayload_ pCuCustomerId_ =
+customersUpdate pCuPayload_ pCuCustomerId_ = 
     CustomersUpdate'
     { _cuPayload = pCuPayload_
     , _cuCustomerId = pCuCustomerId_
+    , _cuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -83,17 +87,25 @@ cuPayload :: Lens' CustomersUpdate Customer
 cuPayload
   = lens _cuPayload (\ s a -> s{_cuPayload = a})
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 cuCustomerId :: Lens' CustomersUpdate Text
 cuCustomerId
   = lens _cuCustomerId (\ s a -> s{_cuCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' CustomersUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
 
 instance GoogleRequest CustomersUpdate where
         type Rs CustomersUpdate = Customer
         type Scopes CustomersUpdate =
              '["https://www.googleapis.com/auth/apps.order"]
         requestClient CustomersUpdate'{..}
-          = go _cuCustomerId (Just AltJSON) _cuPayload
+          = go _cuCustomerId _cuFields (Just AltJSON)
+              _cuPayload
               appsResellerService
           where go
                   = buildClient

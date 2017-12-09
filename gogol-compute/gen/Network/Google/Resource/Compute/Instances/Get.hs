@@ -36,11 +36,12 @@ module Network.Google.Resource.Compute.Instances.Get
     -- * Request Lenses
     , igProject
     , igZone
+    , igFields
     , igInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.get@ method which the
 -- 'InstancesGet' request conforms to.
@@ -53,15 +54,17 @@ type InstancesGetResource =
                Capture "zone" Text :>
                  "instances" :>
                    Capture "instance" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Instance
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Instance
 
 -- | Returns the specified Instance resource. Get a list of available
 -- instances by making a list() request.
 --
 -- /See:/ 'instancesGet' smart constructor.
 data InstancesGet = InstancesGet'
-    { _igProject  :: !Text
-    , _igZone     :: !Text
+    { _igProject :: !Text
+    , _igZone :: !Text
+    , _igFields :: !(Maybe Text)
     , _igInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,16 +76,19 @@ data InstancesGet = InstancesGet'
 --
 -- * 'igZone'
 --
+-- * 'igFields'
+--
 -- * 'igInstance'
 instancesGet
     :: Text -- ^ 'igProject'
     -> Text -- ^ 'igZone'
     -> Text -- ^ 'igInstance'
     -> InstancesGet
-instancesGet pIgProject_ pIgZone_ pIgInstance_ =
+instancesGet pIgProject_ pIgZone_ pIgInstance_ = 
     InstancesGet'
     { _igProject = pIgProject_
     , _igZone = pIgZone_
+    , _igFields = Nothing
     , _igInstance = pIgInstance_
     }
 
@@ -94,6 +100,10 @@ igProject
 -- | The name of the zone for this request.
 igZone :: Lens' InstancesGet Text
 igZone = lens _igZone (\ s a -> s{_igZone = a})
+
+-- | Selector specifying which fields to include in a partial response.
+igFields :: Lens' InstancesGet (Maybe Text)
+igFields = lens _igFields (\ s a -> s{_igFields = a})
 
 -- | Name of the instance resource to return.
 igInstance :: Lens' InstancesGet Text
@@ -107,7 +117,8 @@ instance GoogleRequest InstancesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient InstancesGet'{..}
-          = go _igProject _igZone _igInstance (Just AltJSON)
+          = go _igProject _igZone _igInstance _igFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy InstancesGetResource)

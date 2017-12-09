@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.VariantSets.Patch
     , vspUploadType
     , vspPayload
     , vspBearerToken
+    , vspFields
     , vspCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variantsets.patch@ method which the
 -- 'VariantSetsPatch' request conforms to.
@@ -64,9 +65,10 @@ type VariantSetsPatchResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] VariantSet :>
-                               Patch '[JSON] VariantSet
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] VariantSet :>
+                                 Patch '[JSON] VariantSet
 
 -- | Updates a variant set using patch semantics. For the definitions of
 -- variant sets and other genomics resources, see [Fundamentals of Google
@@ -74,16 +76,17 @@ type VariantSetsPatchResource =
 --
 -- /See:/ 'variantSetsPatch' smart constructor.
 data VariantSetsPatch = VariantSetsPatch'
-    { _vspXgafv          :: !(Maybe Xgafv)
+    { _vspXgafv :: !(Maybe Xgafv)
     , _vspUploadProtocol :: !(Maybe Text)
-    , _vspUpdateMask     :: !(Maybe FieldMask)
-    , _vspPp             :: !Bool
-    , _vspVariantSetId   :: !Text
-    , _vspAccessToken    :: !(Maybe Text)
-    , _vspUploadType     :: !(Maybe Text)
-    , _vspPayload        :: !VariantSet
-    , _vspBearerToken    :: !(Maybe Text)
-    , _vspCallback       :: !(Maybe Text)
+    , _vspUpdateMask :: !(Maybe FieldMask)
+    , _vspPp :: !Bool
+    , _vspVariantSetId :: !Text
+    , _vspAccessToken :: !(Maybe Text)
+    , _vspUploadType :: !(Maybe Text)
+    , _vspPayload :: !VariantSet
+    , _vspBearerToken :: !(Maybe Text)
+    , _vspFields :: !(Maybe Text)
+    , _vspCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantSetsPatch' with the minimum fields required to make a request.
@@ -108,12 +111,14 @@ data VariantSetsPatch = VariantSetsPatch'
 --
 -- * 'vspBearerToken'
 --
+-- * 'vspFields'
+--
 -- * 'vspCallback'
 variantSetsPatch
     :: Text -- ^ 'vspVariantSetId'
     -> VariantSet -- ^ 'vspPayload'
     -> VariantSetsPatch
-variantSetsPatch pVspVariantSetId_ pVspPayload_ =
+variantSetsPatch pVspVariantSetId_ pVspPayload_ = 
     VariantSetsPatch'
     { _vspXgafv = Nothing
     , _vspUploadProtocol = Nothing
@@ -124,6 +129,7 @@ variantSetsPatch pVspVariantSetId_ pVspPayload_ =
     , _vspUploadType = Nothing
     , _vspPayload = pVspPayload_
     , _vspBearerToken = Nothing
+    , _vspFields = Nothing
     , _vspCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ vspBearerToken
   = lens _vspBearerToken
       (\ s a -> s{_vspBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vspFields :: Lens' VariantSetsPatch (Maybe Text)
+vspFields
+  = lens _vspFields (\ s a -> s{_vspFields = a})
+
 -- | JSONP
 vspCallback :: Lens' VariantSetsPatch (Maybe Text)
 vspCallback
@@ -196,6 +207,7 @@ instance GoogleRequest VariantSetsPatch where
               _vspUploadType
               _vspBearerToken
               _vspCallback
+              _vspFields
               (Just AltJSON)
               _vspPayload
               genomicsService

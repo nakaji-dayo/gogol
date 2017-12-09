@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Schemas.List
 
     -- * Request Lenses
     , slCustomerId
+    , slFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.schemas.list@ method which the
 -- 'SchemasList' request conforms to.
@@ -48,13 +49,15 @@ type SchemasListResource =
            "customer" :>
              Capture "customerId" Text :>
                "schemas" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Schemas
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Schemas
 
 -- | Retrieve all schemas for a customer
 --
 -- /See:/ 'schemasList' smart constructor.
-newtype SchemasList = SchemasList'
-    { _slCustomerId :: Text
+data SchemasList = SchemasList'
+    { _slCustomerId :: !Text
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SchemasList' with the minimum fields required to make a request.
@@ -62,18 +65,25 @@ newtype SchemasList = SchemasList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'slCustomerId'
+--
+-- * 'slFields'
 schemasList
     :: Text -- ^ 'slCustomerId'
     -> SchemasList
-schemasList pSlCustomerId_ =
+schemasList pSlCustomerId_ = 
     SchemasList'
     { _slCustomerId = pSlCustomerId_
+    , _slFields = Nothing
     }
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 slCustomerId :: Lens' SchemasList Text
 slCustomerId
   = lens _slCustomerId (\ s a -> s{_slCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SchemasList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
 
 instance GoogleRequest SchemasList where
         type Rs SchemasList = Schemas
@@ -81,7 +91,8 @@ instance GoogleRequest SchemasList where
              '["https://www.googleapis.com/auth/admin.directory.userschema",
                "https://www.googleapis.com/auth/admin.directory.userschema.readonly"]
         requestClient SchemasList'{..}
-          = go _slCustomerId (Just AltJSON) directoryService
+          = go _slCustomerId _slFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy SchemasListResource)
                       mempty

@@ -36,10 +36,11 @@ module Network.Google.Resource.Calendar.Events.QuickAdd
     , eqaCalendarId
     , eqaText
     , eqaSendNotifications
+    , eqaFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.quickAdd@ method which the
 -- 'EventsQuickAdd' request conforms to.
@@ -52,15 +53,17 @@ type EventsQuickAddResource =
                "quickAdd" :>
                  QueryParam "text" Text :>
                    QueryParam "sendNotifications" Bool :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] Event
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] Event
 
 -- | Creates an event based on a simple text string.
 --
 -- /See:/ 'eventsQuickAdd' smart constructor.
 data EventsQuickAdd = EventsQuickAdd'
-    { _eqaCalendarId        :: !Text
-    , _eqaText              :: !Text
+    { _eqaCalendarId :: !Text
+    , _eqaText :: !Text
     , _eqaSendNotifications :: !(Maybe Bool)
+    , _eqaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsQuickAdd' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data EventsQuickAdd = EventsQuickAdd'
 -- * 'eqaText'
 --
 -- * 'eqaSendNotifications'
+--
+-- * 'eqaFields'
 eventsQuickAdd
     :: Text -- ^ 'eqaCalendarId'
     -> Text -- ^ 'eqaText'
     -> EventsQuickAdd
-eventsQuickAdd pEqaCalendarId_ pEqaText_ =
+eventsQuickAdd pEqaCalendarId_ pEqaText_ = 
     EventsQuickAdd'
     { _eqaCalendarId = pEqaCalendarId_
     , _eqaText = pEqaText_
     , _eqaSendNotifications = Nothing
+    , _eqaFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -102,6 +108,11 @@ eqaSendNotifications
   = lens _eqaSendNotifications
       (\ s a -> s{_eqaSendNotifications = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eqaFields :: Lens' EventsQuickAdd (Maybe Text)
+eqaFields
+  = lens _eqaFields (\ s a -> s{_eqaFields = a})
+
 instance GoogleRequest EventsQuickAdd where
         type Rs EventsQuickAdd = Event
         type Scopes EventsQuickAdd =
@@ -109,6 +120,7 @@ instance GoogleRequest EventsQuickAdd where
         requestClient EventsQuickAdd'{..}
           = go _eqaCalendarId (Just _eqaText)
               _eqaSendNotifications
+              _eqaFields
               (Just AltJSON)
               appsCalendarService
           where go

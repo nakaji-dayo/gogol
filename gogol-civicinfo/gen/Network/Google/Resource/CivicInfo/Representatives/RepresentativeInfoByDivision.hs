@@ -38,10 +38,11 @@ module Network.Google.Resource.CivicInfo.Representatives.RepresentativeInfoByDiv
     , rribdRecursive
     , rribdOcdId
     , rribdLevels
+    , rribdFields
     ) where
 
-import           Network.Google.CivicInfo.Types
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @civicinfo.representatives.representativeInfoByDivision@ method which the
 -- 'RepresentativesRepresentativeInfoByDivision' request conforms to.
@@ -58,19 +59,21 @@ type RepresentativesRepresentativeInfoByDivisionResource
                  QueryParams "levels"
                    RepresentativesRepresentativeInfoByDivisionLevels
                    :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] DivisionRepresentativeInfoRequest :>
-                       Get '[JSON] RepresentativeInfoData
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] DivisionRepresentativeInfoRequest :>
+                         Get '[JSON] RepresentativeInfoData
 
 -- | Looks up representative information for a single geographic division.
 --
 -- /See:/ 'representativesRepresentativeInfoByDivision' smart constructor.
 data RepresentativesRepresentativeInfoByDivision = RepresentativesRepresentativeInfoByDivision'
-    { _rribdRoles     :: !(Maybe [RepresentativesRepresentativeInfoByDivisionRoles])
-    , _rribdPayload   :: !DivisionRepresentativeInfoRequest
+    { _rribdRoles :: !(Maybe [RepresentativesRepresentativeInfoByDivisionRoles])
+    , _rribdPayload :: !DivisionRepresentativeInfoRequest
     , _rribdRecursive :: !(Maybe Bool)
-    , _rribdOcdId     :: !Text
-    , _rribdLevels    :: !(Maybe [RepresentativesRepresentativeInfoByDivisionLevels])
+    , _rribdOcdId :: !Text
+    , _rribdLevels :: !(Maybe [RepresentativesRepresentativeInfoByDivisionLevels])
+    , _rribdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepresentativesRepresentativeInfoByDivision' with the minimum fields required to make a request.
@@ -86,17 +89,20 @@ data RepresentativesRepresentativeInfoByDivision = RepresentativesRepresentative
 -- * 'rribdOcdId'
 --
 -- * 'rribdLevels'
+--
+-- * 'rribdFields'
 representativesRepresentativeInfoByDivision
     :: DivisionRepresentativeInfoRequest -- ^ 'rribdPayload'
     -> Text -- ^ 'rribdOcdId'
     -> RepresentativesRepresentativeInfoByDivision
-representativesRepresentativeInfoByDivision pRribdPayload_ pRribdOcdId_ =
+representativesRepresentativeInfoByDivision pRribdPayload_ pRribdOcdId_ = 
     RepresentativesRepresentativeInfoByDivision'
     { _rribdRoles = Nothing
     , _rribdPayload = pRribdPayload_
     , _rribdRecursive = Nothing
     , _rribdOcdId = pRribdOcdId_
     , _rribdLevels = Nothing
+    , _rribdFields = Nothing
     }
 
 -- | A list of office roles to filter by. Only offices fulfilling one of
@@ -136,6 +142,11 @@ rribdLevels
       _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rribdFields :: Lens' RepresentativesRepresentativeInfoByDivision (Maybe Text)
+rribdFields
+  = lens _rribdFields (\ s a -> s{_rribdFields = a})
+
 instance GoogleRequest
          RepresentativesRepresentativeInfoByDivision where
         type Rs RepresentativesRepresentativeInfoByDivision =
@@ -148,6 +159,7 @@ instance GoogleRequest
           = go _rribdOcdId (_rribdRoles ^. _Default)
               _rribdRecursive
               (_rribdLevels ^. _Default)
+              _rribdFields
               (Just AltJSON)
               _rribdPayload
               civicInfoService

@@ -43,11 +43,12 @@ module Network.Google.Resource.ServiceManagement.Services.Delete
     , sdUploadType
     , sdBearerToken
     , sdServiceName
+    , sdFields
     , sdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.delete@ method which the
 -- 'ServicesDelete' request conforms to.
@@ -62,7 +63,8 @@ type ServicesDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes a managed service. This method will change the service to the
 -- \`Soft-Delete\` state for 30 days. Within this period, service producers
@@ -71,14 +73,15 @@ type ServicesDeleteResource =
 --
 -- /See:/ 'servicesDelete' smart constructor.
 data ServicesDelete = ServicesDelete'
-    { _sdXgafv          :: !(Maybe Xgafv)
+    { _sdXgafv :: !(Maybe Xgafv)
     , _sdUploadProtocol :: !(Maybe Text)
-    , _sdPp             :: !Bool
-    , _sdAccessToken    :: !(Maybe Text)
-    , _sdUploadType     :: !(Maybe Text)
-    , _sdBearerToken    :: !(Maybe Text)
-    , _sdServiceName    :: !Text
-    , _sdCallback       :: !(Maybe Text)
+    , _sdPp :: !Bool
+    , _sdAccessToken :: !(Maybe Text)
+    , _sdUploadType :: !(Maybe Text)
+    , _sdBearerToken :: !(Maybe Text)
+    , _sdServiceName :: !Text
+    , _sdFields :: !(Maybe Text)
+    , _sdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesDelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data ServicesDelete = ServicesDelete'
 --
 -- * 'sdServiceName'
 --
+-- * 'sdFields'
+--
 -- * 'sdCallback'
 servicesDelete
     :: Text -- ^ 'sdServiceName'
     -> ServicesDelete
-servicesDelete pSdServiceName_ =
+servicesDelete pSdServiceName_ = 
     ServicesDelete'
     { _sdXgafv = Nothing
     , _sdUploadProtocol = Nothing
@@ -112,6 +117,7 @@ servicesDelete pSdServiceName_ =
     , _sdUploadType = Nothing
     , _sdBearerToken = Nothing
     , _sdServiceName = pSdServiceName_
+    , _sdFields = Nothing
     , _sdCallback = Nothing
     }
 
@@ -154,6 +160,10 @@ sdServiceName
   = lens _sdServiceName
       (\ s a -> s{_sdServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' ServicesDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 -- | JSONP
 sdCallback :: Lens' ServicesDelete (Maybe Text)
 sdCallback
@@ -171,6 +181,7 @@ instance GoogleRequest ServicesDelete where
               _sdUploadType
               _sdBearerToken
               _sdCallback
+              _sdFields
               (Just AltJSON)
               serviceManagementService
           where go

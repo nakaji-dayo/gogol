@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Update Organization Unit
+-- Update organizational unit
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.orgunits.update@.
 module Network.Google.Resource.Directory.OrgUnits.Update
@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.OrgUnits.Update
     , ouuPayload
     , ouuOrgUnitPath
     , ouuCustomerId
+    , ouuFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.orgunits.update@ method which the
 -- 'OrgUnitsUpdate' request conforms to.
@@ -51,16 +52,18 @@ type OrgUnitsUpdateResource =
              Capture "customerId" Text :>
                "orgunits" :>
                  Captures "orgUnitPath" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] OrgUnit :> Put '[JSON] OrgUnit
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] OrgUnit :> Put '[JSON] OrgUnit
 
--- | Update Organization Unit
+-- | Update organizational unit
 --
 -- /See:/ 'orgUnitsUpdate' smart constructor.
 data OrgUnitsUpdate = OrgUnitsUpdate'
-    { _ouuPayload     :: !OrgUnit
+    { _ouuPayload :: !OrgUnit
     , _ouuOrgUnitPath :: ![Text]
-    , _ouuCustomerId  :: !Text
+    , _ouuCustomerId :: !Text
+    , _ouuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnitsUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data OrgUnitsUpdate = OrgUnitsUpdate'
 -- * 'ouuOrgUnitPath'
 --
 -- * 'ouuCustomerId'
+--
+-- * 'ouuFields'
 orgUnitsUpdate
     :: OrgUnit -- ^ 'ouuPayload'
     -> [Text] -- ^ 'ouuOrgUnitPath'
     -> Text -- ^ 'ouuCustomerId'
     -> OrgUnitsUpdate
-orgUnitsUpdate pOuuPayload_ pOuuOrgUnitPath_ pOuuCustomerId_ =
+orgUnitsUpdate pOuuPayload_ pOuuOrgUnitPath_ pOuuCustomerId_ = 
     OrgUnitsUpdate'
     { _ouuPayload = pOuuPayload_
     , _ouuOrgUnitPath = _Coerce # pOuuOrgUnitPath_
     , _ouuCustomerId = pOuuCustomerId_
+    , _ouuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,25 +95,31 @@ ouuPayload :: Lens' OrgUnitsUpdate OrgUnit
 ouuPayload
   = lens _ouuPayload (\ s a -> s{_ouuPayload = a})
 
--- | Full path of the organization unit or its Id
+-- | Full path of the organizational unit or its ID
 ouuOrgUnitPath :: Lens' OrgUnitsUpdate [Text]
 ouuOrgUnitPath
   = lens _ouuOrgUnitPath
       (\ s a -> s{_ouuOrgUnitPath = a})
       . _Coerce
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 ouuCustomerId :: Lens' OrgUnitsUpdate Text
 ouuCustomerId
   = lens _ouuCustomerId
       (\ s a -> s{_ouuCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ouuFields :: Lens' OrgUnitsUpdate (Maybe Text)
+ouuFields
+  = lens _ouuFields (\ s a -> s{_ouuFields = a})
 
 instance GoogleRequest OrgUnitsUpdate where
         type Rs OrgUnitsUpdate = OrgUnit
         type Scopes OrgUnitsUpdate =
              '["https://www.googleapis.com/auth/admin.directory.orgunit"]
         requestClient OrgUnitsUpdate'{..}
-          = go _ouuCustomerId _ouuOrgUnitPath (Just AltJSON)
+          = go _ouuCustomerId _ouuOrgUnitPath _ouuFields
+              (Just AltJSON)
               _ouuPayload
               directoryService
           where go

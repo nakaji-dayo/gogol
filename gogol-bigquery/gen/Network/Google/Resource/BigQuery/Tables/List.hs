@@ -38,10 +38,11 @@ module Network.Google.Resource.BigQuery.Tables.List
     , tlPageToken
     , tlProjectId
     , tlMaxResults
+    , tlFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tables.list@ method which the
 -- 'TablesList' request conforms to.
@@ -55,17 +56,19 @@ type TablesListResource =
                  "tables" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] TableList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] TableList
 
 -- | Lists all tables in the specified dataset. Requires the READER dataset
 -- role.
 --
 -- /See:/ 'tablesList' smart constructor.
 data TablesList = TablesList'
-    { _tlDataSetId  :: !Text
-    , _tlPageToken  :: !(Maybe Text)
-    , _tlProjectId  :: !Text
+    { _tlDataSetId :: !Text
+    , _tlPageToken :: !(Maybe Text)
+    , _tlProjectId :: !Text
     , _tlMaxResults :: !(Maybe (Textual Word32))
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TablesList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data TablesList = TablesList'
 -- * 'tlProjectId'
 --
 -- * 'tlMaxResults'
+--
+-- * 'tlFields'
 tablesList
     :: Text -- ^ 'tlDataSetId'
     -> Text -- ^ 'tlProjectId'
     -> TablesList
-tablesList pTlDataSetId_ pTlProjectId_ =
+tablesList pTlDataSetId_ pTlProjectId_ = 
     TablesList'
     { _tlDataSetId = pTlDataSetId_
     , _tlPageToken = Nothing
     , _tlProjectId = pTlProjectId_
     , _tlMaxResults = Nothing
+    , _tlFields = Nothing
     }
 
 -- | Dataset ID of the tables to list
@@ -113,6 +119,10 @@ tlMaxResults
   = lens _tlMaxResults (\ s a -> s{_tlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TablesList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TablesList where
         type Rs TablesList = TableList
         type Scopes TablesList =
@@ -122,6 +132,7 @@ instance GoogleRequest TablesList where
         requestClient TablesList'{..}
           = go _tlProjectId _tlDataSetId _tlPageToken
               _tlMaxResults
+              _tlFields
               (Just AltJSON)
               bigQueryService
           where go

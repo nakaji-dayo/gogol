@@ -36,10 +36,11 @@ module Network.Google.Resource.Books.Bookshelves.Get
     , bgUserId
     , bgShelf
     , bgSource
+    , bgFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.bookshelves.get@ method which the
 -- 'BookshelvesGet' request conforms to.
@@ -51,15 +52,17 @@ type BookshelvesGetResource =
              "bookshelves" :>
                Capture "shelf" Text :>
                  QueryParam "source" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Bookshelf
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Bookshelf
 
 -- | Retrieves metadata for a specific bookshelf for the specified user.
 --
 -- /See:/ 'bookshelvesGet' smart constructor.
 data BookshelvesGet = BookshelvesGet'
     { _bgUserId :: !Text
-    , _bgShelf  :: !Text
+    , _bgShelf :: !Text
     , _bgSource :: !(Maybe Text)
+    , _bgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BookshelvesGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data BookshelvesGet = BookshelvesGet'
 -- * 'bgShelf'
 --
 -- * 'bgSource'
+--
+-- * 'bgFields'
 bookshelvesGet
     :: Text -- ^ 'bgUserId'
     -> Text -- ^ 'bgShelf'
     -> BookshelvesGet
-bookshelvesGet pBgUserId_ pBgShelf_ =
+bookshelvesGet pBgUserId_ pBgShelf_ = 
     BookshelvesGet'
     { _bgUserId = pBgUserId_
     , _bgShelf = pBgShelf_
     , _bgSource = Nothing
+    , _bgFields = Nothing
     }
 
 -- | ID of user for whom to retrieve bookshelves.
@@ -94,12 +100,17 @@ bgShelf = lens _bgShelf (\ s a -> s{_bgShelf = a})
 bgSource :: Lens' BookshelvesGet (Maybe Text)
 bgSource = lens _bgSource (\ s a -> s{_bgSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bgFields :: Lens' BookshelvesGet (Maybe Text)
+bgFields = lens _bgFields (\ s a -> s{_bgFields = a})
+
 instance GoogleRequest BookshelvesGet where
         type Rs BookshelvesGet = Bookshelf
         type Scopes BookshelvesGet =
              '["https://www.googleapis.com/auth/books"]
         requestClient BookshelvesGet'{..}
-          = go _bgUserId _bgShelf _bgSource (Just AltJSON)
+          = go _bgUserId _bgShelf _bgSource _bgFields
+              (Just AltJSON)
               booksService
           where go
                   = buildClient (Proxy :: Proxy BookshelvesGetResource)

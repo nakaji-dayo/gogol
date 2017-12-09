@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Drafts.Get
     , udgFormat
     , udgUserId
     , udgId
+    , udgFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.drafts.get@ method which the
 -- 'UsersDraftsGet' request conforms to.
@@ -51,7 +52,8 @@ type UsersDraftsGetResource =
              "drafts" :>
                Capture "id" Text :>
                  QueryParam "format" UsersDraftsGetFormat :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Draft
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Draft
 
 -- | Gets the specified draft.
 --
@@ -59,7 +61,8 @@ type UsersDraftsGetResource =
 data UsersDraftsGet = UsersDraftsGet'
     { _udgFormat :: !UsersDraftsGetFormat
     , _udgUserId :: !Text
-    , _udgId     :: !Text
+    , _udgId :: !Text
+    , _udgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDraftsGet' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data UsersDraftsGet = UsersDraftsGet'
 -- * 'udgUserId'
 --
 -- * 'udgId'
+--
+-- * 'udgFields'
 usersDraftsGet
     :: Text -- ^ 'udgId'
     -> UsersDraftsGet
-usersDraftsGet pUdgId_ =
+usersDraftsGet pUdgId_ = 
     UsersDraftsGet'
     { _udgFormat = UDGFFull
     , _udgUserId = "me"
     , _udgId = pUdgId_
+    , _udgFields = Nothing
     }
 
 -- | The format to return the draft in.
@@ -96,6 +102,11 @@ udgUserId
 udgId :: Lens' UsersDraftsGet Text
 udgId = lens _udgId (\ s a -> s{_udgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udgFields :: Lens' UsersDraftsGet (Maybe Text)
+udgFields
+  = lens _udgFields (\ s a -> s{_udgFields = a})
+
 instance GoogleRequest UsersDraftsGet where
         type Rs UsersDraftsGet = Draft
         type Scopes UsersDraftsGet =
@@ -104,7 +115,7 @@ instance GoogleRequest UsersDraftsGet where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersDraftsGet'{..}
-          = go _udgUserId _udgId (Just _udgFormat)
+          = go _udgUserId _udgId (Just _udgFormat) _udgFields
               (Just AltJSON)
               gmailService
           where go

@@ -36,32 +36,35 @@ module Network.Google.Resource.DFAReporting.CreativeFieldValues.Update
     , cfvuCreativeFieldId
     , cfvuProFileId
     , cfvuPayload
+    , cfvuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFieldValues.update@ method which the
 -- 'CreativeFieldValuesUpdate' request conforms to.
 type CreativeFieldValuesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "creativeFieldId" (Textual Int64) :>
                  "creativeFieldValues" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CreativeFieldValue :>
-                       Put '[JSON] CreativeFieldValue
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CreativeFieldValue :>
+                         Put '[JSON] CreativeFieldValue
 
 -- | Updates an existing creative field value.
 --
 -- /See:/ 'creativeFieldValuesUpdate' smart constructor.
 data CreativeFieldValuesUpdate = CreativeFieldValuesUpdate'
     { _cfvuCreativeFieldId :: !(Textual Int64)
-    , _cfvuProFileId       :: !(Textual Int64)
-    , _cfvuPayload         :: !CreativeFieldValue
+    , _cfvuProFileId :: !(Textual Int64)
+    , _cfvuPayload :: !CreativeFieldValue
+    , _cfvuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValuesUpdate' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CreativeFieldValuesUpdate = CreativeFieldValuesUpdate'
 -- * 'cfvuProFileId'
 --
 -- * 'cfvuPayload'
+--
+-- * 'cfvuFields'
 creativeFieldValuesUpdate
     :: Int64 -- ^ 'cfvuCreativeFieldId'
     -> Int64 -- ^ 'cfvuProFileId'
     -> CreativeFieldValue -- ^ 'cfvuPayload'
     -> CreativeFieldValuesUpdate
-creativeFieldValuesUpdate pCfvuCreativeFieldId_ pCfvuProFileId_ pCfvuPayload_ =
+creativeFieldValuesUpdate pCfvuCreativeFieldId_ pCfvuProFileId_ pCfvuPayload_ = 
     CreativeFieldValuesUpdate'
     { _cfvuCreativeFieldId = _Coerce # pCfvuCreativeFieldId_
     , _cfvuProFileId = _Coerce # pCfvuProFileId_
     , _cfvuPayload = pCfvuPayload_
+    , _cfvuFields = Nothing
     }
 
 -- | Creative field ID for this creative field value.
@@ -104,6 +110,11 @@ cfvuPayload :: Lens' CreativeFieldValuesUpdate CreativeFieldValue
 cfvuPayload
   = lens _cfvuPayload (\ s a -> s{_cfvuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cfvuFields :: Lens' CreativeFieldValuesUpdate (Maybe Text)
+cfvuFields
+  = lens _cfvuFields (\ s a -> s{_cfvuFields = a})
+
 instance GoogleRequest CreativeFieldValuesUpdate
          where
         type Rs CreativeFieldValuesUpdate =
@@ -111,7 +122,7 @@ instance GoogleRequest CreativeFieldValuesUpdate
         type Scopes CreativeFieldValuesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldValuesUpdate'{..}
-          = go _cfvuProFileId _cfvuCreativeFieldId
+          = go _cfvuProFileId _cfvuCreativeFieldId _cfvuFields
               (Just AltJSON)
               _cfvuPayload
               dFAReportingService

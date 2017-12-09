@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.VideoFormats.List
 
     -- * Request Lenses
     , vflProFileId
+    , vflFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.videoFormats.list@ method which the
 -- 'VideoFormatsList' request conforms to.
 type VideoFormatsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "videoFormats" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] VideoFormatsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] VideoFormatsListResponse
 
 -- | Lists available video formats.
 --
 -- /See:/ 'videoFormatsList' smart constructor.
-newtype VideoFormatsList = VideoFormatsList'
-    { _vflProFileId :: Textual Int64
+data VideoFormatsList = VideoFormatsList'
+    { _vflProFileId :: !(Textual Int64)
+    , _vflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoFormatsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype VideoFormatsList = VideoFormatsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'vflProFileId'
+--
+-- * 'vflFields'
 videoFormatsList
     :: Int64 -- ^ 'vflProFileId'
     -> VideoFormatsList
-videoFormatsList pVflProFileId_ =
+videoFormatsList pVflProFileId_ = 
     VideoFormatsList'
     { _vflProFileId = _Coerce # pVflProFileId_
+    , _vflFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,18 @@ vflProFileId
   = lens _vflProFileId (\ s a -> s{_vflProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+vflFields :: Lens' VideoFormatsList (Maybe Text)
+vflFields
+  = lens _vflFields (\ s a -> s{_vflFields = a})
+
 instance GoogleRequest VideoFormatsList where
         type Rs VideoFormatsList = VideoFormatsListResponse
         type Scopes VideoFormatsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient VideoFormatsList'{..}
-          = go _vflProFileId (Just AltJSON) dFAReportingService
+          = go _vflProFileId _vflFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy VideoFormatsListResource)

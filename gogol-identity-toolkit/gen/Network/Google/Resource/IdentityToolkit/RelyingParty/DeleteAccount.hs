@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.DeleteAccount
 
     -- * Request Lenses
     , rPayload
+    , rFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.deleteAccount@ method which the
 -- 'RelyingPartyDeleteAccount' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyDeleteAccountResource =
        "v3" :>
          "relyingparty" :>
            "deleteAccount" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyDeleteAccountRequest
-                 :> Post '[JSON] DeleteAccountResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyDeleteAccountRequest
+                   :> Post '[JSON] DeleteAccountResponse
 
 -- | Delete user account.
 --
 -- /See:/ 'relyingPartyDeleteAccount' smart constructor.
-newtype RelyingPartyDeleteAccount = RelyingPartyDeleteAccount'
-    { _rPayload :: IdentitytoolkitRelyingPartyDeleteAccountRequest
+data RelyingPartyDeleteAccount = RelyingPartyDeleteAccount'
+    { _rPayload :: !IdentitytoolkitRelyingPartyDeleteAccountRequest
+    , _rFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyDeleteAccount' with the minimum fields required to make a request.
@@ -63,17 +66,24 @@ newtype RelyingPartyDeleteAccount = RelyingPartyDeleteAccount'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rPayload'
+--
+-- * 'rFields'
 relyingPartyDeleteAccount
     :: IdentitytoolkitRelyingPartyDeleteAccountRequest -- ^ 'rPayload'
     -> RelyingPartyDeleteAccount
-relyingPartyDeleteAccount pRPayload_ =
+relyingPartyDeleteAccount pRPayload_ = 
     RelyingPartyDeleteAccount'
     { _rPayload = pRPayload_
+    , _rFields = Nothing
     }
 
 -- | Multipart request metadata.
 rPayload :: Lens' RelyingPartyDeleteAccount IdentitytoolkitRelyingPartyDeleteAccountRequest
 rPayload = lens _rPayload (\ s a -> s{_rPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rFields :: Lens' RelyingPartyDeleteAccount (Maybe Text)
+rFields = lens _rFields (\ s a -> s{_rFields = a})
 
 instance GoogleRequest RelyingPartyDeleteAccount
          where
@@ -82,7 +92,8 @@ instance GoogleRequest RelyingPartyDeleteAccount
         type Scopes RelyingPartyDeleteAccount =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyDeleteAccount'{..}
-          = go (Just AltJSON) _rPayload identityToolkitService
+          = go _rFields (Just AltJSON) _rPayload
+              identityToolkitService
           where go
                   = buildClient
                       (Proxy :: Proxy RelyingPartyDeleteAccountResource)

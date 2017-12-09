@@ -35,10 +35,11 @@ module Network.Google.Resource.Webfonts.Webfonts.List
 
     -- * Request Lenses
     , wlSort
+    , wlFields
     ) where
 
-import           Network.Google.Fonts.Types
-import           Network.Google.Prelude
+import Network.Google.Fonts.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @webfonts.webfonts.list@ method which the
 -- 'WebfontsList' request conforms to.
@@ -47,14 +48,16 @@ type WebfontsListResource =
        "v1" :>
          "webfonts" :>
            QueryParam "sort" WebfontsListSort :>
-             QueryParam "alt" AltJSON :> Get '[JSON] WebfontList
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] WebfontList
 
 -- | Retrieves the list of fonts currently served by the Google Fonts
 -- Developer API
 --
 -- /See:/ 'webfontsList' smart constructor.
-newtype WebfontsList = WebfontsList'
-    { _wlSort :: Maybe WebfontsListSort
+data WebfontsList = WebfontsList'
+    { _wlSort :: !(Maybe WebfontsListSort)
+    , _wlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebfontsList' with the minimum fields required to make a request.
@@ -62,22 +65,29 @@ newtype WebfontsList = WebfontsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'wlSort'
+--
+-- * 'wlFields'
 webfontsList
     :: WebfontsList
-webfontsList =
+webfontsList = 
     WebfontsList'
     { _wlSort = Nothing
+    , _wlFields = Nothing
     }
 
 -- | Enables sorting of the list
 wlSort :: Lens' WebfontsList (Maybe WebfontsListSort)
 wlSort = lens _wlSort (\ s a -> s{_wlSort = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wlFields :: Lens' WebfontsList (Maybe Text)
+wlFields = lens _wlFields (\ s a -> s{_wlFields = a})
+
 instance GoogleRequest WebfontsList where
         type Rs WebfontsList = WebfontList
         type Scopes WebfontsList = '[]
         requestClient WebfontsList'{..}
-          = go _wlSort (Just AltJSON) fontsService
+          = go _wlSort _wlFields (Just AltJSON) fontsService
           where go
                   = buildClient (Proxy :: Proxy WebfontsListResource)
                       mempty

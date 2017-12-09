@@ -36,10 +36,11 @@ module Network.Google.Resource.PlusDomains.Audiences.List
     , aUserId
     , aPageToken
     , aMaxResults
+    , aFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.audiences.list@ method which the
 -- 'AudiencesList' request conforms to.
@@ -51,15 +52,17 @@ type AudiencesListResource =
              "audiences" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] AudiencesFeed
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] AudiencesFeed
 
 -- | List all of the audiences to which a user can share.
 --
 -- /See:/ 'audiencesList' smart constructor.
 data AudiencesList = AudiencesList'
-    { _aUserId     :: !Text
-    , _aPageToken  :: !(Maybe Text)
+    { _aUserId :: !Text
+    , _aPageToken :: !(Maybe Text)
     , _aMaxResults :: !(Textual Word32)
+    , _aFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AudiencesList' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data AudiencesList = AudiencesList'
 -- * 'aPageToken'
 --
 -- * 'aMaxResults'
+--
+-- * 'aFields'
 audiencesList
     :: Text -- ^ 'aUserId'
     -> AudiencesList
-audiencesList pAUserId_ =
+audiencesList pAUserId_ = 
     AudiencesList'
     { _aUserId = pAUserId_
     , _aPageToken = Nothing
     , _aMaxResults = 20
+    , _aFields = Nothing
     }
 
 -- | The ID of the user to get audiences for. The special value \"me\" can be
@@ -101,6 +107,10 @@ aMaxResults
   = lens _aMaxResults (\ s a -> s{_aMaxResults = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aFields :: Lens' AudiencesList (Maybe Text)
+aFields = lens _aFields (\ s a -> s{_aFields = a})
+
 instance GoogleRequest AudiencesList where
         type Rs AudiencesList = AudiencesFeed
         type Scopes AudiencesList =
@@ -109,6 +119,7 @@ instance GoogleRequest AudiencesList where
                "https://www.googleapis.com/auth/plus.me"]
         requestClient AudiencesList'{..}
           = go _aUserId _aPageToken (Just _aMaxResults)
+              _aFields
               (Just AltJSON)
               plusDomainsService
           where go

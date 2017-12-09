@@ -46,11 +46,12 @@ module Network.Google.Resource.Genomics.DataSets.GetIAMPolicy
     , dsgipPayload
     , dsgipBearerToken
     , dsgipResource
+    , dsgipFields
     , dsgipCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.getIamPolicy@ method which the
 -- 'DataSetsGetIAMPolicy' request conforms to.
@@ -64,9 +65,10 @@ type DataSetsGetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] GetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] GetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Gets the access control policy for the dataset. This is empty if the
 -- policy or resource does not exist. See
@@ -77,15 +79,16 @@ type DataSetsGetIAMPolicyResource =
 --
 -- /See:/ 'dataSetsGetIAMPolicy' smart constructor.
 data DataSetsGetIAMPolicy = DataSetsGetIAMPolicy'
-    { _dsgipXgafv          :: !(Maybe Xgafv)
+    { _dsgipXgafv :: !(Maybe Xgafv)
     , _dsgipUploadProtocol :: !(Maybe Text)
-    , _dsgipPp             :: !Bool
-    , _dsgipAccessToken    :: !(Maybe Text)
-    , _dsgipUploadType     :: !(Maybe Text)
-    , _dsgipPayload        :: !GetIAMPolicyRequest
-    , _dsgipBearerToken    :: !(Maybe Text)
-    , _dsgipResource       :: !Text
-    , _dsgipCallback       :: !(Maybe Text)
+    , _dsgipPp :: !Bool
+    , _dsgipAccessToken :: !(Maybe Text)
+    , _dsgipUploadType :: !(Maybe Text)
+    , _dsgipPayload :: !GetIAMPolicyRequest
+    , _dsgipBearerToken :: !(Maybe Text)
+    , _dsgipResource :: !Text
+    , _dsgipFields :: !(Maybe Text)
+    , _dsgipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsGetIAMPolicy' with the minimum fields required to make a request.
@@ -108,12 +111,14 @@ data DataSetsGetIAMPolicy = DataSetsGetIAMPolicy'
 --
 -- * 'dsgipResource'
 --
+-- * 'dsgipFields'
+--
 -- * 'dsgipCallback'
 dataSetsGetIAMPolicy
     :: GetIAMPolicyRequest -- ^ 'dsgipPayload'
     -> Text -- ^ 'dsgipResource'
     -> DataSetsGetIAMPolicy
-dataSetsGetIAMPolicy pDsgipPayload_ pDsgipResource_ =
+dataSetsGetIAMPolicy pDsgipPayload_ pDsgipResource_ = 
     DataSetsGetIAMPolicy'
     { _dsgipXgafv = Nothing
     , _dsgipUploadProtocol = Nothing
@@ -123,6 +128,7 @@ dataSetsGetIAMPolicy pDsgipPayload_ pDsgipResource_ =
     , _dsgipPayload = pDsgipPayload_
     , _dsgipBearerToken = Nothing
     , _dsgipResource = pDsgipResource_
+    , _dsgipFields = Nothing
     , _dsgipCallback = Nothing
     }
 
@@ -171,6 +177,11 @@ dsgipResource
   = lens _dsgipResource
       (\ s a -> s{_dsgipResource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsgipFields :: Lens' DataSetsGetIAMPolicy (Maybe Text)
+dsgipFields
+  = lens _dsgipFields (\ s a -> s{_dsgipFields = a})
+
 -- | JSONP
 dsgipCallback :: Lens' DataSetsGetIAMPolicy (Maybe Text)
 dsgipCallback
@@ -189,6 +200,7 @@ instance GoogleRequest DataSetsGetIAMPolicy where
               _dsgipUploadType
               _dsgipBearerToken
               _dsgipCallback
+              _dsgipFields
               (Just AltJSON)
               _dsgipPayload
               genomicsService

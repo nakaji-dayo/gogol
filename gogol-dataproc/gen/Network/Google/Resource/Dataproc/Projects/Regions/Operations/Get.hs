@@ -42,25 +42,27 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Operations.Get
     , progUploadType
     , progBearerToken
     , progName
+    , progFields
     , progCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.operations.get@ method which the
 -- 'ProjectsRegionsOperationsGet' request conforms to.
 type ProjectsRegionsOperationsGetResource =
      "v1" :>
        Capture "name" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Gets the latest state of a long-running operation. Clients can use this
 -- method to poll the operation result at intervals as recommended by the
@@ -68,14 +70,15 @@ type ProjectsRegionsOperationsGetResource =
 --
 -- /See:/ 'projectsRegionsOperationsGet' smart constructor.
 data ProjectsRegionsOperationsGet = ProjectsRegionsOperationsGet'
-    { _progXgafv          :: !(Maybe Text)
+    { _progXgafv :: !(Maybe Xgafv)
     , _progUploadProtocol :: !(Maybe Text)
-    , _progPp             :: !Bool
-    , _progAccessToken    :: !(Maybe Text)
-    , _progUploadType     :: !(Maybe Text)
-    , _progBearerToken    :: !(Maybe Text)
-    , _progName           :: !Text
-    , _progCallback       :: !(Maybe Text)
+    , _progPp :: !Bool
+    , _progAccessToken :: !(Maybe Text)
+    , _progUploadType :: !(Maybe Text)
+    , _progBearerToken :: !(Maybe Text)
+    , _progName :: !Text
+    , _progFields :: !(Maybe Text)
+    , _progCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsOperationsGet' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data ProjectsRegionsOperationsGet = ProjectsRegionsOperationsGet'
 --
 -- * 'progName'
 --
+-- * 'progFields'
+--
 -- * 'progCallback'
 projectsRegionsOperationsGet
     :: Text -- ^ 'progName'
     -> ProjectsRegionsOperationsGet
-projectsRegionsOperationsGet pProgName_ =
+projectsRegionsOperationsGet pProgName_ = 
     ProjectsRegionsOperationsGet'
     { _progXgafv = Nothing
     , _progUploadProtocol = Nothing
@@ -109,11 +114,12 @@ projectsRegionsOperationsGet pProgName_ =
     , _progUploadType = Nothing
     , _progBearerToken = Nothing
     , _progName = pProgName_
+    , _progFields = Nothing
     , _progCallback = Nothing
     }
 
 -- | V1 error format.
-progXgafv :: Lens' ProjectsRegionsOperationsGet (Maybe Text)
+progXgafv :: Lens' ProjectsRegionsOperationsGet (Maybe Xgafv)
 progXgafv
   = lens _progXgafv (\ s a -> s{_progXgafv = a})
 
@@ -149,6 +155,11 @@ progBearerToken
 progName :: Lens' ProjectsRegionsOperationsGet Text
 progName = lens _progName (\ s a -> s{_progName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+progFields :: Lens' ProjectsRegionsOperationsGet (Maybe Text)
+progFields
+  = lens _progFields (\ s a -> s{_progFields = a})
+
 -- | JSONP
 progCallback :: Lens' ProjectsRegionsOperationsGet (Maybe Text)
 progCallback
@@ -166,6 +177,7 @@ instance GoogleRequest ProjectsRegionsOperationsGet
               _progUploadType
               _progBearerToken
               _progCallback
+              _progFields
               (Just AltJSON)
               dataprocService
           where go

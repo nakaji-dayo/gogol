@@ -20,8 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the specified Router resource with the data included in the
--- request. This method supports patch semantics.
+-- Patches the specified Router resource with the data included in the
+-- request. This method supports PATCH semantics and uses JSON merge patch
+-- format and processing rules.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.routers.patch@.
 module Network.Google.Resource.Compute.Routers.Patch
@@ -34,14 +35,16 @@ module Network.Google.Resource.Compute.Routers.Patch
     , RoutersPatch
 
     -- * Request Lenses
+    , rpRequestId
     , rpProject
     , rpRouter
     , rpPayload
     , rpRegion
+    , rpFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routers.patch@ method which the
 -- 'RoutersPatch' request conforms to.
@@ -54,23 +57,30 @@ type RoutersPatchResource =
                Capture "region" Text :>
                  "routers" :>
                    Capture "router" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Router :> Patch '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Router :> Patch '[JSON] Operation
 
--- | Updates the specified Router resource with the data included in the
--- request. This method supports patch semantics.
+-- | Patches the specified Router resource with the data included in the
+-- request. This method supports PATCH semantics and uses JSON merge patch
+-- format and processing rules.
 --
 -- /See:/ 'routersPatch' smart constructor.
 data RoutersPatch = RoutersPatch'
-    { _rpProject :: !Text
-    , _rpRouter  :: !Text
+    { _rpRequestId :: !(Maybe Text)
+    , _rpProject :: !Text
+    , _rpRouter :: !Text
     , _rpPayload :: !Router
-    , _rpRegion  :: !Text
+    , _rpRegion :: !Text
+    , _rpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutersPatch' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rpRequestId'
 --
 -- * 'rpProject'
 --
@@ -79,26 +89,44 @@ data RoutersPatch = RoutersPatch'
 -- * 'rpPayload'
 --
 -- * 'rpRegion'
+--
+-- * 'rpFields'
 routersPatch
     :: Text -- ^ 'rpProject'
     -> Text -- ^ 'rpRouter'
     -> Router -- ^ 'rpPayload'
     -> Text -- ^ 'rpRegion'
     -> RoutersPatch
-routersPatch pRpProject_ pRpRouter_ pRpPayload_ pRpRegion_ =
+routersPatch pRpProject_ pRpRouter_ pRpPayload_ pRpRegion_ = 
     RoutersPatch'
-    { _rpProject = pRpProject_
+    { _rpRequestId = Nothing
+    , _rpProject = pRpProject_
     , _rpRouter = pRpRouter_
     , _rpPayload = pRpPayload_
     , _rpRegion = pRpRegion_
+    , _rpFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rpRequestId :: Lens' RoutersPatch (Maybe Text)
+rpRequestId
+  = lens _rpRequestId (\ s a -> s{_rpRequestId = a})
 
 -- | Project ID for this request.
 rpProject :: Lens' RoutersPatch Text
 rpProject
   = lens _rpProject (\ s a -> s{_rpProject = a})
 
--- | Name of the Router resource to update.
+-- | Name of the Router resource to patch.
 rpRouter :: Lens' RoutersPatch Text
 rpRouter = lens _rpRouter (\ s a -> s{_rpRouter = a})
 
@@ -111,13 +139,19 @@ rpPayload
 rpRegion :: Lens' RoutersPatch Text
 rpRegion = lens _rpRegion (\ s a -> s{_rpRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rpFields :: Lens' RoutersPatch (Maybe Text)
+rpFields = lens _rpFields (\ s a -> s{_rpFields = a})
+
 instance GoogleRequest RoutersPatch where
         type Rs RoutersPatch = Operation
         type Scopes RoutersPatch =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient RoutersPatch'{..}
-          = go _rpProject _rpRegion _rpRouter (Just AltJSON)
+          = go _rpProject _rpRegion _rpRouter _rpRequestId
+              _rpFields
+              (Just AltJSON)
               _rpPayload
               computeService
           where go

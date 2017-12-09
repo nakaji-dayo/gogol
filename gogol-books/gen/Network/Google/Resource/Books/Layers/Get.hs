@@ -36,11 +36,12 @@ module Network.Google.Resource.Books.Layers.Get
     , lgContentVersion
     , lgVolumeId
     , lgSource
+    , lgFields
     , lgSummaryId
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.layers.get@ method which the
 -- 'LayersGet' request conforms to.
@@ -53,16 +54,18 @@ type LayersGetResource =
                Capture "summaryId" Text :>
                  QueryParam "contentVersion" Text :>
                    QueryParam "source" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Layersummary
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Layersummary
 
 -- | Gets the layer summary for a volume.
 --
 -- /See:/ 'layersGet' smart constructor.
 data LayersGet = LayersGet'
     { _lgContentVersion :: !(Maybe Text)
-    , _lgVolumeId       :: !Text
-    , _lgSource         :: !(Maybe Text)
-    , _lgSummaryId      :: !Text
+    , _lgVolumeId :: !Text
+    , _lgSource :: !(Maybe Text)
+    , _lgFields :: !(Maybe Text)
+    , _lgSummaryId :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LayersGet' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data LayersGet = LayersGet'
 --
 -- * 'lgSource'
 --
+-- * 'lgFields'
+--
 -- * 'lgSummaryId'
 layersGet
     :: Text -- ^ 'lgVolumeId'
     -> Text -- ^ 'lgSummaryId'
     -> LayersGet
-layersGet pLgVolumeId_ pLgSummaryId_ =
+layersGet pLgVolumeId_ pLgSummaryId_ = 
     LayersGet'
     { _lgContentVersion = Nothing
     , _lgVolumeId = pLgVolumeId_
     , _lgSource = Nothing
+    , _lgFields = Nothing
     , _lgSummaryId = pLgSummaryId_
     }
 
@@ -103,6 +109,10 @@ lgVolumeId
 lgSource :: Lens' LayersGet (Maybe Text)
 lgSource = lens _lgSource (\ s a -> s{_lgSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lgFields :: Lens' LayersGet (Maybe Text)
+lgFields = lens _lgFields (\ s a -> s{_lgFields = a})
+
 -- | The ID for the layer to get the summary for.
 lgSummaryId :: Lens' LayersGet Text
 lgSummaryId
@@ -115,6 +125,7 @@ instance GoogleRequest LayersGet where
         requestClient LayersGet'{..}
           = go _lgVolumeId _lgSummaryId _lgContentVersion
               _lgSource
+              _lgFields
               (Just AltJSON)
               booksService
           where go

@@ -21,7 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Exports a Google Doc to the requested MIME type and returns the exported
--- content.
+-- content. Please note that the exported content is limited to 10MB.
 --
 -- /See:/ <https://developers.google.com/drive/ Drive API Reference> for @drive.files.export@.
 module Network.Google.Resource.Drive.Files.Export
@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Files.Export
     -- * Request Lenses
     , feMimeType
     , feFileId
+    , feFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.export@ method which the
 -- 'FilesExport' request conforms to.
@@ -50,7 +51,8 @@ type FilesExportResource =
            Capture "fileId" Text :>
              "export" :>
                QueryParam "mimeType" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] ()
        :<|>
        "drive" :>
          "v3" :>
@@ -58,16 +60,18 @@ type FilesExportResource =
              Capture "fileId" Text :>
                "export" :>
                  QueryParam "mimeType" Text :>
-                   QueryParam "alt" AltMedia :>
-                     Get '[OctetStream] Stream
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Get '[OctetStream] Stream
 
 -- | Exports a Google Doc to the requested MIME type and returns the exported
--- content.
+-- content. Please note that the exported content is limited to 10MB.
 --
 -- /See:/ 'filesExport' smart constructor.
 data FilesExport = FilesExport'
     { _feMimeType :: !Text
-    , _feFileId   :: !Text
+    , _feFileId :: !Text
+    , _feFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesExport' with the minimum fields required to make a request.
@@ -77,14 +81,17 @@ data FilesExport = FilesExport'
 -- * 'feMimeType'
 --
 -- * 'feFileId'
+--
+-- * 'feFields'
 filesExport
     :: Text -- ^ 'feMimeType'
     -> Text -- ^ 'feFileId'
     -> FilesExport
-filesExport pFeMimeType_ pFeFileId_ =
+filesExport pFeMimeType_ pFeFileId_ = 
     FilesExport'
     { _feMimeType = pFeMimeType_
     , _feFileId = pFeFileId_
+    , _feFields = Nothing
     }
 
 -- | The MIME type of the format requested for this export.
@@ -96,6 +103,10 @@ feMimeType
 feFileId :: Lens' FilesExport Text
 feFileId = lens _feFileId (\ s a -> s{_feFileId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+feFields :: Lens' FilesExport (Maybe Text)
+feFields = lens _feFields (\ s a -> s{_feFields = a})
+
 instance GoogleRequest FilesExport where
         type Rs FilesExport = ()
         type Scopes FilesExport =
@@ -103,7 +114,8 @@ instance GoogleRequest FilesExport where
                "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/drive.readonly"]
         requestClient FilesExport'{..}
-          = go _feFileId (Just _feMimeType) (Just AltJSON)
+          = go _feFileId (Just _feMimeType) _feFields
+              (Just AltJSON)
               driveService
           where go :<|> _
                   = buildClient (Proxy :: Proxy FilesExportResource)
@@ -115,7 +127,8 @@ instance GoogleRequest (MediaDownload FilesExport)
         type Scopes (MediaDownload FilesExport) =
              Scopes FilesExport
         requestClient (MediaDownload FilesExport'{..})
-          = go _feFileId (Just _feMimeType) (Just AltMedia)
+          = go _feFileId (Just _feMimeType) _feFields
+              (Just AltMedia)
               driveService
           where _ :<|> go
                   = buildClient (Proxy :: Proxy FilesExportResource)

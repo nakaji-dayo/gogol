@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.Projects.Metrics.Create
     , pmcUploadType
     , pmcPayload
     , pmcBearerToken
+    , pmcFields
     , pmcCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.metrics.create@ method which the
 -- 'ProjectsMetricsCreate' request conforms to.
@@ -60,22 +61,24 @@ type ProjectsMetricsCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] LogMetric :> Post '[JSON] LogMetric
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] LogMetric :> Post '[JSON] LogMetric
 
 -- | Creates a logs-based metric.
 --
 -- /See:/ 'projectsMetricsCreate' smart constructor.
 data ProjectsMetricsCreate = ProjectsMetricsCreate'
-    { _pmcParent         :: !Text
-    , _pmcXgafv          :: !(Maybe Xgafv)
+    { _pmcParent :: !Text
+    , _pmcXgafv :: !(Maybe Xgafv)
     , _pmcUploadProtocol :: !(Maybe Text)
-    , _pmcPp             :: !Bool
-    , _pmcAccessToken    :: !(Maybe Text)
-    , _pmcUploadType     :: !(Maybe Text)
-    , _pmcPayload        :: !LogMetric
-    , _pmcBearerToken    :: !(Maybe Text)
-    , _pmcCallback       :: !(Maybe Text)
+    , _pmcPp :: !Bool
+    , _pmcAccessToken :: !(Maybe Text)
+    , _pmcUploadType :: !(Maybe Text)
+    , _pmcPayload :: !LogMetric
+    , _pmcBearerToken :: !(Maybe Text)
+    , _pmcFields :: !(Maybe Text)
+    , _pmcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricsCreate' with the minimum fields required to make a request.
@@ -98,12 +101,14 @@ data ProjectsMetricsCreate = ProjectsMetricsCreate'
 --
 -- * 'pmcBearerToken'
 --
+-- * 'pmcFields'
+--
 -- * 'pmcCallback'
 projectsMetricsCreate
     :: Text -- ^ 'pmcParent'
     -> LogMetric -- ^ 'pmcPayload'
     -> ProjectsMetricsCreate
-projectsMetricsCreate pPmcParent_ pPmcPayload_ =
+projectsMetricsCreate pPmcParent_ pPmcPayload_ = 
     ProjectsMetricsCreate'
     { _pmcParent = pPmcParent_
     , _pmcXgafv = Nothing
@@ -113,6 +118,7 @@ projectsMetricsCreate pPmcParent_ pPmcPayload_ =
     , _pmcUploadType = Nothing
     , _pmcPayload = pPmcPayload_
     , _pmcBearerToken = Nothing
+    , _pmcFields = Nothing
     , _pmcCallback = Nothing
     }
 
@@ -160,6 +166,11 @@ pmcBearerToken
   = lens _pmcBearerToken
       (\ s a -> s{_pmcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmcFields :: Lens' ProjectsMetricsCreate (Maybe Text)
+pmcFields
+  = lens _pmcFields (\ s a -> s{_pmcFields = a})
+
 -- | JSONP
 pmcCallback :: Lens' ProjectsMetricsCreate (Maybe Text)
 pmcCallback
@@ -178,6 +189,7 @@ instance GoogleRequest ProjectsMetricsCreate where
               _pmcUploadType
               _pmcBearerToken
               _pmcCallback
+              _pmcFields
               (Just AltJSON)
               _pmcPayload
               loggingService

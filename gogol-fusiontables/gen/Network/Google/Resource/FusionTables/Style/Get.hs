@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Style.Get
     -- * Request Lenses
     , sgStyleId
     , sgTableId
+    , sgFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.get@ method which the
 -- 'StyleGet' request conforms to.
@@ -49,7 +50,8 @@ type StyleGetResource =
            Capture "tableId" Text :>
              "styles" :>
                Capture "styleId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] StyleSetting
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] StyleSetting
 
 -- | Gets a specific style.
 --
@@ -57,6 +59,7 @@ type StyleGetResource =
 data StyleGet = StyleGet'
     { _sgStyleId :: !(Textual Int32)
     , _sgTableId :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StyleGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data StyleGet = StyleGet'
 -- * 'sgStyleId'
 --
 -- * 'sgTableId'
+--
+-- * 'sgFields'
 styleGet
     :: Int32 -- ^ 'sgStyleId'
     -> Text -- ^ 'sgTableId'
     -> StyleGet
-styleGet pSgStyleId_ pSgTableId_ =
+styleGet pSgStyleId_ pSgTableId_ = 
     StyleGet'
     { _sgStyleId = _Coerce # pSgStyleId_
     , _sgTableId = pSgTableId_
+    , _sgFields = Nothing
     }
 
 -- | Identifier (integer) for a specific style in a table
@@ -87,13 +93,17 @@ sgTableId :: Lens' StyleGet Text
 sgTableId
   = lens _sgTableId (\ s a -> s{_sgTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' StyleGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest StyleGet where
         type Rs StyleGet = StyleSetting
         type Scopes StyleGet =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient StyleGet'{..}
-          = go _sgTableId _sgStyleId (Just AltJSON)
+          = go _sgTableId _sgStyleId _sgFields (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy StyleGetResource)

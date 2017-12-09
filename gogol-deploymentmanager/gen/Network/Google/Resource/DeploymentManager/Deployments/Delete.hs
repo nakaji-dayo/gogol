@@ -35,11 +35,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.Delete
     -- * Request Lenses
     , ddProject
     , ddDeletePolicy
+    , ddFields
     , ddDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.delete@ method which the
 -- 'DeploymentsDelete' request conforms to.
@@ -54,15 +55,17 @@ type DeploymentsDeleteResource =
                    QueryParam "deletePolicy"
                      DeploymentsDeleteDeletePolicy
                      :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes a deployment and all of the resources in the deployment.
 --
 -- /See:/ 'deploymentsDelete' smart constructor.
 data DeploymentsDelete = DeploymentsDelete'
-    { _ddProject      :: !Text
+    { _ddProject :: !Text
     , _ddDeletePolicy :: !DeploymentsDeleteDeletePolicy
-    , _ddDeployment   :: !Text
+    , _ddFields :: !(Maybe Text)
+    , _ddDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsDelete' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data DeploymentsDelete = DeploymentsDelete'
 --
 -- * 'ddDeletePolicy'
 --
+-- * 'ddFields'
+--
 -- * 'ddDeployment'
 deploymentsDelete
     :: Text -- ^ 'ddProject'
     -> Text -- ^ 'ddDeployment'
     -> DeploymentsDelete
-deploymentsDelete pDdProject_ pDdDeployment_ =
+deploymentsDelete pDdProject_ pDdDeployment_ = 
     DeploymentsDelete'
     { _ddProject = pDdProject_
     , _ddDeletePolicy = Delete'
+    , _ddFields = Nothing
     , _ddDeployment = pDdDeployment_
     }
 
@@ -96,6 +102,10 @@ ddDeletePolicy
   = lens _ddDeletePolicy
       (\ s a -> s{_ddDeletePolicy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ddFields :: Lens' DeploymentsDelete (Maybe Text)
+ddFields = lens _ddFields (\ s a -> s{_ddFields = a})
+
 -- | The name of the deployment for this request.
 ddDeployment :: Lens' DeploymentsDelete Text
 ddDeployment
@@ -108,6 +118,7 @@ instance GoogleRequest DeploymentsDelete where
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsDelete'{..}
           = go _ddProject _ddDeployment (Just _ddDeletePolicy)
+              _ddFields
               (Just AltJSON)
               deploymentManagerService
           where go

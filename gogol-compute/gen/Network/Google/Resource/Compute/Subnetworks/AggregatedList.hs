@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.Subnetworks.AggregatedList
     , salFilter
     , salPageToken
     , salMaxResults
+    , salFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.subnetworks.aggregatedList@ method which the
 -- 'SubnetworksAggregatedList' request conforms to.
@@ -56,18 +57,20 @@ type SubnetworksAggregatedListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] SubnetworkAggregatedList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] SubnetworkAggregatedList
 
 -- | Retrieves an aggregated list of subnetworks.
 --
 -- /See:/ 'subnetworksAggregatedList' smart constructor.
 data SubnetworksAggregatedList = SubnetworksAggregatedList'
-    { _salOrderBy    :: !(Maybe Text)
-    , _salProject    :: !Text
-    , _salFilter     :: !(Maybe Text)
-    , _salPageToken  :: !(Maybe Text)
+    { _salOrderBy :: !(Maybe Text)
+    , _salProject :: !Text
+    , _salFilter :: !(Maybe Text)
+    , _salPageToken :: !(Maybe Text)
     , _salMaxResults :: !(Textual Word32)
+    , _salFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubnetworksAggregatedList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data SubnetworksAggregatedList = SubnetworksAggregatedList'
 -- * 'salPageToken'
 --
 -- * 'salMaxResults'
+--
+-- * 'salFields'
 subnetworksAggregatedList
     :: Text -- ^ 'salProject'
     -> SubnetworksAggregatedList
-subnetworksAggregatedList pSalProject_ =
+subnetworksAggregatedList pSalProject_ = 
     SubnetworksAggregatedList'
     { _salOrderBy = Nothing
     , _salProject = pSalProject_
     , _salFilter = Nothing
     , _salPageToken = Nothing
     , _salMaxResults = 500
+    , _salFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -112,26 +118,25 @@ salProject :: Lens' SubnetworksAggregatedList Text
 salProject
   = lens _salProject (\ s a -> s{_salProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 salFilter :: Lens' SubnetworksAggregatedList (Maybe Text)
 salFilter
   = lens _salFilter (\ s a -> s{_salFilter = a})
@@ -145,12 +150,18 @@ salPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 salMaxResults :: Lens' SubnetworksAggregatedList Word32
 salMaxResults
   = lens _salMaxResults
       (\ s a -> s{_salMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+salFields :: Lens' SubnetworksAggregatedList (Maybe Text)
+salFields
+  = lens _salFields (\ s a -> s{_salFields = a})
 
 instance GoogleRequest SubnetworksAggregatedList
          where
@@ -163,6 +174,7 @@ instance GoogleRequest SubnetworksAggregatedList
         requestClient SubnetworksAggregatedList'{..}
           = go _salProject _salOrderBy _salFilter _salPageToken
               (Just _salMaxResults)
+              _salFields
               (Just AltJSON)
               computeService
           where go

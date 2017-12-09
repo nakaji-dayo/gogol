@@ -239,18 +239,18 @@ module Network.Google.DoubleClickSearch
     , sclItems
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.DoubleClickSearch.Conversion.Get
-import           Network.Google.Resource.DoubleClickSearch.Conversion.Insert
-import           Network.Google.Resource.DoubleClickSearch.Conversion.Patch
-import           Network.Google.Resource.DoubleClickSearch.Conversion.Update
-import           Network.Google.Resource.DoubleClickSearch.Conversion.UpdateAvailability
-import           Network.Google.Resource.DoubleClickSearch.Reports.Generate
-import           Network.Google.Resource.DoubleClickSearch.Reports.Get
-import           Network.Google.Resource.DoubleClickSearch.Reports.GetFile
-import           Network.Google.Resource.DoubleClickSearch.Reports.Request
-import           Network.Google.Resource.DoubleClickSearch.SavedColumns.List
+import Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Resource.DoubleClickSearch.Conversion.Get
+import Network.Google.Resource.DoubleClickSearch.Conversion.Insert
+import Network.Google.Resource.DoubleClickSearch.Conversion.Patch
+import Network.Google.Resource.DoubleClickSearch.Conversion.Update
+import Network.Google.Resource.DoubleClickSearch.Conversion.UpdateAvailability
+import Network.Google.Resource.DoubleClickSearch.Reports.Generate
+import Network.Google.Resource.DoubleClickSearch.Reports.Get
+import Network.Google.Resource.DoubleClickSearch.Reports.GetFile
+import Network.Google.Resource.DoubleClickSearch.Reports.Request
+import Network.Google.Resource.DoubleClickSearch.SavedColumns.List
 
 {- $resources
 TODO

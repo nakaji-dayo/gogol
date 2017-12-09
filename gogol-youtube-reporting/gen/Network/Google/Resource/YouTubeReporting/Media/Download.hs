@@ -41,11 +41,12 @@ module Network.Google.Resource.YouTubeReporting.Media.Download
     , mdAccessToken
     , mdUploadType
     , mdBearerToken
+    , mdFields
     , mdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.media.download@ method which the
 -- 'MediaDownload'' request conforms to.
@@ -60,7 +61,8 @@ type MediaDownloadResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Media
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Media
        :<|>
        "v1" :>
          "media" :>
@@ -72,22 +74,24 @@ type MediaDownloadResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltMedia :>
-                             Get '[OctetStream] Stream
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltMedia :>
+                               Get '[OctetStream] Stream
 
 -- | Method for media download. Download is supported on the URI
 -- \`\/v1\/media\/{+name}?alt=media\`.
 --
 -- /See:/ 'mediaDownload' smart constructor.
 data MediaDownload' = MediaDownload''
-    { _mdXgafv          :: !(Maybe Xgafv)
+    { _mdXgafv :: !(Maybe Xgafv)
     , _mdUploadProtocol :: !(Maybe Text)
-    , _mdResourceName   :: !Text
-    , _mdPp             :: !Bool
-    , _mdAccessToken    :: !(Maybe Text)
-    , _mdUploadType     :: !(Maybe Text)
-    , _mdBearerToken    :: !(Maybe Text)
-    , _mdCallback       :: !(Maybe Text)
+    , _mdResourceName :: !Text
+    , _mdPp :: !Bool
+    , _mdAccessToken :: !(Maybe Text)
+    , _mdUploadType :: !(Maybe Text)
+    , _mdBearerToken :: !(Maybe Text)
+    , _mdFields :: !(Maybe Text)
+    , _mdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MediaDownload' with the minimum fields required to make a request.
@@ -108,11 +112,13 @@ data MediaDownload' = MediaDownload''
 --
 -- * 'mdBearerToken'
 --
+-- * 'mdFields'
+--
 -- * 'mdCallback'
 mediaDownload
     :: Text -- ^ 'mdResourceName'
     -> MediaDownload'
-mediaDownload pMdResourceName_ =
+mediaDownload pMdResourceName_ = 
     MediaDownload''
     { _mdXgafv = Nothing
     , _mdUploadProtocol = Nothing
@@ -121,6 +127,7 @@ mediaDownload pMdResourceName_ =
     , _mdAccessToken = Nothing
     , _mdUploadType = Nothing
     , _mdBearerToken = Nothing
+    , _mdFields = Nothing
     , _mdCallback = Nothing
     }
 
@@ -162,6 +169,10 @@ mdBearerToken
   = lens _mdBearerToken
       (\ s a -> s{_mdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdFields :: Lens' MediaDownload' (Maybe Text)
+mdFields = lens _mdFields (\ s a -> s{_mdFields = a})
+
 -- | JSONP
 mdCallback :: Lens' MediaDownload' (Maybe Text)
 mdCallback
@@ -179,6 +190,7 @@ instance GoogleRequest MediaDownload' where
               _mdUploadType
               _mdBearerToken
               _mdCallback
+              _mdFields
               (Just AltJSON)
               youTubeReportingService
           where go :<|> _
@@ -197,6 +209,7 @@ instance GoogleRequest (MediaDownload MediaDownload')
               _mdUploadType
               _mdBearerToken
               _mdCallback
+              _mdFields
               (Just AltMedia)
               youTubeReportingService
           where _ :<|> go

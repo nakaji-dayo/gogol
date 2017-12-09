@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -74,9 +74,9 @@ module Network.Google.DataTransfer.Types
     , adtApplicationTransferStatus
     ) where
 
-import           Network.Google.DataTransfer.Types.Product
-import           Network.Google.DataTransfer.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types.Product
+import Network.Google.DataTransfer.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'datatransfer_v1' of the Admin Data Transfer API. This contains the host and root path used as a starting point for constructing service requests.
 dataTransferService :: ServiceConfig

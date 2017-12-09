@@ -32,10 +32,12 @@ module Network.Google.Resource.AdSense.Payments.List
     , paymentsList
     , PaymentsList
 
+    -- * Request Lenses
+    , plFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.payments.list@ method which the
 -- 'PaymentsList' request conforms to.
@@ -43,28 +45,39 @@ type PaymentsListResource =
      "adsense" :>
        "v1.4" :>
          "payments" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] Payments
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] Payments
 
 -- | List the payments for this AdSense account.
 --
 -- /See:/ 'paymentsList' smart constructor.
-data PaymentsList =
-    PaymentsList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype PaymentsList = PaymentsList'
+    { _plFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PaymentsList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'plFields'
 paymentsList
     :: PaymentsList
-paymentsList = PaymentsList'
+paymentsList = 
+    PaymentsList'
+    { _plFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' PaymentsList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
 
 instance GoogleRequest PaymentsList where
         type Rs PaymentsList = Payments
         type Scopes PaymentsList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
-        requestClient PaymentsList'{}
-          = go (Just AltJSON) adSenseService
+        requestClient PaymentsList'{..}
+          = go _plFields (Just AltJSON) adSenseService
           where go
                   = buildClient (Proxy :: Proxy PaymentsListResource)
                       mempty

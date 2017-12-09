@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates a shipment\'s status, carrier, and\/or tracking ID. This method
--- can only be called for non-multi-client accounts.
+-- Updates a shipment\'s status, carrier, and\/or tracking ID.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.updateshipment@.
 module Network.Google.Resource.Content.Orders.Updateshipment
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.Updateshipment
     , ouMerchantId
     , ouPayload
     , ouOrderId
+    , ouFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.updateshipment@ method which the
 -- 'OrdersUpdateshipment' request conforms to.
@@ -51,18 +51,19 @@ type OrdersUpdateshipmentResource =
            "orders" :>
              Capture "orderId" Text :>
                "updateShipment" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrdersUpdateShipmentRequest :>
-                     Post '[JSON] OrdersUpdateShipmentResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrdersUpdateShipmentRequest :>
+                       Post '[JSON] OrdersUpdateShipmentResponse
 
--- | Updates a shipment\'s status, carrier, and\/or tracking ID. This method
--- can only be called for non-multi-client accounts.
+-- | Updates a shipment\'s status, carrier, and\/or tracking ID.
 --
 -- /See:/ 'ordersUpdateshipment' smart constructor.
 data OrdersUpdateshipment = OrdersUpdateshipment'
     { _ouMerchantId :: !(Textual Word64)
-    , _ouPayload    :: !OrdersUpdateShipmentRequest
-    , _ouOrderId    :: !Text
+    , _ouPayload :: !OrdersUpdateShipmentRequest
+    , _ouOrderId :: !Text
+    , _ouFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersUpdateshipment' with the minimum fields required to make a request.
@@ -74,19 +75,23 @@ data OrdersUpdateshipment = OrdersUpdateshipment'
 -- * 'ouPayload'
 --
 -- * 'ouOrderId'
+--
+-- * 'ouFields'
 ordersUpdateshipment
     :: Word64 -- ^ 'ouMerchantId'
     -> OrdersUpdateShipmentRequest -- ^ 'ouPayload'
     -> Text -- ^ 'ouOrderId'
     -> OrdersUpdateshipment
-ordersUpdateshipment pOuMerchantId_ pOuPayload_ pOuOrderId_ =
+ordersUpdateshipment pOuMerchantId_ pOuPayload_ pOuOrderId_ = 
     OrdersUpdateshipment'
     { _ouMerchantId = _Coerce # pOuMerchantId_
     , _ouPayload = pOuPayload_
     , _ouOrderId = pOuOrderId_
+    , _ouFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 ouMerchantId :: Lens' OrdersUpdateshipment Word64
 ouMerchantId
   = lens _ouMerchantId (\ s a -> s{_ouMerchantId = a})
@@ -102,13 +107,18 @@ ouOrderId :: Lens' OrdersUpdateshipment Text
 ouOrderId
   = lens _ouOrderId (\ s a -> s{_ouOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ouFields :: Lens' OrdersUpdateshipment (Maybe Text)
+ouFields = lens _ouFields (\ s a -> s{_ouFields = a})
+
 instance GoogleRequest OrdersUpdateshipment where
         type Rs OrdersUpdateshipment =
              OrdersUpdateShipmentResponse
         type Scopes OrdersUpdateshipment =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersUpdateshipment'{..}
-          = go _ouMerchantId _ouOrderId (Just AltJSON)
+          = go _ouMerchantId _ouOrderId _ouFields
+              (Just AltJSON)
               _ouPayload
               shoppingContentService
           where go

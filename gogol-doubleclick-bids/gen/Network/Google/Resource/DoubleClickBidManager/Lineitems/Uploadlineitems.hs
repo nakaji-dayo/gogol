@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Lineitems.Uploadlineitems
 
     -- * Request Lenses
     , luPayload
+    , luFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.lineitems.uploadlineitems@ method which the
 -- 'LineitemsUploadlineitems' request conforms to.
@@ -46,15 +47,17 @@ type LineitemsUploadlineitemsResource =
        "v1" :>
          "lineitems" :>
            "uploadlineitems" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] UploadLineItemsRequest :>
-                 Post '[JSON] UploadLineItemsResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] UploadLineItemsRequest :>
+                   Post '[JSON] UploadLineItemsResponse
 
 -- | Uploads line items in CSV format.
 --
 -- /See:/ 'lineitemsUploadlineitems' smart constructor.
-newtype LineitemsUploadlineitems = LineitemsUploadlineitems'
-    { _luPayload :: UploadLineItemsRequest
+data LineitemsUploadlineitems = LineitemsUploadlineitems'
+    { _luPayload :: !UploadLineItemsRequest
+    , _luFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LineitemsUploadlineitems' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype LineitemsUploadlineitems = LineitemsUploadlineitems'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'luPayload'
+--
+-- * 'luFields'
 lineitemsUploadlineitems
     :: UploadLineItemsRequest -- ^ 'luPayload'
     -> LineitemsUploadlineitems
-lineitemsUploadlineitems pLuPayload_ =
+lineitemsUploadlineitems pLuPayload_ = 
     LineitemsUploadlineitems'
     { _luPayload = pLuPayload_
+    , _luFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,12 +81,18 @@ luPayload :: Lens' LineitemsUploadlineitems UploadLineItemsRequest
 luPayload
   = lens _luPayload (\ s a -> s{_luPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+luFields :: Lens' LineitemsUploadlineitems (Maybe Text)
+luFields = lens _luFields (\ s a -> s{_luFields = a})
+
 instance GoogleRequest LineitemsUploadlineitems where
         type Rs LineitemsUploadlineitems =
              UploadLineItemsResponse
-        type Scopes LineitemsUploadlineitems = '[]
+        type Scopes LineitemsUploadlineitems =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient LineitemsUploadlineitems'{..}
-          = go (Just AltJSON) _luPayload doubleClickBidsService
+          = go _luFields (Just AltJSON) _luPayload
+              doubleClickBidsService
           where go
                   = buildClient
                       (Proxy :: Proxy LineitemsUploadlineitemsResource)

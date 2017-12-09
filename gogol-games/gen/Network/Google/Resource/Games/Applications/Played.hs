@@ -35,10 +35,11 @@ module Network.Google.Resource.Games.Applications.Played
 
     -- * Request Lenses
     , apConsistencyToken
+    , apFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.applications.played@ method which the
 -- 'ApplicationsPlayed' request conforms to.
@@ -48,14 +49,16 @@ type ApplicationsPlayedResource =
          "applications" :>
            "played" :>
              QueryParam "consistencyToken" (Textual Int64) :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Indicate that the the currently authenticated user is playing your
 -- application.
 --
 -- /See:/ 'applicationsPlayed' smart constructor.
-newtype ApplicationsPlayed = ApplicationsPlayed'
-    { _apConsistencyToken :: Maybe (Textual Int64)
+data ApplicationsPlayed = ApplicationsPlayed'
+    { _apConsistencyToken :: !(Maybe (Textual Int64))
+    , _apFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsPlayed' with the minimum fields required to make a request.
@@ -63,11 +66,14 @@ newtype ApplicationsPlayed = ApplicationsPlayed'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'apConsistencyToken'
+--
+-- * 'apFields'
 applicationsPlayed
     :: ApplicationsPlayed
-applicationsPlayed =
+applicationsPlayed = 
     ApplicationsPlayed'
     { _apConsistencyToken = Nothing
+    , _apFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -77,13 +83,18 @@ apConsistencyToken
       (\ s a -> s{_apConsistencyToken = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' ApplicationsPlayed (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
+
 instance GoogleRequest ApplicationsPlayed where
         type Rs ApplicationsPlayed = ()
         type Scopes ApplicationsPlayed =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient ApplicationsPlayed'{..}
-          = go _apConsistencyToken (Just AltJSON) gamesService
+          = go _apConsistencyToken _apFields (Just AltJSON)
+              gamesService
           where go
                   = buildClient
                       (Proxy :: Proxy ApplicationsPlayedResource)

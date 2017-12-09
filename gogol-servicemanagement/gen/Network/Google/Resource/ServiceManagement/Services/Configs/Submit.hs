@@ -46,11 +46,12 @@ module Network.Google.Resource.ServiceManagement.Services.Configs.Submit
     , scsPayload
     , scsBearerToken
     , scsServiceName
+    , scsFields
     , scsCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.configs.submit@ method which the
 -- 'ServicesConfigsSubmit' request conforms to.
@@ -66,9 +67,10 @@ type ServicesConfigsSubmitResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] SubmitConfigSourceRequest :>
-                               Post '[JSON] Operation
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] SubmitConfigSourceRequest :>
+                                 Post '[JSON] Operation
 
 -- | Creates a new service configuration (version) for a managed service
 -- based on user-supplied configuration source files (for example: OpenAPI
@@ -79,15 +81,16 @@ type ServicesConfigsSubmitResource =
 --
 -- /See:/ 'servicesConfigsSubmit' smart constructor.
 data ServicesConfigsSubmit = ServicesConfigsSubmit'
-    { _scsXgafv          :: !(Maybe Xgafv)
+    { _scsXgafv :: !(Maybe Xgafv)
     , _scsUploadProtocol :: !(Maybe Text)
-    , _scsPp             :: !Bool
-    , _scsAccessToken    :: !(Maybe Text)
-    , _scsUploadType     :: !(Maybe Text)
-    , _scsPayload        :: !SubmitConfigSourceRequest
-    , _scsBearerToken    :: !(Maybe Text)
-    , _scsServiceName    :: !Text
-    , _scsCallback       :: !(Maybe Text)
+    , _scsPp :: !Bool
+    , _scsAccessToken :: !(Maybe Text)
+    , _scsUploadType :: !(Maybe Text)
+    , _scsPayload :: !SubmitConfigSourceRequest
+    , _scsBearerToken :: !(Maybe Text)
+    , _scsServiceName :: !Text
+    , _scsFields :: !(Maybe Text)
+    , _scsCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesConfigsSubmit' with the minimum fields required to make a request.
@@ -110,12 +113,14 @@ data ServicesConfigsSubmit = ServicesConfigsSubmit'
 --
 -- * 'scsServiceName'
 --
+-- * 'scsFields'
+--
 -- * 'scsCallback'
 servicesConfigsSubmit
     :: SubmitConfigSourceRequest -- ^ 'scsPayload'
     -> Text -- ^ 'scsServiceName'
     -> ServicesConfigsSubmit
-servicesConfigsSubmit pScsPayload_ pScsServiceName_ =
+servicesConfigsSubmit pScsPayload_ pScsServiceName_ = 
     ServicesConfigsSubmit'
     { _scsXgafv = Nothing
     , _scsUploadProtocol = Nothing
@@ -125,6 +130,7 @@ servicesConfigsSubmit pScsPayload_ pScsServiceName_ =
     , _scsPayload = pScsPayload_
     , _scsBearerToken = Nothing
     , _scsServiceName = pScsServiceName_
+    , _scsFields = Nothing
     , _scsCallback = Nothing
     }
 
@@ -173,6 +179,11 @@ scsServiceName
   = lens _scsServiceName
       (\ s a -> s{_scsServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scsFields :: Lens' ServicesConfigsSubmit (Maybe Text)
+scsFields
+  = lens _scsFields (\ s a -> s{_scsFields = a})
+
 -- | JSONP
 scsCallback :: Lens' ServicesConfigsSubmit (Maybe Text)
 scsCallback
@@ -190,6 +201,7 @@ instance GoogleRequest ServicesConfigsSubmit where
               _scsUploadType
               _scsBearerToken
               _scsCallback
+              _scsFields
               (Just AltJSON)
               _scsPayload
               serviceManagementService

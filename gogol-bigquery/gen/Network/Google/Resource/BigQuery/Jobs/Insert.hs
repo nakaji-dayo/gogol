@@ -35,10 +35,11 @@ module Network.Google.Resource.BigQuery.Jobs.Insert
     -- * Request Lenses
     , jiPayload
     , jiProjectId
+    , jiFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.insert@ method which the
 -- 'JobsInsert' request conforms to.
@@ -48,8 +49,9 @@ type JobsInsertResource =
          "projects" :>
            Capture "projectId" Text :>
              "jobs" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Job :> Post '[JSON] Job
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Job :> Post '[JSON] Job
        :<|>
        "upload" :>
          "bigquery" :>
@@ -57,16 +59,18 @@ type JobsInsertResource =
              "projects" :>
                Capture "projectId" Text :>
                  "jobs" :>
-                   QueryParam "alt" AltJSON :>
-                     QueryParam "uploadType" Multipart :>
-                       MultipartRelated '[JSON] Job :> Post '[JSON] Job
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       QueryParam "uploadType" Multipart :>
+                         MultipartRelated '[JSON] Job :> Post '[JSON] Job
 
 -- | Starts a new asynchronous job. Requires the Can View project role.
 --
 -- /See:/ 'jobsInsert' smart constructor.
 data JobsInsert = JobsInsert'
-    { _jiPayload   :: !Job
+    { _jiPayload :: !Job
     , _jiProjectId :: !Text
+    , _jiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsInsert' with the minimum fields required to make a request.
@@ -76,14 +80,17 @@ data JobsInsert = JobsInsert'
 -- * 'jiPayload'
 --
 -- * 'jiProjectId'
+--
+-- * 'jiFields'
 jobsInsert
     :: Job -- ^ 'jiPayload'
     -> Text -- ^ 'jiProjectId'
     -> JobsInsert
-jobsInsert pJiPayload_ pJiProjectId_ =
+jobsInsert pJiPayload_ pJiProjectId_ = 
     JobsInsert'
     { _jiPayload = pJiPayload_
     , _jiProjectId = pJiProjectId_
+    , _jiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -96,6 +103,10 @@ jiProjectId :: Lens' JobsInsert Text
 jiProjectId
   = lens _jiProjectId (\ s a -> s{_jiProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jiFields :: Lens' JobsInsert (Maybe Text)
+jiFields = lens _jiFields (\ s a -> s{_jiFields = a})
+
 instance GoogleRequest JobsInsert where
         type Rs JobsInsert = Job
         type Scopes JobsInsert =
@@ -105,7 +116,7 @@ instance GoogleRequest JobsInsert where
                "https://www.googleapis.com/auth/devstorage.read_only",
                "https://www.googleapis.com/auth/devstorage.read_write"]
         requestClient JobsInsert'{..}
-          = go _jiProjectId (Just AltJSON) _jiPayload
+          = go _jiProjectId _jiFields (Just AltJSON) _jiPayload
               bigQueryService
           where go :<|> _
                   = buildClient (Proxy :: Proxy JobsInsertResource)
@@ -116,7 +127,8 @@ instance GoogleRequest (MediaUpload JobsInsert) where
         type Scopes (MediaUpload JobsInsert) =
              Scopes JobsInsert
         requestClient (MediaUpload JobsInsert'{..} body)
-          = go _jiProjectId (Just AltJSON) (Just Multipart)
+          = go _jiProjectId _jiFields (Just AltJSON)
+              (Just Multipart)
               _jiPayload
               body
               bigQueryService

@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.Snapshots.List
     , sFilter
     , sPageToken
     , sMaxResults
+    , sFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.snapshots.list@ method which the
 -- 'SnapshotsList' request conforms to.
@@ -57,18 +58,20 @@ type SnapshotsListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] SnapshotList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] SnapshotList
 
 -- | Retrieves the list of Snapshot resources contained within the specified
 -- project.
 --
 -- /See:/ 'snapshotsList' smart constructor.
 data SnapshotsList = SnapshotsList'
-    { _sOrderBy    :: !(Maybe Text)
-    , _sProject    :: !Text
-    , _sFilter     :: !(Maybe Text)
-    , _sPageToken  :: !(Maybe Text)
+    { _sOrderBy :: !(Maybe Text)
+    , _sProject :: !Text
+    , _sFilter :: !(Maybe Text)
+    , _sPageToken :: !(Maybe Text)
     , _sMaxResults :: !(Textual Word32)
+    , _sFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SnapshotsList' with the minimum fields required to make a request.
@@ -84,16 +87,19 @@ data SnapshotsList = SnapshotsList'
 -- * 'sPageToken'
 --
 -- * 'sMaxResults'
+--
+-- * 'sFields'
 snapshotsList
     :: Text -- ^ 'sProject'
     -> SnapshotsList
-snapshotsList pSProject_ =
+snapshotsList pSProject_ = 
     SnapshotsList'
     { _sOrderBy = Nothing
     , _sProject = pSProject_
     , _sFilter = Nothing
     , _sPageToken = Nothing
     , _sMaxResults = 500
+    , _sFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -111,26 +117,25 @@ sOrderBy = lens _sOrderBy (\ s a -> s{_sOrderBy = a})
 sProject :: Lens' SnapshotsList Text
 sProject = lens _sProject (\ s a -> s{_sProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 sFilter :: Lens' SnapshotsList (Maybe Text)
 sFilter = lens _sFilter (\ s a -> s{_sFilter = a})
 
@@ -143,11 +148,16 @@ sPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 sMaxResults :: Lens' SnapshotsList Word32
 sMaxResults
   = lens _sMaxResults (\ s a -> s{_sMaxResults = a}) .
       _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' SnapshotsList (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
 
 instance GoogleRequest SnapshotsList where
         type Rs SnapshotsList = SnapshotList
@@ -158,6 +168,7 @@ instance GoogleRequest SnapshotsList where
         requestClient SnapshotsList'{..}
           = go _sProject _sOrderBy _sFilter _sPageToken
               (Just _sMaxResults)
+              _sFields
               (Just AltJSON)
               computeService
           where go

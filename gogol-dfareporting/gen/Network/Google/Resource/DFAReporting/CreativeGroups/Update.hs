@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.CreativeGroups.Update
     -- * Request Lenses
     , cguProFileId
     , cguPayload
+    , cguFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeGroups.update@ method which the
 -- 'CreativeGroupsUpdate' request conforms to.
 type CreativeGroupsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] CreativeGroup :>
-                   Put '[JSON] CreativeGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] CreativeGroup :>
+                     Put '[JSON] CreativeGroup
 
 -- | Updates an existing creative group.
 --
 -- /See:/ 'creativeGroupsUpdate' smart constructor.
 data CreativeGroupsUpdate = CreativeGroupsUpdate'
     { _cguProFileId :: !(Textual Int64)
-    , _cguPayload   :: !CreativeGroup
+    , _cguPayload :: !CreativeGroup
+    , _cguFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CreativeGroupsUpdate = CreativeGroupsUpdate'
 -- * 'cguProFileId'
 --
 -- * 'cguPayload'
+--
+-- * 'cguFields'
 creativeGroupsUpdate
     :: Int64 -- ^ 'cguProFileId'
     -> CreativeGroup -- ^ 'cguPayload'
     -> CreativeGroupsUpdate
-creativeGroupsUpdate pCguProFileId_ pCguPayload_ =
+creativeGroupsUpdate pCguProFileId_ pCguPayload_ = 
     CreativeGroupsUpdate'
     { _cguProFileId = _Coerce # pCguProFileId_
     , _cguPayload = pCguPayload_
+    , _cguFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ cguPayload :: Lens' CreativeGroupsUpdate CreativeGroup
 cguPayload
   = lens _cguPayload (\ s a -> s{_cguPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cguFields :: Lens' CreativeGroupsUpdate (Maybe Text)
+cguFields
+  = lens _cguFields (\ s a -> s{_cguFields = a})
+
 instance GoogleRequest CreativeGroupsUpdate where
         type Rs CreativeGroupsUpdate = CreativeGroup
         type Scopes CreativeGroupsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeGroupsUpdate'{..}
-          = go _cguProFileId (Just AltJSON) _cguPayload
+          = go _cguProFileId _cguFields (Just AltJSON)
+              _cguPayload
               dFAReportingService
           where go
                   = buildClient

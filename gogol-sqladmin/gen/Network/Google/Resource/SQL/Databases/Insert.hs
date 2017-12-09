@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.Databases.Insert
     -- * Request Lenses
     , diProject
     , diPayload
+    , diFields
     , diInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.insert@ method which the
 -- 'DatabasesInsert' request conforms to.
@@ -52,16 +53,18 @@ type DatabasesInsertResource =
              "instances" :>
                Capture "instance" Text :>
                  "databases" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Database :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Database :> Post '[JSON] Operation
 
 -- | Inserts a resource containing information about a database inside a
 -- Cloud SQL instance.
 --
 -- /See:/ 'databasesInsert' smart constructor.
 data DatabasesInsert = DatabasesInsert'
-    { _diProject  :: !Text
-    , _diPayload  :: !Database
+    { _diProject :: !Text
+    , _diPayload :: !Database
+    , _diFields :: !(Maybe Text)
     , _diInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,16 +76,19 @@ data DatabasesInsert = DatabasesInsert'
 --
 -- * 'diPayload'
 --
+-- * 'diFields'
+--
 -- * 'diInstance'
 databasesInsert
     :: Text -- ^ 'diProject'
     -> Database -- ^ 'diPayload'
     -> Text -- ^ 'diInstance'
     -> DatabasesInsert
-databasesInsert pDiProject_ pDiPayload_ pDiInstance_ =
+databasesInsert pDiProject_ pDiPayload_ pDiInstance_ = 
     DatabasesInsert'
     { _diProject = pDiProject_
     , _diPayload = pDiPayload_
+    , _diFields = Nothing
     , _diInstance = pDiInstance_
     }
 
@@ -96,6 +102,10 @@ diPayload :: Lens' DatabasesInsert Database
 diPayload
   = lens _diPayload (\ s a -> s{_diPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+diFields :: Lens' DatabasesInsert (Maybe Text)
+diFields = lens _diFields (\ s a -> s{_diFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 diInstance :: Lens' DatabasesInsert Text
 diInstance
@@ -107,7 +117,8 @@ instance GoogleRequest DatabasesInsert where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesInsert'{..}
-          = go _diProject _diInstance (Just AltJSON) _diPayload
+          = go _diProject _diInstance _diFields (Just AltJSON)
+              _diPayload
               sQLAdminService
           where go
                   = buildClient

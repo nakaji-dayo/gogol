@@ -39,10 +39,11 @@ module Network.Google.Resource.CivicInfo.Representatives.RepresentativeInfoByAdd
     , rribaPayload
     , rribaIncludeOffices
     , rribaLevels
+    , rribaFields
     ) where
 
-import           Network.Google.CivicInfo.Types
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @civicinfo.representatives.representativeInfoByAddress@ method which the
 -- 'RepresentativesRepresentativeInfoByAddress' request conforms to.
@@ -59,20 +60,22 @@ type RepresentativesRepresentativeInfoByAddressResource
                  QueryParams "levels"
                    RepresentativesRepresentativeInfoByAddressLevels
                    :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] RepresentativeInfoRequest :>
-                       Get '[JSON] RepresentativeInfoResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] RepresentativeInfoRequest :>
+                         Get '[JSON] RepresentativeInfoResponse
 
 -- | Looks up political geography and representative information for a single
 -- address.
 --
 -- /See:/ 'representativesRepresentativeInfoByAddress' smart constructor.
 data RepresentativesRepresentativeInfoByAddress = RepresentativesRepresentativeInfoByAddress'
-    { _rribaRoles          :: !(Maybe [RepresentativesRepresentativeInfoByAddressRoles])
-    , _rribaAddress        :: !(Maybe Text)
-    , _rribaPayload        :: !RepresentativeInfoRequest
+    { _rribaRoles :: !(Maybe [RepresentativesRepresentativeInfoByAddressRoles])
+    , _rribaAddress :: !(Maybe Text)
+    , _rribaPayload :: !RepresentativeInfoRequest
     , _rribaIncludeOffices :: !Bool
-    , _rribaLevels         :: !(Maybe [RepresentativesRepresentativeInfoByAddressLevels])
+    , _rribaLevels :: !(Maybe [RepresentativesRepresentativeInfoByAddressLevels])
+    , _rribaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepresentativesRepresentativeInfoByAddress' with the minimum fields required to make a request.
@@ -88,16 +91,19 @@ data RepresentativesRepresentativeInfoByAddress = RepresentativesRepresentativeI
 -- * 'rribaIncludeOffices'
 --
 -- * 'rribaLevels'
+--
+-- * 'rribaFields'
 representativesRepresentativeInfoByAddress
     :: RepresentativeInfoRequest -- ^ 'rribaPayload'
     -> RepresentativesRepresentativeInfoByAddress
-representativesRepresentativeInfoByAddress pRribaPayload_ =
+representativesRepresentativeInfoByAddress pRribaPayload_ = 
     RepresentativesRepresentativeInfoByAddress'
     { _rribaRoles = Nothing
     , _rribaAddress = Nothing
     , _rribaPayload = pRribaPayload_
     , _rribaIncludeOffices = True
     , _rribaLevels = Nothing
+    , _rribaFields = Nothing
     }
 
 -- | A list of office roles to filter by. Only offices fulfilling one of
@@ -136,6 +142,11 @@ rribaLevels
       _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rribaFields :: Lens' RepresentativesRepresentativeInfoByAddress (Maybe Text)
+rribaFields
+  = lens _rribaFields (\ s a -> s{_rribaFields = a})
+
 instance GoogleRequest
          RepresentativesRepresentativeInfoByAddress where
         type Rs RepresentativesRepresentativeInfoByAddress =
@@ -148,6 +159,7 @@ instance GoogleRequest
           = go (_rribaRoles ^. _Default) _rribaAddress
               (Just _rribaIncludeOffices)
               (_rribaLevels ^. _Default)
+              _rribaFields
               (Just AltJSON)
               _rribaPayload
               civicInfoService

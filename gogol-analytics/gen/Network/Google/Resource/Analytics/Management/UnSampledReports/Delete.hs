@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.UnSampledReports.Delete
     , musrdProFileId
     , musrdAccountId
     , musrdUnSampledReportId
+    , musrdFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.unsampledReports.delete@ method which the
 -- 'ManagementUnSampledReportsDelete' request conforms to.
@@ -56,16 +57,18 @@ type ManagementUnSampledReportsDeleteResource =
                      Capture "profileId" Text :>
                        "unsampledReports" :>
                          Capture "unsampledReportId" Text :>
-                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an unsampled report.
 --
 -- /See:/ 'managementUnSampledReportsDelete' smart constructor.
 data ManagementUnSampledReportsDelete = ManagementUnSampledReportsDelete'
-    { _musrdWebPropertyId     :: !Text
-    , _musrdProFileId         :: !Text
-    , _musrdAccountId         :: !Text
+    { _musrdWebPropertyId :: !Text
+    , _musrdProFileId :: !Text
+    , _musrdAccountId :: !Text
     , _musrdUnSampledReportId :: !Text
+    , _musrdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUnSampledReportsDelete' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementUnSampledReportsDelete = ManagementUnSampledReportsDelete'
 -- * 'musrdAccountId'
 --
 -- * 'musrdUnSampledReportId'
+--
+-- * 'musrdFields'
 managementUnSampledReportsDelete
     :: Text -- ^ 'musrdWebPropertyId'
     -> Text -- ^ 'musrdProFileId'
     -> Text -- ^ 'musrdAccountId'
     -> Text -- ^ 'musrdUnSampledReportId'
     -> ManagementUnSampledReportsDelete
-managementUnSampledReportsDelete pMusrdWebPropertyId_ pMusrdProFileId_ pMusrdAccountId_ pMusrdUnSampledReportId_ =
+managementUnSampledReportsDelete pMusrdWebPropertyId_ pMusrdProFileId_ pMusrdAccountId_ pMusrdUnSampledReportId_ = 
     ManagementUnSampledReportsDelete'
     { _musrdWebPropertyId = pMusrdWebPropertyId_
     , _musrdProFileId = pMusrdProFileId_
     , _musrdAccountId = pMusrdAccountId_
     , _musrdUnSampledReportId = pMusrdUnSampledReportId_
+    , _musrdFields = Nothing
     }
 
 -- | Web property ID to delete the unsampled reports for.
@@ -117,6 +123,11 @@ musrdUnSampledReportId
   = lens _musrdUnSampledReportId
       (\ s a -> s{_musrdUnSampledReportId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+musrdFields :: Lens' ManagementUnSampledReportsDelete (Maybe Text)
+musrdFields
+  = lens _musrdFields (\ s a -> s{_musrdFields = a})
+
 instance GoogleRequest
          ManagementUnSampledReportsDelete where
         type Rs ManagementUnSampledReportsDelete = ()
@@ -126,6 +137,7 @@ instance GoogleRequest
           = go _musrdAccountId _musrdWebPropertyId
               _musrdProFileId
               _musrdUnSampledReportId
+              _musrdFields
               (Just AltJSON)
               analyticsService
           where go

@@ -33,14 +33,16 @@ module Network.Google.Resource.Compute.TargetPools.AddInstance
     , TargetPoolsAddInstance
 
     -- * Request Lenses
+    , tpaiRequestId
     , tpaiProject
     , tpaiTargetPool
     , tpaiPayload
     , tpaiRegion
+    , tpaiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetPools.addInstance@ method which the
 -- 'TargetPoolsAddInstance' request conforms to.
@@ -54,23 +56,29 @@ type TargetPoolsAddInstanceResource =
                  "targetPools" :>
                    Capture "targetPool" Text :>
                      "addInstance" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TargetPoolsAddInstanceRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] TargetPoolsAddInstanceRequest :>
+                               Post '[JSON] Operation
 
 -- | Adds an instance to a target pool.
 --
 -- /See:/ 'targetPoolsAddInstance' smart constructor.
 data TargetPoolsAddInstance = TargetPoolsAddInstance'
-    { _tpaiProject    :: !Text
+    { _tpaiRequestId :: !(Maybe Text)
+    , _tpaiProject :: !Text
     , _tpaiTargetPool :: !Text
-    , _tpaiPayload    :: !TargetPoolsAddInstanceRequest
-    , _tpaiRegion     :: !Text
+    , _tpaiPayload :: !TargetPoolsAddInstanceRequest
+    , _tpaiRegion :: !Text
+    , _tpaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetPoolsAddInstance' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tpaiRequestId'
 --
 -- * 'tpaiProject'
 --
@@ -79,19 +87,38 @@ data TargetPoolsAddInstance = TargetPoolsAddInstance'
 -- * 'tpaiPayload'
 --
 -- * 'tpaiRegion'
+--
+-- * 'tpaiFields'
 targetPoolsAddInstance
     :: Text -- ^ 'tpaiProject'
     -> Text -- ^ 'tpaiTargetPool'
     -> TargetPoolsAddInstanceRequest -- ^ 'tpaiPayload'
     -> Text -- ^ 'tpaiRegion'
     -> TargetPoolsAddInstance
-targetPoolsAddInstance pTpaiProject_ pTpaiTargetPool_ pTpaiPayload_ pTpaiRegion_ =
+targetPoolsAddInstance pTpaiProject_ pTpaiTargetPool_ pTpaiPayload_ pTpaiRegion_ = 
     TargetPoolsAddInstance'
-    { _tpaiProject = pTpaiProject_
+    { _tpaiRequestId = Nothing
+    , _tpaiProject = pTpaiProject_
     , _tpaiTargetPool = pTpaiTargetPool_
     , _tpaiPayload = pTpaiPayload_
     , _tpaiRegion = pTpaiRegion_
+    , _tpaiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tpaiRequestId :: Lens' TargetPoolsAddInstance (Maybe Text)
+tpaiRequestId
+  = lens _tpaiRequestId
+      (\ s a -> s{_tpaiRequestId = a})
 
 -- | Project ID for this request.
 tpaiProject :: Lens' TargetPoolsAddInstance Text
@@ -114,6 +141,11 @@ tpaiRegion :: Lens' TargetPoolsAddInstance Text
 tpaiRegion
   = lens _tpaiRegion (\ s a -> s{_tpaiRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpaiFields :: Lens' TargetPoolsAddInstance (Maybe Text)
+tpaiFields
+  = lens _tpaiFields (\ s a -> s{_tpaiFields = a})
+
 instance GoogleRequest TargetPoolsAddInstance where
         type Rs TargetPoolsAddInstance = Operation
         type Scopes TargetPoolsAddInstance =
@@ -121,6 +153,8 @@ instance GoogleRequest TargetPoolsAddInstance where
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetPoolsAddInstance'{..}
           = go _tpaiProject _tpaiRegion _tpaiTargetPool
+              _tpaiRequestId
+              _tpaiFields
               (Just AltJSON)
               _tpaiPayload
               computeService

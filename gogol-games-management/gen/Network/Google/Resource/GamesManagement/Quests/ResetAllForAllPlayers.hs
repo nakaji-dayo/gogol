@@ -33,10 +33,12 @@ module Network.Google.Resource.GamesManagement.Quests.ResetAllForAllPlayers
     , questsResetAllForAllPlayers
     , QuestsResetAllForAllPlayers
 
+    -- * Request Lenses
+    , qrafapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.quests.resetAllForAllPlayers@ method which the
 -- 'QuestsResetAllForAllPlayers' request conforms to.
@@ -45,21 +47,33 @@ type QuestsResetAllForAllPlayersResource =
        "v1management" :>
          "quests" :>
            "resetAllForAllPlayers" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets all draft quests for all players. This method is only available
 -- to user accounts for your developer console.
 --
 -- /See:/ 'questsResetAllForAllPlayers' smart constructor.
-data QuestsResetAllForAllPlayers =
-    QuestsResetAllForAllPlayers'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype QuestsResetAllForAllPlayers = QuestsResetAllForAllPlayers'
+    { _qrafapFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsResetAllForAllPlayers' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qrafapFields'
 questsResetAllForAllPlayers
     :: QuestsResetAllForAllPlayers
-questsResetAllForAllPlayers = QuestsResetAllForAllPlayers'
+questsResetAllForAllPlayers = 
+    QuestsResetAllForAllPlayers'
+    { _qrafapFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+qrafapFields :: Lens' QuestsResetAllForAllPlayers (Maybe Text)
+qrafapFields
+  = lens _qrafapFields (\ s a -> s{_qrafapFields = a})
 
 instance GoogleRequest QuestsResetAllForAllPlayers
          where
@@ -67,8 +81,9 @@ instance GoogleRequest QuestsResetAllForAllPlayers
         type Scopes QuestsResetAllForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient QuestsResetAllForAllPlayers'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient QuestsResetAllForAllPlayers'{..}
+          = go _qrafapFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy QuestsResetAllForAllPlayersResource)

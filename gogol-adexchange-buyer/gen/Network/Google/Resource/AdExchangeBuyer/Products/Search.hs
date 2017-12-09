@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Products.Search
 
     -- * Request Lenses
     , psPqlQuery
+    , psFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.products.search@ method which the
 -- 'ProductsSearch' request conforms to.
@@ -47,14 +48,16 @@ type ProductsSearchResource =
          "products" :>
            "search" :>
              QueryParam "pqlQuery" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] GetOffersResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] GetOffersResponse
 
 -- | Gets the requested product.
 --
 -- /See:/ 'productsSearch' smart constructor.
-newtype ProductsSearch = ProductsSearch'
-    { _psPqlQuery :: Maybe Text
+data ProductsSearch = ProductsSearch'
+    { _psPqlQuery :: !(Maybe Text)
+    , _psFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsSearch' with the minimum fields required to make a request.
@@ -62,11 +65,14 @@ newtype ProductsSearch = ProductsSearch'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'psPqlQuery'
+--
+-- * 'psFields'
 productsSearch
     :: ProductsSearch
-productsSearch =
+productsSearch = 
     ProductsSearch'
     { _psPqlQuery = Nothing
+    , _psFields = Nothing
     }
 
 -- | The pql query used to query for products.
@@ -74,12 +80,16 @@ psPqlQuery :: Lens' ProductsSearch (Maybe Text)
 psPqlQuery
   = lens _psPqlQuery (\ s a -> s{_psPqlQuery = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psFields :: Lens' ProductsSearch (Maybe Text)
+psFields = lens _psFields (\ s a -> s{_psFields = a})
+
 instance GoogleRequest ProductsSearch where
         type Rs ProductsSearch = GetOffersResponse
         type Scopes ProductsSearch =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProductsSearch'{..}
-          = go _psPqlQuery (Just AltJSON)
+          = go _psPqlQuery _psFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy ProductsSearchResource)

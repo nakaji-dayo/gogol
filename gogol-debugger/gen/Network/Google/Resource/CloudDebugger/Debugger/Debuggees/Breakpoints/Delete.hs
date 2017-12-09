@@ -42,11 +42,12 @@ module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Dele
     , ddbdBearerToken
     , ddbdDebuggeeId
     , ddbdClientVersion
+    , ddbdFields
     , ddbdCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.debugger.debuggees.breakpoints.delete@ method which the
 -- 'DebuggerDebuggeesBreakpointsDelete' request conforms to.
@@ -65,23 +66,25 @@ type DebuggerDebuggeesBreakpointsDeleteResource =
                            QueryParam "bearer_token" Text :>
                              QueryParam "clientVersion" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Delete '[JSON] Empty
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Delete '[JSON] Empty
 
 -- | Deletes the breakpoint from the debuggee.
 --
 -- /See:/ 'debuggerDebuggeesBreakpointsDelete' smart constructor.
 data DebuggerDebuggeesBreakpointsDelete = DebuggerDebuggeesBreakpointsDelete'
-    { _ddbdXgafv          :: !(Maybe Xgafv)
+    { _ddbdXgafv :: !(Maybe Xgafv)
     , _ddbdUploadProtocol :: !(Maybe Text)
-    , _ddbdPp             :: !Bool
-    , _ddbdAccessToken    :: !(Maybe Text)
-    , _ddbdUploadType     :: !(Maybe Text)
-    , _ddbdBreakpointId   :: !Text
-    , _ddbdBearerToken    :: !(Maybe Text)
-    , _ddbdDebuggeeId     :: !Text
-    , _ddbdClientVersion  :: !(Maybe Text)
-    , _ddbdCallback       :: !(Maybe Text)
+    , _ddbdPp :: !Bool
+    , _ddbdAccessToken :: !(Maybe Text)
+    , _ddbdUploadType :: !(Maybe Text)
+    , _ddbdBreakpointId :: !Text
+    , _ddbdBearerToken :: !(Maybe Text)
+    , _ddbdDebuggeeId :: !Text
+    , _ddbdClientVersion :: !(Maybe Text)
+    , _ddbdFields :: !(Maybe Text)
+    , _ddbdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DebuggerDebuggeesBreakpointsDelete' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data DebuggerDebuggeesBreakpointsDelete = DebuggerDebuggeesBreakpointsDelete'
 --
 -- * 'ddbdClientVersion'
 --
+-- * 'ddbdFields'
+--
 -- * 'ddbdCallback'
 debuggerDebuggeesBreakpointsDelete
     :: Text -- ^ 'ddbdBreakpointId'
     -> Text -- ^ 'ddbdDebuggeeId'
     -> DebuggerDebuggeesBreakpointsDelete
-debuggerDebuggeesBreakpointsDelete pDdbdBreakpointId_ pDdbdDebuggeeId_ =
+debuggerDebuggeesBreakpointsDelete pDdbdBreakpointId_ pDdbdDebuggeeId_ = 
     DebuggerDebuggeesBreakpointsDelete'
     { _ddbdXgafv = Nothing
     , _ddbdUploadProtocol = Nothing
@@ -122,6 +127,7 @@ debuggerDebuggeesBreakpointsDelete pDdbdBreakpointId_ pDdbdDebuggeeId_ =
     , _ddbdBearerToken = Nothing
     , _ddbdDebuggeeId = pDdbdDebuggeeId_
     , _ddbdClientVersion = Nothing
+    , _ddbdFields = Nothing
     , _ddbdCallback = Nothing
     }
 
@@ -170,12 +176,17 @@ ddbdDebuggeeId
   = lens _ddbdDebuggeeId
       (\ s a -> s{_ddbdDebuggeeId = a})
 
--- | The client version making the call. Following: \`domain\/type\/version\`
+-- | The client version making the call. Schema: \`domain\/type\/version\`
 -- (e.g., \`google.com\/intellij\/v1\`).
 ddbdClientVersion :: Lens' DebuggerDebuggeesBreakpointsDelete (Maybe Text)
 ddbdClientVersion
   = lens _ddbdClientVersion
       (\ s a -> s{_ddbdClientVersion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ddbdFields :: Lens' DebuggerDebuggeesBreakpointsDelete (Maybe Text)
+ddbdFields
+  = lens _ddbdFields (\ s a -> s{_ddbdFields = a})
 
 -- | JSONP
 ddbdCallback :: Lens' DebuggerDebuggeesBreakpointsDelete (Maybe Text)
@@ -197,6 +208,7 @@ instance GoogleRequest
               _ddbdBearerToken
               _ddbdClientVersion
               _ddbdCallback
+              _ddbdFields
               (Just AltJSON)
               debuggerService
           where go

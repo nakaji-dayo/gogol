@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Deletes the specified forwarding address and revokes any verification
--- that may have been required.
+-- that may have been required. This method is only available to service
+-- account clients that have been delegated domain-wide authority.
 --
 -- /See:/ <https://developers.google.com/gmail/api/ Gmail API Reference> for @gmail.users.settings.forwardingAddresses.delete@.
 module Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Delete
@@ -36,10 +37,11 @@ module Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Delete
     -- * Request Lenses
     , usfadForwardingEmail
     , usfadUserId
+    , usfadFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.forwardingAddresses.delete@ method which the
 -- 'UsersSettingsForwardingAddressesDelete' request conforms to.
@@ -51,15 +53,18 @@ type UsersSettingsForwardingAddressesDeleteResource =
              "settings" :>
                "forwardingAddresses" :>
                  Capture "forwardingEmail" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified forwarding address and revokes any verification
--- that may have been required.
+-- that may have been required. This method is only available to service
+-- account clients that have been delegated domain-wide authority.
 --
 -- /See:/ 'usersSettingsForwardingAddressesDelete' smart constructor.
 data UsersSettingsForwardingAddressesDelete = UsersSettingsForwardingAddressesDelete'
     { _usfadForwardingEmail :: !Text
-    , _usfadUserId          :: !Text
+    , _usfadUserId :: !Text
+    , _usfadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsForwardingAddressesDelete' with the minimum fields required to make a request.
@@ -69,13 +74,16 @@ data UsersSettingsForwardingAddressesDelete = UsersSettingsForwardingAddressesDe
 -- * 'usfadForwardingEmail'
 --
 -- * 'usfadUserId'
+--
+-- * 'usfadFields'
 usersSettingsForwardingAddressesDelete
     :: Text -- ^ 'usfadForwardingEmail'
     -> UsersSettingsForwardingAddressesDelete
-usersSettingsForwardingAddressesDelete pUsfadForwardingEmail_ =
+usersSettingsForwardingAddressesDelete pUsfadForwardingEmail_ = 
     UsersSettingsForwardingAddressesDelete'
     { _usfadForwardingEmail = pUsfadForwardingEmail_
     , _usfadUserId = "me"
+    , _usfadFields = Nothing
     }
 
 -- | The forwarding address to be deleted.
@@ -90,6 +98,11 @@ usfadUserId :: Lens' UsersSettingsForwardingAddressesDelete Text
 usfadUserId
   = lens _usfadUserId (\ s a -> s{_usfadUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usfadFields :: Lens' UsersSettingsForwardingAddressesDelete (Maybe Text)
+usfadFields
+  = lens _usfadFields (\ s a -> s{_usfadFields = a})
+
 instance GoogleRequest
          UsersSettingsForwardingAddressesDelete where
         type Rs UsersSettingsForwardingAddressesDelete = ()
@@ -97,7 +110,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/gmail.settings.sharing"]
         requestClient
           UsersSettingsForwardingAddressesDelete'{..}
-          = go _usfadUserId _usfadForwardingEmail
+          = go _usfadUserId _usfadForwardingEmail _usfadFields
               (Just AltJSON)
               gmailService
           where go

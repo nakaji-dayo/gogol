@@ -30,10 +30,12 @@ module Network.Google.Method.OAuth2.GetCertForOpenIdConnect
     , getCertForOpenIdConnect
     , GetCertForOpenIdConnect
 
+    -- * Request Lenses
+    , gcfoicFields
     ) where
 
-import           Network.Google.OAuth2.Types
-import           Network.Google.Prelude
+import Network.Google.OAuth2.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @oauth2.getCertForOpenIdConnect@ method which the
 -- 'GetCertForOpenIdConnect' request conforms to.
@@ -41,25 +43,37 @@ type GetCertForOpenIdConnectMethod =
      "oauth2" :>
        "v2" :>
          "certs" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] JWK
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] JWK
 
 --
 -- /See:/ 'getCertForOpenIdConnect' smart constructor.
-data GetCertForOpenIdConnect =
-    GetCertForOpenIdConnect'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype GetCertForOpenIdConnect = GetCertForOpenIdConnect'
+    { _gcfoicFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GetCertForOpenIdConnect' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'gcfoicFields'
 getCertForOpenIdConnect
     :: GetCertForOpenIdConnect
-getCertForOpenIdConnect = GetCertForOpenIdConnect'
+getCertForOpenIdConnect = 
+    GetCertForOpenIdConnect'
+    { _gcfoicFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+gcfoicFields :: Lens' GetCertForOpenIdConnect (Maybe Text)
+gcfoicFields
+  = lens _gcfoicFields (\ s a -> s{_gcfoicFields = a})
 
 instance GoogleRequest GetCertForOpenIdConnect where
         type Rs GetCertForOpenIdConnect = JWK
         type Scopes GetCertForOpenIdConnect = '[]
-        requestClient GetCertForOpenIdConnect'{}
-          = go (Just AltJSON) oAuth2Service
+        requestClient GetCertForOpenIdConnect'{..}
+          = go _gcfoicFields (Just AltJSON) oAuth2Service
           where go
                   = buildClient
                       (Proxy :: Proxy GetCertForOpenIdConnectMethod)

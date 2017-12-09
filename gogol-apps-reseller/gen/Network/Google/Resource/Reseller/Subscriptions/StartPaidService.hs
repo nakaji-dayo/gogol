@@ -20,7 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Starts paid service of a trial subscription
+-- Immediately move a 30-day free trial subscription to a paid service
+-- subscription.
 --
 -- /See:/ <https://developers.google.com/google-apps/reseller/ Enterprise Apps Reseller API Reference> for @reseller.subscriptions.startPaidService@.
 module Network.Google.Resource.Reseller.Subscriptions.StartPaidService
@@ -35,10 +36,11 @@ module Network.Google.Resource.Reseller.Subscriptions.StartPaidService
     -- * Request Lenses
     , sspsCustomerId
     , sspsSubscriptionId
+    , sspsFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.subscriptions.startPaidService@ method which the
 -- 'SubscriptionsStartPaidService' request conforms to.
@@ -51,14 +53,17 @@ type SubscriptionsStartPaidServiceResource =
                "subscriptions" :>
                  Capture "subscriptionId" Text :>
                    "startPaidService" :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] Subscription
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] Subscription
 
--- | Starts paid service of a trial subscription
+-- | Immediately move a 30-day free trial subscription to a paid service
+-- subscription.
 --
 -- /See:/ 'subscriptionsStartPaidService' smart constructor.
 data SubscriptionsStartPaidService = SubscriptionsStartPaidService'
-    { _sspsCustomerId     :: !Text
+    { _sspsCustomerId :: !Text
     , _sspsSubscriptionId :: !Text
+    , _sspsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsStartPaidService' with the minimum fields required to make a request.
@@ -68,27 +73,42 @@ data SubscriptionsStartPaidService = SubscriptionsStartPaidService'
 -- * 'sspsCustomerId'
 --
 -- * 'sspsSubscriptionId'
+--
+-- * 'sspsFields'
 subscriptionsStartPaidService
     :: Text -- ^ 'sspsCustomerId'
     -> Text -- ^ 'sspsSubscriptionId'
     -> SubscriptionsStartPaidService
-subscriptionsStartPaidService pSspsCustomerId_ pSspsSubscriptionId_ =
+subscriptionsStartPaidService pSspsCustomerId_ pSspsSubscriptionId_ = 
     SubscriptionsStartPaidService'
     { _sspsCustomerId = pSspsCustomerId_
     , _sspsSubscriptionId = pSspsSubscriptionId_
+    , _sspsFields = Nothing
     }
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 sspsCustomerId :: Lens' SubscriptionsStartPaidService Text
 sspsCustomerId
   = lens _sspsCustomerId
       (\ s a -> s{_sspsCustomerId = a})
 
--- | Id of the subscription, which is unique for a customer
+-- | This is a required property. The subscriptionId is the subscription
+-- identifier and is unique for each customer. Since a subscriptionId
+-- changes when a subscription is updated, we recommend to not use this ID
+-- as a key for persistent data. And the subscriptionId can be found using
+-- the retrieve all reseller subscriptions method.
 sspsSubscriptionId :: Lens' SubscriptionsStartPaidService Text
 sspsSubscriptionId
   = lens _sspsSubscriptionId
       (\ s a -> s{_sspsSubscriptionId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sspsFields :: Lens' SubscriptionsStartPaidService (Maybe Text)
+sspsFields
+  = lens _sspsFields (\ s a -> s{_sspsFields = a})
 
 instance GoogleRequest SubscriptionsStartPaidService
          where
@@ -96,7 +116,7 @@ instance GoogleRequest SubscriptionsStartPaidService
         type Scopes SubscriptionsStartPaidService =
              '["https://www.googleapis.com/auth/apps.order"]
         requestClient SubscriptionsStartPaidService'{..}
-          = go _sspsCustomerId _sspsSubscriptionId
+          = go _sspsCustomerId _sspsSubscriptionId _sspsFields
               (Just AltJSON)
               appsResellerService
           where go

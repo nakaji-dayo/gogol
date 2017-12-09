@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Labels.Create
     -- * Request Lenses
     , ulcPayload
     , ulcUserId
+    , ulcFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.create@ method which the
 -- 'UsersLabelsCreate' request conforms to.
@@ -48,15 +49,17 @@ type UsersLabelsCreateResource =
          "users" :>
            Capture "userId" Text :>
              "labels" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Label :> Post '[JSON] Label
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Label :> Post '[JSON] Label
 
 -- | Creates a new label.
 --
 -- /See:/ 'usersLabelsCreate' smart constructor.
 data UsersLabelsCreate = UsersLabelsCreate'
     { _ulcPayload :: !Label
-    , _ulcUserId  :: !Text
+    , _ulcUserId :: !Text
+    , _ulcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsCreate' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data UsersLabelsCreate = UsersLabelsCreate'
 -- * 'ulcPayload'
 --
 -- * 'ulcUserId'
+--
+-- * 'ulcFields'
 usersLabelsCreate
     :: Label -- ^ 'ulcPayload'
     -> UsersLabelsCreate
-usersLabelsCreate pUlcPayload_ =
+usersLabelsCreate pUlcPayload_ = 
     UsersLabelsCreate'
     { _ulcPayload = pUlcPayload_
     , _ulcUserId = "me"
+    , _ulcFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,6 +92,11 @@ ulcUserId :: Lens' UsersLabelsCreate Text
 ulcUserId
   = lens _ulcUserId (\ s a -> s{_ulcUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ulcFields :: Lens' UsersLabelsCreate (Maybe Text)
+ulcFields
+  = lens _ulcFields (\ s a -> s{_ulcFields = a})
+
 instance GoogleRequest UsersLabelsCreate where
         type Rs UsersLabelsCreate = Label
         type Scopes UsersLabelsCreate =
@@ -93,7 +104,7 @@ instance GoogleRequest UsersLabelsCreate where
                "https://www.googleapis.com/auth/gmail.labels",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersLabelsCreate'{..}
-          = go _ulcUserId (Just AltJSON) _ulcPayload
+          = go _ulcUserId _ulcFields (Just AltJSON) _ulcPayload
               gmailService
           where go
                   = buildClient

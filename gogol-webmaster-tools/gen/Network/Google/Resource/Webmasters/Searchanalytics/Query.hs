@@ -40,10 +40,11 @@ module Network.Google.Resource.Webmasters.Searchanalytics.Query
     -- * Request Lenses
     , sqSiteURL
     , sqPayload
+    , sqFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.searchanalytics.query@ method which the
 -- 'SearchanalyticsQuery' request conforms to.
@@ -54,9 +55,10 @@ type SearchanalyticsQueryResource =
            Capture "siteUrl" Text :>
              "searchAnalytics" :>
                "query" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] SearchAnalyticsQueryRequest :>
-                     Post '[JSON] SearchAnalyticsQueryResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] SearchAnalyticsQueryRequest :>
+                       Post '[JSON] SearchAnalyticsQueryResponse
 
 -- | Query your data with filters and parameters that you define. Returns
 -- zero or more rows grouped by the row keys that you define. You must
@@ -69,6 +71,7 @@ type SearchanalyticsQueryResource =
 data SearchanalyticsQuery = SearchanalyticsQuery'
     { _sqSiteURL :: !Text
     , _sqPayload :: !SearchAnalyticsQueryRequest
+    , _sqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SearchanalyticsQuery' with the minimum fields required to make a request.
@@ -78,14 +81,17 @@ data SearchanalyticsQuery = SearchanalyticsQuery'
 -- * 'sqSiteURL'
 --
 -- * 'sqPayload'
+--
+-- * 'sqFields'
 searchanalyticsQuery
     :: Text -- ^ 'sqSiteURL'
     -> SearchAnalyticsQueryRequest -- ^ 'sqPayload'
     -> SearchanalyticsQuery
-searchanalyticsQuery pSqSiteURL_ pSqPayload_ =
+searchanalyticsQuery pSqSiteURL_ pSqPayload_ = 
     SearchanalyticsQuery'
     { _sqSiteURL = pSqSiteURL_
     , _sqPayload = pSqPayload_
+    , _sqFields = Nothing
     }
 
 -- | The site\'s URL, including protocol. For example:
@@ -99,6 +105,10 @@ sqPayload :: Lens' SearchanalyticsQuery SearchAnalyticsQueryRequest
 sqPayload
   = lens _sqPayload (\ s a -> s{_sqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sqFields :: Lens' SearchanalyticsQuery (Maybe Text)
+sqFields = lens _sqFields (\ s a -> s{_sqFields = a})
+
 instance GoogleRequest SearchanalyticsQuery where
         type Rs SearchanalyticsQuery =
              SearchAnalyticsQueryResponse
@@ -106,7 +116,7 @@ instance GoogleRequest SearchanalyticsQuery where
              '["https://www.googleapis.com/auth/webmasters",
                "https://www.googleapis.com/auth/webmasters.readonly"]
         requestClient SearchanalyticsQuery'{..}
-          = go _sqSiteURL (Just AltJSON) _sqPayload
+          = go _sqSiteURL _sqFields (Just AltJSON) _sqPayload
               webmasterToolsService
           where go
                   = buildClient

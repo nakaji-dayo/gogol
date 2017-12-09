@@ -51,18 +51,19 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Update
     , buPayload
     , buBearerToken
     , buProjectId
+    , buFields
     , buCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.update@ method which the
 -- 'BeaconsUpdate' request conforms to.
 type BeaconsUpdateResource =
      "v1beta1" :>
        Capture "beaconName" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -70,8 +71,9 @@ type BeaconsUpdateResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Beacon :> Put '[JSON] Beacon
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Beacon :> Put '[JSON] Beacon
 
 -- | Updates the information about the specified beacon. **Any field that you
 -- do not populate in the submitted beacon will be permanently erased**, so
@@ -86,16 +88,17 @@ type BeaconsUpdateResource =
 --
 -- /See:/ 'beaconsUpdate' smart constructor.
 data BeaconsUpdate = BeaconsUpdate'
-    { _buXgafv          :: !(Maybe Text)
+    { _buXgafv :: !(Maybe Xgafv)
     , _buUploadProtocol :: !(Maybe Text)
-    , _buPp             :: !Bool
-    , _buAccessToken    :: !(Maybe Text)
-    , _buBeaconName     :: !Text
-    , _buUploadType     :: !(Maybe Text)
-    , _buPayload        :: !Beacon
-    , _buBearerToken    :: !(Maybe Text)
-    , _buProjectId      :: !(Maybe Text)
-    , _buCallback       :: !(Maybe Text)
+    , _buPp :: !Bool
+    , _buAccessToken :: !(Maybe Text)
+    , _buBeaconName :: !Text
+    , _buUploadType :: !(Maybe Text)
+    , _buPayload :: !Beacon
+    , _buBearerToken :: !(Maybe Text)
+    , _buProjectId :: !(Maybe Text)
+    , _buFields :: !(Maybe Text)
+    , _buCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsUpdate' with the minimum fields required to make a request.
@@ -120,12 +123,14 @@ data BeaconsUpdate = BeaconsUpdate'
 --
 -- * 'buProjectId'
 --
+-- * 'buFields'
+--
 -- * 'buCallback'
 beaconsUpdate
     :: Text -- ^ 'buBeaconName'
     -> Beacon -- ^ 'buPayload'
     -> BeaconsUpdate
-beaconsUpdate pBuBeaconName_ pBuPayload_ =
+beaconsUpdate pBuBeaconName_ pBuPayload_ = 
     BeaconsUpdate'
     { _buXgafv = Nothing
     , _buUploadProtocol = Nothing
@@ -136,11 +141,12 @@ beaconsUpdate pBuBeaconName_ pBuPayload_ =
     , _buPayload = pBuPayload_
     , _buBearerToken = Nothing
     , _buProjectId = Nothing
+    , _buFields = Nothing
     , _buCallback = Nothing
     }
 
 -- | V1 error format.
-buXgafv :: Lens' BeaconsUpdate (Maybe Text)
+buXgafv :: Lens' BeaconsUpdate (Maybe Xgafv)
 buXgafv = lens _buXgafv (\ s a -> s{_buXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -192,6 +198,10 @@ buProjectId :: Lens' BeaconsUpdate (Maybe Text)
 buProjectId
   = lens _buProjectId (\ s a -> s{_buProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+buFields :: Lens' BeaconsUpdate (Maybe Text)
+buFields = lens _buFields (\ s a -> s{_buFields = a})
+
 -- | JSONP
 buCallback :: Lens' BeaconsUpdate (Maybe Text)
 buCallback
@@ -209,6 +219,7 @@ instance GoogleRequest BeaconsUpdate where
               _buBearerToken
               _buProjectId
               _buCallback
+              _buFields
               (Just AltJSON)
               _buPayload
               proximityBeaconService

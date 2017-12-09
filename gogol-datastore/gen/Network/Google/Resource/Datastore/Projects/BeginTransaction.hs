@@ -41,11 +41,12 @@ module Network.Google.Resource.Datastore.Projects.BeginTransaction
     , pbtPayload
     , pbtBearerToken
     , pbtProjectId
+    , pbtFields
     , pbtCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.beginTransaction@ method which the
 -- 'ProjectsBeginTransaction' request conforms to.
@@ -60,23 +61,25 @@ type ProjectsBeginTransactionResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] BeginTransactionRequest :>
-                             Post '[JSON] BeginTransactionResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] BeginTransactionRequest :>
+                               Post '[JSON] BeginTransactionResponse
 
 -- | Begins a new transaction.
 --
 -- /See:/ 'projectsBeginTransaction' smart constructor.
 data ProjectsBeginTransaction = ProjectsBeginTransaction'
-    { _pbtXgafv          :: !(Maybe Xgafv)
+    { _pbtXgafv :: !(Maybe Xgafv)
     , _pbtUploadProtocol :: !(Maybe Text)
-    , _pbtPp             :: !Bool
-    , _pbtAccessToken    :: !(Maybe Text)
-    , _pbtUploadType     :: !(Maybe Text)
-    , _pbtPayload        :: !BeginTransactionRequest
-    , _pbtBearerToken    :: !(Maybe Text)
-    , _pbtProjectId      :: !Text
-    , _pbtCallback       :: !(Maybe Text)
+    , _pbtPp :: !Bool
+    , _pbtAccessToken :: !(Maybe Text)
+    , _pbtUploadType :: !(Maybe Text)
+    , _pbtPayload :: !BeginTransactionRequest
+    , _pbtBearerToken :: !(Maybe Text)
+    , _pbtProjectId :: !Text
+    , _pbtFields :: !(Maybe Text)
+    , _pbtCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsBeginTransaction' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsBeginTransaction = ProjectsBeginTransaction'
 --
 -- * 'pbtProjectId'
 --
+-- * 'pbtFields'
+--
 -- * 'pbtCallback'
 projectsBeginTransaction
     :: BeginTransactionRequest -- ^ 'pbtPayload'
     -> Text -- ^ 'pbtProjectId'
     -> ProjectsBeginTransaction
-projectsBeginTransaction pPbtPayload_ pPbtProjectId_ =
+projectsBeginTransaction pPbtPayload_ pPbtProjectId_ = 
     ProjectsBeginTransaction'
     { _pbtXgafv = Nothing
     , _pbtUploadProtocol = Nothing
@@ -114,6 +119,7 @@ projectsBeginTransaction pPbtPayload_ pPbtProjectId_ =
     , _pbtPayload = pPbtPayload_
     , _pbtBearerToken = Nothing
     , _pbtProjectId = pPbtProjectId_
+    , _pbtFields = Nothing
     , _pbtCallback = Nothing
     }
 
@@ -159,6 +165,11 @@ pbtProjectId :: Lens' ProjectsBeginTransaction Text
 pbtProjectId
   = lens _pbtProjectId (\ s a -> s{_pbtProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pbtFields :: Lens' ProjectsBeginTransaction (Maybe Text)
+pbtFields
+  = lens _pbtFields (\ s a -> s{_pbtFields = a})
+
 -- | JSONP
 pbtCallback :: Lens' ProjectsBeginTransaction (Maybe Text)
 pbtCallback
@@ -177,6 +188,7 @@ instance GoogleRequest ProjectsBeginTransaction where
               _pbtUploadType
               _pbtBearerToken
               _pbtCallback
+              _pbtFields
               (Just AltJSON)
               _pbtPayload
               datastoreService

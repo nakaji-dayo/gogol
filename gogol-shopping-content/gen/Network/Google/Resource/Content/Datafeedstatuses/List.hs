@@ -21,7 +21,6 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Lists the statuses of the datafeeds in your Merchant Center account.
--- This method can only be called for non-multi-client accounts.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.datafeedstatuses.list@.
 module Network.Google.Resource.Content.Datafeedstatuses.List
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Datafeedstatuses.List
     , dlMerchantId
     , dlPageToken
     , dlMaxResults
+    , dlFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.datafeedstatuses.list@ method which the
 -- 'DatafeedstatusesList' request conforms to.
@@ -51,17 +51,18 @@ type DatafeedstatusesListResource =
            "datafeedstatuses" :>
              QueryParam "pageToken" Text :>
                QueryParam "maxResults" (Textual Word32) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] DatafeedstatusesListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] DatafeedstatusesListResponse
 
 -- | Lists the statuses of the datafeeds in your Merchant Center account.
--- This method can only be called for non-multi-client accounts.
 --
 -- /See:/ 'datafeedstatusesList' smart constructor.
 data DatafeedstatusesList = DatafeedstatusesList'
     { _dlMerchantId :: !(Textual Word64)
-    , _dlPageToken  :: !(Maybe Text)
+    , _dlPageToken :: !(Maybe Text)
     , _dlMaxResults :: !(Maybe (Textual Word32))
+    , _dlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DatafeedstatusesList' with the minimum fields required to make a request.
@@ -73,17 +74,21 @@ data DatafeedstatusesList = DatafeedstatusesList'
 -- * 'dlPageToken'
 --
 -- * 'dlMaxResults'
+--
+-- * 'dlFields'
 datafeedstatusesList
     :: Word64 -- ^ 'dlMerchantId'
     -> DatafeedstatusesList
-datafeedstatusesList pDlMerchantId_ =
+datafeedstatusesList pDlMerchantId_ = 
     DatafeedstatusesList'
     { _dlMerchantId = _Coerce # pDlMerchantId_
     , _dlPageToken = Nothing
     , _dlMaxResults = Nothing
+    , _dlFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the datafeeds. This account cannot be
+-- a multi-client account.
 dlMerchantId :: Lens' DatafeedstatusesList Word64
 dlMerchantId
   = lens _dlMerchantId (\ s a -> s{_dlMerchantId = a})
@@ -101,6 +106,10 @@ dlMaxResults
   = lens _dlMaxResults (\ s a -> s{_dlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dlFields :: Lens' DatafeedstatusesList (Maybe Text)
+dlFields = lens _dlFields (\ s a -> s{_dlFields = a})
+
 instance GoogleRequest DatafeedstatusesList where
         type Rs DatafeedstatusesList =
              DatafeedstatusesListResponse
@@ -108,6 +117,7 @@ instance GoogleRequest DatafeedstatusesList where
              '["https://www.googleapis.com/auth/content"]
         requestClient DatafeedstatusesList'{..}
           = go _dlMerchantId _dlPageToken _dlMaxResults
+              _dlFields
               (Just AltJSON)
               shoppingContentService
           where go

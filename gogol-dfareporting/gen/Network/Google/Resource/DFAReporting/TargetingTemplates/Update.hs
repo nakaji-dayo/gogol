@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.TargetingTemplates.Update
     -- * Request Lenses
     , ttuProFileId
     , ttuPayload
+    , ttuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.targetingTemplates.update@ method which the
 -- 'TargetingTemplatesUpdate' request conforms to.
 type TargetingTemplatesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "targetingTemplates" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] TargetingTemplate :>
-                   Put '[JSON] TargetingTemplate
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] TargetingTemplate :>
+                     Put '[JSON] TargetingTemplate
 
 -- | Updates an existing targeting template.
 --
 -- /See:/ 'targetingTemplatesUpdate' smart constructor.
 data TargetingTemplatesUpdate = TargetingTemplatesUpdate'
     { _ttuProFileId :: !(Textual Int64)
-    , _ttuPayload   :: !TargetingTemplate
+    , _ttuPayload :: !TargetingTemplate
+    , _ttuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingTemplatesUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TargetingTemplatesUpdate = TargetingTemplatesUpdate'
 -- * 'ttuProFileId'
 --
 -- * 'ttuPayload'
+--
+-- * 'ttuFields'
 targetingTemplatesUpdate
     :: Int64 -- ^ 'ttuProFileId'
     -> TargetingTemplate -- ^ 'ttuPayload'
     -> TargetingTemplatesUpdate
-targetingTemplatesUpdate pTtuProFileId_ pTtuPayload_ =
+targetingTemplatesUpdate pTtuProFileId_ pTtuPayload_ = 
     TargetingTemplatesUpdate'
     { _ttuProFileId = _Coerce # pTtuProFileId_
     , _ttuPayload = pTtuPayload_
+    , _ttuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ ttuPayload :: Lens' TargetingTemplatesUpdate TargetingTemplate
 ttuPayload
   = lens _ttuPayload (\ s a -> s{_ttuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ttuFields :: Lens' TargetingTemplatesUpdate (Maybe Text)
+ttuFields
+  = lens _ttuFields (\ s a -> s{_ttuFields = a})
+
 instance GoogleRequest TargetingTemplatesUpdate where
         type Rs TargetingTemplatesUpdate = TargetingTemplate
         type Scopes TargetingTemplatesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient TargetingTemplatesUpdate'{..}
-          = go _ttuProFileId (Just AltJSON) _ttuPayload
+          = go _ttuProFileId _ttuFields (Just AltJSON)
+              _ttuPayload
               dFAReportingService
           where go
                   = buildClient

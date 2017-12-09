@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.WebProperties.Patch
     , mwppWebPropertyId
     , mwppPayload
     , mwppAccountId
+    , mwppFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webproperties.patch@ method which the
 -- 'ManagementWebPropertiesPatch' request conforms to.
@@ -51,17 +52,19 @@ type ManagementWebPropertiesPatchResource =
              Capture "accountId" Text :>
                "webproperties" :>
                  Capture "webPropertyId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] WebProperty :>
-                       Patch '[JSON] WebProperty
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] WebProperty :>
+                         Patch '[JSON] WebProperty
 
 -- | Updates an existing web property. This method supports patch semantics.
 --
 -- /See:/ 'managementWebPropertiesPatch' smart constructor.
 data ManagementWebPropertiesPatch = ManagementWebPropertiesPatch'
     { _mwppWebPropertyId :: !Text
-    , _mwppPayload       :: !WebProperty
-    , _mwppAccountId     :: !Text
+    , _mwppPayload :: !WebProperty
+    , _mwppAccountId :: !Text
+    , _mwppFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertiesPatch' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementWebPropertiesPatch = ManagementWebPropertiesPatch'
 -- * 'mwppPayload'
 --
 -- * 'mwppAccountId'
+--
+-- * 'mwppFields'
 managementWebPropertiesPatch
     :: Text -- ^ 'mwppWebPropertyId'
     -> WebProperty -- ^ 'mwppPayload'
     -> Text -- ^ 'mwppAccountId'
     -> ManagementWebPropertiesPatch
-managementWebPropertiesPatch pMwppWebPropertyId_ pMwppPayload_ pMwppAccountId_ =
+managementWebPropertiesPatch pMwppWebPropertyId_ pMwppPayload_ pMwppAccountId_ = 
     ManagementWebPropertiesPatch'
     { _mwppWebPropertyId = pMwppWebPropertyId_
     , _mwppPayload = pMwppPayload_
     , _mwppAccountId = pMwppAccountId_
+    , _mwppFields = Nothing
     }
 
 -- | Web property ID
@@ -102,13 +108,19 @@ mwppAccountId
   = lens _mwppAccountId
       (\ s a -> s{_mwppAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwppFields :: Lens' ManagementWebPropertiesPatch (Maybe Text)
+mwppFields
+  = lens _mwppFields (\ s a -> s{_mwppFields = a})
+
 instance GoogleRequest ManagementWebPropertiesPatch
          where
         type Rs ManagementWebPropertiesPatch = WebProperty
         type Scopes ManagementWebPropertiesPatch =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementWebPropertiesPatch'{..}
-          = go _mwppAccountId _mwppWebPropertyId (Just AltJSON)
+          = go _mwppAccountId _mwppWebPropertyId _mwppFields
+              (Just AltJSON)
               _mwppPayload
               analyticsService
           where go

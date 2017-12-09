@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Settings.SendAs.Get
     -- * Request Lenses
     , ussagUserId
     , ussagSendAsEmail
+    , ussagFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.sendAs.get@ method which the
 -- 'UsersSettingsSendAsGet' request conforms to.
@@ -51,15 +52,17 @@ type UsersSettingsSendAsGetResource =
              "settings" :>
                "sendAs" :>
                  Capture "sendAsEmail" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] SendAs
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] SendAs
 
 -- | Gets the specified send-as alias. Fails with an HTTP 404 error if the
 -- specified address is not a member of the collection.
 --
 -- /See:/ 'usersSettingsSendAsGet' smart constructor.
 data UsersSettingsSendAsGet = UsersSettingsSendAsGet'
-    { _ussagUserId      :: !Text
+    { _ussagUserId :: !Text
     , _ussagSendAsEmail :: !Text
+    , _ussagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsSendAsGet' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data UsersSettingsSendAsGet = UsersSettingsSendAsGet'
 -- * 'ussagUserId'
 --
 -- * 'ussagSendAsEmail'
+--
+-- * 'ussagFields'
 usersSettingsSendAsGet
     :: Text -- ^ 'ussagSendAsEmail'
     -> UsersSettingsSendAsGet
-usersSettingsSendAsGet pUssagSendAsEmail_ =
+usersSettingsSendAsGet pUssagSendAsEmail_ = 
     UsersSettingsSendAsGet'
     { _ussagUserId = "me"
     , _ussagSendAsEmail = pUssagSendAsEmail_
+    , _ussagFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -90,6 +96,11 @@ ussagSendAsEmail
   = lens _ussagSendAsEmail
       (\ s a -> s{_ussagSendAsEmail = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ussagFields :: Lens' UsersSettingsSendAsGet (Maybe Text)
+ussagFields
+  = lens _ussagFields (\ s a -> s{_ussagFields = a})
+
 instance GoogleRequest UsersSettingsSendAsGet where
         type Rs UsersSettingsSendAsGet = SendAs
         type Scopes UsersSettingsSendAsGet =
@@ -98,7 +109,8 @@ instance GoogleRequest UsersSettingsSendAsGet where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsSendAsGet'{..}
-          = go _ussagUserId _ussagSendAsEmail (Just AltJSON)
+          = go _ussagUserId _ussagSendAsEmail _ussagFields
+              (Just AltJSON)
               gmailService
           where go
                   = buildClient

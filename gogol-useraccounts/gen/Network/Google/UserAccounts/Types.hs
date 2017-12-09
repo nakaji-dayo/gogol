@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -194,9 +194,9 @@ module Network.Google.UserAccounts.Types
     , owiMessage
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types.Product
-import           Network.Google.UserAccounts.Types.Sum
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types.Product
+import Network.Google.UserAccounts.Types.Sum
 
 -- | Default request referring to version 'beta' of the Cloud User Accounts API. This contains the host and root path used as a starting point for constructing service requests.
 userAccountsService :: ServiceConfig

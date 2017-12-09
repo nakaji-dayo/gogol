@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Videos.Delete
     -- * Request Lenses
     , vdOnBehalfOfContentOwner
     , vdId
+    , vdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.delete@ method which the
 -- 'VideosDelete' request conforms to.
@@ -48,14 +49,16 @@ type VideosDeleteResource =
          "videos" :>
            QueryParam "id" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a YouTube video.
 --
 -- /See:/ 'videosDelete' smart constructor.
 data VideosDelete = VideosDelete'
     { _vdOnBehalfOfContentOwner :: !(Maybe Text)
-    , _vdId                     :: !Text
+    , _vdId :: !Text
+    , _vdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosDelete' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data VideosDelete = VideosDelete'
 -- * 'vdOnBehalfOfContentOwner'
 --
 -- * 'vdId'
+--
+-- * 'vdFields'
 videosDelete
     :: Text -- ^ 'vdId'
     -> VideosDelete
-videosDelete pVdId_ =
+videosDelete pVdId_ = 
     VideosDelete'
     { _vdOnBehalfOfContentOwner = Nothing
     , _vdId = pVdId_
+    , _vdFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -95,6 +101,10 @@ vdOnBehalfOfContentOwner
 vdId :: Lens' VideosDelete Text
 vdId = lens _vdId (\ s a -> s{_vdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vdFields :: Lens' VideosDelete (Maybe Text)
+vdFields = lens _vdFields (\ s a -> s{_vdFields = a})
+
 instance GoogleRequest VideosDelete where
         type Rs VideosDelete = ()
         type Scopes VideosDelete =
@@ -102,7 +112,7 @@ instance GoogleRequest VideosDelete where
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient VideosDelete'{..}
-          = go (Just _vdId) _vdOnBehalfOfContentOwner
+          = go (Just _vdId) _vdOnBehalfOfContentOwner _vdFields
               (Just AltJSON)
               youTubeService
           where go

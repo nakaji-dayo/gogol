@@ -36,10 +36,11 @@ module Network.Google.Resource.Content.ShippingSettings.Custombatch
     -- * Request Lenses
     , sscPayload
     , sscDryRun
+    , sscFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.shippingsettings.custombatch@ method which the
 -- 'ShippingSettingsCustombatch' request conforms to.
@@ -49,9 +50,10 @@ type ShippingSettingsCustombatchResource =
          "shippingsettings" :>
            "batch" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ShippingSettingsCustomBatchRequest :>
-                   Post '[JSON] ShippingSettingsCustomBatchResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ShippingSettingsCustomBatchRequest :>
+                     Post '[JSON] ShippingSettingsCustomBatchResponse
 
 -- | Retrieves and updates the shipping settings of multiple accounts in a
 -- single request.
@@ -59,7 +61,8 @@ type ShippingSettingsCustombatchResource =
 -- /See:/ 'shippingSettingsCustombatch' smart constructor.
 data ShippingSettingsCustombatch = ShippingSettingsCustombatch'
     { _sscPayload :: !ShippingSettingsCustomBatchRequest
-    , _sscDryRun  :: !(Maybe Bool)
+    , _sscDryRun :: !(Maybe Bool)
+    , _sscFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ShippingSettingsCustombatch' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data ShippingSettingsCustombatch = ShippingSettingsCustombatch'
 -- * 'sscPayload'
 --
 -- * 'sscDryRun'
+--
+-- * 'sscFields'
 shippingSettingsCustombatch
     :: ShippingSettingsCustomBatchRequest -- ^ 'sscPayload'
     -> ShippingSettingsCustombatch
-shippingSettingsCustombatch pSscPayload_ =
+shippingSettingsCustombatch pSscPayload_ = 
     ShippingSettingsCustombatch'
     { _sscPayload = pSscPayload_
     , _sscDryRun = Nothing
+    , _sscFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,6 +94,11 @@ sscDryRun :: Lens' ShippingSettingsCustombatch (Maybe Bool)
 sscDryRun
   = lens _sscDryRun (\ s a -> s{_sscDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sscFields :: Lens' ShippingSettingsCustombatch (Maybe Text)
+sscFields
+  = lens _sscFields (\ s a -> s{_sscFields = a})
+
 instance GoogleRequest ShippingSettingsCustombatch
          where
         type Rs ShippingSettingsCustombatch =
@@ -95,7 +106,7 @@ instance GoogleRequest ShippingSettingsCustombatch
         type Scopes ShippingSettingsCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient ShippingSettingsCustombatch'{..}
-          = go _sscDryRun (Just AltJSON) _sscPayload
+          = go _sscDryRun _sscFields (Just AltJSON) _sscPayload
               shoppingContentService
           where go
                   = buildClient

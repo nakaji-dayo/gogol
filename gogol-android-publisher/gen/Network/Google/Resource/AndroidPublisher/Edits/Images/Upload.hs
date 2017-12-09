@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Images.Upload
     , eiuImageType
     , eiuLanguage
     , eiuEditId
+    , eiuFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.images.upload@ method which the
 -- 'EditsImagesUpload' request conforms to.
@@ -55,8 +56,9 @@ type EditsImagesUploadResource =
                  "listings" :>
                    Capture "language" Text :>
                      Capture "imageType" EditsImagesUploadImageType :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] ImagesUploadResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] ImagesUploadResponse
        :<|>
        "upload" :>
          "androidpublisher" :>
@@ -68,9 +70,10 @@ type EditsImagesUploadResource =
                      "listings" :>
                        Capture "language" Text :>
                          Capture "imageType" EditsImagesUploadImageType :>
-                           QueryParam "alt" AltJSON :>
-                             QueryParam "uploadType" AltMedia :>
-                               AltMedia :> Post '[JSON] ImagesUploadResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               QueryParam "uploadType" AltMedia :>
+                                 AltMedia :> Post '[JSON] ImagesUploadResponse
 
 -- | Uploads a new image and adds it to the list of images for the specified
 -- language and image type.
@@ -78,9 +81,10 @@ type EditsImagesUploadResource =
 -- /See:/ 'editsImagesUpload' smart constructor.
 data EditsImagesUpload = EditsImagesUpload'
     { _eiuPackageName :: !Text
-    , _eiuImageType   :: !EditsImagesUploadImageType
-    , _eiuLanguage    :: !Text
-    , _eiuEditId      :: !Text
+    , _eiuImageType :: !EditsImagesUploadImageType
+    , _eiuLanguage :: !Text
+    , _eiuEditId :: !Text
+    , _eiuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsImagesUpload' with the minimum fields required to make a request.
@@ -94,18 +98,21 @@ data EditsImagesUpload = EditsImagesUpload'
 -- * 'eiuLanguage'
 --
 -- * 'eiuEditId'
+--
+-- * 'eiuFields'
 editsImagesUpload
     :: Text -- ^ 'eiuPackageName'
     -> EditsImagesUploadImageType -- ^ 'eiuImageType'
     -> Text -- ^ 'eiuLanguage'
     -> Text -- ^ 'eiuEditId'
     -> EditsImagesUpload
-editsImagesUpload pEiuPackageName_ pEiuImageType_ pEiuLanguage_ pEiuEditId_ =
+editsImagesUpload pEiuPackageName_ pEiuImageType_ pEiuLanguage_ pEiuEditId_ = 
     EditsImagesUpload'
     { _eiuPackageName = pEiuPackageName_
     , _eiuImageType = pEiuImageType_
     , _eiuLanguage = pEiuLanguage_
     , _eiuEditId = pEiuEditId_
+    , _eiuFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -131,6 +138,11 @@ eiuEditId :: Lens' EditsImagesUpload Text
 eiuEditId
   = lens _eiuEditId (\ s a -> s{_eiuEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eiuFields :: Lens' EditsImagesUpload (Maybe Text)
+eiuFields
+  = lens _eiuFields (\ s a -> s{_eiuFields = a})
+
 instance GoogleRequest EditsImagesUpload where
         type Rs EditsImagesUpload = ImagesUploadResponse
         type Scopes EditsImagesUpload =
@@ -138,6 +150,7 @@ instance GoogleRequest EditsImagesUpload where
         requestClient EditsImagesUpload'{..}
           = go _eiuPackageName _eiuEditId _eiuLanguage
               _eiuImageType
+              _eiuFields
               (Just AltJSON)
               androidPublisherService
           where go :<|> _
@@ -155,6 +168,7 @@ instance GoogleRequest
           (MediaUpload EditsImagesUpload'{..} body)
           = go _eiuPackageName _eiuEditId _eiuLanguage
               _eiuImageType
+              _eiuFields
               (Just AltJSON)
               (Just AltMedia)
               body

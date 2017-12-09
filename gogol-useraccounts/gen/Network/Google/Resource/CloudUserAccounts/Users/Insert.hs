@@ -36,10 +36,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.Insert
     -- * Request Lenses
     , uiProject
     , uiPayload
+    , uiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.insert@ method which the
 -- 'UsersInsert' request conforms to.
@@ -50,8 +51,9 @@ type UsersInsertResource =
            Capture "project" Text :>
              "global" :>
                "users" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] User :> Post '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] User :> Post '[JSON] Operation
 
 -- | Creates a User resource in the specified project using the data included
 -- in the request.
@@ -60,6 +62,7 @@ type UsersInsertResource =
 data UsersInsert = UsersInsert'
     { _uiProject :: !Text
     , _uiPayload :: !User
+    , _uiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersInsert' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data UsersInsert = UsersInsert'
 -- * 'uiProject'
 --
 -- * 'uiPayload'
+--
+-- * 'uiFields'
 usersInsert
     :: Text -- ^ 'uiProject'
     -> User -- ^ 'uiPayload'
     -> UsersInsert
-usersInsert pUiProject_ pUiPayload_ =
+usersInsert pUiProject_ pUiPayload_ = 
     UsersInsert'
     { _uiProject = pUiProject_
     , _uiPayload = pUiPayload_
+    , _uiFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,13 +95,17 @@ uiPayload :: Lens' UsersInsert User
 uiPayload
   = lens _uiPayload (\ s a -> s{_uiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uiFields :: Lens' UsersInsert (Maybe Text)
+uiFields = lens _uiFields (\ s a -> s{_uiFields = a})
+
 instance GoogleRequest UsersInsert where
         type Rs UsersInsert = Operation
         type Scopes UsersInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient UsersInsert'{..}
-          = go _uiProject (Just AltJSON) _uiPayload
+          = go _uiProject _uiFields (Just AltJSON) _uiPayload
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy UsersInsertResource)

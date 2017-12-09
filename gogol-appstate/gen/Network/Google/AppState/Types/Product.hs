@@ -17,16 +17,16 @@
 --
 module Network.Google.AppState.Types.Product where
 
-import           Network.Google.AppState.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppState.Types.Sum
+import Network.Google.Prelude
 
 -- | This is a JSON template for an app state write result.
 --
 -- /See:/ 'writeResult' smart constructor.
 data WriteResult = WriteResult'
     { _wrCurrentStateVersion :: !(Maybe Text)
-    , _wrKind                :: !Text
-    , _wrStateKey            :: !(Maybe (Textual Int32))
+    , _wrKind :: !Text
+    , _wrStateKey :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WriteResult' with the minimum fields required to make a request.
@@ -40,7 +40,7 @@ data WriteResult = WriteResult'
 -- * 'wrStateKey'
 writeResult
     :: WriteResult
-writeResult =
+writeResult = 
     WriteResult'
     { _wrCurrentStateVersion = Nothing
     , _wrKind = "appstate#writeResult"
@@ -87,8 +87,8 @@ instance ToJSON WriteResult where
 -- /See:/ 'listResponse' smart constructor.
 data ListResponse = ListResponse'
     { _lrMaximumKeyCount :: !(Maybe (Textual Int32))
-    , _lrKind            :: !Text
-    , _lrItems           :: !(Maybe [GetResponse])
+    , _lrKind :: !Text
+    , _lrItems :: !(Maybe [GetResponse])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListResponse' with the minimum fields required to make a request.
@@ -102,7 +102,7 @@ data ListResponse = ListResponse'
 -- * 'lrItems'
 listResponse
     :: ListResponse
-listResponse =
+listResponse = 
     ListResponse'
     { _lrMaximumKeyCount = Nothing
     , _lrKind = "appstate#listResponse"
@@ -148,9 +148,9 @@ instance ToJSON ListResponse where
 -- /See:/ 'getResponse' smart constructor.
 data GetResponse = GetResponse'
     { _grCurrentStateVersion :: !(Maybe Text)
-    , _grKind                :: !Text
-    , _grData                :: !(Maybe Text)
-    , _grStateKey            :: !(Maybe (Textual Int32))
+    , _grKind :: !Text
+    , _grData :: !(Maybe Text)
+    , _grStateKey :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GetResponse' with the minimum fields required to make a request.
@@ -166,7 +166,7 @@ data GetResponse = GetResponse'
 -- * 'grStateKey'
 getResponse
     :: GetResponse
-getResponse =
+getResponse = 
     GetResponse'
     { _grCurrentStateVersion = Nothing
     , _grKind = "appstate#getResponse"
@@ -231,7 +231,7 @@ data UpdateRequest = UpdateRequest'
 -- * 'urData'
 updateRequest
     :: UpdateRequest
-updateRequest =
+updateRequest = 
     UpdateRequest'
     { _urKind = "appstate#updateRequest"
     , _urData = Nothing

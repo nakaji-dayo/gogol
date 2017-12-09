@@ -44,11 +44,12 @@ module Network.Google.Resource.Monitoring.Projects.TimeSeries.Create
     , ptscPayload
     , ptscBearerToken
     , ptscName
+    , ptscFields
     , ptscCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.timeSeries.create@ method which the
 -- 'ProjectsTimeSeriesCreate' request conforms to.
@@ -63,9 +64,10 @@ type ProjectsTimeSeriesCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CreateTimeSeriesRequest :>
-                             Post '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CreateTimeSeriesRequest :>
+                               Post '[JSON] Empty
 
 -- | Creates or adds data to one or more time series. The response is empty
 -- if all time series in the request were written. If any time series could
@@ -74,15 +76,16 @@ type ProjectsTimeSeriesCreateResource =
 --
 -- /See:/ 'projectsTimeSeriesCreate' smart constructor.
 data ProjectsTimeSeriesCreate = ProjectsTimeSeriesCreate'
-    { _ptscXgafv          :: !(Maybe Xgafv)
+    { _ptscXgafv :: !(Maybe Xgafv)
     , _ptscUploadProtocol :: !(Maybe Text)
-    , _ptscPp             :: !Bool
-    , _ptscAccessToken    :: !(Maybe Text)
-    , _ptscUploadType     :: !(Maybe Text)
-    , _ptscPayload        :: !CreateTimeSeriesRequest
-    , _ptscBearerToken    :: !(Maybe Text)
-    , _ptscName           :: !Text
-    , _ptscCallback       :: !(Maybe Text)
+    , _ptscPp :: !Bool
+    , _ptscAccessToken :: !(Maybe Text)
+    , _ptscUploadType :: !(Maybe Text)
+    , _ptscPayload :: !CreateTimeSeriesRequest
+    , _ptscBearerToken :: !(Maybe Text)
+    , _ptscName :: !Text
+    , _ptscFields :: !(Maybe Text)
+    , _ptscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTimeSeriesCreate' with the minimum fields required to make a request.
@@ -105,12 +108,14 @@ data ProjectsTimeSeriesCreate = ProjectsTimeSeriesCreate'
 --
 -- * 'ptscName'
 --
+-- * 'ptscFields'
+--
 -- * 'ptscCallback'
 projectsTimeSeriesCreate
     :: CreateTimeSeriesRequest -- ^ 'ptscPayload'
     -> Text -- ^ 'ptscName'
     -> ProjectsTimeSeriesCreate
-projectsTimeSeriesCreate pPtscPayload_ pPtscName_ =
+projectsTimeSeriesCreate pPtscPayload_ pPtscName_ = 
     ProjectsTimeSeriesCreate'
     { _ptscXgafv = Nothing
     , _ptscUploadProtocol = Nothing
@@ -120,6 +125,7 @@ projectsTimeSeriesCreate pPtscPayload_ pPtscName_ =
     , _ptscPayload = pPtscPayload_
     , _ptscBearerToken = Nothing
     , _ptscName = pPtscName_
+    , _ptscFields = Nothing
     , _ptscCallback = Nothing
     }
 
@@ -166,6 +172,11 @@ ptscBearerToken
 ptscName :: Lens' ProjectsTimeSeriesCreate Text
 ptscName = lens _ptscName (\ s a -> s{_ptscName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptscFields :: Lens' ProjectsTimeSeriesCreate (Maybe Text)
+ptscFields
+  = lens _ptscFields (\ s a -> s{_ptscFields = a})
+
 -- | JSONP
 ptscCallback :: Lens' ProjectsTimeSeriesCreate (Maybe Text)
 ptscCallback
@@ -184,6 +195,7 @@ instance GoogleRequest ProjectsTimeSeriesCreate where
               _ptscUploadType
               _ptscBearerToken
               _ptscCallback
+              _ptscFields
               (Just AltJSON)
               _ptscPayload
               monitoringService

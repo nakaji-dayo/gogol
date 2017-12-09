@@ -41,8 +41,14 @@ module Network.Google.FirebaseRules
     -- ** firebaserules.projects.releases.get
     , module Network.Google.Resource.FirebaseRules.Projects.Releases.Get
 
+    -- ** firebaserules.projects.releases.getExecutable
+    , module Network.Google.Resource.FirebaseRules.Projects.Releases.GetExecutable
+
     -- ** firebaserules.projects.releases.list
     , module Network.Google.Resource.FirebaseRules.Projects.Releases.List
+
+    -- ** firebaserules.projects.releases.patch
+    , module Network.Google.Resource.FirebaseRules.Projects.Releases.Patch
 
     -- ** firebaserules.projects.releases.update
     , module Network.Google.Resource.FirebaseRules.Projects.Releases.Update
@@ -71,9 +77,33 @@ module Network.Google.FirebaseRules
     , spColumn
     , spFileName
 
+    -- ** TestCase
+    , TestCase
+    , testCase
+    , tcResource
+    , tcExpectation
+    , tcFunctionMocks
+    , tcRequest
+
     -- ** Empty
     , Empty
     , empty
+
+    -- ** FunctionMock
+    , FunctionMock
+    , functionMock
+    , fmArgs
+    , fmFunction
+    , fmResult
+
+    -- ** TestResultState
+    , TestResultState (..)
+
+    -- ** FunctionCall
+    , FunctionCall
+    , functionCall
+    , fcArgs
+    , fcFunction
 
     -- ** ListReleasesResponse
     , ListReleasesResponse
@@ -81,9 +111,16 @@ module Network.Google.FirebaseRules
     , lrrNextPageToken
     , lrrReleases
 
+    -- ** Result
+    , Result
+    , result
+    , rValue
+    , rUndefined
+
     -- ** TestRulesetResponse
     , TestRulesetResponse
     , testRulesetResponse
+    , trrTestResults
     , trrIssues
 
     -- ** Release
@@ -94,12 +131,35 @@ module Network.Google.FirebaseRules
     , rName
     , rCreateTime
 
+    -- ** Arg
+    , Arg
+    , arg
+    , aAnyValue
+    , aExactValue
+
     -- ** Ruleset
     , Ruleset
     , ruleset
     , rulName
     , rulSource
     , rulCreateTime
+
+    -- ** GetReleaseExecutableResponse
+    , GetReleaseExecutableResponse
+    , getReleaseExecutableResponse
+    , grerExecutable
+    , grerRulesetName
+    , grerUpdateTime
+    , grerExecutableVersion
+    , grerLanguage
+
+    -- ** TestResult
+    , TestResult
+    , testResult
+    , trState
+    , trFunctionCalls
+    , trErrorPosition
+    , trDebugMessages
 
     -- ** Xgafv
     , Xgafv (..)
@@ -112,10 +172,19 @@ module Network.Google.FirebaseRules
     , source
     , sFiles
 
+    -- ** TestCaseExpectation
+    , TestCaseExpectation (..)
+
+    -- ** TestSuite
+    , TestSuite
+    , testSuite
+    , tsTestCases
+
     -- ** TestRulesetRequest
     , TestRulesetRequest
     , testRulesetRequest
     , trrSource
+    , trrTestSuite
 
     -- ** File
     , File
@@ -123,6 +192,12 @@ module Network.Google.FirebaseRules
     , fFingerprint
     , fContent
     , fName
+
+    -- ** GetReleaseExecutableResponseExecutableVersion
+    , GetReleaseExecutableResponseExecutableVersion (..)
+
+    -- ** GetReleaseExecutableResponseLanguage
+    , GetReleaseExecutableResponseLanguage (..)
 
     -- ** ListRulesetsResponse
     , ListRulesetsResponse
@@ -136,20 +211,28 @@ module Network.Google.FirebaseRules
     , iSourcePosition
     , iSeverity
     , iDescription
+
+    -- ** UpdateReleaseRequest
+    , UpdateReleaseRequest
+    , updateReleaseRequest
+    , urrUpdateMask
+    , urrRelease
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.FirebaseRules.Projects.Releases.Create
-import           Network.Google.Resource.FirebaseRules.Projects.Releases.Delete
-import           Network.Google.Resource.FirebaseRules.Projects.Releases.Get
-import           Network.Google.Resource.FirebaseRules.Projects.Releases.List
-import           Network.Google.Resource.FirebaseRules.Projects.Releases.Update
-import           Network.Google.Resource.FirebaseRules.Projects.Rulesets.Create
-import           Network.Google.Resource.FirebaseRules.Projects.Rulesets.Delete
-import           Network.Google.Resource.FirebaseRules.Projects.Rulesets.Get
-import           Network.Google.Resource.FirebaseRules.Projects.Rulesets.List
-import           Network.Google.Resource.FirebaseRules.Projects.Test
+import Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Resource.FirebaseRules.Projects.Releases.Create
+import Network.Google.Resource.FirebaseRules.Projects.Releases.Delete
+import Network.Google.Resource.FirebaseRules.Projects.Releases.Get
+import Network.Google.Resource.FirebaseRules.Projects.Releases.GetExecutable
+import Network.Google.Resource.FirebaseRules.Projects.Releases.List
+import Network.Google.Resource.FirebaseRules.Projects.Releases.Patch
+import Network.Google.Resource.FirebaseRules.Projects.Releases.Update
+import Network.Google.Resource.FirebaseRules.Projects.Rulesets.Create
+import Network.Google.Resource.FirebaseRules.Projects.Rulesets.Delete
+import Network.Google.Resource.FirebaseRules.Projects.Rulesets.Get
+import Network.Google.Resource.FirebaseRules.Projects.Rulesets.List
+import Network.Google.Resource.FirebaseRules.Projects.Test
 
 {- $resources
 TODO
@@ -162,7 +245,9 @@ type FirebaseRulesAPI =
        :<|> ProjectsRulesetsCreateResource
        :<|> ProjectsRulesetsDeleteResource
        :<|> ProjectsReleasesListResource
+       :<|> ProjectsReleasesPatchResource
        :<|> ProjectsReleasesGetResource
+       :<|> ProjectsReleasesGetExecutableResource
        :<|> ProjectsReleasesCreateResource
        :<|> ProjectsReleasesDeleteResource
        :<|> ProjectsReleasesUpdateResource

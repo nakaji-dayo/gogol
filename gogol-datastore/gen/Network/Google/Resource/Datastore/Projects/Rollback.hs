@@ -41,11 +41,12 @@ module Network.Google.Resource.Datastore.Projects.Rollback
     , prPayload
     , prBearerToken
     , prProjectId
+    , prFields
     , prCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.rollback@ method which the
 -- 'ProjectsRollback' request conforms to.
@@ -60,23 +61,25 @@ type ProjectsRollbackResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] RollbackRequest :>
-                             Post '[JSON] RollbackResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] RollbackRequest :>
+                               Post '[JSON] RollbackResponse
 
 -- | Rolls back a transaction.
 --
 -- /See:/ 'projectsRollback' smart constructor.
 data ProjectsRollback = ProjectsRollback'
-    { _prXgafv          :: !(Maybe Xgafv)
+    { _prXgafv :: !(Maybe Xgafv)
     , _prUploadProtocol :: !(Maybe Text)
-    , _prPp             :: !Bool
-    , _prAccessToken    :: !(Maybe Text)
-    , _prUploadType     :: !(Maybe Text)
-    , _prPayload        :: !RollbackRequest
-    , _prBearerToken    :: !(Maybe Text)
-    , _prProjectId      :: !Text
-    , _prCallback       :: !(Maybe Text)
+    , _prPp :: !Bool
+    , _prAccessToken :: !(Maybe Text)
+    , _prUploadType :: !(Maybe Text)
+    , _prPayload :: !RollbackRequest
+    , _prBearerToken :: !(Maybe Text)
+    , _prProjectId :: !Text
+    , _prFields :: !(Maybe Text)
+    , _prCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRollback' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsRollback = ProjectsRollback'
 --
 -- * 'prProjectId'
 --
+-- * 'prFields'
+--
 -- * 'prCallback'
 projectsRollback
     :: RollbackRequest -- ^ 'prPayload'
     -> Text -- ^ 'prProjectId'
     -> ProjectsRollback
-projectsRollback pPrPayload_ pPrProjectId_ =
+projectsRollback pPrPayload_ pPrProjectId_ = 
     ProjectsRollback'
     { _prXgafv = Nothing
     , _prUploadProtocol = Nothing
@@ -114,6 +119,7 @@ projectsRollback pPrPayload_ pPrProjectId_ =
     , _prPayload = pPrPayload_
     , _prBearerToken = Nothing
     , _prProjectId = pPrProjectId_
+    , _prFields = Nothing
     , _prCallback = Nothing
     }
 
@@ -158,6 +164,10 @@ prProjectId :: Lens' ProjectsRollback Text
 prProjectId
   = lens _prProjectId (\ s a -> s{_prProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prFields :: Lens' ProjectsRollback (Maybe Text)
+prFields = lens _prFields (\ s a -> s{_prFields = a})
+
 -- | JSONP
 prCallback :: Lens' ProjectsRollback (Maybe Text)
 prCallback
@@ -175,6 +185,7 @@ instance GoogleRequest ProjectsRollback where
               _prUploadType
               _prBearerToken
               _prCallback
+              _prFields
               (Just AltJSON)
               _prPayload
               datastoreService

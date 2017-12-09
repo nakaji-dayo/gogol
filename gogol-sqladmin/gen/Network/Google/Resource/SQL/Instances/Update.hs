@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Instances.Update
     -- * Request Lenses
     , iuProject
     , iuPayload
+    , iuFields
     , iuInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.update@ method which the
 -- 'InstancesUpdate' request conforms to.
@@ -52,9 +53,10 @@ type InstancesUpdateResource =
            Capture "project" Text :>
              "instances" :>
                Capture "instance" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DatabaseInstance :>
-                     Put '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DatabaseInstance :>
+                       Put '[JSON] Operation
 
 -- | Updates settings of a Cloud SQL instance. Caution: This is not a partial
 -- update, so you must include values for all the settings that you want to
@@ -62,8 +64,9 @@ type InstancesUpdateResource =
 --
 -- /See:/ 'instancesUpdate' smart constructor.
 data InstancesUpdate = InstancesUpdate'
-    { _iuProject  :: !Text
-    , _iuPayload  :: !DatabaseInstance
+    { _iuProject :: !Text
+    , _iuPayload :: !DatabaseInstance
+    , _iuFields :: !(Maybe Text)
     , _iuInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -75,16 +78,19 @@ data InstancesUpdate = InstancesUpdate'
 --
 -- * 'iuPayload'
 --
+-- * 'iuFields'
+--
 -- * 'iuInstance'
 instancesUpdate
     :: Text -- ^ 'iuProject'
     -> DatabaseInstance -- ^ 'iuPayload'
     -> Text -- ^ 'iuInstance'
     -> InstancesUpdate
-instancesUpdate pIuProject_ pIuPayload_ pIuInstance_ =
+instancesUpdate pIuProject_ pIuPayload_ pIuInstance_ = 
     InstancesUpdate'
     { _iuProject = pIuProject_
     , _iuPayload = pIuPayload_
+    , _iuFields = Nothing
     , _iuInstance = pIuInstance_
     }
 
@@ -98,6 +104,10 @@ iuPayload :: Lens' InstancesUpdate DatabaseInstance
 iuPayload
   = lens _iuPayload (\ s a -> s{_iuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iuFields :: Lens' InstancesUpdate (Maybe Text)
+iuFields = lens _iuFields (\ s a -> s{_iuFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 iuInstance :: Lens' InstancesUpdate Text
 iuInstance
@@ -109,7 +119,8 @@ instance GoogleRequest InstancesUpdate where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesUpdate'{..}
-          = go _iuProject _iuInstance (Just AltJSON) _iuPayload
+          = go _iuProject _iuInstance _iuFields (Just AltJSON)
+              _iuPayload
               sQLAdminService
           where go
                   = buildClient

@@ -16,7 +16,7 @@
 --
 module Network.Google.GamesConfiguration.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Selects which image in a resource for this method.
 data ImageConfigurationsUploadImageType

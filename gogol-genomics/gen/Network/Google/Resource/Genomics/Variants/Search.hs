@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.Variants.Search
     , vsUploadType
     , vsPayload
     , vsBearerToken
+    , vsFields
     , vsCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variants.search@ method which the
 -- 'VariantsSearch' request conforms to.
@@ -63,9 +64,10 @@ type VariantsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchVariantsRequest :>
-                             Post '[JSON] SearchVariantsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchVariantsRequest :>
+                               Post '[JSON] SearchVariantsResponse
 
 -- | Gets a list of variants matching the criteria. For the definitions of
 -- variants and other genomics resources, see [Fundamentals of Google
@@ -75,14 +77,15 @@ type VariantsSearchResource =
 --
 -- /See:/ 'variantsSearch' smart constructor.
 data VariantsSearch = VariantsSearch'
-    { _vsXgafv          :: !(Maybe Xgafv)
+    { _vsXgafv :: !(Maybe Xgafv)
     , _vsUploadProtocol :: !(Maybe Text)
-    , _vsPp             :: !Bool
-    , _vsAccessToken    :: !(Maybe Text)
-    , _vsUploadType     :: !(Maybe Text)
-    , _vsPayload        :: !SearchVariantsRequest
-    , _vsBearerToken    :: !(Maybe Text)
-    , _vsCallback       :: !(Maybe Text)
+    , _vsPp :: !Bool
+    , _vsAccessToken :: !(Maybe Text)
+    , _vsUploadType :: !(Maybe Text)
+    , _vsPayload :: !SearchVariantsRequest
+    , _vsBearerToken :: !(Maybe Text)
+    , _vsFields :: !(Maybe Text)
+    , _vsCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantsSearch' with the minimum fields required to make a request.
@@ -103,11 +106,13 @@ data VariantsSearch = VariantsSearch'
 --
 -- * 'vsBearerToken'
 --
+-- * 'vsFields'
+--
 -- * 'vsCallback'
 variantsSearch
     :: SearchVariantsRequest -- ^ 'vsPayload'
     -> VariantsSearch
-variantsSearch pVsPayload_ =
+variantsSearch pVsPayload_ = 
     VariantsSearch'
     { _vsXgafv = Nothing
     , _vsUploadProtocol = Nothing
@@ -116,6 +121,7 @@ variantsSearch pVsPayload_ =
     , _vsUploadType = Nothing
     , _vsPayload = pVsPayload_
     , _vsBearerToken = Nothing
+    , _vsFields = Nothing
     , _vsCallback = Nothing
     }
 
@@ -155,6 +161,10 @@ vsBearerToken
   = lens _vsBearerToken
       (\ s a -> s{_vsBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vsFields :: Lens' VariantsSearch (Maybe Text)
+vsFields = lens _vsFields (\ s a -> s{_vsFields = a})
+
 -- | JSONP
 vsCallback :: Lens' VariantsSearch (Maybe Text)
 vsCallback
@@ -172,6 +182,7 @@ instance GoogleRequest VariantsSearch where
               _vsUploadType
               _vsBearerToken
               _vsCallback
+              _vsFields
               (Just AltJSON)
               _vsPayload
               genomicsService

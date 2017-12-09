@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Comments.RemoveContent
     , crcBlogId
     , crcPostId
     , crcCommentId
+    , crcFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.removeContent@ method which the
 -- 'CommentsRemoveContent' request conforms to.
@@ -53,15 +54,17 @@ type CommentsRemoveContentResource =
                  "comments" :>
                    Capture "commentId" Text :>
                      "removecontent" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Comment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Comment
 
 -- | Removes the content of a comment.
 --
 -- /See:/ 'commentsRemoveContent' smart constructor.
 data CommentsRemoveContent = CommentsRemoveContent'
-    { _crcBlogId    :: !Text
-    , _crcPostId    :: !Text
+    { _crcBlogId :: !Text
+    , _crcPostId :: !Text
     , _crcCommentId :: !Text
+    , _crcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsRemoveContent' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CommentsRemoveContent = CommentsRemoveContent'
 -- * 'crcPostId'
 --
 -- * 'crcCommentId'
+--
+-- * 'crcFields'
 commentsRemoveContent
     :: Text -- ^ 'crcBlogId'
     -> Text -- ^ 'crcPostId'
     -> Text -- ^ 'crcCommentId'
     -> CommentsRemoveContent
-commentsRemoveContent pCrcBlogId_ pCrcPostId_ pCrcCommentId_ =
+commentsRemoveContent pCrcBlogId_ pCrcPostId_ pCrcCommentId_ = 
     CommentsRemoveContent'
     { _crcBlogId = pCrcBlogId_
     , _crcPostId = pCrcPostId_
     , _crcCommentId = pCrcCommentId_
+    , _crcFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -100,12 +106,17 @@ crcCommentId :: Lens' CommentsRemoveContent Text
 crcCommentId
   = lens _crcCommentId (\ s a -> s{_crcCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+crcFields :: Lens' CommentsRemoveContent (Maybe Text)
+crcFields
+  = lens _crcFields (\ s a -> s{_crcFields = a})
+
 instance GoogleRequest CommentsRemoveContent where
         type Rs CommentsRemoveContent = Comment
         type Scopes CommentsRemoveContent =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient CommentsRemoveContent'{..}
-          = go _crcBlogId _crcPostId _crcCommentId
+          = go _crcBlogId _crcPostId _crcCommentId _crcFields
               (Just AltJSON)
               bloggerService
           where go

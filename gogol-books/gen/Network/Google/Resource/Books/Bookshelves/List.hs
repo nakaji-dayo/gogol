@@ -35,10 +35,11 @@ module Network.Google.Resource.Books.Bookshelves.List
     -- * Request Lenses
     , blUserId
     , blSource
+    , blFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.bookshelves.list@ method which the
 -- 'BookshelvesList' request conforms to.
@@ -49,7 +50,8 @@ type BookshelvesListResource =
            Capture "userId" Text :>
              "bookshelves" :>
                QueryParam "source" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Bookshelves
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Bookshelves
 
 -- | Retrieves a list of public bookshelves for the specified user.
 --
@@ -57,6 +59,7 @@ type BookshelvesListResource =
 data BookshelvesList = BookshelvesList'
     { _blUserId :: !Text
     , _blSource :: !(Maybe Text)
+    , _blFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BookshelvesList' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data BookshelvesList = BookshelvesList'
 -- * 'blUserId'
 --
 -- * 'blSource'
+--
+-- * 'blFields'
 bookshelvesList
     :: Text -- ^ 'blUserId'
     -> BookshelvesList
-bookshelvesList pBlUserId_ =
+bookshelvesList pBlUserId_ = 
     BookshelvesList'
     { _blUserId = pBlUserId_
     , _blSource = Nothing
+    , _blFields = Nothing
     }
 
 -- | ID of user for whom to retrieve bookshelves.
@@ -83,12 +89,17 @@ blUserId = lens _blUserId (\ s a -> s{_blUserId = a})
 blSource :: Lens' BookshelvesList (Maybe Text)
 blSource = lens _blSource (\ s a -> s{_blSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+blFields :: Lens' BookshelvesList (Maybe Text)
+blFields = lens _blFields (\ s a -> s{_blFields = a})
+
 instance GoogleRequest BookshelvesList where
         type Rs BookshelvesList = Bookshelves
         type Scopes BookshelvesList =
              '["https://www.googleapis.com/auth/books"]
         requestClient BookshelvesList'{..}
-          = go _blUserId _blSource (Just AltJSON) booksService
+          = go _blUserId _blSource _blFields (Just AltJSON)
+              booksService
           where go
                   = buildClient
                       (Proxy :: Proxy BookshelvesListResource)

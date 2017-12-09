@@ -40,10 +40,11 @@ module Network.Google.Resource.Calendar.Events.Update
     , euSupportsAttachments
     , euAlwaysIncludeEmail
     , euEventId
+    , euFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.update@ method which the
 -- 'EventsUpdate' request conforms to.
@@ -58,20 +59,22 @@ type EventsUpdateResource =
                    QueryParam "sendNotifications" Bool :>
                      QueryParam "supportsAttachments" Bool :>
                        QueryParam "alwaysIncludeEmail" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Event :> Put '[JSON] Event
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Event :> Put '[JSON] Event
 
 -- | Updates an event.
 --
 -- /See:/ 'eventsUpdate' smart constructor.
 data EventsUpdate = EventsUpdate'
-    { _euCalendarId          :: !Text
-    , _euPayload             :: !Event
-    , _euMaxAttendees        :: !(Maybe (Textual Int32))
-    , _euSendNotifications   :: !(Maybe Bool)
+    { _euCalendarId :: !Text
+    , _euPayload :: !Event
+    , _euMaxAttendees :: !(Maybe (Textual Int32))
+    , _euSendNotifications :: !(Maybe Bool)
     , _euSupportsAttachments :: !(Maybe Bool)
-    , _euAlwaysIncludeEmail  :: !(Maybe Bool)
-    , _euEventId             :: !Text
+    , _euAlwaysIncludeEmail :: !(Maybe Bool)
+    , _euEventId :: !Text
+    , _euFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsUpdate' with the minimum fields required to make a request.
@@ -91,12 +94,14 @@ data EventsUpdate = EventsUpdate'
 -- * 'euAlwaysIncludeEmail'
 --
 -- * 'euEventId'
+--
+-- * 'euFields'
 eventsUpdate
     :: Text -- ^ 'euCalendarId'
     -> Event -- ^ 'euPayload'
     -> Text -- ^ 'euEventId'
     -> EventsUpdate
-eventsUpdate pEuCalendarId_ pEuPayload_ pEuEventId_ =
+eventsUpdate pEuCalendarId_ pEuPayload_ pEuEventId_ = 
     EventsUpdate'
     { _euCalendarId = pEuCalendarId_
     , _euPayload = pEuPayload_
@@ -105,6 +110,7 @@ eventsUpdate pEuCalendarId_ pEuPayload_ pEuEventId_ =
     , _euSupportsAttachments = Nothing
     , _euAlwaysIncludeEmail = Nothing
     , _euEventId = pEuEventId_
+    , _euFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -158,6 +164,10 @@ euEventId :: Lens' EventsUpdate Text
 euEventId
   = lens _euEventId (\ s a -> s{_euEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+euFields :: Lens' EventsUpdate (Maybe Text)
+euFields = lens _euFields (\ s a -> s{_euFields = a})
+
 instance GoogleRequest EventsUpdate where
         type Rs EventsUpdate = Event
         type Scopes EventsUpdate =
@@ -167,6 +177,7 @@ instance GoogleRequest EventsUpdate where
               _euSendNotifications
               _euSupportsAttachments
               _euAlwaysIncludeEmail
+              _euFields
               (Just AltJSON)
               _euPayload
               appsCalendarService

@@ -37,10 +37,11 @@ module Network.Google.Resource.Drive.Replies.Get
     , rgFileId
     , rgCommentId
     , rgIncludeDeleted
+    , rgFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.replies.get@ method which the
 -- 'RepliesGet' request conforms to.
@@ -54,16 +55,18 @@ type RepliesGetResource =
                  "replies" :>
                    Capture "replyId" Text :>
                      QueryParam "includeDeleted" Bool :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Reply
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Reply
 
 -- | Gets a reply by ID.
 --
 -- /See:/ 'repliesGet' smart constructor.
 data RepliesGet = RepliesGet'
-    { _rgReplyId        :: !Text
-    , _rgFileId         :: !Text
-    , _rgCommentId      :: !Text
+    { _rgReplyId :: !Text
+    , _rgFileId :: !Text
+    , _rgCommentId :: !Text
     , _rgIncludeDeleted :: !Bool
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepliesGet' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data RepliesGet = RepliesGet'
 -- * 'rgCommentId'
 --
 -- * 'rgIncludeDeleted'
+--
+-- * 'rgFields'
 repliesGet
     :: Text -- ^ 'rgReplyId'
     -> Text -- ^ 'rgFileId'
     -> Text -- ^ 'rgCommentId'
     -> RepliesGet
-repliesGet pRgReplyId_ pRgFileId_ pRgCommentId_ =
+repliesGet pRgReplyId_ pRgFileId_ pRgCommentId_ = 
     RepliesGet'
     { _rgReplyId = pRgReplyId_
     , _rgFileId = pRgFileId_
     , _rgCommentId = pRgCommentId_
     , _rgIncludeDeleted = False
+    , _rgFields = Nothing
     }
 
 -- | The ID of the reply.
@@ -111,6 +117,10 @@ rgIncludeDeleted
   = lens _rgIncludeDeleted
       (\ s a -> s{_rgIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' RepliesGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest RepliesGet where
         type Rs RepliesGet = Reply
         type Scopes RepliesGet =
@@ -120,6 +130,7 @@ instance GoogleRequest RepliesGet where
         requestClient RepliesGet'{..}
           = go _rgFileId _rgCommentId _rgReplyId
               (Just _rgIncludeDeleted)
+              _rgFields
               (Just AltJSON)
               driveService
           where go

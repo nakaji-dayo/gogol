@@ -47,16 +47,17 @@ module Network.Google.Resource.DFAReporting.Advertisers.List
     , allSubAccountId
     , allFloodlightConfigurationIds
     , allMaxResults
+    , allFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertisers.list@ method which the
 -- 'AdvertisersList' request conforms to.
 type AdvertisersListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertisers" :>
@@ -76,27 +77,29 @@ type AdvertisersListResource =
                                      (Textual Int64)
                                      :>
                                      QueryParam "maxResults" (Textual Int32) :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] AdvertisersListResponse
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] AdvertisersListResponse
 
 -- | Retrieves a list of advertisers, possibly filtered. This method supports
 -- paging.
 --
 -- /See:/ 'advertisersList' smart constructor.
 data AdvertisersList = AdvertisersList'
-    { _allStatus                              :: !(Maybe AdvertisersListStatus)
-    , _allOnlyParent                          :: !(Maybe Bool)
-    , _allSearchString                        :: !(Maybe Text)
-    , _allIds                                 :: !(Maybe [Textual Int64])
+    { _allStatus :: !(Maybe AdvertisersListStatus)
+    , _allOnlyParent :: !(Maybe Bool)
+    , _allSearchString :: !(Maybe Text)
+    , _allIds :: !(Maybe [Textual Int64])
     , _allIncludeAdvertisersWithoutGroupsOnly :: !(Maybe Bool)
-    , _allProFileId                           :: !(Textual Int64)
-    , _allSortOrder                           :: !(Maybe AdvertisersListSortOrder)
-    , _allAdvertiserGroupIds                  :: !(Maybe [Textual Int64])
-    , _allPageToken                           :: !(Maybe Text)
-    , _allSortField                           :: !(Maybe AdvertisersListSortField)
-    , _allSubAccountId                        :: !(Maybe (Textual Int64))
-    , _allFloodlightConfigurationIds          :: !(Maybe [Textual Int64])
-    , _allMaxResults                          :: !(Maybe (Textual Int32))
+    , _allProFileId :: !(Textual Int64)
+    , _allSortOrder :: !AdvertisersListSortOrder
+    , _allAdvertiserGroupIds :: !(Maybe [Textual Int64])
+    , _allPageToken :: !(Maybe Text)
+    , _allSortField :: !AdvertisersListSortField
+    , _allSubAccountId :: !(Maybe (Textual Int64))
+    , _allFloodlightConfigurationIds :: !(Maybe [Textual Int64])
+    , _allMaxResults :: !(Textual Int32)
+    , _allFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertisersList' with the minimum fields required to make a request.
@@ -128,10 +131,12 @@ data AdvertisersList = AdvertisersList'
 -- * 'allFloodlightConfigurationIds'
 --
 -- * 'allMaxResults'
+--
+-- * 'allFields'
 advertisersList
     :: Int64 -- ^ 'allProFileId'
     -> AdvertisersList
-advertisersList pAllProFileId_ =
+advertisersList pAllProFileId_ = 
     AdvertisersList'
     { _allStatus = Nothing
     , _allOnlyParent = Nothing
@@ -139,13 +144,14 @@ advertisersList pAllProFileId_ =
     , _allIds = Nothing
     , _allIncludeAdvertisersWithoutGroupsOnly = Nothing
     , _allProFileId = _Coerce # pAllProFileId_
-    , _allSortOrder = Nothing
+    , _allSortOrder = ALSOAscending
     , _allAdvertiserGroupIds = Nothing
     , _allPageToken = Nothing
-    , _allSortField = Nothing
+    , _allSortField = ID
     , _allSubAccountId = Nothing
     , _allFloodlightConfigurationIds = Nothing
-    , _allMaxResults = Nothing
+    , _allMaxResults = 1000
+    , _allFields = Nothing
     }
 
 -- | Select only advertisers with the specified status.
@@ -191,8 +197,8 @@ allProFileId
   = lens _allProFileId (\ s a -> s{_allProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-allSortOrder :: Lens' AdvertisersList (Maybe AdvertisersListSortOrder)
+-- | Order of sorted results.
+allSortOrder :: Lens' AdvertisersList AdvertisersListSortOrder
 allSortOrder
   = lens _allSortOrder (\ s a -> s{_allSortOrder = a})
 
@@ -210,7 +216,7 @@ allPageToken
   = lens _allPageToken (\ s a -> s{_allPageToken = a})
 
 -- | Field by which to sort the list.
-allSortField :: Lens' AdvertisersList (Maybe AdvertisersListSortField)
+allSortField :: Lens' AdvertisersList AdvertisersListSortField
 allSortField
   = lens _allSortField (\ s a -> s{_allSortField = a})
 
@@ -230,11 +236,16 @@ allFloodlightConfigurationIds
       . _Coerce
 
 -- | Maximum number of results to return.
-allMaxResults :: Lens' AdvertisersList (Maybe Int32)
+allMaxResults :: Lens' AdvertisersList Int32
 allMaxResults
   = lens _allMaxResults
       (\ s a -> s{_allMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+allFields :: Lens' AdvertisersList (Maybe Text)
+allFields
+  = lens _allFields (\ s a -> s{_allFields = a})
 
 instance GoogleRequest AdvertisersList where
         type Rs AdvertisersList = AdvertisersListResponse
@@ -245,13 +256,14 @@ instance GoogleRequest AdvertisersList where
               _allSearchString
               (_allIds ^. _Default)
               _allIncludeAdvertisersWithoutGroupsOnly
-              _allSortOrder
+              (Just _allSortOrder)
               (_allAdvertiserGroupIds ^. _Default)
               _allPageToken
-              _allSortField
+              (Just _allSortField)
               _allSubAccountId
               (_allFloodlightConfigurationIds ^. _Default)
-              _allMaxResults
+              (Just _allMaxResults)
+              _allFields
               (Just AltJSON)
               dFAReportingService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Tasks.Tasks.Delete
     -- * Request Lenses
     , tdTaskList
     , tdTask
+    , tdFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.delete@ method which the
 -- 'TasksDelete' request conforms to.
@@ -49,14 +50,16 @@ type TasksDeleteResource =
            Capture "tasklist" Text :>
              "tasks" :>
                Capture "task" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified task from the task list.
 --
 -- /See:/ 'tasksDelete' smart constructor.
 data TasksDelete = TasksDelete'
     { _tdTaskList :: !Text
-    , _tdTask     :: !Text
+    , _tdTask :: !Text
+    , _tdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TasksDelete = TasksDelete'
 -- * 'tdTaskList'
 --
 -- * 'tdTask'
+--
+-- * 'tdFields'
 tasksDelete
     :: Text -- ^ 'tdTaskList'
     -> Text -- ^ 'tdTask'
     -> TasksDelete
-tasksDelete pTdTaskList_ pTdTask_ =
+tasksDelete pTdTaskList_ pTdTask_ = 
     TasksDelete'
     { _tdTaskList = pTdTaskList_
     , _tdTask = pTdTask_
+    , _tdFields = Nothing
     }
 
 -- | Task list identifier.
@@ -85,12 +91,16 @@ tdTaskList
 tdTask :: Lens' TasksDelete Text
 tdTask = lens _tdTask (\ s a -> s{_tdTask = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdFields :: Lens' TasksDelete (Maybe Text)
+tdFields = lens _tdFields (\ s a -> s{_tdFields = a})
+
 instance GoogleRequest TasksDelete where
         type Rs TasksDelete = ()
         type Scopes TasksDelete =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TasksDelete'{..}
-          = go _tdTaskList _tdTask (Just AltJSON)
+          = go _tdTaskList _tdTask _tdFields (Just AltJSON)
               appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TasksDeleteResource)

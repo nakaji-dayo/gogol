@@ -23,6 +23,7 @@
 -- Provides information about a list of specific people by specifying a
 -- list of requested resource names. Use \`people\/me\` to indicate the
 -- authenticated user.
+-- The request throws a 400 error if \'personFields\' is not specified.
 --
 -- /See:/ <https://developers.google.com/people/ Google People API Reference> for @people.people.getBatchGet@.
 module Network.Google.Resource.People.People.GetBatchGet
@@ -41,46 +42,53 @@ module Network.Google.Resource.People.People.GetBatchGet
     , pgbgPp
     , pgbgAccessToken
     , pgbgUploadType
+    , pgbgPersonFields
     , pgbgBearerToken
     , pgbgResourceNames
+    , pgbgFields
     , pgbgCallback
     ) where
 
-import           Network.Google.People.Types
-import           Network.Google.Prelude
+import Network.Google.People.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @people.people.getBatchGet@ method which the
 -- 'PeopleGetBatchGet' request conforms to.
 type PeopleGetBatchGetResource =
      "v1" :>
        "people:batchGet" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
-             QueryParam "requestMask.includeField" Text :>
+             QueryParam "requestMask.includeField" FieldMask :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
-                     QueryParam "bearer_token" Text :>
-                       QueryParams "resourceNames" Text :>
-                         QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] GetPeopleResponse
+                     QueryParam "personFields" FieldMask :>
+                       QueryParam "bearer_token" Text :>
+                         QueryParams "resourceNames" Text :>
+                           QueryParam "callback" Text :>
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] GetPeopleResponse
 
 -- | Provides information about a list of specific people by specifying a
 -- list of requested resource names. Use \`people\/me\` to indicate the
 -- authenticated user.
+-- The request throws a 400 error if \'personFields\' is not specified.
 --
 -- /See:/ 'peopleGetBatchGet' smart constructor.
 data PeopleGetBatchGet = PeopleGetBatchGet'
-    { _pgbgXgafv                   :: !(Maybe Text)
-    , _pgbgUploadProtocol          :: !(Maybe Text)
-    , _pgbgRequestMaskIncludeField :: !(Maybe Text)
-    , _pgbgPp                      :: !Bool
-    , _pgbgAccessToken             :: !(Maybe Text)
-    , _pgbgUploadType              :: !(Maybe Text)
-    , _pgbgBearerToken             :: !(Maybe Text)
-    , _pgbgResourceNames           :: !(Maybe [Text])
-    , _pgbgCallback                :: !(Maybe Text)
+    { _pgbgXgafv :: !(Maybe Xgafv)
+    , _pgbgUploadProtocol :: !(Maybe Text)
+    , _pgbgRequestMaskIncludeField :: !(Maybe FieldMask)
+    , _pgbgPp :: !Bool
+    , _pgbgAccessToken :: !(Maybe Text)
+    , _pgbgUploadType :: !(Maybe Text)
+    , _pgbgPersonFields :: !(Maybe FieldMask)
+    , _pgbgBearerToken :: !(Maybe Text)
+    , _pgbgResourceNames :: !(Maybe [Text])
+    , _pgbgFields :: !(Maybe Text)
+    , _pgbgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleGetBatchGet' with the minimum fields required to make a request.
@@ -99,14 +107,18 @@ data PeopleGetBatchGet = PeopleGetBatchGet'
 --
 -- * 'pgbgUploadType'
 --
+-- * 'pgbgPersonFields'
+--
 -- * 'pgbgBearerToken'
 --
 -- * 'pgbgResourceNames'
 --
+-- * 'pgbgFields'
+--
 -- * 'pgbgCallback'
 peopleGetBatchGet
     :: PeopleGetBatchGet
-peopleGetBatchGet =
+peopleGetBatchGet = 
     PeopleGetBatchGet'
     { _pgbgXgafv = Nothing
     , _pgbgUploadProtocol = Nothing
@@ -114,13 +126,15 @@ peopleGetBatchGet =
     , _pgbgPp = True
     , _pgbgAccessToken = Nothing
     , _pgbgUploadType = Nothing
+    , _pgbgPersonFields = Nothing
     , _pgbgBearerToken = Nothing
     , _pgbgResourceNames = Nothing
+    , _pgbgFields = Nothing
     , _pgbgCallback = Nothing
     }
 
 -- | V1 error format.
-pgbgXgafv :: Lens' PeopleGetBatchGet (Maybe Text)
+pgbgXgafv :: Lens' PeopleGetBatchGet (Maybe Xgafv)
 pgbgXgafv
   = lens _pgbgXgafv (\ s a -> s{_pgbgXgafv = a})
 
@@ -130,10 +144,10 @@ pgbgUploadProtocol
   = lens _pgbgUploadProtocol
       (\ s a -> s{_pgbgUploadProtocol = a})
 
--- | Comma-separated list of fields to be included in the response. Omitting
--- this field will include all fields. Each path should start with
--- \`person.\`: for example, \`person.names\` or \`person.photos\`.
-pgbgRequestMaskIncludeField :: Lens' PeopleGetBatchGet (Maybe Text)
+-- | **Required.** Comma-separated list of person fields to be included in
+-- the response. Each path should start with \`person.\`: for example,
+-- \`person.names\` or \`person.photos\`.
+pgbgRequestMaskIncludeField :: Lens' PeopleGetBatchGet (Maybe FieldMask)
 pgbgRequestMaskIncludeField
   = lens _pgbgRequestMaskIncludeField
       (\ s a -> s{_pgbgRequestMaskIncludeField = a})
@@ -154,22 +168,42 @@ pgbgUploadType
   = lens _pgbgUploadType
       (\ s a -> s{_pgbgUploadType = a})
 
+-- | **Required.** A field mask to restrict which fields on each person are
+-- returned. Valid values are: * addresses * ageRanges * biographies *
+-- birthdays * braggingRights * coverPhotos * emailAddresses * events *
+-- genders * imClients * locales * memberships * metadata * names *
+-- nicknames * occupations * organizations * phoneNumbers * photos *
+-- relations * relationshipInterests * relationshipStatuses * residences *
+-- skills * taglines * urls
+pgbgPersonFields :: Lens' PeopleGetBatchGet (Maybe FieldMask)
+pgbgPersonFields
+  = lens _pgbgPersonFields
+      (\ s a -> s{_pgbgPersonFields = a})
+
 -- | OAuth bearer token.
 pgbgBearerToken :: Lens' PeopleGetBatchGet (Maybe Text)
 pgbgBearerToken
   = lens _pgbgBearerToken
       (\ s a -> s{_pgbgBearerToken = a})
 
--- | The resource name, such as one returned by
--- [\`people.connections.list\`](\/people\/api\/rest\/v1\/people.connections\/list),
--- of one of the people to provide information about. You can include this
--- parameter up to 50 times in one request.
+-- | The resource names of the people to provide information about. - To get
+-- information about the authenticated user, specify \`people\/me\`. - To
+-- get information about a google account, specify \`people\/\`account_id.
+-- - To get information about a contact, specify the resource name that
+-- identifies the contact as returned by
+-- [\`people.connections.list\`](\/people\/api\/rest\/v1\/people.connections\/list).
+-- You can include up to 50 resource names in one request.
 pgbgResourceNames :: Lens' PeopleGetBatchGet [Text]
 pgbgResourceNames
   = lens _pgbgResourceNames
       (\ s a -> s{_pgbgResourceNames = a})
       . _Default
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+pgbgFields :: Lens' PeopleGetBatchGet (Maybe Text)
+pgbgFields
+  = lens _pgbgFields (\ s a -> s{_pgbgFields = a})
 
 -- | JSONP
 pgbgCallback :: Lens' PeopleGetBatchGet (Maybe Text)
@@ -194,9 +228,11 @@ instance GoogleRequest PeopleGetBatchGet where
               (Just _pgbgPp)
               _pgbgAccessToken
               _pgbgUploadType
+              _pgbgPersonFields
               _pgbgBearerToken
               (_pgbgResourceNames ^. _Default)
               _pgbgCallback
+              _pgbgFields
               (Just AltJSON)
               peopleService
           where go

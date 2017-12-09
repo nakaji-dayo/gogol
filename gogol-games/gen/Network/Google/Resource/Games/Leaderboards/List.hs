@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Leaderboards.List
     , llLanguage
     , llPageToken
     , llMaxResults
+    , llFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.leaderboards.list@ method which the
 -- 'LeaderboardsList' request conforms to.
@@ -52,17 +53,19 @@ type LeaderboardsListResource =
              QueryParam "language" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] LeaderboardListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] LeaderboardListResponse
 
 -- | Lists all the leaderboard metadata for your application.
 --
 -- /See:/ 'leaderboardsList' smart constructor.
 data LeaderboardsList = LeaderboardsList'
     { _llConsistencyToken :: !(Maybe (Textual Int64))
-    , _llLanguage         :: !(Maybe Text)
-    , _llPageToken        :: !(Maybe Text)
-    , _llMaxResults       :: !(Maybe (Textual Int32))
+    , _llLanguage :: !(Maybe Text)
+    , _llPageToken :: !(Maybe Text)
+    , _llMaxResults :: !(Maybe (Textual Int32))
+    , _llFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardsList' with the minimum fields required to make a request.
@@ -76,14 +79,17 @@ data LeaderboardsList = LeaderboardsList'
 -- * 'llPageToken'
 --
 -- * 'llMaxResults'
+--
+-- * 'llFields'
 leaderboardsList
     :: LeaderboardsList
-leaderboardsList =
+leaderboardsList = 
     LeaderboardsList'
     { _llConsistencyToken = Nothing
     , _llLanguage = Nothing
     , _llPageToken = Nothing
     , _llMaxResults = Nothing
+    , _llFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -111,6 +117,10 @@ llMaxResults
   = lens _llMaxResults (\ s a -> s{_llMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+llFields :: Lens' LeaderboardsList (Maybe Text)
+llFields = lens _llFields (\ s a -> s{_llFields = a})
+
 instance GoogleRequest LeaderboardsList where
         type Rs LeaderboardsList = LeaderboardListResponse
         type Scopes LeaderboardsList =
@@ -119,6 +129,7 @@ instance GoogleRequest LeaderboardsList where
         requestClient LeaderboardsList'{..}
           = go _llConsistencyToken _llLanguage _llPageToken
               _llMaxResults
+              _llFields
               (Just AltJSON)
               gamesService
           where go

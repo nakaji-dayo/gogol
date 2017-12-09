@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.PlayLists.Delete
     -- * Request Lenses
     , pldOnBehalfOfContentOwner
     , pldId
+    , pldFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlists.delete@ method which the
 -- 'PlayListsDelete' request conforms to.
@@ -48,14 +49,16 @@ type PlayListsDeleteResource =
          "playlists" :>
            QueryParam "id" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a playlist.
 --
 -- /See:/ 'playListsDelete' smart constructor.
 data PlayListsDelete = PlayListsDelete'
     { _pldOnBehalfOfContentOwner :: !(Maybe Text)
-    , _pldId                     :: !Text
+    , _pldId :: !Text
+    , _pldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListsDelete' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data PlayListsDelete = PlayListsDelete'
 -- * 'pldOnBehalfOfContentOwner'
 --
 -- * 'pldId'
+--
+-- * 'pldFields'
 playListsDelete
     :: Text -- ^ 'pldId'
     -> PlayListsDelete
-playListsDelete pPldId_ =
+playListsDelete pPldId_ = 
     PlayListsDelete'
     { _pldOnBehalfOfContentOwner = Nothing
     , _pldId = pPldId_
+    , _pldFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -95,6 +101,11 @@ pldOnBehalfOfContentOwner
 pldId :: Lens' PlayListsDelete Text
 pldId = lens _pldId (\ s a -> s{_pldId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pldFields :: Lens' PlayListsDelete (Maybe Text)
+pldFields
+  = lens _pldFields (\ s a -> s{_pldFields = a})
+
 instance GoogleRequest PlayListsDelete where
         type Rs PlayListsDelete = ()
         type Scopes PlayListsDelete =
@@ -103,6 +114,7 @@ instance GoogleRequest PlayListsDelete where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient PlayListsDelete'{..}
           = go (Just _pldId) _pldOnBehalfOfContentOwner
+              _pldFields
               (Just AltJSON)
               youTubeService
           where go

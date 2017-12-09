@@ -35,10 +35,11 @@ module Network.Google.Resource.Prediction.TrainedModels.Analyze
     -- * Request Lenses
     , tmaProject
     , tmaId
+    , tmaFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.analyze@ method which the
 -- 'TrainedModelsAnalyze' request conforms to.
@@ -50,14 +51,16 @@ type TrainedModelsAnalyzeResource =
              "trainedmodels" :>
                Capture "id" Text :>
                  "analyze" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Analyze
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Analyze
 
 -- | Get analysis of the model and the data the model was trained on.
 --
 -- /See:/ 'trainedModelsAnalyze' smart constructor.
 data TrainedModelsAnalyze = TrainedModelsAnalyze'
     { _tmaProject :: !Text
-    , _tmaId      :: !Text
+    , _tmaId :: !Text
+    , _tmaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsAnalyze' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TrainedModelsAnalyze = TrainedModelsAnalyze'
 -- * 'tmaProject'
 --
 -- * 'tmaId'
+--
+-- * 'tmaFields'
 trainedModelsAnalyze
     :: Text -- ^ 'tmaProject'
     -> Text -- ^ 'tmaId'
     -> TrainedModelsAnalyze
-trainedModelsAnalyze pTmaProject_ pTmaId_ =
+trainedModelsAnalyze pTmaProject_ pTmaId_ = 
     TrainedModelsAnalyze'
     { _tmaProject = pTmaProject_
     , _tmaId = pTmaId_
+    , _tmaFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -86,13 +92,18 @@ tmaProject
 tmaId :: Lens' TrainedModelsAnalyze Text
 tmaId = lens _tmaId (\ s a -> s{_tmaId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tmaFields :: Lens' TrainedModelsAnalyze (Maybe Text)
+tmaFields
+  = lens _tmaFields (\ s a -> s{_tmaFields = a})
+
 instance GoogleRequest TrainedModelsAnalyze where
         type Rs TrainedModelsAnalyze = Analyze
         type Scopes TrainedModelsAnalyze =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsAnalyze'{..}
-          = go _tmaProject _tmaId (Just AltJSON)
+          = go _tmaProject _tmaId _tmaFields (Just AltJSON)
               predictionService
           where go
                   = buildClient

@@ -40,10 +40,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.Resize
     , igmrSize
     , igmrInstanceGroupManager
     , igmrZone
+    , igmrFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.resize@ method which the
 -- 'InstanceGroupManagersResize' request conforms to.
@@ -58,7 +59,8 @@ type InstanceGroupManagersResizeResource =
                    Capture "instanceGroupManager" Text :>
                      "resize" :>
                        QueryParam "size" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Resizes the managed instance group up or down. If resized up, new
 -- instances are created using the current instance template. If resized
@@ -67,10 +69,11 @@ type InstanceGroupManagersResizeResource =
 --
 -- /See:/ 'instanceGroupManagersResize' smart constructor.
 data InstanceGroupManagersResize = InstanceGroupManagersResize'
-    { _igmrProject              :: !Text
-    , _igmrSize                 :: !(Textual Int32)
+    { _igmrProject :: !Text
+    , _igmrSize :: !(Textual Int32)
     , _igmrInstanceGroupManager :: !Text
-    , _igmrZone                 :: !Text
+    , _igmrZone :: !Text
+    , _igmrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersResize' with the minimum fields required to make a request.
@@ -84,18 +87,21 @@ data InstanceGroupManagersResize = InstanceGroupManagersResize'
 -- * 'igmrInstanceGroupManager'
 --
 -- * 'igmrZone'
+--
+-- * 'igmrFields'
 instanceGroupManagersResize
     :: Text -- ^ 'igmrProject'
     -> Int32 -- ^ 'igmrSize'
     -> Text -- ^ 'igmrInstanceGroupManager'
     -> Text -- ^ 'igmrZone'
     -> InstanceGroupManagersResize
-instanceGroupManagersResize pIgmrProject_ pIgmrSize_ pIgmrInstanceGroupManager_ pIgmrZone_ =
+instanceGroupManagersResize pIgmrProject_ pIgmrSize_ pIgmrInstanceGroupManager_ pIgmrZone_ = 
     InstanceGroupManagersResize'
     { _igmrProject = pIgmrProject_
     , _igmrSize = _Coerce # pIgmrSize_
     , _igmrInstanceGroupManager = pIgmrInstanceGroupManager_
     , _igmrZone = pIgmrZone_
+    , _igmrFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -119,6 +125,11 @@ igmrInstanceGroupManager
 igmrZone :: Lens' InstanceGroupManagersResize Text
 igmrZone = lens _igmrZone (\ s a -> s{_igmrZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmrFields :: Lens' InstanceGroupManagersResize (Maybe Text)
+igmrFields
+  = lens _igmrFields (\ s a -> s{_igmrFields = a})
+
 instance GoogleRequest InstanceGroupManagersResize
          where
         type Rs InstanceGroupManagersResize = Operation
@@ -128,6 +139,7 @@ instance GoogleRequest InstanceGroupManagersResize
         requestClient InstanceGroupManagersResize'{..}
           = go _igmrProject _igmrZone _igmrInstanceGroupManager
               (Just _igmrSize)
+              _igmrFields
               (Just AltJSON)
               replicaPoolService
           where go

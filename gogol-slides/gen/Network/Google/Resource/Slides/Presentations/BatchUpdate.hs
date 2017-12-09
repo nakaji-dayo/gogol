@@ -54,11 +54,12 @@ module Network.Google.Resource.Slides.Presentations.BatchUpdate
     , pbuPresentationId
     , pbuPayload
     , pbuBearerToken
+    , pbuFields
     , pbuCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Slides.Types
+import Network.Google.Prelude
+import Network.Google.Slides.Types
 
 -- | A resource alias for @slides.presentations.batchUpdate@ method which the
 -- 'PresentationsBatchUpdate' request conforms to.
@@ -73,9 +74,10 @@ type PresentationsBatchUpdateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] BatchUpdatePresentationRequest :>
-                             Post '[JSON] BatchUpdatePresentationResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] BatchUpdatePresentationRequest :>
+                               Post '[JSON] BatchUpdatePresentationResponse
 
 -- | Applies one or more updates to the presentation. Each request is
 -- validated before being applied. If any request is not valid, then the
@@ -94,15 +96,16 @@ type PresentationsBatchUpdateResource =
 --
 -- /See:/ 'presentationsBatchUpdate' smart constructor.
 data PresentationsBatchUpdate = PresentationsBatchUpdate'
-    { _pbuXgafv          :: !(Maybe Xgafv)
+    { _pbuXgafv :: !(Maybe Xgafv)
     , _pbuUploadProtocol :: !(Maybe Text)
-    , _pbuPp             :: !Bool
-    , _pbuAccessToken    :: !(Maybe Text)
-    , _pbuUploadType     :: !(Maybe Text)
+    , _pbuPp :: !Bool
+    , _pbuAccessToken :: !(Maybe Text)
+    , _pbuUploadType :: !(Maybe Text)
     , _pbuPresentationId :: !Text
-    , _pbuPayload        :: !BatchUpdatePresentationRequest
-    , _pbuBearerToken    :: !(Maybe Text)
-    , _pbuCallback       :: !(Maybe Text)
+    , _pbuPayload :: !BatchUpdatePresentationRequest
+    , _pbuBearerToken :: !(Maybe Text)
+    , _pbuFields :: !(Maybe Text)
+    , _pbuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PresentationsBatchUpdate' with the minimum fields required to make a request.
@@ -125,12 +128,14 @@ data PresentationsBatchUpdate = PresentationsBatchUpdate'
 --
 -- * 'pbuBearerToken'
 --
+-- * 'pbuFields'
+--
 -- * 'pbuCallback'
 presentationsBatchUpdate
     :: Text -- ^ 'pbuPresentationId'
     -> BatchUpdatePresentationRequest -- ^ 'pbuPayload'
     -> PresentationsBatchUpdate
-presentationsBatchUpdate pPbuPresentationId_ pPbuPayload_ =
+presentationsBatchUpdate pPbuPresentationId_ pPbuPayload_ = 
     PresentationsBatchUpdate'
     { _pbuXgafv = Nothing
     , _pbuUploadProtocol = Nothing
@@ -140,6 +145,7 @@ presentationsBatchUpdate pPbuPresentationId_ pPbuPayload_ =
     , _pbuPresentationId = pPbuPresentationId_
     , _pbuPayload = pPbuPayload_
     , _pbuBearerToken = Nothing
+    , _pbuFields = Nothing
     , _pbuCallback = Nothing
     }
 
@@ -186,6 +192,11 @@ pbuBearerToken
   = lens _pbuBearerToken
       (\ s a -> s{_pbuBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pbuFields :: Lens' PresentationsBatchUpdate (Maybe Text)
+pbuFields
+  = lens _pbuFields (\ s a -> s{_pbuFields = a})
+
 -- | JSONP
 pbuCallback :: Lens' PresentationsBatchUpdate (Maybe Text)
 pbuCallback
@@ -207,6 +218,7 @@ instance GoogleRequest PresentationsBatchUpdate where
               _pbuUploadType
               _pbuBearerToken
               _pbuCallback
+              _pbuFields
               (Just AltJSON)
               _pbuPayload
               slidesService

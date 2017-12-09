@@ -17,18 +17,18 @@
 --
 module Network.Google.DataTransfer.Types.Product where
 
-import           Network.Google.DataTransfer.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types.Sum
+import Network.Google.Prelude
 
 -- | The JSON template for an Application resource.
 --
 -- /See:/ 'application' smart constructor.
 data Application = Application'
     { _aTransferParams :: !(Maybe [ApplicationTransferParam])
-    , _aEtag           :: !(Maybe Text)
-    , _aKind           :: !Text
-    , _aName           :: !(Maybe Text)
-    , _aId             :: !(Maybe (Textual Int64))
+    , _aEtag :: !(Maybe Text)
+    , _aKind :: !Text
+    , _aName :: !(Maybe Text)
+    , _aId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Application' with the minimum fields required to make a request.
@@ -46,7 +46,7 @@ data Application = Application'
 -- * 'aId'
 application
     :: Application
-application =
+application = 
     Application'
     { _aTransferParams = Nothing
     , _aEtag = Nothing
@@ -108,7 +108,7 @@ instance ToJSON Application where
 -- /See:/ 'applicationTransferParam' smart constructor.
 data ApplicationTransferParam = ApplicationTransferParam'
     { _atpValue :: !(Maybe [Text])
-    , _atpKey   :: !(Maybe Text)
+    , _atpKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationTransferParam' with the minimum fields required to make a request.
@@ -120,7 +120,7 @@ data ApplicationTransferParam = ApplicationTransferParam'
 -- * 'atpKey'
 applicationTransferParam
     :: ApplicationTransferParam
-applicationTransferParam =
+applicationTransferParam = 
     ApplicationTransferParam'
     { _atpValue = Nothing
     , _atpKey = Nothing
@@ -155,10 +155,10 @@ instance ToJSON ApplicationTransferParam where
 --
 -- /See:/ 'applicationsListResponse' smart constructor.
 data ApplicationsListResponse = ApplicationsListResponse'
-    { _alrEtag          :: !(Maybe Text)
+    { _alrEtag :: !(Maybe Text)
     , _alrNextPageToken :: !(Maybe Text)
-    , _alrKind          :: !Text
-    , _alrApplications  :: !(Maybe [Application])
+    , _alrKind :: !Text
+    , _alrApplications :: !(Maybe [Application])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsListResponse' with the minimum fields required to make a request.
@@ -174,7 +174,7 @@ data ApplicationsListResponse = ApplicationsListResponse'
 -- * 'alrApplications'
 applicationsListResponse
     :: ApplicationsListResponse
-applicationsListResponse =
+applicationsListResponse = 
     ApplicationsListResponse'
     { _alrEtag = Nothing
     , _alrNextPageToken = Nothing
@@ -228,13 +228,13 @@ instance ToJSON ApplicationsListResponse where
 --
 -- /See:/ 'dataTransfer' smart constructor.
 data DataTransfer = DataTransfer'
-    { _dtEtag                      :: !(Maybe Text)
-    , _dtOldOwnerUserId            :: !(Maybe Text)
-    , _dtKind                      :: !Text
-    , _dtNewOwnerUserId            :: !(Maybe Text)
-    , _dtRequestTime               :: !(Maybe DateTime')
-    , _dtApplicationDataTransfers  :: !(Maybe [ApplicationDataTransfer])
-    , _dtId                        :: !(Maybe Text)
+    { _dtEtag :: !(Maybe Text)
+    , _dtOldOwnerUserId :: !(Maybe Text)
+    , _dtKind :: !Text
+    , _dtNewOwnerUserId :: !(Maybe Text)
+    , _dtRequestTime :: !(Maybe DateTime')
+    , _dtApplicationDataTransfers :: !(Maybe [ApplicationDataTransfer])
+    , _dtId :: !(Maybe Text)
     , _dtOverallTransferStatusCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -259,7 +259,7 @@ data DataTransfer = DataTransfer'
 -- * 'dtOverallTransferStatusCode'
 dataTransfer
     :: DataTransfer
-dataTransfer =
+dataTransfer = 
     DataTransfer'
     { _dtEtag = Nothing
     , _dtOldOwnerUserId = Nothing
@@ -352,9 +352,9 @@ instance ToJSON DataTransfer where
 --
 -- /See:/ 'dataTransfersListResponse' smart constructor.
 data DataTransfersListResponse = DataTransfersListResponse'
-    { _dtlrEtag          :: !(Maybe Text)
+    { _dtlrEtag :: !(Maybe Text)
     , _dtlrNextPageToken :: !(Maybe Text)
-    , _dtlrKind          :: !Text
+    , _dtlrKind :: !Text
     , _dtlrDataTransfers :: !(Maybe [DataTransfer])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -371,7 +371,7 @@ data DataTransfersListResponse = DataTransfersListResponse'
 -- * 'dtlrDataTransfers'
 dataTransfersListResponse
     :: DataTransfersListResponse
-dataTransfersListResponse =
+dataTransfersListResponse = 
     DataTransfersListResponse'
     { _dtlrEtag = Nothing
     , _dtlrNextPageToken = Nothing
@@ -425,7 +425,7 @@ instance ToJSON DataTransfersListResponse where
 -- /See:/ 'applicationDataTransfer' smart constructor.
 data ApplicationDataTransfer = ApplicationDataTransfer'
     { _adtApplicationTransferParams :: !(Maybe [ApplicationTransferParam])
-    , _adtApplicationId             :: !(Maybe (Textual Int64))
+    , _adtApplicationId :: !(Maybe (Textual Int64))
     , _adtApplicationTransferStatus :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -440,7 +440,7 @@ data ApplicationDataTransfer = ApplicationDataTransfer'
 -- * 'adtApplicationTransferStatus'
 applicationDataTransfer
     :: ApplicationDataTransfer
-applicationDataTransfer =
+applicationDataTransfer = 
     ApplicationDataTransfer'
     { _adtApplicationTransferParams = Nothing
     , _adtApplicationId = Nothing

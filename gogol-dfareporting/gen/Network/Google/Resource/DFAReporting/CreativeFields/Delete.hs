@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.CreativeFields.Delete
     -- * Request Lenses
     , cfdProFileId
     , cfdId
+    , cfdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFields.delete@ method which the
 -- 'CreativeFieldsDelete' request conforms to.
 type CreativeFieldsDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing creative field.
 --
 -- /See:/ 'creativeFieldsDelete' smart constructor.
 data CreativeFieldsDelete = CreativeFieldsDelete'
     { _cfdProFileId :: !(Textual Int64)
-    , _cfdId        :: !(Textual Int64)
+    , _cfdId :: !(Textual Int64)
+    , _cfdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativeFieldsDelete = CreativeFieldsDelete'
 -- * 'cfdProFileId'
 --
 -- * 'cfdId'
+--
+-- * 'cfdFields'
 creativeFieldsDelete
     :: Int64 -- ^ 'cfdProFileId'
     -> Int64 -- ^ 'cfdId'
     -> CreativeFieldsDelete
-creativeFieldsDelete pCfdProFileId_ pCfdId_ =
+creativeFieldsDelete pCfdProFileId_ pCfdId_ = 
     CreativeFieldsDelete'
     { _cfdProFileId = _Coerce # pCfdProFileId_
     , _cfdId = _Coerce # pCfdId_
+    , _cfdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ cfdId :: Lens' CreativeFieldsDelete Int64
 cfdId
   = lens _cfdId (\ s a -> s{_cfdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfdFields :: Lens' CreativeFieldsDelete (Maybe Text)
+cfdFields
+  = lens _cfdFields (\ s a -> s{_cfdFields = a})
+
 instance GoogleRequest CreativeFieldsDelete where
         type Rs CreativeFieldsDelete = ()
         type Scopes CreativeFieldsDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldsDelete'{..}
-          = go _cfdProFileId _cfdId (Just AltJSON)
+          = go _cfdProFileId _cfdId _cfdFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

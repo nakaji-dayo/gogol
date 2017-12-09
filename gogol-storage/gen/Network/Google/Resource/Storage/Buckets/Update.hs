@@ -39,12 +39,14 @@ module Network.Google.Resource.Storage.Buckets.Update
     , buBucket
     , buPayload
     , buPredefinedDefaultObjectACL
+    , buUserProject
     , buIfMetagenerationNotMatch
     , buProjection
+    , buFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.buckets.update@ method which the
 -- 'BucketsUpdate' request conforms to.
@@ -59,24 +61,28 @@ type BucketsUpdateResource =
                  QueryParam "predefinedDefaultObjectAcl"
                    BucketsUpdatePredefinedDefaultObjectACL
                    :>
-                   QueryParam "ifMetagenerationNotMatch" (Textual Int64)
-                     :>
-                     QueryParam "projection" BucketsUpdateProjection :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Bucket :> Put '[JSON] Bucket
+                   QueryParam "userProject" Text :>
+                     QueryParam "ifMetagenerationNotMatch" (Textual Int64)
+                       :>
+                       QueryParam "projection" BucketsUpdateProjection :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Bucket :> Put '[JSON] Bucket
 
 -- | Updates a bucket. Changes to the bucket will be readable immediately
 -- after writing, but configuration changes may take time to propagate.
 --
 -- /See:/ 'bucketsUpdate' smart constructor.
 data BucketsUpdate = BucketsUpdate'
-    { _buIfMetagenerationMatch      :: !(Maybe (Textual Int64))
-    , _buPredefinedACL              :: !(Maybe BucketsUpdatePredefinedACL)
-    , _buBucket                     :: !Text
-    , _buPayload                    :: !Bucket
+    { _buIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _buPredefinedACL :: !(Maybe BucketsUpdatePredefinedACL)
+    , _buBucket :: !Text
+    , _buPayload :: !Bucket
     , _buPredefinedDefaultObjectACL :: !(Maybe BucketsUpdatePredefinedDefaultObjectACL)
-    , _buIfMetagenerationNotMatch   :: !(Maybe (Textual Int64))
-    , _buProjection                 :: !(Maybe BucketsUpdateProjection)
+    , _buUserProject :: !(Maybe Text)
+    , _buIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
+    , _buProjection :: !(Maybe BucketsUpdateProjection)
+    , _buFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BucketsUpdate' with the minimum fields required to make a request.
@@ -93,22 +99,28 @@ data BucketsUpdate = BucketsUpdate'
 --
 -- * 'buPredefinedDefaultObjectACL'
 --
+-- * 'buUserProject'
+--
 -- * 'buIfMetagenerationNotMatch'
 --
 -- * 'buProjection'
+--
+-- * 'buFields'
 bucketsUpdate
     :: Text -- ^ 'buBucket'
     -> Bucket -- ^ 'buPayload'
     -> BucketsUpdate
-bucketsUpdate pBuBucket_ pBuPayload_ =
+bucketsUpdate pBuBucket_ pBuPayload_ = 
     BucketsUpdate'
     { _buIfMetagenerationMatch = Nothing
     , _buPredefinedACL = Nothing
     , _buBucket = pBuBucket_
     , _buPayload = pBuPayload_
     , _buPredefinedDefaultObjectACL = Nothing
+    , _buUserProject = Nothing
     , _buIfMetagenerationNotMatch = Nothing
     , _buProjection = Nothing
+    , _buFields = Nothing
     }
 
 -- | Makes the return of the bucket metadata conditional on whether the
@@ -140,6 +152,13 @@ buPredefinedDefaultObjectACL
   = lens _buPredefinedDefaultObjectACL
       (\ s a -> s{_buPredefinedDefaultObjectACL = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+buUserProject :: Lens' BucketsUpdate (Maybe Text)
+buUserProject
+  = lens _buUserProject
+      (\ s a -> s{_buUserProject = a})
+
 -- | Makes the return of the bucket metadata conditional on whether the
 -- bucket\'s current metageneration does not match the given value.
 buIfMetagenerationNotMatch :: Lens' BucketsUpdate (Maybe Int64)
@@ -153,6 +172,10 @@ buProjection :: Lens' BucketsUpdate (Maybe BucketsUpdateProjection)
 buProjection
   = lens _buProjection (\ s a -> s{_buProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+buFields :: Lens' BucketsUpdate (Maybe Text)
+buFields = lens _buFields (\ s a -> s{_buFields = a})
+
 instance GoogleRequest BucketsUpdate where
         type Rs BucketsUpdate = Bucket
         type Scopes BucketsUpdate =
@@ -162,8 +185,10 @@ instance GoogleRequest BucketsUpdate where
           = go _buBucket _buIfMetagenerationMatch
               _buPredefinedACL
               _buPredefinedDefaultObjectACL
+              _buUserProject
               _buIfMetagenerationNotMatch
               _buProjection
+              _buFields
               (Just AltJSON)
               _buPayload
               storageService

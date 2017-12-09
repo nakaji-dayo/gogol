@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.CallSets.Patch
     , cspPayload
     , cspBearerToken
     , cspCallSetId
+    , cspFields
     , cspCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.callsets.patch@ method which the
 -- 'CallSetsPatch' request conforms to.
@@ -65,8 +66,9 @@ type CallSetsPatchResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] CallSet :> Patch '[JSON] CallSet
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] CallSet :> Patch '[JSON] CallSet
 
 -- | Updates a call set. For the definitions of call sets and other genomics
 -- resources, see [Fundamentals of Google
@@ -75,16 +77,17 @@ type CallSetsPatchResource =
 --
 -- /See:/ 'callSetsPatch' smart constructor.
 data CallSetsPatch = CallSetsPatch'
-    { _cspXgafv          :: !(Maybe Xgafv)
+    { _cspXgafv :: !(Maybe Xgafv)
     , _cspUploadProtocol :: !(Maybe Text)
-    , _cspUpdateMask     :: !(Maybe FieldMask)
-    , _cspPp             :: !Bool
-    , _cspAccessToken    :: !(Maybe Text)
-    , _cspUploadType     :: !(Maybe Text)
-    , _cspPayload        :: !CallSet
-    , _cspBearerToken    :: !(Maybe Text)
-    , _cspCallSetId      :: !Text
-    , _cspCallback       :: !(Maybe Text)
+    , _cspUpdateMask :: !(Maybe FieldMask)
+    , _cspPp :: !Bool
+    , _cspAccessToken :: !(Maybe Text)
+    , _cspUploadType :: !(Maybe Text)
+    , _cspPayload :: !CallSet
+    , _cspBearerToken :: !(Maybe Text)
+    , _cspCallSetId :: !Text
+    , _cspFields :: !(Maybe Text)
+    , _cspCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CallSetsPatch' with the minimum fields required to make a request.
@@ -109,12 +112,14 @@ data CallSetsPatch = CallSetsPatch'
 --
 -- * 'cspCallSetId'
 --
+-- * 'cspFields'
+--
 -- * 'cspCallback'
 callSetsPatch
     :: CallSet -- ^ 'cspPayload'
     -> Text -- ^ 'cspCallSetId'
     -> CallSetsPatch
-callSetsPatch pCspPayload_ pCspCallSetId_ =
+callSetsPatch pCspPayload_ pCspCallSetId_ = 
     CallSetsPatch'
     { _cspXgafv = Nothing
     , _cspUploadProtocol = Nothing
@@ -125,6 +130,7 @@ callSetsPatch pCspPayload_ pCspCallSetId_ =
     , _cspPayload = pCspPayload_
     , _cspBearerToken = Nothing
     , _cspCallSetId = pCspCallSetId_
+    , _cspFields = Nothing
     , _cspCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ cspCallSetId :: Lens' CallSetsPatch Text
 cspCallSetId
   = lens _cspCallSetId (\ s a -> s{_cspCallSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cspFields :: Lens' CallSetsPatch (Maybe Text)
+cspFields
+  = lens _cspFields (\ s a -> s{_cspFields = a})
+
 -- | JSONP
 cspCallback :: Lens' CallSetsPatch (Maybe Text)
 cspCallback
@@ -196,6 +207,7 @@ instance GoogleRequest CallSetsPatch where
               _cspUploadType
               _cspBearerToken
               _cspCallback
+              _cspFields
               (Just AltJSON)
               _cspPayload
               genomicsService

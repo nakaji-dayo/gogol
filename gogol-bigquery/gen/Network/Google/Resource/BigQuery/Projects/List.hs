@@ -35,10 +35,11 @@ module Network.Google.Resource.BigQuery.Projects.List
     -- * Request Lenses
     , plPageToken
     , plMaxResults
+    , plFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.projects.list@ method which the
 -- 'ProjectsList' request conforms to.
@@ -48,14 +49,16 @@ type ProjectsListResource =
          "projects" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Word32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] ProjectList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] ProjectList
 
 -- | Lists all projects to which you have been granted any project role.
 --
 -- /See:/ 'projectsList' smart constructor.
 data ProjectsList = ProjectsList'
-    { _plPageToken  :: !(Maybe Text)
+    { _plPageToken :: !(Maybe Text)
     , _plMaxResults :: !(Maybe (Textual Word32))
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsList' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data ProjectsList = ProjectsList'
 -- * 'plPageToken'
 --
 -- * 'plMaxResults'
+--
+-- * 'plFields'
 projectsList
     :: ProjectsList
-projectsList =
+projectsList = 
     ProjectsList'
     { _plPageToken = Nothing
     , _plMaxResults = Nothing
+    , _plFields = Nothing
     }
 
 -- | Page token, returned by a previous call, to request the next page of
@@ -85,6 +91,10 @@ plMaxResults
   = lens _plMaxResults (\ s a -> s{_plMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' ProjectsList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 instance GoogleRequest ProjectsList where
         type Rs ProjectsList = ProjectList
         type Scopes ProjectsList =
@@ -92,7 +102,8 @@ instance GoogleRequest ProjectsList where
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient ProjectsList'{..}
-          = go _plPageToken _plMaxResults (Just AltJSON)
+          = go _plPageToken _plMaxResults _plFields
+              (Just AltJSON)
               bigQueryService
           where go
                   = buildClient (Proxy :: Proxy ProjectsListResource)

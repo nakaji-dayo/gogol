@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Messages.BatchDelete
     -- * Request Lenses
     , umbdPayload
     , umbdUserId
+    , umbdFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.batchDelete@ method which the
 -- 'UsersMessagesBatchDelete' request conforms to.
@@ -50,9 +51,10 @@ type UsersMessagesBatchDeleteResource =
            Capture "userId" Text :>
              "messages" :>
                "batchDelete" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] BatchDeleteMessagesRequest :>
-                     Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] BatchDeleteMessagesRequest :>
+                       Post '[JSON] ()
 
 -- | Deletes many messages by message ID. Provides no guarantees that
 -- messages were not already deleted or even existed at all.
@@ -60,7 +62,8 @@ type UsersMessagesBatchDeleteResource =
 -- /See:/ 'usersMessagesBatchDelete' smart constructor.
 data UsersMessagesBatchDelete = UsersMessagesBatchDelete'
     { _umbdPayload :: !BatchDeleteMessagesRequest
-    , _umbdUserId  :: !Text
+    , _umbdUserId :: !Text
+    , _umbdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesBatchDelete' with the minimum fields required to make a request.
@@ -70,13 +73,16 @@ data UsersMessagesBatchDelete = UsersMessagesBatchDelete'
 -- * 'umbdPayload'
 --
 -- * 'umbdUserId'
+--
+-- * 'umbdFields'
 usersMessagesBatchDelete
     :: BatchDeleteMessagesRequest -- ^ 'umbdPayload'
     -> UsersMessagesBatchDelete
-usersMessagesBatchDelete pUmbdPayload_ =
+usersMessagesBatchDelete pUmbdPayload_ = 
     UsersMessagesBatchDelete'
     { _umbdPayload = pUmbdPayload_
     , _umbdUserId = "me"
+    , _umbdFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -90,12 +96,18 @@ umbdUserId :: Lens' UsersMessagesBatchDelete Text
 umbdUserId
   = lens _umbdUserId (\ s a -> s{_umbdUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umbdFields :: Lens' UsersMessagesBatchDelete (Maybe Text)
+umbdFields
+  = lens _umbdFields (\ s a -> s{_umbdFields = a})
+
 instance GoogleRequest UsersMessagesBatchDelete where
         type Rs UsersMessagesBatchDelete = ()
         type Scopes UsersMessagesBatchDelete =
              '["https://mail.google.com/"]
         requestClient UsersMessagesBatchDelete'{..}
-          = go _umbdUserId (Just AltJSON) _umbdPayload
+          = go _umbdUserId _umbdFields (Just AltJSON)
+              _umbdPayload
               gmailService
           where go
                   = buildClient

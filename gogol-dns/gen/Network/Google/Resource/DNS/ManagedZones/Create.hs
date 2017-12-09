@@ -36,10 +36,11 @@ module Network.Google.Resource.DNS.ManagedZones.Create
     , mzcProject
     , mzcPayload
     , mzcClientOperationId
+    , mzcFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.create@ method which the
 -- 'ManagedZonesCreate' request conforms to.
@@ -50,17 +51,19 @@ type ManagedZonesCreateResource =
            Capture "project" Text :>
              "managedZones" :>
                QueryParam "clientOperationId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ManagedZone :>
-                     Post '[JSON] ManagedZone
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ManagedZone :>
+                       Post '[JSON] ManagedZone
 
 -- | Create a new ManagedZone.
 --
 -- /See:/ 'managedZonesCreate' smart constructor.
 data ManagedZonesCreate = ManagedZonesCreate'
-    { _mzcProject           :: !Text
-    , _mzcPayload           :: !ManagedZone
+    { _mzcProject :: !Text
+    , _mzcPayload :: !ManagedZone
     , _mzcClientOperationId :: !(Maybe Text)
+    , _mzcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesCreate' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data ManagedZonesCreate = ManagedZonesCreate'
 -- * 'mzcPayload'
 --
 -- * 'mzcClientOperationId'
+--
+-- * 'mzcFields'
 managedZonesCreate
     :: Text -- ^ 'mzcProject'
     -> ManagedZone -- ^ 'mzcPayload'
     -> ManagedZonesCreate
-managedZonesCreate pMzcProject_ pMzcPayload_ =
+managedZonesCreate pMzcProject_ pMzcPayload_ = 
     ManagedZonesCreate'
     { _mzcProject = pMzcProject_
     , _mzcPayload = pMzcPayload_
     , _mzcClientOperationId = Nothing
+    , _mzcFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -101,13 +107,19 @@ mzcClientOperationId
   = lens _mzcClientOperationId
       (\ s a -> s{_mzcClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzcFields :: Lens' ManagedZonesCreate (Maybe Text)
+mzcFields
+  = lens _mzcFields (\ s a -> s{_mzcFields = a})
+
 instance GoogleRequest ManagedZonesCreate where
         type Rs ManagedZonesCreate = ManagedZone
         type Scopes ManagedZonesCreate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.clouddns.readwrite"]
         requestClient ManagedZonesCreate'{..}
-          = go _mzcProject _mzcClientOperationId (Just AltJSON)
+          = go _mzcProject _mzcClientOperationId _mzcFields
+              (Just AltJSON)
               _mzcPayload
               dNSService
           where go

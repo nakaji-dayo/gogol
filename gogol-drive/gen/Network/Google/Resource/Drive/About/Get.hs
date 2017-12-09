@@ -33,10 +33,12 @@ module Network.Google.Resource.Drive.About.Get
     , aboutGet
     , AboutGet
 
+    -- * Request Lenses
+    , agFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.about.get@ method which the
 -- 'AboutGet' request conforms to.
@@ -44,21 +46,32 @@ type AboutGetResource =
      "drive" :>
        "v3" :>
          "about" :>
-           QueryParam "alt" AltJSON :> Get '[JSON] About
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :> Get '[JSON] About
 
 -- | Gets information about the user, the user\'s Drive, and system
 -- capabilities.
 --
 -- /See:/ 'aboutGet' smart constructor.
-data AboutGet =
-    AboutGet'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype AboutGet = AboutGet'
+    { _agFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AboutGet' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'agFields'
 aboutGet
     :: AboutGet
-aboutGet = AboutGet'
+aboutGet = 
+    AboutGet'
+    { _agFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AboutGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
 
 instance GoogleRequest AboutGet where
         type Rs AboutGet = About
@@ -70,8 +83,8 @@ instance GoogleRequest AboutGet where
                "https://www.googleapis.com/auth/drive.metadata.readonly",
                "https://www.googleapis.com/auth/drive.photos.readonly",
                "https://www.googleapis.com/auth/drive.readonly"]
-        requestClient AboutGet'{}
-          = go (Just AltJSON) driveService
+        requestClient AboutGet'{..}
+          = go _agFields (Just AltJSON) driveService
           where go
                   = buildClient (Proxy :: Proxy AboutGetResource)
                       mempty

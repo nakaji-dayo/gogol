@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -22,6 +22,19 @@ module Network.Google.FirebaseDynamicLinks.Types
     -- * OAuth Scopes
     , firebaseScope
 
+    -- * NavigationInfo
+    , NavigationInfo
+    , navigationInfo
+    , niEnableForcedRedirect
+
+    -- * DesktopInfo
+    , DesktopInfo
+    , desktopInfo
+    , diDesktopFallbackLink
+
+    -- * DynamicLinkEventStatPlatform
+    , DynamicLinkEventStatPlatform (..)
+
     -- * Suffix
     , Suffix
     , suffix
@@ -31,6 +44,7 @@ module Network.Google.FirebaseDynamicLinks.Types
     , DynamicLinkWarning
     , dynamicLinkWarning
     , dlwWarningCode
+    , dlwWarningDocumentLink
     , dlwWarningMessage
 
     -- * CreateShortDynamicLinkRequest
@@ -54,6 +68,13 @@ module Network.Google.FirebaseDynamicLinks.Types
     , csdlrWarning
     , csdlrShortLink
 
+    -- * DynamicLinkEventStat
+    , DynamicLinkEventStat
+    , dynamicLinkEventStat
+    , dlesEvent
+    , dlesPlatform
+    , dlesCount
+
     -- * IosInfo
     , IosInfo
     , iosInfo
@@ -67,6 +88,8 @@ module Network.Google.FirebaseDynamicLinks.Types
     -- * DynamicLinkInfo
     , DynamicLinkInfo
     , dynamicLinkInfo
+    , dliNavigationInfo
+    , dliDesktopInfo
     , dliSocialMetaTagInfo
     , dliDynamicLinkDomain
     , dliLink
@@ -74,11 +97,37 @@ module Network.Google.FirebaseDynamicLinks.Types
     , dliAndroidInfo
     , dliAnalyticsInfo
 
+    -- * GetIosPostInstallAttributionRequestVisualStyle
+    , GetIosPostInstallAttributionRequestVisualStyle (..)
+
+    -- * DynamicLinkStats
+    , DynamicLinkStats
+    , dynamicLinkStats
+    , dlsLinkEventStats
+
     -- * SuffixOption
     , SuffixOption (..)
 
+    -- * DynamicLinkEventStatEvent
+    , DynamicLinkEventStatEvent (..)
+
+    -- * GetIosPostInstallAttributionRequest
+    , GetIosPostInstallAttributionRequest
+    , getIosPostInstallAttributionRequest
+    , gipiarIosVersion
+    , gipiarUniqueMatchLinkToCheck
+    , gipiarAppInstallationTime
+    , gipiarDevice
+    , gipiarSdkVersion
+    , gipiarBundleId
+    , gipiarRetrievalMethod
+    , gipiarVisualStyle
+
     -- * Xgafv
     , Xgafv (..)
+
+    -- * GetIosPostInstallAttributionResponseAttributionConfidence
+    , GetIosPostInstallAttributionResponseAttributionConfidence (..)
 
     -- * AndroidInfo
     , AndroidInfo
@@ -105,6 +154,23 @@ module Network.Google.FirebaseDynamicLinks.Types
     , itcaPt
     , itcaCt
 
+    -- * GetIosPostInstallAttributionResponse
+    , GetIosPostInstallAttributionResponse
+    , getIosPostInstallAttributionResponse
+    , gipiarDeepLink
+    , gipiarAppMinimumVersion
+    , gipiarAttributionConfidence
+    , gipiarExternalBrowserDestinationLink
+    , gipiarResolvedLink
+    , gipiarRequestedLink
+    , gipiarUtmMedium
+    , gipiarFallbackLink
+    , gipiarInvitationId
+    , gipiarIsStrongMatchExecutable
+    , gipiarUtmCampaign
+    , gipiarMatchMessage
+    , gipiarUtmSource
+
     -- * GooglePlayAnalytics
     , GooglePlayAnalytics
     , googlePlayAnalytics
@@ -114,18 +180,31 @@ module Network.Google.FirebaseDynamicLinks.Types
     , gpaUtmCampaign
     , gpaGclid
     , gpaUtmSource
+
+    -- * GetIosPostInstallAttributionRequestRetrievalMethod
+    , GetIosPostInstallAttributionRequestRetrievalMethod (..)
+
+    -- * DeviceInfo
+    , DeviceInfo
+    , deviceInfo
+    , diScreenResolutionWidth
+    , diLanguageCode
+    , diDeviceModelName
+    , diScreenResolutionHeight
+    , diLanguageCodeRaw
+    , diTimezone
     ) where
 
-import           Network.Google.FirebaseDynamicLinks.Types.Product
-import           Network.Google.FirebaseDynamicLinks.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.FirebaseDynamicLinks.Types.Product
+import Network.Google.FirebaseDynamicLinks.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Firebase Dynamic Links API. This contains the host and root path used as a starting point for constructing service requests.
 firebaseDynamicLinksService :: ServiceConfig
 firebaseDynamicLinksService
   = defaultService
       (ServiceId "firebasedynamiclinks:v1")
-      "firebasedynamiclinks.googleapis.com"
+      "firebasedynamiclinks-ipv6.googleapis.com"
 
 -- | View and administer all your Firebase data and settings
 firebaseScope :: Proxy '["https://www.googleapis.com/auth/firebase"]

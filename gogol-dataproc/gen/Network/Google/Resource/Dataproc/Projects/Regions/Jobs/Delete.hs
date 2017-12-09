@@ -21,7 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Deletes the job from the project. If the job is active, the delete
--- fails, and the response returns \`FAILED_PRECONDITION\`.
+-- fails, and the response returns FAILED_PRECONDITION.
 --
 -- /See:/ <https://cloud.google.com/dataproc/ Google Cloud Dataproc API Reference> for @dataproc.projects.regions.jobs.delete@.
 module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Delete
@@ -43,11 +43,12 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Delete
     , prjdBearerToken
     , prjdRegion
     , prjdProjectId
+    , prjdFields
     , prjdCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.jobs.delete@ method which the
 -- 'ProjectsRegionsJobsDelete' request conforms to.
@@ -59,31 +60,33 @@ type ProjectsRegionsJobsDeleteResource =
              Capture "region" Text :>
                "jobs" :>
                  Capture "jobId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Delete '[JSON] Empty
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Delete '[JSON] Empty
 
 -- | Deletes the job from the project. If the job is active, the delete
--- fails, and the response returns \`FAILED_PRECONDITION\`.
+-- fails, and the response returns FAILED_PRECONDITION.
 --
 -- /See:/ 'projectsRegionsJobsDelete' smart constructor.
 data ProjectsRegionsJobsDelete = ProjectsRegionsJobsDelete'
-    { _prjdXgafv          :: !(Maybe Text)
-    , _prjdJobId          :: !Text
+    { _prjdXgafv :: !(Maybe Xgafv)
+    , _prjdJobId :: !Text
     , _prjdUploadProtocol :: !(Maybe Text)
-    , _prjdPp             :: !Bool
-    , _prjdAccessToken    :: !(Maybe Text)
-    , _prjdUploadType     :: !(Maybe Text)
-    , _prjdBearerToken    :: !(Maybe Text)
-    , _prjdRegion         :: !Text
-    , _prjdProjectId      :: !Text
-    , _prjdCallback       :: !(Maybe Text)
+    , _prjdPp :: !Bool
+    , _prjdAccessToken :: !(Maybe Text)
+    , _prjdUploadType :: !(Maybe Text)
+    , _prjdBearerToken :: !(Maybe Text)
+    , _prjdRegion :: !Text
+    , _prjdProjectId :: !Text
+    , _prjdFields :: !(Maybe Text)
+    , _prjdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsJobsDelete' with the minimum fields required to make a request.
@@ -108,13 +111,15 @@ data ProjectsRegionsJobsDelete = ProjectsRegionsJobsDelete'
 --
 -- * 'prjdProjectId'
 --
+-- * 'prjdFields'
+--
 -- * 'prjdCallback'
 projectsRegionsJobsDelete
     :: Text -- ^ 'prjdJobId'
     -> Text -- ^ 'prjdRegion'
     -> Text -- ^ 'prjdProjectId'
     -> ProjectsRegionsJobsDelete
-projectsRegionsJobsDelete pPrjdJobId_ pPrjdRegion_ pPrjdProjectId_ =
+projectsRegionsJobsDelete pPrjdJobId_ pPrjdRegion_ pPrjdProjectId_ = 
     ProjectsRegionsJobsDelete'
     { _prjdXgafv = Nothing
     , _prjdJobId = pPrjdJobId_
@@ -125,15 +130,16 @@ projectsRegionsJobsDelete pPrjdJobId_ pPrjdRegion_ pPrjdProjectId_ =
     , _prjdBearerToken = Nothing
     , _prjdRegion = pPrjdRegion_
     , _prjdProjectId = pPrjdProjectId_
+    , _prjdFields = Nothing
     , _prjdCallback = Nothing
     }
 
 -- | V1 error format.
-prjdXgafv :: Lens' ProjectsRegionsJobsDelete (Maybe Text)
+prjdXgafv :: Lens' ProjectsRegionsJobsDelete (Maybe Xgafv)
 prjdXgafv
   = lens _prjdXgafv (\ s a -> s{_prjdXgafv = a})
 
--- | [Required] The job ID.
+-- | Required. The job ID.
 prjdJobId :: Lens' ProjectsRegionsJobsDelete Text
 prjdJobId
   = lens _prjdJobId (\ s a -> s{_prjdJobId = a})
@@ -166,17 +172,22 @@ prjdBearerToken
   = lens _prjdBearerToken
       (\ s a -> s{_prjdBearerToken = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prjdRegion :: Lens' ProjectsRegionsJobsDelete Text
 prjdRegion
   = lens _prjdRegion (\ s a -> s{_prjdRegion = a})
 
--- | [Required] The ID of the Google Cloud Platform project that the job
+-- | Required. The ID of the Google Cloud Platform project that the job
 -- belongs to.
 prjdProjectId :: Lens' ProjectsRegionsJobsDelete Text
 prjdProjectId
   = lens _prjdProjectId
       (\ s a -> s{_prjdProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+prjdFields :: Lens' ProjectsRegionsJobsDelete (Maybe Text)
+prjdFields
+  = lens _prjdFields (\ s a -> s{_prjdFields = a})
 
 -- | JSONP
 prjdCallback :: Lens' ProjectsRegionsJobsDelete (Maybe Text)
@@ -196,6 +207,7 @@ instance GoogleRequest ProjectsRegionsJobsDelete
               _prjdUploadType
               _prjdBearerToken
               _prjdCallback
+              _prjdFields
               (Just AltJSON)
               dataprocService
           where go

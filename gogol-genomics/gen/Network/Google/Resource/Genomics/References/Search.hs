@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.References.Search
     , refUploadType
     , refPayload
     , refBearerToken
+    , refFields
     , refCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.references.search@ method which the
 -- 'ReferencesSearch' request conforms to.
@@ -64,9 +65,10 @@ type ReferencesSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchReferencesRequest :>
-                             Post '[JSON] SearchReferencesResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchReferencesRequest :>
+                               Post '[JSON] SearchReferencesResponse
 
 -- | Searches for references which match the given criteria. For the
 -- definitions of references and other genomics resources, see
@@ -77,14 +79,15 @@ type ReferencesSearchResource =
 --
 -- /See:/ 'referencesSearch' smart constructor.
 data ReferencesSearch = ReferencesSearch'
-    { _refXgafv          :: !(Maybe Xgafv)
+    { _refXgafv :: !(Maybe Xgafv)
     , _refUploadProtocol :: !(Maybe Text)
-    , _refPp             :: !Bool
-    , _refAccessToken    :: !(Maybe Text)
-    , _refUploadType     :: !(Maybe Text)
-    , _refPayload        :: !SearchReferencesRequest
-    , _refBearerToken    :: !(Maybe Text)
-    , _refCallback       :: !(Maybe Text)
+    , _refPp :: !Bool
+    , _refAccessToken :: !(Maybe Text)
+    , _refUploadType :: !(Maybe Text)
+    , _refPayload :: !SearchReferencesRequest
+    , _refBearerToken :: !(Maybe Text)
+    , _refFields :: !(Maybe Text)
+    , _refCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReferencesSearch' with the minimum fields required to make a request.
@@ -105,11 +108,13 @@ data ReferencesSearch = ReferencesSearch'
 --
 -- * 'refBearerToken'
 --
+-- * 'refFields'
+--
 -- * 'refCallback'
 referencesSearch
     :: SearchReferencesRequest -- ^ 'refPayload'
     -> ReferencesSearch
-referencesSearch pRefPayload_ =
+referencesSearch pRefPayload_ = 
     ReferencesSearch'
     { _refXgafv = Nothing
     , _refUploadProtocol = Nothing
@@ -118,6 +123,7 @@ referencesSearch pRefPayload_ =
     , _refUploadType = Nothing
     , _refPayload = pRefPayload_
     , _refBearerToken = Nothing
+    , _refFields = Nothing
     , _refCallback = Nothing
     }
 
@@ -158,6 +164,11 @@ refBearerToken
   = lens _refBearerToken
       (\ s a -> s{_refBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+refFields :: Lens' ReferencesSearch (Maybe Text)
+refFields
+  = lens _refFields (\ s a -> s{_refFields = a})
+
 -- | JSONP
 refCallback :: Lens' ReferencesSearch (Maybe Text)
 refCallback
@@ -175,6 +186,7 @@ instance GoogleRequest ReferencesSearch where
               _refUploadType
               _refBearerToken
               _refCallback
+              _refFields
               (Just AltJSON)
               _refPayload
               genomicsService

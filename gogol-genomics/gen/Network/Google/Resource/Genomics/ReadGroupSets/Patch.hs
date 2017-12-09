@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.Patch
     , rgspUploadType
     , rgspPayload
     , rgspBearerToken
+    , rgspFields
     , rgspCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.patch@ method which the
 -- 'ReadGroupSetsPatch' request conforms to.
@@ -65,9 +66,10 @@ type ReadGroupSetsPatchResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] ReadGroupSet :>
-                               Patch '[JSON] ReadGroupSet
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] ReadGroupSet :>
+                                 Patch '[JSON] ReadGroupSet
 
 -- | Updates a read group set. For the definitions of read group sets and
 -- other genomics resources, see [Fundamentals of Google
@@ -76,16 +78,17 @@ type ReadGroupSetsPatchResource =
 --
 -- /See:/ 'readGroupSetsPatch' smart constructor.
 data ReadGroupSetsPatch = ReadGroupSetsPatch'
-    { _rgspXgafv          :: !(Maybe Xgafv)
+    { _rgspXgafv :: !(Maybe Xgafv)
     , _rgspReadGroupSetId :: !Text
     , _rgspUploadProtocol :: !(Maybe Text)
-    , _rgspUpdateMask     :: !(Maybe FieldMask)
-    , _rgspPp             :: !Bool
-    , _rgspAccessToken    :: !(Maybe Text)
-    , _rgspUploadType     :: !(Maybe Text)
-    , _rgspPayload        :: !ReadGroupSet
-    , _rgspBearerToken    :: !(Maybe Text)
-    , _rgspCallback       :: !(Maybe Text)
+    , _rgspUpdateMask :: !(Maybe FieldMask)
+    , _rgspPp :: !Bool
+    , _rgspAccessToken :: !(Maybe Text)
+    , _rgspUploadType :: !(Maybe Text)
+    , _rgspPayload :: !ReadGroupSet
+    , _rgspBearerToken :: !(Maybe Text)
+    , _rgspFields :: !(Maybe Text)
+    , _rgspCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsPatch' with the minimum fields required to make a request.
@@ -110,12 +113,14 @@ data ReadGroupSetsPatch = ReadGroupSetsPatch'
 --
 -- * 'rgspBearerToken'
 --
+-- * 'rgspFields'
+--
 -- * 'rgspCallback'
 readGroupSetsPatch
     :: Text -- ^ 'rgspReadGroupSetId'
     -> ReadGroupSet -- ^ 'rgspPayload'
     -> ReadGroupSetsPatch
-readGroupSetsPatch pRgspReadGroupSetId_ pRgspPayload_ =
+readGroupSetsPatch pRgspReadGroupSetId_ pRgspPayload_ = 
     ReadGroupSetsPatch'
     { _rgspXgafv = Nothing
     , _rgspReadGroupSetId = pRgspReadGroupSetId_
@@ -126,6 +131,7 @@ readGroupSetsPatch pRgspReadGroupSetId_ pRgspPayload_ =
     , _rgspUploadType = Nothing
     , _rgspPayload = pRgspPayload_
     , _rgspBearerToken = Nothing
+    , _rgspFields = Nothing
     , _rgspCallback = Nothing
     }
 
@@ -182,6 +188,11 @@ rgspBearerToken
   = lens _rgspBearerToken
       (\ s a -> s{_rgspBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgspFields :: Lens' ReadGroupSetsPatch (Maybe Text)
+rgspFields
+  = lens _rgspFields (\ s a -> s{_rgspFields = a})
+
 -- | JSONP
 rgspCallback :: Lens' ReadGroupSetsPatch (Maybe Text)
 rgspCallback
@@ -201,6 +212,7 @@ instance GoogleRequest ReadGroupSetsPatch where
               _rgspUploadType
               _rgspBearerToken
               _rgspCallback
+              _rgspFields
               (Just AltJSON)
               _rgspPayload
               genomicsService

@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.List
     -- * Request Lenses
     , ulEmail
     , ulEnterpriseId
+    , ulFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.list@ method which the
 -- 'UsersList' request conforms to.
@@ -52,8 +53,9 @@ type UsersListResource =
            Capture "enterpriseId" Text :>
              "users" :>
                QueryParam "email" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] UsersListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] UsersListResponse
 
 -- | Looks up a user by primary email address. This is only supported for
 -- Google-managed users. Lookup of the id is not needed for EMM-managed
@@ -62,8 +64,9 @@ type UsersListResource =
 --
 -- /See:/ 'usersList' smart constructor.
 data UsersList = UsersList'
-    { _ulEmail        :: !Text
+    { _ulEmail :: !Text
     , _ulEnterpriseId :: !Text
+    , _ulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersList' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data UsersList = UsersList'
 -- * 'ulEmail'
 --
 -- * 'ulEnterpriseId'
+--
+-- * 'ulFields'
 usersList
     :: Text -- ^ 'ulEmail'
     -> Text -- ^ 'ulEnterpriseId'
     -> UsersList
-usersList pUlEmail_ pUlEnterpriseId_ =
+usersList pUlEmail_ pUlEnterpriseId_ = 
     UsersList'
     { _ulEmail = pUlEmail_
     , _ulEnterpriseId = pUlEnterpriseId_
+    , _ulFields = Nothing
     }
 
 -- | The exact primary email address of the user to look up.
@@ -93,12 +99,17 @@ ulEnterpriseId
   = lens _ulEnterpriseId
       (\ s a -> s{_ulEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ulFields :: Lens' UsersList (Maybe Text)
+ulFields = lens _ulFields (\ s a -> s{_ulFields = a})
+
 instance GoogleRequest UsersList where
         type Rs UsersList = UsersListResponse
         type Scopes UsersList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersList'{..}
-          = go _ulEnterpriseId (Just _ulEmail) (Just AltJSON)
+          = go _ulEnterpriseId (Just _ulEmail) _ulFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy UsersListResource)

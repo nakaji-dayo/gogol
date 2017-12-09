@@ -42,11 +42,12 @@ module Network.Google.Resource.Logging.Organizations.Sinks.List
     , oslBearerToken
     , oslPageToken
     , oslPageSize
+    , oslFields
     , oslCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.organizations.sinks.list@ method which the
 -- 'OrganizationsSinksList' request conforms to.
@@ -63,23 +64,25 @@ type OrganizationsSinksListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListSinksResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListSinksResponse
 
 -- | Lists sinks.
 --
 -- /See:/ 'organizationsSinksList' smart constructor.
 data OrganizationsSinksList = OrganizationsSinksList'
-    { _oslParent         :: !Text
-    , _oslXgafv          :: !(Maybe Xgafv)
+    { _oslParent :: !Text
+    , _oslXgafv :: !(Maybe Xgafv)
     , _oslUploadProtocol :: !(Maybe Text)
-    , _oslPp             :: !Bool
-    , _oslAccessToken    :: !(Maybe Text)
-    , _oslUploadType     :: !(Maybe Text)
-    , _oslBearerToken    :: !(Maybe Text)
-    , _oslPageToken      :: !(Maybe Text)
-    , _oslPageSize       :: !(Maybe (Textual Int32))
-    , _oslCallback       :: !(Maybe Text)
+    , _oslPp :: !Bool
+    , _oslAccessToken :: !(Maybe Text)
+    , _oslUploadType :: !(Maybe Text)
+    , _oslBearerToken :: !(Maybe Text)
+    , _oslPageToken :: !(Maybe Text)
+    , _oslPageSize :: !(Maybe (Textual Int32))
+    , _oslFields :: !(Maybe Text)
+    , _oslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrganizationsSinksList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data OrganizationsSinksList = OrganizationsSinksList'
 --
 -- * 'oslPageSize'
 --
+-- * 'oslFields'
+--
 -- * 'oslCallback'
 organizationsSinksList
     :: Text -- ^ 'oslParent'
     -> OrganizationsSinksList
-organizationsSinksList pOslParent_ =
+organizationsSinksList pOslParent_ = 
     OrganizationsSinksList'
     { _oslParent = pOslParent_
     , _oslXgafv = Nothing
@@ -119,11 +124,13 @@ organizationsSinksList pOslParent_ =
     , _oslBearerToken = Nothing
     , _oslPageToken = Nothing
     , _oslPageSize = Nothing
+    , _oslFields = Nothing
     , _oslCallback = Nothing
     }
 
--- | Required. The parent resource whose sinks are to be listed. Examples:
--- \"projects\/my-logging-project\", \"organizations\/123456789\".
+-- | Required. The parent resource whose sinks are to be listed:
+-- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 oslParent :: Lens' OrganizationsSinksList Text
 oslParent
   = lens _oslParent (\ s a -> s{_oslParent = a})
@@ -176,6 +183,11 @@ oslPageSize
   = lens _oslPageSize (\ s a -> s{_oslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+oslFields :: Lens' OrganizationsSinksList (Maybe Text)
+oslFields
+  = lens _oslFields (\ s a -> s{_oslFields = a})
+
 -- | JSONP
 oslCallback :: Lens' OrganizationsSinksList (Maybe Text)
 oslCallback
@@ -197,6 +209,7 @@ instance GoogleRequest OrganizationsSinksList where
               _oslPageToken
               _oslPageSize
               _oslCallback
+              _oslFields
               (Just AltJSON)
               loggingService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.WebProperties.List
     , mwplAccountId
     , mwplStartIndex
     , mwplMaxResults
+    , mwplFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webproperties.list@ method which the
 -- 'ManagementWebPropertiesList' request conforms to.
@@ -52,15 +53,17 @@ type ManagementWebPropertiesListResource =
                "webproperties" :>
                  QueryParam "start-index" (Textual Int32) :>
                    QueryParam "max-results" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] WebProperties
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] WebProperties
 
 -- | Lists web properties to which the user has access.
 --
 -- /See:/ 'managementWebPropertiesList' smart constructor.
 data ManagementWebPropertiesList = ManagementWebPropertiesList'
-    { _mwplAccountId  :: !Text
+    { _mwplAccountId :: !Text
     , _mwplStartIndex :: !(Maybe (Textual Int32))
     , _mwplMaxResults :: !(Maybe (Textual Int32))
+    , _mwplFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertiesList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data ManagementWebPropertiesList = ManagementWebPropertiesList'
 -- * 'mwplStartIndex'
 --
 -- * 'mwplMaxResults'
+--
+-- * 'mwplFields'
 managementWebPropertiesList
     :: Text -- ^ 'mwplAccountId'
     -> ManagementWebPropertiesList
-managementWebPropertiesList pMwplAccountId_ =
+managementWebPropertiesList pMwplAccountId_ = 
     ManagementWebPropertiesList'
     { _mwplAccountId = pMwplAccountId_
     , _mwplStartIndex = Nothing
     , _mwplMaxResults = Nothing
+    , _mwplFields = Nothing
     }
 
 -- | Account ID to retrieve web properties for. Can either be a specific
@@ -105,6 +111,11 @@ mwplMaxResults
       (\ s a -> s{_mwplMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mwplFields :: Lens' ManagementWebPropertiesList (Maybe Text)
+mwplFields
+  = lens _mwplFields (\ s a -> s{_mwplFields = a})
+
 instance GoogleRequest ManagementWebPropertiesList
          where
         type Rs ManagementWebPropertiesList = WebProperties
@@ -114,6 +125,7 @@ instance GoogleRequest ManagementWebPropertiesList
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementWebPropertiesList'{..}
           = go _mwplAccountId _mwplStartIndex _mwplMaxResults
+              _mwplFields
               (Just AltJSON)
               analyticsService
           where go

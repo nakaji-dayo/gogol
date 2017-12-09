@@ -44,11 +44,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.List
     , asvlPageToken
     , asvlServicesId
     , asvlPageSize
+    , asvlFields
     , asvlCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.list@ method which the
 -- 'AppsServicesVersionsList' request conforms to.
@@ -59,7 +60,7 @@ type AppsServicesVersionsListResource =
            "services" :>
              Capture "servicesId" Text :>
                "versions" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
@@ -69,25 +70,27 @@ type AppsServicesVersionsListResource =
                                QueryParam "pageToken" Text :>
                                  QueryParam "pageSize" (Textual Int32) :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] ListVersionsResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] ListVersionsResponse
 
 -- | Lists the versions of a service.
 --
 -- /See:/ 'appsServicesVersionsList' smart constructor.
 data AppsServicesVersionsList = AppsServicesVersionsList'
-    { _asvlXgafv          :: !(Maybe Text)
+    { _asvlXgafv :: !(Maybe Xgafv)
     , _asvlUploadProtocol :: !(Maybe Text)
-    , _asvlPp             :: !Bool
-    , _asvlAccessToken    :: !(Maybe Text)
-    , _asvlUploadType     :: !(Maybe Text)
-    , _asvlBearerToken    :: !(Maybe Text)
-    , _asvlAppsId         :: !Text
-    , _asvlView           :: !(Maybe Text)
-    , _asvlPageToken      :: !(Maybe Text)
-    , _asvlServicesId     :: !Text
-    , _asvlPageSize       :: !(Maybe (Textual Int32))
-    , _asvlCallback       :: !(Maybe Text)
+    , _asvlPp :: !Bool
+    , _asvlAccessToken :: !(Maybe Text)
+    , _asvlUploadType :: !(Maybe Text)
+    , _asvlBearerToken :: !(Maybe Text)
+    , _asvlAppsId :: !Text
+    , _asvlView :: !(Maybe Text)
+    , _asvlPageToken :: !(Maybe Text)
+    , _asvlServicesId :: !Text
+    , _asvlPageSize :: !(Maybe (Textual Int32))
+    , _asvlFields :: !(Maybe Text)
+    , _asvlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsList' with the minimum fields required to make a request.
@@ -116,12 +119,14 @@ data AppsServicesVersionsList = AppsServicesVersionsList'
 --
 -- * 'asvlPageSize'
 --
+-- * 'asvlFields'
+--
 -- * 'asvlCallback'
 appsServicesVersionsList
     :: Text -- ^ 'asvlAppsId'
     -> Text -- ^ 'asvlServicesId'
     -> AppsServicesVersionsList
-appsServicesVersionsList pAsvlAppsId_ pAsvlServicesId_ =
+appsServicesVersionsList pAsvlAppsId_ pAsvlServicesId_ = 
     AppsServicesVersionsList'
     { _asvlXgafv = Nothing
     , _asvlUploadProtocol = Nothing
@@ -134,11 +139,12 @@ appsServicesVersionsList pAsvlAppsId_ pAsvlServicesId_ =
     , _asvlPageToken = Nothing
     , _asvlServicesId = pAsvlServicesId_
     , _asvlPageSize = Nothing
+    , _asvlFields = Nothing
     , _asvlCallback = Nothing
     }
 
 -- | V1 error format.
-asvlXgafv :: Lens' AppsServicesVersionsList (Maybe Text)
+asvlXgafv :: Lens' AppsServicesVersionsList (Maybe Xgafv)
 asvlXgafv
   = lens _asvlXgafv (\ s a -> s{_asvlXgafv = a})
 
@@ -198,6 +204,11 @@ asvlPageSize
   = lens _asvlPageSize (\ s a -> s{_asvlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+asvlFields :: Lens' AppsServicesVersionsList (Maybe Text)
+asvlFields
+  = lens _asvlFields (\ s a -> s{_asvlFields = a})
+
 -- | JSONP
 asvlCallback :: Lens' AppsServicesVersionsList (Maybe Text)
 asvlCallback
@@ -221,6 +232,7 @@ instance GoogleRequest AppsServicesVersionsList where
               _asvlPageToken
               _asvlPageSize
               _asvlCallback
+              _asvlFields
               (Just AltJSON)
               appEngineService
           where go

@@ -40,38 +40,41 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Delete
     , psakdUploadType
     , psakdBearerToken
     , psakdName
+    , psakdFields
     , psakdCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.keys.delete@ method which the
 -- 'ProjectsServiceAccountsKeysDelete' request conforms to.
 type ProjectsServiceAccountsKeysDeleteResource =
      "v1" :>
        Capture "name" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a ServiceAccountKey.
 --
 -- /See:/ 'projectsServiceAccountsKeysDelete' smart constructor.
 data ProjectsServiceAccountsKeysDelete = ProjectsServiceAccountsKeysDelete'
-    { _psakdXgafv          :: !(Maybe Text)
+    { _psakdXgafv :: !(Maybe Xgafv)
     , _psakdUploadProtocol :: !(Maybe Text)
-    , _psakdPp             :: !Bool
-    , _psakdAccessToken    :: !(Maybe Text)
-    , _psakdUploadType     :: !(Maybe Text)
-    , _psakdBearerToken    :: !(Maybe Text)
-    , _psakdName           :: !Text
-    , _psakdCallback       :: !(Maybe Text)
+    , _psakdPp :: !Bool
+    , _psakdAccessToken :: !(Maybe Text)
+    , _psakdUploadType :: !(Maybe Text)
+    , _psakdBearerToken :: !(Maybe Text)
+    , _psakdName :: !Text
+    , _psakdFields :: !(Maybe Text)
+    , _psakdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsKeysDelete' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsServiceAccountsKeysDelete = ProjectsServiceAccountsKeysDelete'
 --
 -- * 'psakdName'
 --
+-- * 'psakdFields'
+--
 -- * 'psakdCallback'
 projectsServiceAccountsKeysDelete
     :: Text -- ^ 'psakdName'
     -> ProjectsServiceAccountsKeysDelete
-projectsServiceAccountsKeysDelete pPsakdName_ =
+projectsServiceAccountsKeysDelete pPsakdName_ = 
     ProjectsServiceAccountsKeysDelete'
     { _psakdXgafv = Nothing
     , _psakdUploadProtocol = Nothing
@@ -105,11 +110,12 @@ projectsServiceAccountsKeysDelete pPsakdName_ =
     , _psakdUploadType = Nothing
     , _psakdBearerToken = Nothing
     , _psakdName = pPsakdName_
+    , _psakdFields = Nothing
     , _psakdCallback = Nothing
     }
 
 -- | V1 error format.
-psakdXgafv :: Lens' ProjectsServiceAccountsKeysDelete (Maybe Text)
+psakdXgafv :: Lens' ProjectsServiceAccountsKeysDelete (Maybe Xgafv)
 psakdXgafv
   = lens _psakdXgafv (\ s a -> s{_psakdXgafv = a})
 
@@ -142,13 +148,18 @@ psakdBearerToken
       (\ s a -> s{_psakdBearerToken = a})
 
 -- | The resource name of the service account key in the following format:
--- \`projects\/{project}\/serviceAccounts\/{account}\/keys\/{key}\`. Using
--- \`-\` as a wildcard for the project will infer the project from the
--- account. The \`account\` value can be the \`email\` address or the
--- \`unique_id\` of the service account.
+-- \`projects\/{PROJECT_ID}\/serviceAccounts\/{ACCOUNT}\/keys\/{key}\`.
+-- Using \`-\` as a wildcard for the \`PROJECT_ID\` will infer the project
+-- from the account. The \`ACCOUNT\` value can be the \`email\` address or
+-- the \`unique_id\` of the service account.
 psakdName :: Lens' ProjectsServiceAccountsKeysDelete Text
 psakdName
   = lens _psakdName (\ s a -> s{_psakdName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psakdFields :: Lens' ProjectsServiceAccountsKeysDelete (Maybe Text)
+psakdFields
+  = lens _psakdFields (\ s a -> s{_psakdFields = a})
 
 -- | JSONP
 psakdCallback :: Lens' ProjectsServiceAccountsKeysDelete (Maybe Text)
@@ -168,6 +179,7 @@ instance GoogleRequest
               _psakdUploadType
               _psakdBearerToken
               _psakdCallback
+              _psakdFields
               (Just AltJSON)
               iAMService
           where go

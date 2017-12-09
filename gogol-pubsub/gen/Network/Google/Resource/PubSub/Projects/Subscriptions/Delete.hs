@@ -45,11 +45,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.Delete
     , psdUploadType
     , psdBearerToken
     , psdSubscription
+    , psdFields
     , psdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.delete@ method which the
 -- 'ProjectsSubscriptionsDelete' request conforms to.
@@ -63,7 +64,8 @@ type ProjectsSubscriptionsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an existing subscription. All messages retained in the
 -- subscription are immediately dropped. Calls to \`Pull\` after deletion
@@ -74,14 +76,15 @@ type ProjectsSubscriptionsDeleteResource =
 --
 -- /See:/ 'projectsSubscriptionsDelete' smart constructor.
 data ProjectsSubscriptionsDelete = ProjectsSubscriptionsDelete'
-    { _psdXgafv          :: !(Maybe Xgafv)
+    { _psdXgafv :: !(Maybe Xgafv)
     , _psdUploadProtocol :: !(Maybe Text)
-    , _psdPp             :: !Bool
-    , _psdAccessToken    :: !(Maybe Text)
-    , _psdUploadType     :: !(Maybe Text)
-    , _psdBearerToken    :: !(Maybe Text)
-    , _psdSubscription   :: !Text
-    , _psdCallback       :: !(Maybe Text)
+    , _psdPp :: !Bool
+    , _psdAccessToken :: !(Maybe Text)
+    , _psdUploadType :: !(Maybe Text)
+    , _psdBearerToken :: !(Maybe Text)
+    , _psdSubscription :: !Text
+    , _psdFields :: !(Maybe Text)
+    , _psdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsDelete' with the minimum fields required to make a request.
@@ -102,11 +105,13 @@ data ProjectsSubscriptionsDelete = ProjectsSubscriptionsDelete'
 --
 -- * 'psdSubscription'
 --
+-- * 'psdFields'
+--
 -- * 'psdCallback'
 projectsSubscriptionsDelete
     :: Text -- ^ 'psdSubscription'
     -> ProjectsSubscriptionsDelete
-projectsSubscriptionsDelete pPsdSubscription_ =
+projectsSubscriptionsDelete pPsdSubscription_ = 
     ProjectsSubscriptionsDelete'
     { _psdXgafv = Nothing
     , _psdUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsSubscriptionsDelete pPsdSubscription_ =
     , _psdUploadType = Nothing
     , _psdBearerToken = Nothing
     , _psdSubscription = pPsdSubscription_
+    , _psdFields = Nothing
     , _psdCallback = Nothing
     }
 
@@ -157,6 +163,11 @@ psdSubscription
   = lens _psdSubscription
       (\ s a -> s{_psdSubscription = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psdFields :: Lens' ProjectsSubscriptionsDelete (Maybe Text)
+psdFields
+  = lens _psdFields (\ s a -> s{_psdFields = a})
+
 -- | JSONP
 psdCallback :: Lens' ProjectsSubscriptionsDelete (Maybe Text)
 psdCallback
@@ -175,6 +186,7 @@ instance GoogleRequest ProjectsSubscriptionsDelete
               _psdUploadType
               _psdBearerToken
               _psdCallback
+              _psdFields
               (Just AltJSON)
               pubSubService
           where go

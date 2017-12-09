@@ -37,10 +37,11 @@ module Network.Google.Resource.FusionTables.Query.SQL
     , qsqlTyped
     , qsqlHdrs
     , qsqlSQL
+    , qsqlFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.query.sql@ method which the
 -- 'QuerySQL' request conforms to.
@@ -51,7 +52,8 @@ type QuerySQLResource =
            QueryParam "sql" Text :>
              QueryParam "typed" Bool :>
                QueryParam "hdrs" Bool :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] SQLresponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] SQLresponse
        :<|>
        "fusiontables" :>
          "v2" :>
@@ -59,8 +61,9 @@ type QuerySQLResource =
              QueryParam "sql" Text :>
                QueryParam "typed" Bool :>
                  QueryParam "hdrs" Bool :>
-                   QueryParam "alt" AltMedia :>
-                     Post '[OctetStream] Stream
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Post '[OctetStream] Stream
 
 -- | Executes a Fusion Tables SQL statement, which can be any of - SELECT -
 -- INSERT - UPDATE - DELETE - SHOW - DESCRIBE - CREATE statement.
@@ -68,8 +71,9 @@ type QuerySQLResource =
 -- /See:/ 'querySQL' smart constructor.
 data QuerySQL = QuerySQL'
     { _qsqlTyped :: !(Maybe Bool)
-    , _qsqlHdrs  :: !(Maybe Bool)
-    , _qsqlSQL   :: !Text
+    , _qsqlHdrs :: !(Maybe Bool)
+    , _qsqlSQL :: !Text
+    , _qsqlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuerySQL' with the minimum fields required to make a request.
@@ -81,14 +85,17 @@ data QuerySQL = QuerySQL'
 -- * 'qsqlHdrs'
 --
 -- * 'qsqlSQL'
+--
+-- * 'qsqlFields'
 querySQL
     :: Text -- ^ 'qsqlSQL'
     -> QuerySQL
-querySQL pQsqlSQL_ =
+querySQL pQsqlSQL_ = 
     QuerySQL'
     { _qsqlTyped = Nothing
     , _qsqlHdrs = Nothing
     , _qsqlSQL = pQsqlSQL_
+    , _qsqlFields = Nothing
     }
 
 -- | Whether typed values are returned in the (JSON) response: numbers for
@@ -106,13 +113,18 @@ qsqlHdrs = lens _qsqlHdrs (\ s a -> s{_qsqlHdrs = a})
 qsqlSQL :: Lens' QuerySQL Text
 qsqlSQL = lens _qsqlSQL (\ s a -> s{_qsqlSQL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qsqlFields :: Lens' QuerySQL (Maybe Text)
+qsqlFields
+  = lens _qsqlFields (\ s a -> s{_qsqlFields = a})
+
 instance GoogleRequest QuerySQL where
         type Rs QuerySQL = SQLresponse
         type Scopes QuerySQL =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient QuerySQL'{..}
-          = go (Just _qsqlSQL) _qsqlTyped _qsqlHdrs
+          = go (Just _qsqlSQL) _qsqlTyped _qsqlHdrs _qsqlFields
               (Just AltJSON)
               fusionTablesService
           where go :<|> _
@@ -124,7 +136,7 @@ instance GoogleRequest (MediaDownload QuerySQL) where
         type Scopes (MediaDownload QuerySQL) =
              Scopes QuerySQL
         requestClient (MediaDownload QuerySQL'{..})
-          = go (Just _qsqlSQL) _qsqlTyped _qsqlHdrs
+          = go (Just _qsqlSQL) _qsqlTyped _qsqlHdrs _qsqlFields
               (Just AltMedia)
               fusionTablesService
           where _ :<|> go

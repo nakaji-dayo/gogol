@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Refund
     , psrPackageName
     , psrToken
     , psrSubscriptionId
+    , psrFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.purchases.subscriptions.refund@ method which the
 -- 'PurchasesSubscriptionsRefund' request conforms to.
@@ -54,16 +55,18 @@ type PurchasesSubscriptionsRefundResource =
                  Capture "subscriptionId" Text :>
                    "tokens" :>
                      CaptureMode "token" "refund" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Refunds a user\'s subscription purchase, but the subscription remains
 -- valid until its expiration time and it will continue to recur.
 --
 -- /See:/ 'purchasesSubscriptionsRefund' smart constructor.
 data PurchasesSubscriptionsRefund = PurchasesSubscriptionsRefund'
-    { _psrPackageName    :: !Text
-    , _psrToken          :: !Text
+    { _psrPackageName :: !Text
+    , _psrToken :: !Text
     , _psrSubscriptionId :: !Text
+    , _psrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PurchasesSubscriptionsRefund' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data PurchasesSubscriptionsRefund = PurchasesSubscriptionsRefund'
 -- * 'psrToken'
 --
 -- * 'psrSubscriptionId'
+--
+-- * 'psrFields'
 purchasesSubscriptionsRefund
     :: Text -- ^ 'psrPackageName'
     -> Text -- ^ 'psrToken'
     -> Text -- ^ 'psrSubscriptionId'
     -> PurchasesSubscriptionsRefund
-purchasesSubscriptionsRefund pPsrPackageName_ pPsrToken_ pPsrSubscriptionId_ =
+purchasesSubscriptionsRefund pPsrPackageName_ pPsrToken_ pPsrSubscriptionId_ = 
     PurchasesSubscriptionsRefund'
     { _psrPackageName = pPsrPackageName_
     , _psrToken = pPsrToken_
     , _psrSubscriptionId = pPsrSubscriptionId_
+    , _psrFields = Nothing
     }
 
 -- | The package name of the application for which this subscription was
@@ -105,6 +111,11 @@ psrSubscriptionId
   = lens _psrSubscriptionId
       (\ s a -> s{_psrSubscriptionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psrFields :: Lens' PurchasesSubscriptionsRefund (Maybe Text)
+psrFields
+  = lens _psrFields (\ s a -> s{_psrFields = a})
+
 instance GoogleRequest PurchasesSubscriptionsRefund
          where
         type Rs PurchasesSubscriptionsRefund = ()
@@ -112,6 +123,7 @@ instance GoogleRequest PurchasesSubscriptionsRefund
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient PurchasesSubscriptionsRefund'{..}
           = go _psrPackageName _psrSubscriptionId _psrToken
+              _psrFields
               (Just AltJSON)
               androidPublisherService
           where go

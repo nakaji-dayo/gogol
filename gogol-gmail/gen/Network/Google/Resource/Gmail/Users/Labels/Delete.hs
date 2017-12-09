@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Labels.Delete
     -- * Request Lenses
     , uldUserId
     , uldId
+    , uldFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.delete@ method which the
 -- 'UsersLabelsDelete' request conforms to.
@@ -50,7 +51,8 @@ type UsersLabelsDeleteResource =
            Capture "userId" Text :>
              "labels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Immediately and permanently deletes the specified label and removes it
 -- from any messages and threads that it is applied to.
@@ -58,7 +60,8 @@ type UsersLabelsDeleteResource =
 -- /See:/ 'usersLabelsDelete' smart constructor.
 data UsersLabelsDelete = UsersLabelsDelete'
     { _uldUserId :: !Text
-    , _uldId     :: !Text
+    , _uldId :: !Text
+    , _uldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsDelete' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersLabelsDelete = UsersLabelsDelete'
 -- * 'uldUserId'
 --
 -- * 'uldId'
+--
+-- * 'uldFields'
 usersLabelsDelete
     :: Text -- ^ 'uldId'
     -> UsersLabelsDelete
-usersLabelsDelete pUldId_ =
+usersLabelsDelete pUldId_ = 
     UsersLabelsDelete'
     { _uldUserId = "me"
     , _uldId = pUldId_
+    , _uldFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -87,6 +93,11 @@ uldUserId
 uldId :: Lens' UsersLabelsDelete Text
 uldId = lens _uldId (\ s a -> s{_uldId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uldFields :: Lens' UsersLabelsDelete (Maybe Text)
+uldFields
+  = lens _uldFields (\ s a -> s{_uldFields = a})
+
 instance GoogleRequest UsersLabelsDelete where
         type Rs UsersLabelsDelete = ()
         type Scopes UsersLabelsDelete =
@@ -94,7 +105,8 @@ instance GoogleRequest UsersLabelsDelete where
                "https://www.googleapis.com/auth/gmail.labels",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersLabelsDelete'{..}
-          = go _uldUserId _uldId (Just AltJSON) gmailService
+          = go _uldUserId _uldId _uldFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersLabelsDeleteResource)

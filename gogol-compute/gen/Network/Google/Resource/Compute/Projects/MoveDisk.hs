@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.Projects.MoveDisk
     , ProjectsMoveDisk
 
     -- * Request Lenses
+    , pmdRequestId
     , pmdProject
     , pmdPayload
+    , pmdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.projects.moveDisk@ method which the
 -- 'ProjectsMoveDisk' request conforms to.
@@ -48,34 +50,58 @@ type ProjectsMoveDiskResource =
          "projects" :>
            Capture "project" Text :>
              "moveDisk" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DiskMoveRequest :>
-                   Post '[JSON] Operation
+               QueryParam "requestId" Text :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DiskMoveRequest :>
+                       Post '[JSON] Operation
 
 -- | Moves a persistent disk from one zone to another.
 --
 -- /See:/ 'projectsMoveDisk' smart constructor.
 data ProjectsMoveDisk = ProjectsMoveDisk'
-    { _pmdProject :: !Text
+    { _pmdRequestId :: !(Maybe Text)
+    , _pmdProject :: !Text
     , _pmdPayload :: !DiskMoveRequest
+    , _pmdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMoveDisk' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'pmdRequestId'
+--
 -- * 'pmdProject'
 --
 -- * 'pmdPayload'
+--
+-- * 'pmdFields'
 projectsMoveDisk
     :: Text -- ^ 'pmdProject'
     -> DiskMoveRequest -- ^ 'pmdPayload'
     -> ProjectsMoveDisk
-projectsMoveDisk pPmdProject_ pPmdPayload_ =
+projectsMoveDisk pPmdProject_ pPmdPayload_ = 
     ProjectsMoveDisk'
-    { _pmdProject = pPmdProject_
+    { _pmdRequestId = Nothing
+    , _pmdProject = pPmdProject_
     , _pmdPayload = pPmdPayload_
+    , _pmdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+pmdRequestId :: Lens' ProjectsMoveDisk (Maybe Text)
+pmdRequestId
+  = lens _pmdRequestId (\ s a -> s{_pmdRequestId = a})
 
 -- | Project ID for this request.
 pmdProject :: Lens' ProjectsMoveDisk Text
@@ -87,13 +113,20 @@ pmdPayload :: Lens' ProjectsMoveDisk DiskMoveRequest
 pmdPayload
   = lens _pmdPayload (\ s a -> s{_pmdPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmdFields :: Lens' ProjectsMoveDisk (Maybe Text)
+pmdFields
+  = lens _pmdFields (\ s a -> s{_pmdFields = a})
+
 instance GoogleRequest ProjectsMoveDisk where
         type Rs ProjectsMoveDisk = Operation
         type Scopes ProjectsMoveDisk =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient ProjectsMoveDisk'{..}
-          = go _pmdProject (Just AltJSON) _pmdPayload
+          = go _pmdProject _pmdRequestId _pmdFields
+              (Just AltJSON)
+              _pmdPayload
               computeService
           where go
                   = buildClient

@@ -42,11 +42,12 @@ module Network.Google.Resource.YouTubeReporting.Jobs.Reports.Get
     , jrgUploadType
     , jrgOnBehalfOfContentOwner
     , jrgBearerToken
+    , jrgFields
     , jrgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.jobs.reports.get@ method which the
 -- 'JobsReportsGet' request conforms to.
@@ -64,22 +65,24 @@ type JobsReportsGetResource =
                          QueryParam "onBehalfOfContentOwner" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :> Get '[JSON] Report
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :> Get '[JSON] Report
 
 -- | Gets the metadata of a specific report.
 --
 -- /See:/ 'jobsReportsGet' smart constructor.
 data JobsReportsGet = JobsReportsGet'
-    { _jrgXgafv                  :: !(Maybe Xgafv)
-    , _jrgJobId                  :: !Text
-    , _jrgUploadProtocol         :: !(Maybe Text)
-    , _jrgPp                     :: !Bool
-    , _jrgAccessToken            :: !(Maybe Text)
-    , _jrgReportId               :: !Text
-    , _jrgUploadType             :: !(Maybe Text)
+    { _jrgXgafv :: !(Maybe Xgafv)
+    , _jrgJobId :: !Text
+    , _jrgUploadProtocol :: !(Maybe Text)
+    , _jrgPp :: !Bool
+    , _jrgAccessToken :: !(Maybe Text)
+    , _jrgReportId :: !Text
+    , _jrgUploadType :: !(Maybe Text)
     , _jrgOnBehalfOfContentOwner :: !(Maybe Text)
-    , _jrgBearerToken            :: !(Maybe Text)
-    , _jrgCallback               :: !(Maybe Text)
+    , _jrgBearerToken :: !(Maybe Text)
+    , _jrgFields :: !(Maybe Text)
+    , _jrgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsReportsGet' with the minimum fields required to make a request.
@@ -104,12 +107,14 @@ data JobsReportsGet = JobsReportsGet'
 --
 -- * 'jrgBearerToken'
 --
+-- * 'jrgFields'
+--
 -- * 'jrgCallback'
 jobsReportsGet
     :: Text -- ^ 'jrgJobId'
     -> Text -- ^ 'jrgReportId'
     -> JobsReportsGet
-jobsReportsGet pJrgJobId_ pJrgReportId_ =
+jobsReportsGet pJrgJobId_ pJrgReportId_ = 
     JobsReportsGet'
     { _jrgXgafv = Nothing
     , _jrgJobId = pJrgJobId_
@@ -120,6 +125,7 @@ jobsReportsGet pJrgJobId_ pJrgReportId_ =
     , _jrgUploadType = Nothing
     , _jrgOnBehalfOfContentOwner = Nothing
     , _jrgBearerToken = Nothing
+    , _jrgFields = Nothing
     , _jrgCallback = Nothing
     }
 
@@ -171,6 +177,11 @@ jrgBearerToken
   = lens _jrgBearerToken
       (\ s a -> s{_jrgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jrgFields :: Lens' JobsReportsGet (Maybe Text)
+jrgFields
+  = lens _jrgFields (\ s a -> s{_jrgFields = a})
+
 -- | JSONP
 jrgCallback :: Lens' JobsReportsGet (Maybe Text)
 jrgCallback
@@ -190,6 +201,7 @@ instance GoogleRequest JobsReportsGet where
               _jrgOnBehalfOfContentOwner
               _jrgBearerToken
               _jrgCallback
+              _jrgFields
               (Just AltJSON)
               youTubeReportingService
           where go

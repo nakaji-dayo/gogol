@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.LiveChatModerators.Insert
     -- * Request Lenses
     , lPart
     , lPayload
+    , lFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatModerators.insert@ method which the
 -- 'LiveChatModeratorsInsert' request conforms to.
@@ -48,16 +49,18 @@ type LiveChatModeratorsInsertResource =
          "liveChat" :>
            "moderators" :>
              QueryParam "part" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] LiveChatModerator :>
-                   Post '[JSON] LiveChatModerator
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] LiveChatModerator :>
+                     Post '[JSON] LiveChatModerator
 
 -- | Adds a new moderator for the chat.
 --
 -- /See:/ 'liveChatModeratorsInsert' smart constructor.
 data LiveChatModeratorsInsert = LiveChatModeratorsInsert'
-    { _lPart    :: !Text
+    { _lPart :: !Text
     , _lPayload :: !LiveChatModerator
+    , _lFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatModeratorsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data LiveChatModeratorsInsert = LiveChatModeratorsInsert'
 -- * 'lPart'
 --
 -- * 'lPayload'
+--
+-- * 'lFields'
 liveChatModeratorsInsert
     :: Text -- ^ 'lPart'
     -> LiveChatModerator -- ^ 'lPayload'
     -> LiveChatModeratorsInsert
-liveChatModeratorsInsert pLPart_ pLPayload_ =
+liveChatModeratorsInsert pLPart_ pLPayload_ = 
     LiveChatModeratorsInsert'
     { _lPart = pLPart_
     , _lPayload = pLPayload_
+    , _lFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -88,13 +94,17 @@ lPart = lens _lPart (\ s a -> s{_lPart = a})
 lPayload :: Lens' LiveChatModeratorsInsert LiveChatModerator
 lPayload = lens _lPayload (\ s a -> s{_lPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lFields :: Lens' LiveChatModeratorsInsert (Maybe Text)
+lFields = lens _lFields (\ s a -> s{_lFields = a})
+
 instance GoogleRequest LiveChatModeratorsInsert where
         type Rs LiveChatModeratorsInsert = LiveChatModerator
         type Scopes LiveChatModeratorsInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatModeratorsInsert'{..}
-          = go (Just _lPart) (Just AltJSON) _lPayload
+          = go (Just _lPart) _lFields (Just AltJSON) _lPayload
               youTubeService
           where go
                   = buildClient

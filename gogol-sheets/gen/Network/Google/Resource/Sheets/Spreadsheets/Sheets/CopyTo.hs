@@ -43,11 +43,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Sheets.CopyTo
     , ssctPayload
     , ssctBearerToken
     , ssctSheetId
+    , ssctFields
     , ssctCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.sheets.copyTo@ method which the
 -- 'SpreadsheetsSheetsCopyTo' request conforms to.
@@ -64,26 +65,28 @@ type SpreadsheetsSheetsCopyToResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               ReqBody '[JSON]
-                                 CopySheetToAnotherSpreadsheetRequest
-                                 :> Post '[JSON] SheetProperties
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 ReqBody '[JSON]
+                                   CopySheetToAnotherSpreadsheetRequest
+                                   :> Post '[JSON] SheetProperties
 
 -- | Copies a single sheet from a spreadsheet to another spreadsheet. Returns
 -- the properties of the newly created sheet.
 --
 -- /See:/ 'spreadsheetsSheetsCopyTo' smart constructor.
 data SpreadsheetsSheetsCopyTo = SpreadsheetsSheetsCopyTo'
-    { _ssctXgafv          :: !(Maybe Xgafv)
+    { _ssctXgafv :: !(Maybe Xgafv)
     , _ssctUploadProtocol :: !(Maybe Text)
-    , _ssctPp             :: !Bool
-    , _ssctAccessToken    :: !(Maybe Text)
-    , _ssctSpreadsheetId  :: !Text
-    , _ssctUploadType     :: !(Maybe Text)
-    , _ssctPayload        :: !CopySheetToAnotherSpreadsheetRequest
-    , _ssctBearerToken    :: !(Maybe Text)
-    , _ssctSheetId        :: !(Textual Int32)
-    , _ssctCallback       :: !(Maybe Text)
+    , _ssctPp :: !Bool
+    , _ssctAccessToken :: !(Maybe Text)
+    , _ssctSpreadsheetId :: !Text
+    , _ssctUploadType :: !(Maybe Text)
+    , _ssctPayload :: !CopySheetToAnotherSpreadsheetRequest
+    , _ssctBearerToken :: !(Maybe Text)
+    , _ssctSheetId :: !(Textual Int32)
+    , _ssctFields :: !(Maybe Text)
+    , _ssctCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsSheetsCopyTo' with the minimum fields required to make a request.
@@ -108,13 +111,15 @@ data SpreadsheetsSheetsCopyTo = SpreadsheetsSheetsCopyTo'
 --
 -- * 'ssctSheetId'
 --
+-- * 'ssctFields'
+--
 -- * 'ssctCallback'
 spreadsheetsSheetsCopyTo
     :: Text -- ^ 'ssctSpreadsheetId'
     -> CopySheetToAnotherSpreadsheetRequest -- ^ 'ssctPayload'
     -> Int32 -- ^ 'ssctSheetId'
     -> SpreadsheetsSheetsCopyTo
-spreadsheetsSheetsCopyTo pSsctSpreadsheetId_ pSsctPayload_ pSsctSheetId_ =
+spreadsheetsSheetsCopyTo pSsctSpreadsheetId_ pSsctPayload_ pSsctSheetId_ = 
     SpreadsheetsSheetsCopyTo'
     { _ssctXgafv = Nothing
     , _ssctUploadProtocol = Nothing
@@ -125,6 +130,7 @@ spreadsheetsSheetsCopyTo pSsctSpreadsheetId_ pSsctPayload_ pSsctSheetId_ =
     , _ssctPayload = pSsctPayload_
     , _ssctBearerToken = Nothing
     , _ssctSheetId = _Coerce # pSsctSheetId_
+    , _ssctFields = Nothing
     , _ssctCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ ssctSheetId
   = lens _ssctSheetId (\ s a -> s{_ssctSheetId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ssctFields :: Lens' SpreadsheetsSheetsCopyTo (Maybe Text)
+ssctFields
+  = lens _ssctFields (\ s a -> s{_ssctFields = a})
+
 -- | JSONP
 ssctCallback :: Lens' SpreadsheetsSheetsCopyTo (Maybe Text)
 ssctCallback
@@ -187,6 +198,7 @@ instance GoogleRequest SpreadsheetsSheetsCopyTo where
         type Rs SpreadsheetsSheetsCopyTo = SheetProperties
         type Scopes SpreadsheetsSheetsCopyTo =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsSheetsCopyTo'{..}
           = go _ssctSpreadsheetId _ssctSheetId _ssctXgafv
@@ -196,6 +208,7 @@ instance GoogleRequest SpreadsheetsSheetsCopyTo where
               _ssctUploadType
               _ssctBearerToken
               _ssctCallback
+              _ssctFields
               (Just AltJSON)
               _ssctPayload
               sheetsService

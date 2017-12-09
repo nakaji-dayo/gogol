@@ -41,39 +41,42 @@ module Network.Google.Resource.StorageTransfer.TransferOperations.Cancel
     , tocUploadType
     , tocBearerToken
     , tocName
+    , tocFields
     , tocCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferOperations.cancel@ method which the
 -- 'TransferOperationsCancel' request conforms to.
 type TransferOperationsCancelResource =
      "v1" :>
        CaptureMode "name" "cancel" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Empty
 
 -- | Cancels a transfer. Use the get method to check whether the cancellation
 -- succeeded or whether the operation completed despite cancellation.
 --
 -- /See:/ 'transferOperationsCancel' smart constructor.
 data TransferOperationsCancel = TransferOperationsCancel'
-    { _tocXgafv          :: !(Maybe Text)
+    { _tocXgafv :: !(Maybe Xgafv)
     , _tocUploadProtocol :: !(Maybe Text)
-    , _tocPp             :: !Bool
-    , _tocAccessToken    :: !(Maybe Text)
-    , _tocUploadType     :: !(Maybe Text)
-    , _tocBearerToken    :: !(Maybe Text)
-    , _tocName           :: !Text
-    , _tocCallback       :: !(Maybe Text)
+    , _tocPp :: !Bool
+    , _tocAccessToken :: !(Maybe Text)
+    , _tocUploadType :: !(Maybe Text)
+    , _tocBearerToken :: !(Maybe Text)
+    , _tocName :: !Text
+    , _tocFields :: !(Maybe Text)
+    , _tocCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferOperationsCancel' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data TransferOperationsCancel = TransferOperationsCancel'
 --
 -- * 'tocName'
 --
+-- * 'tocFields'
+--
 -- * 'tocCallback'
 transferOperationsCancel
     :: Text -- ^ 'tocName'
     -> TransferOperationsCancel
-transferOperationsCancel pTocName_ =
+transferOperationsCancel pTocName_ = 
     TransferOperationsCancel'
     { _tocXgafv = Nothing
     , _tocUploadProtocol = Nothing
@@ -107,11 +112,12 @@ transferOperationsCancel pTocName_ =
     , _tocUploadType = Nothing
     , _tocBearerToken = Nothing
     , _tocName = pTocName_
+    , _tocFields = Nothing
     , _tocCallback = Nothing
     }
 
 -- | V1 error format.
-tocXgafv :: Lens' TransferOperationsCancel (Maybe Text)
+tocXgafv :: Lens' TransferOperationsCancel (Maybe Xgafv)
 tocXgafv = lens _tocXgafv (\ s a -> s{_tocXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -146,6 +152,11 @@ tocBearerToken
 tocName :: Lens' TransferOperationsCancel Text
 tocName = lens _tocName (\ s a -> s{_tocName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tocFields :: Lens' TransferOperationsCancel (Maybe Text)
+tocFields
+  = lens _tocFields (\ s a -> s{_tocFields = a})
+
 -- | JSONP
 tocCallback :: Lens' TransferOperationsCancel (Maybe Text)
 tocCallback
@@ -162,6 +173,7 @@ instance GoogleRequest TransferOperationsCancel where
               _tocUploadType
               _tocBearerToken
               _tocCallback
+              _tocFields
               (Just AltJSON)
               storageTransferService
           where go

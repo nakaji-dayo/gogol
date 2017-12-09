@@ -35,12 +35,14 @@ module Network.Google.Resource.SQL.Instances.List
 
     -- * Request Lenses
     , ilProject
+    , ilFilter
     , ilPageToken
     , ilMaxResults
+    , ilFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.list@ method which the
 -- 'InstancesList' request conforms to.
@@ -50,19 +52,23 @@ type InstancesListResource =
          "projects" :>
            Capture "project" Text :>
              "instances" :>
-               QueryParam "pageToken" Text :>
-                 QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] InstancesListResponse
+               QueryParam "filter" Text :>
+                 QueryParam "pageToken" Text :>
+                   QueryParam "maxResults" (Textual Word32) :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] InstancesListResponse
 
 -- | Lists instances under a given project in the alphabetical order of the
 -- instance name.
 --
 -- /See:/ 'instancesList' smart constructor.
 data InstancesList = InstancesList'
-    { _ilProject    :: !Text
-    , _ilPageToken  :: !(Maybe Text)
+    { _ilProject :: !Text
+    , _ilFilter :: !(Maybe Text)
+    , _ilPageToken :: !(Maybe Text)
     , _ilMaxResults :: !(Maybe (Textual Word32))
+    , _ilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesList' with the minimum fields required to make a request.
@@ -71,23 +77,34 @@ data InstancesList = InstancesList'
 --
 -- * 'ilProject'
 --
+-- * 'ilFilter'
+--
 -- * 'ilPageToken'
 --
 -- * 'ilMaxResults'
+--
+-- * 'ilFields'
 instancesList
     :: Text -- ^ 'ilProject'
     -> InstancesList
-instancesList pIlProject_ =
+instancesList pIlProject_ = 
     InstancesList'
     { _ilProject = pIlProject_
+    , _ilFilter = Nothing
     , _ilPageToken = Nothing
     , _ilMaxResults = Nothing
+    , _ilFields = Nothing
     }
 
 -- | Project ID of the project for which to list Cloud SQL instances.
 ilProject :: Lens' InstancesList Text
 ilProject
   = lens _ilProject (\ s a -> s{_ilProject = a})
+
+-- | An expression for filtering the results of the request, such as by name
+-- or label.
+ilFilter :: Lens' InstancesList (Maybe Text)
+ilFilter = lens _ilFilter (\ s a -> s{_ilFilter = a})
 
 -- | A previously-returned page token representing part of the larger set of
 -- results to view.
@@ -101,13 +118,18 @@ ilMaxResults
   = lens _ilMaxResults (\ s a -> s{_ilMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ilFields :: Lens' InstancesList (Maybe Text)
+ilFields = lens _ilFields (\ s a -> s{_ilFields = a})
+
 instance GoogleRequest InstancesList where
         type Rs InstancesList = InstancesListResponse
         type Scopes InstancesList =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesList'{..}
-          = go _ilProject _ilPageToken _ilMaxResults
+          = go _ilProject _ilFilter _ilPageToken _ilMaxResults
+              _ilFields
               (Just AltJSON)
               sQLAdminService
           where go

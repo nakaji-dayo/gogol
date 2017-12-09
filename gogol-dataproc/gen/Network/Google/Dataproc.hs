@@ -13,8 +13,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- An API for managing Hadoop-based clusters and jobs on Google Cloud
--- Platform.
+-- Manages Hadoop-based clusters and jobs on Google Cloud Platform.
 --
 -- /See:/ <https://cloud.google.com/dataproc/ Google Cloud Dataproc API Reference>
 module Network.Google.Dataproc
@@ -60,6 +59,9 @@ module Network.Google.Dataproc
     -- ** dataproc.projects.regions.jobs.list
     , module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.List
 
+    -- ** dataproc.projects.regions.jobs.patch
+    , module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Patch
+
     -- ** dataproc.projects.regions.jobs.submit
     , module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Submit
 
@@ -83,17 +85,15 @@ module Network.Google.Dataproc
     , jrJobId
     , jrProjectId
 
+    -- ** JobStatusState
+    , JobStatusState (..)
+
     -- ** Status
     , Status
     , status
     , sDetails
     , sCode
     , sMessage
-
-    -- ** OperationSchema
-    , OperationSchema
-    , operationSchema
-    , osAddtional
 
     -- ** PySparkJobProperties
     , PySparkJobProperties
@@ -112,6 +112,7 @@ module Network.Google.Dataproc
     , igcDiskConfig
     , igcIsPreemptible
     , igcImageURI
+    , igcAccelerators
     , igcInstanceNames
     , igcManagedGroupConfig
     , igcMachineTypeURI
@@ -132,6 +133,11 @@ module Network.Google.Dataproc
     , SoftwareConfigProperties
     , softwareConfigProperties
     , scpAddtional
+
+    -- ** JobScheduling
+    , JobScheduling
+    , jobScheduling
+    , jsMaxFailuresPerHour
 
     -- ** DiskConfig
     , DiskConfig
@@ -176,6 +182,9 @@ module Network.Google.Dataproc
     , SubmitJobRequest
     , submitJobRequest
     , sjrJob
+
+    -- ** ClusterStatusSubState
+    , ClusterStatusSubState (..)
 
     -- ** ClusterMetrics
     , ClusterMetrics
@@ -274,32 +283,29 @@ module Network.Google.Dataproc
     , gccInternalIPOnly
     , gccNetworkURI
     , gccZoneURI
+    , gccServiceAccount
     , gccMetadata
     , gccServiceAccountScopes
     , gccTags
 
-    -- ** OperationStatus
-    , OperationStatus
-    , operationStatus
-    , osState
-    , osInnerState
-    , osStateStartTime
-    , osDetails
+    -- ** YarnApplicationState
+    , YarnApplicationState (..)
+
+    -- ** ClusterStatusState
+    , ClusterStatusState (..)
 
     -- ** GceClusterConfigMetadata
     , GceClusterConfigMetadata
     , gceClusterConfigMetadata
     , gccmAddtional
 
+    -- ** ClusterOperationStatusState
+    , ClusterOperationStatusState (..)
+
     -- ** HiveJobProperties
     , HiveJobProperties
     , hiveJobProperties
     , hAddtional
-
-    -- ** DiagnoseClusterOutputLocation
-    , DiagnoseClusterOutputLocation
-    , diagnoseClusterOutputLocation
-    , dcolOutputURI
 
     -- ** ClusterLabels
     , ClusterLabels
@@ -320,6 +326,7 @@ module Network.Google.Dataproc
     , jLabels
     , jPysparkJob
     , jDriverOutputResourceURI
+    , jScheduling
     , jStatusHistory
     , jPlacement
     , jPigJob
@@ -340,11 +347,15 @@ module Network.Google.Dataproc
     , hLoggingConfig
     , hProperties
 
+    -- ** Xgafv
+    , Xgafv (..)
+
     -- ** ClusterOperationMetadata
     , ClusterOperationMetadata
     , clusterOperationMetadata
     , comStatus
     , comClusterUuid
+    , comWarnings
     , comClusterName
     , comLabels
     , comOperationType
@@ -372,6 +383,12 @@ module Network.Google.Dataproc
     , listJobsResponse
     , ljrNextPageToken
     , ljrJobs
+
+    -- ** AcceleratorConfig
+    , AcceleratorConfig
+    , acceleratorConfig
+    , acAcceleratorCount
+    , acAcceleratorTypeURI
 
     -- ** SparkJobProperties
     , SparkJobProperties
@@ -402,6 +419,9 @@ module Network.Google.Dataproc
     , lcrNextPageToken
     , lcrClusters
 
+    -- ** JobStatusSubState
+    , JobStatusSubState (..)
+
     -- ** CancelJobRequest
     , CancelJobRequest
     , cancelJobRequest
@@ -414,23 +434,13 @@ module Network.Google.Dataproc
     -- ** OperationMetadata
     , OperationMetadata
     , operationMetadata
-    , omStatus
-    , omState
-    , omClusterUuid
-    , omInsertTime
-    , omStartTime
-    , omInnerState
-    , omEndTime
-    , omDetails
-    , omClusterName
-    , omOperationType
-    , omStatusHistory
-    , omDescription
+    , omAddtional
 
     -- ** JobStatus
     , JobStatus
     , jobStatus
     , jsState
+    , jsSubState
     , jsStateStartTime
     , jsDetails
 
@@ -458,6 +468,7 @@ module Network.Google.Dataproc
     , ClusterStatus
     , clusterStatus
     , csState
+    , csSubState
     , csStateStartTime
     , csDetail
 
@@ -486,23 +497,24 @@ module Network.Google.Dataproc
     , lcDriverLogLevels
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Create
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Delete
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Diagnose
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Get
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.List
-import           Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Patch
-import           Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Cancel
-import           Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Delete
-import           Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Get
-import           Network.Google.Resource.Dataproc.Projects.Regions.Jobs.List
-import           Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Submit
-import           Network.Google.Resource.Dataproc.Projects.Regions.Operations.Cancel
-import           Network.Google.Resource.Dataproc.Projects.Regions.Operations.Delete
-import           Network.Google.Resource.Dataproc.Projects.Regions.Operations.Get
-import           Network.Google.Resource.Dataproc.Projects.Regions.Operations.List
+import Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Create
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Delete
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Diagnose
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Get
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.List
+import Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Patch
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Cancel
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Delete
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Get
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.List
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Patch
+import Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Submit
+import Network.Google.Resource.Dataproc.Projects.Regions.Operations.Cancel
+import Network.Google.Resource.Dataproc.Projects.Regions.Operations.Delete
+import Network.Google.Resource.Dataproc.Projects.Regions.Operations.Get
+import Network.Google.Resource.Dataproc.Projects.Regions.Operations.List
 
 {- $resources
 TODO
@@ -511,7 +523,8 @@ TODO
 -- | Represents the entirety of the methods and resources available for the Google Cloud Dataproc API service.
 type DataprocAPI =
      ProjectsRegionsJobsListResource :<|>
-       ProjectsRegionsJobsGetResource
+       ProjectsRegionsJobsPatchResource
+       :<|> ProjectsRegionsJobsGetResource
        :<|> ProjectsRegionsJobsSubmitResource
        :<|> ProjectsRegionsJobsCancelResource
        :<|> ProjectsRegionsJobsDeleteResource

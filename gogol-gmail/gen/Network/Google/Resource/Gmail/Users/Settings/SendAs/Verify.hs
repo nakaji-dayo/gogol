@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Sends a verification email to the specified send-as alias address. The
--- verification status must be pending.
+-- verification status must be pending. This method is only available to
+-- service account clients that have been delegated domain-wide authority.
 --
 -- /See:/ <https://developers.google.com/gmail/api/ Gmail API Reference> for @gmail.users.settings.sendAs.verify@.
 module Network.Google.Resource.Gmail.Users.Settings.SendAs.Verify
@@ -36,10 +37,11 @@ module Network.Google.Resource.Gmail.Users.Settings.SendAs.Verify
     -- * Request Lenses
     , ussavUserId
     , ussavSendAsEmail
+    , ussavFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.sendAs.verify@ method which the
 -- 'UsersSettingsSendAsVerify' request conforms to.
@@ -52,15 +54,18 @@ type UsersSettingsSendAsVerifyResource =
                "sendAs" :>
                  Capture "sendAsEmail" Text :>
                    "verify" :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Sends a verification email to the specified send-as alias address. The
--- verification status must be pending.
+-- verification status must be pending. This method is only available to
+-- service account clients that have been delegated domain-wide authority.
 --
 -- /See:/ 'usersSettingsSendAsVerify' smart constructor.
 data UsersSettingsSendAsVerify = UsersSettingsSendAsVerify'
-    { _ussavUserId      :: !Text
+    { _ussavUserId :: !Text
     , _ussavSendAsEmail :: !Text
+    , _ussavFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsSendAsVerify' with the minimum fields required to make a request.
@@ -70,13 +75,16 @@ data UsersSettingsSendAsVerify = UsersSettingsSendAsVerify'
 -- * 'ussavUserId'
 --
 -- * 'ussavSendAsEmail'
+--
+-- * 'ussavFields'
 usersSettingsSendAsVerify
     :: Text -- ^ 'ussavSendAsEmail'
     -> UsersSettingsSendAsVerify
-usersSettingsSendAsVerify pUssavSendAsEmail_ =
+usersSettingsSendAsVerify pUssavSendAsEmail_ = 
     UsersSettingsSendAsVerify'
     { _ussavUserId = "me"
     , _ussavSendAsEmail = pUssavSendAsEmail_
+    , _ussavFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -91,13 +99,19 @@ ussavSendAsEmail
   = lens _ussavSendAsEmail
       (\ s a -> s{_ussavSendAsEmail = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ussavFields :: Lens' UsersSettingsSendAsVerify (Maybe Text)
+ussavFields
+  = lens _ussavFields (\ s a -> s{_ussavFields = a})
+
 instance GoogleRequest UsersSettingsSendAsVerify
          where
         type Rs UsersSettingsSendAsVerify = ()
         type Scopes UsersSettingsSendAsVerify =
              '["https://www.googleapis.com/auth/gmail.settings.sharing"]
         requestClient UsersSettingsSendAsVerify'{..}
-          = go _ussavUserId _ussavSendAsEmail (Just AltJSON)
+          = go _ussavUserId _ussavSendAsEmail _ussavFields
+              (Just AltJSON)
               gmailService
           where go
                   = buildClient

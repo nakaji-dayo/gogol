@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Databases.Update
     , duProject
     , duDatabase
     , duPayload
+    , duFields
     , duInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.update@ method which the
 -- 'DatabasesUpdate' request conforms to.
@@ -54,17 +55,19 @@ type DatabasesUpdateResource =
                Capture "instance" Text :>
                  "databases" :>
                    Capture "database" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Database :> Put '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Database :> Put '[JSON] Operation
 
 -- | Updates a resource containing information about a database inside a
 -- Cloud SQL instance.
 --
 -- /See:/ 'databasesUpdate' smart constructor.
 data DatabasesUpdate = DatabasesUpdate'
-    { _duProject  :: !Text
+    { _duProject :: !Text
     , _duDatabase :: !Text
-    , _duPayload  :: !Database
+    , _duPayload :: !Database
+    , _duFields :: !(Maybe Text)
     , _duInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -78,6 +81,8 @@ data DatabasesUpdate = DatabasesUpdate'
 --
 -- * 'duPayload'
 --
+-- * 'duFields'
+--
 -- * 'duInstance'
 databasesUpdate
     :: Text -- ^ 'duProject'
@@ -85,11 +90,12 @@ databasesUpdate
     -> Database -- ^ 'duPayload'
     -> Text -- ^ 'duInstance'
     -> DatabasesUpdate
-databasesUpdate pDuProject_ pDuDatabase_ pDuPayload_ pDuInstance_ =
+databasesUpdate pDuProject_ pDuDatabase_ pDuPayload_ pDuInstance_ = 
     DatabasesUpdate'
     { _duProject = pDuProject_
     , _duDatabase = pDuDatabase_
     , _duPayload = pDuPayload_
+    , _duFields = Nothing
     , _duInstance = pDuInstance_
     }
 
@@ -108,6 +114,10 @@ duPayload :: Lens' DatabasesUpdate Database
 duPayload
   = lens _duPayload (\ s a -> s{_duPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+duFields :: Lens' DatabasesUpdate (Maybe Text)
+duFields = lens _duFields (\ s a -> s{_duFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 duInstance :: Lens' DatabasesUpdate Text
 duInstance
@@ -119,7 +129,7 @@ instance GoogleRequest DatabasesUpdate where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesUpdate'{..}
-          = go _duProject _duInstance _duDatabase
+          = go _duProject _duInstance _duDatabase _duFields
               (Just AltJSON)
               _duPayload
               sQLAdminService

@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.Videos.Update
     , vuPart
     , vuPayload
     , vuOnBehalfOfContentOwner
+    , vuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.update@ method which the
 -- 'VideosUpdate' request conforms to.
@@ -49,16 +50,18 @@ type VideosUpdateResource =
          "videos" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Video :> Put '[JSON] Video
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Video :> Put '[JSON] Video
 
 -- | Updates a video\'s metadata.
 --
 -- /See:/ 'videosUpdate' smart constructor.
 data VideosUpdate = VideosUpdate'
-    { _vuPart                   :: !Text
-    , _vuPayload                :: !Video
+    { _vuPart :: !Text
+    , _vuPayload :: !Video
     , _vuOnBehalfOfContentOwner :: !(Maybe Text)
+    , _vuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosUpdate' with the minimum fields required to make a request.
@@ -70,15 +73,18 @@ data VideosUpdate = VideosUpdate'
 -- * 'vuPayload'
 --
 -- * 'vuOnBehalfOfContentOwner'
+--
+-- * 'vuFields'
 videosUpdate
     :: Text -- ^ 'vuPart'
     -> Video -- ^ 'vuPayload'
     -> VideosUpdate
-videosUpdate pVuPart_ pVuPayload_ =
+videosUpdate pVuPart_ pVuPayload_ = 
     VideosUpdate'
     { _vuPart = pVuPart_
     , _vuPayload = pVuPayload_
     , _vuOnBehalfOfContentOwner = Nothing
+    , _vuFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -121,6 +127,10 @@ vuOnBehalfOfContentOwner
   = lens _vuOnBehalfOfContentOwner
       (\ s a -> s{_vuOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vuFields :: Lens' VideosUpdate (Maybe Text)
+vuFields = lens _vuFields (\ s a -> s{_vuFields = a})
+
 instance GoogleRequest VideosUpdate where
         type Rs VideosUpdate = Video
         type Scopes VideosUpdate =
@@ -129,6 +139,7 @@ instance GoogleRequest VideosUpdate where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient VideosUpdate'{..}
           = go (Just _vuPart) _vuOnBehalfOfContentOwner
+              _vuFields
               (Just AltJSON)
               _vuPayload
               youTubeService

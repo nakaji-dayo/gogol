@@ -21,7 +21,6 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Lists the statuses of the sub-accounts in your Merchant Center account.
--- This method can only be called for multi-client accounts.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accountstatuses.list@.
 module Network.Google.Resource.Content.Accountstatuses.List
@@ -34,13 +33,14 @@ module Network.Google.Resource.Content.Accountstatuses.List
     , AccountstatusesList
 
     -- * Request Lenses
-    , acc3MerchantId
-    , acc3PageToken
-    , acc3MaxResults
+    , al1MerchantId
+    , al1PageToken
+    , al1MaxResults
+    , al1Fields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accountstatuses.list@ method which the
 -- 'AccountstatusesList' request conforms to.
@@ -51,58 +51,66 @@ type AccountstatusesListResource =
            "accountstatuses" :>
              QueryParam "pageToken" Text :>
                QueryParam "maxResults" (Textual Word32) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccountstatusesListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccountstatusesListResponse
 
 -- | Lists the statuses of the sub-accounts in your Merchant Center account.
--- This method can only be called for multi-client accounts.
 --
 -- /See:/ 'accountstatusesList' smart constructor.
 data AccountstatusesList = AccountstatusesList'
-    { _acc3MerchantId :: !(Textual Word64)
-    , _acc3PageToken  :: !(Maybe Text)
-    , _acc3MaxResults :: !(Maybe (Textual Word32))
+    { _al1MerchantId :: !(Textual Word64)
+    , _al1PageToken :: !(Maybe Text)
+    , _al1MaxResults :: !(Maybe (Textual Word32))
+    , _al1Fields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountstatusesList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acc3MerchantId'
+-- * 'al1MerchantId'
 --
--- * 'acc3PageToken'
+-- * 'al1PageToken'
 --
--- * 'acc3MaxResults'
+-- * 'al1MaxResults'
+--
+-- * 'al1Fields'
 accountstatusesList
-    :: Word64 -- ^ 'acc3MerchantId'
+    :: Word64 -- ^ 'al1MerchantId'
     -> AccountstatusesList
-accountstatusesList pAcc3MerchantId_ =
+accountstatusesList pAl1MerchantId_ = 
     AccountstatusesList'
-    { _acc3MerchantId = _Coerce # pAcc3MerchantId_
-    , _acc3PageToken = Nothing
-    , _acc3MaxResults = Nothing
+    { _al1MerchantId = _Coerce # pAl1MerchantId_
+    , _al1PageToken = Nothing
+    , _al1MaxResults = Nothing
+    , _al1Fields = Nothing
     }
 
--- | The ID of the managing account.
-acc3MerchantId :: Lens' AccountstatusesList Word64
-acc3MerchantId
-  = lens _acc3MerchantId
-      (\ s a -> s{_acc3MerchantId = a})
+-- | The ID of the managing account. This must be a multi-client account.
+al1MerchantId :: Lens' AccountstatusesList Word64
+al1MerchantId
+  = lens _al1MerchantId
+      (\ s a -> s{_al1MerchantId = a})
       . _Coerce
 
 -- | The token returned by the previous request.
-acc3PageToken :: Lens' AccountstatusesList (Maybe Text)
-acc3PageToken
-  = lens _acc3PageToken
-      (\ s a -> s{_acc3PageToken = a})
+al1PageToken :: Lens' AccountstatusesList (Maybe Text)
+al1PageToken
+  = lens _al1PageToken (\ s a -> s{_al1PageToken = a})
 
 -- | The maximum number of account statuses to return in the response, used
 -- for paging.
-acc3MaxResults :: Lens' AccountstatusesList (Maybe Word32)
-acc3MaxResults
-  = lens _acc3MaxResults
-      (\ s a -> s{_acc3MaxResults = a})
+al1MaxResults :: Lens' AccountstatusesList (Maybe Word32)
+al1MaxResults
+  = lens _al1MaxResults
+      (\ s a -> s{_al1MaxResults = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+al1Fields :: Lens' AccountstatusesList (Maybe Text)
+al1Fields
+  = lens _al1Fields (\ s a -> s{_al1Fields = a})
 
 instance GoogleRequest AccountstatusesList where
         type Rs AccountstatusesList =
@@ -110,7 +118,8 @@ instance GoogleRequest AccountstatusesList where
         type Scopes AccountstatusesList =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccountstatusesList'{..}
-          = go _acc3MerchantId _acc3PageToken _acc3MaxResults
+          = go _al1MerchantId _al1PageToken _al1MaxResults
+              _al1Fields
               (Just AltJSON)
               shoppingContentService
           where go

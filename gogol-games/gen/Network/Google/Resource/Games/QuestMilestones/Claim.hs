@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.QuestMilestones.Claim
     , qmcConsistencyToken
     , qmcMilestoneId
     , qmcQuestId
+    , qmcFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.questMilestones.claim@ method which the
 -- 'QuestMilestonesClaim' request conforms to.
@@ -56,7 +57,8 @@ type QuestMilestonesClaimResource =
                  "claim" :>
                    QueryParam "requestId" (Textual Int64) :>
                      QueryParam "consistencyToken" (Textual Int64) :>
-                       QueryParam "alt" AltJSON :> Put '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Put '[JSON] ()
 
 -- | Report that a reward for the milestone corresponding to milestoneId for
 -- the quest corresponding to questId has been claimed by the currently
@@ -64,10 +66,11 @@ type QuestMilestonesClaimResource =
 --
 -- /See:/ 'questMilestonesClaim' smart constructor.
 data QuestMilestonesClaim = QuestMilestonesClaim'
-    { _qmcRequestId        :: !(Textual Int64)
+    { _qmcRequestId :: !(Textual Int64)
     , _qmcConsistencyToken :: !(Maybe (Textual Int64))
-    , _qmcMilestoneId      :: !Text
-    , _qmcQuestId          :: !Text
+    , _qmcMilestoneId :: !Text
+    , _qmcQuestId :: !Text
+    , _qmcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestMilestonesClaim' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data QuestMilestonesClaim = QuestMilestonesClaim'
 -- * 'qmcMilestoneId'
 --
 -- * 'qmcQuestId'
+--
+-- * 'qmcFields'
 questMilestonesClaim
     :: Int64 -- ^ 'qmcRequestId'
     -> Text -- ^ 'qmcMilestoneId'
     -> Text -- ^ 'qmcQuestId'
     -> QuestMilestonesClaim
-questMilestonesClaim pQmcRequestId_ pQmcMilestoneId_ pQmcQuestId_ =
+questMilestonesClaim pQmcRequestId_ pQmcMilestoneId_ pQmcQuestId_ = 
     QuestMilestonesClaim'
     { _qmcRequestId = _Coerce # pQmcRequestId_
     , _qmcConsistencyToken = Nothing
     , _qmcMilestoneId = pQmcMilestoneId_
     , _qmcQuestId = pQmcQuestId_
+    , _qmcFields = Nothing
     }
 
 -- | A numeric ID to ensure that the request is handled correctly across
@@ -119,6 +125,11 @@ qmcQuestId :: Lens' QuestMilestonesClaim Text
 qmcQuestId
   = lens _qmcQuestId (\ s a -> s{_qmcQuestId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qmcFields :: Lens' QuestMilestonesClaim (Maybe Text)
+qmcFields
+  = lens _qmcFields (\ s a -> s{_qmcFields = a})
+
 instance GoogleRequest QuestMilestonesClaim where
         type Rs QuestMilestonesClaim = ()
         type Scopes QuestMilestonesClaim =
@@ -127,6 +138,7 @@ instance GoogleRequest QuestMilestonesClaim where
         requestClient QuestMilestonesClaim'{..}
           = go _qmcQuestId _qmcMilestoneId (Just _qmcRequestId)
               _qmcConsistencyToken
+              _qmcFields
               (Just AltJSON)
               gamesService
           where go

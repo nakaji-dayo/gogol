@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdUnits.Patch
     , aaupPayload
     , aaupAdClientId
     , aaupAccountId
+    , aaupFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adunits.patch@ method which the
 -- 'AccountsAdUnitsPatch' request conforms to.
@@ -54,18 +55,20 @@ type AccountsAdUnitsPatchResource =
                Capture "adClientId" Text :>
                  "adunits" :>
                    QueryParam "adUnitId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] AdUnit :> Patch '[JSON] AdUnit
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] AdUnit :> Patch '[JSON] AdUnit
 
 -- | Update the supplied ad unit in the specified publisher AdSense account.
 -- This method supports patch semantics.
 --
 -- /See:/ 'accountsAdUnitsPatch' smart constructor.
 data AccountsAdUnitsPatch = AccountsAdUnitsPatch'
-    { _aaupAdUnitId   :: !Text
-    , _aaupPayload    :: !AdUnit
+    { _aaupAdUnitId :: !Text
+    , _aaupPayload :: !AdUnit
     , _aaupAdClientId :: !Text
-    , _aaupAccountId  :: !Text
+    , _aaupAccountId :: !Text
+    , _aaupFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsPatch' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data AccountsAdUnitsPatch = AccountsAdUnitsPatch'
 -- * 'aaupAdClientId'
 --
 -- * 'aaupAccountId'
+--
+-- * 'aaupFields'
 accountsAdUnitsPatch
     :: Text -- ^ 'aaupAdUnitId'
     -> AdUnit -- ^ 'aaupPayload'
     -> Text -- ^ 'aaupAdClientId'
     -> Text -- ^ 'aaupAccountId'
     -> AccountsAdUnitsPatch
-accountsAdUnitsPatch pAaupAdUnitId_ pAaupPayload_ pAaupAdClientId_ pAaupAccountId_ =
+accountsAdUnitsPatch pAaupAdUnitId_ pAaupPayload_ pAaupAdClientId_ pAaupAccountId_ = 
     AccountsAdUnitsPatch'
     { _aaupAdUnitId = pAaupAdUnitId_
     , _aaupPayload = pAaupPayload_
     , _aaupAdClientId = pAaupAdClientId_
     , _aaupAccountId = pAaupAccountId_
+    , _aaupFields = Nothing
     }
 
 -- | Ad unit to get.
@@ -115,6 +121,11 @@ aaupAccountId
   = lens _aaupAccountId
       (\ s a -> s{_aaupAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aaupFields :: Lens' AccountsAdUnitsPatch (Maybe Text)
+aaupFields
+  = lens _aaupFields (\ s a -> s{_aaupFields = a})
+
 instance GoogleRequest AccountsAdUnitsPatch where
         type Rs AccountsAdUnitsPatch = AdUnit
         type Scopes AccountsAdUnitsPatch =
@@ -122,6 +133,7 @@ instance GoogleRequest AccountsAdUnitsPatch where
         requestClient AccountsAdUnitsPatch'{..}
           = go _aaupAccountId _aaupAdClientId
               (Just _aaupAdUnitId)
+              _aaupFields
               (Just AltJSON)
               _aaupPayload
               adSenseHostService

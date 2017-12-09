@@ -39,11 +39,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.Patch
     , dpPayload
     , dpDeletePolicy
     , dpPreview
+    , dpFields
     , dpDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.patch@ method which the
 -- 'DeploymentsPatch' request conforms to.
@@ -62,8 +63,10 @@ type DeploymentsPatchResource =
                        DeploymentsPatchDeletePolicy
                        :>
                        QueryParam "preview" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Deployment :> Patch '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Deployment :>
+                               Patch '[JSON] Operation
 
 -- | Updates a deployment and all of the resources described by the
 -- deployment manifest. This method supports patch semantics.
@@ -71,11 +74,12 @@ type DeploymentsPatchResource =
 -- /See:/ 'deploymentsPatch' smart constructor.
 data DeploymentsPatch = DeploymentsPatch'
     { _dpCreatePolicy :: !DeploymentsPatchCreatePolicy
-    , _dpProject      :: !Text
-    , _dpPayload      :: !Deployment
+    , _dpProject :: !Text
+    , _dpPayload :: !Deployment
     , _dpDeletePolicy :: !DeploymentsPatchDeletePolicy
-    , _dpPreview      :: !Bool
-    , _dpDeployment   :: !Text
+    , _dpPreview :: !Bool
+    , _dpFields :: !(Maybe Text)
+    , _dpDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeploymentsPatch' with the minimum fields required to make a request.
@@ -92,19 +96,22 @@ data DeploymentsPatch = DeploymentsPatch'
 --
 -- * 'dpPreview'
 --
+-- * 'dpFields'
+--
 -- * 'dpDeployment'
 deploymentsPatch
     :: Text -- ^ 'dpProject'
     -> Deployment -- ^ 'dpPayload'
     -> Text -- ^ 'dpDeployment'
     -> DeploymentsPatch
-deploymentsPatch pDpProject_ pDpPayload_ pDpDeployment_ =
+deploymentsPatch pDpProject_ pDpPayload_ pDpDeployment_ = 
     DeploymentsPatch'
     { _dpCreatePolicy = DPCPCreateOrAcquire
     , _dpProject = pDpProject_
     , _dpPayload = pDpPayload_
     , _dpDeletePolicy = DPDPDelete'
     , _dpPreview = False
+    , _dpFields = Nothing
     , _dpDeployment = pDpDeployment_
     }
 
@@ -144,6 +151,10 @@ dpPreview :: Lens' DeploymentsPatch Bool
 dpPreview
   = lens _dpPreview (\ s a -> s{_dpPreview = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dpFields :: Lens' DeploymentsPatch (Maybe Text)
+dpFields = lens _dpFields (\ s a -> s{_dpFields = a})
+
 -- | The name of the deployment for this request.
 dpDeployment :: Lens' DeploymentsPatch Text
 dpDeployment
@@ -158,6 +169,7 @@ instance GoogleRequest DeploymentsPatch where
           = go _dpProject _dpDeployment (Just _dpCreatePolicy)
               (Just _dpDeletePolicy)
               (Just _dpPreview)
+              _dpFields
               (Just AltJSON)
               _dpPayload
               deploymentManagerService

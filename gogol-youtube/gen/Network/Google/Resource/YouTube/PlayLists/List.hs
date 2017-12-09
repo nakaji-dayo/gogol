@@ -44,10 +44,11 @@ module Network.Google.Resource.YouTube.PlayLists.List
     , pllId
     , pllPageToken
     , pllMaxResults
+    , pllFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlists.list@ method which the
 -- 'PlayListsList' request conforms to.
@@ -64,8 +65,9 @@ type PlayListsListResource =
                        QueryParam "id" Text :>
                          QueryParam "pageToken" Text :>
                            QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] PlayListListResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] PlayListListResponse
 
 -- | Returns a collection of playlists that match the API request parameters.
 -- For example, you can retrieve all playlists that the authenticated user
@@ -73,15 +75,16 @@ type PlayListsListResource =
 --
 -- /See:/ 'playListsList' smart constructor.
 data PlayListsList = PlayListsList'
-    { _pllPart                          :: !Text
-    , _pllMine                          :: !(Maybe Bool)
-    , _pllChannelId                     :: !(Maybe Text)
-    , _pllHl                            :: !(Maybe Text)
-    , _pllOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _pllPart :: !Text
+    , _pllMine :: !(Maybe Bool)
+    , _pllChannelId :: !(Maybe Text)
+    , _pllHl :: !(Maybe Text)
+    , _pllOnBehalfOfContentOwner :: !(Maybe Text)
     , _pllOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _pllId                            :: !(Maybe Text)
-    , _pllPageToken                     :: !(Maybe Text)
-    , _pllMaxResults                    :: !(Textual Word32)
+    , _pllId :: !(Maybe Text)
+    , _pllPageToken :: !(Maybe Text)
+    , _pllMaxResults :: !(Textual Word32)
+    , _pllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListsList' with the minimum fields required to make a request.
@@ -105,10 +108,12 @@ data PlayListsList = PlayListsList'
 -- * 'pllPageToken'
 --
 -- * 'pllMaxResults'
+--
+-- * 'pllFields'
 playListsList
     :: Text -- ^ 'pllPart'
     -> PlayListsList
-playListsList pPllPart_ =
+playListsList pPllPart_ = 
     PlayListsList'
     { _pllPart = pPllPart_
     , _pllMine = Nothing
@@ -119,6 +124,7 @@ playListsList pPllPart_ =
     , _pllId = Nothing
     , _pllPageToken = Nothing
     , _pllMaxResults = 5
+    , _pllFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -205,6 +211,11 @@ pllMaxResults
       (\ s a -> s{_pllMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pllFields :: Lens' PlayListsList (Maybe Text)
+pllFields
+  = lens _pllFields (\ s a -> s{_pllFields = a})
+
 instance GoogleRequest PlayListsList where
         type Rs PlayListsList = PlayListListResponse
         type Scopes PlayListsList =
@@ -219,6 +230,7 @@ instance GoogleRequest PlayListsList where
               _pllId
               _pllPageToken
               (Just _pllMaxResults)
+              _pllFields
               (Just AltJSON)
               youTubeService
           where go

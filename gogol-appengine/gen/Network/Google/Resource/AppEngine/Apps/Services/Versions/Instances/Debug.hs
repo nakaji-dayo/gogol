@@ -50,11 +50,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Instances.Debug
     , asvidBearerToken
     , asvidAppsId
     , asvidServicesId
+    , asvidFields
     , asvidCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.instances.debug@ method which the
 -- 'AppsServicesVersionsInstancesDebug' request conforms to.
@@ -68,16 +69,17 @@ type AppsServicesVersionsInstancesDebugResource =
                  Capture "versionsId" Text :>
                    "instances" :>
                      CaptureMode "instancesId" "debug" Text :>
-                       QueryParam "$.xgafv" Text :>
+                       QueryParam "$.xgafv" Xgafv :>
                          QueryParam "upload_protocol" Text :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       ReqBody '[JSON] DebugInstanceRequest :>
-                                         Post '[JSON] Operation
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         ReqBody '[JSON] DebugInstanceRequest :>
+                                           Post '[JSON] Operation
 
 -- | Enables debugging on a VM instance. This allows you to use the SSH
 -- command to connect to the virtual machine where the instance lives.
@@ -89,18 +91,19 @@ type AppsServicesVersionsInstancesDebugResource =
 --
 -- /See:/ 'appsServicesVersionsInstancesDebug' smart constructor.
 data AppsServicesVersionsInstancesDebug = AppsServicesVersionsInstancesDebug'
-    { _asvidXgafv          :: !(Maybe Text)
-    , _asvidInstancesId    :: !Text
+    { _asvidXgafv :: !(Maybe Xgafv)
+    , _asvidInstancesId :: !Text
     , _asvidUploadProtocol :: !(Maybe Text)
-    , _asvidPp             :: !Bool
-    , _asvidAccessToken    :: !(Maybe Text)
-    , _asvidUploadType     :: !(Maybe Text)
-    , _asvidPayload        :: !DebugInstanceRequest
-    , _asvidVersionsId     :: !Text
-    , _asvidBearerToken    :: !(Maybe Text)
-    , _asvidAppsId         :: !Text
-    , _asvidServicesId     :: !Text
-    , _asvidCallback       :: !(Maybe Text)
+    , _asvidPp :: !Bool
+    , _asvidAccessToken :: !(Maybe Text)
+    , _asvidUploadType :: !(Maybe Text)
+    , _asvidPayload :: !DebugInstanceRequest
+    , _asvidVersionsId :: !Text
+    , _asvidBearerToken :: !(Maybe Text)
+    , _asvidAppsId :: !Text
+    , _asvidServicesId :: !Text
+    , _asvidFields :: !(Maybe Text)
+    , _asvidCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsInstancesDebug' with the minimum fields required to make a request.
@@ -129,6 +132,8 @@ data AppsServicesVersionsInstancesDebug = AppsServicesVersionsInstancesDebug'
 --
 -- * 'asvidServicesId'
 --
+-- * 'asvidFields'
+--
 -- * 'asvidCallback'
 appsServicesVersionsInstancesDebug
     :: Text -- ^ 'asvidInstancesId'
@@ -137,7 +142,7 @@ appsServicesVersionsInstancesDebug
     -> Text -- ^ 'asvidAppsId'
     -> Text -- ^ 'asvidServicesId'
     -> AppsServicesVersionsInstancesDebug
-appsServicesVersionsInstancesDebug pAsvidInstancesId_ pAsvidPayload_ pAsvidVersionsId_ pAsvidAppsId_ pAsvidServicesId_ =
+appsServicesVersionsInstancesDebug pAsvidInstancesId_ pAsvidPayload_ pAsvidVersionsId_ pAsvidAppsId_ pAsvidServicesId_ = 
     AppsServicesVersionsInstancesDebug'
     { _asvidXgafv = Nothing
     , _asvidInstancesId = pAsvidInstancesId_
@@ -150,11 +155,12 @@ appsServicesVersionsInstancesDebug pAsvidInstancesId_ pAsvidPayload_ pAsvidVersi
     , _asvidBearerToken = Nothing
     , _asvidAppsId = pAsvidAppsId_
     , _asvidServicesId = pAsvidServicesId_
+    , _asvidFields = Nothing
     , _asvidCallback = Nothing
     }
 
 -- | V1 error format.
-asvidXgafv :: Lens' AppsServicesVersionsInstancesDebug (Maybe Text)
+asvidXgafv :: Lens' AppsServicesVersionsInstancesDebug (Maybe Xgafv)
 asvidXgafv
   = lens _asvidXgafv (\ s a -> s{_asvidXgafv = a})
 
@@ -215,6 +221,11 @@ asvidServicesId
   = lens _asvidServicesId
       (\ s a -> s{_asvidServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asvidFields :: Lens' AppsServicesVersionsInstancesDebug (Maybe Text)
+asvidFields
+  = lens _asvidFields (\ s a -> s{_asvidFields = a})
+
 -- | JSONP
 asvidCallback :: Lens' AppsServicesVersionsInstancesDebug (Maybe Text)
 asvidCallback
@@ -237,6 +248,7 @@ instance GoogleRequest
               _asvidUploadType
               _asvidBearerToken
               _asvidCallback
+              _asvidFields
               (Just AltJSON)
               _asvidPayload
               appEngineService

@@ -34,10 +34,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.GenerateSignupURL
 
     -- * Request Lenses
     , egsuCallbackURL
+    , egsuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.generateSignupUrl@ method which the
 -- 'EnterprisesGenerateSignupURL' request conforms to.
@@ -47,13 +48,15 @@ type EnterprisesGenerateSignupURLResource =
          "enterprises" :>
            "signupUrl" :>
              QueryParam "callbackUrl" Text :>
-               QueryParam "alt" AltJSON :> Post '[JSON] SignupInfo
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] SignupInfo
 
 -- | Generates a sign-up URL.
 --
 -- /See:/ 'enterprisesGenerateSignupURL' smart constructor.
-newtype EnterprisesGenerateSignupURL = EnterprisesGenerateSignupURL'
-    { _egsuCallbackURL :: Maybe Text
+data EnterprisesGenerateSignupURL = EnterprisesGenerateSignupURL'
+    { _egsuCallbackURL :: !(Maybe Text)
+    , _egsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesGenerateSignupURL' with the minimum fields required to make a request.
@@ -61,11 +64,14 @@ newtype EnterprisesGenerateSignupURL = EnterprisesGenerateSignupURL'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'egsuCallbackURL'
+--
+-- * 'egsuFields'
 enterprisesGenerateSignupURL
     :: EnterprisesGenerateSignupURL
-enterprisesGenerateSignupURL =
+enterprisesGenerateSignupURL = 
     EnterprisesGenerateSignupURL'
     { _egsuCallbackURL = Nothing
+    , _egsuFields = Nothing
     }
 
 -- | The callback URL to which the Admin will be redirected after
@@ -81,13 +87,18 @@ egsuCallbackURL
   = lens _egsuCallbackURL
       (\ s a -> s{_egsuCallbackURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egsuFields :: Lens' EnterprisesGenerateSignupURL (Maybe Text)
+egsuFields
+  = lens _egsuFields (\ s a -> s{_egsuFields = a})
+
 instance GoogleRequest EnterprisesGenerateSignupURL
          where
         type Rs EnterprisesGenerateSignupURL = SignupInfo
         type Scopes EnterprisesGenerateSignupURL =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesGenerateSignupURL'{..}
-          = go _egsuCallbackURL (Just AltJSON)
+          = go _egsuCallbackURL _egsuFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

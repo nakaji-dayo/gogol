@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.Get
     , proEnterpriseId
     , proLanguage
     , proProductId
+    , proFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.get@ method which the
 -- 'ProductsGet' request conforms to.
@@ -51,15 +52,17 @@ type ProductsGetResource =
              "products" :>
                Capture "productId" Text :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Product
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Product
 
 -- | Retrieves details of a product for display to an enterprise admin.
 --
 -- /See:/ 'productsGet' smart constructor.
 data ProductsGet = ProductsGet'
     { _proEnterpriseId :: !Text
-    , _proLanguage     :: !(Maybe Text)
-    , _proProductId    :: !Text
+    , _proLanguage :: !(Maybe Text)
+    , _proProductId :: !Text
+    , _proFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data ProductsGet = ProductsGet'
 -- * 'proLanguage'
 --
 -- * 'proProductId'
+--
+-- * 'proFields'
 productsGet
     :: Text -- ^ 'proEnterpriseId'
     -> Text -- ^ 'proProductId'
     -> ProductsGet
-productsGet pProEnterpriseId_ pProProductId_ =
+productsGet pProEnterpriseId_ pProProductId_ = 
     ProductsGet'
     { _proEnterpriseId = pProEnterpriseId_
     , _proLanguage = Nothing
     , _proProductId = pProProductId_
+    , _proFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -99,12 +105,18 @@ proProductId :: Lens' ProductsGet Text
 proProductId
   = lens _proProductId (\ s a -> s{_proProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+proFields :: Lens' ProductsGet (Maybe Text)
+proFields
+  = lens _proFields (\ s a -> s{_proFields = a})
+
 instance GoogleRequest ProductsGet where
         type Rs ProductsGet = Product
         type Scopes ProductsGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ProductsGet'{..}
           = go _proEnterpriseId _proProductId _proLanguage
+              _proFields
               (Just AltJSON)
               androidEnterpriseService
           where go

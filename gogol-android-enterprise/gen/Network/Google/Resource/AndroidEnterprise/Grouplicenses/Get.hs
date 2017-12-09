@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Grouplicenses.Get
     -- * Request Lenses
     , ggEnterpriseId
     , ggGroupLicenseId
+    , ggFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.grouplicenses.get@ method which the
 -- 'GrouplicensesGet' request conforms to.
@@ -49,14 +50,16 @@ type GrouplicensesGetResource =
            Capture "enterpriseId" Text :>
              "groupLicenses" :>
                Capture "groupLicenseId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] GroupLicense
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] GroupLicense
 
 -- | Retrieves details of an enterprise\'s group license for a product.
 --
 -- /See:/ 'grouplicensesGet' smart constructor.
 data GrouplicensesGet = GrouplicensesGet'
-    { _ggEnterpriseId   :: !Text
+    { _ggEnterpriseId :: !Text
     , _ggGroupLicenseId :: !Text
+    , _ggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GrouplicensesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data GrouplicensesGet = GrouplicensesGet'
 -- * 'ggEnterpriseId'
 --
 -- * 'ggGroupLicenseId'
+--
+-- * 'ggFields'
 grouplicensesGet
     :: Text -- ^ 'ggEnterpriseId'
     -> Text -- ^ 'ggGroupLicenseId'
     -> GrouplicensesGet
-grouplicensesGet pGgEnterpriseId_ pGgGroupLicenseId_ =
+grouplicensesGet pGgEnterpriseId_ pGgGroupLicenseId_ = 
     GrouplicensesGet'
     { _ggEnterpriseId = pGgEnterpriseId_
     , _ggGroupLicenseId = pGgGroupLicenseId_
+    , _ggFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -89,12 +95,17 @@ ggGroupLicenseId
   = lens _ggGroupLicenseId
       (\ s a -> s{_ggGroupLicenseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ggFields :: Lens' GrouplicensesGet (Maybe Text)
+ggFields = lens _ggFields (\ s a -> s{_ggFields = a})
+
 instance GoogleRequest GrouplicensesGet where
         type Rs GrouplicensesGet = GroupLicense
         type Scopes GrouplicensesGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient GrouplicensesGet'{..}
-          = go _ggEnterpriseId _ggGroupLicenseId (Just AltJSON)
+          = go _ggEnterpriseId _ggGroupLicenseId _ggFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

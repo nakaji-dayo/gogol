@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.De
     , mcudEnterpriseId
     , mcudUserId
     , mcudManagedConfigurationForUserId
+    , mcudFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsforuser.delete@ method which the
 -- 'ManagedConfigurationsforUserDelete' request conforms to.
@@ -53,16 +54,18 @@ type ManagedConfigurationsforUserDeleteResource =
                Capture "userId" Text :>
                  "managedConfigurationsForUser" :>
                    Capture "managedConfigurationForUserId" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a per-user managed configuration for an app for the specified
 -- user.
 --
 -- /See:/ 'managedConfigurationsforUserDelete' smart constructor.
 data ManagedConfigurationsforUserDelete = ManagedConfigurationsforUserDelete'
-    { _mcudEnterpriseId                  :: !Text
-    , _mcudUserId                        :: !Text
+    { _mcudEnterpriseId :: !Text
+    , _mcudUserId :: !Text
     , _mcudManagedConfigurationForUserId :: !Text
+    , _mcudFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforUserDelete' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagedConfigurationsforUserDelete = ManagedConfigurationsforUserDelete'
 -- * 'mcudUserId'
 --
 -- * 'mcudManagedConfigurationForUserId'
+--
+-- * 'mcudFields'
 managedConfigurationsforUserDelete
     :: Text -- ^ 'mcudEnterpriseId'
     -> Text -- ^ 'mcudUserId'
     -> Text -- ^ 'mcudManagedConfigurationForUserId'
     -> ManagedConfigurationsforUserDelete
-managedConfigurationsforUserDelete pMcudEnterpriseId_ pMcudUserId_ pMcudManagedConfigurationForUserId_ =
+managedConfigurationsforUserDelete pMcudEnterpriseId_ pMcudUserId_ pMcudManagedConfigurationForUserId_ = 
     ManagedConfigurationsforUserDelete'
     { _mcudEnterpriseId = pMcudEnterpriseId_
     , _mcudUserId = pMcudUserId_
     , _mcudManagedConfigurationForUserId = pMcudManagedConfigurationForUserId_
+    , _mcudFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -104,6 +110,11 @@ mcudManagedConfigurationForUserId
   = lens _mcudManagedConfigurationForUserId
       (\ s a -> s{_mcudManagedConfigurationForUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcudFields :: Lens' ManagedConfigurationsforUserDelete (Maybe Text)
+mcudFields
+  = lens _mcudFields (\ s a -> s{_mcudFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforUserDelete where
         type Rs ManagedConfigurationsforUserDelete = ()
@@ -112,6 +123,7 @@ instance GoogleRequest
         requestClient ManagedConfigurationsforUserDelete'{..}
           = go _mcudEnterpriseId _mcudUserId
               _mcudManagedConfigurationForUserId
+              _mcudFields
               (Just AltJSON)
               androidEnterpriseService
           where go

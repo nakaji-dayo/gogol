@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.GetPermissions
     -- * Request Lenses
     , pgpEnterpriseId
     , pgpProductId
+    , pgpFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.getPermissions@ method which the
 -- 'ProductsGetPermissions' request conforms to.
@@ -50,15 +51,17 @@ type ProductsGetPermissionsResource =
              "products" :>
                Capture "productId" Text :>
                  "permissions" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ProductPermissions
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ProductPermissions
 
 -- | Retrieves the Android app permissions required by this app.
 --
 -- /See:/ 'productsGetPermissions' smart constructor.
 data ProductsGetPermissions = ProductsGetPermissions'
     { _pgpEnterpriseId :: !Text
-    , _pgpProductId    :: !Text
+    , _pgpProductId :: !Text
+    , _pgpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGetPermissions' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data ProductsGetPermissions = ProductsGetPermissions'
 -- * 'pgpEnterpriseId'
 --
 -- * 'pgpProductId'
+--
+-- * 'pgpFields'
 productsGetPermissions
     :: Text -- ^ 'pgpEnterpriseId'
     -> Text -- ^ 'pgpProductId'
     -> ProductsGetPermissions
-productsGetPermissions pPgpEnterpriseId_ pPgpProductId_ =
+productsGetPermissions pPgpEnterpriseId_ pPgpProductId_ = 
     ProductsGetPermissions'
     { _pgpEnterpriseId = pPgpEnterpriseId_
     , _pgpProductId = pPgpProductId_
+    , _pgpFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -89,12 +95,18 @@ pgpProductId :: Lens' ProductsGetPermissions Text
 pgpProductId
   = lens _pgpProductId (\ s a -> s{_pgpProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgpFields :: Lens' ProductsGetPermissions (Maybe Text)
+pgpFields
+  = lens _pgpFields (\ s a -> s{_pgpFields = a})
+
 instance GoogleRequest ProductsGetPermissions where
         type Rs ProductsGetPermissions = ProductPermissions
         type Scopes ProductsGetPermissions =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ProductsGetPermissions'{..}
-          = go _pgpEnterpriseId _pgpProductId (Just AltJSON)
+          = go _pgpEnterpriseId _pgpProductId _pgpFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

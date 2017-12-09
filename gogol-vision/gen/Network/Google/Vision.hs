@@ -24,6 +24,7 @@ module Network.Google.Vision
       visionService
 
     -- * OAuth Scopes
+    , cloudVisionScope
     , cloudPlatformScope
 
     -- * API Declaration
@@ -61,6 +62,7 @@ module Network.Google.Vision
     -- ** Property
     , Property
     , property
+    , pUint64Value
     , pValue
     , pName
 
@@ -76,6 +78,23 @@ module Network.Google.Vision
     , lType
     , lPosition
 
+    -- ** CropHintsParams
+    , CropHintsParams
+    , cropHintsParams
+    , chpAspectRatios
+
+    -- ** TextProperty
+    , TextProperty
+    , textProperty
+    , tpDetectedLanguages
+    , tpDetectedBreak
+
+    -- ** TextAnnotation
+    , TextAnnotation
+    , textAnnotation
+    , taText
+    , taPages
+
     -- ** Color
     , Color
     , color
@@ -86,6 +105,9 @@ module Network.Google.Vision
 
     -- ** FaceAnnotationHeadwearLikelihood
     , FaceAnnotationHeadwearLikelihood (..)
+
+    -- ** BlockBlockType
+    , BlockBlockType (..)
 
     -- ** BoundingPoly
     , BoundingPoly
@@ -100,6 +122,13 @@ module Network.Google.Vision
     , vertex
     , vX
     , vY
+
+    -- ** WebEntity
+    , WebEntity
+    , webEntity
+    , weScore
+    , weEntityId
+    , weDescription
 
     -- ** FaceAnnotationAngerLikelihood
     , FaceAnnotationAngerLikelihood (..)
@@ -122,12 +151,34 @@ module Network.Google.Vision
     , batchAnnotateImagesRequest
     , bairRequests
 
+    -- ** Page
+    , Page
+    , page
+    , pProperty
+    , pHeight
+    , pBlocks
+    , pWidth
+
     -- ** ColorInfo
     , ColorInfo
     , colorInfo
     , ciColor
     , ciScore
     , ciPixelFraction
+
+    -- ** Paragraph
+    , Paragraph
+    , paragraph
+    , parProperty
+    , parBoundingBox
+    , parWords
+
+    -- ** Symbol
+    , Symbol
+    , symbol
+    , sProperty
+    , sBoundingBox
+    , sText
 
     -- ** FaceAnnotationBlurredLikelihood
     , FaceAnnotationBlurredLikelihood (..)
@@ -139,9 +190,12 @@ module Network.Google.Vision
     , airLabelAnnotations
     , airFaceAnnotations
     , airError
+    , airWebDetection
     , airSafeSearchAnnotation
     , airLandmarkAnnotations
     , airTextAnnotations
+    , airCropHintsAnnotation
+    , airFullTextAnnotation
     , airImagePropertiesAnnotation
 
     -- ** ImageProperties
@@ -167,6 +221,20 @@ module Network.Google.Vision
     , faSorrowLikelihood
     , faJoyLikelihood
     , faLandmarks
+
+    -- ** DetectedBreak
+    , DetectedBreak
+    , detectedBreak
+    , dbIsPrefix
+    , dbType
+
+    -- ** Block
+    , Block
+    , block
+    , bProperty
+    , bBoundingBox
+    , bParagraphs
+    , bBlockType
 
     -- ** SafeSearchAnnotationViolence
     , SafeSearchAnnotationViolence (..)
@@ -194,6 +262,27 @@ module Network.Google.Vision
     , airFeatures
     , airImageContext
 
+    -- ** DetectedLanguage
+    , DetectedLanguage
+    , detectedLanguage
+    , dlLanguageCode
+    , dlConfidence
+
+    -- ** WebImage
+    , WebImage
+    , webImage
+    , wiScore
+    , wiURL
+
+    -- ** WebDetection
+    , WebDetection
+    , webDetection
+    , wdVisuallySimilarImages
+    , wdPagesWithMatchingImages
+    , wdPartialMatchingImages
+    , wdFullMatchingImages
+    , wdWebEntities
+
     -- ** LandmarkType
     , LandmarkType (..)
 
@@ -204,6 +293,14 @@ module Network.Google.Vision
     , ImageSource
     , imageSource
     , isGcsImageURI
+    , isImageURI
+
+    -- ** CropHint
+    , CropHint
+    , cropHint
+    , chBoundingPoly
+    , chConfidence
+    , chImportanceFraction
 
     -- ** SafeSearchAnnotationSpoof
     , SafeSearchAnnotationSpoof (..)
@@ -228,8 +325,15 @@ module Network.Google.Vision
     -- ** ImageContext
     , ImageContext
     , imageContext
+    , icCropHintsParams
     , icLanguageHints
     , icLatLongRect
+
+    -- ** WebPage
+    , WebPage
+    , webPage
+    , wpScore
+    , wpURL
 
     -- ** DominantColorsAnnotation
     , DominantColorsAnnotation
@@ -242,10 +346,25 @@ module Network.Google.Vision
     , llrMaxLatLng
     , llrMinLatLng
 
+    -- ** Word
+    , Word
+    , word
+    , wProperty
+    , wBoundingBox
+    , wSymbols
+
+    -- ** DetectedBreakType
+    , DetectedBreakType (..)
+
     -- ** BatchAnnotateImagesResponse
     , BatchAnnotateImagesResponse
     , batchAnnotateImagesResponse
     , bairResponses
+
+    -- ** CropHintsAnnotation
+    , CropHintsAnnotation
+    , cropHintsAnnotation
+    , chaCropHints
 
     -- ** Position
     , Position
@@ -255,9 +374,9 @@ module Network.Google.Vision
     , pY
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.Vision.Images.Annotate
-import           Network.Google.Vision.Types
+import Network.Google.Prelude
+import Network.Google.Resource.Vision.Images.Annotate
+import Network.Google.Vision.Types
 
 {- $resources
 TODO

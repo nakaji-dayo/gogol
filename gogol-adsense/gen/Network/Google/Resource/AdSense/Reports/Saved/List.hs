@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.Reports.Saved.List
     -- * Request Lenses
     , rslPageToken
     , rslMaxResults
+    , rslFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.reports.saved.list@ method which the
 -- 'ReportsSavedList' request conforms to.
@@ -49,14 +50,16 @@ type ReportsSavedListResource =
            "saved" :>
              QueryParam "pageToken" Text :>
                QueryParam "maxResults" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] SavedReports
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] SavedReports
 
 -- | List all saved reports in this AdSense account.
 --
 -- /See:/ 'reportsSavedList' smart constructor.
 data ReportsSavedList = ReportsSavedList'
-    { _rslPageToken  :: !(Maybe Text)
+    { _rslPageToken :: !(Maybe Text)
     , _rslMaxResults :: !(Maybe (Textual Int32))
+    , _rslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsSavedList' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ data ReportsSavedList = ReportsSavedList'
 -- * 'rslPageToken'
 --
 -- * 'rslMaxResults'
+--
+-- * 'rslFields'
 reportsSavedList
     :: ReportsSavedList
-reportsSavedList =
+reportsSavedList = 
     ReportsSavedList'
     { _rslPageToken = Nothing
     , _rslMaxResults = Nothing
+    , _rslFields = Nothing
     }
 
 -- | A continuation token, used to page through saved reports. To retrieve
@@ -89,13 +95,19 @@ rslMaxResults
       (\ s a -> s{_rslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rslFields :: Lens' ReportsSavedList (Maybe Text)
+rslFields
+  = lens _rslFields (\ s a -> s{_rslFields = a})
+
 instance GoogleRequest ReportsSavedList where
         type Rs ReportsSavedList = SavedReports
         type Scopes ReportsSavedList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient ReportsSavedList'{..}
-          = go _rslPageToken _rslMaxResults (Just AltJSON)
+          = go _rslPageToken _rslMaxResults _rslFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient

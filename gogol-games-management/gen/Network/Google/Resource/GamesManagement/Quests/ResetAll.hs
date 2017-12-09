@@ -34,10 +34,12 @@ module Network.Google.Resource.GamesManagement.Quests.ResetAll
     , questsResetAll
     , QuestsResetAll
 
+    -- * Request Lenses
+    , qraFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.quests.resetAll@ method which the
 -- 'QuestsResetAll' request conforms to.
@@ -46,30 +48,42 @@ type QuestsResetAllResource =
        "v1management" :>
          "quests" :>
            "reset" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets all player progress on all quests for the currently authenticated
 -- player. This method is only accessible to whitelisted tester accounts
 -- for your application.
 --
 -- /See:/ 'questsResetAll' smart constructor.
-data QuestsResetAll =
-    QuestsResetAll'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype QuestsResetAll = QuestsResetAll'
+    { _qraFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsResetAll' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qraFields'
 questsResetAll
     :: QuestsResetAll
-questsResetAll = QuestsResetAll'
+questsResetAll = 
+    QuestsResetAll'
+    { _qraFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+qraFields :: Lens' QuestsResetAll (Maybe Text)
+qraFields
+  = lens _qraFields (\ s a -> s{_qraFields = a})
 
 instance GoogleRequest QuestsResetAll where
         type Rs QuestsResetAll = ()
         type Scopes QuestsResetAll =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient QuestsResetAll'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient QuestsResetAll'{..}
+          = go _qraFields (Just AltJSON) gamesManagementService
           where go
                   = buildClient (Proxy :: Proxy QuestsResetAllResource)
                       mempty

@@ -33,13 +33,15 @@ module Network.Google.Resource.Compute.Autoscalers.Delete
     , AutoscalersDelete
 
     -- * Request Lenses
+    , adRequestId
     , adProject
     , adZone
     , adAutoscaler
+    , adFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.autoscalers.delete@ method which the
 -- 'AutoscalersDelete' request conforms to.
@@ -52,37 +54,61 @@ type AutoscalersDeleteResource =
                Capture "zone" Text :>
                  "autoscalers" :>
                    Capture "autoscaler" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified autoscaler.
 --
 -- /See:/ 'autoscalersDelete' smart constructor.
 data AutoscalersDelete = AutoscalersDelete'
-    { _adProject    :: !Text
-    , _adZone       :: !Text
+    { _adRequestId :: !(Maybe Text)
+    , _adProject :: !Text
+    , _adZone :: !Text
     , _adAutoscaler :: !Text
+    , _adFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalersDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'adRequestId'
+--
 -- * 'adProject'
 --
 -- * 'adZone'
 --
 -- * 'adAutoscaler'
+--
+-- * 'adFields'
 autoscalersDelete
     :: Text -- ^ 'adProject'
     -> Text -- ^ 'adZone'
     -> Text -- ^ 'adAutoscaler'
     -> AutoscalersDelete
-autoscalersDelete pAdProject_ pAdZone_ pAdAutoscaler_ =
+autoscalersDelete pAdProject_ pAdZone_ pAdAutoscaler_ = 
     AutoscalersDelete'
-    { _adProject = pAdProject_
+    { _adRequestId = Nothing
+    , _adProject = pAdProject_
     , _adZone = pAdZone_
     , _adAutoscaler = pAdAutoscaler_
+    , _adFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+adRequestId :: Lens' AutoscalersDelete (Maybe Text)
+adRequestId
+  = lens _adRequestId (\ s a -> s{_adRequestId = a})
 
 -- | Project ID for this request.
 adProject :: Lens' AutoscalersDelete Text
@@ -98,13 +124,19 @@ adAutoscaler :: Lens' AutoscalersDelete Text
 adAutoscaler
   = lens _adAutoscaler (\ s a -> s{_adAutoscaler = a})
 
+-- | Selector specifying which fields to include in a partial response.
+adFields :: Lens' AutoscalersDelete (Maybe Text)
+adFields = lens _adFields (\ s a -> s{_adFields = a})
+
 instance GoogleRequest AutoscalersDelete where
         type Rs AutoscalersDelete = Operation
         type Scopes AutoscalersDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient AutoscalersDelete'{..}
-          = go _adProject _adZone _adAutoscaler (Just AltJSON)
+          = go _adProject _adZone _adAutoscaler _adRequestId
+              _adFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

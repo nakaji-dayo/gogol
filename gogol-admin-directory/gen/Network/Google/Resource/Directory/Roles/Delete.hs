@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Roles.Delete
     -- * Request Lenses
     , rdRoleId
     , rdCustomer
+    , rdFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roles.delete@ method which the
 -- 'RolesDelete' request conforms to.
@@ -50,14 +51,16 @@ type RolesDeleteResource =
              Capture "customer" Text :>
                "roles" :>
                  Capture "roleId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a role.
 --
 -- /See:/ 'rolesDelete' smart constructor.
 data RolesDelete = RolesDelete'
-    { _rdRoleId   :: !Text
+    { _rdRoleId :: !Text
     , _rdCustomer :: !Text
+    , _rdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesDelete' with the minimum fields required to make a request.
@@ -67,31 +70,38 @@ data RolesDelete = RolesDelete'
 -- * 'rdRoleId'
 --
 -- * 'rdCustomer'
+--
+-- * 'rdFields'
 rolesDelete
     :: Text -- ^ 'rdRoleId'
     -> Text -- ^ 'rdCustomer'
     -> RolesDelete
-rolesDelete pRdRoleId_ pRdCustomer_ =
+rolesDelete pRdRoleId_ pRdCustomer_ = 
     RolesDelete'
     { _rdRoleId = pRdRoleId_
     , _rdCustomer = pRdCustomer_
+    , _rdFields = Nothing
     }
 
 -- | Immutable ID of the role.
 rdRoleId :: Lens' RolesDelete Text
 rdRoleId = lens _rdRoleId (\ s a -> s{_rdRoleId = a})
 
--- | Immutable ID of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 rdCustomer :: Lens' RolesDelete Text
 rdCustomer
   = lens _rdCustomer (\ s a -> s{_rdCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rdFields :: Lens' RolesDelete (Maybe Text)
+rdFields = lens _rdFields (\ s a -> s{_rdFields = a})
 
 instance GoogleRequest RolesDelete where
         type Rs RolesDelete = ()
         type Scopes RolesDelete =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
         requestClient RolesDelete'{..}
-          = go _rdCustomer _rdRoleId (Just AltJSON)
+          = go _rdCustomer _rdRoleId _rdFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy RolesDeleteResource)

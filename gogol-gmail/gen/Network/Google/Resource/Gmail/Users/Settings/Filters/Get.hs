@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.Filters.Get
     -- * Request Lenses
     , usfgUserId
     , usfgId
+    , usfgFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.filters.get@ method which the
 -- 'UsersSettingsFiltersGet' request conforms to.
@@ -50,14 +51,16 @@ type UsersSettingsFiltersGetResource =
              "settings" :>
                "filters" :>
                  Capture "id" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Filter
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Filter
 
 -- | Gets a filter.
 --
 -- /See:/ 'usersSettingsFiltersGet' smart constructor.
 data UsersSettingsFiltersGet = UsersSettingsFiltersGet'
     { _usfgUserId :: !Text
-    , _usfgId     :: !Text
+    , _usfgId :: !Text
+    , _usfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsFiltersGet' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersSettingsFiltersGet = UsersSettingsFiltersGet'
 -- * 'usfgUserId'
 --
 -- * 'usfgId'
+--
+-- * 'usfgFields'
 usersSettingsFiltersGet
     :: Text -- ^ 'usfgId'
     -> UsersSettingsFiltersGet
-usersSettingsFiltersGet pUsfgId_ =
+usersSettingsFiltersGet pUsfgId_ = 
     UsersSettingsFiltersGet'
     { _usfgUserId = "me"
     , _usfgId = pUsfgId_
+    , _usfgFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -86,6 +92,11 @@ usfgUserId
 usfgId :: Lens' UsersSettingsFiltersGet Text
 usfgId = lens _usfgId (\ s a -> s{_usfgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usfgFields :: Lens' UsersSettingsFiltersGet (Maybe Text)
+usfgFields
+  = lens _usfgFields (\ s a -> s{_usfgFields = a})
+
 instance GoogleRequest UsersSettingsFiltersGet where
         type Rs UsersSettingsFiltersGet = Filter
         type Scopes UsersSettingsFiltersGet =
@@ -94,7 +105,8 @@ instance GoogleRequest UsersSettingsFiltersGet where
                "https://www.googleapis.com/auth/gmail.readonly",
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsFiltersGet'{..}
-          = go _usfgUserId _usfgId (Just AltJSON) gmailService
+          = go _usfgUserId _usfgId _usfgFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsFiltersGetResource)

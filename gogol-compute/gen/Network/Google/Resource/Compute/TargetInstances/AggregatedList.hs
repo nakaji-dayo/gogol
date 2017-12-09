@@ -38,10 +38,11 @@ module Network.Google.Resource.Compute.TargetInstances.AggregatedList
     , tialFilter
     , tialPageToken
     , tialMaxResults
+    , tialFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetInstances.aggregatedList@ method which the
 -- 'TargetInstancesAggregatedList' request conforms to.
@@ -56,18 +57,20 @@ type TargetInstancesAggregatedListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] TargetInstanceAggregatedList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] TargetInstanceAggregatedList
 
 -- | Retrieves an aggregated list of target instances.
 --
 -- /See:/ 'targetInstancesAggregatedList' smart constructor.
 data TargetInstancesAggregatedList = TargetInstancesAggregatedList'
-    { _tialOrderBy    :: !(Maybe Text)
-    , _tialProject    :: !Text
-    , _tialFilter     :: !(Maybe Text)
-    , _tialPageToken  :: !(Maybe Text)
+    { _tialOrderBy :: !(Maybe Text)
+    , _tialProject :: !Text
+    , _tialFilter :: !(Maybe Text)
+    , _tialPageToken :: !(Maybe Text)
     , _tialMaxResults :: !(Textual Word32)
+    , _tialFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetInstancesAggregatedList' with the minimum fields required to make a request.
@@ -83,16 +86,19 @@ data TargetInstancesAggregatedList = TargetInstancesAggregatedList'
 -- * 'tialPageToken'
 --
 -- * 'tialMaxResults'
+--
+-- * 'tialFields'
 targetInstancesAggregatedList
     :: Text -- ^ 'tialProject'
     -> TargetInstancesAggregatedList
-targetInstancesAggregatedList pTialProject_ =
+targetInstancesAggregatedList pTialProject_ = 
     TargetInstancesAggregatedList'
     { _tialOrderBy = Nothing
     , _tialProject = pTialProject_
     , _tialFilter = Nothing
     , _tialPageToken = Nothing
     , _tialMaxResults = 500
+    , _tialFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -112,26 +118,25 @@ tialProject :: Lens' TargetInstancesAggregatedList Text
 tialProject
   = lens _tialProject (\ s a -> s{_tialProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 tialFilter :: Lens' TargetInstancesAggregatedList (Maybe Text)
 tialFilter
   = lens _tialFilter (\ s a -> s{_tialFilter = a})
@@ -146,12 +151,18 @@ tialPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 tialMaxResults :: Lens' TargetInstancesAggregatedList Word32
 tialMaxResults
   = lens _tialMaxResults
       (\ s a -> s{_tialMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+tialFields :: Lens' TargetInstancesAggregatedList (Maybe Text)
+tialFields
+  = lens _tialFields (\ s a -> s{_tialFields = a})
 
 instance GoogleRequest TargetInstancesAggregatedList
          where
@@ -165,6 +176,7 @@ instance GoogleRequest TargetInstancesAggregatedList
           = go _tialProject _tialOrderBy _tialFilter
               _tialPageToken
               (Just _tialMaxResults)
+              _tialFields
               (Just AltJSON)
               computeService
           where go

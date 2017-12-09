@@ -34,10 +34,11 @@ module Network.Google.Resource.AdSenseHost.AdClients.Get
 
     -- * Request Lenses
     , acgAdClientId
+    , acgFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.adclients.get@ method which the
 -- 'AdClientsGet' request conforms to.
@@ -46,13 +47,15 @@ type AdClientsGetResource =
        "v4.1" :>
          "adclients" :>
            Capture "adClientId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] AdClient
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] AdClient
 
 -- | Get information about one of the ad clients in the Host AdSense account.
 --
 -- /See:/ 'adClientsGet' smart constructor.
-newtype AdClientsGet = AdClientsGet'
-    { _acgAdClientId :: Text
+data AdClientsGet = AdClientsGet'
+    { _acgAdClientId :: !Text
+    , _acgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdClientsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype AdClientsGet = AdClientsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'acgAdClientId'
+--
+-- * 'acgFields'
 adClientsGet
     :: Text -- ^ 'acgAdClientId'
     -> AdClientsGet
-adClientsGet pAcgAdClientId_ =
+adClientsGet pAcgAdClientId_ = 
     AdClientsGet'
     { _acgAdClientId = pAcgAdClientId_
+    , _acgFields = Nothing
     }
 
 -- | Ad client to get.
@@ -74,12 +80,18 @@ acgAdClientId
   = lens _acgAdClientId
       (\ s a -> s{_acgAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acgFields :: Lens' AdClientsGet (Maybe Text)
+acgFields
+  = lens _acgFields (\ s a -> s{_acgFields = a})
+
 instance GoogleRequest AdClientsGet where
         type Rs AdClientsGet = AdClient
         type Scopes AdClientsGet =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient AdClientsGet'{..}
-          = go _acgAdClientId (Just AltJSON) adSenseHostService
+          = go _acgAdClientId _acgFields (Just AltJSON)
+              adSenseHostService
           where go
                   = buildClient (Proxy :: Proxy AdClientsGetResource)
                       mempty

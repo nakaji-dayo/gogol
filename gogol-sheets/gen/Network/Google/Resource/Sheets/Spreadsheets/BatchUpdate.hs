@@ -53,11 +53,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.BatchUpdate
     , sbuUploadType
     , sbuPayload
     , sbuBearerToken
+    , sbuFields
     , sbuCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.batchUpdate@ method which the
 -- 'SpreadsheetsBatchUpdate' request conforms to.
@@ -72,9 +73,10 @@ type SpreadsheetsBatchUpdateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] BatchUpdateSpreadsheetRequest :>
-                             Post '[JSON] BatchUpdateSpreadsheetResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] BatchUpdateSpreadsheetRequest :>
+                               Post '[JSON] BatchUpdateSpreadsheetResponse
 
 -- | Applies one or more updates to the spreadsheet. Each request is
 -- validated before being applied. If any request is not valid then the
@@ -92,15 +94,16 @@ type SpreadsheetsBatchUpdateResource =
 --
 -- /See:/ 'spreadsheetsBatchUpdate' smart constructor.
 data SpreadsheetsBatchUpdate = SpreadsheetsBatchUpdate'
-    { _sbuXgafv          :: !(Maybe Xgafv)
+    { _sbuXgafv :: !(Maybe Xgafv)
     , _sbuUploadProtocol :: !(Maybe Text)
-    , _sbuPp             :: !Bool
-    , _sbuAccessToken    :: !(Maybe Text)
-    , _sbuSpreadsheetId  :: !Text
-    , _sbuUploadType     :: !(Maybe Text)
-    , _sbuPayload        :: !BatchUpdateSpreadsheetRequest
-    , _sbuBearerToken    :: !(Maybe Text)
-    , _sbuCallback       :: !(Maybe Text)
+    , _sbuPp :: !Bool
+    , _sbuAccessToken :: !(Maybe Text)
+    , _sbuSpreadsheetId :: !Text
+    , _sbuUploadType :: !(Maybe Text)
+    , _sbuPayload :: !BatchUpdateSpreadsheetRequest
+    , _sbuBearerToken :: !(Maybe Text)
+    , _sbuFields :: !(Maybe Text)
+    , _sbuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsBatchUpdate' with the minimum fields required to make a request.
@@ -123,12 +126,14 @@ data SpreadsheetsBatchUpdate = SpreadsheetsBatchUpdate'
 --
 -- * 'sbuBearerToken'
 --
+-- * 'sbuFields'
+--
 -- * 'sbuCallback'
 spreadsheetsBatchUpdate
     :: Text -- ^ 'sbuSpreadsheetId'
     -> BatchUpdateSpreadsheetRequest -- ^ 'sbuPayload'
     -> SpreadsheetsBatchUpdate
-spreadsheetsBatchUpdate pSbuSpreadsheetId_ pSbuPayload_ =
+spreadsheetsBatchUpdate pSbuSpreadsheetId_ pSbuPayload_ = 
     SpreadsheetsBatchUpdate'
     { _sbuXgafv = Nothing
     , _sbuUploadProtocol = Nothing
@@ -138,6 +143,7 @@ spreadsheetsBatchUpdate pSbuSpreadsheetId_ pSbuPayload_ =
     , _sbuUploadType = Nothing
     , _sbuPayload = pSbuPayload_
     , _sbuBearerToken = Nothing
+    , _sbuFields = Nothing
     , _sbuCallback = Nothing
     }
 
@@ -184,6 +190,11 @@ sbuBearerToken
   = lens _sbuBearerToken
       (\ s a -> s{_sbuBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sbuFields :: Lens' SpreadsheetsBatchUpdate (Maybe Text)
+sbuFields
+  = lens _sbuFields (\ s a -> s{_sbuFields = a})
+
 -- | JSONP
 sbuCallback :: Lens' SpreadsheetsBatchUpdate (Maybe Text)
 sbuCallback
@@ -194,6 +205,7 @@ instance GoogleRequest SpreadsheetsBatchUpdate where
              BatchUpdateSpreadsheetResponse
         type Scopes SpreadsheetsBatchUpdate =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsBatchUpdate'{..}
           = go _sbuSpreadsheetId _sbuXgafv _sbuUploadProtocol
@@ -202,6 +214,7 @@ instance GoogleRequest SpreadsheetsBatchUpdate where
               _sbuUploadType
               _sbuBearerToken
               _sbuCallback
+              _sbuFields
               (Just AltJSON)
               _sbuPayload
               sheetsService

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.Alerts.List
     -- * Request Lenses
     , aalLocale
     , aalAccountId
+    , aalFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.alerts.list@ method which the
 -- 'AccountsAlertsList' request conforms to.
@@ -49,14 +50,16 @@ type AccountsAlertsListResource =
            Capture "accountId" Text :>
              "alerts" :>
                QueryParam "locale" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Alerts
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Alerts
 
 -- | List the alerts for this Ad Exchange account.
 --
 -- /See:/ 'accountsAlertsList' smart constructor.
 data AccountsAlertsList = AccountsAlertsList'
-    { _aalLocale    :: !(Maybe Text)
+    { _aalLocale :: !(Maybe Text)
     , _aalAccountId :: !Text
+    , _aalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAlertsList' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data AccountsAlertsList = AccountsAlertsList'
 -- * 'aalLocale'
 --
 -- * 'aalAccountId'
+--
+-- * 'aalFields'
 accountsAlertsList
     :: Text -- ^ 'aalAccountId'
     -> AccountsAlertsList
-accountsAlertsList pAalAccountId_ =
+accountsAlertsList pAalAccountId_ = 
     AccountsAlertsList'
     { _aalLocale = Nothing
     , _aalAccountId = pAalAccountId_
+    , _aalFields = Nothing
     }
 
 -- | The locale to use for translating alert messages. The account locale
@@ -87,13 +93,19 @@ aalAccountId :: Lens' AccountsAlertsList Text
 aalAccountId
   = lens _aalAccountId (\ s a -> s{_aalAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aalFields :: Lens' AccountsAlertsList (Maybe Text)
+aalFields
+  = lens _aalFields (\ s a -> s{_aalFields = a})
+
 instance GoogleRequest AccountsAlertsList where
         type Rs AccountsAlertsList = Alerts
         type Scopes AccountsAlertsList =
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsAlertsList'{..}
-          = go _aalAccountId _aalLocale (Just AltJSON)
+          = go _aalAccountId _aalLocale _aalFields
+              (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient

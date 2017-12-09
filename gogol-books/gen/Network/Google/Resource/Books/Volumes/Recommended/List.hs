@@ -36,10 +36,11 @@ module Network.Google.Resource.Books.Volumes.Recommended.List
     , vrlLocale
     , vrlMaxAllowedMaturityRating
     , vrlSource
+    , vrlFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.recommended.list@ method which the
 -- 'VolumesRecommendedList' request conforms to.
@@ -53,15 +54,17 @@ type VolumesRecommendedListResource =
                  VolumesRecommendedListMaxAllowedMaturityRating
                  :>
                  QueryParam "source" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Return a list of recommended books for the current user.
 --
 -- /See:/ 'volumesRecommendedList' smart constructor.
 data VolumesRecommendedList = VolumesRecommendedList'
-    { _vrlLocale                   :: !(Maybe Text)
+    { _vrlLocale :: !(Maybe Text)
     , _vrlMaxAllowedMaturityRating :: !(Maybe VolumesRecommendedListMaxAllowedMaturityRating)
-    , _vrlSource                   :: !(Maybe Text)
+    , _vrlSource :: !(Maybe Text)
+    , _vrlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesRecommendedList' with the minimum fields required to make a request.
@@ -73,13 +76,16 @@ data VolumesRecommendedList = VolumesRecommendedList'
 -- * 'vrlMaxAllowedMaturityRating'
 --
 -- * 'vrlSource'
+--
+-- * 'vrlFields'
 volumesRecommendedList
     :: VolumesRecommendedList
-volumesRecommendedList =
+volumesRecommendedList = 
     VolumesRecommendedList'
     { _vrlLocale = Nothing
     , _vrlMaxAllowedMaturityRating = Nothing
     , _vrlSource = Nothing
+    , _vrlFields = Nothing
     }
 
 -- | ISO-639-1 language and ISO-3166-1 country code. Ex: \'en_US\'. Used for
@@ -100,6 +106,11 @@ vrlSource :: Lens' VolumesRecommendedList (Maybe Text)
 vrlSource
   = lens _vrlSource (\ s a -> s{_vrlSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vrlFields :: Lens' VolumesRecommendedList (Maybe Text)
+vrlFields
+  = lens _vrlFields (\ s a -> s{_vrlFields = a})
+
 instance GoogleRequest VolumesRecommendedList where
         type Rs VolumesRecommendedList = Volumes
         type Scopes VolumesRecommendedList =
@@ -107,6 +118,7 @@ instance GoogleRequest VolumesRecommendedList where
         requestClient VolumesRecommendedList'{..}
           = go _vrlLocale _vrlMaxAllowedMaturityRating
               _vrlSource
+              _vrlFields
               (Just AltJSON)
               booksService
           where go

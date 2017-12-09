@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.Projects.Sinks.Delete
     , psdUploadType
     , psdBearerToken
     , psdSinkName
+    , psdFields
     , psdCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.sinks.delete@ method which the
 -- 'ProjectsSinksDelete' request conforms to.
@@ -59,21 +60,23 @@ type ProjectsSinksDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a sink. If the sink has a unique writer_identity, then that
 -- service account is also deleted.
 --
 -- /See:/ 'projectsSinksDelete' smart constructor.
 data ProjectsSinksDelete = ProjectsSinksDelete'
-    { _psdXgafv          :: !(Maybe Xgafv)
+    { _psdXgafv :: !(Maybe Xgafv)
     , _psdUploadProtocol :: !(Maybe Text)
-    , _psdPp             :: !Bool
-    , _psdAccessToken    :: !(Maybe Text)
-    , _psdUploadType     :: !(Maybe Text)
-    , _psdBearerToken    :: !(Maybe Text)
-    , _psdSinkName       :: !Text
-    , _psdCallback       :: !(Maybe Text)
+    , _psdPp :: !Bool
+    , _psdAccessToken :: !(Maybe Text)
+    , _psdUploadType :: !(Maybe Text)
+    , _psdBearerToken :: !(Maybe Text)
+    , _psdSinkName :: !Text
+    , _psdFields :: !(Maybe Text)
+    , _psdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSinksDelete' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data ProjectsSinksDelete = ProjectsSinksDelete'
 --
 -- * 'psdSinkName'
 --
+-- * 'psdFields'
+--
 -- * 'psdCallback'
 projectsSinksDelete
     :: Text -- ^ 'psdSinkName'
     -> ProjectsSinksDelete
-projectsSinksDelete pPsdSinkName_ =
+projectsSinksDelete pPsdSinkName_ = 
     ProjectsSinksDelete'
     { _psdXgafv = Nothing
     , _psdUploadProtocol = Nothing
@@ -107,6 +112,7 @@ projectsSinksDelete pPsdSinkName_ =
     , _psdUploadType = Nothing
     , _psdBearerToken = Nothing
     , _psdSinkName = pPsdSinkName_
+    , _psdFields = Nothing
     , _psdCallback = Nothing
     }
 
@@ -145,13 +151,18 @@ psdBearerToken
 -- | Required. The full resource name of the sink to delete, including the
 -- parent resource and the sink identifier:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" It is an error if
--- the sink does not exist. Example:
--- \"projects\/my-project-id\/sinks\/my-sink-id\". It is an error if the
--- sink does not exist.
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"projects\/my-project-id\/sinks\/my-sink-id\".
 psdSinkName :: Lens' ProjectsSinksDelete Text
 psdSinkName
   = lens _psdSinkName (\ s a -> s{_psdSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psdFields :: Lens' ProjectsSinksDelete (Maybe Text)
+psdFields
+  = lens _psdFields (\ s a -> s{_psdFields = a})
 
 -- | JSONP
 psdCallback :: Lens' ProjectsSinksDelete (Maybe Text)
@@ -170,6 +181,7 @@ instance GoogleRequest ProjectsSinksDelete where
               _psdUploadType
               _psdBearerToken
               _psdCallback
+              _psdFields
               (Just AltJSON)
               loggingService
           where go

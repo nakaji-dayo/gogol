@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Routes.Get
     -- * Request Lenses
     , rrProject
     , rrRoute
+    , rrFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.routes.get@ method which the
 -- 'RoutesGet' request conforms to.
@@ -51,7 +52,8 @@ type RoutesGetResource =
              "global" :>
                "routes" :>
                  Capture "route" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Route
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Route
 
 -- | Returns the specified Route resource. Get a list of available routes by
 -- making a list() request.
@@ -59,7 +61,8 @@ type RoutesGetResource =
 -- /See:/ 'routesGet' smart constructor.
 data RoutesGet = RoutesGet'
     { _rrProject :: !Text
-    , _rrRoute   :: !Text
+    , _rrRoute :: !Text
+    , _rrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoutesGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data RoutesGet = RoutesGet'
 -- * 'rrProject'
 --
 -- * 'rrRoute'
+--
+-- * 'rrFields'
 routesGet
     :: Text -- ^ 'rrProject'
     -> Text -- ^ 'rrRoute'
     -> RoutesGet
-routesGet pRrProject_ pRrRoute_ =
+routesGet pRrProject_ pRrRoute_ = 
     RoutesGet'
     { _rrProject = pRrProject_
     , _rrRoute = pRrRoute_
+    , _rrFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -88,6 +94,10 @@ rrProject
 rrRoute :: Lens' RoutesGet Text
 rrRoute = lens _rrRoute (\ s a -> s{_rrRoute = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rrFields :: Lens' RoutesGet (Maybe Text)
+rrFields = lens _rrFields (\ s a -> s{_rrFields = a})
+
 instance GoogleRequest RoutesGet where
         type Rs RoutesGet = Route
         type Scopes RoutesGet =
@@ -95,7 +105,7 @@ instance GoogleRequest RoutesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RoutesGet'{..}
-          = go _rrProject _rrRoute (Just AltJSON)
+          = go _rrProject _rrRoute _rrFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy RoutesGetResource)

@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.Users.Delete
     , udProject
     , udName
     , udHost
+    , udFields
     , udInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.users.delete@ method which the
 -- 'UsersDelete' request conforms to.
@@ -54,15 +55,17 @@ type UsersDeleteResource =
                  "users" :>
                    QueryParam "host" Text :>
                      QueryParam "name" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes a user from a Cloud SQL instance.
 --
 -- /See:/ 'usersDelete' smart constructor.
 data UsersDelete = UsersDelete'
-    { _udProject  :: !Text
-    , _udName     :: !Text
-    , _udHost     :: !Text
+    { _udProject :: !Text
+    , _udName :: !Text
+    , _udHost :: !Text
+    , _udFields :: !(Maybe Text)
     , _udInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -76,6 +79,8 @@ data UsersDelete = UsersDelete'
 --
 -- * 'udHost'
 --
+-- * 'udFields'
+--
 -- * 'udInstance'
 usersDelete
     :: Text -- ^ 'udProject'
@@ -83,11 +88,12 @@ usersDelete
     -> Text -- ^ 'udHost'
     -> Text -- ^ 'udInstance'
     -> UsersDelete
-usersDelete pUdProject_ pUdName_ pUdHost_ pUdInstance_ =
+usersDelete pUdProject_ pUdName_ pUdHost_ pUdInstance_ = 
     UsersDelete'
     { _udProject = pUdProject_
     , _udName = pUdName_
     , _udHost = pUdHost_
+    , _udFields = Nothing
     , _udInstance = pUdInstance_
     }
 
@@ -104,6 +110,10 @@ udName = lens _udName (\ s a -> s{_udName = a})
 udHost :: Lens' UsersDelete Text
 udHost = lens _udHost (\ s a -> s{_udHost = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udFields :: Lens' UsersDelete (Maybe Text)
+udFields = lens _udFields (\ s a -> s{_udFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 udInstance :: Lens' UsersDelete Text
 udInstance
@@ -117,6 +127,7 @@ instance GoogleRequest UsersDelete where
         requestClient UsersDelete'{..}
           = go _udProject _udInstance (Just _udHost)
               (Just _udName)
+              _udFields
               (Just AltJSON)
               sQLAdminService
           where go

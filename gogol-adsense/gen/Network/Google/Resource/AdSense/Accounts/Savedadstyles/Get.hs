@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.Accounts.Savedadstyles.Get
     -- * Request Lenses
     , asgSavedAdStyleId
     , asgAccountId
+    , asgFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.savedadstyles.get@ method which the
 -- 'AccountsSavedadstylesGet' request conforms to.
@@ -49,14 +50,16 @@ type AccountsSavedadstylesGetResource =
            Capture "accountId" Text :>
              "savedadstyles" :>
                Capture "savedAdStyleId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyle
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyle
 
 -- | List a specific saved ad style for the specified account.
 --
 -- /See:/ 'accountsSavedadstylesGet' smart constructor.
 data AccountsSavedadstylesGet = AccountsSavedadstylesGet'
     { _asgSavedAdStyleId :: !Text
-    , _asgAccountId      :: !Text
+    , _asgAccountId :: !Text
+    , _asgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsSavedadstylesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AccountsSavedadstylesGet = AccountsSavedadstylesGet'
 -- * 'asgSavedAdStyleId'
 --
 -- * 'asgAccountId'
+--
+-- * 'asgFields'
 accountsSavedadstylesGet
     :: Text -- ^ 'asgSavedAdStyleId'
     -> Text -- ^ 'asgAccountId'
     -> AccountsSavedadstylesGet
-accountsSavedadstylesGet pAsgSavedAdStyleId_ pAsgAccountId_ =
+accountsSavedadstylesGet pAsgSavedAdStyleId_ pAsgAccountId_ = 
     AccountsSavedadstylesGet'
     { _asgSavedAdStyleId = pAsgSavedAdStyleId_
     , _asgAccountId = pAsgAccountId_
+    , _asgFields = Nothing
     }
 
 -- | Saved ad style to retrieve.
@@ -87,13 +93,19 @@ asgAccountId :: Lens' AccountsSavedadstylesGet Text
 asgAccountId
   = lens _asgAccountId (\ s a -> s{_asgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asgFields :: Lens' AccountsSavedadstylesGet (Maybe Text)
+asgFields
+  = lens _asgFields (\ s a -> s{_asgFields = a})
+
 instance GoogleRequest AccountsSavedadstylesGet where
         type Rs AccountsSavedadstylesGet = SavedAdStyle
         type Scopes AccountsSavedadstylesGet =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsSavedadstylesGet'{..}
-          = go _asgAccountId _asgSavedAdStyleId (Just AltJSON)
+          = go _asgAccountId _asgSavedAdStyleId _asgFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient

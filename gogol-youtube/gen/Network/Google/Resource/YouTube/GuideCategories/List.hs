@@ -38,10 +38,11 @@ module Network.Google.Resource.YouTube.GuideCategories.List
     , gclRegionCode
     , gclHl
     , gclId
+    , gclFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.guideCategories.list@ method which the
 -- 'GuideCategoriesList' request conforms to.
@@ -53,18 +54,20 @@ type GuideCategoriesListResource =
              QueryParam "regionCode" Text :>
                QueryParam "hl" Text :>
                  QueryParam "id" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] GuideCategoryListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] GuideCategoryListResponse
 
 -- | Returns a list of categories that can be associated with YouTube
 -- channels.
 --
 -- /See:/ 'guideCategoriesList' smart constructor.
 data GuideCategoriesList = GuideCategoriesList'
-    { _gclPart       :: !Text
+    { _gclPart :: !Text
     , _gclRegionCode :: !(Maybe Text)
-    , _gclHl         :: !Text
-    , _gclId         :: !(Maybe Text)
+    , _gclHl :: !Text
+    , _gclId :: !(Maybe Text)
+    , _gclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GuideCategoriesList' with the minimum fields required to make a request.
@@ -78,15 +81,18 @@ data GuideCategoriesList = GuideCategoriesList'
 -- * 'gclHl'
 --
 -- * 'gclId'
+--
+-- * 'gclFields'
 guideCategoriesList
     :: Text -- ^ 'gclPart'
     -> GuideCategoriesList
-guideCategoriesList pGclPart_ =
+guideCategoriesList pGclPart_ = 
     GuideCategoriesList'
     { _gclPart = pGclPart_
     , _gclRegionCode = Nothing
     , _gclHl = "en-US"
     , _gclId = Nothing
+    , _gclFields = Nothing
     }
 
 -- | The part parameter specifies the guideCategory resource properties that
@@ -114,6 +120,11 @@ gclHl = lens _gclHl (\ s a -> s{_gclHl = a})
 gclId :: Lens' GuideCategoriesList (Maybe Text)
 gclId = lens _gclId (\ s a -> s{_gclId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gclFields :: Lens' GuideCategoriesList (Maybe Text)
+gclFields
+  = lens _gclFields (\ s a -> s{_gclFields = a})
+
 instance GoogleRequest GuideCategoriesList where
         type Rs GuideCategoriesList =
              GuideCategoryListResponse
@@ -125,6 +136,7 @@ instance GoogleRequest GuideCategoriesList where
         requestClient GuideCategoriesList'{..}
           = go (Just _gclPart) _gclRegionCode (Just _gclHl)
               _gclId
+              _gclFields
               (Just AltJSON)
               youTubeService
           where go

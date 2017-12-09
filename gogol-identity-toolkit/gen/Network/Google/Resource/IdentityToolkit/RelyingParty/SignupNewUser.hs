@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.SignupNewUser
 
     -- * Request Lenses
     , rpsnuPayload
+    , rpsnuFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.signupNewUser@ method which the
 -- 'RelyingPartySignupNewUser' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartySignupNewUserResource =
        "v3" :>
          "relyingparty" :>
            "signupNewUser" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartySignupNewUserRequest
-                 :> Post '[JSON] SignupNewUserResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartySignupNewUserRequest
+                   :> Post '[JSON] SignupNewUserResponse
 
 -- | Signup new user.
 --
 -- /See:/ 'relyingPartySignupNewUser' smart constructor.
-newtype RelyingPartySignupNewUser = RelyingPartySignupNewUser'
-    { _rpsnuPayload :: IdentitytoolkitRelyingPartySignupNewUserRequest
+data RelyingPartySignupNewUser = RelyingPartySignupNewUser'
+    { _rpsnuPayload :: !IdentitytoolkitRelyingPartySignupNewUserRequest
+    , _rpsnuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartySignupNewUser' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartySignupNewUser = RelyingPartySignupNewUser'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpsnuPayload'
+--
+-- * 'rpsnuFields'
 relyingPartySignupNewUser
     :: IdentitytoolkitRelyingPartySignupNewUserRequest -- ^ 'rpsnuPayload'
     -> RelyingPartySignupNewUser
-relyingPartySignupNewUser pRpsnuPayload_ =
+relyingPartySignupNewUser pRpsnuPayload_ = 
     RelyingPartySignupNewUser'
     { _rpsnuPayload = pRpsnuPayload_
+    , _rpsnuFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpsnuPayload :: Lens' RelyingPartySignupNewUser IdentitytoolkitRelyingPartySignupNewUserRequest
 rpsnuPayload
   = lens _rpsnuPayload (\ s a -> s{_rpsnuPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpsnuFields :: Lens' RelyingPartySignupNewUser (Maybe Text)
+rpsnuFields
+  = lens _rpsnuFields (\ s a -> s{_rpsnuFields = a})
 
 instance GoogleRequest RelyingPartySignupNewUser
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartySignupNewUser
         type Scopes RelyingPartySignupNewUser =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartySignupNewUser'{..}
-          = go (Just AltJSON) _rpsnuPayload
+          = go _rpsnuFields (Just AltJSON) _rpsnuPayload
               identityToolkitService
           where go
                   = buildClient

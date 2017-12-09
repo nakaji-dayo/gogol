@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.Patch
     , upEnterpriseId
     , upPayload
     , upUserId
+    , upFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.patch@ method which the
 -- 'UsersPatch' request conforms to.
@@ -54,8 +55,9 @@ type UsersPatchResource =
            Capture "enterpriseId" Text :>
              "users" :>
                Capture "userId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] User :> Patch '[JSON] User
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] User :> Patch '[JSON] User
 
 -- | Updates the details of an EMM-managed user. Can be used with EMM-managed
 -- users only (not Google managed users). Pass the new details in the Users
@@ -66,8 +68,9 @@ type UsersPatchResource =
 -- /See:/ 'usersPatch' smart constructor.
 data UsersPatch = UsersPatch'
     { _upEnterpriseId :: !Text
-    , _upPayload      :: !User
-    , _upUserId       :: !Text
+    , _upPayload :: !User
+    , _upUserId :: !Text
+    , _upFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersPatch' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data UsersPatch = UsersPatch'
 -- * 'upPayload'
 --
 -- * 'upUserId'
+--
+-- * 'upFields'
 usersPatch
     :: Text -- ^ 'upEnterpriseId'
     -> User -- ^ 'upPayload'
     -> Text -- ^ 'upUserId'
     -> UsersPatch
-usersPatch pUpEnterpriseId_ pUpPayload_ pUpUserId_ =
+usersPatch pUpEnterpriseId_ pUpPayload_ pUpUserId_ = 
     UsersPatch'
     { _upEnterpriseId = pUpEnterpriseId_
     , _upPayload = pUpPayload_
     , _upUserId = pUpUserId_
+    , _upFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -106,12 +112,17 @@ upPayload
 upUserId :: Lens' UsersPatch Text
 upUserId = lens _upUserId (\ s a -> s{_upUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+upFields :: Lens' UsersPatch (Maybe Text)
+upFields = lens _upFields (\ s a -> s{_upFields = a})
+
 instance GoogleRequest UsersPatch where
         type Rs UsersPatch = User
         type Scopes UsersPatch =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersPatch'{..}
-          = go _upEnterpriseId _upUserId (Just AltJSON)
+          = go _upEnterpriseId _upUserId _upFields
+              (Just AltJSON)
               _upPayload
               androidEnterpriseService
           where go

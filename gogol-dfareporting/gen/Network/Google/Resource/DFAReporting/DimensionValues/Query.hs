@@ -37,34 +37,37 @@ module Network.Google.Resource.DFAReporting.DimensionValues.Query
     , dvqPayload
     , dvqPageToken
     , dvqMaxResults
+    , dvqFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.dimensionValues.query@ method which the
 -- 'DimensionValuesQuery' request conforms to.
 type DimensionValuesQueryResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "dimensionvalues" :>
                "query" :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] DimensionValueRequest :>
-                         Post '[JSON] DimensionValueList
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] DimensionValueRequest :>
+                           Post '[JSON] DimensionValueList
 
 -- | Retrieves list of report dimension values for a list of filters.
 --
 -- /See:/ 'dimensionValuesQuery' smart constructor.
 data DimensionValuesQuery = DimensionValuesQuery'
-    { _dvqProFileId  :: !(Textual Int64)
-    , _dvqPayload    :: !DimensionValueRequest
-    , _dvqPageToken  :: !(Maybe Text)
-    , _dvqMaxResults :: !(Maybe (Textual Int32))
+    { _dvqProFileId :: !(Textual Int64)
+    , _dvqPayload :: !DimensionValueRequest
+    , _dvqPageToken :: !(Maybe Text)
+    , _dvqMaxResults :: !(Textual Int32)
+    , _dvqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DimensionValuesQuery' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data DimensionValuesQuery = DimensionValuesQuery'
 -- * 'dvqPageToken'
 --
 -- * 'dvqMaxResults'
+--
+-- * 'dvqFields'
 dimensionValuesQuery
     :: Int64 -- ^ 'dvqProFileId'
     -> DimensionValueRequest -- ^ 'dvqPayload'
     -> DimensionValuesQuery
-dimensionValuesQuery pDvqProFileId_ pDvqPayload_ =
+dimensionValuesQuery pDvqProFileId_ pDvqPayload_ = 
     DimensionValuesQuery'
     { _dvqProFileId = _Coerce # pDvqProFileId_
     , _dvqPayload = pDvqPayload_
     , _dvqPageToken = Nothing
-    , _dvqMaxResults = Nothing
+    , _dvqMaxResults = 100
+    , _dvqFields = Nothing
     }
 
 -- | The DFA user profile ID.
@@ -107,18 +113,25 @@ dvqPageToken
   = lens _dvqPageToken (\ s a -> s{_dvqPageToken = a})
 
 -- | Maximum number of results to return.
-dvqMaxResults :: Lens' DimensionValuesQuery (Maybe Int32)
+dvqMaxResults :: Lens' DimensionValuesQuery Int32
 dvqMaxResults
   = lens _dvqMaxResults
       (\ s a -> s{_dvqMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+dvqFields :: Lens' DimensionValuesQuery (Maybe Text)
+dvqFields
+  = lens _dvqFields (\ s a -> s{_dvqFields = a})
 
 instance GoogleRequest DimensionValuesQuery where
         type Rs DimensionValuesQuery = DimensionValueList
         type Scopes DimensionValuesQuery =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient DimensionValuesQuery'{..}
-          = go _dvqProFileId _dvqPageToken _dvqMaxResults
+          = go _dvqProFileId _dvqPageToken
+              (Just _dvqMaxResults)
+              _dvqFields
               (Just AltJSON)
               _dvqPayload
               dFAReportingService

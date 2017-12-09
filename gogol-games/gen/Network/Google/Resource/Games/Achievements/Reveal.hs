@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.Achievements.Reveal
     -- * Request Lenses
     , arAchievementId
     , arConsistencyToken
+    , arFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.reveal@ method which the
 -- 'AchievementsReveal' request conforms to.
@@ -50,16 +51,18 @@ type AchievementsRevealResource =
            Capture "achievementId" Text :>
              "reveal" :>
                QueryParam "consistencyToken" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Post '[JSON] AchievementRevealResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Post '[JSON] AchievementRevealResponse
 
 -- | Sets the state of the achievement with the given ID to REVEALED for the
 -- currently authenticated player.
 --
 -- /See:/ 'achievementsReveal' smart constructor.
 data AchievementsReveal = AchievementsReveal'
-    { _arAchievementId    :: !Text
+    { _arAchievementId :: !Text
     , _arConsistencyToken :: !(Maybe (Textual Int64))
+    , _arFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsReveal' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data AchievementsReveal = AchievementsReveal'
 -- * 'arAchievementId'
 --
 -- * 'arConsistencyToken'
+--
+-- * 'arFields'
 achievementsReveal
     :: Text -- ^ 'arAchievementId'
     -> AchievementsReveal
-achievementsReveal pArAchievementId_ =
+achievementsReveal pArAchievementId_ = 
     AchievementsReveal'
     { _arAchievementId = pArAchievementId_
     , _arConsistencyToken = Nothing
+    , _arFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -91,6 +97,10 @@ arConsistencyToken
       (\ s a -> s{_arConsistencyToken = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+arFields :: Lens' AchievementsReveal (Maybe Text)
+arFields = lens _arFields (\ s a -> s{_arFields = a})
+
 instance GoogleRequest AchievementsReveal where
         type Rs AchievementsReveal =
              AchievementRevealResponse
@@ -98,7 +108,7 @@ instance GoogleRequest AchievementsReveal where
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient AchievementsReveal'{..}
-          = go _arAchievementId _arConsistencyToken
+          = go _arAchievementId _arConsistencyToken _arFields
               (Just AltJSON)
               gamesService
           where go

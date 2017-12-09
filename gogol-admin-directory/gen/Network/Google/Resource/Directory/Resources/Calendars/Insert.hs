@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Resources.Calendars.Insert
     -- * Request Lenses
     , rciPayload
     , rciCustomer
+    , rciFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.resources.calendars.insert@ method which the
 -- 'ResourcesCalendarsInsert' request conforms to.
@@ -50,16 +51,18 @@ type ResourcesCalendarsInsertResource =
              Capture "customer" Text :>
                "resources" :>
                  "calendars" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CalendarResource :>
-                       Post '[JSON] CalendarResource
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CalendarResource :>
+                         Post '[JSON] CalendarResource
 
 -- | Inserts a calendar resource.
 --
 -- /See:/ 'resourcesCalendarsInsert' smart constructor.
 data ResourcesCalendarsInsert = ResourcesCalendarsInsert'
-    { _rciPayload  :: !CalendarResource
+    { _rciPayload :: !CalendarResource
     , _rciCustomer :: !Text
+    , _rciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourcesCalendarsInsert' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data ResourcesCalendarsInsert = ResourcesCalendarsInsert'
 -- * 'rciPayload'
 --
 -- * 'rciCustomer'
+--
+-- * 'rciFields'
 resourcesCalendarsInsert
     :: CalendarResource -- ^ 'rciPayload'
     -> Text -- ^ 'rciCustomer'
     -> ResourcesCalendarsInsert
-resourcesCalendarsInsert pRciPayload_ pRciCustomer_ =
+resourcesCalendarsInsert pRciPayload_ pRciCustomer_ = 
     ResourcesCalendarsInsert'
     { _rciPayload = pRciPayload_
     , _rciCustomer = pRciCustomer_
+    , _rciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -84,19 +90,25 @@ rciPayload :: Lens' ResourcesCalendarsInsert CalendarResource
 rciPayload
   = lens _rciPayload (\ s a -> s{_rciPayload = a})
 
--- | The unique ID for the customer\'s Google account. As an account
+-- | The unique ID for the customer\'s G Suite account. As an account
 -- administrator, you can also use the my_customer alias to represent your
 -- account\'s customer ID.
 rciCustomer :: Lens' ResourcesCalendarsInsert Text
 rciCustomer
   = lens _rciCustomer (\ s a -> s{_rciCustomer = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rciFields :: Lens' ResourcesCalendarsInsert (Maybe Text)
+rciFields
+  = lens _rciFields (\ s a -> s{_rciFields = a})
+
 instance GoogleRequest ResourcesCalendarsInsert where
         type Rs ResourcesCalendarsInsert = CalendarResource
         type Scopes ResourcesCalendarsInsert =
              '["https://www.googleapis.com/auth/admin.directory.resource.calendar"]
         requestClient ResourcesCalendarsInsert'{..}
-          = go _rciCustomer (Just AltJSON) _rciPayload
+          = go _rciCustomer _rciFields (Just AltJSON)
+              _rciPayload
               directoryService
           where go
                   = buildClient

@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.AccountUserProFiles.Patch
     , aupfpProFileId
     , aupfpPayload
     , aupfpId
+    , aupfpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountUserProfiles.patch@ method which the
 -- 'AccountUserProFilesPatch' request conforms to.
 type AccountUserProFilesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountUserProfiles" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AccountUserProFile :>
-                     Patch '[JSON] AccountUserProFile
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AccountUserProFile :>
+                       Patch '[JSON] AccountUserProFile
 
 -- | Updates an existing account user profile. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type AccountUserProFilesPatchResource =
 -- /See:/ 'accountUserProFilesPatch' smart constructor.
 data AccountUserProFilesPatch = AccountUserProFilesPatch'
     { _aupfpProFileId :: !(Textual Int64)
-    , _aupfpPayload   :: !AccountUserProFile
-    , _aupfpId        :: !(Textual Int64)
+    , _aupfpPayload :: !AccountUserProFile
+    , _aupfpId :: !(Textual Int64)
+    , _aupfpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data AccountUserProFilesPatch = AccountUserProFilesPatch'
 -- * 'aupfpPayload'
 --
 -- * 'aupfpId'
+--
+-- * 'aupfpFields'
 accountUserProFilesPatch
     :: Int64 -- ^ 'aupfpProFileId'
     -> AccountUserProFile -- ^ 'aupfpPayload'
     -> Int64 -- ^ 'aupfpId'
     -> AccountUserProFilesPatch
-accountUserProFilesPatch pAupfpProFileId_ pAupfpPayload_ pAupfpId_ =
+accountUserProFilesPatch pAupfpProFileId_ pAupfpPayload_ pAupfpId_ = 
     AccountUserProFilesPatch'
     { _aupfpProFileId = _Coerce # pAupfpProFileId_
     , _aupfpPayload = pAupfpPayload_
     , _aupfpId = _Coerce # pAupfpId_
+    , _aupfpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -103,12 +109,18 @@ aupfpId :: Lens' AccountUserProFilesPatch Int64
 aupfpId
   = lens _aupfpId (\ s a -> s{_aupfpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aupfpFields :: Lens' AccountUserProFilesPatch (Maybe Text)
+aupfpFields
+  = lens _aupfpFields (\ s a -> s{_aupfpFields = a})
+
 instance GoogleRequest AccountUserProFilesPatch where
         type Rs AccountUserProFilesPatch = AccountUserProFile
         type Scopes AccountUserProFilesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountUserProFilesPatch'{..}
-          = go _aupfpProFileId (Just _aupfpId) (Just AltJSON)
+          = go _aupfpProFileId (Just _aupfpId) _aupfpFields
+              (Just AltJSON)
               _aupfpPayload
               dFAReportingService
           where go

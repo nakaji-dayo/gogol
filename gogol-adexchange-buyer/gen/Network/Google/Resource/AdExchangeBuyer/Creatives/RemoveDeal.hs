@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.RemoveDeal
     , crdBuyerCreativeId
     , crdDealId
     , crdAccountId
+    , crdFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.removeDeal@ method which the
 -- 'CreativesRemoveDeal' request conforms to.
@@ -51,15 +52,17 @@ type CreativesRemoveDealResource =
              Capture "buyerCreativeId" Text :>
                "removeDeal" :>
                  Capture "dealId" (Textual Int64) :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Remove a deal id associated with the creative.
 --
 -- /See:/ 'creativesRemoveDeal' smart constructor.
 data CreativesRemoveDeal = CreativesRemoveDeal'
     { _crdBuyerCreativeId :: !Text
-    , _crdDealId          :: !(Textual Int64)
-    , _crdAccountId       :: !(Textual Int32)
+    , _crdDealId :: !(Textual Int64)
+    , _crdAccountId :: !(Textual Int32)
+    , _crdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesRemoveDeal' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data CreativesRemoveDeal = CreativesRemoveDeal'
 -- * 'crdDealId'
 --
 -- * 'crdAccountId'
+--
+-- * 'crdFields'
 creativesRemoveDeal
     :: Text -- ^ 'crdBuyerCreativeId'
     -> Int64 -- ^ 'crdDealId'
     -> Int32 -- ^ 'crdAccountId'
     -> CreativesRemoveDeal
-creativesRemoveDeal pCrdBuyerCreativeId_ pCrdDealId_ pCrdAccountId_ =
+creativesRemoveDeal pCrdBuyerCreativeId_ pCrdDealId_ pCrdAccountId_ = 
     CreativesRemoveDeal'
     { _crdBuyerCreativeId = pCrdBuyerCreativeId_
     , _crdDealId = _Coerce # pCrdDealId_
     , _crdAccountId = _Coerce # pCrdAccountId_
+    , _crdFields = Nothing
     }
 
 -- | The buyer-specific id for this creative.
@@ -101,12 +107,18 @@ crdAccountId
   = lens _crdAccountId (\ s a -> s{_crdAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+crdFields :: Lens' CreativesRemoveDeal (Maybe Text)
+crdFields
+  = lens _crdFields (\ s a -> s{_crdFields = a})
+
 instance GoogleRequest CreativesRemoveDeal where
         type Rs CreativesRemoveDeal = ()
         type Scopes CreativesRemoveDeal =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient CreativesRemoveDeal'{..}
           = go _crdAccountId _crdBuyerCreativeId _crdDealId
+              _crdFields
               (Just AltJSON)
               adExchangeBuyerService
           where go

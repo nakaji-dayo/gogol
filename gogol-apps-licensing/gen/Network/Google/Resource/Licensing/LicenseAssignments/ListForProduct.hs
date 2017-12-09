@@ -37,10 +37,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.ListForProduct
     , lalfpPageToken
     , lalfpProductId
     , lalfpMaxResults
+    , lalfpFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.listForProduct@ method which the
 -- 'LicenseAssignmentsListForProduct' request conforms to.
@@ -54,17 +55,19 @@ type LicenseAssignmentsListForProductResource =
                  QueryParam "customerId" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] LicenseAssignmentList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] LicenseAssignmentList
 
 -- | List license assignments for given product of the customer.
 --
 -- /See:/ 'licenseAssignmentsListForProduct' smart constructor.
 data LicenseAssignmentsListForProduct = LicenseAssignmentsListForProduct'
     { _lalfpCustomerId :: !Text
-    , _lalfpPageToken  :: !Text
-    , _lalfpProductId  :: !Text
+    , _lalfpPageToken :: !Text
+    , _lalfpProductId :: !Text
     , _lalfpMaxResults :: !(Textual Word32)
+    , _lalfpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsListForProduct' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data LicenseAssignmentsListForProduct = LicenseAssignmentsListForProduct'
 -- * 'lalfpProductId'
 --
 -- * 'lalfpMaxResults'
+--
+-- * 'lalfpFields'
 licenseAssignmentsListForProduct
     :: Text -- ^ 'lalfpCustomerId'
     -> Text -- ^ 'lalfpProductId'
     -> LicenseAssignmentsListForProduct
-licenseAssignmentsListForProduct pLalfpCustomerId_ pLalfpProductId_ =
+licenseAssignmentsListForProduct pLalfpCustomerId_ pLalfpProductId_ = 
     LicenseAssignmentsListForProduct'
     { _lalfpCustomerId = pLalfpCustomerId_
     , _lalfpPageToken = ""
     , _lalfpProductId = pLalfpProductId_
     , _lalfpMaxResults = 100
+    , _lalfpFields = Nothing
     }
 
 -- | CustomerId represents the customer for whom licenseassignments are
@@ -118,6 +124,11 @@ lalfpMaxResults
       (\ s a -> s{_lalfpMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lalfpFields :: Lens' LicenseAssignmentsListForProduct (Maybe Text)
+lalfpFields
+  = lens _lalfpFields (\ s a -> s{_lalfpFields = a})
+
 instance GoogleRequest
          LicenseAssignmentsListForProduct where
         type Rs LicenseAssignmentsListForProduct =
@@ -128,6 +139,7 @@ instance GoogleRequest
           = go _lalfpProductId (Just _lalfpCustomerId)
               (Just _lalfpPageToken)
               (Just _lalfpMaxResults)
+              _lalfpFields
               (Just AltJSON)
               appsLicensingService
           where go

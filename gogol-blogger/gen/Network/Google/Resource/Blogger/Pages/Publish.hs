@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Pages.Publish
     -- * Request Lenses
     , pagaBlogId
     , pagaPageId
+    , pagaFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.publish@ method which the
 -- 'PagesPublish' request conforms to.
@@ -50,7 +51,8 @@ type PagesPublishResource =
              "pages" :>
                Capture "pageId" Text :>
                  "publish" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Page
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Page
 
 -- | Publishes a draft page.
 --
@@ -58,6 +60,7 @@ type PagesPublishResource =
 data PagesPublish = PagesPublish'
     { _pagaBlogId :: !Text
     , _pagaPageId :: !Text
+    , _pagaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesPublish' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PagesPublish = PagesPublish'
 -- * 'pagaBlogId'
 --
 -- * 'pagaPageId'
+--
+-- * 'pagaFields'
 pagesPublish
     :: Text -- ^ 'pagaBlogId'
     -> Text -- ^ 'pagaPageId'
     -> PagesPublish
-pagesPublish pPagaBlogId_ pPagaPageId_ =
+pagesPublish pPagaBlogId_ pPagaPageId_ = 
     PagesPublish'
     { _pagaBlogId = pPagaBlogId_
     , _pagaPageId = pPagaPageId_
+    , _pagaFields = Nothing
     }
 
 -- | The ID of the blog.
@@ -87,12 +93,18 @@ pagaPageId :: Lens' PagesPublish Text
 pagaPageId
   = lens _pagaPageId (\ s a -> s{_pagaPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pagaFields :: Lens' PagesPublish (Maybe Text)
+pagaFields
+  = lens _pagaFields (\ s a -> s{_pagaFields = a})
+
 instance GoogleRequest PagesPublish where
         type Rs PagesPublish = Page
         type Scopes PagesPublish =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesPublish'{..}
-          = go _pagaBlogId _pagaPageId (Just AltJSON)
+          = go _pagaBlogId _pagaPageId _pagaFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PagesPublishResource)

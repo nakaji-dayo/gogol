@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.FanFundingEvents.List
     , ffelHl
     , ffelPageToken
     , ffelMaxResults
+    , ffelFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.fanFundingEvents.list@ method which the
 -- 'FanFundingEventsList' request conforms to.
@@ -52,17 +53,19 @@ type FanFundingEventsListResource =
              QueryParam "hl" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] FanFundingEventListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] FanFundingEventListResponse
 
 -- | Lists fan funding events for a channel.
 --
 -- /See:/ 'fanFundingEventsList' smart constructor.
 data FanFundingEventsList = FanFundingEventsList'
-    { _ffelPart       :: !Text
-    , _ffelHl         :: !(Maybe Text)
-    , _ffelPageToken  :: !(Maybe Text)
+    { _ffelPart :: !Text
+    , _ffelHl :: !(Maybe Text)
+    , _ffelPageToken :: !(Maybe Text)
     , _ffelMaxResults :: !(Textual Word32)
+    , _ffelFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FanFundingEventsList' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data FanFundingEventsList = FanFundingEventsList'
 -- * 'ffelPageToken'
 --
 -- * 'ffelMaxResults'
+--
+-- * 'ffelFields'
 fanFundingEventsList
     :: Text -- ^ 'ffelPart'
     -> FanFundingEventsList
-fanFundingEventsList pFfelPart_ =
+fanFundingEventsList pFfelPart_ = 
     FanFundingEventsList'
     { _ffelPart = pFfelPart_
     , _ffelHl = Nothing
     , _ffelPageToken = Nothing
     , _ffelMaxResults = 5
+    , _ffelFields = Nothing
     }
 
 -- | The part parameter specifies the fanFundingEvent resource parts that the
@@ -119,6 +125,11 @@ ffelMaxResults
       (\ s a -> s{_ffelMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ffelFields :: Lens' FanFundingEventsList (Maybe Text)
+ffelFields
+  = lens _ffelFields (\ s a -> s{_ffelFields = a})
+
 instance GoogleRequest FanFundingEventsList where
         type Rs FanFundingEventsList =
              FanFundingEventListResponse
@@ -129,6 +140,7 @@ instance GoogleRequest FanFundingEventsList where
         requestClient FanFundingEventsList'{..}
           = go (Just _ffelPart) _ffelHl _ffelPageToken
               (Just _ffelMaxResults)
+              _ffelFields
               (Just AltJSON)
               youTubeService
           where go

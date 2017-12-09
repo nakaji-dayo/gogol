@@ -34,10 +34,11 @@ module Network.Google.Resource.FusionTables.Table.Get
 
     -- * Request Lenses
     , tgTableId
+    , tgFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.get@ method which the
 -- 'TableGet' request conforms to.
@@ -46,13 +47,15 @@ type TableGetResource =
        "v2" :>
          "tables" :>
            Capture "tableId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Table
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Table
 
 -- | Retrieves a specific table by its ID.
 --
 -- /See:/ 'tableGet' smart constructor.
-newtype TableGet = TableGet'
-    { _tgTableId :: Text
+data TableGet = TableGet'
+    { _tgTableId :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype TableGet = TableGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tgTableId'
+--
+-- * 'tgFields'
 tableGet
     :: Text -- ^ 'tgTableId'
     -> TableGet
-tableGet pTgTableId_ =
+tableGet pTgTableId_ = 
     TableGet'
     { _tgTableId = pTgTableId_
+    , _tgFields = Nothing
     }
 
 -- | Identifier for the table being requested.
@@ -73,13 +79,18 @@ tgTableId :: Lens' TableGet Text
 tgTableId
   = lens _tgTableId (\ s a -> s{_tgTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TableGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
+
 instance GoogleRequest TableGet where
         type Rs TableGet = Table
         type Scopes TableGet =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient TableGet'{..}
-          = go _tgTableId (Just AltJSON) fusionTablesService
+          = go _tgTableId _tgFields (Just AltJSON)
+              fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TableGetResource)
                       mempty

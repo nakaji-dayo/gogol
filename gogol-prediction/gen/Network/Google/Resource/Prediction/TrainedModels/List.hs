@@ -36,10 +36,11 @@ module Network.Google.Resource.Prediction.TrainedModels.List
     , tmlProject
     , tmlPageToken
     , tmlMaxResults
+    , tmlFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.list@ method which the
 -- 'TrainedModelsList' request conforms to.
@@ -52,15 +53,17 @@ type TrainedModelsListResource =
                "list" :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] List
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] List
 
 -- | List available models.
 --
 -- /See:/ 'trainedModelsList' smart constructor.
 data TrainedModelsList = TrainedModelsList'
-    { _tmlProject    :: !Text
-    , _tmlPageToken  :: !(Maybe Text)
+    { _tmlProject :: !Text
+    , _tmlPageToken :: !(Maybe Text)
     , _tmlMaxResults :: !(Maybe (Textual Word32))
+    , _tmlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data TrainedModelsList = TrainedModelsList'
 -- * 'tmlPageToken'
 --
 -- * 'tmlMaxResults'
+--
+-- * 'tmlFields'
 trainedModelsList
     :: Text -- ^ 'tmlProject'
     -> TrainedModelsList
-trainedModelsList pTmlProject_ =
+trainedModelsList pTmlProject_ = 
     TrainedModelsList'
     { _tmlProject = pTmlProject_
     , _tmlPageToken = Nothing
     , _tmlMaxResults = Nothing
+    , _tmlFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -99,6 +105,11 @@ tmlMaxResults
       (\ s a -> s{_tmlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tmlFields :: Lens' TrainedModelsList (Maybe Text)
+tmlFields
+  = lens _tmlFields (\ s a -> s{_tmlFields = a})
+
 instance GoogleRequest TrainedModelsList where
         type Rs TrainedModelsList = List
         type Scopes TrainedModelsList =
@@ -106,6 +117,7 @@ instance GoogleRequest TrainedModelsList where
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsList'{..}
           = go _tmlProject _tmlPageToken _tmlMaxResults
+              _tmlFields
               (Just AltJSON)
               predictionService
           where go

@@ -42,11 +42,12 @@ module Network.Google.Resource.Language.Documents.AnalyzeSyntax
     , dUploadType
     , dPayload
     , dBearerToken
+    , dFields
     , dCallback
     ) where
 
-import           Network.Google.Language.Types
-import           Network.Google.Prelude
+import Network.Google.Language.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @language.documents.analyzeSyntax@ method which the
 -- 'DocumentsAnalyzeSyntax' request conforms to.
@@ -60,9 +61,10 @@ type DocumentsAnalyzeSyntaxResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AnalyzeSyntaxRequest :>
-                           Post '[JSON] AnalyzeSyntaxResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AnalyzeSyntaxRequest :>
+                             Post '[JSON] AnalyzeSyntaxResponse
 
 -- | Analyzes the syntax of the text and provides sentence boundaries and
 -- tokenization along with part of speech tags, dependency trees, and other
@@ -70,14 +72,15 @@ type DocumentsAnalyzeSyntaxResource =
 --
 -- /See:/ 'documentsAnalyzeSyntax' smart constructor.
 data DocumentsAnalyzeSyntax = DocumentsAnalyzeSyntax'
-    { _dXgafv          :: !(Maybe Xgafv)
+    { _dXgafv :: !(Maybe Xgafv)
     , _dUploadProtocol :: !(Maybe Text)
-    , _dPp             :: !Bool
-    , _dAccessToken    :: !(Maybe Text)
-    , _dUploadType     :: !(Maybe Text)
-    , _dPayload        :: !AnalyzeSyntaxRequest
-    , _dBearerToken    :: !(Maybe Text)
-    , _dCallback       :: !(Maybe Text)
+    , _dPp :: !Bool
+    , _dAccessToken :: !(Maybe Text)
+    , _dUploadType :: !(Maybe Text)
+    , _dPayload :: !AnalyzeSyntaxRequest
+    , _dBearerToken :: !(Maybe Text)
+    , _dFields :: !(Maybe Text)
+    , _dCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DocumentsAnalyzeSyntax' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data DocumentsAnalyzeSyntax = DocumentsAnalyzeSyntax'
 --
 -- * 'dBearerToken'
 --
+-- * 'dFields'
+--
 -- * 'dCallback'
 documentsAnalyzeSyntax
     :: AnalyzeSyntaxRequest -- ^ 'dPayload'
     -> DocumentsAnalyzeSyntax
-documentsAnalyzeSyntax pDPayload_ =
+documentsAnalyzeSyntax pDPayload_ = 
     DocumentsAnalyzeSyntax'
     { _dXgafv = Nothing
     , _dUploadProtocol = Nothing
@@ -111,6 +116,7 @@ documentsAnalyzeSyntax pDPayload_ =
     , _dUploadType = Nothing
     , _dPayload = pDPayload_
     , _dBearerToken = Nothing
+    , _dFields = Nothing
     , _dCallback = Nothing
     }
 
@@ -147,6 +153,10 @@ dBearerToken :: Lens' DocumentsAnalyzeSyntax (Maybe Text)
 dBearerToken
   = lens _dBearerToken (\ s a -> s{_dBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dFields :: Lens' DocumentsAnalyzeSyntax (Maybe Text)
+dFields = lens _dFields (\ s a -> s{_dFields = a})
+
 -- | JSONP
 dCallback :: Lens' DocumentsAnalyzeSyntax (Maybe Text)
 dCallback
@@ -156,13 +166,15 @@ instance GoogleRequest DocumentsAnalyzeSyntax where
         type Rs DocumentsAnalyzeSyntax =
              AnalyzeSyntaxResponse
         type Scopes DocumentsAnalyzeSyntax =
-             '["https://www.googleapis.com/auth/cloud-platform"]
+             '["https://www.googleapis.com/auth/cloud-language",
+               "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DocumentsAnalyzeSyntax'{..}
           = go _dXgafv _dUploadProtocol (Just _dPp)
               _dAccessToken
               _dUploadType
               _dBearerToken
               _dCallback
+              _dFields
               (Just AltJSON)
               _dPayload
               languageService

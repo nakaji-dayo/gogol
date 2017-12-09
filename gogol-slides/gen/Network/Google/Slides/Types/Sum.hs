@@ -16,9 +16,10 @@
 --
 module Network.Google.Slides.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
--- | The text direction of this paragraph. This property is read-only.
+-- | The text direction of this paragraph. If unset, the value defaults to
+-- LEFT_TO_RIGHT since text direction is not inherited.
 data ParagraphStyleDirection
     = TextDirectionUnspecified
       -- ^ @TEXT_DIRECTION_UNSPECIFIED@
@@ -95,6 +96,56 @@ instance FromJSON TextStyleBaselineOffSet where
 instance ToJSON TextStyleBaselineOffSet where
     toJSON = toJSONText
 
+-- | The alignment of the content in the table cell. The default alignment
+-- matches the alignment for newly created table cells in the Slides
+-- editor.
+data TableCellPropertiesContentAlignment
+    = ContentAlignmentUnspecified
+      -- ^ @CONTENT_ALIGNMENT_UNSPECIFIED@
+      -- An unspecified content alignment. The content alignment is inherited
+      -- from the parent if it exists.
+    | ContentAlignmentUnsupported
+      -- ^ @CONTENT_ALIGNMENT_UNSUPPORTED@
+      -- An unsupported content alignment.
+    | Top
+      -- ^ @TOP@
+      -- An alignment that aligns the content to the top of the content holder.
+      -- Corresponds to ECMA-376 ST_TextAnchoringType \'t\'.
+    | Middle
+      -- ^ @MIDDLE@
+      -- An alignment that aligns the content to the middle of the content
+      -- holder. Corresponds to ECMA-376 ST_TextAnchoringType \'ctr\'.
+    | Bottom
+      -- ^ @BOTTOM@
+      -- An alignment that aligns the content to the bottom of the content
+      -- holder. Corresponds to ECMA-376 ST_TextAnchoringType \'b\'.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable TableCellPropertiesContentAlignment
+
+instance FromHttpApiData TableCellPropertiesContentAlignment where
+    parseQueryParam = \case
+        "CONTENT_ALIGNMENT_UNSPECIFIED" -> Right ContentAlignmentUnspecified
+        "CONTENT_ALIGNMENT_UNSUPPORTED" -> Right ContentAlignmentUnsupported
+        "TOP" -> Right Top
+        "MIDDLE" -> Right Middle
+        "BOTTOM" -> Right Bottom
+        x -> Left ("Unable to parse TableCellPropertiesContentAlignment from: " <> x)
+
+instance ToHttpApiData TableCellPropertiesContentAlignment where
+    toQueryParam = \case
+        ContentAlignmentUnspecified -> "CONTENT_ALIGNMENT_UNSPECIFIED"
+        ContentAlignmentUnsupported -> "CONTENT_ALIGNMENT_UNSUPPORTED"
+        Top -> "TOP"
+        Middle -> "MIDDLE"
+        Bottom -> "BOTTOM"
+
+instance FromJSON TableCellPropertiesContentAlignment where
+    parseJSON = parseJSONText "TableCellPropertiesContentAlignment"
+
+instance ToJSON TableCellPropertiesContentAlignment where
+    toJSON = toJSONText
+
 -- | The type of range.
 data RangeType
     = RangeTypeUnspecified
@@ -137,7 +188,7 @@ instance FromJSON RangeType where
 instance ToJSON RangeType where
     toJSON = toJSONText
 
--- | The background fill property state. Updating the the fill on a page will
+-- | The background fill property state. Updating the fill on a page will
 -- implicitly update this field to \`RENDERED\`, unless another value is
 -- specified in the same request. To have no fill on a page, set this field
 -- to \`NOT_RENDERED\`. In this case, any other fill fields set in the same
@@ -187,6 +238,173 @@ instance FromJSON PageBackgRoundFillPropertyState where
 instance ToJSON PageBackgRoundFillPropertyState where
     toJSON = toJSONText
 
+-- | The name of the recolor effect. The name is determined from the
+-- \`recolor_stops\` by matching the gradient against the colors in the
+-- page\'s current color scheme. This property is read-only.
+data RecolorName
+    = RNNone
+      -- ^ @NONE@
+      -- No recolor effect. The default value.
+    | RNLIGHT1
+      -- ^ @LIGHT1@
+      -- A recolor effect that lightens the image using the page\'s first
+      -- available color from its color scheme.
+    | RNLIGHT2
+      -- ^ @LIGHT2@
+      -- A recolor effect that lightens the image using the page\'s second
+      -- available color from its color scheme.
+    | RNLIGHT3
+      -- ^ @LIGHT3@
+      -- A recolor effect that lightens the image using the page\'s third
+      -- available color from its color scheme.
+    | RNLIGHT4
+      -- ^ @LIGHT4@
+      -- A recolor effect that lightens the image using the page\'s forth
+      -- available color from its color scheme.
+    | RNLIGHT5
+      -- ^ @LIGHT5@
+      -- A recolor effect that lightens the image using the page\'s fifth
+      -- available color from its color scheme.
+    | RNLIGHT6
+      -- ^ @LIGHT6@
+      -- A recolor effect that lightens the image using the page\'s sixth
+      -- available color from its color scheme.
+    | RNLIGHT7
+      -- ^ @LIGHT7@
+      -- A recolor effect that lightens the image using the page\'s seventh
+      -- available color from its color scheme.e.
+    | RNLIGHT8
+      -- ^ @LIGHT8@
+      -- A recolor effect that lightens the image using the page\'s eighth
+      -- available color from its color scheme.
+    | RNLIGHT9
+      -- ^ @LIGHT9@
+      -- A recolor effect that lightens the image using the page\'s ninth
+      -- available color from its color scheme.
+    | RNLIGHT10
+      -- ^ @LIGHT10@
+      -- A recolor effect that lightens the image using the page\'s tenth
+      -- available color from its color scheme.
+    | RNDARK1
+      -- ^ @DARK1@
+      -- A recolor effect that darkens the image using the page\'s first
+      -- available color from its color scheme.
+    | RNDARK2
+      -- ^ @DARK2@
+      -- A recolor effect that darkens the image using the page\'s second
+      -- available color from its color scheme.
+    | RNDARK3
+      -- ^ @DARK3@
+      -- A recolor effect that darkens the image using the page\'s third
+      -- available color from its color scheme.
+    | RNDARK4
+      -- ^ @DARK4@
+      -- A recolor effect that darkens the image using the page\'s fourth
+      -- available color from its color scheme.
+    | RNDARK5
+      -- ^ @DARK5@
+      -- A recolor effect that darkens the image using the page\'s fifth
+      -- available color from its color scheme.
+    | RNDARK6
+      -- ^ @DARK6@
+      -- A recolor effect that darkens the image using the page\'s sixth
+      -- available color from its color scheme.
+    | RNDARK7
+      -- ^ @DARK7@
+      -- A recolor effect that darkens the image using the page\'s seventh
+      -- available color from its color scheme.
+    | RNDARK8
+      -- ^ @DARK8@
+      -- A recolor effect that darkens the image using the page\'s eighth
+      -- available color from its color scheme.
+    | RNDARK9
+      -- ^ @DARK9@
+      -- A recolor effect that darkens the image using the page\'s ninth
+      -- available color from its color scheme.
+    | RNDARK10
+      -- ^ @DARK10@
+      -- A recolor effect that darkens the image using the page\'s tenth
+      -- available color from its color scheme.
+    | RNGrayscale
+      -- ^ @GRAYSCALE@
+      -- A recolor effect that recolors the image to grayscale.
+    | RNNegative
+      -- ^ @NEGATIVE@
+      -- A recolor effect that recolors the image to negative grayscale.
+    | RNSepia
+      -- ^ @SEPIA@
+      -- A recolor effect that recolors the image using the sepia color.
+    | RNCustom
+      -- ^ @CUSTOM@
+      -- Custom recolor effect. Refer to \`recolor_stops\` for the concrete
+      -- gradient.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable RecolorName
+
+instance FromHttpApiData RecolorName where
+    parseQueryParam = \case
+        "NONE" -> Right RNNone
+        "LIGHT1" -> Right RNLIGHT1
+        "LIGHT2" -> Right RNLIGHT2
+        "LIGHT3" -> Right RNLIGHT3
+        "LIGHT4" -> Right RNLIGHT4
+        "LIGHT5" -> Right RNLIGHT5
+        "LIGHT6" -> Right RNLIGHT6
+        "LIGHT7" -> Right RNLIGHT7
+        "LIGHT8" -> Right RNLIGHT8
+        "LIGHT9" -> Right RNLIGHT9
+        "LIGHT10" -> Right RNLIGHT10
+        "DARK1" -> Right RNDARK1
+        "DARK2" -> Right RNDARK2
+        "DARK3" -> Right RNDARK3
+        "DARK4" -> Right RNDARK4
+        "DARK5" -> Right RNDARK5
+        "DARK6" -> Right RNDARK6
+        "DARK7" -> Right RNDARK7
+        "DARK8" -> Right RNDARK8
+        "DARK9" -> Right RNDARK9
+        "DARK10" -> Right RNDARK10
+        "GRAYSCALE" -> Right RNGrayscale
+        "NEGATIVE" -> Right RNNegative
+        "SEPIA" -> Right RNSepia
+        "CUSTOM" -> Right RNCustom
+        x -> Left ("Unable to parse RecolorName from: " <> x)
+
+instance ToHttpApiData RecolorName where
+    toQueryParam = \case
+        RNNone -> "NONE"
+        RNLIGHT1 -> "LIGHT1"
+        RNLIGHT2 -> "LIGHT2"
+        RNLIGHT3 -> "LIGHT3"
+        RNLIGHT4 -> "LIGHT4"
+        RNLIGHT5 -> "LIGHT5"
+        RNLIGHT6 -> "LIGHT6"
+        RNLIGHT7 -> "LIGHT7"
+        RNLIGHT8 -> "LIGHT8"
+        RNLIGHT9 -> "LIGHT9"
+        RNLIGHT10 -> "LIGHT10"
+        RNDARK1 -> "DARK1"
+        RNDARK2 -> "DARK2"
+        RNDARK3 -> "DARK3"
+        RNDARK4 -> "DARK4"
+        RNDARK5 -> "DARK5"
+        RNDARK6 -> "DARK6"
+        RNDARK7 -> "DARK7"
+        RNDARK8 -> "DARK8"
+        RNDARK9 -> "DARK9"
+        RNDARK10 -> "DARK10"
+        RNGrayscale -> "GRAYSCALE"
+        RNNegative -> "NEGATIVE"
+        RNSepia -> "SEPIA"
+        RNCustom -> "CUSTOM"
+
+instance FromJSON RecolorName where
+    parseJSON = parseJSONText "RecolorName"
+
+instance ToJSON RecolorName where
+    toJSON = toJSONText
+
 -- | The kinds of bullet glyphs to be used. Defaults to the
 -- \`BULLET_DISC_CIRCLE_SQUARE\` preset.
 data CreateParagraphBulletsRequestBulletPreset
@@ -208,7 +426,7 @@ data CreateParagraphBulletsRequestBulletPreset
       -- for the first 3 list nesting levels.
     | BulletStarCircleSquare
       -- ^ @BULLET_STAR_CIRCLE_SQUARE@
-      -- A bulleted list with a \`STAR\`, \`CIRCLE\` and \`DISC\` bullet glyph
+      -- A bulleted list with a \`STAR\`, \`CIRCLE\` and \`SQUARE\` bullet glyph
       -- for the first 3 list nesting levels.
     | BulletARROW3DCircleSquare
       -- ^ @BULLET_ARROW3D_CIRCLE_SQUARE@
@@ -2029,11 +2247,62 @@ instance FromJSON ShapeShapeType where
 instance ToJSON ShapeShapeType where
     toJSON = toJSONText
 
--- | The outline property state. Updating the the outline on a page element
--- will implicitly update this field to\`RENDERED\`, unless another value
--- is specified in the same request. To have no outline on a page element,
--- set this field to \`NOT_RENDERED\`. In this case, any other outline
--- fields set in the same request will be ignored.
+-- | The alignment of the content in the shape. If unspecified, the alignment
+-- is inherited from a parent placeholder if it exists. If the shape has no
+-- parent, the default alignment matches the alignment for new shapes
+-- created in the Slides editor.
+data ShapePropertiesContentAlignment
+    = SPCAContentAlignmentUnspecified
+      -- ^ @CONTENT_ALIGNMENT_UNSPECIFIED@
+      -- An unspecified content alignment. The content alignment is inherited
+      -- from the parent if it exists.
+    | SPCAContentAlignmentUnsupported
+      -- ^ @CONTENT_ALIGNMENT_UNSUPPORTED@
+      -- An unsupported content alignment.
+    | SPCATop
+      -- ^ @TOP@
+      -- An alignment that aligns the content to the top of the content holder.
+      -- Corresponds to ECMA-376 ST_TextAnchoringType \'t\'.
+    | SPCAMiddle
+      -- ^ @MIDDLE@
+      -- An alignment that aligns the content to the middle of the content
+      -- holder. Corresponds to ECMA-376 ST_TextAnchoringType \'ctr\'.
+    | SPCABottom
+      -- ^ @BOTTOM@
+      -- An alignment that aligns the content to the bottom of the content
+      -- holder. Corresponds to ECMA-376 ST_TextAnchoringType \'b\'.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ShapePropertiesContentAlignment
+
+instance FromHttpApiData ShapePropertiesContentAlignment where
+    parseQueryParam = \case
+        "CONTENT_ALIGNMENT_UNSPECIFIED" -> Right SPCAContentAlignmentUnspecified
+        "CONTENT_ALIGNMENT_UNSUPPORTED" -> Right SPCAContentAlignmentUnsupported
+        "TOP" -> Right SPCATop
+        "MIDDLE" -> Right SPCAMiddle
+        "BOTTOM" -> Right SPCABottom
+        x -> Left ("Unable to parse ShapePropertiesContentAlignment from: " <> x)
+
+instance ToHttpApiData ShapePropertiesContentAlignment where
+    toQueryParam = \case
+        SPCAContentAlignmentUnspecified -> "CONTENT_ALIGNMENT_UNSPECIFIED"
+        SPCAContentAlignmentUnsupported -> "CONTENT_ALIGNMENT_UNSUPPORTED"
+        SPCATop -> "TOP"
+        SPCAMiddle -> "MIDDLE"
+        SPCABottom -> "BOTTOM"
+
+instance FromJSON ShapePropertiesContentAlignment where
+    parseJSON = parseJSONText "ShapePropertiesContentAlignment"
+
+instance ToJSON ShapePropertiesContentAlignment where
+    toJSON = toJSONText
+
+-- | The outline property state. Updating the outline on a page element will
+-- implicitly update this field to \`RENDERED\`, unless another value is
+-- specified in the same request. To have no outline on a page element, set
+-- this field to \`NOT_RENDERED\`. In this case, any other outline fields
+-- set in the same request will be ignored.
 data OutlinePropertyState
     = OPSRendered
       -- ^ @RENDERED@
@@ -2249,9 +2518,9 @@ instance FromJSON CreateSheetsChartRequestLinkingMode where
 instance ToJSON CreateSheetsChartRequestLinkingMode where
     toJSON = toJSONText
 
--- | The background fill property state. Updating the the fill on a shape
--- will implicitly update this field to \`RENDERED\`, unless another value
--- is specified in the same request. To have no fill on a shape, set this
+-- | The background fill property state. Updating the fill on a shape will
+-- implicitly update this field to \`RENDERED\`, unless another value is
+-- specified in the same request. To have no fill on a shape, set this
 -- field to \`NOT_RENDERED\`. In this case, any other fill fields set in
 -- the same request will be ignored.
 data ShapeBackgRoundFillPropertyState
@@ -2462,7 +2731,7 @@ instance FromJSON LinePropertiesDashStyle where
 instance ToJSON LinePropertiesDashStyle where
     toJSON = toJSONText
 
--- | The text alignment for this paragraph. This property is read-only.
+-- | The text alignment for this paragraph.
 data ParagraphStyleAlignment
     = AlignmentUnspecified
       -- ^ @ALIGNMENT_UNSPECIFIED@
@@ -2506,6 +2775,72 @@ instance FromJSON ParagraphStyleAlignment where
     parseJSON = parseJSONText "ParagraphStyleAlignment"
 
 instance ToJSON ParagraphStyleAlignment where
+    toJSON = toJSONText
+
+-- | The border position in the table range the updates should apply to. If a
+-- border position is not specified, the updates will apply to all borders
+-- in the table range.
+data UpdateTableBOrderPropertiesRequestBOrderPosition
+    = UTBOPRBOPAll
+      -- ^ @ALL@
+      -- All borders in the range.
+    | UTBOPRBOPBottom
+      -- ^ @BOTTOM@
+      -- Borders at the bottom of the range.
+    | UTBOPRBOPInner
+      -- ^ @INNER@
+      -- Borders on the inside of the range.
+    | UTBOPRBOPInnerHorizontal
+      -- ^ @INNER_HORIZONTAL@
+      -- Horizontal borders on the inside of the range.
+    | UTBOPRBOPInnerVertical
+      -- ^ @INNER_VERTICAL@
+      -- Vertical borders on the inside of the range.
+    | UTBOPRBOPLeft'
+      -- ^ @LEFT@
+      -- Borders at the left of the range.
+    | UTBOPRBOPOuter
+      -- ^ @OUTER@
+      -- Borders along the outside of the range.
+    | UTBOPRBOPRight'
+      -- ^ @RIGHT@
+      -- Borders at the right of the range.
+    | UTBOPRBOPTop
+      -- ^ @TOP@
+      -- Borders at the top of the range.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable UpdateTableBOrderPropertiesRequestBOrderPosition
+
+instance FromHttpApiData UpdateTableBOrderPropertiesRequestBOrderPosition where
+    parseQueryParam = \case
+        "ALL" -> Right UTBOPRBOPAll
+        "BOTTOM" -> Right UTBOPRBOPBottom
+        "INNER" -> Right UTBOPRBOPInner
+        "INNER_HORIZONTAL" -> Right UTBOPRBOPInnerHorizontal
+        "INNER_VERTICAL" -> Right UTBOPRBOPInnerVertical
+        "LEFT" -> Right UTBOPRBOPLeft'
+        "OUTER" -> Right UTBOPRBOPOuter
+        "RIGHT" -> Right UTBOPRBOPRight'
+        "TOP" -> Right UTBOPRBOPTop
+        x -> Left ("Unable to parse UpdateTableBOrderPropertiesRequestBOrderPosition from: " <> x)
+
+instance ToHttpApiData UpdateTableBOrderPropertiesRequestBOrderPosition where
+    toQueryParam = \case
+        UTBOPRBOPAll -> "ALL"
+        UTBOPRBOPBottom -> "BOTTOM"
+        UTBOPRBOPInner -> "INNER"
+        UTBOPRBOPInnerHorizontal -> "INNER_HORIZONTAL"
+        UTBOPRBOPInnerVertical -> "INNER_VERTICAL"
+        UTBOPRBOPLeft' -> "LEFT"
+        UTBOPRBOPOuter -> "OUTER"
+        UTBOPRBOPRight' -> "RIGHT"
+        UTBOPRBOPTop -> "TOP"
+
+instance FromJSON UpdateTableBOrderPropertiesRequestBOrderPosition where
+    parseJSON = parseJSONText "UpdateTableBOrderPropertiesRequestBOrderPosition"
+
+instance ToJSON UpdateTableBOrderPropertiesRequestBOrderPosition where
     toJSON = toJSONText
 
 -- | The alignment point of the shadow, that sets the origin for translate,
@@ -2576,6 +2911,38 @@ instance FromJSON ShadowAlignment where
     parseJSON = parseJSONText "ShadowAlignment"
 
 instance ToJSON ShadowAlignment where
+    toJSON = toJSONText
+
+-- | The mode with which the chart is linked to the source spreadsheet. When
+-- not specified, the chart will be an image that is not linked.
+data ReplaceAllShapesWithSheetsChartRequestLinkingMode
+    = RASWSCRLMNotLinkedImage
+      -- ^ @NOT_LINKED_IMAGE@
+      -- The chart is not associated with the source spreadsheet and cannot be
+      -- updated. A chart that is not linked will be inserted as an image.
+    | RASWSCRLMLinked
+      -- ^ @LINKED@
+      -- Linking the chart allows it to be updated, and other collaborators will
+      -- see a link to the spreadsheet.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ReplaceAllShapesWithSheetsChartRequestLinkingMode
+
+instance FromHttpApiData ReplaceAllShapesWithSheetsChartRequestLinkingMode where
+    parseQueryParam = \case
+        "NOT_LINKED_IMAGE" -> Right RASWSCRLMNotLinkedImage
+        "LINKED" -> Right RASWSCRLMLinked
+        x -> Left ("Unable to parse ReplaceAllShapesWithSheetsChartRequestLinkingMode from: " <> x)
+
+instance ToHttpApiData ReplaceAllShapesWithSheetsChartRequestLinkingMode where
+    toQueryParam = \case
+        RASWSCRLMNotLinkedImage -> "NOT_LINKED_IMAGE"
+        RASWSCRLMLinked -> "LINKED"
+
+instance FromJSON ReplaceAllShapesWithSheetsChartRequestLinkingMode where
+    parseJSON = parseJSONText "ReplaceAllShapesWithSheetsChartRequestLinkingMode"
+
+instance ToJSON ReplaceAllShapesWithSheetsChartRequestLinkingMode where
     toJSON = toJSONText
 
 -- | The style of the arrow at the end of the line.
@@ -2654,11 +3021,11 @@ instance FromJSON LinePropertiesEndArrow where
 instance ToJSON LinePropertiesEndArrow where
     toJSON = toJSONText
 
--- | The background fill property state. Updating the the fill on a table
--- cell will implicitly update this field to \`RENDERED\`, unless another
--- value is specified in the same request. To have no fill on a table cell,
--- set this field to \`NOT_RENDERED\`. In this case, any other fill fields
--- set in the same request will be ignored.
+-- | The background fill property state. Updating the fill on a table cell
+-- will implicitly update this field to \`RENDERED\`, unless another value
+-- is specified in the same request. To have no fill on a table cell, set
+-- this field to \`NOT_RENDERED\`. In this case, any other fill fields set
+-- in the same request will be ignored.
 data TableCellBackgRoundFillPropertyState
     = TCBRFPSRendered
       -- ^ @RENDERED@
@@ -2865,6 +3232,65 @@ instance FromJSON AutoTextType where
 instance ToJSON AutoTextType where
     toJSON = toJSONText
 
+-- | The dash style of the border.
+data TableBOrderPropertiesDashStyle
+    = TBOPDSDashStyleUnspecified
+      -- ^ @DASH_STYLE_UNSPECIFIED@
+      -- Unspecified dash style.
+    | TBOPDSSolid
+      -- ^ @SOLID@
+      -- Solid line. Corresponds to ECMA-376 ST_PresetLineDashVal value
+      -- \'solid\'. This is the default dash style.
+    | TBOPDSDot
+      -- ^ @DOT@
+      -- Dotted line. Corresponds to ECMA-376 ST_PresetLineDashVal value \'dot\'.
+    | TBOPDSDash
+      -- ^ @DASH@
+      -- Dashed line. Corresponds to ECMA-376 ST_PresetLineDashVal value
+      -- \'dash\'.
+    | TBOPDSDashDot
+      -- ^ @DASH_DOT@
+      -- Alternating dashes and dots. Corresponds to ECMA-376
+      -- ST_PresetLineDashVal value \'dashDot\'.
+    | TBOPDSLongDash
+      -- ^ @LONG_DASH@
+      -- Line with large dashes. Corresponds to ECMA-376 ST_PresetLineDashVal
+      -- value \'lgDash\'.
+    | TBOPDSLongDashDot
+      -- ^ @LONG_DASH_DOT@
+      -- Alternating large dashes and dots. Corresponds to ECMA-376
+      -- ST_PresetLineDashVal value \'lgDashDot\'.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable TableBOrderPropertiesDashStyle
+
+instance FromHttpApiData TableBOrderPropertiesDashStyle where
+    parseQueryParam = \case
+        "DASH_STYLE_UNSPECIFIED" -> Right TBOPDSDashStyleUnspecified
+        "SOLID" -> Right TBOPDSSolid
+        "DOT" -> Right TBOPDSDot
+        "DASH" -> Right TBOPDSDash
+        "DASH_DOT" -> Right TBOPDSDashDot
+        "LONG_DASH" -> Right TBOPDSLongDash
+        "LONG_DASH_DOT" -> Right TBOPDSLongDashDot
+        x -> Left ("Unable to parse TableBOrderPropertiesDashStyle from: " <> x)
+
+instance ToHttpApiData TableBOrderPropertiesDashStyle where
+    toQueryParam = \case
+        TBOPDSDashStyleUnspecified -> "DASH_STYLE_UNSPECIFIED"
+        TBOPDSSolid -> "SOLID"
+        TBOPDSDot -> "DOT"
+        TBOPDSDash -> "DASH"
+        TBOPDSDashDot -> "DASH_DOT"
+        TBOPDSLongDash -> "LONG_DASH"
+        TBOPDSLongDashDot -> "LONG_DASH_DOT"
+
+instance FromJSON TableBOrderPropertiesDashStyle where
+    parseJSON = parseJSONText "TableBOrderPropertiesDashStyle"
+
+instance ToJSON TableBOrderPropertiesDashStyle where
+    toJSON = toJSONText
+
 -- | The type of the line.
 data LineLineType
     = LLTTypeUnspecified
@@ -2954,6 +3380,12 @@ data PagePageType
     | Layout
       -- ^ @LAYOUT@
       -- A layout page.
+    | Notes
+      -- ^ @NOTES@
+      -- A notes page.
+    | NotesMaster
+      -- ^ @NOTES_MASTER@
+      -- A notes master page.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable PagePageType
@@ -2963,6 +3395,8 @@ instance FromHttpApiData PagePageType where
         "SLIDE" -> Right Slide
         "MASTER" -> Right Master
         "LAYOUT" -> Right Layout
+        "NOTES" -> Right Notes
+        "NOTES_MASTER" -> Right NotesMaster
         x -> Left ("Unable to parse PagePageType from: " <> x)
 
 instance ToHttpApiData PagePageType where
@@ -2970,6 +3404,8 @@ instance ToHttpApiData PagePageType where
         Slide -> "SLIDE"
         Master -> "MASTER"
         Layout -> "LAYOUT"
+        Notes -> "NOTES"
+        NotesMaster -> "NOTES_MASTER"
 
 instance FromJSON PagePageType where
     parseJSON = parseJSONText "PagePageType"
@@ -2977,7 +3413,7 @@ instance FromJSON PagePageType where
 instance ToJSON PagePageType where
     toJSON = toJSONText
 
--- | The spacing mode for the paragraph. This property is read-only.
+-- | The spacing mode for the paragraph.
 data ParagraphStyleSpacingMode
     = SpacingModeUnspecified
       -- ^ @SPACING_MODE_UNSPECIFIED@
@@ -3191,11 +3627,11 @@ instance FromJSON LinePropertiesStartArrow where
 instance ToJSON LinePropertiesStartArrow where
     toJSON = toJSONText
 
--- | The shadow property state. Updating the the shadow on a page element
--- will implicitly update this field to \`RENDERED\`, unless another value
--- is specified in the same request. To have no shadow on a page element,
--- set this field to \`NOT_RENDERED\`. In this case, any other shadow
--- fields set in the same request will be ignored.
+-- | The shadow property state. Updating the shadow on a page element will
+-- implicitly update this field to \`RENDERED\`, unless another value is
+-- specified in the same request. To have no shadow on a page element, set
+-- this field to \`NOT_RENDERED\`. In this case, any other shadow fields
+-- set in the same request will be ignored.
 data ShadowPropertyState
     = SPSRendered
       -- ^ @RENDERED@

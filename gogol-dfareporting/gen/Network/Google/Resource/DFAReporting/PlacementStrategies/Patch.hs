@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.PlacementStrategies.Patch
     , pspProFileId
     , pspPayload
     , pspId
+    , pspFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementStrategies.patch@ method which the
 -- 'PlacementStrategiesPatch' request conforms to.
 type PlacementStrategiesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementStrategies" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] PlacementStrategy :>
-                     Patch '[JSON] PlacementStrategy
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] PlacementStrategy :>
+                       Patch '[JSON] PlacementStrategy
 
 -- | Updates an existing placement strategy. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type PlacementStrategiesPatchResource =
 -- /See:/ 'placementStrategiesPatch' smart constructor.
 data PlacementStrategiesPatch = PlacementStrategiesPatch'
     { _pspProFileId :: !(Textual Int64)
-    , _pspPayload   :: !PlacementStrategy
-    , _pspId        :: !(Textual Int64)
+    , _pspPayload :: !PlacementStrategy
+    , _pspId :: !(Textual Int64)
+    , _pspFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategiesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data PlacementStrategiesPatch = PlacementStrategiesPatch'
 -- * 'pspPayload'
 --
 -- * 'pspId'
+--
+-- * 'pspFields'
 placementStrategiesPatch
     :: Int64 -- ^ 'pspProFileId'
     -> PlacementStrategy -- ^ 'pspPayload'
     -> Int64 -- ^ 'pspId'
     -> PlacementStrategiesPatch
-placementStrategiesPatch pPspProFileId_ pPspPayload_ pPspId_ =
+placementStrategiesPatch pPspProFileId_ pPspPayload_ pPspId_ = 
     PlacementStrategiesPatch'
     { _pspProFileId = _Coerce # pPspProFileId_
     , _pspPayload = pPspPayload_
     , _pspId = _Coerce # pPspId_
+    , _pspFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ pspId :: Lens' PlacementStrategiesPatch Int64
 pspId
   = lens _pspId (\ s a -> s{_pspId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pspFields :: Lens' PlacementStrategiesPatch (Maybe Text)
+pspFields
+  = lens _pspFields (\ s a -> s{_pspFields = a})
+
 instance GoogleRequest PlacementStrategiesPatch where
         type Rs PlacementStrategiesPatch = PlacementStrategy
         type Scopes PlacementStrategiesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementStrategiesPatch'{..}
-          = go _pspProFileId (Just _pspId) (Just AltJSON)
+          = go _pspProFileId (Just _pspId) _pspFields
+              (Just AltJSON)
               _pspPayload
               dFAReportingService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.BigQuery.DataSets.Update
     , dsuPayload
     , dsuDataSetId
     , dsuProjectId
+    , dsuFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.update@ method which the
 -- 'DataSetsUpdate' request conforms to.
@@ -52,8 +53,9 @@ type DataSetsUpdateResource =
            Capture "projectId" Text :>
              "datasets" :>
                Capture "datasetId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DataSet :> Put '[JSON] DataSet
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DataSet :> Put '[JSON] DataSet
 
 -- | Updates information in an existing dataset. The update method replaces
 -- the entire dataset resource, whereas the patch method only replaces
@@ -61,9 +63,10 @@ type DataSetsUpdateResource =
 --
 -- /See:/ 'dataSetsUpdate' smart constructor.
 data DataSetsUpdate = DataSetsUpdate'
-    { _dsuPayload   :: !DataSet
+    { _dsuPayload :: !DataSet
     , _dsuDataSetId :: !Text
     , _dsuProjectId :: !Text
+    , _dsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsUpdate' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data DataSetsUpdate = DataSetsUpdate'
 -- * 'dsuDataSetId'
 --
 -- * 'dsuProjectId'
+--
+-- * 'dsuFields'
 dataSetsUpdate
     :: DataSet -- ^ 'dsuPayload'
     -> Text -- ^ 'dsuDataSetId'
     -> Text -- ^ 'dsuProjectId'
     -> DataSetsUpdate
-dataSetsUpdate pDsuPayload_ pDsuDataSetId_ pDsuProjectId_ =
+dataSetsUpdate pDsuPayload_ pDsuDataSetId_ pDsuProjectId_ = 
     DataSetsUpdate'
     { _dsuPayload = pDsuPayload_
     , _dsuDataSetId = pDsuDataSetId_
     , _dsuProjectId = pDsuProjectId_
+    , _dsuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -102,13 +108,19 @@ dsuProjectId :: Lens' DataSetsUpdate Text
 dsuProjectId
   = lens _dsuProjectId (\ s a -> s{_dsuProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsuFields :: Lens' DataSetsUpdate (Maybe Text)
+dsuFields
+  = lens _dsuFields (\ s a -> s{_dsuFields = a})
+
 instance GoogleRequest DataSetsUpdate where
         type Rs DataSetsUpdate = DataSet
         type Scopes DataSetsUpdate =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DataSetsUpdate'{..}
-          = go _dsuProjectId _dsuDataSetId (Just AltJSON)
+          = go _dsuProjectId _dsuDataSetId _dsuFields
+              (Just AltJSON)
               _dsuPayload
               bigQueryService
           where go

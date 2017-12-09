@@ -43,11 +43,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.BatchUpdate
     , svbuUploadType
     , svbuPayload
     , svbuBearerToken
+    , svbuFields
     , svbuCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.batchUpdate@ method which the
 -- 'SpreadsheetsValuesBatchUpdate' request conforms to.
@@ -63,9 +64,10 @@ type SpreadsheetsValuesBatchUpdateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] BatchUpdateValuesRequest :>
-                               Post '[JSON] BatchUpdateValuesResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] BatchUpdateValuesRequest :>
+                                 Post '[JSON] BatchUpdateValuesResponse
 
 -- | Sets values in one or more ranges of a spreadsheet. The caller must
 -- specify the spreadsheet ID, a valueInputOption, and one or more
@@ -73,15 +75,16 @@ type SpreadsheetsValuesBatchUpdateResource =
 --
 -- /See:/ 'spreadsheetsValuesBatchUpdate' smart constructor.
 data SpreadsheetsValuesBatchUpdate = SpreadsheetsValuesBatchUpdate'
-    { _svbuXgafv          :: !(Maybe Xgafv)
+    { _svbuXgafv :: !(Maybe Xgafv)
     , _svbuUploadProtocol :: !(Maybe Text)
-    , _svbuPp             :: !Bool
-    , _svbuAccessToken    :: !(Maybe Text)
-    , _svbuSpreadsheetId  :: !Text
-    , _svbuUploadType     :: !(Maybe Text)
-    , _svbuPayload        :: !BatchUpdateValuesRequest
-    , _svbuBearerToken    :: !(Maybe Text)
-    , _svbuCallback       :: !(Maybe Text)
+    , _svbuPp :: !Bool
+    , _svbuAccessToken :: !(Maybe Text)
+    , _svbuSpreadsheetId :: !Text
+    , _svbuUploadType :: !(Maybe Text)
+    , _svbuPayload :: !BatchUpdateValuesRequest
+    , _svbuBearerToken :: !(Maybe Text)
+    , _svbuFields :: !(Maybe Text)
+    , _svbuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesBatchUpdate' with the minimum fields required to make a request.
@@ -104,12 +107,14 @@ data SpreadsheetsValuesBatchUpdate = SpreadsheetsValuesBatchUpdate'
 --
 -- * 'svbuBearerToken'
 --
+-- * 'svbuFields'
+--
 -- * 'svbuCallback'
 spreadsheetsValuesBatchUpdate
     :: Text -- ^ 'svbuSpreadsheetId'
     -> BatchUpdateValuesRequest -- ^ 'svbuPayload'
     -> SpreadsheetsValuesBatchUpdate
-spreadsheetsValuesBatchUpdate pSvbuSpreadsheetId_ pSvbuPayload_ =
+spreadsheetsValuesBatchUpdate pSvbuSpreadsheetId_ pSvbuPayload_ = 
     SpreadsheetsValuesBatchUpdate'
     { _svbuXgafv = Nothing
     , _svbuUploadProtocol = Nothing
@@ -119,6 +124,7 @@ spreadsheetsValuesBatchUpdate pSvbuSpreadsheetId_ pSvbuPayload_ =
     , _svbuUploadType = Nothing
     , _svbuPayload = pSvbuPayload_
     , _svbuBearerToken = Nothing
+    , _svbuFields = Nothing
     , _svbuCallback = Nothing
     }
 
@@ -166,6 +172,11 @@ svbuBearerToken
   = lens _svbuBearerToken
       (\ s a -> s{_svbuBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svbuFields :: Lens' SpreadsheetsValuesBatchUpdate (Maybe Text)
+svbuFields
+  = lens _svbuFields (\ s a -> s{_svbuFields = a})
+
 -- | JSONP
 svbuCallback :: Lens' SpreadsheetsValuesBatchUpdate (Maybe Text)
 svbuCallback
@@ -177,6 +188,7 @@ instance GoogleRequest SpreadsheetsValuesBatchUpdate
              BatchUpdateValuesResponse
         type Scopes SpreadsheetsValuesBatchUpdate =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsValuesBatchUpdate'{..}
           = go _svbuSpreadsheetId _svbuXgafv
@@ -186,6 +198,7 @@ instance GoogleRequest SpreadsheetsValuesBatchUpdate
               _svbuUploadType
               _svbuBearerToken
               _svbuCallback
+              _svbuFields
               (Just AltJSON)
               _svbuPayload
               sheetsService

@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Listings.Get
     , elgPackageName
     , elgLanguage
     , elgEditId
+    , elgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.listings.get@ method which the
 -- 'EditsListingsGet' request conforms to.
@@ -52,15 +53,17 @@ type EditsListingsGetResource =
                Capture "editId" Text :>
                  "listings" :>
                    Capture "language" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Listing
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Listing
 
 -- | Fetches information about a localized store listing.
 --
 -- /See:/ 'editsListingsGet' smart constructor.
 data EditsListingsGet = EditsListingsGet'
     { _elgPackageName :: !Text
-    , _elgLanguage    :: !Text
-    , _elgEditId      :: !Text
+    , _elgLanguage :: !Text
+    , _elgEditId :: !Text
+    , _elgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsListingsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data EditsListingsGet = EditsListingsGet'
 -- * 'elgLanguage'
 --
 -- * 'elgEditId'
+--
+-- * 'elgFields'
 editsListingsGet
     :: Text -- ^ 'elgPackageName'
     -> Text -- ^ 'elgLanguage'
     -> Text -- ^ 'elgEditId'
     -> EditsListingsGet
-editsListingsGet pElgPackageName_ pElgLanguage_ pElgEditId_ =
+editsListingsGet pElgPackageName_ pElgLanguage_ pElgEditId_ = 
     EditsListingsGet'
     { _elgPackageName = pElgPackageName_
     , _elgLanguage = pElgLanguage_
     , _elgEditId = pElgEditId_
+    , _elgFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -102,12 +108,18 @@ elgEditId :: Lens' EditsListingsGet Text
 elgEditId
   = lens _elgEditId (\ s a -> s{_elgEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+elgFields :: Lens' EditsListingsGet (Maybe Text)
+elgFields
+  = lens _elgFields (\ s a -> s{_elgFields = a})
+
 instance GoogleRequest EditsListingsGet where
         type Rs EditsListingsGet = Listing
         type Scopes EditsListingsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsListingsGet'{..}
           = go _elgPackageName _elgEditId _elgLanguage
+              _elgFields
               (Just AltJSON)
               androidPublisherService
           where go

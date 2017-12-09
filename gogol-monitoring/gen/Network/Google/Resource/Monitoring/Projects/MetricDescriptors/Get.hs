@@ -41,11 +41,12 @@ module Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Get
     , pmdgUploadType
     , pmdgBearerToken
     , pmdgName
+    , pmdgFields
     , pmdgCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.metricDescriptors.get@ method which the
 -- 'ProjectsMetricDescriptorsGet' request conforms to.
@@ -59,22 +60,24 @@ type ProjectsMetricDescriptorsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] MetricDescriptor
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] MetricDescriptor
 
 -- | Gets a single metric descriptor. This method does not require a
 -- Stackdriver account.
 --
 -- /See:/ 'projectsMetricDescriptorsGet' smart constructor.
 data ProjectsMetricDescriptorsGet = ProjectsMetricDescriptorsGet'
-    { _pmdgXgafv          :: !(Maybe Xgafv)
+    { _pmdgXgafv :: !(Maybe Xgafv)
     , _pmdgUploadProtocol :: !(Maybe Text)
-    , _pmdgPp             :: !Bool
-    , _pmdgAccessToken    :: !(Maybe Text)
-    , _pmdgUploadType     :: !(Maybe Text)
-    , _pmdgBearerToken    :: !(Maybe Text)
-    , _pmdgName           :: !Text
-    , _pmdgCallback       :: !(Maybe Text)
+    , _pmdgPp :: !Bool
+    , _pmdgAccessToken :: !(Maybe Text)
+    , _pmdgUploadType :: !(Maybe Text)
+    , _pmdgBearerToken :: !(Maybe Text)
+    , _pmdgName :: !Text
+    , _pmdgFields :: !(Maybe Text)
+    , _pmdgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricDescriptorsGet' with the minimum fields required to make a request.
@@ -95,11 +98,13 @@ data ProjectsMetricDescriptorsGet = ProjectsMetricDescriptorsGet'
 --
 -- * 'pmdgName'
 --
+-- * 'pmdgFields'
+--
 -- * 'pmdgCallback'
 projectsMetricDescriptorsGet
     :: Text -- ^ 'pmdgName'
     -> ProjectsMetricDescriptorsGet
-projectsMetricDescriptorsGet pPmdgName_ =
+projectsMetricDescriptorsGet pPmdgName_ = 
     ProjectsMetricDescriptorsGet'
     { _pmdgXgafv = Nothing
     , _pmdgUploadProtocol = Nothing
@@ -108,6 +113,7 @@ projectsMetricDescriptorsGet pPmdgName_ =
     , _pmdgUploadType = Nothing
     , _pmdgBearerToken = Nothing
     , _pmdgName = pPmdgName_
+    , _pmdgFields = Nothing
     , _pmdgCallback = Nothing
     }
 
@@ -151,6 +157,11 @@ pmdgBearerToken
 pmdgName :: Lens' ProjectsMetricDescriptorsGet Text
 pmdgName = lens _pmdgName (\ s a -> s{_pmdgName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmdgFields :: Lens' ProjectsMetricDescriptorsGet (Maybe Text)
+pmdgFields
+  = lens _pmdgFields (\ s a -> s{_pmdgFields = a})
+
 -- | JSONP
 pmdgCallback :: Lens' ProjectsMetricDescriptorsGet (Maybe Text)
 pmdgCallback
@@ -172,6 +183,7 @@ instance GoogleRequest ProjectsMetricDescriptorsGet
               _pmdgUploadType
               _pmdgBearerToken
               _pmdgCallback
+              _pmdgFields
               (Just AltJSON)
               monitoringService
           where go

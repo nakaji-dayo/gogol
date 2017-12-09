@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.EventTags.Delete
     -- * Request Lenses
     , etdProFileId
     , etdId
+    , etdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.eventTags.delete@ method which the
 -- 'EventTagsDelete' request conforms to.
 type EventTagsDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "eventTags" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing event tag.
 --
 -- /See:/ 'eventTagsDelete' smart constructor.
 data EventTagsDelete = EventTagsDelete'
     { _etdProFileId :: !(Textual Int64)
-    , _etdId        :: !(Textual Int64)
+    , _etdId :: !(Textual Int64)
+    , _etdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTagsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data EventTagsDelete = EventTagsDelete'
 -- * 'etdProFileId'
 --
 -- * 'etdId'
+--
+-- * 'etdFields'
 eventTagsDelete
     :: Int64 -- ^ 'etdProFileId'
     -> Int64 -- ^ 'etdId'
     -> EventTagsDelete
-eventTagsDelete pEtdProFileId_ pEtdId_ =
+eventTagsDelete pEtdProFileId_ pEtdId_ = 
     EventTagsDelete'
     { _etdProFileId = _Coerce # pEtdProFileId_
     , _etdId = _Coerce # pEtdId_
+    , _etdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ etdId :: Lens' EventTagsDelete Int64
 etdId
   = lens _etdId (\ s a -> s{_etdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+etdFields :: Lens' EventTagsDelete (Maybe Text)
+etdFields
+  = lens _etdFields (\ s a -> s{_etdFields = a})
+
 instance GoogleRequest EventTagsDelete where
         type Rs EventTagsDelete = ()
         type Scopes EventTagsDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient EventTagsDelete'{..}
-          = go _etdProFileId _etdId (Just AltJSON)
+          = go _etdProFileId _etdId _etdFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

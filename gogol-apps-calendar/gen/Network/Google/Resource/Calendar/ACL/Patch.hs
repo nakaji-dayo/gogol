@@ -36,10 +36,12 @@ module Network.Google.Resource.Calendar.ACL.Patch
     , apCalendarId
     , apRuleId
     , apPayload
+    , apSendNotifications
+    , apFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.patch@ method which the
 -- 'ACLPatch' request conforms to.
@@ -50,16 +52,20 @@ type ACLPatchResource =
            Capture "calendarId" Text :>
              "acl" :>
                Capture "ruleId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ACLRule :> Patch '[JSON] ACLRule
+                 QueryParam "sendNotifications" Bool :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ACLRule :> Patch '[JSON] ACLRule
 
 -- | Updates an access control rule. This method supports patch semantics.
 --
 -- /See:/ 'aclPatch' smart constructor.
 data ACLPatch = ACLPatch'
     { _apCalendarId :: !Text
-    , _apRuleId     :: !Text
-    , _apPayload    :: !ACLRule
+    , _apRuleId :: !Text
+    , _apPayload :: !ACLRule
+    , _apSendNotifications :: !(Maybe Bool)
+    , _apFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLPatch' with the minimum fields required to make a request.
@@ -71,16 +77,22 @@ data ACLPatch = ACLPatch'
 -- * 'apRuleId'
 --
 -- * 'apPayload'
+--
+-- * 'apSendNotifications'
+--
+-- * 'apFields'
 aclPatch
     :: Text -- ^ 'apCalendarId'
     -> Text -- ^ 'apRuleId'
     -> ACLRule -- ^ 'apPayload'
     -> ACLPatch
-aclPatch pApCalendarId_ pApRuleId_ pApPayload_ =
+aclPatch pApCalendarId_ pApRuleId_ pApPayload_ = 
     ACLPatch'
     { _apCalendarId = pApCalendarId_
     , _apRuleId = pApRuleId_
     , _apPayload = pApPayload_
+    , _apSendNotifications = Nothing
+    , _apFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -99,12 +111,26 @@ apPayload :: Lens' ACLPatch ACLRule
 apPayload
   = lens _apPayload (\ s a -> s{_apPayload = a})
 
+-- | Whether to send notifications about the calendar sharing change. Note
+-- that there are no notifications on access removal. Optional. The default
+-- is True.
+apSendNotifications :: Lens' ACLPatch (Maybe Bool)
+apSendNotifications
+  = lens _apSendNotifications
+      (\ s a -> s{_apSendNotifications = a})
+
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' ACLPatch (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
+
 instance GoogleRequest ACLPatch where
         type Rs ACLPatch = ACLRule
         type Scopes ACLPatch =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient ACLPatch'{..}
-          = go _apCalendarId _apRuleId (Just AltJSON)
+          = go _apCalendarId _apRuleId _apSendNotifications
+              _apFields
+              (Just AltJSON)
               _apPayload
               appsCalendarService
           where go

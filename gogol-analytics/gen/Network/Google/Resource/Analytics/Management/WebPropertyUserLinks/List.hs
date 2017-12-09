@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyUserLinks.List
     , mwpullAccountId
     , mwpullStartIndex
     , mwpullMaxResults
+    , mwpullFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webpropertyUserLinks.list@ method which the
 -- 'ManagementWebPropertyUserLinksList' request conforms to.
@@ -55,17 +56,19 @@ type ManagementWebPropertyUserLinksListResource =
                    "entityUserLinks" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] EntityUserLinks
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] EntityUserLinks
 
 -- | Lists webProperty-user links for a given web property.
 --
 -- /See:/ 'managementWebPropertyUserLinksList' smart constructor.
 data ManagementWebPropertyUserLinksList = ManagementWebPropertyUserLinksList'
     { _mwpullWebPropertyId :: !Text
-    , _mwpullAccountId     :: !Text
-    , _mwpullStartIndex    :: !(Maybe (Textual Int32))
-    , _mwpullMaxResults    :: !(Maybe (Textual Int32))
+    , _mwpullAccountId :: !Text
+    , _mwpullStartIndex :: !(Maybe (Textual Int32))
+    , _mwpullMaxResults :: !(Maybe (Textual Int32))
+    , _mwpullFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyUserLinksList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data ManagementWebPropertyUserLinksList = ManagementWebPropertyUserLinksList'
 -- * 'mwpullStartIndex'
 --
 -- * 'mwpullMaxResults'
+--
+-- * 'mwpullFields'
 managementWebPropertyUserLinksList
     :: Text -- ^ 'mwpullWebPropertyId'
     -> Text -- ^ 'mwpullAccountId'
     -> ManagementWebPropertyUserLinksList
-managementWebPropertyUserLinksList pMwpullWebPropertyId_ pMwpullAccountId_ =
+managementWebPropertyUserLinksList pMwpullWebPropertyId_ pMwpullAccountId_ = 
     ManagementWebPropertyUserLinksList'
     { _mwpullWebPropertyId = pMwpullWebPropertyId_
     , _mwpullAccountId = pMwpullAccountId_
     , _mwpullStartIndex = Nothing
     , _mwpullMaxResults = Nothing
+    , _mwpullFields = Nothing
     }
 
 -- | Web Property ID for the webProperty-user links to retrieve. Can either
@@ -122,6 +128,11 @@ mwpullMaxResults
       (\ s a -> s{_mwpullMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mwpullFields :: Lens' ManagementWebPropertyUserLinksList (Maybe Text)
+mwpullFields
+  = lens _mwpullFields (\ s a -> s{_mwpullFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyUserLinksList where
         type Rs ManagementWebPropertyUserLinksList =
@@ -133,6 +144,7 @@ instance GoogleRequest
           = go _mwpullAccountId _mwpullWebPropertyId
               _mwpullStartIndex
               _mwpullMaxResults
+              _mwpullFields
               (Just AltJSON)
               analyticsService
           where go

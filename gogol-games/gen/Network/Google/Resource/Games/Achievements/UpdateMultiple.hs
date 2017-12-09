@@ -35,10 +35,11 @@ module Network.Google.Resource.Games.Achievements.UpdateMultiple
     -- * Request Lenses
     , aumConsistencyToken
     , aumPayload
+    , aumFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.updateMultiple@ method which the
 -- 'AchievementsUpdateMultiple' request conforms to.
@@ -48,16 +49,18 @@ type AchievementsUpdateMultipleResource =
          "achievements" :>
            "updateMultiple" :>
              QueryParam "consistencyToken" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AchievementUpdateMultipleRequest :>
-                   Post '[JSON] AchievementUpdateMultipleResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AchievementUpdateMultipleRequest :>
+                     Post '[JSON] AchievementUpdateMultipleResponse
 
 -- | Updates multiple achievements for the currently authenticated player.
 --
 -- /See:/ 'achievementsUpdateMultiple' smart constructor.
 data AchievementsUpdateMultiple = AchievementsUpdateMultiple'
     { _aumConsistencyToken :: !(Maybe (Textual Int64))
-    , _aumPayload          :: !AchievementUpdateMultipleRequest
+    , _aumPayload :: !AchievementUpdateMultipleRequest
+    , _aumFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsUpdateMultiple' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data AchievementsUpdateMultiple = AchievementsUpdateMultiple'
 -- * 'aumConsistencyToken'
 --
 -- * 'aumPayload'
+--
+-- * 'aumFields'
 achievementsUpdateMultiple
     :: AchievementUpdateMultipleRequest -- ^ 'aumPayload'
     -> AchievementsUpdateMultiple
-achievementsUpdateMultiple pAumPayload_ =
+achievementsUpdateMultiple pAumPayload_ = 
     AchievementsUpdateMultiple'
     { _aumConsistencyToken = Nothing
     , _aumPayload = pAumPayload_
+    , _aumFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -88,6 +94,11 @@ aumPayload :: Lens' AchievementsUpdateMultiple AchievementUpdateMultipleRequest
 aumPayload
   = lens _aumPayload (\ s a -> s{_aumPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aumFields :: Lens' AchievementsUpdateMultiple (Maybe Text)
+aumFields
+  = lens _aumFields (\ s a -> s{_aumFields = a})
+
 instance GoogleRequest AchievementsUpdateMultiple
          where
         type Rs AchievementsUpdateMultiple =
@@ -96,7 +107,8 @@ instance GoogleRequest AchievementsUpdateMultiple
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient AchievementsUpdateMultiple'{..}
-          = go _aumConsistencyToken (Just AltJSON) _aumPayload
+          = go _aumConsistencyToken _aumFields (Just AltJSON)
+              _aumPayload
               gamesService
           where go
                   = buildClient

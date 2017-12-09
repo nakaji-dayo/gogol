@@ -41,11 +41,12 @@ module Network.Google.Resource.ServiceManagement.Services.Get
     , sgUploadType
     , sgBearerToken
     , sgServiceName
+    , sgFields
     , sgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.get@ method which the
 -- 'ServicesGet' request conforms to.
@@ -60,22 +61,24 @@ type ServicesGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ManagedService
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ManagedService
 
 -- | Gets a managed service. Authentication is required unless the service is
 -- public.
 --
 -- /See:/ 'servicesGet' smart constructor.
 data ServicesGet = ServicesGet'
-    { _sgXgafv          :: !(Maybe Xgafv)
+    { _sgXgafv :: !(Maybe Xgafv)
     , _sgUploadProtocol :: !(Maybe Text)
-    , _sgPp             :: !Bool
-    , _sgAccessToken    :: !(Maybe Text)
-    , _sgUploadType     :: !(Maybe Text)
-    , _sgBearerToken    :: !(Maybe Text)
-    , _sgServiceName    :: !Text
-    , _sgCallback       :: !(Maybe Text)
+    , _sgPp :: !Bool
+    , _sgAccessToken :: !(Maybe Text)
+    , _sgUploadType :: !(Maybe Text)
+    , _sgBearerToken :: !(Maybe Text)
+    , _sgServiceName :: !Text
+    , _sgFields :: !(Maybe Text)
+    , _sgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesGet' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data ServicesGet = ServicesGet'
 --
 -- * 'sgServiceName'
 --
+-- * 'sgFields'
+--
 -- * 'sgCallback'
 servicesGet
     :: Text -- ^ 'sgServiceName'
     -> ServicesGet
-servicesGet pSgServiceName_ =
+servicesGet pSgServiceName_ = 
     ServicesGet'
     { _sgXgafv = Nothing
     , _sgUploadProtocol = Nothing
@@ -109,6 +114,7 @@ servicesGet pSgServiceName_ =
     , _sgUploadType = Nothing
     , _sgBearerToken = Nothing
     , _sgServiceName = pSgServiceName_
+    , _sgFields = Nothing
     , _sgCallback = Nothing
     }
 
@@ -150,6 +156,10 @@ sgServiceName
   = lens _sgServiceName
       (\ s a -> s{_sgServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' ServicesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 -- | JSONP
 sgCallback :: Lens' ServicesGet (Maybe Text)
 sgCallback
@@ -169,6 +179,7 @@ instance GoogleRequest ServicesGet where
               _sgUploadType
               _sgBearerToken
               _sgCallback
+              _sgFields
               (Just AltJSON)
               serviceManagementService
           where go

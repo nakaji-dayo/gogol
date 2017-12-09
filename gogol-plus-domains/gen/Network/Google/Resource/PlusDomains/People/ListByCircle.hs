@@ -36,10 +36,11 @@ module Network.Google.Resource.PlusDomains.People.ListByCircle
     , plbcCircleId
     , plbcPageToken
     , plbcMaxResults
+    , plbcFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.people.listByCircle@ method which the
 -- 'PeopleListByCircle' request conforms to.
@@ -51,15 +52,17 @@ type PeopleListByCircleResource =
              "people" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
 
 -- | List all of the people who are members of a circle.
 --
 -- /See:/ 'peopleListByCircle' smart constructor.
 data PeopleListByCircle = PeopleListByCircle'
-    { _plbcCircleId   :: !Text
-    , _plbcPageToken  :: !(Maybe Text)
+    { _plbcCircleId :: !Text
+    , _plbcPageToken :: !(Maybe Text)
     , _plbcMaxResults :: !(Textual Word32)
+    , _plbcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleListByCircle' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data PeopleListByCircle = PeopleListByCircle'
 -- * 'plbcPageToken'
 --
 -- * 'plbcMaxResults'
+--
+-- * 'plbcFields'
 peopleListByCircle
     :: Text -- ^ 'plbcCircleId'
     -> PeopleListByCircle
-peopleListByCircle pPlbcCircleId_ =
+peopleListByCircle pPlbcCircleId_ = 
     PeopleListByCircle'
     { _plbcCircleId = pPlbcCircleId_
     , _plbcPageToken = Nothing
     , _plbcMaxResults = 20
+    , _plbcFields = Nothing
     }
 
 -- | The ID of the circle to get the members of.
@@ -103,6 +109,11 @@ plbcMaxResults
       (\ s a -> s{_plbcMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plbcFields :: Lens' PeopleListByCircle (Maybe Text)
+plbcFields
+  = lens _plbcFields (\ s a -> s{_plbcFields = a})
+
 instance GoogleRequest PeopleListByCircle where
         type Rs PeopleListByCircle = PeopleFeed
         type Scopes PeopleListByCircle =
@@ -111,6 +122,7 @@ instance GoogleRequest PeopleListByCircle where
         requestClient PeopleListByCircle'{..}
           = go _plbcCircleId _plbcPageToken
               (Just _plbcMaxResults)
+              _plbcFields
               (Just AltJSON)
               plusDomainsService
           where go

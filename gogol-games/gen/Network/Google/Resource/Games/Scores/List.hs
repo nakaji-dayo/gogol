@@ -40,10 +40,11 @@ module Network.Google.Resource.Games.Scores.List
     , sllLanguage
     , sllPageToken
     , sllMaxResults
+    , sllFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.scores.list@ method which the
 -- 'ScoresList' request conforms to.
@@ -59,20 +60,22 @@ type ScoresListResource =
                      QueryParam "language" Text :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] LeaderboardScores
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] LeaderboardScores
 
 -- | Lists the scores in a leaderboard, starting from the top.
 --
 -- /See:/ 'scoresList' smart constructor.
 data ScoresList = ScoresList'
     { _sllConsistencyToken :: !(Maybe (Textual Int64))
-    , _sllCollection       :: !ScoresListCollection
-    , _sllTimeSpan         :: !ScoresListTimeSpan
-    , _sllLeaderboardId    :: !Text
-    , _sllLanguage         :: !(Maybe Text)
-    , _sllPageToken        :: !(Maybe Text)
-    , _sllMaxResults       :: !(Maybe (Textual Int32))
+    , _sllCollection :: !ScoresListCollection
+    , _sllTimeSpan :: !ScoresListTimeSpan
+    , _sllLeaderboardId :: !Text
+    , _sllLanguage :: !(Maybe Text)
+    , _sllPageToken :: !(Maybe Text)
+    , _sllMaxResults :: !(Maybe (Textual Int32))
+    , _sllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresList' with the minimum fields required to make a request.
@@ -92,12 +95,14 @@ data ScoresList = ScoresList'
 -- * 'sllPageToken'
 --
 -- * 'sllMaxResults'
+--
+-- * 'sllFields'
 scoresList
     :: ScoresListCollection -- ^ 'sllCollection'
     -> ScoresListTimeSpan -- ^ 'sllTimeSpan'
     -> Text -- ^ 'sllLeaderboardId'
     -> ScoresList
-scoresList pSllCollection_ pSllTimeSpan_ pSllLeaderboardId_ =
+scoresList pSllCollection_ pSllTimeSpan_ pSllLeaderboardId_ = 
     ScoresList'
     { _sllConsistencyToken = Nothing
     , _sllCollection = pSllCollection_
@@ -106,6 +111,7 @@ scoresList pSllCollection_ pSllTimeSpan_ pSllLeaderboardId_ =
     , _sllLanguage = Nothing
     , _sllPageToken = Nothing
     , _sllMaxResults = Nothing
+    , _sllFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -151,6 +157,11 @@ sllMaxResults
       (\ s a -> s{_sllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sllFields :: Lens' ScoresList (Maybe Text)
+sllFields
+  = lens _sllFields (\ s a -> s{_sllFields = a})
+
 instance GoogleRequest ScoresList where
         type Rs ScoresList = LeaderboardScores
         type Scopes ScoresList =
@@ -163,6 +174,7 @@ instance GoogleRequest ScoresList where
               _sllLanguage
               _sllPageToken
               _sllMaxResults
+              _sllFields
               (Just AltJSON)
               gamesService
           where go

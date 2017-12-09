@@ -38,10 +38,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.SetTargetPools
     , igmstpInstanceGroupManager
     , igmstpZone
     , igmstpPayload
+    , igmstpFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.setTargetPools@ method which the
 -- 'InstanceGroupManagersSetTargetPools' request conforms to.
@@ -55,20 +56,22 @@ type InstanceGroupManagersSetTargetPoolsResource =
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "setTargetPools" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           InstanceGroupManagersSetTargetPoolsRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             InstanceGroupManagersSetTargetPoolsRequest
+                             :> Post '[JSON] Operation
 
 -- | Modifies the target pools to which all new instances in this group are
 -- assigned. Existing instances in the group are not affected.
 --
 -- /See:/ 'instanceGroupManagersSetTargetPools' smart constructor.
 data InstanceGroupManagersSetTargetPools = InstanceGroupManagersSetTargetPools'
-    { _igmstpProject              :: !Text
+    { _igmstpProject :: !Text
     , _igmstpInstanceGroupManager :: !Text
-    , _igmstpZone                 :: !Text
-    , _igmstpPayload              :: !InstanceGroupManagersSetTargetPoolsRequest
+    , _igmstpZone :: !Text
+    , _igmstpPayload :: !InstanceGroupManagersSetTargetPoolsRequest
+    , _igmstpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersSetTargetPools' with the minimum fields required to make a request.
@@ -82,18 +85,21 @@ data InstanceGroupManagersSetTargetPools = InstanceGroupManagersSetTargetPools'
 -- * 'igmstpZone'
 --
 -- * 'igmstpPayload'
+--
+-- * 'igmstpFields'
 instanceGroupManagersSetTargetPools
     :: Text -- ^ 'igmstpProject'
     -> Text -- ^ 'igmstpInstanceGroupManager'
     -> Text -- ^ 'igmstpZone'
     -> InstanceGroupManagersSetTargetPoolsRequest -- ^ 'igmstpPayload'
     -> InstanceGroupManagersSetTargetPools
-instanceGroupManagersSetTargetPools pIgmstpProject_ pIgmstpInstanceGroupManager_ pIgmstpZone_ pIgmstpPayload_ =
+instanceGroupManagersSetTargetPools pIgmstpProject_ pIgmstpInstanceGroupManager_ pIgmstpZone_ pIgmstpPayload_ = 
     InstanceGroupManagersSetTargetPools'
     { _igmstpProject = pIgmstpProject_
     , _igmstpInstanceGroupManager = pIgmstpInstanceGroupManager_
     , _igmstpZone = pIgmstpZone_
     , _igmstpPayload = pIgmstpPayload_
+    , _igmstpFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -119,6 +125,11 @@ igmstpPayload
   = lens _igmstpPayload
       (\ s a -> s{_igmstpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmstpFields :: Lens' InstanceGroupManagersSetTargetPools (Maybe Text)
+igmstpFields
+  = lens _igmstpFields (\ s a -> s{_igmstpFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersSetTargetPools where
         type Rs InstanceGroupManagersSetTargetPools =
@@ -130,6 +141,7 @@ instance GoogleRequest
           InstanceGroupManagersSetTargetPools'{..}
           = go _igmstpProject _igmstpZone
               _igmstpInstanceGroupManager
+              _igmstpFields
               (Just AltJSON)
               _igmstpPayload
               replicaPoolService

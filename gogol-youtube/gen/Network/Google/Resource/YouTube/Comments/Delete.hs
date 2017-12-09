@@ -34,10 +34,11 @@ module Network.Google.Resource.YouTube.Comments.Delete
 
     -- * Request Lenses
     , cdId
+    , cdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.comments.delete@ method which the
 -- 'CommentsDelete' request conforms to.
@@ -46,13 +47,15 @@ type CommentsDeleteResource =
        "v3" :>
          "comments" :>
            QueryParam "id" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a comment.
 --
 -- /See:/ 'commentsDelete' smart constructor.
-newtype CommentsDelete = CommentsDelete'
-    { _cdId :: Text
+data CommentsDelete = CommentsDelete'
+    { _cdId :: !Text
+    , _cdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsDelete' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CommentsDelete = CommentsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cdId'
+--
+-- * 'cdFields'
 commentsDelete
     :: Text -- ^ 'cdId'
     -> CommentsDelete
-commentsDelete pCdId_ =
+commentsDelete pCdId_ = 
     CommentsDelete'
     { _cdId = pCdId_
+    , _cdFields = Nothing
     }
 
 -- | The id parameter specifies the comment ID for the resource that is being
@@ -73,12 +79,17 @@ commentsDelete pCdId_ =
 cdId :: Lens' CommentsDelete Text
 cdId = lens _cdId (\ s a -> s{_cdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' CommentsDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 instance GoogleRequest CommentsDelete where
         type Rs CommentsDelete = ()
         type Scopes CommentsDelete =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentsDelete'{..}
-          = go (Just _cdId) (Just AltJSON) youTubeService
+          = go (Just _cdId) _cdFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient (Proxy :: Proxy CommentsDeleteResource)
                       mempty

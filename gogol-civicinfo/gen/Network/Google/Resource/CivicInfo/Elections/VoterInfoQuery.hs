@@ -39,10 +39,11 @@ module Network.Google.Resource.CivicInfo.Elections.VoterInfoQuery
     , eviqAddress
     , eviqPayload
     , eviqOfficialOnly
+    , eviqFields
     ) where
 
-import           Network.Google.CivicInfo.Types
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @civicinfo.elections.voterInfoQuery@ method which the
 -- 'ElectionsVoterInfoQuery' request conforms to.
@@ -54,9 +55,10 @@ type ElectionsVoterInfoQueryResource =
              QueryParam "returnAllAvailableData" Bool :>
                QueryParam "electionId" (Textual Int64) :>
                  QueryParam "officialOnly" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] VoterInfoRequest :>
-                       Get '[JSON] VoterInfoResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] VoterInfoRequest :>
+                         Get '[JSON] VoterInfoResponse
 
 -- | Looks up information relevant to a voter based on the voter\'s
 -- registered address.
@@ -64,10 +66,11 @@ type ElectionsVoterInfoQueryResource =
 -- /See:/ 'electionsVoterInfoQuery' smart constructor.
 data ElectionsVoterInfoQuery = ElectionsVoterInfoQuery'
     { _eviqReturnAllAvailableData :: !Bool
-    , _eviqElectionId             :: !(Textual Int64)
-    , _eviqAddress                :: !Text
-    , _eviqPayload                :: !VoterInfoRequest
-    , _eviqOfficialOnly           :: !Bool
+    , _eviqElectionId :: !(Textual Int64)
+    , _eviqAddress :: !Text
+    , _eviqPayload :: !VoterInfoRequest
+    , _eviqOfficialOnly :: !Bool
+    , _eviqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ElectionsVoterInfoQuery' with the minimum fields required to make a request.
@@ -83,17 +86,20 @@ data ElectionsVoterInfoQuery = ElectionsVoterInfoQuery'
 -- * 'eviqPayload'
 --
 -- * 'eviqOfficialOnly'
+--
+-- * 'eviqFields'
 electionsVoterInfoQuery
     :: Text -- ^ 'eviqAddress'
     -> VoterInfoRequest -- ^ 'eviqPayload'
     -> ElectionsVoterInfoQuery
-electionsVoterInfoQuery pEviqAddress_ pEviqPayload_ =
+electionsVoterInfoQuery pEviqAddress_ pEviqPayload_ = 
     ElectionsVoterInfoQuery'
     { _eviqReturnAllAvailableData = False
     , _eviqElectionId = 0
     , _eviqAddress = pEviqAddress_
     , _eviqPayload = pEviqPayload_
     , _eviqOfficialOnly = False
+    , _eviqFields = Nothing
     }
 
 -- | If set to true, the query will return the success codeand include any
@@ -129,6 +135,11 @@ eviqOfficialOnly
   = lens _eviqOfficialOnly
       (\ s a -> s{_eviqOfficialOnly = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eviqFields :: Lens' ElectionsVoterInfoQuery (Maybe Text)
+eviqFields
+  = lens _eviqFields (\ s a -> s{_eviqFields = a})
+
 instance GoogleRequest ElectionsVoterInfoQuery where
         type Rs ElectionsVoterInfoQuery = VoterInfoResponse
         type Scopes ElectionsVoterInfoQuery = '[]
@@ -137,6 +148,7 @@ instance GoogleRequest ElectionsVoterInfoQuery where
               (Just _eviqReturnAllAvailableData)
               (Just _eviqElectionId)
               (Just _eviqOfficialOnly)
+              _eviqFields
               (Just AltJSON)
               _eviqPayload
               civicInfoService

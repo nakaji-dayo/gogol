@@ -41,11 +41,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Rulesets.Delete
     , proUploadType
     , proBearerToken
     , proName
+    , proFields
     , proCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.rulesets.delete@ method which the
 -- 'ProjectsRulesetsDelete' request conforms to.
@@ -59,21 +60,23 @@ type ProjectsRulesetsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Delete a \`Ruleset\` by resource name. If the \`Ruleset\` is referenced
 -- by a \`Release\` the operation will fail.
 --
 -- /See:/ 'projectsRulesetsDelete' smart constructor.
 data ProjectsRulesetsDelete = ProjectsRulesetsDelete'
-    { _proXgafv          :: !(Maybe Xgafv)
+    { _proXgafv :: !(Maybe Xgafv)
     , _proUploadProtocol :: !(Maybe Text)
-    , _proPp             :: !Bool
-    , _proAccessToken    :: !(Maybe Text)
-    , _proUploadType     :: !(Maybe Text)
-    , _proBearerToken    :: !(Maybe Text)
-    , _proName           :: !Text
-    , _proCallback       :: !(Maybe Text)
+    , _proPp :: !Bool
+    , _proAccessToken :: !(Maybe Text)
+    , _proUploadType :: !(Maybe Text)
+    , _proBearerToken :: !(Maybe Text)
+    , _proName :: !Text
+    , _proFields :: !(Maybe Text)
+    , _proCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRulesetsDelete' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data ProjectsRulesetsDelete = ProjectsRulesetsDelete'
 --
 -- * 'proName'
 --
+-- * 'proFields'
+--
 -- * 'proCallback'
 projectsRulesetsDelete
     :: Text -- ^ 'proName'
     -> ProjectsRulesetsDelete
-projectsRulesetsDelete pProName_ =
+projectsRulesetsDelete pProName_ = 
     ProjectsRulesetsDelete'
     { _proXgafv = Nothing
     , _proUploadProtocol = Nothing
@@ -107,6 +112,7 @@ projectsRulesetsDelete pProName_ =
     , _proUploadType = Nothing
     , _proBearerToken = Nothing
     , _proName = pProName_
+    , _proFields = Nothing
     , _proCallback = Nothing
     }
 
@@ -147,6 +153,11 @@ proBearerToken
 proName :: Lens' ProjectsRulesetsDelete Text
 proName = lens _proName (\ s a -> s{_proName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+proFields :: Lens' ProjectsRulesetsDelete (Maybe Text)
+proFields
+  = lens _proFields (\ s a -> s{_proFields = a})
+
 -- | JSONP
 proCallback :: Lens' ProjectsRulesetsDelete (Maybe Text)
 proCallback
@@ -164,6 +175,7 @@ instance GoogleRequest ProjectsRulesetsDelete where
               _proUploadType
               _proBearerToken
               _proCallback
+              _proFields
               (Just AltJSON)
               firebaseRulesService
           where go

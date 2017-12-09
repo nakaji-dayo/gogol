@@ -45,26 +45,28 @@ module Network.Google.Resource.ProximityBeacon.GetEidparams
     , geAccessToken
     , geUploadType
     , geBearerToken
+    , geFields
     , geCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.getEidparams@ method which the
 -- 'GetEidparams' request conforms to.
 type GetEidparamsResource =
      "v1beta1" :>
        "eidparams" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] EphemeralIdRegistrationParams
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] EphemeralIdRegistrationParams
 
 -- | Gets the Proximity Beacon API\'s current public key and associated
 -- parameters used to initiate the Diffie-Hellman key exchange required to
@@ -76,13 +78,14 @@ type GetEidparamsResource =
 --
 -- /See:/ 'getEidparams' smart constructor.
 data GetEidparams = GetEidparams'
-    { _geXgafv          :: !(Maybe Text)
+    { _geXgafv :: !(Maybe Xgafv)
     , _geUploadProtocol :: !(Maybe Text)
-    , _gePp             :: !Bool
-    , _geAccessToken    :: !(Maybe Text)
-    , _geUploadType     :: !(Maybe Text)
-    , _geBearerToken    :: !(Maybe Text)
-    , _geCallback       :: !(Maybe Text)
+    , _gePp :: !Bool
+    , _geAccessToken :: !(Maybe Text)
+    , _geUploadType :: !(Maybe Text)
+    , _geBearerToken :: !(Maybe Text)
+    , _geFields :: !(Maybe Text)
+    , _geCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GetEidparams' with the minimum fields required to make a request.
@@ -101,10 +104,12 @@ data GetEidparams = GetEidparams'
 --
 -- * 'geBearerToken'
 --
+-- * 'geFields'
+--
 -- * 'geCallback'
 getEidparams
     :: GetEidparams
-getEidparams =
+getEidparams = 
     GetEidparams'
     { _geXgafv = Nothing
     , _geUploadProtocol = Nothing
@@ -112,11 +117,12 @@ getEidparams =
     , _geAccessToken = Nothing
     , _geUploadType = Nothing
     , _geBearerToken = Nothing
+    , _geFields = Nothing
     , _geCallback = Nothing
     }
 
 -- | V1 error format.
-geXgafv :: Lens' GetEidparams (Maybe Text)
+geXgafv :: Lens' GetEidparams (Maybe Xgafv)
 geXgafv = lens _geXgafv (\ s a -> s{_geXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -146,6 +152,10 @@ geBearerToken
   = lens _geBearerToken
       (\ s a -> s{_geBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+geFields :: Lens' GetEidparams (Maybe Text)
+geFields = lens _geFields (\ s a -> s{_geFields = a})
+
 -- | JSONP
 geCallback :: Lens' GetEidparams (Maybe Text)
 geCallback
@@ -161,6 +171,7 @@ instance GoogleRequest GetEidparams where
               _geUploadType
               _geBearerToken
               _geCallback
+              _geFields
               (Just AltJSON)
               proximityBeaconService
           where go

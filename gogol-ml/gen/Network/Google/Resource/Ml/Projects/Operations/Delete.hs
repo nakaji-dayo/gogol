@@ -25,7 +25,7 @@
 -- operation. If the server doesn\'t support this method, it returns
 -- \`google.rpc.Code.UNIMPLEMENTED\`.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.operations.delete@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.operations.delete@.
 module Network.Google.Resource.Ml.Projects.Operations.Delete
     (
     -- * REST Resource
@@ -43,16 +43,17 @@ module Network.Google.Resource.Ml.Projects.Operations.Delete
     , podUploadType
     , podBearerToken
     , podName
+    , podFields
     , podCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.operations.delete@ method which the
 -- 'ProjectsOperationsDelete' request conforms to.
 type ProjectsOperationsDeleteResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "name" Text :>
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
@@ -61,8 +62,9 @@ type ProjectsOperationsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Delete '[JSON] GoogleProtobuf__Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Delete '[JSON] GoogleProtobuf__Empty
 
 -- | Deletes a long-running operation. This method indicates that the client
 -- is no longer interested in the operation result. It does not cancel the
@@ -71,14 +73,15 @@ type ProjectsOperationsDeleteResource =
 --
 -- /See:/ 'projectsOperationsDelete' smart constructor.
 data ProjectsOperationsDelete = ProjectsOperationsDelete'
-    { _podXgafv          :: !(Maybe Xgafv)
+    { _podXgafv :: !(Maybe Xgafv)
     , _podUploadProtocol :: !(Maybe Text)
-    , _podPp             :: !Bool
-    , _podAccessToken    :: !(Maybe Text)
-    , _podUploadType     :: !(Maybe Text)
-    , _podBearerToken    :: !(Maybe Text)
-    , _podName           :: !Text
-    , _podCallback       :: !(Maybe Text)
+    , _podPp :: !Bool
+    , _podAccessToken :: !(Maybe Text)
+    , _podUploadType :: !(Maybe Text)
+    , _podBearerToken :: !(Maybe Text)
+    , _podName :: !Text
+    , _podFields :: !(Maybe Text)
+    , _podCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsOperationsDelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data ProjectsOperationsDelete = ProjectsOperationsDelete'
 --
 -- * 'podName'
 --
+-- * 'podFields'
+--
 -- * 'podCallback'
 projectsOperationsDelete
     :: Text -- ^ 'podName'
     -> ProjectsOperationsDelete
-projectsOperationsDelete pPodName_ =
+projectsOperationsDelete pPodName_ = 
     ProjectsOperationsDelete'
     { _podXgafv = Nothing
     , _podUploadProtocol = Nothing
@@ -112,6 +117,7 @@ projectsOperationsDelete pPodName_ =
     , _podUploadType = Nothing
     , _podBearerToken = Nothing
     , _podName = pPodName_
+    , _podFields = Nothing
     , _podCallback = Nothing
     }
 
@@ -151,6 +157,11 @@ podBearerToken
 podName :: Lens' ProjectsOperationsDelete Text
 podName = lens _podName (\ s a -> s{_podName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+podFields :: Lens' ProjectsOperationsDelete (Maybe Text)
+podFields
+  = lens _podFields (\ s a -> s{_podFields = a})
+
 -- | JSONP
 podCallback :: Lens' ProjectsOperationsDelete (Maybe Text)
 podCallback
@@ -168,6 +179,7 @@ instance GoogleRequest ProjectsOperationsDelete where
               _podUploadType
               _podBearerToken
               _podCallback
+              _podFields
               (Just AltJSON)
               machineLearningService
           where go

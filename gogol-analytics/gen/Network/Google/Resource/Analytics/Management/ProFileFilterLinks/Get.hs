@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.Get
     , mpfflgProFileId
     , mpfflgAccountId
     , mpfflgLinkId
+    , mpfflgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.get@ method which the
 -- 'ManagementProFileFilterLinksGet' request conforms to.
@@ -56,17 +57,19 @@ type ManagementProFileFilterLinksGetResource =
                      Capture "profileId" Text :>
                        "profileFilterLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] ProFileFilterLink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] ProFileFilterLink
 
 -- | Returns a single profile filter link.
 --
 -- /See:/ 'managementProFileFilterLinksGet' smart constructor.
 data ManagementProFileFilterLinksGet = ManagementProFileFilterLinksGet'
     { _mpfflgWebPropertyId :: !Text
-    , _mpfflgProFileId     :: !Text
-    , _mpfflgAccountId     :: !Text
-    , _mpfflgLinkId        :: !Text
+    , _mpfflgProFileId :: !Text
+    , _mpfflgAccountId :: !Text
+    , _mpfflgLinkId :: !Text
+    , _mpfflgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksGet' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementProFileFilterLinksGet = ManagementProFileFilterLinksGet'
 -- * 'mpfflgAccountId'
 --
 -- * 'mpfflgLinkId'
+--
+-- * 'mpfflgFields'
 managementProFileFilterLinksGet
     :: Text -- ^ 'mpfflgWebPropertyId'
     -> Text -- ^ 'mpfflgProFileId'
     -> Text -- ^ 'mpfflgAccountId'
     -> Text -- ^ 'mpfflgLinkId'
     -> ManagementProFileFilterLinksGet
-managementProFileFilterLinksGet pMpfflgWebPropertyId_ pMpfflgProFileId_ pMpfflgAccountId_ pMpfflgLinkId_ =
+managementProFileFilterLinksGet pMpfflgWebPropertyId_ pMpfflgProFileId_ pMpfflgAccountId_ pMpfflgLinkId_ = 
     ManagementProFileFilterLinksGet'
     { _mpfflgWebPropertyId = pMpfflgWebPropertyId_
     , _mpfflgProFileId = pMpfflgProFileId_
     , _mpfflgAccountId = pMpfflgAccountId_
     , _mpfflgLinkId = pMpfflgLinkId_
+    , _mpfflgFields = Nothing
     }
 
 -- | Web property Id to retrieve profile filter link for.
@@ -117,6 +123,11 @@ mpfflgLinkId :: Lens' ManagementProFileFilterLinksGet Text
 mpfflgLinkId
   = lens _mpfflgLinkId (\ s a -> s{_mpfflgLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfflgFields :: Lens' ManagementProFileFilterLinksGet (Maybe Text)
+mpfflgFields
+  = lens _mpfflgFields (\ s a -> s{_mpfflgFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksGet where
         type Rs ManagementProFileFilterLinksGet =
@@ -128,6 +139,7 @@ instance GoogleRequest
           = go _mpfflgAccountId _mpfflgWebPropertyId
               _mpfflgProFileId
               _mpfflgLinkId
+              _mpfflgFields
               (Just AltJSON)
               analyticsService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.AdClients.List
     , aaclAccountId
     , aaclPageToken
     , aaclMaxResults
+    , aaclFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.adclients.list@ method which the
 -- 'AccountsAdClientsList' request conforms to.
@@ -51,15 +52,17 @@ type AccountsAdClientsListResource =
              "adclients" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] AdClients
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] AdClients
 
 -- | List all ad clients in this Ad Exchange account.
 --
 -- /See:/ 'accountsAdClientsList' smart constructor.
 data AccountsAdClientsList = AccountsAdClientsList'
-    { _aaclAccountId  :: !Text
-    , _aaclPageToken  :: !(Maybe Text)
+    { _aaclAccountId :: !Text
+    , _aaclPageToken :: !(Maybe Text)
     , _aaclMaxResults :: !(Maybe (Textual Word32))
+    , _aaclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdClientsList' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data AccountsAdClientsList = AccountsAdClientsList'
 -- * 'aaclPageToken'
 --
 -- * 'aaclMaxResults'
+--
+-- * 'aaclFields'
 accountsAdClientsList
     :: Text -- ^ 'aaclAccountId'
     -> AccountsAdClientsList
-accountsAdClientsList pAaclAccountId_ =
+accountsAdClientsList pAaclAccountId_ = 
     AccountsAdClientsList'
     { _aaclAccountId = pAaclAccountId_
     , _aaclPageToken = Nothing
     , _aaclMaxResults = Nothing
+    , _aaclFields = Nothing
     }
 
 -- | Account to which the ad client belongs.
@@ -103,6 +109,11 @@ aaclMaxResults
       (\ s a -> s{_aaclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aaclFields :: Lens' AccountsAdClientsList (Maybe Text)
+aaclFields
+  = lens _aaclFields (\ s a -> s{_aaclFields = a})
+
 instance GoogleRequest AccountsAdClientsList where
         type Rs AccountsAdClientsList = AdClients
         type Scopes AccountsAdClientsList =
@@ -110,6 +121,7 @@ instance GoogleRequest AccountsAdClientsList where
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsAdClientsList'{..}
           = go _aaclAccountId _aaclPageToken _aaclMaxResults
+              _aaclFields
               (Just AltJSON)
               adExchangeSellerService
           where go

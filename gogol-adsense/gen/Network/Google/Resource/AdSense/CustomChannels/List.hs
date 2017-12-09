@@ -37,10 +37,11 @@ module Network.Google.Resource.AdSense.CustomChannels.List
     , cclAdClientId
     , cclPageToken
     , cclMaxResults
+    , cclFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.customchannels.list@ method which the
 -- 'CustomChannelsList' request conforms to.
@@ -52,8 +53,9 @@ type CustomChannelsListResource =
              "customchannels" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] CustomChannels
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] CustomChannels
 
 -- | List all custom channels in the specified ad client for this AdSense
 -- account.
@@ -61,8 +63,9 @@ type CustomChannelsListResource =
 -- /See:/ 'customChannelsList' smart constructor.
 data CustomChannelsList = CustomChannelsList'
     { _cclAdClientId :: !Text
-    , _cclPageToken  :: !(Maybe Text)
+    , _cclPageToken :: !(Maybe Text)
     , _cclMaxResults :: !(Maybe (Textual Int32))
+    , _cclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsList' with the minimum fields required to make a request.
@@ -74,14 +77,17 @@ data CustomChannelsList = CustomChannelsList'
 -- * 'cclPageToken'
 --
 -- * 'cclMaxResults'
+--
+-- * 'cclFields'
 customChannelsList
     :: Text -- ^ 'cclAdClientId'
     -> CustomChannelsList
-customChannelsList pCclAdClientId_ =
+customChannelsList pCclAdClientId_ = 
     CustomChannelsList'
     { _cclAdClientId = pCclAdClientId_
     , _cclPageToken = Nothing
     , _cclMaxResults = Nothing
+    , _cclFields = Nothing
     }
 
 -- | Ad client for which to list custom channels.
@@ -105,6 +111,11 @@ cclMaxResults
       (\ s a -> s{_cclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cclFields :: Lens' CustomChannelsList (Maybe Text)
+cclFields
+  = lens _cclFields (\ s a -> s{_cclFields = a})
+
 instance GoogleRequest CustomChannelsList where
         type Rs CustomChannelsList = CustomChannels
         type Scopes CustomChannelsList =
@@ -112,6 +123,7 @@ instance GoogleRequest CustomChannelsList where
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient CustomChannelsList'{..}
           = go _cclAdClientId _cclPageToken _cclMaxResults
+              _cclFields
               (Just AltJSON)
               adSenseService
           where go

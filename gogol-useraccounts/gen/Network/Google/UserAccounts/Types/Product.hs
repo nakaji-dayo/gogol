@@ -17,14 +17,14 @@
 --
 module Network.Google.UserAccounts.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types.Sum
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types.Sum
 
 --
 -- /See:/ 'operationWarningsItemDataItem' smart constructor.
 data OperationWarningsItemDataItem = OperationWarningsItemDataItem'
     { _owidiValue :: !(Maybe Text)
-    , _owidiKey   :: !(Maybe Text)
+    , _owidiKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationWarningsItemDataItem' with the minimum fields required to make a request.
@@ -36,7 +36,7 @@ data OperationWarningsItemDataItem = OperationWarningsItemDataItem'
 -- * 'owidiKey'
 operationWarningsItemDataItem
     :: OperationWarningsItemDataItem
-operationWarningsItemDataItem =
+operationWarningsItemDataItem = 
     OperationWarningsItemDataItem'
     { _owidiValue = Nothing
     , _owidiKey = Nothing
@@ -76,10 +76,10 @@ instance ToJSON OperationWarningsItemDataItem where
 -- /See:/ 'operationList' smart constructor.
 data OperationList = OperationList'
     { _olNextPageToken :: !(Maybe Text)
-    , _olKind          :: !Text
-    , _olItems         :: !(Maybe [Operation])
-    , _olSelfLink      :: !(Maybe Text)
-    , _olId            :: !(Maybe Text)
+    , _olKind :: !Text
+    , _olItems :: !(Maybe [Operation])
+    , _olSelfLink :: !(Maybe Text)
+    , _olId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationList' with the minimum fields required to make a request.
@@ -97,7 +97,7 @@ data OperationList = OperationList'
 -- * 'olId'
 operationList
     :: OperationList
-operationList =
+operationList = 
     OperationList'
     { _olNextPageToken = Nothing
     , _olKind = "clouduseraccounts#operationList"
@@ -161,13 +161,13 @@ instance ToJSON OperationList where
 --
 -- /See:/ 'group'' smart constructor.
 data Group = Group'
-    { _gKind              :: !Text
-    , _gMembers           :: !(Maybe [Text])
-    , _gSelfLink          :: !(Maybe Text)
-    , _gName              :: !(Maybe Text)
+    { _gKind :: !Text
+    , _gMembers :: !(Maybe [Text])
+    , _gSelfLink :: !(Maybe Text)
+    , _gName :: !(Maybe Text)
     , _gCreationTimestamp :: !(Maybe Text)
-    , _gId                :: !(Maybe (Textual Word64))
-    , _gDescription       :: !(Maybe Text)
+    , _gId :: !(Maybe (Textual Word64))
+    , _gDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Group' with the minimum fields required to make a request.
@@ -189,7 +189,7 @@ data Group = Group'
 -- * 'gDescription'
 group'
     :: Group
-group' =
+group' = 
     Group'
     { _gKind = "clouduseraccounts#group"
     , _gMembers = Nothing
@@ -269,10 +269,10 @@ instance ToJSON Group where
 -- /See:/ 'groupList' smart constructor.
 data GroupList = GroupList'
     { _glNextPageToken :: !(Maybe Text)
-    , _glKind          :: !Text
-    , _glItems         :: !(Maybe [Group])
-    , _glSelfLink      :: !(Maybe Text)
-    , _glId            :: !(Maybe Text)
+    , _glKind :: !Text
+    , _glItems :: !(Maybe [Group])
+    , _glSelfLink :: !(Maybe Text)
+    , _glId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupList' with the minimum fields required to make a request.
@@ -290,7 +290,7 @@ data GroupList = GroupList'
 -- * 'glId'
 groupList
     :: GroupList
-groupList =
+groupList = 
     GroupList'
     { _glNextPageToken = Nothing
     , _glKind = "clouduseraccounts#groupList"
@@ -349,29 +349,29 @@ instance ToJSON GroupList where
 --
 -- /See:/ 'operation' smart constructor.
 data Operation = Operation'
-    { _oTargetId            :: !(Maybe (Textual Word64))
-    , _oStatus              :: !(Maybe OperationStatus)
-    , _oInsertTime          :: !(Maybe Text)
-    , _oProgress            :: !(Maybe (Textual Int32))
-    , _oStartTime           :: !(Maybe Text)
-    , _oKind                :: !Text
-    , _oError               :: !(Maybe OperationError)
-    , _oHTTPErrorMessage    :: !(Maybe Text)
-    , _oZone                :: !(Maybe Text)
-    , _oWarnings            :: !(Maybe [OperationWarningsItem])
+    { _oTargetId :: !(Maybe (Textual Word64))
+    , _oStatus :: !(Maybe OperationStatus)
+    , _oInsertTime :: !(Maybe Text)
+    , _oProgress :: !(Maybe (Textual Int32))
+    , _oStartTime :: !(Maybe Text)
+    , _oKind :: !Text
+    , _oError :: !(Maybe OperationError)
+    , _oHTTPErrorMessage :: !(Maybe Text)
+    , _oZone :: !(Maybe Text)
+    , _oWarnings :: !(Maybe [OperationWarningsItem])
     , _oHTTPErrorStatusCode :: !(Maybe (Textual Int32))
-    , _oUser                :: !(Maybe Text)
-    , _oSelfLink            :: !(Maybe Text)
-    , _oName                :: !(Maybe Text)
-    , _oStatusMessage       :: !(Maybe Text)
-    , _oCreationTimestamp   :: !(Maybe Text)
-    , _oEndTime             :: !(Maybe Text)
-    , _oId                  :: !(Maybe (Textual Word64))
-    , _oOperationType       :: !(Maybe Text)
-    , _oRegion              :: !(Maybe Text)
-    , _oDescription         :: !(Maybe Text)
-    , _oTargetLink          :: !(Maybe Text)
-    , _oClientOperationId   :: !(Maybe Text)
+    , _oUser :: !(Maybe Text)
+    , _oSelfLink :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
+    , _oStatusMessage :: !(Maybe Text)
+    , _oCreationTimestamp :: !(Maybe Text)
+    , _oEndTime :: !(Maybe Text)
+    , _oId :: !(Maybe (Textual Word64))
+    , _oOperationType :: !(Maybe Text)
+    , _oRegion :: !(Maybe Text)
+    , _oDescription :: !(Maybe Text)
+    , _oTargetLink :: !(Maybe Text)
+    , _oClientOperationId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Operation' with the minimum fields required to make a request.
@@ -425,7 +425,7 @@ data Operation = Operation'
 -- * 'oClientOperationId'
 operation
     :: Operation
-operation =
+operation = 
     Operation'
     { _oTargetId = Nothing
     , _oStatus = Nothing
@@ -650,10 +650,10 @@ instance ToJSON Operation where
 -- /See:/ 'userList' smart constructor.
 data UserList = UserList'
     { _ulNextPageToken :: !(Maybe Text)
-    , _ulKind          :: !Text
-    , _ulItems         :: !(Maybe [User])
-    , _ulSelfLink      :: !(Maybe Text)
-    , _ulId            :: !(Maybe Text)
+    , _ulKind :: !Text
+    , _ulItems :: !(Maybe [User])
+    , _ulSelfLink :: !(Maybe Text)
+    , _ulId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserList' with the minimum fields required to make a request.
@@ -671,7 +671,7 @@ data UserList = UserList'
 -- * 'ulId'
 userList
     :: UserList
-userList =
+userList = 
     UserList'
     { _ulNextPageToken = Nothing
     , _ulKind = "clouduseraccounts#userList"
@@ -730,11 +730,11 @@ instance ToJSON UserList where
 --
 -- /See:/ 'publicKey' smart constructor.
 data PublicKey = PublicKey'
-    { _pkFingerprint         :: !(Maybe Text)
-    , _pkKey                 :: !(Maybe Text)
-    , _pkCreationTimestamp   :: !(Maybe Text)
+    { _pkFingerprint :: !(Maybe Text)
+    , _pkKey :: !(Maybe Text)
+    , _pkCreationTimestamp :: !(Maybe Text)
     , _pkExpirationTimestamp :: !(Maybe Text)
-    , _pkDescription         :: !(Maybe Text)
+    , _pkDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PublicKey' with the minimum fields required to make a request.
@@ -752,7 +752,7 @@ data PublicKey = PublicKey'
 -- * 'pkDescription'
 publicKey
     :: PublicKey
-publicKey =
+publicKey = 
     PublicKey'
     { _pkFingerprint = Nothing
     , _pkKey = Nothing
@@ -820,8 +820,8 @@ instance ToJSON PublicKey where
 --
 -- /See:/ 'linuxAccountViews' smart constructor.
 data LinuxAccountViews = LinuxAccountViews'
-    { _lavUserViews  :: !(Maybe [LinuxUserView])
-    , _lavKind       :: !Text
+    { _lavUserViews :: !(Maybe [LinuxUserView])
+    , _lavKind :: !Text
     , _lavGroupViews :: !(Maybe [LinuxGroupView])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -836,7 +836,7 @@ data LinuxAccountViews = LinuxAccountViews'
 -- * 'lavGroupViews'
 linuxAccountViews
     :: LinuxAccountViews
-linuxAccountViews =
+linuxAccountViews = 
     LinuxAccountViews'
     { _lavUserViews = Nothing
     , _lavKind = "clouduseraccounts#linuxAccountViews"
@@ -885,15 +885,15 @@ instance ToJSON LinuxAccountViews where
 --
 -- /See:/ 'user' smart constructor.
 data User = User'
-    { _uGroups            :: !(Maybe [Text])
-    , _uPublicKeys        :: !(Maybe [PublicKey])
-    , _uKind              :: !Text
-    , _uOwner             :: !(Maybe Text)
-    , _uSelfLink          :: !(Maybe Text)
-    , _uName              :: !(Maybe Text)
+    { _uGroups :: !(Maybe [Text])
+    , _uPublicKeys :: !(Maybe [PublicKey])
+    , _uKind :: !Text
+    , _uOwner :: !(Maybe Text)
+    , _uSelfLink :: !(Maybe Text)
+    , _uName :: !(Maybe Text)
     , _uCreationTimestamp :: !(Maybe Text)
-    , _uId                :: !(Maybe (Textual Word64))
-    , _uDescription       :: !(Maybe Text)
+    , _uId :: !(Maybe (Textual Word64))
+    , _uDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'User' with the minimum fields required to make a request.
@@ -919,7 +919,7 @@ data User = User'
 -- * 'uDescription'
 user
     :: User
-user =
+user = 
     User'
     { _uGroups = Nothing
     , _uPublicKeys = Nothing
@@ -1025,7 +1025,7 @@ newtype GroupsAddMemberRequest = GroupsAddMemberRequest'
 -- * 'gamrUsers'
 groupsAddMemberRequest
     :: GroupsAddMemberRequest
-groupsAddMemberRequest =
+groupsAddMemberRequest = 
     GroupsAddMemberRequest'
     { _gamrUsers = Nothing
     }
@@ -1052,8 +1052,8 @@ instance ToJSON GroupsAddMemberRequest where
 --
 -- /See:/ 'linuxGroupView' smart constructor.
 data LinuxGroupView = LinuxGroupView'
-    { _lgvMembers   :: !(Maybe [Text])
-    , _lgvGid       :: !(Maybe (Textual Word32))
+    { _lgvMembers :: !(Maybe [Text])
+    , _lgvGid :: !(Maybe (Textual Word32))
     , _lgvGroupName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1068,7 +1068,7 @@ data LinuxGroupView = LinuxGroupView'
 -- * 'lgvGroupName'
 linuxGroupView
     :: LinuxGroupView
-linuxGroupView =
+linuxGroupView = 
     LinuxGroupView'
     { _lgvMembers = Nothing
     , _lgvGid = Nothing
@@ -1113,11 +1113,11 @@ instance ToJSON LinuxGroupView where
 --
 -- /See:/ 'linuxUserView' smart constructor.
 data LinuxUserView = LinuxUserView'
-    { _luvGecos         :: !(Maybe Text)
-    , _luvUid           :: !(Maybe (Textual Word32))
-    , _luvUsername      :: !(Maybe Text)
-    , _luvShell         :: !(Maybe Text)
-    , _luvGid           :: !(Maybe (Textual Word32))
+    { _luvGecos :: !(Maybe Text)
+    , _luvUid :: !(Maybe (Textual Word32))
+    , _luvUsername :: !(Maybe Text)
+    , _luvShell :: !(Maybe Text)
+    , _luvGid :: !(Maybe (Textual Word32))
     , _luvHomeDirectory :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1138,7 +1138,7 @@ data LinuxUserView = LinuxUserView'
 -- * 'luvHomeDirectory'
 linuxUserView
     :: LinuxUserView
-linuxUserView =
+linuxUserView = 
     LinuxUserView'
     { _luvGecos = Nothing
     , _luvUid = Nothing
@@ -1212,7 +1212,7 @@ newtype LinuxGetLinuxAccountViewsResponse = LinuxGetLinuxAccountViewsResponse'
 -- * 'lglavrResource'
 linuxGetLinuxAccountViewsResponse
     :: LinuxGetLinuxAccountViewsResponse
-linuxGetLinuxAccountViewsResponse =
+linuxGetLinuxAccountViewsResponse = 
     LinuxGetLinuxAccountViewsResponse'
     { _lglavrResource = Nothing
     }
@@ -1252,7 +1252,7 @@ newtype OperationError = OperationError'
 -- * 'oeErrors'
 operationError
     :: OperationError
-operationError =
+operationError = 
     OperationError'
     { _oeErrors = Nothing
     }
@@ -1288,7 +1288,7 @@ newtype LinuxGetAuthorizedKeysViewResponse = LinuxGetAuthorizedKeysViewResponse'
 -- * 'lgakvrResource'
 linuxGetAuthorizedKeysViewResponse
     :: LinuxGetAuthorizedKeysViewResponse
-linuxGetAuthorizedKeysViewResponse =
+linuxGetAuthorizedKeysViewResponse = 
     LinuxGetAuthorizedKeysViewResponse'
     { _lgakvrResource = Nothing
     }
@@ -1317,8 +1317,8 @@ instance ToJSON LinuxGetAuthorizedKeysViewResponse
 -- /See:/ 'operationErrorErrorsItem' smart constructor.
 data OperationErrorErrorsItem = OperationErrorErrorsItem'
     { _oeeiLocation :: !(Maybe Text)
-    , _oeeiCode     :: !(Maybe Text)
-    , _oeeiMessage  :: !(Maybe Text)
+    , _oeeiCode :: !(Maybe Text)
+    , _oeeiMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationErrorErrorsItem' with the minimum fields required to make a request.
@@ -1332,7 +1332,7 @@ data OperationErrorErrorsItem = OperationErrorErrorsItem'
 -- * 'oeeiMessage'
 operationErrorErrorsItem
     :: OperationErrorErrorsItem
-operationErrorErrorsItem =
+operationErrorErrorsItem = 
     OperationErrorErrorsItem'
     { _oeeiLocation = Nothing
     , _oeeiCode = Nothing
@@ -1383,7 +1383,7 @@ newtype GroupsRemoveMemberRequest = GroupsRemoveMemberRequest'
 -- * 'grmrUsers'
 groupsRemoveMemberRequest
     :: GroupsRemoveMemberRequest
-groupsRemoveMemberRequest =
+groupsRemoveMemberRequest = 
     GroupsRemoveMemberRequest'
     { _grmrUsers = Nothing
     }
@@ -1411,7 +1411,7 @@ instance ToJSON GroupsRemoveMemberRequest where
 -- /See:/ 'authorizedKeysView' smart constructor.
 data AuthorizedKeysView = AuthorizedKeysView'
     { _akvSudoer :: !(Maybe Bool)
-    , _akvKeys   :: !(Maybe [Text])
+    , _akvKeys :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AuthorizedKeysView' with the minimum fields required to make a request.
@@ -1423,7 +1423,7 @@ data AuthorizedKeysView = AuthorizedKeysView'
 -- * 'akvKeys'
 authorizedKeysView
     :: AuthorizedKeysView
-authorizedKeysView =
+authorizedKeysView = 
     AuthorizedKeysView'
     { _akvSudoer = Nothing
     , _akvKeys = Nothing
@@ -1458,8 +1458,8 @@ instance ToJSON AuthorizedKeysView where
 --
 -- /See:/ 'operationWarningsItem' smart constructor.
 data OperationWarningsItem = OperationWarningsItem'
-    { _owiData    :: !(Maybe [OperationWarningsItemDataItem])
-    , _owiCode    :: !(Maybe OperationWarningsItemCode)
+    { _owiData :: !(Maybe [OperationWarningsItemDataItem])
+    , _owiCode :: !(Maybe OperationWarningsItemCode)
     , _owiMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1474,7 +1474,7 @@ data OperationWarningsItem = OperationWarningsItem'
 -- * 'owiMessage'
 operationWarningsItem
     :: OperationWarningsItem
-operationWarningsItem =
+operationWarningsItem = 
     OperationWarningsItem'
     { _owiData = Nothing
     , _owiCode = Nothing

@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.Referencesets.Search
     , rsUploadType
     , rsPayload
     , rsBearerToken
+    , rsFields
     , rsCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.referencesets.search@ method which the
 -- 'ReferencesetsSearch' request conforms to.
@@ -64,9 +65,10 @@ type ReferencesetsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchReferenceSetsRequest :>
-                             Post '[JSON] SearchReferenceSetsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchReferenceSetsRequest :>
+                               Post '[JSON] SearchReferenceSetsResponse
 
 -- | Searches for reference sets which match the given criteria. For the
 -- definitions of references and other genomics resources, see
@@ -77,14 +79,15 @@ type ReferencesetsSearchResource =
 --
 -- /See:/ 'referencesetsSearch' smart constructor.
 data ReferencesetsSearch = ReferencesetsSearch'
-    { _rsXgafv          :: !(Maybe Xgafv)
+    { _rsXgafv :: !(Maybe Xgafv)
     , _rsUploadProtocol :: !(Maybe Text)
-    , _rsPp             :: !Bool
-    , _rsAccessToken    :: !(Maybe Text)
-    , _rsUploadType     :: !(Maybe Text)
-    , _rsPayload        :: !SearchReferenceSetsRequest
-    , _rsBearerToken    :: !(Maybe Text)
-    , _rsCallback       :: !(Maybe Text)
+    , _rsPp :: !Bool
+    , _rsAccessToken :: !(Maybe Text)
+    , _rsUploadType :: !(Maybe Text)
+    , _rsPayload :: !SearchReferenceSetsRequest
+    , _rsBearerToken :: !(Maybe Text)
+    , _rsFields :: !(Maybe Text)
+    , _rsCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReferencesetsSearch' with the minimum fields required to make a request.
@@ -105,11 +108,13 @@ data ReferencesetsSearch = ReferencesetsSearch'
 --
 -- * 'rsBearerToken'
 --
+-- * 'rsFields'
+--
 -- * 'rsCallback'
 referencesetsSearch
     :: SearchReferenceSetsRequest -- ^ 'rsPayload'
     -> ReferencesetsSearch
-referencesetsSearch pRsPayload_ =
+referencesetsSearch pRsPayload_ = 
     ReferencesetsSearch'
     { _rsXgafv = Nothing
     , _rsUploadProtocol = Nothing
@@ -118,6 +123,7 @@ referencesetsSearch pRsPayload_ =
     , _rsUploadType = Nothing
     , _rsPayload = pRsPayload_
     , _rsBearerToken = Nothing
+    , _rsFields = Nothing
     , _rsCallback = Nothing
     }
 
@@ -157,6 +163,10 @@ rsBearerToken
   = lens _rsBearerToken
       (\ s a -> s{_rsBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rsFields :: Lens' ReferencesetsSearch (Maybe Text)
+rsFields = lens _rsFields (\ s a -> s{_rsFields = a})
+
 -- | JSONP
 rsCallback :: Lens' ReferencesetsSearch (Maybe Text)
 rsCallback
@@ -175,6 +185,7 @@ instance GoogleRequest ReferencesetsSearch where
               _rsUploadType
               _rsBearerToken
               _rsCallback
+              _rsFields
               (Just AltJSON)
               _rsPayload
               genomicsService

@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.Installs.Get
     , igUserId
     , igInstallId
     , igDeviceId
+    , igFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.installs.get@ method which the
 -- 'InstallsGet' request conforms to.
@@ -55,16 +56,18 @@ type InstallsGetResource =
                    Capture "deviceId" Text :>
                      "installs" :>
                        Capture "installId" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Install
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Install
 
 -- | Retrieves details of an installation of an app on a device.
 --
 -- /See:/ 'installsGet' smart constructor.
 data InstallsGet = InstallsGet'
     { _igEnterpriseId :: !Text
-    , _igUserId       :: !Text
-    , _igInstallId    :: !Text
-    , _igDeviceId     :: !Text
+    , _igUserId :: !Text
+    , _igInstallId :: !Text
+    , _igDeviceId :: !Text
+    , _igFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstallsGet' with the minimum fields required to make a request.
@@ -78,18 +81,21 @@ data InstallsGet = InstallsGet'
 -- * 'igInstallId'
 --
 -- * 'igDeviceId'
+--
+-- * 'igFields'
 installsGet
     :: Text -- ^ 'igEnterpriseId'
     -> Text -- ^ 'igUserId'
     -> Text -- ^ 'igInstallId'
     -> Text -- ^ 'igDeviceId'
     -> InstallsGet
-installsGet pIgEnterpriseId_ pIgUserId_ pIgInstallId_ pIgDeviceId_ =
+installsGet pIgEnterpriseId_ pIgUserId_ pIgInstallId_ pIgDeviceId_ = 
     InstallsGet'
     { _igEnterpriseId = pIgEnterpriseId_
     , _igUserId = pIgUserId_
     , _igInstallId = pIgInstallId_
     , _igDeviceId = pIgDeviceId_
+    , _igFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -113,6 +119,10 @@ igDeviceId :: Lens' InstallsGet Text
 igDeviceId
   = lens _igDeviceId (\ s a -> s{_igDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igFields :: Lens' InstallsGet (Maybe Text)
+igFields = lens _igFields (\ s a -> s{_igFields = a})
+
 instance GoogleRequest InstallsGet where
         type Rs InstallsGet = Install
         type Scopes InstallsGet =
@@ -120,6 +130,7 @@ instance GoogleRequest InstallsGet where
         requestClient InstallsGet'{..}
           = go _igEnterpriseId _igUserId _igDeviceId
               _igInstallId
+              _igFields
               (Just AltJSON)
               androidEnterpriseService
           where go

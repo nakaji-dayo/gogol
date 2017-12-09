@@ -38,25 +38,27 @@ module Network.Google.Resource.DFAReporting.CreativeFieldValues.Patch
     , cfvpProFileId
     , cfvpPayload
     , cfvpId
+    , cfvpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFieldValues.patch@ method which the
 -- 'CreativeFieldValuesPatch' request conforms to.
 type CreativeFieldValuesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "creativeFieldId" (Textual Int64) :>
                  "creativeFieldValues" :>
                    QueryParam "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] CreativeFieldValue :>
-                         Patch '[JSON] CreativeFieldValue
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] CreativeFieldValue :>
+                           Patch '[JSON] CreativeFieldValue
 
 -- | Updates an existing creative field value. This method supports patch
 -- semantics.
@@ -64,9 +66,10 @@ type CreativeFieldValuesPatchResource =
 -- /See:/ 'creativeFieldValuesPatch' smart constructor.
 data CreativeFieldValuesPatch = CreativeFieldValuesPatch'
     { _cfvpCreativeFieldId :: !(Textual Int64)
-    , _cfvpProFileId       :: !(Textual Int64)
-    , _cfvpPayload         :: !CreativeFieldValue
-    , _cfvpId              :: !(Textual Int64)
+    , _cfvpProFileId :: !(Textual Int64)
+    , _cfvpPayload :: !CreativeFieldValue
+    , _cfvpId :: !(Textual Int64)
+    , _cfvpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValuesPatch' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data CreativeFieldValuesPatch = CreativeFieldValuesPatch'
 -- * 'cfvpPayload'
 --
 -- * 'cfvpId'
+--
+-- * 'cfvpFields'
 creativeFieldValuesPatch
     :: Int64 -- ^ 'cfvpCreativeFieldId'
     -> Int64 -- ^ 'cfvpProFileId'
     -> CreativeFieldValue -- ^ 'cfvpPayload'
     -> Int64 -- ^ 'cfvpId'
     -> CreativeFieldValuesPatch
-creativeFieldValuesPatch pCfvpCreativeFieldId_ pCfvpProFileId_ pCfvpPayload_ pCfvpId_ =
+creativeFieldValuesPatch pCfvpCreativeFieldId_ pCfvpProFileId_ pCfvpPayload_ pCfvpId_ = 
     CreativeFieldValuesPatch'
     { _cfvpCreativeFieldId = _Coerce # pCfvpCreativeFieldId_
     , _cfvpProFileId = _Coerce # pCfvpProFileId_
     , _cfvpPayload = pCfvpPayload_
     , _cfvpId = _Coerce # pCfvpId_
+    , _cfvpFields = Nothing
     }
 
 -- | Creative field ID for this creative field value.
@@ -118,6 +124,11 @@ cfvpId :: Lens' CreativeFieldValuesPatch Int64
 cfvpId
   = lens _cfvpId (\ s a -> s{_cfvpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfvpFields :: Lens' CreativeFieldValuesPatch (Maybe Text)
+cfvpFields
+  = lens _cfvpFields (\ s a -> s{_cfvpFields = a})
+
 instance GoogleRequest CreativeFieldValuesPatch where
         type Rs CreativeFieldValuesPatch = CreativeFieldValue
         type Scopes CreativeFieldValuesPatch =
@@ -125,6 +136,7 @@ instance GoogleRequest CreativeFieldValuesPatch where
         requestClient CreativeFieldValuesPatch'{..}
           = go _cfvpProFileId _cfvpCreativeFieldId
               (Just _cfvpId)
+              _cfvpFields
               (Just AltJSON)
               _cfvpPayload
               dFAReportingService

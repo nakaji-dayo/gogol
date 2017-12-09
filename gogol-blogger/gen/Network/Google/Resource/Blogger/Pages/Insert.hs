@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Pages.Insert
     , piIsDraft
     , piBlogId
     , piPayload
+    , piFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.insert@ method which the
 -- 'PagesInsert' request conforms to.
@@ -50,16 +51,18 @@ type PagesInsertResource =
            Capture "blogId" Text :>
              "pages" :>
                QueryParam "isDraft" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Page :> Post '[JSON] Page
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Page :> Post '[JSON] Page
 
 -- | Add a page.
 --
 -- /See:/ 'pagesInsert' smart constructor.
 data PagesInsert = PagesInsert'
     { _piIsDraft :: !(Maybe Bool)
-    , _piBlogId  :: !Text
+    , _piBlogId :: !Text
     , _piPayload :: !Page
+    , _piFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesInsert' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data PagesInsert = PagesInsert'
 -- * 'piBlogId'
 --
 -- * 'piPayload'
+--
+-- * 'piFields'
 pagesInsert
     :: Text -- ^ 'piBlogId'
     -> Page -- ^ 'piPayload'
     -> PagesInsert
-pagesInsert pPiBlogId_ pPiPayload_ =
+pagesInsert pPiBlogId_ pPiPayload_ = 
     PagesInsert'
     { _piIsDraft = Nothing
     , _piBlogId = pPiBlogId_
     , _piPayload = pPiPayload_
+    , _piFields = Nothing
     }
 
 -- | Whether to create the page as a draft (default: false).
@@ -96,12 +102,17 @@ piPayload :: Lens' PagesInsert Page
 piPayload
   = lens _piPayload (\ s a -> s{_piPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+piFields :: Lens' PagesInsert (Maybe Text)
+piFields = lens _piFields (\ s a -> s{_piFields = a})
+
 instance GoogleRequest PagesInsert where
         type Rs PagesInsert = Page
         type Scopes PagesInsert =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesInsert'{..}
-          = go _piBlogId _piIsDraft (Just AltJSON) _piPayload
+          = go _piBlogId _piIsDraft _piFields (Just AltJSON)
+              _piPayload
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PagesInsertResource)

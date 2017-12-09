@@ -32,10 +32,12 @@ module Network.Google.Resource.Webmasters.Sites.List
     , sitesList
     , SitesList
 
+    -- * Request Lenses
+    , sitFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sites.list@ method which the
 -- 'SitesList' request conforms to.
@@ -43,29 +45,41 @@ type SitesListResource =
      "webmasters" :>
        "v3" :>
          "sites" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] SitesListResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] SitesListResponse
 
 -- | Lists the user\'s Search Console sites.
 --
 -- /See:/ 'sitesList' smart constructor.
-data SitesList =
-    SitesList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype SitesList = SitesList'
+    { _sitFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sitFields'
 sitesList
     :: SitesList
-sitesList = SitesList'
+sitesList = 
+    SitesList'
+    { _sitFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+sitFields :: Lens' SitesList (Maybe Text)
+sitFields
+  = lens _sitFields (\ s a -> s{_sitFields = a})
 
 instance GoogleRequest SitesList where
         type Rs SitesList = SitesListResponse
         type Scopes SitesList =
              '["https://www.googleapis.com/auth/webmasters",
                "https://www.googleapis.com/auth/webmasters.readonly"]
-        requestClient SitesList'{}
-          = go (Just AltJSON) webmasterToolsService
+        requestClient SitesList'{..}
+          = go _sitFields (Just AltJSON) webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitesListResource)
                       mempty

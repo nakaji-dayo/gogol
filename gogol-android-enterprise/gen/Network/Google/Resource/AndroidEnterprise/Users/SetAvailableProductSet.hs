@@ -20,7 +20,10 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Modifies the set of products a user is entitled to access.
+-- Modifies the set of products that a user is entitled to access (referred
+-- to as whitelisted products). Only products that are approved or products
+-- that were previously approved (products with revoked approval) can be
+-- whitelisted.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.users.setAvailableProductSet@.
 module Network.Google.Resource.AndroidEnterprise.Users.SetAvailableProductSet
@@ -36,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.SetAvailableProductSet
     , usapsEnterpriseId
     , usapsPayload
     , usapsUserId
+    , usapsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.setAvailableProductSet@ method which the
 -- 'UsersSetAvailableProductSet' request conforms to.
@@ -51,16 +55,21 @@ type UsersSetAvailableProductSetResource =
              "users" :>
                Capture "userId" Text :>
                  "availableProductSet" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ProductSet :> Put '[JSON] ProductSet
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ProductSet :> Put '[JSON] ProductSet
 
--- | Modifies the set of products a user is entitled to access.
+-- | Modifies the set of products that a user is entitled to access (referred
+-- to as whitelisted products). Only products that are approved or products
+-- that were previously approved (products with revoked approval) can be
+-- whitelisted.
 --
 -- /See:/ 'usersSetAvailableProductSet' smart constructor.
 data UsersSetAvailableProductSet = UsersSetAvailableProductSet'
     { _usapsEnterpriseId :: !Text
-    , _usapsPayload      :: !ProductSet
-    , _usapsUserId       :: !Text
+    , _usapsPayload :: !ProductSet
+    , _usapsUserId :: !Text
+    , _usapsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSetAvailableProductSet' with the minimum fields required to make a request.
@@ -72,16 +81,19 @@ data UsersSetAvailableProductSet = UsersSetAvailableProductSet'
 -- * 'usapsPayload'
 --
 -- * 'usapsUserId'
+--
+-- * 'usapsFields'
 usersSetAvailableProductSet
     :: Text -- ^ 'usapsEnterpriseId'
     -> ProductSet -- ^ 'usapsPayload'
     -> Text -- ^ 'usapsUserId'
     -> UsersSetAvailableProductSet
-usersSetAvailableProductSet pUsapsEnterpriseId_ pUsapsPayload_ pUsapsUserId_ =
+usersSetAvailableProductSet pUsapsEnterpriseId_ pUsapsPayload_ pUsapsUserId_ = 
     UsersSetAvailableProductSet'
     { _usapsEnterpriseId = pUsapsEnterpriseId_
     , _usapsPayload = pUsapsPayload_
     , _usapsUserId = pUsapsUserId_
+    , _usapsFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -100,13 +112,19 @@ usapsUserId :: Lens' UsersSetAvailableProductSet Text
 usapsUserId
   = lens _usapsUserId (\ s a -> s{_usapsUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usapsFields :: Lens' UsersSetAvailableProductSet (Maybe Text)
+usapsFields
+  = lens _usapsFields (\ s a -> s{_usapsFields = a})
+
 instance GoogleRequest UsersSetAvailableProductSet
          where
         type Rs UsersSetAvailableProductSet = ProductSet
         type Scopes UsersSetAvailableProductSet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersSetAvailableProductSet'{..}
-          = go _usapsEnterpriseId _usapsUserId (Just AltJSON)
+          = go _usapsEnterpriseId _usapsUserId _usapsFields
+              (Just AltJSON)
               _usapsPayload
               androidEnterpriseService
           where go

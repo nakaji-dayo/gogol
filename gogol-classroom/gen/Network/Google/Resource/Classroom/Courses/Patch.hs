@@ -48,11 +48,12 @@ module Network.Google.Resource.Classroom.Courses.Patch
     , cpPayload
     , cpBearerToken
     , cpId
+    , cpFields
     , cpCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.patch@ method which the
 -- 'CoursesPatch' request conforms to.
@@ -60,16 +61,17 @@ type CoursesPatchResource =
      "v1" :>
        "courses" :>
          Capture "id" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
-               QueryParam "updateMask" Text :>
+               QueryParam "updateMask" FieldMask :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Course :> Patch '[JSON] Course
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Course :> Patch '[JSON] Course
 
 -- | Updates one or more fields in a course. This method returns the
 -- following error codes: * \`PERMISSION_DENIED\` if the requesting user is
@@ -81,16 +83,17 @@ type CoursesPatchResource =
 --
 -- /See:/ 'coursesPatch' smart constructor.
 data CoursesPatch = CoursesPatch'
-    { _cpXgafv          :: !(Maybe Text)
+    { _cpXgafv :: !(Maybe Xgafv)
     , _cpUploadProtocol :: !(Maybe Text)
-    , _cpUpdateMask     :: !(Maybe Text)
-    , _cpPp             :: !Bool
-    , _cpAccessToken    :: !(Maybe Text)
-    , _cpUploadType     :: !(Maybe Text)
-    , _cpPayload        :: !Course
-    , _cpBearerToken    :: !(Maybe Text)
-    , _cpId             :: !Text
-    , _cpCallback       :: !(Maybe Text)
+    , _cpUpdateMask :: !(Maybe FieldMask)
+    , _cpPp :: !Bool
+    , _cpAccessToken :: !(Maybe Text)
+    , _cpUploadType :: !(Maybe Text)
+    , _cpPayload :: !Course
+    , _cpBearerToken :: !(Maybe Text)
+    , _cpId :: !Text
+    , _cpFields :: !(Maybe Text)
+    , _cpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesPatch' with the minimum fields required to make a request.
@@ -115,12 +118,14 @@ data CoursesPatch = CoursesPatch'
 --
 -- * 'cpId'
 --
+-- * 'cpFields'
+--
 -- * 'cpCallback'
 coursesPatch
     :: Course -- ^ 'cpPayload'
     -> Text -- ^ 'cpId'
     -> CoursesPatch
-coursesPatch pCpPayload_ pCpId_ =
+coursesPatch pCpPayload_ pCpId_ = 
     CoursesPatch'
     { _cpXgafv = Nothing
     , _cpUploadProtocol = Nothing
@@ -131,11 +136,12 @@ coursesPatch pCpPayload_ pCpId_ =
     , _cpPayload = pCpPayload_
     , _cpBearerToken = Nothing
     , _cpId = pCpId_
+    , _cpFields = Nothing
     , _cpCallback = Nothing
     }
 
 -- | V1 error format.
-cpXgafv :: Lens' CoursesPatch (Maybe Text)
+cpXgafv :: Lens' CoursesPatch (Maybe Xgafv)
 cpXgafv = lens _cpXgafv (\ s a -> s{_cpXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -147,10 +153,12 @@ cpUploadProtocol
 -- | Mask that identifies which fields on the course to update. This field is
 -- required to do an update. The update will fail if invalid fields are
 -- specified. The following fields are valid: * \`name\` * \`section\` *
--- \`descriptionHeading\` * \`description\` * \`room\` * \`courseState\`
--- When set in a query parameter, this field should be specified as
--- \`updateMask=,,...\`
-cpUpdateMask :: Lens' CoursesPatch (Maybe Text)
+-- \`descriptionHeading\` * \`description\` * \`room\` * \`courseState\` *
+-- \`ownerId\` Note: patches to ownerId are treated as being effective
+-- immediately, but in practice it may take some time for the ownership
+-- transfer of all affected resources to complete. When set in a query
+-- parameter, this field should be specified as \`updateMask=,,...\`
+cpUpdateMask :: Lens' CoursesPatch (Maybe FieldMask)
 cpUpdateMask
   = lens _cpUpdateMask (\ s a -> s{_cpUpdateMask = a})
 
@@ -185,6 +193,10 @@ cpBearerToken
 cpId :: Lens' CoursesPatch Text
 cpId = lens _cpId (\ s a -> s{_cpId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' CoursesPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 -- | JSONP
 cpCallback :: Lens' CoursesPatch (Maybe Text)
 cpCallback
@@ -201,6 +213,7 @@ instance GoogleRequest CoursesPatch where
               _cpUploadType
               _cpBearerToken
               _cpCallback
+              _cpFields
               (Just AltJSON)
               _cpPayload
               classroomService

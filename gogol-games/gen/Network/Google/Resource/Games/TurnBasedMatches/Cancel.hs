@@ -35,10 +35,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Cancel
     -- * Request Lenses
     , tConsistencyToken
     , tMatchId
+    , tFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.cancel@ method which the
 -- 'TurnBasedMatchesCancel' request conforms to.
@@ -49,14 +50,16 @@ type TurnBasedMatchesCancelResource =
            Capture "matchId" Text :>
              "cancel" :>
                QueryParam "consistencyToken" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Put '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Put '[JSON] ()
 
 -- | Cancel a turn-based match.
 --
 -- /See:/ 'turnBasedMatchesCancel' smart constructor.
 data TurnBasedMatchesCancel = TurnBasedMatchesCancel'
     { _tConsistencyToken :: !(Maybe (Textual Int64))
-    , _tMatchId          :: !Text
+    , _tMatchId :: !Text
+    , _tFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesCancel' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data TurnBasedMatchesCancel = TurnBasedMatchesCancel'
 -- * 'tConsistencyToken'
 --
 -- * 'tMatchId'
+--
+-- * 'tFields'
 turnBasedMatchesCancel
     :: Text -- ^ 'tMatchId'
     -> TurnBasedMatchesCancel
-turnBasedMatchesCancel pTMatchId_ =
+turnBasedMatchesCancel pTMatchId_ = 
     TurnBasedMatchesCancel'
     { _tConsistencyToken = Nothing
     , _tMatchId = pTMatchId_
+    , _tFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -86,13 +92,18 @@ tConsistencyToken
 tMatchId :: Lens' TurnBasedMatchesCancel Text
 tMatchId = lens _tMatchId (\ s a -> s{_tMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tFields :: Lens' TurnBasedMatchesCancel (Maybe Text)
+tFields = lens _tFields (\ s a -> s{_tFields = a})
+
 instance GoogleRequest TurnBasedMatchesCancel where
         type Rs TurnBasedMatchesCancel = ()
         type Scopes TurnBasedMatchesCancel =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient TurnBasedMatchesCancel'{..}
-          = go _tMatchId _tConsistencyToken (Just AltJSON)
+          = go _tMatchId _tConsistencyToken _tFields
+              (Just AltJSON)
               gamesService
           where go
                   = buildClient

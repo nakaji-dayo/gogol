@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Achievements.ResetMultipleForAllP
 
     -- * Request Lenses
     , armfapPayload
+    , armfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.achievements.resetMultipleForAllPlayers@ method which the
 -- 'AchievementsResetMultipleForAllPlayers' request conforms to.
@@ -48,17 +49,19 @@ type AchievementsResetMultipleForAllPlayersResource =
        "v1management" :>
          "achievements" :>
            "resetMultipleForAllPlayers" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] AchievementResetMultipleForAllRequest
-                 :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] AchievementResetMultipleForAllRequest
+                   :> Post '[JSON] ()
 
 -- | Resets achievements with the given IDs for all players. This method is
 -- only available to user accounts for your developer console. Only draft
 -- achievements may be reset.
 --
 -- /See:/ 'achievementsResetMultipleForAllPlayers' smart constructor.
-newtype AchievementsResetMultipleForAllPlayers = AchievementsResetMultipleForAllPlayers'
-    { _armfapPayload :: AchievementResetMultipleForAllRequest
+data AchievementsResetMultipleForAllPlayers = AchievementsResetMultipleForAllPlayers'
+    { _armfapPayload :: !AchievementResetMultipleForAllRequest
+    , _armfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsResetMultipleForAllPlayers' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype AchievementsResetMultipleForAllPlayers = AchievementsResetMultipleForAll
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'armfapPayload'
+--
+-- * 'armfapFields'
 achievementsResetMultipleForAllPlayers
     :: AchievementResetMultipleForAllRequest -- ^ 'armfapPayload'
     -> AchievementsResetMultipleForAllPlayers
-achievementsResetMultipleForAllPlayers pArmfapPayload_ =
+achievementsResetMultipleForAllPlayers pArmfapPayload_ = 
     AchievementsResetMultipleForAllPlayers'
     { _armfapPayload = pArmfapPayload_
+    , _armfapFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -79,6 +85,11 @@ armfapPayload :: Lens' AchievementsResetMultipleForAllPlayers AchievementResetMu
 armfapPayload
   = lens _armfapPayload
       (\ s a -> s{_armfapPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+armfapFields :: Lens' AchievementsResetMultipleForAllPlayers (Maybe Text)
+armfapFields
+  = lens _armfapFields (\ s a -> s{_armfapFields = a})
 
 instance GoogleRequest
          AchievementsResetMultipleForAllPlayers where
@@ -88,7 +99,7 @@ instance GoogleRequest
                "https://www.googleapis.com/auth/plus.login"]
         requestClient
           AchievementsResetMultipleForAllPlayers'{..}
-          = go (Just AltJSON) _armfapPayload
+          = go _armfapFields (Just AltJSON) _armfapPayload
               gamesManagementService
           where go
                   = buildClient

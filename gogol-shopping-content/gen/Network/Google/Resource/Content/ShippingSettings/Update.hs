@@ -20,10 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the shipping settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- Updates the shipping settings of the account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.shippingsettings.update@.
 module Network.Google.Resource.Content.ShippingSettings.Update
@@ -40,10 +37,11 @@ module Network.Google.Resource.Content.ShippingSettings.Update
     , ssuPayload
     , ssuAccountId
     , ssuDryRun
+    , ssuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.shippingsettings.update@ method which the
 -- 'ShippingSettingsUpdate' request conforms to.
@@ -54,21 +52,20 @@ type ShippingSettingsUpdateResource =
            "shippingsettings" :>
              Capture "accountId" (Textual Word64) :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ShippingSettings :>
-                     Put '[JSON] ShippingSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ShippingSettings :>
+                       Put '[JSON] ShippingSettings
 
--- | Updates the shipping settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- | Updates the shipping settings of the account.
 --
 -- /See:/ 'shippingSettingsUpdate' smart constructor.
 data ShippingSettingsUpdate = ShippingSettingsUpdate'
     { _ssuMerchantId :: !(Textual Word64)
-    , _ssuPayload    :: !ShippingSettings
-    , _ssuAccountId  :: !(Textual Word64)
-    , _ssuDryRun     :: !(Maybe Bool)
+    , _ssuPayload :: !ShippingSettings
+    , _ssuAccountId :: !(Textual Word64)
+    , _ssuDryRun :: !(Maybe Bool)
+    , _ssuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ShippingSettingsUpdate' with the minimum fields required to make a request.
@@ -82,20 +79,25 @@ data ShippingSettingsUpdate = ShippingSettingsUpdate'
 -- * 'ssuAccountId'
 --
 -- * 'ssuDryRun'
+--
+-- * 'ssuFields'
 shippingSettingsUpdate
     :: Word64 -- ^ 'ssuMerchantId'
     -> ShippingSettings -- ^ 'ssuPayload'
     -> Word64 -- ^ 'ssuAccountId'
     -> ShippingSettingsUpdate
-shippingSettingsUpdate pSsuMerchantId_ pSsuPayload_ pSsuAccountId_ =
+shippingSettingsUpdate pSsuMerchantId_ pSsuPayload_ pSsuAccountId_ = 
     ShippingSettingsUpdate'
     { _ssuMerchantId = _Coerce # pSsuMerchantId_
     , _ssuPayload = pSsuPayload_
     , _ssuAccountId = _Coerce # pSsuAccountId_
     , _ssuDryRun = Nothing
+    , _ssuFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
 ssuMerchantId :: Lens' ShippingSettingsUpdate Word64
 ssuMerchantId
   = lens _ssuMerchantId
@@ -118,12 +120,18 @@ ssuDryRun :: Lens' ShippingSettingsUpdate (Maybe Bool)
 ssuDryRun
   = lens _ssuDryRun (\ s a -> s{_ssuDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ssuFields :: Lens' ShippingSettingsUpdate (Maybe Text)
+ssuFields
+  = lens _ssuFields (\ s a -> s{_ssuFields = a})
+
 instance GoogleRequest ShippingSettingsUpdate where
         type Rs ShippingSettingsUpdate = ShippingSettings
         type Scopes ShippingSettingsUpdate =
              '["https://www.googleapis.com/auth/content"]
         requestClient ShippingSettingsUpdate'{..}
           = go _ssuMerchantId _ssuAccountId _ssuDryRun
+              _ssuFields
               (Just AltJSON)
               _ssuPayload
               shoppingContentService

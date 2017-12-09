@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Update
     , suuPageId
     , suuPayload
     , suuClusterId
+    , suuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.update@ method which the
 -- 'StorelayoutclustersUpdate' request conforms to.
@@ -54,18 +55,20 @@ type StorelayoutclustersUpdateResource =
                  Capture "pageId" Text :>
                    "clusters" :>
                      Capture "clusterId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] StoreCluster :>
-                           Put '[JSON] StoreCluster
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] StoreCluster :>
+                             Put '[JSON] StoreCluster
 
 -- | Updates a cluster.
 --
 -- /See:/ 'storelayoutclustersUpdate' smart constructor.
 data StorelayoutclustersUpdate = StorelayoutclustersUpdate'
     { _suuEnterpriseId :: !Text
-    , _suuPageId       :: !Text
-    , _suuPayload      :: !StoreCluster
-    , _suuClusterId    :: !Text
+    , _suuPageId :: !Text
+    , _suuPayload :: !StoreCluster
+    , _suuClusterId :: !Text
+    , _suuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersUpdate' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data StorelayoutclustersUpdate = StorelayoutclustersUpdate'
 -- * 'suuPayload'
 --
 -- * 'suuClusterId'
+--
+-- * 'suuFields'
 storelayoutclustersUpdate
     :: Text -- ^ 'suuEnterpriseId'
     -> Text -- ^ 'suuPageId'
     -> StoreCluster -- ^ 'suuPayload'
     -> Text -- ^ 'suuClusterId'
     -> StorelayoutclustersUpdate
-storelayoutclustersUpdate pSuuEnterpriseId_ pSuuPageId_ pSuuPayload_ pSuuClusterId_ =
+storelayoutclustersUpdate pSuuEnterpriseId_ pSuuPageId_ pSuuPayload_ pSuuClusterId_ = 
     StorelayoutclustersUpdate'
     { _suuEnterpriseId = pSuuEnterpriseId_
     , _suuPageId = pSuuPageId_
     , _suuPayload = pSuuPayload_
     , _suuClusterId = pSuuClusterId_
+    , _suuFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -114,6 +120,11 @@ suuClusterId :: Lens' StorelayoutclustersUpdate Text
 suuClusterId
   = lens _suuClusterId (\ s a -> s{_suuClusterId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suuFields :: Lens' StorelayoutclustersUpdate (Maybe Text)
+suuFields
+  = lens _suuFields (\ s a -> s{_suuFields = a})
+
 instance GoogleRequest StorelayoutclustersUpdate
          where
         type Rs StorelayoutclustersUpdate = StoreCluster
@@ -121,6 +132,7 @@ instance GoogleRequest StorelayoutclustersUpdate
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersUpdate'{..}
           = go _suuEnterpriseId _suuPageId _suuClusterId
+              _suuFields
               (Just AltJSON)
               _suuPayload
               androidEnterpriseService

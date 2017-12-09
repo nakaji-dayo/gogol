@@ -34,10 +34,11 @@ module Network.Google.Resource.SiteVerification.WebResource.Get
 
     -- * Request Lenses
     , wrgId
+    , wrgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types
 
 -- | A resource alias for @siteVerification.webResource.get@ method which the
 -- 'WebResourceGet' request conforms to.
@@ -46,14 +47,16 @@ type WebResourceGetResource =
        "v1" :>
          "webResource" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] SiteVerificationWebResourceResource
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] SiteVerificationWebResourceResource
 
 -- | Get the most current data for a website or domain.
 --
 -- /See:/ 'webResourceGet' smart constructor.
-newtype WebResourceGet = WebResourceGet'
-    { _wrgId :: Text
+data WebResourceGet = WebResourceGet'
+    { _wrgId :: !Text
+    , _wrgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebResourceGet' with the minimum fields required to make a request.
@@ -61,17 +64,25 @@ newtype WebResourceGet = WebResourceGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'wrgId'
+--
+-- * 'wrgFields'
 webResourceGet
     :: Text -- ^ 'wrgId'
     -> WebResourceGet
-webResourceGet pWrgId_ =
+webResourceGet pWrgId_ = 
     WebResourceGet'
     { _wrgId = pWrgId_
+    , _wrgFields = Nothing
     }
 
 -- | The id of a verified site or domain.
 wrgId :: Lens' WebResourceGet Text
 wrgId = lens _wrgId (\ s a -> s{_wrgId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+wrgFields :: Lens' WebResourceGet (Maybe Text)
+wrgFields
+  = lens _wrgFields (\ s a -> s{_wrgFields = a})
 
 instance GoogleRequest WebResourceGet where
         type Rs WebResourceGet =
@@ -79,7 +90,8 @@ instance GoogleRequest WebResourceGet where
         type Scopes WebResourceGet =
              '["https://www.googleapis.com/auth/siteverification"]
         requestClient WebResourceGet'{..}
-          = go _wrgId (Just AltJSON) siteVerificationService
+          = go _wrgId _wrgFields (Just AltJSON)
+              siteVerificationService
           where go
                   = buildClient (Proxy :: Proxy WebResourceGetResource)
                       mempty

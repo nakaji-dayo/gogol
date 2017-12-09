@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Quests.ResetMultipleForAllPlayers
 
     -- * Request Lenses
     , qrmfapPayload
+    , qrmfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.quests.resetMultipleForAllPlayers@ method which the
 -- 'QuestsResetMultipleForAllPlayers' request conforms to.
@@ -48,17 +49,19 @@ type QuestsResetMultipleForAllPlayersResource =
        "v1management" :>
          "quests" :>
            "resetMultipleForAllPlayers" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] QuestsResetMultipleForAllRequest :>
-                 Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] QuestsResetMultipleForAllRequest :>
+                   Post '[JSON] ()
 
 -- | Resets quests with the given IDs for all players. This method is only
 -- available to user accounts for your developer console. Only draft quests
 -- may be reset.
 --
 -- /See:/ 'questsResetMultipleForAllPlayers' smart constructor.
-newtype QuestsResetMultipleForAllPlayers = QuestsResetMultipleForAllPlayers'
-    { _qrmfapPayload :: QuestsResetMultipleForAllRequest
+data QuestsResetMultipleForAllPlayers = QuestsResetMultipleForAllPlayers'
+    { _qrmfapPayload :: !QuestsResetMultipleForAllRequest
+    , _qrmfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsResetMultipleForAllPlayers' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype QuestsResetMultipleForAllPlayers = QuestsResetMultipleForAllPlayers'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'qrmfapPayload'
+--
+-- * 'qrmfapFields'
 questsResetMultipleForAllPlayers
     :: QuestsResetMultipleForAllRequest -- ^ 'qrmfapPayload'
     -> QuestsResetMultipleForAllPlayers
-questsResetMultipleForAllPlayers pQrmfapPayload_ =
+questsResetMultipleForAllPlayers pQrmfapPayload_ = 
     QuestsResetMultipleForAllPlayers'
     { _qrmfapPayload = pQrmfapPayload_
+    , _qrmfapFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -80,6 +86,11 @@ qrmfapPayload
   = lens _qrmfapPayload
       (\ s a -> s{_qrmfapPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qrmfapFields :: Lens' QuestsResetMultipleForAllPlayers (Maybe Text)
+qrmfapFields
+  = lens _qrmfapFields (\ s a -> s{_qrmfapFields = a})
+
 instance GoogleRequest
          QuestsResetMultipleForAllPlayers where
         type Rs QuestsResetMultipleForAllPlayers = ()
@@ -87,7 +98,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient QuestsResetMultipleForAllPlayers'{..}
-          = go (Just AltJSON) _qrmfapPayload
+          = go _qrmfapFields (Just AltJSON) _qrmfapPayload
               gamesManagementService
           where go
                   = buildClient

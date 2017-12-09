@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Accounts.Update
     , auPayload
     , auConfirmUnsafeAccountChange
     , auId
+    , auFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.accounts.update@ method which the
 -- 'AccountsUpdate' request conforms to.
@@ -49,16 +50,18 @@ type AccountsUpdateResource =
          "accounts" :>
            Capture "id" (Textual Int32) :>
              QueryParam "confirmUnsafeAccountChange" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Account :> Put '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Account :> Put '[JSON] Account
 
 -- | Updates an existing account.
 --
 -- /See:/ 'accountsUpdate' smart constructor.
 data AccountsUpdate = AccountsUpdate'
-    { _auPayload                    :: !Account
+    { _auPayload :: !Account
     , _auConfirmUnsafeAccountChange :: !(Maybe Bool)
-    , _auId                         :: !(Textual Int32)
+    , _auId :: !(Textual Int32)
+    , _auFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsUpdate' with the minimum fields required to make a request.
@@ -70,15 +73,18 @@ data AccountsUpdate = AccountsUpdate'
 -- * 'auConfirmUnsafeAccountChange'
 --
 -- * 'auId'
+--
+-- * 'auFields'
 accountsUpdate
     :: Account -- ^ 'auPayload'
     -> Int32 -- ^ 'auId'
     -> AccountsUpdate
-accountsUpdate pAuPayload_ pAuId_ =
+accountsUpdate pAuPayload_ pAuId_ = 
     AccountsUpdate'
     { _auPayload = pAuPayload_
     , _auConfirmUnsafeAccountChange = Nothing
     , _auId = _Coerce # pAuId_
+    , _auFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -96,12 +102,16 @@ auConfirmUnsafeAccountChange
 auId :: Lens' AccountsUpdate Int32
 auId = lens _auId (\ s a -> s{_auId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+auFields :: Lens' AccountsUpdate (Maybe Text)
+auFields = lens _auFields (\ s a -> s{_auFields = a})
+
 instance GoogleRequest AccountsUpdate where
         type Rs AccountsUpdate = Account
         type Scopes AccountsUpdate =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient AccountsUpdate'{..}
-          = go _auId _auConfirmUnsafeAccountChange
+          = go _auId _auConfirmUnsafeAccountChange _auFields
               (Just AltJSON)
               _auPayload
               adExchangeBuyerService

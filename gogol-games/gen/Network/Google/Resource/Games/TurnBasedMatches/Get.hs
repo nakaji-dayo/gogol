@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Get
     , tbmgIncludeMatchData
     , tbmgLanguage
     , tbmgMatchId
+    , tbmgFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.get@ method which the
 -- 'TurnBasedMatchesGet' request conforms to.
@@ -52,8 +53,9 @@ type TurnBasedMatchesGetResource =
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "includeMatchData" Bool :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] TurnBasedMatch
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] TurnBasedMatch
 
 -- | Get the data for a turn-based match.
 --
@@ -61,8 +63,9 @@ type TurnBasedMatchesGetResource =
 data TurnBasedMatchesGet = TurnBasedMatchesGet'
     { _tbmgConsistencyToken :: !(Maybe (Textual Int64))
     , _tbmgIncludeMatchData :: !(Maybe Bool)
-    , _tbmgLanguage         :: !(Maybe Text)
-    , _tbmgMatchId          :: !Text
+    , _tbmgLanguage :: !(Maybe Text)
+    , _tbmgMatchId :: !Text
+    , _tbmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesGet' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data TurnBasedMatchesGet = TurnBasedMatchesGet'
 -- * 'tbmgLanguage'
 --
 -- * 'tbmgMatchId'
+--
+-- * 'tbmgFields'
 turnBasedMatchesGet
     :: Text -- ^ 'tbmgMatchId'
     -> TurnBasedMatchesGet
-turnBasedMatchesGet pTbmgMatchId_ =
+turnBasedMatchesGet pTbmgMatchId_ = 
     TurnBasedMatchesGet'
     { _tbmgConsistencyToken = Nothing
     , _tbmgIncludeMatchData = Nothing
     , _tbmgLanguage = Nothing
     , _tbmgMatchId = pTbmgMatchId_
+    , _tbmgFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -110,6 +116,11 @@ tbmgMatchId :: Lens' TurnBasedMatchesGet Text
 tbmgMatchId
   = lens _tbmgMatchId (\ s a -> s{_tbmgMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmgFields :: Lens' TurnBasedMatchesGet (Maybe Text)
+tbmgFields
+  = lens _tbmgFields (\ s a -> s{_tbmgFields = a})
+
 instance GoogleRequest TurnBasedMatchesGet where
         type Rs TurnBasedMatchesGet = TurnBasedMatch
         type Scopes TurnBasedMatchesGet =
@@ -119,6 +130,7 @@ instance GoogleRequest TurnBasedMatchesGet where
           = go _tbmgMatchId _tbmgConsistencyToken
               _tbmgIncludeMatchData
               _tbmgLanguage
+              _tbmgFields
               (Just AltJSON)
               gamesService
           where go

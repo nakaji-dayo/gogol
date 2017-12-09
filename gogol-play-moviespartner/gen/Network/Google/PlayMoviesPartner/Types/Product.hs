@@ -17,8 +17,8 @@
 --
 module Network.Google.PlayMoviesPartner.Types.Product where
 
-import           Network.Google.PlayMoviesPartner.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.PlayMoviesPartner.Types.Sum
+import Network.Google.Prelude
 
 -- | An Avail describes the Availability Window of a specific Edit in a given
 -- country, which means the period Google is allowed to sell or rent the
@@ -28,39 +28,39 @@ import           Network.Google.Prelude
 --
 -- /See:/ 'avail' smart constructor.
 data Avail = Avail'
-    { _aAltId                     :: !(Maybe Text)
-    , _aPphNames                  :: !(Maybe [Text])
-    , _aCaptionExemption          :: !(Maybe Text)
-    , _aRatingSystem              :: !(Maybe Text)
-    , _aSuppressionLiftDate       :: !(Maybe Text)
-    , _aEpisodeNumber             :: !(Maybe Text)
-    , _aPriceType                 :: !(Maybe Text)
-    , _aStoreLanguage             :: !(Maybe Text)
-    , _aEpisodeAltId              :: !(Maybe Text)
-    , _aStart                     :: !(Maybe Text)
-    , _aTerritory                 :: !(Maybe Text)
+    { _aAltId :: !(Maybe Text)
+    , _aPphNames :: !(Maybe [Text])
+    , _aCaptionExemption :: !(Maybe Text)
+    , _aRatingSystem :: !(Maybe Text)
+    , _aSuppressionLiftDate :: !(Maybe Text)
+    , _aEpisodeNumber :: !(Maybe Text)
+    , _aPriceType :: !(Maybe Text)
+    , _aStoreLanguage :: !(Maybe Text)
+    , _aEpisodeAltId :: !(Maybe Text)
+    , _aStart :: !(Maybe Text)
+    , _aTerritory :: !(Maybe Text)
     , _aEpisodeTitleInternalAlias :: !(Maybe Text)
-    , _aLicenseType               :: !(Maybe Text)
-    , _aAvailId                   :: !(Maybe Text)
-    , _aSeasonNumber              :: !(Maybe Text)
-    , _aWorkType                  :: !(Maybe Text)
-    , _aRatingValue               :: !(Maybe Text)
-    , _aSeasonTitleInternalAlias  :: !(Maybe Text)
-    , _aContentId                 :: !(Maybe Text)
-    , _aVideoId                   :: !(Maybe Text)
-    , _aSeriesAltId               :: !(Maybe Text)
-    , _aEnd                       :: !(Maybe Text)
-    , _aSeriesTitleInternalAlias  :: !(Maybe Text)
-    , _aDisplayName               :: !(Maybe Text)
-    , _aReleaseDate               :: !(Maybe Text)
-    , _aFormatProFile             :: !(Maybe Text)
-    , _aRatingReason              :: !(Maybe Text)
-    , _aEncodeId                  :: !(Maybe Text)
-    , _aPriceValue                :: !(Maybe Text)
-    , _aCaptionIncluded           :: !(Maybe Bool)
-    , _aProductId                 :: !(Maybe Text)
-    , _aSeasonAltId               :: !(Maybe Text)
-    , _aTitleInternalAlias        :: !(Maybe Text)
+    , _aLicenseType :: !(Maybe AvailLicenseType)
+    , _aAvailId :: !(Maybe Text)
+    , _aSeasonNumber :: !(Maybe Text)
+    , _aWorkType :: !(Maybe AvailWorkType)
+    , _aRatingValue :: !(Maybe Text)
+    , _aSeasonTitleInternalAlias :: !(Maybe Text)
+    , _aContentId :: !(Maybe Text)
+    , _aVideoId :: !(Maybe Text)
+    , _aSeriesAltId :: !(Maybe Text)
+    , _aEnd :: !(Maybe Text)
+    , _aSeriesTitleInternalAlias :: !(Maybe Text)
+    , _aDisplayName :: !(Maybe Text)
+    , _aReleaseDate :: !(Maybe Text)
+    , _aFormatProFile :: !(Maybe AvailFormatProFile)
+    , _aRatingReason :: !(Maybe Text)
+    , _aEncodeId :: !(Maybe Text)
+    , _aPriceValue :: !(Maybe Text)
+    , _aCaptionIncluded :: !(Maybe Bool)
+    , _aProductId :: !(Maybe Text)
+    , _aSeasonAltId :: !(Maybe Text)
+    , _aTitleInternalAlias :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Avail' with the minimum fields required to make a request.
@@ -134,7 +134,7 @@ data Avail = Avail'
 -- * 'aTitleInternalAlias'
 avail
     :: Avail
-avail =
+avail = 
     Avail'
     { _aAltId = Nothing
     , _aPphNames = Nothing
@@ -257,7 +257,7 @@ aEpisodeTitleInternalAlias
       (\ s a -> s{_aEpisodeTitleInternalAlias = a})
 
 -- | Type of transaction.
-aLicenseType :: Lens' Avail (Maybe Text)
+aLicenseType :: Lens' Avail (Maybe AvailLicenseType)
 aLicenseType
   = lens _aLicenseType (\ s a -> s{_aLicenseType = a})
 
@@ -274,7 +274,7 @@ aSeasonNumber
       (\ s a -> s{_aSeasonNumber = a})
 
 -- | Work type as enumerated in EMA.
-aWorkType :: Lens' Avail (Maybe Text)
+aWorkType :: Lens' Avail (Maybe AvailWorkType)
 aWorkType
   = lens _aWorkType (\ s a -> s{_aWorkType = a})
 
@@ -335,7 +335,7 @@ aReleaseDate
   = lens _aReleaseDate (\ s a -> s{_aReleaseDate = a})
 
 -- | Indicates the format profile covered by the transaction.
-aFormatProFile :: Lens' Avail (Maybe Text)
+aFormatProFile :: Lens' Avail (Maybe AvailFormatProFile)
 aFormatProFile
   = lens _aFormatProFile
       (\ s a -> s{_aFormatProFile = a})
@@ -468,8 +468,8 @@ instance ToJSON Avail where
 -- /See:/ 'listAvailsResponse' smart constructor.
 data ListAvailsResponse = ListAvailsResponse'
     { _larNextPageToken :: !(Maybe Text)
-    , _larAvails        :: !(Maybe [Avail])
-    , _larTotalSize     :: !(Maybe (Textual Int32))
+    , _larAvails :: !(Maybe [Avail])
+    , _larTotalSize :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListAvailsResponse' with the minimum fields required to make a request.
@@ -483,7 +483,7 @@ data ListAvailsResponse = ListAvailsResponse'
 -- * 'larTotalSize'
 listAvailsResponse
     :: ListAvailsResponse
-listAvailsResponse =
+listAvailsResponse = 
     ListAvailsResponse'
     { _larNextPageToken = Nothing
     , _larAvails = Nothing
@@ -531,8 +531,8 @@ instance ToJSON ListAvailsResponse where
 -- /See:/ 'listOrdersResponse' smart constructor.
 data ListOrdersResponse = ListOrdersResponse'
     { _lorNextPageToken :: !(Maybe Text)
-    , _lorTotalSize     :: !(Maybe (Textual Int32))
-    , _lorOrders        :: !(Maybe [Order])
+    , _lorTotalSize :: !(Maybe (Textual Int32))
+    , _lorOrders :: !(Maybe [Order])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListOrdersResponse' with the minimum fields required to make a request.
@@ -546,7 +546,7 @@ data ListOrdersResponse = ListOrdersResponse'
 -- * 'lorOrders'
 listOrdersResponse
     :: ListOrdersResponse
-listOrdersResponse =
+listOrdersResponse = 
     ListOrdersResponse'
     { _lorNextPageToken = Nothing
     , _lorTotalSize = Nothing
@@ -593,8 +593,8 @@ instance ToJSON ListOrdersResponse where
 -- /See:/ 'listStoreInfosResponse' smart constructor.
 data ListStoreInfosResponse = ListStoreInfosResponse'
     { _lsirNextPageToken :: !(Maybe Text)
-    , _lsirTotalSize     :: !(Maybe (Textual Int32))
-    , _lsirStoreInfos    :: !(Maybe [StoreInfo])
+    , _lsirTotalSize :: !(Maybe (Textual Int32))
+    , _lsirStoreInfos :: !(Maybe [StoreInfo])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListStoreInfosResponse' with the minimum fields required to make a request.
@@ -608,7 +608,7 @@ data ListStoreInfosResponse = ListStoreInfosResponse'
 -- * 'lsirStoreInfos'
 listStoreInfosResponse
     :: ListStoreInfosResponse
-listStoreInfosResponse =
+listStoreInfosResponse = 
     ListStoreInfosResponse'
     { _lsirNextPageToken = Nothing
     , _lsirTotalSize = Nothing
@@ -659,29 +659,29 @@ instance ToJSON ListStoreInfosResponse where
 --
 -- /See:/ 'order' smart constructor.
 data Order = Order'
-    { _oStatus                 :: !(Maybe Text)
-    , _oShowName               :: !(Maybe Text)
-    , _oPphName                :: !(Maybe Text)
-    , _oEarliestAvailStartTime :: !(Maybe Text)
-    , _oStudioName             :: !(Maybe Text)
-    , _oReceivedTime           :: !(Maybe Text)
-    , _oPriority               :: !(Maybe (Textual Double))
-    , _oChannelId              :: !(Maybe Text)
-    , _oCustomId               :: !(Maybe Text)
-    , _oApprovedTime           :: !(Maybe Text)
-    , _oCountries              :: !(Maybe [Text])
-    , _oChannelName            :: !(Maybe Text)
-    , _oVideoId                :: !(Maybe Text)
-    , _oLegacyPriority         :: !(Maybe Text)
-    , _oName                   :: !(Maybe Text)
-    , _oRejectionNote          :: !(Maybe Text)
-    , _oOrderedTime            :: !(Maybe Text)
-    , _oSeasonName             :: !(Maybe Text)
-    , _oStatusDetail           :: !(Maybe Text)
-    , _oType                   :: !(Maybe Text)
-    , _oNormalizedPriority     :: !(Maybe Text)
-    , _oOrderId                :: !(Maybe Text)
-    , _oEpisodeName            :: !(Maybe Text)
+    { _oStatus :: !(Maybe OrderStatus)
+    , _oShowName :: !(Maybe Text)
+    , _oPphName :: !(Maybe Text)
+    , _oEarliestAvailStartTime :: !(Maybe DateTime')
+    , _oStudioName :: !(Maybe Text)
+    , _oReceivedTime :: !(Maybe DateTime')
+    , _oPriority :: !(Maybe (Textual Double))
+    , _oChannelId :: !(Maybe Text)
+    , _oCustomId :: !(Maybe Text)
+    , _oApprovedTime :: !(Maybe DateTime')
+    , _oCountries :: !(Maybe [Text])
+    , _oChannelName :: !(Maybe Text)
+    , _oVideoId :: !(Maybe Text)
+    , _oLegacyPriority :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
+    , _oRejectionNote :: !(Maybe Text)
+    , _oOrderedTime :: !(Maybe DateTime')
+    , _oSeasonName :: !(Maybe Text)
+    , _oStatusDetail :: !(Maybe OrderStatusDetail)
+    , _oType :: !(Maybe OrderType)
+    , _oNormalizedPriority :: !(Maybe OrderNormalizedPriority)
+    , _oOrderId :: !(Maybe Text)
+    , _oEpisodeName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Order' with the minimum fields required to make a request.
@@ -735,7 +735,7 @@ data Order = Order'
 -- * 'oEpisodeName'
 order
     :: Order
-order =
+order = 
     Order'
     { _oStatus = Nothing
     , _oShowName = Nothing
@@ -763,7 +763,7 @@ order =
     }
 
 -- | High-level status of the order.
-oStatus :: Lens' Order (Maybe Text)
+oStatus :: Lens' Order (Maybe OrderStatus)
 oStatus = lens _oStatus (\ s a -> s{_oStatus = a})
 
 -- | Default Show name, usually in the language of the country of origin.
@@ -777,10 +777,11 @@ oPphName :: Lens' Order (Maybe Text)
 oPphName = lens _oPphName (\ s a -> s{_oPphName = a})
 
 -- | Timestamp of the earliest start date of the Avails linked to this Order.
-oEarliestAvailStartTime :: Lens' Order (Maybe Text)
+oEarliestAvailStartTime :: Lens' Order (Maybe UTCTime)
 oEarliestAvailStartTime
   = lens _oEarliestAvailStartTime
       (\ s a -> s{_oEarliestAvailStartTime = a})
+      . mapping _DateTime
 
 -- | Name of the studio that owns the Edit ordered.
 oStudioName :: Lens' Order (Maybe Text)
@@ -788,10 +789,11 @@ oStudioName
   = lens _oStudioName (\ s a -> s{_oStudioName = a})
 
 -- | Timestamp when the Order was fulfilled.
-oReceivedTime :: Lens' Order (Maybe Text)
+oReceivedTime :: Lens' Order (Maybe UTCTime)
 oReceivedTime
   = lens _oReceivedTime
       (\ s a -> s{_oReceivedTime = a})
+      . mapping _DateTime
 
 -- | Order priority, as defined by Google. The higher the value, the higher
 -- the priority. Example: 90
@@ -813,10 +815,11 @@ oCustomId
   = lens _oCustomId (\ s a -> s{_oCustomId = a})
 
 -- | Timestamp when the Order was approved.
-oApprovedTime :: Lens' Order (Maybe Text)
+oApprovedTime :: Lens' Order (Maybe UTCTime)
 oApprovedTime
   = lens _oApprovedTime
       (\ s a -> s{_oApprovedTime = a})
+      . mapping _DateTime
 
 -- | Countries where the Order is available, using the \"ISO 3166-1 alpha-2\"
 -- format (example: \"US\").
@@ -856,9 +859,10 @@ oRejectionNote
       (\ s a -> s{_oRejectionNote = a})
 
 -- | Timestamp when the Order was created.
-oOrderedTime :: Lens' Order (Maybe Text)
+oOrderedTime :: Lens' Order (Maybe UTCTime)
 oOrderedTime
   = lens _oOrderedTime (\ s a -> s{_oOrderedTime = a})
+      . mapping _DateTime
 
 -- | Default Season name, usually in the language of the country of origin.
 -- Only available for TV Edits Example: \"Googlers, The - A Brave New
@@ -868,17 +872,17 @@ oSeasonName
   = lens _oSeasonName (\ s a -> s{_oSeasonName = a})
 
 -- | Detailed status of the order
-oStatusDetail :: Lens' Order (Maybe Text)
+oStatusDetail :: Lens' Order (Maybe OrderStatusDetail)
 oStatusDetail
   = lens _oStatusDetail
       (\ s a -> s{_oStatusDetail = a})
 
 -- | Type of the Edit linked to the Order.
-oType :: Lens' Order (Maybe Text)
+oType :: Lens' Order (Maybe OrderType)
 oType = lens _oType (\ s a -> s{_oType = a})
 
 -- | A simpler representation of the priority.
-oNormalizedPriority :: Lens' Order (Maybe Text)
+oNormalizedPriority :: Lens' Order (Maybe OrderNormalizedPriority)
 oNormalizedPriority
   = lens _oNormalizedPriority
       (\ s a -> s{_oNormalizedPriority = a})
@@ -960,30 +964,30 @@ instance ToJSON Order where
 -- /See:/ 'storeInfo' smart constructor.
 data StoreInfo = StoreInfo'
     { _siTitleLevelEidr :: !(Maybe Text)
-    , _siPphNames       :: !(Maybe [Text])
-    , _siShowName       :: !(Maybe Text)
-    , _siSubtitles      :: !(Maybe [Text])
-    , _siStudioName     :: !(Maybe Text)
-    , _siAudioTracks    :: !(Maybe [Text])
-    , _siEpisodeNumber  :: !(Maybe Text)
-    , _siCountry        :: !(Maybe Text)
-    , _siTrailerId      :: !(Maybe Text)
-    , _siHasInfoCards   :: !(Maybe Bool)
-    , _siLiveTime       :: !(Maybe Text)
-    , _siSeasonNumber   :: !(Maybe Text)
-    , _siHasHdOffer     :: !(Maybe Bool)
-    , _siVideoId        :: !(Maybe Text)
-    , _siName           :: !(Maybe Text)
-    , _siHasVodOffer    :: !(Maybe Bool)
-    , _siSeasonName     :: !(Maybe Text)
-    , _siHasSdOffer     :: !(Maybe Bool)
-    , _siMid            :: !(Maybe Text)
-    , _siEditLevelEidr  :: !(Maybe Text)
-    , _siType           :: !(Maybe Text)
-    , _siHasEstOffer    :: !(Maybe Bool)
-    , _siHasAudio51     :: !(Maybe Bool)
-    , _siSeasonId       :: !(Maybe Text)
-    , _siShowId         :: !(Maybe Text)
+    , _siPphNames :: !(Maybe [Text])
+    , _siShowName :: !(Maybe Text)
+    , _siSubtitles :: !(Maybe [Text])
+    , _siStudioName :: !(Maybe Text)
+    , _siAudioTracks :: !(Maybe [Text])
+    , _siEpisodeNumber :: !(Maybe Text)
+    , _siCountry :: !(Maybe Text)
+    , _siTrailerId :: !(Maybe Text)
+    , _siHasInfoCards :: !(Maybe Bool)
+    , _siLiveTime :: !(Maybe DateTime')
+    , _siSeasonNumber :: !(Maybe Text)
+    , _siHasHdOffer :: !(Maybe Bool)
+    , _siVideoId :: !(Maybe Text)
+    , _siName :: !(Maybe Text)
+    , _siHasVodOffer :: !(Maybe Bool)
+    , _siSeasonName :: !(Maybe Text)
+    , _siHasSdOffer :: !(Maybe Bool)
+    , _siMid :: !(Maybe Text)
+    , _siEditLevelEidr :: !(Maybe Text)
+    , _siType :: !(Maybe StoreInfoType)
+    , _siHasEstOffer :: !(Maybe Bool)
+    , _siHasAudio51 :: !(Maybe Bool)
+    , _siSeasonId :: !(Maybe Text)
+    , _siShowId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StoreInfo' with the minimum fields required to make a request.
@@ -1041,7 +1045,7 @@ data StoreInfo = StoreInfo'
 -- * 'siShowId'
 storeInfo
     :: StoreInfo
-storeInfo =
+storeInfo = 
     StoreInfo'
     { _siTitleLevelEidr = Nothing
     , _siPphNames = Nothing
@@ -1135,9 +1139,10 @@ siHasInfoCards
       (\ s a -> s{_siHasInfoCards = a})
 
 -- | Timestamp when the Edit went live on the Store.
-siLiveTime :: Lens' StoreInfo (Maybe Text)
+siLiveTime :: Lens' StoreInfo (Maybe UTCTime)
 siLiveTime
-  = lens _siLiveTime (\ s a -> s{_siLiveTime = a})
+  = lens _siLiveTime (\ s a -> s{_siLiveTime = a}) .
+      mapping _DateTime
 
 -- | The number assigned to the season within a show. Only available on TV
 -- Edits. Example: \"1\".
@@ -1195,7 +1200,7 @@ siEditLevelEidr
       (\ s a -> s{_siEditLevelEidr = a})
 
 -- | Edit type, like Movie, Episode or Season.
-siType :: Lens' StoreInfo (Maybe Text)
+siType :: Lens' StoreInfo (Maybe StoreInfoType)
 siType = lens _siType (\ s a -> s{_siType = a})
 
 -- | Whether the Edit has a EST offer.

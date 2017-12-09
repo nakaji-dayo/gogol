@@ -35,11 +35,12 @@ module Network.Google.Resource.Compute.RegionBackendServices.Get
     -- * Request Lenses
     , rbsgProject
     , rbsgRegion
+    , rbsgFields
     , rbsgBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionBackendServices.get@ method which the
 -- 'RegionBackendServicesGet' request conforms to.
@@ -52,15 +53,17 @@ type RegionBackendServicesGetResource =
                Capture "region" Text :>
                  "backendServices" :>
                    Capture "backendService" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] BackendService
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] BackendService
 
 -- | Returns the specified regional BackendService resource.
 --
 -- /See:/ 'regionBackendServicesGet' smart constructor.
 data RegionBackendServicesGet = RegionBackendServicesGet'
-    { _rbsgProject        :: !Text
-    , _rbsgRegion         :: !Text
+    { _rbsgProject :: !Text
+    , _rbsgRegion :: !Text
+    , _rbsgFields :: !(Maybe Text)
     , _rbsgBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data RegionBackendServicesGet = RegionBackendServicesGet'
 --
 -- * 'rbsgRegion'
 --
+-- * 'rbsgFields'
+--
 -- * 'rbsgBackendService'
 regionBackendServicesGet
     :: Text -- ^ 'rbsgProject'
     -> Text -- ^ 'rbsgRegion'
     -> Text -- ^ 'rbsgBackendService'
     -> RegionBackendServicesGet
-regionBackendServicesGet pRbsgProject_ pRbsgRegion_ pRbsgBackendService_ =
+regionBackendServicesGet pRbsgProject_ pRbsgRegion_ pRbsgBackendService_ = 
     RegionBackendServicesGet'
     { _rbsgProject = pRbsgProject_
     , _rbsgRegion = pRbsgRegion_
+    , _rbsgFields = Nothing
     , _rbsgBackendService = pRbsgBackendService_
     }
 
@@ -94,6 +100,11 @@ rbsgProject
 rbsgRegion :: Lens' RegionBackendServicesGet Text
 rbsgRegion
   = lens _rbsgRegion (\ s a -> s{_rbsgRegion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rbsgFields :: Lens' RegionBackendServicesGet (Maybe Text)
+rbsgFields
+  = lens _rbsgFields (\ s a -> s{_rbsgFields = a})
 
 -- | Name of the BackendService resource to return.
 rbsgBackendService :: Lens' RegionBackendServicesGet Text
@@ -109,6 +120,7 @@ instance GoogleRequest RegionBackendServicesGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionBackendServicesGet'{..}
           = go _rbsgProject _rbsgRegion _rbsgBackendService
+              _rbsgFields
               (Just AltJSON)
               computeService
           where go

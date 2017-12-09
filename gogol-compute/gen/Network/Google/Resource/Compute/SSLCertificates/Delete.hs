@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.SSLCertificates.Delete
     , SSLCertificatesDelete
 
     -- * Request Lenses
+    , scdRequestId
     , scdProject
     , scdSSLCertificate
+    , scdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.sslCertificates.delete@ method which the
 -- 'SSLCertificatesDelete' request conforms to.
@@ -50,32 +52,56 @@ type SSLCertificatesDeleteResource =
              "global" :>
                "sslCertificates" :>
                  Capture "sslCertificate" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified SslCertificate resource.
 --
 -- /See:/ 'sslCertificatesDelete' smart constructor.
 data SSLCertificatesDelete = SSLCertificatesDelete'
-    { _scdProject        :: !Text
+    { _scdRequestId :: !(Maybe Text)
+    , _scdProject :: !Text
     , _scdSSLCertificate :: !Text
+    , _scdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SSLCertificatesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'scdRequestId'
+--
 -- * 'scdProject'
 --
 -- * 'scdSSLCertificate'
+--
+-- * 'scdFields'
 sslCertificatesDelete
     :: Text -- ^ 'scdProject'
     -> Text -- ^ 'scdSSLCertificate'
     -> SSLCertificatesDelete
-sslCertificatesDelete pScdProject_ pScdSSLCertificate_ =
+sslCertificatesDelete pScdProject_ pScdSSLCertificate_ = 
     SSLCertificatesDelete'
-    { _scdProject = pScdProject_
+    { _scdRequestId = Nothing
+    , _scdProject = pScdProject_
     , _scdSSLCertificate = pScdSSLCertificate_
+    , _scdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+scdRequestId :: Lens' SSLCertificatesDelete (Maybe Text)
+scdRequestId
+  = lens _scdRequestId (\ s a -> s{_scdRequestId = a})
 
 -- | Project ID for this request.
 scdProject :: Lens' SSLCertificatesDelete Text
@@ -88,13 +114,20 @@ scdSSLCertificate
   = lens _scdSSLCertificate
       (\ s a -> s{_scdSSLCertificate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scdFields :: Lens' SSLCertificatesDelete (Maybe Text)
+scdFields
+  = lens _scdFields (\ s a -> s{_scdFields = a})
+
 instance GoogleRequest SSLCertificatesDelete where
         type Rs SSLCertificatesDelete = Operation
         type Scopes SSLCertificatesDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient SSLCertificatesDelete'{..}
-          = go _scdProject _scdSSLCertificate (Just AltJSON)
+          = go _scdProject _scdSSLCertificate _scdRequestId
+              _scdFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

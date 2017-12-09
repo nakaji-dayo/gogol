@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.VerifyPassword
 
     -- * Request Lenses
     , rpvpPayload
+    , rpvpFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.verifyPassword@ method which the
 -- 'RelyingPartyVerifyPassword' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyVerifyPasswordResource =
        "v3" :>
          "relyingparty" :>
            "verifyPassword" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyVerifyPasswordRequest
-                 :> Post '[JSON] VerifyPasswordResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyVerifyPasswordRequest
+                   :> Post '[JSON] VerifyPasswordResponse
 
 -- | Verifies the user entered password.
 --
 -- /See:/ 'relyingPartyVerifyPassword' smart constructor.
-newtype RelyingPartyVerifyPassword = RelyingPartyVerifyPassword'
-    { _rpvpPayload :: IdentitytoolkitRelyingPartyVerifyPasswordRequest
+data RelyingPartyVerifyPassword = RelyingPartyVerifyPassword'
+    { _rpvpPayload :: !IdentitytoolkitRelyingPartyVerifyPasswordRequest
+    , _rpvpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyVerifyPassword' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyVerifyPassword = RelyingPartyVerifyPassword'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpvpPayload'
+--
+-- * 'rpvpFields'
 relyingPartyVerifyPassword
     :: IdentitytoolkitRelyingPartyVerifyPasswordRequest -- ^ 'rpvpPayload'
     -> RelyingPartyVerifyPassword
-relyingPartyVerifyPassword pRpvpPayload_ =
+relyingPartyVerifyPassword pRpvpPayload_ = 
     RelyingPartyVerifyPassword'
     { _rpvpPayload = pRpvpPayload_
+    , _rpvpFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpvpPayload :: Lens' RelyingPartyVerifyPassword IdentitytoolkitRelyingPartyVerifyPasswordRequest
 rpvpPayload
   = lens _rpvpPayload (\ s a -> s{_rpvpPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpvpFields :: Lens' RelyingPartyVerifyPassword (Maybe Text)
+rpvpFields
+  = lens _rpvpFields (\ s a -> s{_rpvpFields = a})
 
 instance GoogleRequest RelyingPartyVerifyPassword
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartyVerifyPassword
         type Scopes RelyingPartyVerifyPassword =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyVerifyPassword'{..}
-          = go (Just AltJSON) _rpvpPayload
+          = go _rpvpFields (Just AltJSON) _rpvpPayload
               identityToolkitService
           where go
                   = buildClient

@@ -40,40 +40,43 @@ module Network.Google.Resource.StorageTransfer.TransferJobs.Create
     , tjcUploadType
     , tjcPayload
     , tjcBearerToken
+    , tjcFields
     , tjcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferJobs.create@ method which the
 -- 'TransferJobsCreate' request conforms to.
 type TransferJobsCreateResource =
      "v1" :>
        "transferJobs" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TransferJob :>
-                           Post '[JSON] TransferJob
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] TransferJob :>
+                             Post '[JSON] TransferJob
 
 -- | Creates a transfer job that runs periodically.
 --
 -- /See:/ 'transferJobsCreate' smart constructor.
 data TransferJobsCreate = TransferJobsCreate'
-    { _tjcXgafv          :: !(Maybe Text)
+    { _tjcXgafv :: !(Maybe Xgafv)
     , _tjcUploadProtocol :: !(Maybe Text)
-    , _tjcPp             :: !Bool
-    , _tjcAccessToken    :: !(Maybe Text)
-    , _tjcUploadType     :: !(Maybe Text)
-    , _tjcPayload        :: !TransferJob
-    , _tjcBearerToken    :: !(Maybe Text)
-    , _tjcCallback       :: !(Maybe Text)
+    , _tjcPp :: !Bool
+    , _tjcAccessToken :: !(Maybe Text)
+    , _tjcUploadType :: !(Maybe Text)
+    , _tjcPayload :: !TransferJob
+    , _tjcBearerToken :: !(Maybe Text)
+    , _tjcFields :: !(Maybe Text)
+    , _tjcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferJobsCreate' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data TransferJobsCreate = TransferJobsCreate'
 --
 -- * 'tjcBearerToken'
 --
+-- * 'tjcFields'
+--
 -- * 'tjcCallback'
 transferJobsCreate
     :: TransferJob -- ^ 'tjcPayload'
     -> TransferJobsCreate
-transferJobsCreate pTjcPayload_ =
+transferJobsCreate pTjcPayload_ = 
     TransferJobsCreate'
     { _tjcXgafv = Nothing
     , _tjcUploadProtocol = Nothing
@@ -107,11 +112,12 @@ transferJobsCreate pTjcPayload_ =
     , _tjcUploadType = Nothing
     , _tjcPayload = pTjcPayload_
     , _tjcBearerToken = Nothing
+    , _tjcFields = Nothing
     , _tjcCallback = Nothing
     }
 
 -- | V1 error format.
-tjcXgafv :: Lens' TransferJobsCreate (Maybe Text)
+tjcXgafv :: Lens' TransferJobsCreate (Maybe Xgafv)
 tjcXgafv = lens _tjcXgafv (\ s a -> s{_tjcXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -147,6 +153,11 @@ tjcBearerToken
   = lens _tjcBearerToken
       (\ s a -> s{_tjcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tjcFields :: Lens' TransferJobsCreate (Maybe Text)
+tjcFields
+  = lens _tjcFields (\ s a -> s{_tjcFields = a})
+
 -- | JSONP
 tjcCallback :: Lens' TransferJobsCreate (Maybe Text)
 tjcCallback
@@ -162,6 +173,7 @@ instance GoogleRequest TransferJobsCreate where
               _tjcUploadType
               _tjcBearerToken
               _tjcCallback
+              _tjcFields
               (Just AltJSON)
               _tjcPayload
               storageTransferService

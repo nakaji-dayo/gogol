@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Ads.Patch
     , adsdProFileId
     , adsdPayload
     , adsdId
+    , adsdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.ads.patch@ method which the
 -- 'AdsPatch' request conforms to.
 type AdsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "ads" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Ad :> Patch '[JSON] Ad
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Ad :> Patch '[JSON] Ad
 
 -- | Updates an existing ad. This method supports patch semantics.
 --
 -- /See:/ 'adsPatch' smart constructor.
 data AdsPatch = AdsPatch'
     { _adsdProFileId :: !(Textual Int64)
-    , _adsdPayload   :: !Ad
-    , _adsdId        :: !(Textual Int64)
+    , _adsdPayload :: !Ad
+    , _adsdId :: !(Textual Int64)
+    , _adsdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data AdsPatch = AdsPatch'
 -- * 'adsdPayload'
 --
 -- * 'adsdId'
+--
+-- * 'adsdFields'
 adsPatch
     :: Int64 -- ^ 'adsdProFileId'
     -> Ad -- ^ 'adsdPayload'
     -> Int64 -- ^ 'adsdId'
     -> AdsPatch
-adsPatch pAdsdProFileId_ pAdsdPayload_ pAdsdId_ =
+adsPatch pAdsdProFileId_ pAdsdPayload_ pAdsdId_ = 
     AdsPatch'
     { _adsdProFileId = _Coerce # pAdsdProFileId_
     , _adsdPayload = pAdsdPayload_
     , _adsdId = _Coerce # pAdsdId_
+    , _adsdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -100,12 +106,18 @@ adsdId :: Lens' AdsPatch Int64
 adsdId
   = lens _adsdId (\ s a -> s{_adsdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+adsdFields :: Lens' AdsPatch (Maybe Text)
+adsdFields
+  = lens _adsdFields (\ s a -> s{_adsdFields = a})
+
 instance GoogleRequest AdsPatch where
         type Rs AdsPatch = Ad
         type Scopes AdsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdsPatch'{..}
-          = go _adsdProFileId (Just _adsdId) (Just AltJSON)
+          = go _adsdProFileId (Just _adsdId) _adsdFields
+              (Just AltJSON)
               _adsdPayload
               dFAReportingService
           where go

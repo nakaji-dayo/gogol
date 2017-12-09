@@ -34,10 +34,11 @@ module Network.Google.Resource.GroupsMigration.Archive.Insert
 
     -- * Request Lenses
     , aiGroupId
+    , aiFields
     ) where
 
-import           Network.Google.GroupsMigration.Types
-import           Network.Google.Prelude
+import Network.Google.GroupsMigration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @groupsmigration.archive.insert@ method which the
 -- 'ArchiveInsert' request conforms to.
@@ -47,7 +48,8 @@ type ArchiveInsertResource =
          "groups" :>
            Capture "groupId" Text :>
              "archive" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] Groups
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] Groups
        :<|>
        "upload" :>
          "groups" :>
@@ -55,15 +57,17 @@ type ArchiveInsertResource =
              "groups" :>
                Capture "groupId" Text :>
                  "archive" :>
-                   QueryParam "alt" AltJSON :>
-                     QueryParam "uploadType" AltMedia :>
-                       AltMedia :> Post '[JSON] Groups
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       QueryParam "uploadType" AltMedia :>
+                         AltMedia :> Post '[JSON] Groups
 
 -- | Inserts a new mail into the archive of the Google group.
 --
 -- /See:/ 'archiveInsert' smart constructor.
-newtype ArchiveInsert = ArchiveInsert'
-    { _aiGroupId :: Text
+data ArchiveInsert = ArchiveInsert'
+    { _aiGroupId :: !Text
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ArchiveInsert' with the minimum fields required to make a request.
@@ -71,12 +75,15 @@ newtype ArchiveInsert = ArchiveInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'aiGroupId'
+--
+-- * 'aiFields'
 archiveInsert
     :: Text -- ^ 'aiGroupId'
     -> ArchiveInsert
-archiveInsert pAiGroupId_ =
+archiveInsert pAiGroupId_ = 
     ArchiveInsert'
     { _aiGroupId = pAiGroupId_
+    , _aiFields = Nothing
     }
 
 -- | The group ID
@@ -84,12 +91,17 @@ aiGroupId :: Lens' ArchiveInsert Text
 aiGroupId
   = lens _aiGroupId (\ s a -> s{_aiGroupId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' ArchiveInsert (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest ArchiveInsert where
         type Rs ArchiveInsert = Groups
         type Scopes ArchiveInsert =
              '["https://www.googleapis.com/auth/apps.groups.migration"]
         requestClient ArchiveInsert'{..}
-          = go _aiGroupId (Just AltJSON) groupsMigrationService
+          = go _aiGroupId _aiFields (Just AltJSON)
+              groupsMigrationService
           where go :<|> _
                   = buildClient (Proxy :: Proxy ArchiveInsertResource)
                       mempty
@@ -100,7 +112,9 @@ instance GoogleRequest (MediaUpload ArchiveInsert)
         type Scopes (MediaUpload ArchiveInsert) =
              Scopes ArchiveInsert
         requestClient (MediaUpload ArchiveInsert'{..} body)
-          = go _aiGroupId (Just AltJSON) (Just AltMedia) body
+          = go _aiGroupId _aiFields (Just AltJSON)
+              (Just AltMedia)
+              body
               groupsMigrationService
           where _ :<|> go
                   = buildClient (Proxy :: Proxy ArchiveInsertResource)

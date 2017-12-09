@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.Instances.SetMachineType
     , InstancesSetMachineType
 
     -- * Request Lenses
+    , ismtRequestId
     , ismtProject
     , ismtZone
     , ismtPayload
+    , ismtFields
     , ismtInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.setMachineType@ method which the
 -- 'InstancesSetMachineType' request conforms to.
@@ -55,18 +57,22 @@ type InstancesSetMachineTypeResource =
                  "instances" :>
                    Capture "instance" Text :>
                      "setMachineType" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] InstancesSetMachineTypeRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] InstancesSetMachineTypeRequest :>
+                               Post '[JSON] Operation
 
 -- | Changes the machine type for a stopped instance to the machine type
 -- specified in the request.
 --
 -- /See:/ 'instancesSetMachineType' smart constructor.
 data InstancesSetMachineType = InstancesSetMachineType'
-    { _ismtProject  :: !Text
-    , _ismtZone     :: !Text
-    , _ismtPayload  :: !InstancesSetMachineTypeRequest
+    { _ismtRequestId :: !(Maybe Text)
+    , _ismtProject :: !Text
+    , _ismtZone :: !Text
+    , _ismtPayload :: !InstancesSetMachineTypeRequest
+    , _ismtFields :: !(Maybe Text)
     , _ismtInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -74,11 +80,15 @@ data InstancesSetMachineType = InstancesSetMachineType'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'ismtRequestId'
+--
 -- * 'ismtProject'
 --
 -- * 'ismtZone'
 --
 -- * 'ismtPayload'
+--
+-- * 'ismtFields'
 --
 -- * 'ismtInstance'
 instancesSetMachineType
@@ -87,13 +97,30 @@ instancesSetMachineType
     -> InstancesSetMachineTypeRequest -- ^ 'ismtPayload'
     -> Text -- ^ 'ismtInstance'
     -> InstancesSetMachineType
-instancesSetMachineType pIsmtProject_ pIsmtZone_ pIsmtPayload_ pIsmtInstance_ =
+instancesSetMachineType pIsmtProject_ pIsmtZone_ pIsmtPayload_ pIsmtInstance_ = 
     InstancesSetMachineType'
-    { _ismtProject = pIsmtProject_
+    { _ismtRequestId = Nothing
+    , _ismtProject = pIsmtProject_
     , _ismtZone = pIsmtZone_
     , _ismtPayload = pIsmtPayload_
+    , _ismtFields = Nothing
     , _ismtInstance = pIsmtInstance_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+ismtRequestId :: Lens' InstancesSetMachineType (Maybe Text)
+ismtRequestId
+  = lens _ismtRequestId
+      (\ s a -> s{_ismtRequestId = a})
 
 -- | Project ID for this request.
 ismtProject :: Lens' InstancesSetMachineType Text
@@ -109,6 +136,11 @@ ismtPayload :: Lens' InstancesSetMachineType InstancesSetMachineTypeRequest
 ismtPayload
   = lens _ismtPayload (\ s a -> s{_ismtPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ismtFields :: Lens' InstancesSetMachineType (Maybe Text)
+ismtFields
+  = lens _ismtFields (\ s a -> s{_ismtFields = a})
+
 -- | Name of the instance scoping this request.
 ismtInstance :: Lens' InstancesSetMachineType Text
 ismtInstance
@@ -121,6 +153,8 @@ instance GoogleRequest InstancesSetMachineType where
                "https://www.googleapis.com/auth/compute"]
         requestClient InstancesSetMachineType'{..}
           = go _ismtProject _ismtZone _ismtInstance
+              _ismtRequestId
+              _ismtFields
               (Just AltJSON)
               _ismtPayload
               computeService

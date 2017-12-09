@@ -60,9 +60,9 @@ module Network.Google.Fonts
     , wfAddtional
     ) where
 
-import           Network.Google.Fonts.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Webfonts.Webfonts.List
+import Network.Google.Prelude
+import Network.Google.Fonts.Types
+import Network.Google.Resource.Webfonts.Webfonts.List
 
 {- $resources
 TODO

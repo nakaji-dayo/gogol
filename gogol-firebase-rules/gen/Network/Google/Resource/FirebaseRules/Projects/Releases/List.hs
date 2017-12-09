@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- List the \`Release\` values for a project. This list may optionally be
--- filtered by \`Release\` name or \`Ruleset\` id or both.
+-- filtered by \`Release\` name, \`Ruleset\` name, \`TestSuite\` name, or
+-- any combination thereof.
 --
 -- /See:/ <https://firebase.google.com/docs/storage/security Firebase Rules API Reference> for @firebaserules.projects.releases.list@.
 module Network.Google.Resource.FirebaseRules.Projects.Releases.List
@@ -44,11 +45,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Releases.List
     , prlrFilter
     , prlrPageToken
     , prlrPageSize
+    , prlrFields
     , prlrCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.releases.list@ method which the
 -- 'ProjectsReleasesList' request conforms to.
@@ -66,25 +68,28 @@ type ProjectsReleasesListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListReleasesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListReleasesResponse
 
 -- | List the \`Release\` values for a project. This list may optionally be
--- filtered by \`Release\` name or \`Ruleset\` id or both.
+-- filtered by \`Release\` name, \`Ruleset\` name, \`TestSuite\` name, or
+-- any combination thereof.
 --
 -- /See:/ 'projectsReleasesList' smart constructor.
 data ProjectsReleasesList = ProjectsReleasesList'
-    { _prlrXgafv          :: !(Maybe Xgafv)
+    { _prlrXgafv :: !(Maybe Xgafv)
     , _prlrUploadProtocol :: !(Maybe Text)
-    , _prlrPp             :: !Bool
-    , _prlrAccessToken    :: !(Maybe Text)
-    , _prlrUploadType     :: !(Maybe Text)
-    , _prlrBearerToken    :: !(Maybe Text)
-    , _prlrName           :: !Text
-    , _prlrFilter         :: !(Maybe Text)
-    , _prlrPageToken      :: !(Maybe Text)
-    , _prlrPageSize       :: !(Maybe (Textual Int32))
-    , _prlrCallback       :: !(Maybe Text)
+    , _prlrPp :: !Bool
+    , _prlrAccessToken :: !(Maybe Text)
+    , _prlrUploadType :: !(Maybe Text)
+    , _prlrBearerToken :: !(Maybe Text)
+    , _prlrName :: !Text
+    , _prlrFilter :: !(Maybe Text)
+    , _prlrPageToken :: !(Maybe Text)
+    , _prlrPageSize :: !(Maybe (Textual Int32))
+    , _prlrFields :: !(Maybe Text)
+    , _prlrCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsReleasesList' with the minimum fields required to make a request.
@@ -111,11 +116,13 @@ data ProjectsReleasesList = ProjectsReleasesList'
 --
 -- * 'prlrPageSize'
 --
+-- * 'prlrFields'
+--
 -- * 'prlrCallback'
 projectsReleasesList
     :: Text -- ^ 'prlrName'
     -> ProjectsReleasesList
-projectsReleasesList pPrlrName_ =
+projectsReleasesList pPrlrName_ = 
     ProjectsReleasesList'
     { _prlrXgafv = Nothing
     , _prlrUploadProtocol = Nothing
@@ -127,6 +134,7 @@ projectsReleasesList pPrlrName_ =
     , _prlrFilter = Nothing
     , _prlrPageToken = Nothing
     , _prlrPageSize = Nothing
+    , _prlrFields = Nothing
     , _prlrCallback = Nothing
     }
 
@@ -168,24 +176,23 @@ prlrName :: Lens' ProjectsReleasesList Text
 prlrName = lens _prlrName (\ s a -> s{_prlrName = a})
 
 -- | \`Release\` filter. The list method supports filters with restrictions
--- on the \`Release\` \`name\` and also on the \`Ruleset\`
--- \`ruleset_name\`. Example 1) A filter of \'name=prod*\' might return
--- \`Release\`s with names within \'projects\/foo\' prefixed with \'prod\':
--- Name | Ruleset Name ------------------------------|-------------
+-- on the \`Release.name\`, \`Release.ruleset_name\`, and
+-- \`Release.test_suite_name\`. Example 1: A filter of \'name=prod*\' might
+-- return \`Release\`s with names within \'projects\/foo\' prefixed with
+-- \'prod\': Name | Ruleset Name
+-- ------------------------------|-------------
 -- projects\/foo\/releases\/prod | projects\/foo\/rulesets\/uuid1234
 -- projects\/foo\/releases\/prod\/v1 | projects\/foo\/rulesets\/uuid1234
 -- projects\/foo\/releases\/prod\/v2 | projects\/foo\/rulesets\/uuid8888
--- Example 2) A filter of \`name=prod* ruleset_name=uuid1234\` would return
+-- Example 2: A filter of \`name=prod* ruleset_name=uuid1234\` would return
 -- only \`Release\` instances for \'projects\/foo\' with names prefixed
 -- with \'prod\' referring to the same \`Ruleset\` name of \'uuid1234\':
 -- Name | Ruleset Name ------------------------------|-------------
 -- projects\/foo\/releases\/prod | projects\/foo\/rulesets\/1234
 -- projects\/foo\/releases\/prod\/v1 | projects\/foo\/rulesets\/1234 In the
--- examples, the filter parameters refer to the search filters for release
--- and ruleset names are relative to the project releases and rulesets
--- collections. Fully qualified prefixed may also be used. e.g.
--- \`name=projects\/foo\/releases\/prod*
--- ruleset_name=projects\/foo\/rulesets\/uuid1\`
+-- examples, the filter parameters refer to the search filters are relative
+-- to the project. Fully qualified prefixed may also be used. e.g.
+-- \`test_suite_name=projects\/foo\/testsuites\/uuid1\`
 prlrFilter :: Lens' ProjectsReleasesList (Maybe Text)
 prlrFilter
   = lens _prlrFilter (\ s a -> s{_prlrFilter = a})
@@ -197,13 +204,19 @@ prlrPageToken
       (\ s a -> s{_prlrPageToken = a})
 
 -- | Page size to load. Maximum of 100. Defaults to 10. Note: \`page_size\`
--- is just a hint and the service may choose to load less than
--- \`page_size\` due to the size of the output. To traverse all of the
--- releases, caller should iterate until the \`page_token\` is empty.
+-- is just a hint and the service may choose to load fewer than
+-- \`page_size\` results due to the size of the output. To traverse all of
+-- the releases, the caller should iterate until the \`page_token\` on the
+-- response is empty.
 prlrPageSize :: Lens' ProjectsReleasesList (Maybe Int32)
 prlrPageSize
   = lens _prlrPageSize (\ s a -> s{_prlrPageSize = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+prlrFields :: Lens' ProjectsReleasesList (Maybe Text)
+prlrFields
+  = lens _prlrFields (\ s a -> s{_prlrFields = a})
 
 -- | JSONP
 prlrCallback :: Lens' ProjectsReleasesList (Maybe Text)
@@ -226,6 +239,7 @@ instance GoogleRequest ProjectsReleasesList where
               _prlrPageToken
               _prlrPageSize
               _prlrCallback
+              _prlrFields
               (Just AltJSON)
               firebaseRulesService
           where go

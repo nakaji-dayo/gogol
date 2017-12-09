@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Zones.Get
     -- * Request Lenses
     , zgProject
     , zgZone
+    , zgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.zones.get@ method which the
 -- 'ZonesGet' request conforms to.
@@ -50,7 +51,8 @@ type ZonesGetResource =
            Capture "project" Text :>
              "zones" :>
                Capture "zone" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Zone
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Zone
 
 -- | Returns the specified Zone resource. Get a list of available zones by
 -- making a list() request.
@@ -58,7 +60,8 @@ type ZonesGetResource =
 -- /See:/ 'zonesGet' smart constructor.
 data ZonesGet = ZonesGet'
     { _zgProject :: !Text
-    , _zgZone    :: !Text
+    , _zgZone :: !Text
+    , _zgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZonesGet' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data ZonesGet = ZonesGet'
 -- * 'zgProject'
 --
 -- * 'zgZone'
+--
+-- * 'zgFields'
 zonesGet
     :: Text -- ^ 'zgProject'
     -> Text -- ^ 'zgZone'
     -> ZonesGet
-zonesGet pZgProject_ pZgZone_ =
+zonesGet pZgProject_ pZgZone_ = 
     ZonesGet'
     { _zgProject = pZgProject_
     , _zgZone = pZgZone_
+    , _zgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,6 +93,10 @@ zgProject
 zgZone :: Lens' ZonesGet Text
 zgZone = lens _zgZone (\ s a -> s{_zgZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zgFields :: Lens' ZonesGet (Maybe Text)
+zgFields = lens _zgFields (\ s a -> s{_zgFields = a})
+
 instance GoogleRequest ZonesGet where
         type Rs ZonesGet = Zone
         type Scopes ZonesGet =
@@ -94,7 +104,8 @@ instance GoogleRequest ZonesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient ZonesGet'{..}
-          = go _zgProject _zgZone (Just AltJSON) computeService
+          = go _zgProject _zgZone _zgFields (Just AltJSON)
+              computeService
           where go
                   = buildClient (Proxy :: Proxy ZonesGetResource)
                       mempty

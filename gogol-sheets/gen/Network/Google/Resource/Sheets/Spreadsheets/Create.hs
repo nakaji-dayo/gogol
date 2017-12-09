@@ -40,11 +40,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Create
     , scUploadType
     , scPayload
     , scBearerToken
+    , scFields
     , scCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.create@ method which the
 -- 'SpreadsheetsCreate' request conforms to.
@@ -58,22 +59,24 @@ type SpreadsheetsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Spreadsheet :>
-                           Post '[JSON] Spreadsheet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Spreadsheet :>
+                             Post '[JSON] Spreadsheet
 
 -- | Creates a spreadsheet, returning the newly created spreadsheet.
 --
 -- /See:/ 'spreadsheetsCreate' smart constructor.
 data SpreadsheetsCreate = SpreadsheetsCreate'
-    { _scXgafv          :: !(Maybe Xgafv)
+    { _scXgafv :: !(Maybe Xgafv)
     , _scUploadProtocol :: !(Maybe Text)
-    , _scPp             :: !Bool
-    , _scAccessToken    :: !(Maybe Text)
-    , _scUploadType     :: !(Maybe Text)
-    , _scPayload        :: !Spreadsheet
-    , _scBearerToken    :: !(Maybe Text)
-    , _scCallback       :: !(Maybe Text)
+    , _scPp :: !Bool
+    , _scAccessToken :: !(Maybe Text)
+    , _scUploadType :: !(Maybe Text)
+    , _scPayload :: !Spreadsheet
+    , _scBearerToken :: !(Maybe Text)
+    , _scFields :: !(Maybe Text)
+    , _scCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsCreate' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data SpreadsheetsCreate = SpreadsheetsCreate'
 --
 -- * 'scBearerToken'
 --
+-- * 'scFields'
+--
 -- * 'scCallback'
 spreadsheetsCreate
     :: Spreadsheet -- ^ 'scPayload'
     -> SpreadsheetsCreate
-spreadsheetsCreate pScPayload_ =
+spreadsheetsCreate pScPayload_ = 
     SpreadsheetsCreate'
     { _scXgafv = Nothing
     , _scUploadProtocol = Nothing
@@ -107,6 +112,7 @@ spreadsheetsCreate pScPayload_ =
     , _scUploadType = Nothing
     , _scPayload = pScPayload_
     , _scBearerToken = Nothing
+    , _scFields = Nothing
     , _scCallback = Nothing
     }
 
@@ -146,6 +152,10 @@ scBearerToken
   = lens _scBearerToken
       (\ s a -> s{_scBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scFields :: Lens' SpreadsheetsCreate (Maybe Text)
+scFields = lens _scFields (\ s a -> s{_scFields = a})
+
 -- | JSONP
 scCallback :: Lens' SpreadsheetsCreate (Maybe Text)
 scCallback
@@ -155,6 +165,7 @@ instance GoogleRequest SpreadsheetsCreate where
         type Rs SpreadsheetsCreate = Spreadsheet
         type Scopes SpreadsheetsCreate =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsCreate'{..}
           = go _scXgafv _scUploadProtocol (Just _scPp)
@@ -162,6 +173,7 @@ instance GoogleRequest SpreadsheetsCreate where
               _scUploadType
               _scBearerToken
               _scCallback
+              _scFields
               (Just AltJSON)
               _scPayload
               sheetsService

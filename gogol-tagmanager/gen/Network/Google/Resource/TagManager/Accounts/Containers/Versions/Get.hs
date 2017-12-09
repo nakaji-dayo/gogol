@@ -22,7 +22,7 @@
 --
 -- Gets a Container Version.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.containers.versions.get@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.containers.versions.get@.
 module Network.Google.Resource.TagManager.Accounts.Containers.Versions.Get
     (
     -- * REST Resource
@@ -33,76 +33,69 @@ module Network.Google.Resource.TagManager.Accounts.Containers.Versions.Get
     , AccountsContainersVersionsGet
 
     -- * Request Lenses
-    , acvgcContainerId
-    , acvgcContainerVersionId
-    , acvgcAccountId
+    , acvgPath
+    , acvgContainerVersionId
+    , acvgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.containers.versions.get@ method which the
 -- 'AccountsContainersVersionsGet' request conforms to.
 type AccountsContainersVersionsGetResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
-             "containers" :>
-               Capture "containerId" Text :>
-                 "versions" :>
-                   Capture "containerVersionId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] ContainerVersion
+       "v2" :>
+         Capture "path" Text :>
+           QueryParam "containerVersionId" Text :>
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] ContainerVersion
 
 -- | Gets a Container Version.
 --
 -- /See:/ 'accountsContainersVersionsGet' smart constructor.
 data AccountsContainersVersionsGet = AccountsContainersVersionsGet'
-    { _acvgcContainerId        :: !Text
-    , _acvgcContainerVersionId :: !Text
-    , _acvgcAccountId          :: !Text
+    { _acvgPath :: !Text
+    , _acvgContainerVersionId :: !(Maybe Text)
+    , _acvgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsContainersVersionsGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'acvgcContainerId'
+-- * 'acvgPath'
 --
--- * 'acvgcContainerVersionId'
+-- * 'acvgContainerVersionId'
 --
--- * 'acvgcAccountId'
+-- * 'acvgFields'
 accountsContainersVersionsGet
-    :: Text -- ^ 'acvgcContainerId'
-    -> Text -- ^ 'acvgcContainerVersionId'
-    -> Text -- ^ 'acvgcAccountId'
+    :: Text -- ^ 'acvgPath'
     -> AccountsContainersVersionsGet
-accountsContainersVersionsGet pAcvgcContainerId_ pAcvgcContainerVersionId_ pAcvgcAccountId_ =
+accountsContainersVersionsGet pAcvgPath_ = 
     AccountsContainersVersionsGet'
-    { _acvgcContainerId = pAcvgcContainerId_
-    , _acvgcContainerVersionId = pAcvgcContainerVersionId_
-    , _acvgcAccountId = pAcvgcAccountId_
+    { _acvgPath = pAcvgPath_
+    , _acvgContainerVersionId = Nothing
+    , _acvgFields = Nothing
     }
 
--- | The GTM Container ID.
-acvgcContainerId :: Lens' AccountsContainersVersionsGet Text
-acvgcContainerId
-  = lens _acvgcContainerId
-      (\ s a -> s{_acvgcContainerId = a})
+-- | GTM ContainerVersion\'s API relative path. Example:
+-- accounts\/{account_id}\/containers\/{container_id}\/versions\/{version_id}
+acvgPath :: Lens' AccountsContainersVersionsGet Text
+acvgPath = lens _acvgPath (\ s a -> s{_acvgPath = a})
 
--- | The GTM Container Version ID. Specify published to retrieve the
--- currently published version.
-acvgcContainerVersionId :: Lens' AccountsContainersVersionsGet Text
-acvgcContainerVersionId
-  = lens _acvgcContainerVersionId
-      (\ s a -> s{_acvgcContainerVersionId = a})
+-- | The GTM ContainerVersion ID. Specify published to retrieve the currently
+-- published version.
+acvgContainerVersionId :: Lens' AccountsContainersVersionsGet (Maybe Text)
+acvgContainerVersionId
+  = lens _acvgContainerVersionId
+      (\ s a -> s{_acvgContainerVersionId = a})
 
--- | The GTM Account ID.
-acvgcAccountId :: Lens' AccountsContainersVersionsGet Text
-acvgcAccountId
-  = lens _acvgcAccountId
-      (\ s a -> s{_acvgcAccountId = a})
+-- | Selector specifying which fields to include in a partial response.
+acvgFields :: Lens' AccountsContainersVersionsGet (Maybe Text)
+acvgFields
+  = lens _acvgFields (\ s a -> s{_acvgFields = a})
 
 instance GoogleRequest AccountsContainersVersionsGet
          where
@@ -113,8 +106,7 @@ instance GoogleRequest AccountsContainersVersionsGet
                "https://www.googleapis.com/auth/tagmanager.edit.containerversions",
                "https://www.googleapis.com/auth/tagmanager.readonly"]
         requestClient AccountsContainersVersionsGet'{..}
-          = go _acvgcAccountId _acvgcContainerId
-              _acvgcContainerVersionId
+          = go _acvgPath _acvgContainerVersionId _acvgFields
               (Just AltJSON)
               tagManagerService
           where go

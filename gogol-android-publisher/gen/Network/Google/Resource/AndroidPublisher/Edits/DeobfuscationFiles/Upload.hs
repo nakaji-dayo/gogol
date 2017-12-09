@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.DeobfuscationFiles.Upload
     , edfuPackageName
     , edfuAPKVersionCode
     , edfuEditId
+    , edfuFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.deobfuscationfiles.upload@ method which the
 -- 'EditsDeobfuscationFilesUpload' request conforms to.
@@ -58,8 +59,9 @@ type EditsDeobfuscationFilesUploadResource =
                        Capture "deobfuscationFileType"
                          EditsDeobfuscationFilesUploadDeobfuscationFileType
                          :>
-                         QueryParam "alt" AltJSON :>
-                           Post '[JSON] DeobfuscationFilesUploadResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Post '[JSON] DeobfuscationFilesUploadResponse
        :<|>
        "upload" :>
          "androidpublisher" :>
@@ -74,10 +76,12 @@ type EditsDeobfuscationFilesUploadResource =
                            Capture "deobfuscationFileType"
                              EditsDeobfuscationFilesUploadDeobfuscationFileType
                              :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" AltMedia :>
-                                 AltMedia :>
-                                   Post '[JSON] DeobfuscationFilesUploadResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" AltMedia :>
+                                   AltMedia :>
+                                     Post '[JSON]
+                                       DeobfuscationFilesUploadResponse
 
 -- | Uploads the deobfuscation file of the specified APK. If a deobfuscation
 -- file already exists, it will be replaced.
@@ -85,9 +89,10 @@ type EditsDeobfuscationFilesUploadResource =
 -- /See:/ 'editsDeobfuscationFilesUpload' smart constructor.
 data EditsDeobfuscationFilesUpload = EditsDeobfuscationFilesUpload'
     { _edfuDeobfuscationFileType :: !EditsDeobfuscationFilesUploadDeobfuscationFileType
-    , _edfuPackageName           :: !Text
-    , _edfuAPKVersionCode        :: !(Textual Int32)
-    , _edfuEditId                :: !Text
+    , _edfuPackageName :: !Text
+    , _edfuAPKVersionCode :: !(Textual Int32)
+    , _edfuEditId :: !Text
+    , _edfuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsDeobfuscationFilesUpload' with the minimum fields required to make a request.
@@ -101,18 +106,21 @@ data EditsDeobfuscationFilesUpload = EditsDeobfuscationFilesUpload'
 -- * 'edfuAPKVersionCode'
 --
 -- * 'edfuEditId'
+--
+-- * 'edfuFields'
 editsDeobfuscationFilesUpload
     :: EditsDeobfuscationFilesUploadDeobfuscationFileType -- ^ 'edfuDeobfuscationFileType'
     -> Text -- ^ 'edfuPackageName'
     -> Int32 -- ^ 'edfuAPKVersionCode'
     -> Text -- ^ 'edfuEditId'
     -> EditsDeobfuscationFilesUpload
-editsDeobfuscationFilesUpload pEdfuDeobfuscationFileType_ pEdfuPackageName_ pEdfuAPKVersionCode_ pEdfuEditId_ =
+editsDeobfuscationFilesUpload pEdfuDeobfuscationFileType_ pEdfuPackageName_ pEdfuAPKVersionCode_ pEdfuEditId_ = 
     EditsDeobfuscationFilesUpload'
     { _edfuDeobfuscationFileType = pEdfuDeobfuscationFileType_
     , _edfuPackageName = pEdfuPackageName_
     , _edfuAPKVersionCode = _Coerce # pEdfuAPKVersionCode_
     , _edfuEditId = pEdfuEditId_
+    , _edfuFields = Nothing
     }
 
 edfuDeobfuscationFileType :: Lens' EditsDeobfuscationFilesUpload EditsDeobfuscationFilesUploadDeobfuscationFileType
@@ -139,6 +147,11 @@ edfuEditId :: Lens' EditsDeobfuscationFilesUpload Text
 edfuEditId
   = lens _edfuEditId (\ s a -> s{_edfuEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+edfuFields :: Lens' EditsDeobfuscationFilesUpload (Maybe Text)
+edfuFields
+  = lens _edfuFields (\ s a -> s{_edfuFields = a})
+
 instance GoogleRequest EditsDeobfuscationFilesUpload
          where
         type Rs EditsDeobfuscationFilesUpload =
@@ -148,6 +161,7 @@ instance GoogleRequest EditsDeobfuscationFilesUpload
         requestClient EditsDeobfuscationFilesUpload'{..}
           = go _edfuPackageName _edfuEditId _edfuAPKVersionCode
               _edfuDeobfuscationFileType
+              _edfuFields
               (Just AltJSON)
               androidPublisherService
           where go :<|> _
@@ -167,6 +181,7 @@ instance GoogleRequest
           (MediaUpload EditsDeobfuscationFilesUpload'{..} body)
           = go _edfuPackageName _edfuEditId _edfuAPKVersionCode
               _edfuDeobfuscationFileType
+              _edfuFields
               (Just AltJSON)
               (Just AltMedia)
               body

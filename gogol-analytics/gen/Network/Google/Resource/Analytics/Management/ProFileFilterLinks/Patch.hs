@@ -39,10 +39,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.Patch
     , mpfflpPayload
     , mpfflpAccountId
     , mpfflpLinkId
+    , mpfflpFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.patch@ method which the
 -- 'ManagementProFileFilterLinksPatch' request conforms to.
@@ -58,9 +59,10 @@ type ManagementProFileFilterLinksPatchResource =
                      Capture "profileId" Text :>
                        "profileFilterLinks" :>
                          Capture "linkId" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] ProFileFilterLink :>
-                               Patch '[JSON] ProFileFilterLink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] ProFileFilterLink :>
+                                 Patch '[JSON] ProFileFilterLink
 
 -- | Update an existing profile filter link. This method supports patch
 -- semantics.
@@ -68,10 +70,11 @@ type ManagementProFileFilterLinksPatchResource =
 -- /See:/ 'managementProFileFilterLinksPatch' smart constructor.
 data ManagementProFileFilterLinksPatch = ManagementProFileFilterLinksPatch'
     { _mpfflpWebPropertyId :: !Text
-    , _mpfflpProFileId     :: !Text
-    , _mpfflpPayload       :: !ProFileFilterLink
-    , _mpfflpAccountId     :: !Text
-    , _mpfflpLinkId        :: !Text
+    , _mpfflpProFileId :: !Text
+    , _mpfflpPayload :: !ProFileFilterLink
+    , _mpfflpAccountId :: !Text
+    , _mpfflpLinkId :: !Text
+    , _mpfflpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksPatch' with the minimum fields required to make a request.
@@ -87,6 +90,8 @@ data ManagementProFileFilterLinksPatch = ManagementProFileFilterLinksPatch'
 -- * 'mpfflpAccountId'
 --
 -- * 'mpfflpLinkId'
+--
+-- * 'mpfflpFields'
 managementProFileFilterLinksPatch
     :: Text -- ^ 'mpfflpWebPropertyId'
     -> Text -- ^ 'mpfflpProFileId'
@@ -94,13 +99,14 @@ managementProFileFilterLinksPatch
     -> Text -- ^ 'mpfflpAccountId'
     -> Text -- ^ 'mpfflpLinkId'
     -> ManagementProFileFilterLinksPatch
-managementProFileFilterLinksPatch pMpfflpWebPropertyId_ pMpfflpProFileId_ pMpfflpPayload_ pMpfflpAccountId_ pMpfflpLinkId_ =
+managementProFileFilterLinksPatch pMpfflpWebPropertyId_ pMpfflpProFileId_ pMpfflpPayload_ pMpfflpAccountId_ pMpfflpLinkId_ = 
     ManagementProFileFilterLinksPatch'
     { _mpfflpWebPropertyId = pMpfflpWebPropertyId_
     , _mpfflpProFileId = pMpfflpProFileId_
     , _mpfflpPayload = pMpfflpPayload_
     , _mpfflpAccountId = pMpfflpAccountId_
     , _mpfflpLinkId = pMpfflpLinkId_
+    , _mpfflpFields = Nothing
     }
 
 -- | Web property Id to which profile filter link belongs
@@ -132,6 +138,11 @@ mpfflpLinkId :: Lens' ManagementProFileFilterLinksPatch Text
 mpfflpLinkId
   = lens _mpfflpLinkId (\ s a -> s{_mpfflpLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfflpFields :: Lens' ManagementProFileFilterLinksPatch (Maybe Text)
+mpfflpFields
+  = lens _mpfflpFields (\ s a -> s{_mpfflpFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksPatch where
         type Rs ManagementProFileFilterLinksPatch =
@@ -142,6 +153,7 @@ instance GoogleRequest
           = go _mpfflpAccountId _mpfflpWebPropertyId
               _mpfflpProFileId
               _mpfflpLinkId
+              _mpfflpFields
               (Just AltJSON)
               _mpfflpPayload
               analyticsService

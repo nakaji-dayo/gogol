@@ -34,10 +34,11 @@ module Network.Google.Resource.Analytics.Metadata.Columns.List
 
     -- * Request Lenses
     , mclReportType
+    , mclFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.metadata.columns.list@ method which the
 -- 'MetadataColumnsList' request conforms to.
@@ -47,13 +48,15 @@ type MetadataColumnsListResource =
          "metadata" :>
            Capture "reportType" Text :>
              "columns" :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Columns
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Columns
 
 -- | Lists all columns for a report type
 --
 -- /See:/ 'metadataColumnsList' smart constructor.
-newtype MetadataColumnsList = MetadataColumnsList'
-    { _mclReportType :: Text
+data MetadataColumnsList = MetadataColumnsList'
+    { _mclReportType :: !Text
+    , _mclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetadataColumnsList' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype MetadataColumnsList = MetadataColumnsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'mclReportType'
+--
+-- * 'mclFields'
 metadataColumnsList
     :: Text -- ^ 'mclReportType'
     -> MetadataColumnsList
-metadataColumnsList pMclReportType_ =
+metadataColumnsList pMclReportType_ = 
     MetadataColumnsList'
     { _mclReportType = pMclReportType_
+    , _mclFields = Nothing
     }
 
 -- | Report type. Allowed Values: \'ga\'. Where \'ga\' corresponds to the
@@ -76,6 +82,11 @@ mclReportType
   = lens _mclReportType
       (\ s a -> s{_mclReportType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mclFields :: Lens' MetadataColumnsList (Maybe Text)
+mclFields
+  = lens _mclFields (\ s a -> s{_mclFields = a})
+
 instance GoogleRequest MetadataColumnsList where
         type Rs MetadataColumnsList = Columns
         type Scopes MetadataColumnsList =
@@ -83,7 +94,8 @@ instance GoogleRequest MetadataColumnsList where
                "https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient MetadataColumnsList'{..}
-          = go _mclReportType (Just AltJSON) analyticsService
+          = go _mclReportType _mclFields (Just AltJSON)
+              analyticsService
           where go
                   = buildClient
                       (Proxy :: Proxy MetadataColumnsListResource)

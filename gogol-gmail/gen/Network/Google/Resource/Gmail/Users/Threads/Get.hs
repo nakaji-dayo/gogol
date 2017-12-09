@@ -37,10 +37,11 @@ module Network.Google.Resource.Gmail.Users.Threads.Get
     , utgUserId
     , utgId
     , utgMetadataHeaders
+    , utgFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.threads.get@ method which the
 -- 'UsersThreadsGet' request conforms to.
@@ -53,16 +54,18 @@ type UsersThreadsGetResource =
                Capture "id" Text :>
                  QueryParam "format" UsersThreadsGetFormat :>
                    QueryParams "metadataHeaders" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Thread
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Thread
 
 -- | Gets the specified thread.
 --
 -- /See:/ 'usersThreadsGet' smart constructor.
 data UsersThreadsGet = UsersThreadsGet'
-    { _utgFormat          :: !UsersThreadsGetFormat
-    , _utgUserId          :: !Text
-    , _utgId              :: !Text
+    { _utgFormat :: !UsersThreadsGetFormat
+    , _utgUserId :: !Text
+    , _utgId :: !Text
     , _utgMetadataHeaders :: !(Maybe [Text])
+    , _utgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersThreadsGet' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data UsersThreadsGet = UsersThreadsGet'
 -- * 'utgId'
 --
 -- * 'utgMetadataHeaders'
+--
+-- * 'utgFields'
 usersThreadsGet
     :: Text -- ^ 'utgId'
     -> UsersThreadsGet
-usersThreadsGet pUtgId_ =
+usersThreadsGet pUtgId_ = 
     UsersThreadsGet'
     { _utgFormat = UTGFFull
     , _utgUserId = "me"
     , _utgId = pUtgId_
     , _utgMetadataHeaders = Nothing
+    , _utgFields = Nothing
     }
 
 -- | The format to return the messages in.
@@ -110,6 +116,11 @@ utgMetadataHeaders
       . _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+utgFields :: Lens' UsersThreadsGet (Maybe Text)
+utgFields
+  = lens _utgFields (\ s a -> s{_utgFields = a})
+
 instance GoogleRequest UsersThreadsGet where
         type Rs UsersThreadsGet = Thread
         type Scopes UsersThreadsGet =
@@ -120,6 +131,7 @@ instance GoogleRequest UsersThreadsGet where
         requestClient UsersThreadsGet'{..}
           = go _utgUserId _utgId (Just _utgFormat)
               (_utgMetadataHeaders ^. _Default)
+              _utgFields
               (Just AltJSON)
               gmailService
           where go

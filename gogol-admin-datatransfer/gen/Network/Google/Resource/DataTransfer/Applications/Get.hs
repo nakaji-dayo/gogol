@@ -34,10 +34,11 @@ module Network.Google.Resource.DataTransfer.Applications.Get
 
     -- * Request Lenses
     , agApplicationId
+    , agFields
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datatransfer.applications.get@ method which the
 -- 'ApplicationsGet' request conforms to.
@@ -47,13 +48,15 @@ type ApplicationsGetResource =
          "v1" :>
            "applications" :>
              Capture "applicationId" (Textual Int64) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Application
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Application
 
 -- | Retrieves information about an application for the given application ID.
 --
 -- /See:/ 'applicationsGet' smart constructor.
-newtype ApplicationsGet = ApplicationsGet'
-    { _agApplicationId :: Textual Int64
+data ApplicationsGet = ApplicationsGet'
+    { _agApplicationId :: !(Textual Int64)
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApplicationsGet' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype ApplicationsGet = ApplicationsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'agApplicationId'
+--
+-- * 'agFields'
 applicationsGet
     :: Int64 -- ^ 'agApplicationId'
     -> ApplicationsGet
-applicationsGet pAgApplicationId_ =
+applicationsGet pAgApplicationId_ = 
     ApplicationsGet'
     { _agApplicationId = _Coerce # pAgApplicationId_
+    , _agFields = Nothing
     }
 
 -- | ID of the application resource to be retrieved.
@@ -76,13 +82,17 @@ agApplicationId
       (\ s a -> s{_agApplicationId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' ApplicationsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest ApplicationsGet where
         type Rs ApplicationsGet = Application
         type Scopes ApplicationsGet =
              '["https://www.googleapis.com/auth/admin.datatransfer",
                "https://www.googleapis.com/auth/admin.datatransfer.readonly"]
         requestClient ApplicationsGet'{..}
-          = go _agApplicationId (Just AltJSON)
+          = go _agApplicationId _agFields (Just AltJSON)
               dataTransferService
           where go
                   = buildClient

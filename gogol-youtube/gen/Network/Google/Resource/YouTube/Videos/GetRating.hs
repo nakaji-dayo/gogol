@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.Videos.GetRating
     -- * Request Lenses
     , vgrOnBehalfOfContentOwner
     , vgrId
+    , vgrFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.getRating@ method which the
 -- 'VideosGetRating' request conforms to.
@@ -50,8 +51,9 @@ type VideosGetRatingResource =
            "getRating" :>
              QueryParam "id" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] VideoGetRatingResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] VideoGetRatingResponse
 
 -- | Retrieves the ratings that the authorized user gave to a list of
 -- specified videos.
@@ -59,7 +61,8 @@ type VideosGetRatingResource =
 -- /See:/ 'videosGetRating' smart constructor.
 data VideosGetRating = VideosGetRating'
     { _vgrOnBehalfOfContentOwner :: !(Maybe Text)
-    , _vgrId                     :: !Text
+    , _vgrId :: !Text
+    , _vgrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosGetRating' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data VideosGetRating = VideosGetRating'
 -- * 'vgrOnBehalfOfContentOwner'
 --
 -- * 'vgrId'
+--
+-- * 'vgrFields'
 videosGetRating
     :: Text -- ^ 'vgrId'
     -> VideosGetRating
-videosGetRating pVgrId_ =
+videosGetRating pVgrId_ = 
     VideosGetRating'
     { _vgrOnBehalfOfContentOwner = Nothing
     , _vgrId = pVgrId_
+    , _vgrFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -99,6 +105,11 @@ vgrOnBehalfOfContentOwner
 vgrId :: Lens' VideosGetRating Text
 vgrId = lens _vgrId (\ s a -> s{_vgrId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vgrFields :: Lens' VideosGetRating (Maybe Text)
+vgrFields
+  = lens _vgrFields (\ s a -> s{_vgrFields = a})
+
 instance GoogleRequest VideosGetRating where
         type Rs VideosGetRating = VideoGetRatingResponse
         type Scopes VideosGetRating =
@@ -107,6 +118,7 @@ instance GoogleRequest VideosGetRating where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient VideosGetRating'{..}
           = go (Just _vgrId) _vgrOnBehalfOfContentOwner
+              _vgrFields
               (Just AltJSON)
               youTubeService
           where go

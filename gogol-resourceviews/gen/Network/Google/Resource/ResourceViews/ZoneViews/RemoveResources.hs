@@ -37,10 +37,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.RemoveResources
     , zvrrProject
     , zvrrZone
     , zvrrPayload
+    , zvrrFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.removeResources@ method which the
 -- 'ZoneViewsRemoveResources' request conforms to.
@@ -54,18 +55,20 @@ type ZoneViewsRemoveResourcesResource =
                  "resourceViews" :>
                    Capture "resourceView" Text :>
                      "removeResources" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ZoneViewsRemoveResourcesRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ZoneViewsRemoveResourcesRequest :>
+                             Post '[JSON] Operation
 
 -- | Remove resources from the view.
 --
 -- /See:/ 'zoneViewsRemoveResources' smart constructor.
 data ZoneViewsRemoveResources = ZoneViewsRemoveResources'
     { _zvrrResourceView :: !Text
-    , _zvrrProject      :: !Text
-    , _zvrrZone         :: !Text
-    , _zvrrPayload      :: !ZoneViewsRemoveResourcesRequest
+    , _zvrrProject :: !Text
+    , _zvrrZone :: !Text
+    , _zvrrPayload :: !ZoneViewsRemoveResourcesRequest
+    , _zvrrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsRemoveResources' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ZoneViewsRemoveResources = ZoneViewsRemoveResources'
 -- * 'zvrrZone'
 --
 -- * 'zvrrPayload'
+--
+-- * 'zvrrFields'
 zoneViewsRemoveResources
     :: Text -- ^ 'zvrrResourceView'
     -> Text -- ^ 'zvrrProject'
     -> Text -- ^ 'zvrrZone'
     -> ZoneViewsRemoveResourcesRequest -- ^ 'zvrrPayload'
     -> ZoneViewsRemoveResources
-zoneViewsRemoveResources pZvrrResourceView_ pZvrrProject_ pZvrrZone_ pZvrrPayload_ =
+zoneViewsRemoveResources pZvrrResourceView_ pZvrrProject_ pZvrrZone_ pZvrrPayload_ = 
     ZoneViewsRemoveResources'
     { _zvrrResourceView = pZvrrResourceView_
     , _zvrrProject = pZvrrProject_
     , _zvrrZone = pZvrrZone_
     , _zvrrPayload = pZvrrPayload_
+    , _zvrrFields = Nothing
     }
 
 -- | The name of the resource view.
@@ -113,6 +119,11 @@ zvrrPayload :: Lens' ZoneViewsRemoveResources ZoneViewsRemoveResourcesRequest
 zvrrPayload
   = lens _zvrrPayload (\ s a -> s{_zvrrPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zvrrFields :: Lens' ZoneViewsRemoveResources (Maybe Text)
+zvrrFields
+  = lens _zvrrFields (\ s a -> s{_zvrrFields = a})
+
 instance GoogleRequest ZoneViewsRemoveResources where
         type Rs ZoneViewsRemoveResources = Operation
         type Scopes ZoneViewsRemoveResources =
@@ -121,6 +132,7 @@ instance GoogleRequest ZoneViewsRemoveResources where
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient ZoneViewsRemoveResources'{..}
           = go _zvrrProject _zvrrZone _zvrrResourceView
+              _zvrrFields
               (Just AltJSON)
               _zvrrPayload
               resourceViewsService

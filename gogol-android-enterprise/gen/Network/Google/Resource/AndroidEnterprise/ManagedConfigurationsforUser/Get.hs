@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Ge
     , mcugEnterpriseId
     , mcugUserId
     , mcugManagedConfigurationForUserId
+    , mcugFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsforuser.get@ method which the
 -- 'ManagedConfigurationsforUserGet' request conforms to.
@@ -53,17 +54,19 @@ type ManagedConfigurationsforUserGetResource =
                Capture "userId" Text :>
                  "managedConfigurationsForUser" :>
                    Capture "managedConfigurationForUserId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] ManagedConfiguration
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] ManagedConfiguration
 
 -- | Retrieves details of a per-user managed configuration for an app for the
 -- specified user.
 --
 -- /See:/ 'managedConfigurationsforUserGet' smart constructor.
 data ManagedConfigurationsforUserGet = ManagedConfigurationsforUserGet'
-    { _mcugEnterpriseId                  :: !Text
-    , _mcugUserId                        :: !Text
+    { _mcugEnterpriseId :: !Text
+    , _mcugUserId :: !Text
     , _mcugManagedConfigurationForUserId :: !Text
+    , _mcugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforUserGet' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data ManagedConfigurationsforUserGet = ManagedConfigurationsforUserGet'
 -- * 'mcugUserId'
 --
 -- * 'mcugManagedConfigurationForUserId'
+--
+-- * 'mcugFields'
 managedConfigurationsforUserGet
     :: Text -- ^ 'mcugEnterpriseId'
     -> Text -- ^ 'mcugUserId'
     -> Text -- ^ 'mcugManagedConfigurationForUserId'
     -> ManagedConfigurationsforUserGet
-managedConfigurationsforUserGet pMcugEnterpriseId_ pMcugUserId_ pMcugManagedConfigurationForUserId_ =
+managedConfigurationsforUserGet pMcugEnterpriseId_ pMcugUserId_ pMcugManagedConfigurationForUserId_ = 
     ManagedConfigurationsforUserGet'
     { _mcugEnterpriseId = pMcugEnterpriseId_
     , _mcugUserId = pMcugUserId_
     , _mcugManagedConfigurationForUserId = pMcugManagedConfigurationForUserId_
+    , _mcugFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -105,6 +111,11 @@ mcugManagedConfigurationForUserId
   = lens _mcugManagedConfigurationForUserId
       (\ s a -> s{_mcugManagedConfigurationForUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcugFields :: Lens' ManagedConfigurationsforUserGet (Maybe Text)
+mcugFields
+  = lens _mcugFields (\ s a -> s{_mcugFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforUserGet where
         type Rs ManagedConfigurationsforUserGet =
@@ -114,6 +125,7 @@ instance GoogleRequest
         requestClient ManagedConfigurationsforUserGet'{..}
           = go _mcugEnterpriseId _mcugUserId
               _mcugManagedConfigurationForUserId
+              _mcugFields
               (Just AltJSON)
               androidEnterpriseService
           where go

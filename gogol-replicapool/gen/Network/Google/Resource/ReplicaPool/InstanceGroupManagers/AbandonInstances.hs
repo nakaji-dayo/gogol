@@ -39,10 +39,11 @@ module Network.Google.Resource.ReplicaPool.InstanceGroupManagers.AbandonInstance
     , igmaiInstanceGroupManager
     , igmaiZone
     , igmaiPayload
+    , igmaiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPool.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPool.Types
 
 -- | A resource alias for @replicapool.instanceGroupManagers.abandonInstances@ method which the
 -- 'InstanceGroupManagersAbandonInstances' request conforms to.
@@ -56,10 +57,11 @@ type InstanceGroupManagersAbandonInstancesResource =
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "abandonInstances" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           InstanceGroupManagersAbandonInstancesRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             InstanceGroupManagersAbandonInstancesRequest
+                             :> Post '[JSON] Operation
 
 -- | Removes the specified instances from the managed instance group, and
 -- from any target pools of which they were members, without deleting the
@@ -67,10 +69,11 @@ type InstanceGroupManagersAbandonInstancesResource =
 --
 -- /See:/ 'instanceGroupManagersAbandonInstances' smart constructor.
 data InstanceGroupManagersAbandonInstances = InstanceGroupManagersAbandonInstances'
-    { _igmaiProject              :: !Text
+    { _igmaiProject :: !Text
     , _igmaiInstanceGroupManager :: !Text
-    , _igmaiZone                 :: !Text
-    , _igmaiPayload              :: !InstanceGroupManagersAbandonInstancesRequest
+    , _igmaiZone :: !Text
+    , _igmaiPayload :: !InstanceGroupManagersAbandonInstancesRequest
+    , _igmaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersAbandonInstances' with the minimum fields required to make a request.
@@ -84,18 +87,21 @@ data InstanceGroupManagersAbandonInstances = InstanceGroupManagersAbandonInstanc
 -- * 'igmaiZone'
 --
 -- * 'igmaiPayload'
+--
+-- * 'igmaiFields'
 instanceGroupManagersAbandonInstances
     :: Text -- ^ 'igmaiProject'
     -> Text -- ^ 'igmaiInstanceGroupManager'
     -> Text -- ^ 'igmaiZone'
     -> InstanceGroupManagersAbandonInstancesRequest -- ^ 'igmaiPayload'
     -> InstanceGroupManagersAbandonInstances
-instanceGroupManagersAbandonInstances pIgmaiProject_ pIgmaiInstanceGroupManager_ pIgmaiZone_ pIgmaiPayload_ =
+instanceGroupManagersAbandonInstances pIgmaiProject_ pIgmaiInstanceGroupManager_ pIgmaiZone_ pIgmaiPayload_ = 
     InstanceGroupManagersAbandonInstances'
     { _igmaiProject = pIgmaiProject_
     , _igmaiInstanceGroupManager = pIgmaiInstanceGroupManager_
     , _igmaiZone = pIgmaiZone_
     , _igmaiPayload = pIgmaiPayload_
+    , _igmaiFields = Nothing
     }
 
 -- | The Google Developers Console project name.
@@ -119,6 +125,11 @@ igmaiPayload :: Lens' InstanceGroupManagersAbandonInstances InstanceGroupManager
 igmaiPayload
   = lens _igmaiPayload (\ s a -> s{_igmaiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmaiFields :: Lens' InstanceGroupManagersAbandonInstances (Maybe Text)
+igmaiFields
+  = lens _igmaiFields (\ s a -> s{_igmaiFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersAbandonInstances where
         type Rs InstanceGroupManagersAbandonInstances =
@@ -130,6 +141,7 @@ instance GoogleRequest
           InstanceGroupManagersAbandonInstances'{..}
           = go _igmaiProject _igmaiZone
               _igmaiInstanceGroupManager
+              _igmaiFields
               (Just AltJSON)
               _igmaiPayload
               replicaPoolService

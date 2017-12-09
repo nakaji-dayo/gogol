@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.InventoryItems.Get
     , iigProFileId
     , iigId
     , iigProjectId
+    , iigFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.inventoryItems.get@ method which the
 -- 'InventoryItemsGet' request conforms to.
 type InventoryItemsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
                Capture "projectId" (Textual Int64) :>
                  "inventoryItems" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] InventoryItem
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] InventoryItem
 
 -- | Gets one inventory item by ID.
 --
 -- /See:/ 'inventoryItemsGet' smart constructor.
 data InventoryItemsGet = InventoryItemsGet'
     { _iigProFileId :: !(Textual Int64)
-    , _iigId        :: !(Textual Int64)
+    , _iigId :: !(Textual Int64)
     , _iigProjectId :: !(Textual Int64)
+    , _iigFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InventoryItemsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data InventoryItemsGet = InventoryItemsGet'
 -- * 'iigId'
 --
 -- * 'iigProjectId'
+--
+-- * 'iigFields'
 inventoryItemsGet
     :: Int64 -- ^ 'iigProFileId'
     -> Int64 -- ^ 'iigId'
     -> Int64 -- ^ 'iigProjectId'
     -> InventoryItemsGet
-inventoryItemsGet pIigProFileId_ pIigId_ pIigProjectId_ =
+inventoryItemsGet pIigProFileId_ pIigId_ pIigProjectId_ = 
     InventoryItemsGet'
     { _iigProFileId = _Coerce # pIigProFileId_
     , _iigId = _Coerce # pIigId_
     , _iigProjectId = _Coerce # pIigProjectId_
+    , _iigFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -101,12 +107,17 @@ iigProjectId
   = lens _iigProjectId (\ s a -> s{_iigProjectId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+iigFields :: Lens' InventoryItemsGet (Maybe Text)
+iigFields
+  = lens _iigFields (\ s a -> s{_iigFields = a})
+
 instance GoogleRequest InventoryItemsGet where
         type Rs InventoryItemsGet = InventoryItem
         type Scopes InventoryItemsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient InventoryItemsGet'{..}
-          = go _iigProFileId _iigProjectId _iigId
+          = go _iigProFileId _iigProjectId _iigId _iigFields
               (Just AltJSON)
               dFAReportingService
           where go

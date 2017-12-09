@@ -17,8 +17,8 @@
 --
 module Network.Google.ServiceManagement.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types.Sum
 
 -- | Response message for UndeleteService method.
 --
@@ -34,7 +34,7 @@ newtype UndeleteServiceResponse = UndeleteServiceResponse'
 -- * 'usrService'
 undeleteServiceResponse
     :: UndeleteServiceResponse
-undeleteServiceResponse =
+undeleteServiceResponse = 
     UndeleteServiceResponse'
     { _usrService = Nothing
     }
@@ -60,9 +60,9 @@ instance ToJSON UndeleteServiceResponse where
 --
 -- /See:/ 'systemParameter' smart constructor.
 data SystemParameter = SystemParameter'
-    { _spHTTPHeader        :: !(Maybe Text)
+    { _spHTTPHeader :: !(Maybe Text)
     , _spURLQueryParameter :: !(Maybe Text)
-    , _spName              :: !(Maybe Text)
+    , _spName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SystemParameter' with the minimum fields required to make a request.
@@ -76,7 +76,7 @@ data SystemParameter = SystemParameter'
 -- * 'spName'
 systemParameter
     :: SystemParameter
-systemParameter =
+systemParameter = 
     SystemParameter'
     { _spHTTPHeader = Nothing
     , _spURLQueryParameter = Nothing
@@ -132,7 +132,7 @@ newtype Advice = Advice'
 -- * 'aDescription'
 advice
     :: Advice
-advice =
+advice = 
     Advice'
     { _aDescription = Nothing
     }
@@ -158,8 +158,8 @@ instance ToJSON Advice where
 -- /See:/ 'configFile' smart constructor.
 data ConfigFile = ConfigFile'
     { _cfFileContents :: !(Maybe Bytes)
-    , _cfFilePath     :: !(Maybe Text)
-    , _cfFileType     :: !(Maybe ConfigFileFileType)
+    , _cfFilePath :: !(Maybe Text)
+    , _cfFileType :: !(Maybe ConfigFileFileType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConfigFile' with the minimum fields required to make a request.
@@ -173,7 +173,7 @@ data ConfigFile = ConfigFile'
 -- * 'cfFileType'
 configFile
     :: ConfigFile
-configFile =
+configFile = 
     ConfigFile'
     { _cfFileContents = Nothing
     , _cfFilePath = Nothing
@@ -224,10 +224,10 @@ instance ToJSON ConfigFile where
 --
 -- /See:/ 'monitoredResourceDescriptor' smart constructor.
 data MonitoredResourceDescriptor = MonitoredResourceDescriptor'
-    { _mrdName        :: !(Maybe Text)
+    { _mrdName :: !(Maybe Text)
     , _mrdDisplayName :: !(Maybe Text)
-    , _mrdLabels      :: !(Maybe [LabelDescriptor])
-    , _mrdType        :: !(Maybe Text)
+    , _mrdLabels :: !(Maybe [LabelDescriptor])
+    , _mrdType :: !(Maybe Text)
     , _mrdDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -246,7 +246,7 @@ data MonitoredResourceDescriptor = MonitoredResourceDescriptor'
 -- * 'mrdDescription'
 monitoredResourceDescriptor
     :: MonitoredResourceDescriptor
-monitoredResourceDescriptor =
+monitoredResourceDescriptor = 
     MonitoredResourceDescriptor'
     { _mrdName = Nothing
     , _mrdDisplayName = Nothing
@@ -320,9 +320,9 @@ instance ToJSON MonitoredResourceDescriptor where
 --
 -- /See:/ 'documentationRule' smart constructor.
 data DocumentationRule = DocumentationRule'
-    { _drSelector               :: !(Maybe Text)
+    { _drSelector :: !(Maybe Text)
     , _drDeprecationDescription :: !(Maybe Text)
-    , _drDescription            :: !(Maybe Text)
+    , _drDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DocumentationRule' with the minimum fields required to make a request.
@@ -336,7 +336,7 @@ data DocumentationRule = DocumentationRule'
 -- * 'drDescription'
 documentationRule
     :: DocumentationRule
-documentationRule =
+documentationRule = 
     DocumentationRule'
     { _drSelector = Nothing
     , _drDeprecationDescription = Nothing
@@ -397,7 +397,7 @@ instance ToJSON DocumentationRule where
 -- needed, put the localized message in the error details or localize it in
 -- the client. The optional error details may contain arbitrary information
 -- about the error. There is a predefined set of error detail types in the
--- package \`google.rpc\` which can be used for common error conditions. #
+-- package \`google.rpc\` that can be used for common error conditions. #
 -- Language mapping The \`Status\` message is the logical representation of
 -- the error model, but it is not necessarily the actual wire format. When
 -- the \`Status\` message is exposed in different client libraries and
@@ -410,20 +410,20 @@ instance ToJSON DocumentationRule where
 -- Partial errors. If a service needs to return partial errors to the
 -- client, it may embed the \`Status\` in the normal response to indicate
 -- the partial errors. - Workflow errors. A typical workflow has multiple
--- steps. Each step may have a \`Status\` message for error reporting
--- purpose. - Batch operations. If a client uses batch request and batch
--- response, the \`Status\` message should be used directly inside batch
--- response, one for each error sub-response. - Asynchronous operations. If
--- an API call embeds asynchronous operation results in its response, the
--- status of those operations should be represented directly using the
--- \`Status\` message. - Logging. If some API errors are stored in logs,
--- the message \`Status\` could be used directly after any stripping needed
--- for security\/privacy reasons.
+-- steps. Each step may have a \`Status\` message for error reporting. -
+-- Batch operations. If a client uses batch request and batch response, the
+-- \`Status\` message should be used directly inside batch response, one
+-- for each error sub-response. - Asynchronous operations. If an API call
+-- embeds asynchronous operation results in its response, the status of
+-- those operations should be represented directly using the \`Status\`
+-- message. - Logging. If some API errors are stored in logs, the message
+-- \`Status\` could be used directly after any stripping needed for
+-- security\/privacy reasons.
 --
 -- /See:/ 'status' smart constructor.
 data Status = Status'
     { _sDetails :: !(Maybe [StatusDetailsItem])
-    , _sCode    :: !(Maybe (Textual Int32))
+    , _sCode :: !(Maybe (Textual Int32))
     , _sMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -438,15 +438,15 @@ data Status = Status'
 -- * 'sMessage'
 status
     :: Status
-status =
+status = 
     Status'
     { _sDetails = Nothing
     , _sCode = Nothing
     , _sMessage = Nothing
     }
 
--- | A list of messages that carry the error details. There will be a common
--- set of message types for APIs to use.
+-- | A list of messages that carry the error details. There is a common set
+-- of message types for APIs to use.
 sDetails :: Lens' Status [StatusDetailsItem]
 sDetails
   = lens _sDetails (\ s a -> s{_sDetails = a}) .
@@ -499,7 +499,7 @@ newtype OperationSchema = OperationSchema'
 operationSchema
     :: HashMap Text JSONValue -- ^ 'osAddtional'
     -> OperationSchema
-operationSchema pOsAddtional_ =
+operationSchema pOsAddtional_ = 
     OperationSchema'
     { _osAddtional = _Coerce # pOsAddtional_
     }
@@ -522,9 +522,9 @@ instance ToJSON OperationSchema where
 --
 -- /See:/ 'generateConfigReportResponse' smart constructor.
 data GenerateConfigReportResponse = GenerateConfigReportResponse'
-    { _gcrrDiagnostics   :: !(Maybe [Diagnostic])
-    , _gcrrServiceName   :: !(Maybe Text)
-    , _gcrrId            :: !(Maybe Text)
+    { _gcrrDiagnostics :: !(Maybe [Diagnostic])
+    , _gcrrServiceName :: !(Maybe Text)
+    , _gcrrId :: !(Maybe Text)
     , _gcrrChangeReports :: !(Maybe [ChangeReport])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -541,7 +541,7 @@ data GenerateConfigReportResponse = GenerateConfigReportResponse'
 -- * 'gcrrChangeReports'
 generateConfigReportResponse
     :: GenerateConfigReportResponse
-generateConfigReportResponse =
+generateConfigReportResponse = 
     GenerateConfigReportResponse'
     { _gcrrDiagnostics = Nothing
     , _gcrrServiceName = Nothing
@@ -596,92 +596,212 @@ instance ToJSON GenerateConfigReportResponse where
                   ("id" .=) <$> _gcrrId,
                   ("changeReports" .=) <$> _gcrrChangeReports])
 
--- | Options for counters
---
--- /See:/ 'counterOptions' smart constructor.
-data CounterOptions = CounterOptions'
-    { _coField  :: !(Maybe Text)
-    , _coMetric :: !(Maybe Text)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'CounterOptions' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'coField'
---
--- * 'coMetric'
-counterOptions
-    :: CounterOptions
-counterOptions =
-    CounterOptions'
-    { _coField = Nothing
-    , _coMetric = Nothing
-    }
-
--- | The field value to attribute.
-coField :: Lens' CounterOptions (Maybe Text)
-coField = lens _coField (\ s a -> s{_coField = a})
-
--- | The metric to update.
-coMetric :: Lens' CounterOptions (Maybe Text)
-coMetric = lens _coMetric (\ s a -> s{_coMetric = a})
-
-instance FromJSON CounterOptions where
-        parseJSON
-          = withObject "CounterOptions"
-              (\ o ->
-                 CounterOptions' <$>
-                   (o .:? "field") <*> (o .:? "metric"))
-
-instance ToJSON CounterOptions where
-        toJSON CounterOptions'{..}
-          = object
-              (catMaybes
-                 [("field" .=) <$> _coField,
-                  ("metric" .=) <$> _coMetric])
-
--- | Do not use this. For media support, add instead
--- [][google.bytestream.RestByteStream] as an API to your configuration.
+-- | Defines the Media configuration for a service in case of an upload. Use
+-- this only for Scotty Requests. Do not use this for media support using
+-- Bytestream, add instead [][google.bytestream.RestByteStream] as an API
+-- to your configuration for Bytestream methods.
 --
 -- /See:/ 'mediaUpload' smart constructor.
-newtype MediaUpload' = MediaUpload''
-    { _muEnabled :: Maybe Bool
+data MediaUpload' = MediaUpload''
+    { _muMimeTypes :: !(Maybe [Text])
+    , _muStartNotification :: !(Maybe Bool)
+    , _muEnabled :: !(Maybe Bool)
+    , _muProgressNotification :: !(Maybe Bool)
+    , _muMaxSize :: !(Maybe (Textual Int64))
+    , _muCompleteNotification :: !(Maybe Bool)
+    , _muDropzone :: !(Maybe Text)
+    , _muUploadService :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MediaUpload' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'muMimeTypes'
+--
+-- * 'muStartNotification'
+--
 -- * 'muEnabled'
+--
+-- * 'muProgressNotification'
+--
+-- * 'muMaxSize'
+--
+-- * 'muCompleteNotification'
+--
+-- * 'muDropzone'
+--
+-- * 'muUploadService'
 mediaUpload
     :: MediaUpload'
-mediaUpload =
+mediaUpload = 
     MediaUpload''
-    { _muEnabled = Nothing
+    { _muMimeTypes = Nothing
+    , _muStartNotification = Nothing
+    , _muEnabled = Nothing
+    , _muProgressNotification = Nothing
+    , _muMaxSize = Nothing
+    , _muCompleteNotification = Nothing
+    , _muDropzone = Nothing
+    , _muUploadService = Nothing
     }
+
+-- | An array of mimetype patterns. Esf will only accept uploads that match
+-- one of the given patterns.
+muMimeTypes :: Lens' MediaUpload' [Text]
+muMimeTypes
+  = lens _muMimeTypes (\ s a -> s{_muMimeTypes = a}) .
+      _Default
+      . _Coerce
+
+-- | Whether to receive a notification on the start of media upload.
+muStartNotification :: Lens' MediaUpload' (Maybe Bool)
+muStartNotification
+  = lens _muStartNotification
+      (\ s a -> s{_muStartNotification = a})
 
 -- | Whether upload is enabled.
 muEnabled :: Lens' MediaUpload' (Maybe Bool)
 muEnabled
   = lens _muEnabled (\ s a -> s{_muEnabled = a})
 
+-- | Whether to receive a notification for progress changes of media upload.
+muProgressNotification :: Lens' MediaUpload' (Maybe Bool)
+muProgressNotification
+  = lens _muProgressNotification
+      (\ s a -> s{_muProgressNotification = a})
+
+-- | Optional maximum acceptable size for an upload. The size is specified in
+-- bytes.
+muMaxSize :: Lens' MediaUpload' (Maybe Int64)
+muMaxSize
+  = lens _muMaxSize (\ s a -> s{_muMaxSize = a}) .
+      mapping _Coerce
+
+-- | A boolean that determines whether a notification for the completion of
+-- an upload should be sent to the backend. These notifications will not be
+-- seen by the client and will not consume quota.
+muCompleteNotification :: Lens' MediaUpload' (Maybe Bool)
+muCompleteNotification
+  = lens _muCompleteNotification
+      (\ s a -> s{_muCompleteNotification = a})
+
+-- | Name of the Scotty dropzone to use for the current API.
+muDropzone :: Lens' MediaUpload' (Maybe Text)
+muDropzone
+  = lens _muDropzone (\ s a -> s{_muDropzone = a})
+
+-- | DO NOT USE FIELDS BELOW THIS LINE UNTIL THIS WARNING IS REMOVED. Specify
+-- name of the upload service if one is used for upload.
+muUploadService :: Lens' MediaUpload' (Maybe Text)
+muUploadService
+  = lens _muUploadService
+      (\ s a -> s{_muUploadService = a})
+
 instance FromJSON MediaUpload' where
         parseJSON
           = withObject "MediaUpload"
-              (\ o -> MediaUpload'' <$> (o .:? "enabled"))
+              (\ o ->
+                 MediaUpload'' <$>
+                   (o .:? "mimeTypes" .!= mempty) <*>
+                     (o .:? "startNotification")
+                     <*> (o .:? "enabled")
+                     <*> (o .:? "progressNotification")
+                     <*> (o .:? "maxSize")
+                     <*> (o .:? "completeNotification")
+                     <*> (o .:? "dropzone")
+                     <*> (o .:? "uploadService"))
 
 instance ToJSON MediaUpload' where
         toJSON MediaUpload''{..}
-          = object (catMaybes [("enabled" .=) <$> _muEnabled])
+          = object
+              (catMaybes
+                 [("mimeTypes" .=) <$> _muMimeTypes,
+                  ("startNotification" .=) <$> _muStartNotification,
+                  ("enabled" .=) <$> _muEnabled,
+                  ("progressNotification" .=) <$>
+                    _muProgressNotification,
+                  ("maxSize" .=) <$> _muMaxSize,
+                  ("completeNotification" .=) <$>
+                    _muCompleteNotification,
+                  ("dropzone" .=) <$> _muDropzone,
+                  ("uploadService" .=) <$> _muUploadService])
 
--- | Specifies the audit configuration for a service. It consists of which
--- permission types are logged, and what identities, if any, are exempted
--- from logging. An AuditConifg must have one or more AuditLogConfigs.
+-- | Configuration of a specific billing destination (Currently only support
+-- bill against consumer project).
+--
+-- /See:/ 'billingDestination' smart constructor.
+data BillingDestination = BillingDestination'
+    { _bdMetrics :: !(Maybe [Text])
+    , _bdMonitoredResource :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BillingDestination' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bdMetrics'
+--
+-- * 'bdMonitoredResource'
+billingDestination
+    :: BillingDestination
+billingDestination = 
+    BillingDestination'
+    { _bdMetrics = Nothing
+    , _bdMonitoredResource = Nothing
+    }
+
+-- | Names of the metrics to report to this billing destination. Each name
+-- must be defined in Service.metrics section.
+bdMetrics :: Lens' BillingDestination [Text]
+bdMetrics
+  = lens _bdMetrics (\ s a -> s{_bdMetrics = a}) .
+      _Default
+      . _Coerce
+
+-- | The monitored resource type. The type must be defined in
+-- Service.monitored_resources section.
+bdMonitoredResource :: Lens' BillingDestination (Maybe Text)
+bdMonitoredResource
+  = lens _bdMonitoredResource
+      (\ s a -> s{_bdMonitoredResource = a})
+
+instance FromJSON BillingDestination where
+        parseJSON
+          = withObject "BillingDestination"
+              (\ o ->
+                 BillingDestination' <$>
+                   (o .:? "metrics" .!= mempty) <*>
+                     (o .:? "monitoredResource"))
+
+instance ToJSON BillingDestination where
+        toJSON BillingDestination'{..}
+          = object
+              (catMaybes
+                 [("metrics" .=) <$> _bdMetrics,
+                  ("monitoredResource" .=) <$> _bdMonitoredResource])
+
+-- | Specifies the audit configuration for a service. The configuration
+-- determines which permission types are logged, and what identities, if
+-- any, are exempted from logging. An AuditConfig must have one or more
+-- AuditLogConfigs. If there are AuditConfigs for both \`allServices\` and
+-- a specific service, the union of the two AuditConfigs is used for that
+-- service: the log_types specified in each AuditConfig are enabled, and
+-- the exempted_members in each AuditConfig are exempted. Example Policy
+-- with multiple AuditConfigs: { \"audit_configs\": [ { \"service\":
+-- \"allServices\" \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\",
+-- \"exempted_members\": [ \"user:foo\'gmail.com\" ] }, { \"log_type\":
+-- \"DATA_WRITE\", }, { \"log_type\": \"ADMIN_READ\", } ] }, { \"service\":
+-- \"fooservice.googleapis.com\" \"audit_log_configs\": [ { \"log_type\":
+-- \"DATA_READ\", }, { \"log_type\": \"DATA_WRITE\", \"exempted_members\":
+-- [ \"user:bar\'gmail.com\" ] } ] } ] } For fooservice, this policy
+-- enables DATA_READ, DATA_WRITE and ADMIN_READ logging. It also exempts
+-- foo\'gmail.com from DATA_READ logging, and bar\'gmail.com from
+-- DATA_WRITE logging.
 --
 -- /See:/ 'auditConfig' smart constructor.
 data AuditConfig = AuditConfig'
-    { _acService         :: !(Maybe Text)
+    { _acService :: !(Maybe Text)
     , _acAuditLogConfigs :: !(Maybe [AuditLogConfig])
     , _acExemptedMembers :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
@@ -697,7 +817,7 @@ data AuditConfig = AuditConfig'
 -- * 'acExemptedMembers'
 auditConfig
     :: AuditConfig
-auditConfig =
+auditConfig = 
     AuditConfig'
     { _acService = Nothing
     , _acAuditLogConfigs = Nothing
@@ -705,8 +825,8 @@ auditConfig =
     }
 
 -- | Specifies a service that will be enabled for audit logging. For example,
--- \`resourcemanager\`, \`storage\`, \`compute\`. \`allServices\` is a
--- special value that covers all services.
+-- \`storage.googleapis.com\`, \`cloudsql.googleapis.com\`. \`allServices\`
+-- is a special value that covers all services.
 acService :: Lens' AuditConfig (Maybe Text)
 acService
   = lens _acService (\ s a -> s{_acService = a})
@@ -719,10 +839,6 @@ acAuditLogConfigs
       . _Default
       . _Coerce
 
--- | Specifies the identities that are exempted from \"data access\" audit
--- logging for the \`service\` specified above. Follows the same format of
--- Binding.members. This field is deprecated in favor of
--- per-permission-type exemptions.
 acExemptedMembers :: Lens' AuditConfig [Text]
 acExemptedMembers
   = lens _acExemptedMembers
@@ -763,7 +879,7 @@ newtype Control = Control'
 -- * 'cEnvironment'
 control
     :: Control
-control =
+control = 
     Control'
     { _cEnvironment = Nothing
     }
@@ -789,7 +905,7 @@ instance ToJSON Control where
 --
 -- /See:/ 'deleteServiceStrategy' smart constructor.
 data DeleteServiceStrategy =
-    DeleteServiceStrategy'
+    DeleteServiceStrategy' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeleteServiceStrategy' with the minimum fields required to make a request.
@@ -813,7 +929,7 @@ instance ToJSON DeleteServiceStrategy where
 -- /See:/ 'authRequirement' smart constructor.
 data AuthRequirement = AuthRequirement'
     { _arProviderId :: !(Maybe Text)
-    , _arAudiences  :: !(Maybe Text)
+    , _arAudiences :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AuthRequirement' with the minimum fields required to make a request.
@@ -825,7 +941,7 @@ data AuthRequirement = AuthRequirement'
 -- * 'arAudiences'
 authRequirement
     :: AuthRequirement
-authRequirement =
+authRequirement = 
     AuthRequirement'
     { _arProviderId = Nothing
     , _arAudiences = Nothing
@@ -870,7 +986,7 @@ instance ToJSON AuthRequirement where
 -- /See:/ 'listServicesResponse' smart constructor.
 data ListServicesResponse = ListServicesResponse'
     { _lsrNextPageToken :: !(Maybe Text)
-    , _lsrServices      :: !(Maybe [ManagedService])
+    , _lsrServices :: !(Maybe [ManagedService])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListServicesResponse' with the minimum fields required to make a request.
@@ -882,7 +998,7 @@ data ListServicesResponse = ListServicesResponse'
 -- * 'lsrServices'
 listServicesResponse
     :: ListServicesResponse
-listServicesResponse =
+listServicesResponse = 
     ListServicesResponse'
     { _lsrNextPageToken = Nothing
     , _lsrServices = Nothing
@@ -917,6 +1033,82 @@ instance ToJSON ListServicesResponse where
                  [("nextPageToken" .=) <$> _lsrNextPageToken,
                   ("services" .=) <$> _lsrServices])
 
+-- | Represents an expression text. Example: title: \"User account presence\"
+-- description: \"Determines whether the request has a user account\"
+-- expression: \"size(request.user) > 0\"
+--
+-- /See:/ 'expr' smart constructor.
+data Expr = Expr'
+    { _eLocation :: !(Maybe Text)
+    , _eExpression :: !(Maybe Text)
+    , _eTitle :: !(Maybe Text)
+    , _eDescription :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Expr' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'eLocation'
+--
+-- * 'eExpression'
+--
+-- * 'eTitle'
+--
+-- * 'eDescription'
+expr
+    :: Expr
+expr = 
+    Expr'
+    { _eLocation = Nothing
+    , _eExpression = Nothing
+    , _eTitle = Nothing
+    , _eDescription = Nothing
+    }
+
+-- | An optional string indicating the location of the expression for error
+-- reporting, e.g. a file name and a position in the file.
+eLocation :: Lens' Expr (Maybe Text)
+eLocation
+  = lens _eLocation (\ s a -> s{_eLocation = a})
+
+-- | Textual representation of an expression in Common Expression Language
+-- syntax. The application context of the containing message determines
+-- which well-known feature set of CEL is supported.
+eExpression :: Lens' Expr (Maybe Text)
+eExpression
+  = lens _eExpression (\ s a -> s{_eExpression = a})
+
+-- | An optional title for the expression, i.e. a short string describing its
+-- purpose. This can be used e.g. in UIs which allow to enter the
+-- expression.
+eTitle :: Lens' Expr (Maybe Text)
+eTitle = lens _eTitle (\ s a -> s{_eTitle = a})
+
+-- | An optional description of the expression. This is a longer text which
+-- describes the expression, e.g. when hovered over it in a UI.
+eDescription :: Lens' Expr (Maybe Text)
+eDescription
+  = lens _eDescription (\ s a -> s{_eDescription = a})
+
+instance FromJSON Expr where
+        parseJSON
+          = withObject "Expr"
+              (\ o ->
+                 Expr' <$>
+                   (o .:? "location") <*> (o .:? "expression") <*>
+                     (o .:? "title")
+                     <*> (o .:? "description"))
+
+instance ToJSON Expr where
+        toJSON Expr'{..}
+          = object
+              (catMaybes
+                 [("location" .=) <$> _eLocation,
+                  ("expression" .=) <$> _eExpression,
+                  ("title" .=) <$> _eTitle,
+                  ("description" .=) <$> _eDescription])
+
 -- | \`Context\` defines which contexts an API requests. Example: context:
 -- rules: - selector: \"*\" requested: - google.rpc.context.ProjectContext
 -- - google.rpc.context.OriginContext The above specifies that all methods
@@ -936,7 +1128,7 @@ newtype Context = Context'
 -- * 'cRules'
 context
     :: Context
-context =
+context = 
     Context'
     { _cRules = Nothing
     }
@@ -964,7 +1156,7 @@ instance ToJSON Context where
 -- /See:/ 'loggingDestination' smart constructor.
 data LoggingDestination = LoggingDestination'
     { _ldMonitoredResource :: !(Maybe Text)
-    , _ldLogs              :: !(Maybe [Text])
+    , _ldLogs :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LoggingDestination' with the minimum fields required to make a request.
@@ -976,7 +1168,7 @@ data LoggingDestination = LoggingDestination'
 -- * 'ldLogs'
 loggingDestination
     :: LoggingDestination
-loggingDestination =
+loggingDestination = 
     LoggingDestination'
     { _ldMonitoredResource = Nothing
     , _ldLogs = Nothing
@@ -1019,14 +1211,14 @@ instance ToJSON LoggingDestination where
 --
 -- /See:/ 'metricDescriptor' smart constructor.
 data MetricDescriptor = MetricDescriptor'
-    { _mdMetricKind  :: !(Maybe MetricDescriptorMetricKind)
-    , _mdName        :: !(Maybe Text)
+    { _mdMetricKind :: !(Maybe MetricDescriptorMetricKind)
+    , _mdName :: !(Maybe Text)
     , _mdDisplayName :: !(Maybe Text)
-    , _mdLabels      :: !(Maybe [LabelDescriptor])
-    , _mdType        :: !(Maybe Text)
-    , _mdValueType   :: !(Maybe MetricDescriptorValueType)
+    , _mdLabels :: !(Maybe [LabelDescriptor])
+    , _mdType :: !(Maybe Text)
+    , _mdValueType :: !(Maybe MetricDescriptorValueType)
     , _mdDescription :: !(Maybe Text)
-    , _mdUnit        :: !(Maybe Text)
+    , _mdUnit :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptor' with the minimum fields required to make a request.
@@ -1050,7 +1242,7 @@ data MetricDescriptor = MetricDescriptor'
 -- * 'mdUnit'
 metricDescriptor
     :: MetricDescriptor
-metricDescriptor =
+metricDescriptor = 
     MetricDescriptor'
     { _mdMetricKind = Nothing
     , _mdName = Nothing
@@ -1069,19 +1261,15 @@ mdMetricKind :: Lens' MetricDescriptor (Maybe MetricDescriptorMetricKind)
 mdMetricKind
   = lens _mdMetricKind (\ s a -> s{_mdMetricKind = a})
 
--- | The resource name of the metric descriptor. Depending on the
--- implementation, the name typically includes: (1) the parent resource
--- name that defines the scope of the metric type or of its data; and (2)
--- the metric\'s URL-encoded type, which also appears in the \`type\` field
--- of this descriptor. For example, following is the resource name of a
--- custom metric within the GCP project \`my-project-id\`:
--- \"projects\/my-project-id\/metricDescriptors\/custom.googleapis.com%2Finvoice%2Fpaid%2Famount\"
+-- | The resource name of the metric descriptor.
 mdName :: Lens' MetricDescriptor (Maybe Text)
 mdName = lens _mdName (\ s a -> s{_mdName = a})
 
 -- | A concise name for the metric, which can be displayed in user
 -- interfaces. Use sentence case without an ending period, for example
--- \"Request count\".
+-- \"Request count\". This field is optional but it is recommended to be
+-- set for any metrics associated with user-visible concepts, such as
+-- Quota.
 mdDisplayName :: Lens' MetricDescriptor (Maybe Text)
 mdDisplayName
   = lens _mdDisplayName
@@ -1173,11 +1361,100 @@ instance ToJSON MetricDescriptor where
                   ("description" .=) <$> _mdDescription,
                   ("unit" .=) <$> _mdUnit])
 
+-- | The response message for Operations.ListOperations.
+--
+-- /See:/ 'listOperationsResponse' smart constructor.
+data ListOperationsResponse = ListOperationsResponse'
+    { _lorNextPageToken :: !(Maybe Text)
+    , _lorOperations :: !(Maybe [Operation])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ListOperationsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'lorNextPageToken'
+--
+-- * 'lorOperations'
+listOperationsResponse
+    :: ListOperationsResponse
+listOperationsResponse = 
+    ListOperationsResponse'
+    { _lorNextPageToken = Nothing
+    , _lorOperations = Nothing
+    }
+
+-- | The standard List next-page token.
+lorNextPageToken :: Lens' ListOperationsResponse (Maybe Text)
+lorNextPageToken
+  = lens _lorNextPageToken
+      (\ s a -> s{_lorNextPageToken = a})
+
+-- | A list of operations that matches the specified filter in the request.
+lorOperations :: Lens' ListOperationsResponse [Operation]
+lorOperations
+  = lens _lorOperations
+      (\ s a -> s{_lorOperations = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListOperationsResponse where
+        parseJSON
+          = withObject "ListOperationsResponse"
+              (\ o ->
+                 ListOperationsResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "operations" .!= mempty))
+
+instance ToJSON ListOperationsResponse where
+        toJSON ListOperationsResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _lorNextPageToken,
+                  ("operations" .=) <$> _lorOperations])
+
+-- | Configuration for a custom authentication provider.
+--
+-- /See:/ 'customAuthRequirements' smart constructor.
+newtype CustomAuthRequirements = CustomAuthRequirements'
+    { _carProvider :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CustomAuthRequirements' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'carProvider'
+customAuthRequirements
+    :: CustomAuthRequirements
+customAuthRequirements = 
+    CustomAuthRequirements'
+    { _carProvider = Nothing
+    }
+
+-- | A configuration string containing connection information for the
+-- authentication provider, typically formatted as a SmartService string
+-- (go\/smartservice).
+carProvider :: Lens' CustomAuthRequirements (Maybe Text)
+carProvider
+  = lens _carProvider (\ s a -> s{_carProvider = a})
+
+instance FromJSON CustomAuthRequirements where
+        parseJSON
+          = withObject "CustomAuthRequirements"
+              (\ o ->
+                 CustomAuthRequirements' <$> (o .:? "provider"))
+
+instance ToJSON CustomAuthRequirements where
+        toJSON CustomAuthRequirements'{..}
+          = object
+              (catMaybes [("provider" .=) <$> _carProvider])
+
 -- | Request message for \`GetIamPolicy\` method.
 --
 -- /See:/ 'getIAMPolicyRequest' smart constructor.
 data GetIAMPolicyRequest =
-    GetIAMPolicyRequest'
+    GetIAMPolicyRequest' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GetIAMPolicyRequest' with the minimum fields required to make a request.
@@ -1199,7 +1476,8 @@ instance ToJSON GetIAMPolicyRequest where
 -- /See:/ 'backendRule' smart constructor.
 data BackendRule = BackendRule'
     { _brSelector :: !(Maybe Text)
-    , _brAddress  :: !(Maybe Text)
+    , _brMinDeadline :: !(Maybe (Textual Double))
+    , _brAddress :: !(Maybe Text)
     , _brDeadline :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1209,14 +1487,17 @@ data BackendRule = BackendRule'
 --
 -- * 'brSelector'
 --
+-- * 'brMinDeadline'
+--
 -- * 'brAddress'
 --
 -- * 'brDeadline'
 backendRule
     :: BackendRule
-backendRule =
+backendRule = 
     BackendRule'
     { _brSelector = Nothing
+    , _brMinDeadline = Nothing
     , _brAddress = Nothing
     , _brDeadline = Nothing
     }
@@ -1227,13 +1508,22 @@ brSelector :: Lens' BackendRule (Maybe Text)
 brSelector
   = lens _brSelector (\ s a -> s{_brSelector = a})
 
+-- | Minimum deadline in seconds needed for this method. Calls having
+-- deadline value lower than this will be rejected.
+brMinDeadline :: Lens' BackendRule (Maybe Double)
+brMinDeadline
+  = lens _brMinDeadline
+      (\ s a -> s{_brMinDeadline = a})
+      . mapping _Coerce
+
 -- | The address of the API backend.
 brAddress :: Lens' BackendRule (Maybe Text)
 brAddress
   = lens _brAddress (\ s a -> s{_brAddress = a})
 
 -- | The number of seconds to wait for a response from a request. The default
--- depends on the deployment context.
+-- deadline for gRPC is infinite (no deadline) and HTTP requests is 5
+-- seconds.
 brDeadline :: Lens' BackendRule (Maybe Double)
 brDeadline
   = lens _brDeadline (\ s a -> s{_brDeadline = a}) .
@@ -1244,14 +1534,16 @@ instance FromJSON BackendRule where
           = withObject "BackendRule"
               (\ o ->
                  BackendRule' <$>
-                   (o .:? "selector") <*> (o .:? "address") <*>
-                     (o .:? "deadline"))
+                   (o .:? "selector") <*> (o .:? "minDeadline") <*>
+                     (o .:? "address")
+                     <*> (o .:? "deadline"))
 
 instance ToJSON BackendRule where
         toJSON BackendRule'{..}
           = object
               (catMaybes
                  [("selector" .=) <$> _brSelector,
+                  ("minDeadline" .=) <$> _brMinDeadline,
                   ("address" .=) <$> _brAddress,
                   ("deadline" .=) <$> _brDeadline])
 
@@ -1272,7 +1564,7 @@ data SubmitConfigSourceRequest = SubmitConfigSourceRequest'
 -- * 'scsrConfigSource'
 submitConfigSourceRequest
     :: SubmitConfigSourceRequest
-submitConfigSourceRequest =
+submitConfigSourceRequest = 
     SubmitConfigSourceRequest'
     { _scsrValidateOnly = Nothing
     , _scsrConfigSource = Nothing
@@ -1322,7 +1614,7 @@ newtype SourceContext = SourceContext'
 -- * 'scFileName'
 sourceContext
     :: SourceContext
-sourceContext =
+sourceContext = 
     SourceContext'
     { _scFileName = Nothing
     }
@@ -1348,16 +1640,16 @@ instance ToJSON SourceContext where
 --
 -- /See:/ 'field' smart constructor.
 data Field = Field'
-    { _fKind         :: !(Maybe FieldKind)
-    , _fOneofIndex   :: !(Maybe (Textual Int32))
-    , _fName         :: !(Maybe Text)
-    , _fJSONName     :: !(Maybe Text)
-    , _fCardinality  :: !(Maybe FieldCardinality)
-    , _fOptions      :: !(Maybe [Option])
-    , _fPacked       :: !(Maybe Bool)
+    { _fKind :: !(Maybe FieldKind)
+    , _fOneofIndex :: !(Maybe (Textual Int32))
+    , _fName :: !(Maybe Text)
+    , _fJSONName :: !(Maybe Text)
+    , _fCardinality :: !(Maybe FieldCardinality)
+    , _fOptions :: !(Maybe [Option])
+    , _fPacked :: !(Maybe Bool)
     , _fDefaultValue :: !(Maybe Text)
-    , _fNumber       :: !(Maybe (Textual Int32))
-    , _fTypeURL      :: !(Maybe Text)
+    , _fNumber :: !(Maybe (Textual Int32))
+    , _fTypeURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Field' with the minimum fields required to make a request.
@@ -1385,7 +1677,7 @@ data Field = Field'
 -- * 'fTypeURL'
 field
     :: Field
-field =
+field = 
     Field'
     { _fKind = Nothing
     , _fOneofIndex = Nothing
@@ -1483,9 +1775,63 @@ instance ToJSON Field where
                   ("number" .=) <$> _fNumber,
                   ("typeUrl" .=) <$> _fTypeURL])
 
--- | Strategy that specifies how Google Service Control should select
--- different versions of service configurations based on traffic
--- percentage. One example of how to gradually rollout a new service
+-- | Bind API methods to metrics. Binding a method to a metric causes that
+-- metric\'s configured quota behaviors to apply to the method call.
+--
+-- /See:/ 'metricRule' smart constructor.
+data MetricRule = MetricRule'
+    { _mrSelector :: !(Maybe Text)
+    , _mrMetricCosts :: !(Maybe MetricRuleMetricCosts)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'MetricRule' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mrSelector'
+--
+-- * 'mrMetricCosts'
+metricRule
+    :: MetricRule
+metricRule = 
+    MetricRule'
+    { _mrSelector = Nothing
+    , _mrMetricCosts = Nothing
+    }
+
+-- | Selects the methods to which this rule applies. Refer to selector for
+-- syntax details.
+mrSelector :: Lens' MetricRule (Maybe Text)
+mrSelector
+  = lens _mrSelector (\ s a -> s{_mrSelector = a})
+
+-- | Metrics to update when the selected methods are called, and the
+-- associated cost applied to each metric. The key of the map is the metric
+-- name, and the values are the amount increased for the metric against
+-- which the quota limits are defined. The value must not be negative.
+mrMetricCosts :: Lens' MetricRule (Maybe MetricRuleMetricCosts)
+mrMetricCosts
+  = lens _mrMetricCosts
+      (\ s a -> s{_mrMetricCosts = a})
+
+instance FromJSON MetricRule where
+        parseJSON
+          = withObject "MetricRule"
+              (\ o ->
+                 MetricRule' <$>
+                   (o .:? "selector") <*> (o .:? "metricCosts"))
+
+instance ToJSON MetricRule where
+        toJSON MetricRule'{..}
+          = object
+              (catMaybes
+                 [("selector" .=) <$> _mrSelector,
+                  ("metricCosts" .=) <$> _mrMetricCosts])
+
+-- | Strategy that specifies how clients of Google Service Controller want to
+-- send traffic to use different config versions. This is generally used by
+-- API proxy to split traffic based on your configured precentage for each
+-- config version. One example of how to gradually rollout a new service
 -- configuration using this strategy: Day 1 Rollout { id:
 -- \"example.googleapis.com\/rollout_20160206\" traffic_percent_strategy {
 -- percentages: { \"example.googleapis.com\/20160201\": 70.00
@@ -1505,7 +1851,7 @@ newtype TrafficPercentStrategy = TrafficPercentStrategy'
 -- * 'tpsPercentages'
 trafficPercentStrategy
     :: TrafficPercentStrategy
-trafficPercentStrategy =
+trafficPercentStrategy = 
     TrafficPercentStrategy'
     { _tpsPercentages = Nothing
     }
@@ -1545,31 +1891,35 @@ instance ToJSON TrafficPercentStrategy where
 --
 -- /See:/ 'service' smart constructor.
 data Service = Service'
-    { _sControl            :: !(Maybe Control)
-    , _sMetrics            :: !(Maybe [MetricDescriptor])
-    , _sContext            :: !(Maybe Context)
-    , _sAuthentication     :: !(Maybe Authentication)
-    , _sAPIs               :: !(Maybe [API])
-    , _sTypes              :: !(Maybe [Type])
-    , _sVisibility         :: !(Maybe Visibility)
-    , _sSystemTypes        :: !(Maybe [Type])
+    { _sControl :: !(Maybe Control)
+    , _sMetrics :: !(Maybe [MetricDescriptor])
+    , _sContext :: !(Maybe Context)
+    , _sAuthentication :: !(Maybe Authentication)
+    , _sAPIs :: !(Maybe [API])
+    , _sTypes :: !(Maybe [Type])
+    , _sVisibility :: !(Maybe Visibility)
+    , _sSystemTypes :: !(Maybe [Type])
+    , _sExperimental :: !(Maybe Experimental)
     , _sMonitoredResources :: !(Maybe [MonitoredResourceDescriptor])
-    , _sBackend            :: !(Maybe Backend)
-    , _sMonitoring         :: !(Maybe Monitoring)
-    , _sName               :: !(Maybe Text)
-    , _sSystemParameters   :: !(Maybe SystemParameters)
-    , _sLogs               :: !(Maybe [LogDescriptor])
-    , _sDocumentation      :: !(Maybe Documentation)
-    , _sId                 :: !(Maybe Text)
-    , _sUsage              :: !(Maybe Usage)
-    , _sEndpoints          :: !(Maybe [Endpoint])
-    , _sEnums              :: !(Maybe [Enum'])
-    , _sConfigVersion      :: !(Maybe (Textual Word32))
-    , _sHTTP               :: !(Maybe HTTP)
-    , _sTitle              :: !(Maybe Text)
-    , _sProducerProjectId  :: !(Maybe Text)
-    , _sCustomError        :: !(Maybe CustomError)
-    , _sLogging            :: !(Maybe Logging)
+    , _sBackend :: !(Maybe Backend)
+    , _sMonitoring :: !(Maybe Monitoring)
+    , _sName :: !(Maybe Text)
+    , _sSystemParameters :: !(Maybe SystemParameters)
+    , _sLogs :: !(Maybe [LogDescriptor])
+    , _sDocumentation :: !(Maybe Documentation)
+    , _sId :: !(Maybe Text)
+    , _sUsage :: !(Maybe Usage)
+    , _sEndpoints :: !(Maybe [Endpoint])
+    , _sEnums :: !(Maybe [Enum'])
+    , _sConfigVersion :: !(Maybe (Textual Word32))
+    , _sHTTP :: !(Maybe HTTP)
+    , _sTitle :: !(Maybe Text)
+    , _sProducerProjectId :: !(Maybe Text)
+    , _sSourceInfo :: !(Maybe SourceInfo)
+    , _sBilling :: !(Maybe Billing)
+    , _sCustomError :: !(Maybe CustomError)
+    , _sLogging :: !(Maybe Logging)
+    , _sQuota :: !(Maybe Quota)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Service' with the minimum fields required to make a request.
@@ -1591,6 +1941,8 @@ data Service = Service'
 -- * 'sVisibility'
 --
 -- * 'sSystemTypes'
+--
+-- * 'sExperimental'
 --
 -- * 'sMonitoredResources'
 --
@@ -1622,12 +1974,18 @@ data Service = Service'
 --
 -- * 'sProducerProjectId'
 --
+-- * 'sSourceInfo'
+--
+-- * 'sBilling'
+--
 -- * 'sCustomError'
 --
 -- * 'sLogging'
+--
+-- * 'sQuota'
 service
     :: Service
-service =
+service = 
     Service'
     { _sControl = Nothing
     , _sMetrics = Nothing
@@ -1637,6 +1995,7 @@ service =
     , _sTypes = Nothing
     , _sVisibility = Nothing
     , _sSystemTypes = Nothing
+    , _sExperimental = Nothing
     , _sMonitoredResources = Nothing
     , _sBackend = Nothing
     , _sMonitoring = Nothing
@@ -1652,8 +2011,11 @@ service =
     , _sHTTP = Nothing
     , _sTitle = Nothing
     , _sProducerProjectId = Nothing
+    , _sSourceInfo = Nothing
+    , _sBilling = Nothing
     , _sCustomError = Nothing
     , _sLogging = Nothing
+    , _sQuota = Nothing
     }
 
 -- | Configuration for the service control plane.
@@ -1713,6 +2075,12 @@ sSystemTypes
   = lens _sSystemTypes (\ s a -> s{_sSystemTypes = a})
       . _Default
       . _Coerce
+
+-- | Experimental configuration.
+sExperimental :: Lens' Service (Maybe Experimental)
+sExperimental
+  = lens _sExperimental
+      (\ s a -> s{_sExperimental = a})
 
 -- | Defines the monitored resources used by this service. This is required
 -- by the Service.monitoring and Service.logging configurations.
@@ -1783,10 +2151,10 @@ sEnums
   = lens _sEnums (\ s a -> s{_sEnums = a}) . _Default .
       _Coerce
 
--- | The version of the service configuration. The config version may
--- influence interpretation of the configuration, for example, to determine
--- defaults. This is documented together with applicable options. The
--- current default for the config version itself is \`3\`.
+-- | The semantic version of the service configuration. The config version
+-- affects the interpretation of the service configuration. For example,
+-- certain features are enabled by default for certain config versions. The
+-- latest config version is \`3\`.
 sConfigVersion :: Lens' Service (Maybe Word32)
 sConfigVersion
   = lens _sConfigVersion
@@ -1797,17 +2165,24 @@ sConfigVersion
 sHTTP :: Lens' Service (Maybe HTTP)
 sHTTP = lens _sHTTP (\ s a -> s{_sHTTP = a})
 
--- | The product title associated with this service.
+-- | The product title for this service.
 sTitle :: Lens' Service (Maybe Text)
 sTitle = lens _sTitle (\ s a -> s{_sTitle = a})
 
--- | The id of the Google developer project that owns the service. Members of
--- this project can manage the service configuration, manage consumption of
--- the service, etc.
+-- | The Google project that owns this service.
 sProducerProjectId :: Lens' Service (Maybe Text)
 sProducerProjectId
   = lens _sProducerProjectId
       (\ s a -> s{_sProducerProjectId = a})
+
+-- | Output only. The source information for this configuration if available.
+sSourceInfo :: Lens' Service (Maybe SourceInfo)
+sSourceInfo
+  = lens _sSourceInfo (\ s a -> s{_sSourceInfo = a})
+
+-- | Billing configuration.
+sBilling :: Lens' Service (Maybe Billing)
+sBilling = lens _sBilling (\ s a -> s{_sBilling = a})
 
 -- | Custom error configuration.
 sCustomError :: Lens' Service (Maybe CustomError)
@@ -1817,6 +2192,10 @@ sCustomError
 -- | Logging configuration.
 sLogging :: Lens' Service (Maybe Logging)
 sLogging = lens _sLogging (\ s a -> s{_sLogging = a})
+
+-- | Quota configuration.
+sQuota :: Lens' Service (Maybe Quota)
+sQuota = lens _sQuota (\ s a -> s{_sQuota = a})
 
 instance FromJSON Service where
         parseJSON
@@ -1830,6 +2209,7 @@ instance FromJSON Service where
                      <*> (o .:? "types" .!= mempty)
                      <*> (o .:? "visibility")
                      <*> (o .:? "systemTypes" .!= mempty)
+                     <*> (o .:? "experimental")
                      <*> (o .:? "monitoredResources" .!= mempty)
                      <*> (o .:? "backend")
                      <*> (o .:? "monitoring")
@@ -1845,8 +2225,11 @@ instance FromJSON Service where
                      <*> (o .:? "http")
                      <*> (o .:? "title")
                      <*> (o .:? "producerProjectId")
+                     <*> (o .:? "sourceInfo")
+                     <*> (o .:? "billing")
                      <*> (o .:? "customError")
-                     <*> (o .:? "logging"))
+                     <*> (o .:? "logging")
+                     <*> (o .:? "quota"))
 
 instance ToJSON Service where
         toJSON Service'{..}
@@ -1859,6 +2242,7 @@ instance ToJSON Service where
                   ("apis" .=) <$> _sAPIs, ("types" .=) <$> _sTypes,
                   ("visibility" .=) <$> _sVisibility,
                   ("systemTypes" .=) <$> _sSystemTypes,
+                  ("experimental" .=) <$> _sExperimental,
                   ("monitoredResources" .=) <$> _sMonitoredResources,
                   ("backend" .=) <$> _sBackend,
                   ("monitoring" .=) <$> _sMonitoring,
@@ -1872,18 +2256,21 @@ instance ToJSON Service where
                   ("configVersion" .=) <$> _sConfigVersion,
                   ("http" .=) <$> _sHTTP, ("title" .=) <$> _sTitle,
                   ("producerProjectId" .=) <$> _sProducerProjectId,
+                  ("sourceInfo" .=) <$> _sSourceInfo,
+                  ("billing" .=) <$> _sBilling,
                   ("customError" .=) <$> _sCustomError,
-                  ("logging" .=) <$> _sLogging])
+                  ("logging" .=) <$> _sLogging,
+                  ("quota" .=) <$> _sQuota])
 
 -- | This resource represents a long-running operation that is the result of
 -- a network API call.
 --
 -- /See:/ 'operation' smart constructor.
 data Operation = Operation'
-    { _oDone     :: !(Maybe Bool)
-    , _oError    :: !(Maybe Status)
+    { _oDone :: !(Maybe Bool)
+    , _oError :: !(Maybe Status)
     , _oResponse :: !(Maybe OperationResponse)
-    , _oName     :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
     , _oMetadata :: !(Maybe OperationSchema)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1902,7 +2289,7 @@ data Operation = Operation'
 -- * 'oMetadata'
 operation
     :: Operation
-operation =
+operation = 
     Operation'
     { _oDone = Nothing
     , _oError = Nothing
@@ -1912,7 +2299,7 @@ operation =
     }
 
 -- | If the value is \`false\`, it means the operation is still in progress.
--- If true, the operation is completed, and either \`error\` or
+-- If \`true\`, the operation is completed, and either \`error\` or
 -- \`response\` is available.
 oDone :: Lens' Operation (Maybe Bool)
 oDone = lens _oDone (\ s a -> s{_oDone = a})
@@ -1980,7 +2367,7 @@ newtype EnableServiceRequest = EnableServiceRequest'
 -- * 'esrConsumerId'
 enableServiceRequest
     :: EnableServiceRequest
-enableServiceRequest =
+enableServiceRequest = 
     EnableServiceRequest'
     { _esrConsumerId = Nothing
     }
@@ -2010,7 +2397,7 @@ instance ToJSON EnableServiceRequest where
 -- /See:/ 'listServiceConfigsResponse' smart constructor.
 data ListServiceConfigsResponse = ListServiceConfigsResponse'
     { _lscrServiceConfigs :: !(Maybe [Service])
-    , _lscrNextPageToken  :: !(Maybe Text)
+    , _lscrNextPageToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListServiceConfigsResponse' with the minimum fields required to make a request.
@@ -2022,7 +2409,7 @@ data ListServiceConfigsResponse = ListServiceConfigsResponse'
 -- * 'lscrNextPageToken'
 listServiceConfigsResponse
     :: ListServiceConfigsResponse
-listServiceConfigsResponse =
+listServiceConfigsResponse = 
     ListServiceConfigsResponse'
     { _lscrServiceConfigs = Nothing
     , _lscrNextPageToken = Nothing
@@ -2062,7 +2449,7 @@ instance ToJSON ListServiceConfigsResponse where
 -- /See:/ 'customErrorRule' smart constructor.
 data CustomErrorRule = CustomErrorRule'
     { _cerIsErrorType :: !(Maybe Bool)
-    , _cerSelector    :: !(Maybe Text)
+    , _cerSelector :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomErrorRule' with the minimum fields required to make a request.
@@ -2074,7 +2461,7 @@ data CustomErrorRule = CustomErrorRule'
 -- * 'cerSelector'
 customErrorRule
     :: CustomErrorRule
-customErrorRule =
+customErrorRule = 
     CustomErrorRule'
     { _cerIsErrorType = Nothing
     , _cerSelector = Nothing
@@ -2121,7 +2508,7 @@ newtype SubmitConfigSourceResponse = SubmitConfigSourceResponse'
 -- * 'scsrServiceConfig'
 submitConfigSourceResponse
     :: SubmitConfigSourceResponse
-submitConfigSourceResponse =
+submitConfigSourceResponse = 
     SubmitConfigSourceResponse'
     { _scsrServiceConfig = Nothing
     }
@@ -2151,7 +2538,7 @@ instance ToJSON SubmitConfigSourceResponse where
 -- /See:/ 'visibilityRule' smart constructor.
 data VisibilityRule = VisibilityRule'
     { _vrRestriction :: !(Maybe Text)
-    , _vrSelector    :: !(Maybe Text)
+    , _vrSelector :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VisibilityRule' with the minimum fields required to make a request.
@@ -2163,7 +2550,7 @@ data VisibilityRule = VisibilityRule'
 -- * 'vrSelector'
 visibilityRule
     :: VisibilityRule
-visibilityRule =
+visibilityRule = 
     VisibilityRule'
     { _vrRestriction = Nothing
     , _vrSelector = Nothing
@@ -2218,7 +2605,7 @@ newtype ChangeReport = ChangeReport'
 -- * 'crConfigChanges'
 changeReport
     :: ChangeReport
-changeReport =
+changeReport = 
     ChangeReport'
     { _crConfigChanges = Nothing
     }
@@ -2247,39 +2634,110 @@ instance ToJSON ChangeReport where
               (catMaybes
                  [("configChanges" .=) <$> _crConfigChanges])
 
--- | Do not use this. For media support, add instead
--- [][google.bytestream.RestByteStream] as an API to your configuration.
+-- | Defines the Media configuration for a service in case of a download. Use
+-- this only for Scotty Requests. Do not use this for media support using
+-- Bytestream, add instead [][google.bytestream.RestByteStream] as an API
+-- to your configuration for Bytestream methods.
 --
 -- /See:/ 'mediaDownload' smart constructor.
-newtype MediaDownload' = MediaDownload''
-    { _mdEnabled :: Maybe Bool
+data MediaDownload' = MediaDownload''
+    { _mdUseDirectDownload :: !(Maybe Bool)
+    , _mdEnabled :: !(Maybe Bool)
+    , _mdMaxDirectDownloadSize :: !(Maybe (Textual Int64))
+    , _mdCompleteNotification :: !(Maybe Bool)
+    , _mdDropzone :: !(Maybe Text)
+    , _mdDownloadService :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MediaDownload' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'mdUseDirectDownload'
+--
 -- * 'mdEnabled'
+--
+-- * 'mdMaxDirectDownloadSize'
+--
+-- * 'mdCompleteNotification'
+--
+-- * 'mdDropzone'
+--
+-- * 'mdDownloadService'
 mediaDownload
     :: MediaDownload'
-mediaDownload =
+mediaDownload = 
     MediaDownload''
-    { _mdEnabled = Nothing
+    { _mdUseDirectDownload = Nothing
+    , _mdEnabled = Nothing
+    , _mdMaxDirectDownloadSize = Nothing
+    , _mdCompleteNotification = Nothing
+    , _mdDropzone = Nothing
+    , _mdDownloadService = Nothing
     }
+
+-- | A boolean that determines if direct download from ESF should be used for
+-- download of this media.
+mdUseDirectDownload :: Lens' MediaDownload' (Maybe Bool)
+mdUseDirectDownload
+  = lens _mdUseDirectDownload
+      (\ s a -> s{_mdUseDirectDownload = a})
 
 -- | Whether download is enabled.
 mdEnabled :: Lens' MediaDownload' (Maybe Bool)
 mdEnabled
   = lens _mdEnabled (\ s a -> s{_mdEnabled = a})
 
+-- | Optional maximum acceptable size for direct download. The size is
+-- specified in bytes.
+mdMaxDirectDownloadSize :: Lens' MediaDownload' (Maybe Int64)
+mdMaxDirectDownloadSize
+  = lens _mdMaxDirectDownloadSize
+      (\ s a -> s{_mdMaxDirectDownloadSize = a})
+      . mapping _Coerce
+
+-- | A boolean that determines whether a notification for the completion of a
+-- download should be sent to the backend.
+mdCompleteNotification :: Lens' MediaDownload' (Maybe Bool)
+mdCompleteNotification
+  = lens _mdCompleteNotification
+      (\ s a -> s{_mdCompleteNotification = a})
+
+-- | Name of the Scotty dropzone to use for the current API.
+mdDropzone :: Lens' MediaDownload' (Maybe Text)
+mdDropzone
+  = lens _mdDropzone (\ s a -> s{_mdDropzone = a})
+
+-- | DO NOT USE FIELDS BELOW THIS LINE UNTIL THIS WARNING IS REMOVED. Specify
+-- name of the download service if one is used for download.
+mdDownloadService :: Lens' MediaDownload' (Maybe Text)
+mdDownloadService
+  = lens _mdDownloadService
+      (\ s a -> s{_mdDownloadService = a})
+
 instance FromJSON MediaDownload' where
         parseJSON
           = withObject "MediaDownload"
-              (\ o -> MediaDownload'' <$> (o .:? "enabled"))
+              (\ o ->
+                 MediaDownload'' <$>
+                   (o .:? "useDirectDownload") <*> (o .:? "enabled") <*>
+                     (o .:? "maxDirectDownloadSize")
+                     <*> (o .:? "completeNotification")
+                     <*> (o .:? "dropzone")
+                     <*> (o .:? "downloadService"))
 
 instance ToJSON MediaDownload' where
         toJSON MediaDownload''{..}
-          = object (catMaybes [("enabled" .=) <$> _mdEnabled])
+          = object
+              (catMaybes
+                 [("useDirectDownload" .=) <$> _mdUseDirectDownload,
+                  ("enabled" .=) <$> _mdEnabled,
+                  ("maxDirectDownloadSize" .=) <$>
+                    _mdMaxDirectDownloadSize,
+                  ("completeNotification" .=) <$>
+                    _mdCompleteNotification,
+                  ("dropzone" .=) <$> _mdDropzone,
+                  ("downloadService" .=) <$> _mdDownloadService])
 
 -- | The option\'s value packed in an Any message. If the value is a
 -- primitive, the corresponding wrapper type defined in
@@ -2300,7 +2758,7 @@ newtype OptionValue = OptionValue'
 optionValue
     :: HashMap Text JSONValue -- ^ 'ovAddtional'
     -> OptionValue
-optionValue pOvAddtional_ =
+optionValue pOvAddtional_ = 
     OptionValue'
     { _ovAddtional = _Coerce # pOvAddtional_
     }
@@ -2323,9 +2781,9 @@ instance ToJSON OptionValue where
 --
 -- /See:/ 'enumValue' smart constructor.
 data EnumValue = EnumValue'
-    { _evName    :: !(Maybe Text)
+    { _evName :: !(Maybe Text)
     , _evOptions :: !(Maybe [Option])
-    , _evNumber  :: !(Maybe (Textual Int32))
+    , _evNumber :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnumValue' with the minimum fields required to make a request.
@@ -2339,7 +2797,7 @@ data EnumValue = EnumValue'
 -- * 'evNumber'
 enumValue
     :: EnumValue
-enumValue =
+enumValue = 
     EnumValue'
     { _evName = Nothing
     , _evOptions = Nothing
@@ -2389,7 +2847,7 @@ instance ToJSON EnumValue where
 --
 -- /See:/ 'authentication' smart constructor.
 data Authentication = Authentication'
-    { _aRules     :: !(Maybe [AuthenticationRule])
+    { _aRules :: !(Maybe [AuthenticationRule])
     , _aProviders :: !(Maybe [AuthProvider])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2402,7 +2860,7 @@ data Authentication = Authentication'
 -- * 'aProviders'
 authentication
     :: Authentication
-authentication =
+authentication = 
     Authentication'
     { _aRules = Nothing
     , _aProviders = Nothing
@@ -2438,18 +2896,18 @@ instance ToJSON Authentication where
                  [("rules" .=) <$> _aRules,
                   ("providers" .=) <$> _aProviders])
 
--- | Declares an API to be included in this API. The including API must
--- redeclare all the methods from the included API, but documentation and
--- options are inherited as follows: - If after comment and whitespace
--- stripping, the documentation string of the redeclared method is empty,
--- it will be inherited from the original method. - Each annotation
--- belonging to the service config (http, visibility) which is not set in
--- the redeclared method will be inherited. - If an http annotation is
--- inherited, the path pattern will be modified as follows. Any version
--- prefix will be replaced by the version of the including API plus the
--- root path if specified. Example of a simple mixin: package
--- google.acl.v1; service AccessControl { \/\/ Get the underlying ACL
--- object. rpc GetAcl(GetAclRequest) returns (Acl) { option
+-- | Declares an API Interface to be included in this interface. The
+-- including interface must redeclare all the methods from the included
+-- interface, but documentation and options are inherited as follows: - If
+-- after comment and whitespace stripping, the documentation string of the
+-- redeclared method is empty, it will be inherited from the original
+-- method. - Each annotation belonging to the service config (http,
+-- visibility) which is not set in the redeclared method will be inherited.
+-- - If an http annotation is inherited, the path pattern will be modified
+-- as follows. Any version prefix will be replaced by the version of the
+-- including interface plus the root path if specified. Example of a simple
+-- mixin: package google.acl.v1; service AccessControl { \/\/ Get the
+-- underlying ACL object. rpc GetAcl(GetAclRequest) returns (Acl) { option
 -- (google.api.http).get = \"\/v1\/{resource=**}:getAcl\"; } } package
 -- google.storage.v2; service Storage { \/\/ rpc GetAcl(GetAclRequest)
 -- returns (Acl); \/\/ Get a data record. rpc GetData(GetDataRequest)
@@ -2486,7 +2944,7 @@ data Mixin = Mixin'
 -- * 'mName'
 mixin
     :: Mixin
-mixin =
+mixin = 
     Mixin'
     { _mRoot = Nothing
     , _mName = Nothing
@@ -2497,7 +2955,7 @@ mixin =
 mRoot :: Lens' Mixin (Maybe Text)
 mRoot = lens _mRoot (\ s a -> s{_mRoot = a})
 
--- | The fully qualified name of the API which is included.
+-- | The fully qualified name of the interface which is included.
 mName :: Lens' Mixin (Maybe Text)
 mName = lens _mName (\ s a -> s{_mName = a})
 
@@ -2529,7 +2987,7 @@ data CustomHTTPPattern = CustomHTTPPattern'
 -- * 'chttppKind'
 customHTTPPattern
     :: CustomHTTPPattern
-customHTTPPattern =
+customHTTPPattern = 
     CustomHTTPPattern'
     { _chttppPath = Nothing
     , _chttppKind = Nothing
@@ -2574,8 +3032,9 @@ instance ToJSON CustomHTTPPattern where
 --
 -- /See:/ 'usageRule' smart constructor.
 data UsageRule = UsageRule'
-    { _urSelector               :: !(Maybe Text)
+    { _urSelector :: !(Maybe Text)
     , _urAllowUnregisteredCalls :: !(Maybe Bool)
+    , _urSkipServiceControl :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageRule' with the minimum fields required to make a request.
@@ -2585,12 +3044,15 @@ data UsageRule = UsageRule'
 -- * 'urSelector'
 --
 -- * 'urAllowUnregisteredCalls'
+--
+-- * 'urSkipServiceControl'
 usageRule
     :: UsageRule
-usageRule =
+usageRule = 
     UsageRule'
     { _urSelector = Nothing
     , _urAllowUnregisteredCalls = Nothing
+    , _urSkipServiceControl = Nothing
     }
 
 -- | Selects the methods to which this rule applies. Use \'*\' to indicate
@@ -2605,13 +3067,22 @@ urAllowUnregisteredCalls
   = lens _urAllowUnregisteredCalls
       (\ s a -> s{_urAllowUnregisteredCalls = a})
 
+-- | True, if the method should skip service control. If so, no control plane
+-- feature (like quota and billing) will be enabled. This flag is used by
+-- ESP to allow some Endpoints customers to bypass Google internal checks.
+urSkipServiceControl :: Lens' UsageRule (Maybe Bool)
+urSkipServiceControl
+  = lens _urSkipServiceControl
+      (\ s a -> s{_urSkipServiceControl = a})
+
 instance FromJSON UsageRule where
         parseJSON
           = withObject "UsageRule"
               (\ o ->
                  UsageRule' <$>
                    (o .:? "selector") <*>
-                     (o .:? "allowUnregisteredCalls"))
+                     (o .:? "allowUnregisteredCalls")
+                     <*> (o .:? "skipServiceControl"))
 
 instance ToJSON UsageRule where
         toJSON UsageRule'{..}
@@ -2619,7 +3090,8 @@ instance ToJSON UsageRule where
               (catMaybes
                  [("selector" .=) <$> _urSelector,
                   ("allowUnregisteredCalls" .=) <$>
-                    _urAllowUnregisteredCalls])
+                    _urAllowUnregisteredCalls,
+                  ("skipServiceControl" .=) <$> _urSkipServiceControl])
 
 --
 -- /See:/ 'statusDetailsItem' smart constructor.
@@ -2635,7 +3107,7 @@ newtype StatusDetailsItem = StatusDetailsItem'
 statusDetailsItem
     :: HashMap Text JSONValue -- ^ 'sdiAddtional'
     -> StatusDetailsItem
-statusDetailsItem pSdiAddtional_ =
+statusDetailsItem pSdiAddtional_ = 
     StatusDetailsItem'
     { _sdiAddtional = _Coerce # pSdiAddtional_
     }
@@ -2660,8 +3132,8 @@ instance ToJSON StatusDetailsItem where
 -- /See:/ 'page' smart constructor.
 data Page = Page'
     { _pSubpages :: !(Maybe [Page])
-    , _pContent  :: !(Maybe Text)
-    , _pName     :: !(Maybe Text)
+    , _pContent :: !(Maybe Text)
+    , _pName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Page' with the minimum fields required to make a request.
@@ -2675,7 +3147,7 @@ data Page = Page'
 -- * 'pName'
 page
     :: Page
-page =
+page = 
     Page'
     { _pSubpages = Nothing
     , _pContent = Nothing
@@ -2747,7 +3219,7 @@ newtype GenerateConfigReportRequestOldConfig = GenerateConfigReportRequestOldCon
 generateConfigReportRequestOldConfig
     :: HashMap Text JSONValue -- ^ 'gcrrocAddtional'
     -> GenerateConfigReportRequestOldConfig
-generateConfigReportRequestOldConfig pGcrrocAddtional_ =
+generateConfigReportRequestOldConfig pGcrrocAddtional_ = 
     GenerateConfigReportRequestOldConfig'
     { _gcrrocAddtional = _Coerce # pGcrrocAddtional_
     }
@@ -2770,121 +3242,6 @@ instance FromJSON
 instance ToJSON GenerateConfigReportRequestOldConfig
          where
         toJSON = toJSON . _gcrrocAddtional
-
--- | A rule to be applied in a Policy.
---
--- /See:/ 'rule' smart constructor.
-data Rule = Rule'
-    { _rAction      :: !(Maybe RuleAction)
-    , _rIn          :: !(Maybe [Text])
-    , _rNotIn       :: !(Maybe [Text])
-    , _rConditions  :: !(Maybe [Condition])
-    , _rPermissions :: !(Maybe [Text])
-    , _rLogConfig   :: !(Maybe [LogConfig])
-    , _rDescription :: !(Maybe Text)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'Rule' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'rAction'
---
--- * 'rIn'
---
--- * 'rNotIn'
---
--- * 'rConditions'
---
--- * 'rPermissions'
---
--- * 'rLogConfig'
---
--- * 'rDescription'
-rule
-    :: Rule
-rule =
-    Rule'
-    { _rAction = Nothing
-    , _rIn = Nothing
-    , _rNotIn = Nothing
-    , _rConditions = Nothing
-    , _rPermissions = Nothing
-    , _rLogConfig = Nothing
-    , _rDescription = Nothing
-    }
-
--- | Required
-rAction :: Lens' Rule (Maybe RuleAction)
-rAction = lens _rAction (\ s a -> s{_rAction = a})
-
--- | If one or more \'in\' clauses are specified, the rule matches if the
--- PRINCIPAL\/AUTHORITY_SELECTOR is in at least one of these entries.
-rIn :: Lens' Rule [Text]
-rIn
-  = lens _rIn (\ s a -> s{_rIn = a}) . _Default .
-      _Coerce
-
--- | If one or more \'not_in\' clauses are specified, the rule matches if the
--- PRINCIPAL\/AUTHORITY_SELECTOR is in none of the entries. The format for
--- in and not_in entries is the same as for members in a Binding (see
--- google\/iam\/v1\/policy.proto).
-rNotIn :: Lens' Rule [Text]
-rNotIn
-  = lens _rNotIn (\ s a -> s{_rNotIn = a}) . _Default .
-      _Coerce
-
--- | Additional restrictions that must be met
-rConditions :: Lens' Rule [Condition]
-rConditions
-  = lens _rConditions (\ s a -> s{_rConditions = a}) .
-      _Default
-      . _Coerce
-
--- | A permission is a string of form \'..\' (e.g.,
--- \'storage.buckets.list\'). A value of \'*\' matches all permissions, and
--- a verb part of \'*\' (e.g., \'storage.buckets.*\') matches all verbs.
-rPermissions :: Lens' Rule [Text]
-rPermissions
-  = lens _rPermissions (\ s a -> s{_rPermissions = a})
-      . _Default
-      . _Coerce
-
--- | The config returned to callers of tech.iam.IAM.CheckPolicy for any
--- entries that match the LOG action.
-rLogConfig :: Lens' Rule [LogConfig]
-rLogConfig
-  = lens _rLogConfig (\ s a -> s{_rLogConfig = a}) .
-      _Default
-      . _Coerce
-
--- | Human-readable description of the rule.
-rDescription :: Lens' Rule (Maybe Text)
-rDescription
-  = lens _rDescription (\ s a -> s{_rDescription = a})
-
-instance FromJSON Rule where
-        parseJSON
-          = withObject "Rule"
-              (\ o ->
-                 Rule' <$>
-                   (o .:? "action") <*> (o .:? "in" .!= mempty) <*>
-                     (o .:? "notIn" .!= mempty)
-                     <*> (o .:? "conditions" .!= mempty)
-                     <*> (o .:? "permissions" .!= mempty)
-                     <*> (o .:? "logConfig" .!= mempty)
-                     <*> (o .:? "description"))
-
-instance ToJSON Rule where
-        toJSON Rule'{..}
-          = object
-              (catMaybes
-                 [("action" .=) <$> _rAction, ("in" .=) <$> _rIn,
-                  ("notIn" .=) <$> _rNotIn,
-                  ("conditions" .=) <$> _rConditions,
-                  ("permissions" .=) <$> _rPermissions,
-                  ("logConfig" .=) <$> _rLogConfig,
-                  ("description" .=) <$> _rDescription])
 
 -- | \`Visibility\` defines restrictions for the visibility of service
 -- elements. Restrictions are specified using visibility labels (e.g.,
@@ -2911,7 +3268,7 @@ newtype Visibility = Visibility'
 -- * 'vRules'
 visibility
     :: Visibility
-visibility =
+visibility = 
     Visibility'
     { _vRules = Nothing
     }
@@ -2942,10 +3299,11 @@ instance ToJSON Visibility where
 --
 -- /See:/ 'authenticationRule' smart constructor.
 data AuthenticationRule = AuthenticationRule'
-    { _arRequirements           :: !(Maybe [AuthRequirement])
-    , _arSelector               :: !(Maybe Text)
+    { _arRequirements :: !(Maybe [AuthRequirement])
+    , _arSelector :: !(Maybe Text)
+    , _arCustomAuth :: !(Maybe CustomAuthRequirements)
     , _arAllowWithoutCredential :: !(Maybe Bool)
-    , _arOAuth                  :: !(Maybe OAuthRequirements)
+    , _arOAuth :: !(Maybe OAuthRequirements)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AuthenticationRule' with the minimum fields required to make a request.
@@ -2956,15 +3314,18 @@ data AuthenticationRule = AuthenticationRule'
 --
 -- * 'arSelector'
 --
+-- * 'arCustomAuth'
+--
 -- * 'arAllowWithoutCredential'
 --
 -- * 'arOAuth'
 authenticationRule
     :: AuthenticationRule
-authenticationRule =
+authenticationRule = 
     AuthenticationRule'
     { _arRequirements = Nothing
     , _arSelector = Nothing
+    , _arCustomAuth = Nothing
     , _arAllowWithoutCredential = Nothing
     , _arOAuth = Nothing
     }
@@ -2982,6 +3343,11 @@ arRequirements
 arSelector :: Lens' AuthenticationRule (Maybe Text)
 arSelector
   = lens _arSelector (\ s a -> s{_arSelector = a})
+
+-- | Configuration for custom authentication.
+arCustomAuth :: Lens' AuthenticationRule (Maybe CustomAuthRequirements)
+arCustomAuth
+  = lens _arCustomAuth (\ s a -> s{_arCustomAuth = a})
 
 -- | Whether to allow requests without a credential. The credential can be an
 -- OAuth token, Google cookies (first-party auth) or EndUserCreds. For
@@ -3005,6 +3371,7 @@ instance FromJSON AuthenticationRule where
                  AuthenticationRule' <$>
                    (o .:? "requirements" .!= mempty) <*>
                      (o .:? "selector")
+                     <*> (o .:? "customAuth")
                      <*> (o .:? "allowWithoutCredential")
                      <*> (o .:? "oauth"))
 
@@ -3014,6 +3381,7 @@ instance ToJSON AuthenticationRule where
               (catMaybes
                  [("requirements" .=) <$> _arRequirements,
                   ("selector" .=) <$> _arSelector,
+                  ("customAuth" .=) <$> _arCustomAuth,
                   ("allowWithoutCredential" .=) <$>
                     _arAllowWithoutCredential,
                   ("oauth" .=) <$> _arOAuth])
@@ -3023,7 +3391,7 @@ instance ToJSON AuthenticationRule where
 -- /See:/ 'setIAMPolicyRequest' smart constructor.
 data SetIAMPolicyRequest = SetIAMPolicyRequest'
     { _siprUpdateMask :: !(Maybe FieldMask)
-    , _siprPolicy     :: !(Maybe Policy)
+    , _siprPolicy :: !(Maybe Policy)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SetIAMPolicyRequest' with the minimum fields required to make a request.
@@ -3035,16 +3403,16 @@ data SetIAMPolicyRequest = SetIAMPolicyRequest'
 -- * 'siprPolicy'
 setIAMPolicyRequest
     :: SetIAMPolicyRequest
-setIAMPolicyRequest =
+setIAMPolicyRequest = 
     SetIAMPolicyRequest'
     { _siprUpdateMask = Nothing
     , _siprPolicy = Nothing
     }
 
 -- | OPTIONAL: A FieldMask specifying which fields of the policy to modify.
--- Only the fields in the mask will be modified. If no mask is provided, a
--- default mask is used: paths: \"bindings, etag\" This field is only used
--- by Cloud IAM.
+-- Only the fields in the mask will be modified. If no mask is provided,
+-- the following default mask is used: paths: \"bindings, etag\" This field
+-- is only used by Cloud IAM.
 siprUpdateMask :: Lens' SetIAMPolicyRequest (Maybe FieldMask)
 siprUpdateMask
   = lens _siprUpdateMask
@@ -3072,6 +3440,44 @@ instance ToJSON SetIAMPolicyRequest where
                  [("updateMask" .=) <$> _siprUpdateMask,
                   ("policy" .=) <$> _siprPolicy])
 
+-- | Metrics to update when the selected methods are called, and the
+-- associated cost applied to each metric. The key of the map is the metric
+-- name, and the values are the amount increased for the metric against
+-- which the quota limits are defined. The value must not be negative.
+--
+-- /See:/ 'metricRuleMetricCosts' smart constructor.
+newtype MetricRuleMetricCosts = MetricRuleMetricCosts'
+    { _mrmcAddtional :: HashMap Text (Textual Int64)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'MetricRuleMetricCosts' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mrmcAddtional'
+metricRuleMetricCosts
+    :: HashMap Text Int64 -- ^ 'mrmcAddtional'
+    -> MetricRuleMetricCosts
+metricRuleMetricCosts pMrmcAddtional_ = 
+    MetricRuleMetricCosts'
+    { _mrmcAddtional = _Coerce # pMrmcAddtional_
+    }
+
+mrmcAddtional :: Lens' MetricRuleMetricCosts (HashMap Text Int64)
+mrmcAddtional
+  = lens _mrmcAddtional
+      (\ s a -> s{_mrmcAddtional = a})
+      . _Coerce
+
+instance FromJSON MetricRuleMetricCosts where
+        parseJSON
+          = withObject "MetricRuleMetricCosts"
+              (\ o ->
+                 MetricRuleMetricCosts' <$> (parseJSONObject o))
+
+instance ToJSON MetricRuleMetricCosts where
+        toJSON = toJSON . _mrmcAddtional
+
 -- | Maps service configuration IDs to their corresponding traffic
 -- percentage. Key is the service configuration ID, Value is the traffic
 -- percentage which must be greater than 0.0 and the sum must equal to
@@ -3090,7 +3496,7 @@ newtype TrafficPercentStrategyPercentages = TrafficPercentStrategyPercentages'
 trafficPercentStrategyPercentages
     :: HashMap Text Double -- ^ 'tpspAddtional'
     -> TrafficPercentStrategyPercentages
-trafficPercentStrategyPercentages pTpspAddtional_ =
+trafficPercentStrategyPercentages pTpspAddtional_ = 
     TrafficPercentStrategyPercentages'
     { _tpspAddtional = _Coerce # pTpspAddtional_
     }
@@ -3113,12 +3519,87 @@ instance ToJSON TrafficPercentStrategyPercentages
          where
         toJSON = toJSON . _tpspAddtional
 
+-- | Configuration of authorization. This section determines the
+-- authorization provider, if unspecified, then no authorization check will
+-- be done. Example: experimental: authorization: provider:
+-- firebaserules.googleapis.com
+--
+-- /See:/ 'authorizationConfig' smart constructor.
+newtype AuthorizationConfig = AuthorizationConfig'
+    { _acProvider :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AuthorizationConfig' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'acProvider'
+authorizationConfig
+    :: AuthorizationConfig
+authorizationConfig = 
+    AuthorizationConfig'
+    { _acProvider = Nothing
+    }
+
+-- | The name of the authorization provider, such as
+-- firebaserules.googleapis.com.
+acProvider :: Lens' AuthorizationConfig (Maybe Text)
+acProvider
+  = lens _acProvider (\ s a -> s{_acProvider = a})
+
+instance FromJSON AuthorizationConfig where
+        parseJSON
+          = withObject "AuthorizationConfig"
+              (\ o -> AuthorizationConfig' <$> (o .:? "provider"))
+
+instance ToJSON AuthorizationConfig where
+        toJSON AuthorizationConfig'{..}
+          = object
+              (catMaybes [("provider" .=) <$> _acProvider])
+
+-- | Experimental service configuration. These configuration options can only
+-- be used by whitelisted users.
+--
+-- /See:/ 'experimental' smart constructor.
+newtype Experimental = Experimental'
+    { _eAuthorization :: Maybe AuthorizationConfig
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Experimental' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'eAuthorization'
+experimental
+    :: Experimental
+experimental = 
+    Experimental'
+    { _eAuthorization = Nothing
+    }
+
+-- | Authorization configuration.
+eAuthorization :: Lens' Experimental (Maybe AuthorizationConfig)
+eAuthorization
+  = lens _eAuthorization
+      (\ s a -> s{_eAuthorization = a})
+
+instance FromJSON Experimental where
+        parseJSON
+          = withObject "Experimental"
+              (\ o -> Experimental' <$> (o .:? "authorization"))
+
+instance ToJSON Experimental where
+        toJSON Experimental'{..}
+          = object
+              (catMaybes
+                 [("authorization" .=) <$> _eAuthorization])
+
 -- | Response message for ListServiceRollouts method.
 --
 -- /See:/ 'listServiceRolloutsResponse' smart constructor.
 data ListServiceRolloutsResponse = ListServiceRolloutsResponse'
     { _lsrrNextPageToken :: !(Maybe Text)
-    , _lsrrRollouts      :: !(Maybe [Rollout])
+    , _lsrrRollouts :: !(Maybe [Rollout])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListServiceRolloutsResponse' with the minimum fields required to make a request.
@@ -3130,7 +3611,7 @@ data ListServiceRolloutsResponse = ListServiceRolloutsResponse'
 -- * 'lsrrRollouts'
 listServiceRolloutsResponse
     :: ListServiceRolloutsResponse
-listServiceRolloutsResponse =
+listServiceRolloutsResponse = 
     ListServiceRolloutsResponse'
     { _lsrrNextPageToken = Nothing
     , _lsrrRollouts = Nothing
@@ -3171,11 +3652,11 @@ instance ToJSON ListServiceRolloutsResponse where
 --
 -- /See:/ 'configChange' smart constructor.
 data ConfigChange = ConfigChange'
-    { _ccOldValue   :: !(Maybe Text)
-    , _ccNewValue   :: !(Maybe Text)
-    , _ccAdvices    :: !(Maybe [Advice])
+    { _ccOldValue :: !(Maybe Text)
+    , _ccNewValue :: !(Maybe Text)
+    , _ccAdvices :: !(Maybe [Advice])
     , _ccChangeType :: !(Maybe ConfigChangeChangeType)
-    , _ccElement    :: !(Maybe Text)
+    , _ccElement :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConfigChange' with the minimum fields required to make a request.
@@ -3193,7 +3674,7 @@ data ConfigChange = ConfigChange'
 -- * 'ccElement'
 configChange
     :: ConfigChange
-configChange =
+configChange = 
     ConfigChange'
     { _ccOldValue = Nothing
     , _ccNewValue = Nothing
@@ -3260,27 +3741,6 @@ instance ToJSON ConfigChange where
                   ("changeType" .=) <$> _ccChangeType,
                   ("element" .=) <$> _ccElement])
 
--- | Write a Cloud Audit log
---
--- /See:/ 'cloudAuditOptions' smart constructor.
-data CloudAuditOptions =
-    CloudAuditOptions'
-    deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'CloudAuditOptions' with the minimum fields required to make a request.
---
-cloudAuditOptions
-    :: CloudAuditOptions
-cloudAuditOptions = CloudAuditOptions'
-
-instance FromJSON CloudAuditOptions where
-        parseJSON
-          = withObject "CloudAuditOptions"
-              (\ o -> pure CloudAuditOptions')
-
-instance ToJSON CloudAuditOptions where
-        toJSON = const emptyObject
-
 -- | \`Backend\` defines the backend configuration for a service.
 --
 -- /See:/ 'backend' smart constructor.
@@ -3295,7 +3755,7 @@ newtype Backend = Backend'
 -- * 'bRules'
 backend
     :: Backend
-backend =
+backend = 
     Backend'
     { _bRules = Nothing
     }
@@ -3316,27 +3776,6 @@ instance FromJSON Backend where
 instance ToJSON Backend where
         toJSON Backend'{..}
           = object (catMaybes [("rules" .=) <$> _bRules])
-
--- | Write a Data Access (Gin) log
---
--- /See:/ 'dataAccessOptions' smart constructor.
-data DataAccessOptions =
-    DataAccessOptions'
-    deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'DataAccessOptions' with the minimum fields required to make a request.
---
-dataAccessOptions
-    :: DataAccessOptions
-dataAccessOptions = DataAccessOptions'
-
-instance FromJSON DataAccessOptions where
-        parseJSON
-          = withObject "DataAccessOptions"
-              (\ o -> pure DataAccessOptions')
-
-instance ToJSON DataAccessOptions where
-        toJSON = const emptyObject
 
 -- | Monitoring configuration of the service. The example below shows how to
 -- configure monitored resources and metrics for monitoring. In the
@@ -3374,7 +3813,7 @@ data Monitoring = Monitoring'
 -- * 'mConsumerDestinations'
 monitoring
     :: Monitoring
-monitoring =
+monitoring = 
     Monitoring'
     { _mProducerDestinations = Nothing
     , _mConsumerDestinations = Nothing
@@ -3426,9 +3865,9 @@ instance ToJSON Monitoring where
 --
 -- /See:/ 'logDescriptor' smart constructor.
 data LogDescriptor = LogDescriptor'
-    { _ldName        :: !(Maybe Text)
+    { _ldName :: !(Maybe Text)
     , _ldDisplayName :: !(Maybe Text)
-    , _ldLabels      :: !(Maybe [LabelDescriptor])
+    , _ldLabels :: !(Maybe [LabelDescriptor])
     , _ldDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3445,7 +3884,7 @@ data LogDescriptor = LogDescriptor'
 -- * 'ldDescription'
 logDescriptor
     :: LogDescriptor
-logDescriptor =
+logDescriptor = 
     LogDescriptor'
     { _ldName = Nothing
     , _ldDisplayName = Nothing
@@ -3501,17 +3940,17 @@ instance ToJSON LogDescriptor where
                   ("labels" .=) <$> _ldLabels,
                   ("description" .=) <$> _ldDescription])
 
--- | Method represents a method of an api.
+-- | Method represents a method of an API interface.
 --
 -- /See:/ 'method' smart constructor.
 data Method = Method'
-    { _metRequestStreaming  :: !(Maybe Bool)
-    , _metResponseTypeURL   :: !(Maybe Text)
-    , _metName              :: !(Maybe Text)
+    { _metRequestStreaming :: !(Maybe Bool)
+    , _metResponseTypeURL :: !(Maybe Text)
+    , _metName :: !(Maybe Text)
     , _metResponseStreaming :: !(Maybe Bool)
-    , _metRequestTypeURL    :: !(Maybe Text)
-    , _metOptions           :: !(Maybe [Option])
-    , _metSyntax            :: !(Maybe MethodSyntax)
+    , _metRequestTypeURL :: !(Maybe Text)
+    , _metOptions :: !(Maybe [Option])
+    , _metSyntax :: !(Maybe MethodSyntax)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Method' with the minimum fields required to make a request.
@@ -3533,7 +3972,7 @@ data Method = Method'
 -- * 'metSyntax'
 method
     :: Method
-method =
+method = 
     Method'
     { _metRequestStreaming = Nothing
     , _metResponseTypeURL = Nothing
@@ -3614,8 +4053,8 @@ instance ToJSON Method where
 -- /See:/ 'diagnostic' smart constructor.
 data Diagnostic = Diagnostic'
     { _dLocation :: !(Maybe Text)
-    , _dKind     :: !(Maybe DiagnosticKind)
-    , _dMessage  :: !(Maybe Text)
+    , _dKind :: !(Maybe DiagnosticKind)
+    , _dMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Diagnostic' with the minimum fields required to make a request.
@@ -3629,7 +4068,7 @@ data Diagnostic = Diagnostic'
 -- * 'dMessage'
 diagnostic
     :: Diagnostic
-diagnostic =
+diagnostic = 
     Diagnostic'
     { _dLocation = Nothing
     , _dKind = Nothing
@@ -3683,7 +4122,7 @@ newtype SystemParameters = SystemParameters'
 -- * 'spRules'
 systemParameters
     :: SystemParameters
-systemParameters =
+systemParameters = 
     SystemParameters'
     { _spRules = Nothing
     }
@@ -3719,7 +4158,7 @@ instance ToJSON SystemParameters where
 -- /See:/ 'configSource' smart constructor.
 data ConfigSource = ConfigSource'
     { _csFiles :: !(Maybe [ConfigFile])
-    , _csId    :: !(Maybe Text)
+    , _csId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConfigSource' with the minimum fields required to make a request.
@@ -3731,7 +4170,7 @@ data ConfigSource = ConfigSource'
 -- * 'csId'
 configSource
     :: ConfigSource
-configSource =
+configSource = 
     ConfigSource'
     { _csFiles = Nothing
     , _csId = Nothing
@@ -3828,11 +4267,11 @@ instance ToJSON ConfigSource where
 --
 -- /See:/ 'documentation' smart constructor.
 data Documentation = Documentation'
-    { _dSummary              :: !(Maybe Text)
+    { _dSummary :: !(Maybe Text)
     , _dDocumentationRootURL :: !(Maybe Text)
-    , _dRules                :: !(Maybe [DocumentationRule])
-    , _dPages                :: !(Maybe [Page])
-    , _dOverview             :: !(Maybe Text)
+    , _dRules :: !(Maybe [DocumentationRule])
+    , _dPages :: !(Maybe [Page])
+    , _dOverview :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Documentation' with the minimum fields required to make a request.
@@ -3850,7 +4289,7 @@ data Documentation = Documentation'
 -- * 'dOverview'
 documentation
     :: Documentation
-documentation =
+documentation = 
     Documentation'
     { _dSummary = Nothing
     , _dDocumentationRootURL = Nothing
@@ -3927,7 +4366,7 @@ instance ToJSON Documentation where
 --
 -- /See:/ 'step' smart constructor.
 data Step = Step'
-    { _sStatus      :: !(Maybe StepStatus)
+    { _sStatus :: !(Maybe StepStatus)
     , _sDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3940,7 +4379,7 @@ data Step = Step'
 -- * 'sDescription'
 step
     :: Step
-step =
+step = 
     Step'
     { _sStatus = Nothing
     , _sDescription = Nothing
@@ -3982,7 +4421,7 @@ newtype TestIAMPermissionsRequest = TestIAMPermissionsRequest'
 -- * 'tiprPermissions'
 testIAMPermissionsRequest
     :: TestIAMPermissionsRequest
-testIAMPermissionsRequest =
+testIAMPermissionsRequest = 
     TestIAMPermissionsRequest'
     { _tiprPermissions = Nothing
     }
@@ -4010,12 +4449,131 @@ instance ToJSON TestIAMPermissionsRequest where
           = object
               (catMaybes [("permissions" .=) <$> _tiprPermissions])
 
+-- | The metadata associated with a long running operation resource.
+--
+-- /See:/ 'flowOperationMetadata' smart constructor.
+data FlowOperationMetadata = FlowOperationMetadata'
+    { _fomStartTime :: !(Maybe DateTime')
+    , _fomCancelState :: !(Maybe FlowOperationMetadataCancelState)
+    , _fomDeadline :: !(Maybe DateTime')
+    , _fomFlowName :: !(Maybe Text)
+    , _fomOperationType :: !(Maybe (Textual Int32))
+    , _fomSurface :: !(Maybe FlowOperationMetadataSurface)
+    , _fomResourceNames :: !(Maybe [Text])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'FlowOperationMetadata' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'fomStartTime'
+--
+-- * 'fomCancelState'
+--
+-- * 'fomDeadline'
+--
+-- * 'fomFlowName'
+--
+-- * 'fomOperationType'
+--
+-- * 'fomSurface'
+--
+-- * 'fomResourceNames'
+flowOperationMetadata
+    :: FlowOperationMetadata
+flowOperationMetadata = 
+    FlowOperationMetadata'
+    { _fomStartTime = Nothing
+    , _fomCancelState = Nothing
+    , _fomDeadline = Nothing
+    , _fomFlowName = Nothing
+    , _fomOperationType = Nothing
+    , _fomSurface = Nothing
+    , _fomResourceNames = Nothing
+    }
+
+-- | The start time of the operation.
+fomStartTime :: Lens' FlowOperationMetadata (Maybe UTCTime)
+fomStartTime
+  = lens _fomStartTime (\ s a -> s{_fomStartTime = a})
+      . mapping _DateTime
+
+-- | The state of the operation with respect to cancellation.
+fomCancelState :: Lens' FlowOperationMetadata (Maybe FlowOperationMetadataCancelState)
+fomCancelState
+  = lens _fomCancelState
+      (\ s a -> s{_fomCancelState = a})
+
+-- | Deadline for the flow to complete, to prevent orphaned Operations. If
+-- the flow has not completed by this time, it may be terminated by the
+-- engine, or force-failed by Operation lookup. Note that this is not a
+-- hard deadline after which the Flow will definitely be failed, rather it
+-- is a deadline after which it is reasonable to suspect a problem and
+-- other parts of the system may kill operation to ensure we don\'t have
+-- orphans. see also: go\/prevent-orphaned-operations
+fomDeadline :: Lens' FlowOperationMetadata (Maybe UTCTime)
+fomDeadline
+  = lens _fomDeadline (\ s a -> s{_fomDeadline = a}) .
+      mapping _DateTime
+
+-- | The name of the top-level flow corresponding to this operation. Must be
+-- equal to the \"name\" field for a FlowName enum.
+fomFlowName :: Lens' FlowOperationMetadata (Maybe Text)
+fomFlowName
+  = lens _fomFlowName (\ s a -> s{_fomFlowName = a})
+
+-- | Operation type which is a flow type and subtype info as that is missing
+-- in our datastore otherwise. This maps to the ordinal value of the enum:
+-- jcg\/api\/tenant\/operations\/OperationNamespace.java
+fomOperationType :: Lens' FlowOperationMetadata (Maybe Int32)
+fomOperationType
+  = lens _fomOperationType
+      (\ s a -> s{_fomOperationType = a})
+      . mapping _Coerce
+
+fomSurface :: Lens' FlowOperationMetadata (Maybe FlowOperationMetadataSurface)
+fomSurface
+  = lens _fomSurface (\ s a -> s{_fomSurface = a})
+
+-- | The full name of the resources that this flow is directly associated
+-- with.
+fomResourceNames :: Lens' FlowOperationMetadata [Text]
+fomResourceNames
+  = lens _fomResourceNames
+      (\ s a -> s{_fomResourceNames = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON FlowOperationMetadata where
+        parseJSON
+          = withObject "FlowOperationMetadata"
+              (\ o ->
+                 FlowOperationMetadata' <$>
+                   (o .:? "startTime") <*> (o .:? "cancelState") <*>
+                     (o .:? "deadline")
+                     <*> (o .:? "flowName")
+                     <*> (o .:? "operationType")
+                     <*> (o .:? "surface")
+                     <*> (o .:? "resourceNames" .!= mempty))
+
+instance ToJSON FlowOperationMetadata where
+        toJSON FlowOperationMetadata'{..}
+          = object
+              (catMaybes
+                 [("startTime" .=) <$> _fomStartTime,
+                  ("cancelState" .=) <$> _fomCancelState,
+                  ("deadline" .=) <$> _fomDeadline,
+                  ("flowName" .=) <$> _fomFlowName,
+                  ("operationType" .=) <$> _fomOperationType,
+                  ("surface" .=) <$> _fomSurface,
+                  ("resourceNames" .=) <$> _fomResourceNames])
+
 -- | Define a system parameter rule mapping system parameter definitions to
 -- methods.
 --
 -- /See:/ 'systemParameterRule' smart constructor.
 data SystemParameterRule = SystemParameterRule'
-    { _sprSelector   :: !(Maybe Text)
+    { _sprSelector :: !(Maybe Text)
     , _sprParameters :: !(Maybe [SystemParameter])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4028,7 +4586,7 @@ data SystemParameterRule = SystemParameterRule'
 -- * 'sprParameters'
 systemParameterRule
     :: SystemParameterRule
-systemParameterRule =
+systemParameterRule = 
     SystemParameterRule'
     { _sprSelector = Nothing
     , _sprParameters = Nothing
@@ -4070,8 +4628,8 @@ instance ToJSON SystemParameterRule where
 --
 -- /See:/ 'labelDescriptor' smart constructor.
 data LabelDescriptor = LabelDescriptor'
-    { _lKey         :: !(Maybe Text)
-    , _lValueType   :: !(Maybe LabelDescriptorValueType)
+    { _lKey :: !(Maybe Text)
+    , _lValueType :: !(Maybe LabelDescriptorValueType)
     , _lDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4086,7 +4644,7 @@ data LabelDescriptor = LabelDescriptor'
 -- * 'lDescription'
 labelDescriptor
     :: LabelDescriptor
-labelDescriptor =
+labelDescriptor = 
     LabelDescriptor'
     { _lKey = Nothing
     , _lValueType = Nothing
@@ -4127,8 +4685,8 @@ instance ToJSON LabelDescriptor where
 --
 -- /See:/ 'usage' smart constructor.
 data Usage = Usage'
-    { _uRequirements                :: !(Maybe [Text])
-    , _uRules                       :: !(Maybe [UsageRule])
+    { _uRequirements :: !(Maybe [Text])
+    , _uRules :: !(Maybe [UsageRule])
     , _uProducerNotificationChannel :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4143,7 +4701,7 @@ data Usage = Usage'
 -- * 'uProducerNotificationChannel'
 usage
     :: Usage
-usage =
+usage = 
     Usage'
     { _uRequirements = Nothing
     , _uRules = Nothing
@@ -4211,7 +4769,7 @@ newtype TestIAMPermissionsResponse = TestIAMPermissionsResponse'
 -- * 'tiamprPermissions'
 testIAMPermissionsResponse
     :: TestIAMPermissionsResponse
-testIAMPermissionsResponse =
+testIAMPermissionsResponse = 
     TestIAMPermissionsResponse'
     { _tiamprPermissions = Nothing
     }
@@ -4256,7 +4814,7 @@ newtype GenerateConfigReportRequestNewConfig = GenerateConfigReportRequestNewCon
 generateConfigReportRequestNewConfig
     :: HashMap Text JSONValue -- ^ 'gcrrncAddtional'
     -> GenerateConfigReportRequestNewConfig
-generateConfigReportRequestNewConfig pGcrrncAddtional_ =
+generateConfigReportRequestNewConfig pGcrrncAddtional_ = 
     GenerateConfigReportRequestNewConfig'
     { _gcrrncAddtional = _Coerce # pGcrrncAddtional_
     }
@@ -4280,13 +4838,14 @@ instance ToJSON GenerateConfigReportRequestNewConfig
          where
         toJSON = toJSON . _gcrrncAddtional
 
--- | Defines the HTTP configuration for a service. It contains a list of
+-- | Defines the HTTP configuration for an API service. It contains a list of
 -- HttpRule, each specifying the mapping of an RPC method to one or more
 -- HTTP REST API methods.
 --
 -- /See:/ 'hTTP' smart constructor.
-newtype HTTP = HTTP'
-    { _hRules :: Maybe [HTTPRule]
+data HTTP = HTTP'
+    { _hRules :: !(Maybe [HTTPRule])
+    , _hFullyDecodeReservedExpansion :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HTTP' with the minimum fields required to make a request.
@@ -4294,11 +4853,14 @@ newtype HTTP = HTTP'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'hRules'
+--
+-- * 'hFullyDecodeReservedExpansion'
 hTTP
     :: HTTP
-hTTP =
+hTTP = 
     HTTP'
     { _hRules = Nothing
+    , _hFullyDecodeReservedExpansion = Nothing
     }
 
 -- | A list of HTTP configuration rules that apply to individual API methods.
@@ -4309,14 +4871,30 @@ hRules
   = lens _hRules (\ s a -> s{_hRules = a}) . _Default .
       _Coerce
 
+-- | When set to true, URL path parmeters will be fully URI-decoded except in
+-- cases of single segment matches in reserved expansion, where \"%2F\"
+-- will be left encoded. The default behavior is to not decode RFC 6570
+-- reserved characters in multi segment matches.
+hFullyDecodeReservedExpansion :: Lens' HTTP (Maybe Bool)
+hFullyDecodeReservedExpansion
+  = lens _hFullyDecodeReservedExpansion
+      (\ s a -> s{_hFullyDecodeReservedExpansion = a})
+
 instance FromJSON HTTP where
         parseJSON
           = withObject "HTTP"
-              (\ o -> HTTP' <$> (o .:? "rules" .!= mempty))
+              (\ o ->
+                 HTTP' <$>
+                   (o .:? "rules" .!= mempty) <*>
+                     (o .:? "fullyDecodeReservedExpansion"))
 
 instance ToJSON HTTP where
         toJSON HTTP'{..}
-          = object (catMaybes [("rules" .=) <$> _hRules])
+          = object
+              (catMaybes
+                 [("rules" .=) <$> _hRules,
+                  ("fullyDecodeReservedExpansion" .=) <$>
+                    _hFullyDecodeReservedExpansion])
 
 -- | Request message for DisableService method.
 --
@@ -4332,7 +4910,7 @@ newtype DisableServiceRequest = DisableServiceRequest'
 -- * 'dsrConsumerId'
 disableServiceRequest
     :: DisableServiceRequest
-disableServiceRequest =
+disableServiceRequest = 
     DisableServiceRequest'
     { _dsrConsumerId = Nothing
     }
@@ -4374,11 +4952,10 @@ instance ToJSON DisableServiceRequest where
 -- /See:/ 'policy' smart constructor.
 data Policy = Policy'
     { _pAuditConfigs :: !(Maybe [AuditConfig])
-    , _pEtag         :: !(Maybe Bytes)
-    , _pRules        :: !(Maybe [Rule])
-    , _pVersion      :: !(Maybe (Textual Int32))
-    , _pBindings     :: !(Maybe [Binding])
-    , _pIAMOwned     :: !(Maybe Bool)
+    , _pEtag :: !(Maybe Bytes)
+    , _pVersion :: !(Maybe (Textual Int32))
+    , _pBindings :: !(Maybe [Binding])
+    , _pIAMOwned :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Policy' with the minimum fields required to make a request.
@@ -4389,8 +4966,6 @@ data Policy = Policy'
 --
 -- * 'pEtag'
 --
--- * 'pRules'
---
 -- * 'pVersion'
 --
 -- * 'pBindings'
@@ -4398,11 +4973,10 @@ data Policy = Policy'
 -- * 'pIAMOwned'
 policy
     :: Policy
-policy =
+policy = 
     Policy'
     { _pAuditConfigs = Nothing
     , _pEtag = Nothing
-    , _pRules = Nothing
     , _pVersion = Nothing
     , _pBindings = Nothing
     , _pIAMOwned = Nothing
@@ -4430,26 +5004,13 @@ pEtag
   = lens _pEtag (\ s a -> s{_pEtag = a}) .
       mapping _Bytes
 
--- | If more than one rule is specified, the rules are applied in the
--- following manner: - All matching LOG rules are always applied. - If any
--- DENY\/DENY_WITH_LOG rule matches, permission is denied. Logging will be
--- applied if one or more matching rule requires logging. - Otherwise, if
--- any ALLOW\/ALLOW_WITH_LOG rule matches, permission is granted. Logging
--- will be applied if one or more matching rule requires logging. -
--- Otherwise, if no rule applies, permission is denied.
-pRules :: Lens' Policy [Rule]
-pRules
-  = lens _pRules (\ s a -> s{_pRules = a}) . _Default .
-      _Coerce
-
 -- | Version of the \`Policy\`. The default version is 0.
 pVersion :: Lens' Policy (Maybe Int32)
 pVersion
   = lens _pVersion (\ s a -> s{_pVersion = a}) .
       mapping _Coerce
 
--- | Associates a list of \`members\` to a \`role\`. Multiple \`bindings\`
--- must not be specified for the same \`role\`. \`bindings\` with no
+-- | Associates a list of \`members\` to a \`role\`. \`bindings\` with no
 -- members will result in an error.
 pBindings :: Lens' Policy [Binding]
 pBindings
@@ -4467,7 +5028,6 @@ instance FromJSON Policy where
               (\ o ->
                  Policy' <$>
                    (o .:? "auditConfigs" .!= mempty) <*> (o .:? "etag")
-                     <*> (o .:? "rules" .!= mempty)
                      <*> (o .:? "version")
                      <*> (o .:? "bindings" .!= mempty)
                      <*> (o .:? "iamOwned"))
@@ -4477,8 +5037,7 @@ instance ToJSON Policy where
           = object
               (catMaybes
                  [("auditConfigs" .=) <$> _pAuditConfigs,
-                  ("etag" .=) <$> _pEtag, ("rules" .=) <$> _pRules,
-                  ("version" .=) <$> _pVersion,
+                  ("etag" .=) <$> _pEtag, ("version" .=) <$> _pVersion,
                   ("bindings" .=) <$> _pBindings,
                   ("iamOwned" .=) <$> _pIAMOwned])
 
@@ -4487,11 +5046,11 @@ instance ToJSON Policy where
 -- /See:/ 'type'' smart constructor.
 data Type = Type'
     { _tSourceContext :: !(Maybe SourceContext)
-    , _tOneofs        :: !(Maybe [Text])
-    , _tName          :: !(Maybe Text)
-    , _tOptions       :: !(Maybe [Option])
-    , _tFields        :: !(Maybe [Field])
-    , _tSyntax        :: !(Maybe TypeSyntax)
+    , _tOneofs :: !(Maybe [Text])
+    , _tName :: !(Maybe Text)
+    , _tOptions :: !(Maybe [Option])
+    , _tFields :: !(Maybe [Field])
+    , _tSyntax :: !(Maybe TypeSyntax)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Type' with the minimum fields required to make a request.
@@ -4511,7 +5070,7 @@ data Type = Type'
 -- * 'tSyntax'
 type'
     :: Type
-type' =
+type' = 
     Type'
     { _tSourceContext = Nothing
     , _tOneofs = Nothing
@@ -4576,17 +5135,25 @@ instance ToJSON Type where
                   ("fields" .=) <$> _tFields,
                   ("syntax" .=) <$> _tSyntax])
 
--- | Api is a light-weight descriptor for a protocol buffer service.
+-- | Api is a light-weight descriptor for an API Interface. Interfaces are
+-- also described as \"protocol buffer services\" in some contexts, such as
+-- by the \"service\" keyword in a .proto file, but they are different from
+-- API Services, which represent a concrete implementation of an interface
+-- as opposed to simply a description of methods and bindings. They are
+-- also sometimes simply referred to as \"APIs\" in other contexts, such as
+-- the name of this message itself. See
+-- https:\/\/cloud.google.com\/apis\/design\/glossary for detailed
+-- terminology.
 --
 -- /See:/ 'api' smart constructor.
 data API = API'
     { _aSourceContext :: !(Maybe SourceContext)
-    , _aMixins        :: !(Maybe [Mixin])
-    , _aMethods       :: !(Maybe [Method])
-    , _aName          :: !(Maybe Text)
-    , _aVersion       :: !(Maybe Text)
-    , _aOptions       :: !(Maybe [Option])
-    , _aSyntax        :: !(Maybe APISyntax)
+    , _aMixins :: !(Maybe [Mixin])
+    , _aMethods :: !(Maybe [Method])
+    , _aName :: !(Maybe Text)
+    , _aVersion :: !(Maybe Text)
+    , _aOptions :: !(Maybe [Option])
+    , _aSyntax :: !(Maybe APISyntax)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'API' with the minimum fields required to make a request.
@@ -4608,7 +5175,7 @@ data API = API'
 -- * 'aSyntax'
 api
     :: API
-api =
+api = 
     API'
     { _aSourceContext = Nothing
     , _aMixins = Nothing
@@ -4626,25 +5193,25 @@ aSourceContext
   = lens _aSourceContext
       (\ s a -> s{_aSourceContext = a})
 
--- | Included APIs. See Mixin.
+-- | Included interfaces. See Mixin.
 aMixins :: Lens' API [Mixin]
 aMixins
   = lens _aMixins (\ s a -> s{_aMixins = a}) . _Default
       . _Coerce
 
--- | The methods of this api, in unspecified order.
+-- | The methods of this interface, in unspecified order.
 aMethods :: Lens' API [Method]
 aMethods
   = lens _aMethods (\ s a -> s{_aMethods = a}) .
       _Default
       . _Coerce
 
--- | The fully qualified name of this api, including package name followed by
--- the api\'s simple name.
+-- | The fully qualified name of this interface, including package name
+-- followed by the interface\'s simple name.
 aName :: Lens' API (Maybe Text)
 aName = lens _aName (\ s a -> s{_aName = a})
 
--- | A version string for this api. If specified, must have the form
+-- | A version string for this interface. If specified, must have the form
 -- \`major-version.minor-version\`, as in \`1.10\`. If the minor version is
 -- omitted, it defaults to zero. If the entire version field is empty, the
 -- major version is derived from the package name, as outlined below. If
@@ -4655,13 +5222,14 @@ aName = lens _aName (\ s a -> s{_aName = a})
 -- non-breaking change. Both version numbers are signals to users what to
 -- expect from different versions, and should be carefully chosen based on
 -- the product plan. The major version is also reflected in the package
--- name of the API, which must end in \`v\`, as in \`google.feature.v1\`.
--- For major versions 0 and 1, the suffix can be omitted. Zero major
--- versions must only be used for experimental, none-GA apis.
+-- name of the interface, which must end in \`v\`, as in
+-- \`google.feature.v1\`. For major versions 0 and 1, the suffix can be
+-- omitted. Zero major versions must only be used for experimental, non-GA
+-- interfaces.
 aVersion :: Lens' API (Maybe Text)
 aVersion = lens _aVersion (\ s a -> s{_aVersion = a})
 
--- | Any metadata attached to the API.
+-- | Any metadata attached to the interface.
 aOptions :: Lens' API [Option]
 aOptions
   = lens _aOptions (\ s a -> s{_aOptions = a}) .
@@ -4701,7 +5269,7 @@ instance ToJSON API where
 --
 -- /See:/ 'monitoringDestination' smart constructor.
 data MonitoringDestination = MonitoringDestination'
-    { _mdMetrics           :: !(Maybe [Text])
+    { _mdMetrics :: !(Maybe [Text])
     , _mdMonitoredResource :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4714,7 +5282,7 @@ data MonitoringDestination = MonitoringDestination'
 -- * 'mdMonitoredResource'
 monitoringDestination
     :: MonitoringDestination
-monitoringDestination =
+monitoringDestination = 
     MonitoringDestination'
     { _mdMetrics = Nothing
     , _mdMonitoredResource = Nothing
@@ -4755,7 +5323,7 @@ instance ToJSON MonitoringDestination where
 --
 -- /See:/ 'managedService' smart constructor.
 data ManagedService = ManagedService'
-    { _msServiceName       :: !(Maybe Text)
+    { _msServiceName :: !(Maybe Text)
     , _msProducerProjectId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4768,7 +5336,7 @@ data ManagedService = ManagedService'
 -- * 'msProducerProjectId'
 managedService
     :: ManagedService
-managedService =
+managedService = 
     ManagedService'
     { _msServiceName = Nothing
     , _msProducerProjectId = Nothing
@@ -4806,10 +5374,10 @@ instance ToJSON ManagedService where
 --
 -- /See:/ 'operationMetadata' smart constructor.
 data OperationMetadata = OperationMetadata'
-    { _omStartTime          :: !(Maybe DateTime')
-    , _omSteps              :: !(Maybe [Step])
+    { _omStartTime :: !(Maybe DateTime')
+    , _omSteps :: !(Maybe [Step])
     , _omProgressPercentage :: !(Maybe (Textual Int32))
-    , _omResourceNames      :: !(Maybe [Text])
+    , _omResourceNames :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationMetadata' with the minimum fields required to make a request.
@@ -4825,7 +5393,7 @@ data OperationMetadata = OperationMetadata'
 -- * 'omResourceNames'
 operationMetadata
     :: OperationMetadata
-operationMetadata =
+operationMetadata = 
     OperationMetadata'
     { _omStartTime = Nothing
     , _omSteps = Nothing
@@ -4892,11 +5460,11 @@ instance ToJSON OperationMetadata where
 --
 -- /See:/ 'endpoint' smart constructor.
 data Endpoint = Endpoint'
-    { _eAliases   :: !(Maybe [Text])
-    , _eAPIs      :: !(Maybe [Text])
+    { _eAliases :: !(Maybe [Text])
     , _eAllowCORS :: !(Maybe Bool)
-    , _eName      :: !(Maybe Text)
-    , _eFeatures  :: !(Maybe [Text])
+    , _eName :: !(Maybe Text)
+    , _eFeatures :: !(Maybe [Text])
+    , _eTarget :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Endpoint' with the minimum fields required to make a request.
@@ -4905,38 +5473,32 @@ data Endpoint = Endpoint'
 --
 -- * 'eAliases'
 --
--- * 'eAPIs'
---
 -- * 'eAllowCORS'
 --
 -- * 'eName'
 --
 -- * 'eFeatures'
+--
+-- * 'eTarget'
 endpoint
     :: Endpoint
-endpoint =
+endpoint = 
     Endpoint'
     { _eAliases = Nothing
-    , _eAPIs = Nothing
     , _eAllowCORS = Nothing
     , _eName = Nothing
     , _eFeatures = Nothing
+    , _eTarget = Nothing
     }
 
 -- | DEPRECATED: This field is no longer supported. Instead of using aliases,
--- please specify multiple google.api.Endpoint for each of the intented
--- alias. Additional names that this endpoint will be hosted on.
+-- please specify multiple google.api.Endpoint for each of the intended
+-- aliases. Additional names that this endpoint will be hosted on.
 eAliases :: Lens' Endpoint [Text]
 eAliases
   = lens _eAliases (\ s a -> s{_eAliases = a}) .
       _Default
       . _Coerce
-
--- | The list of APIs served by this endpoint.
-eAPIs :: Lens' Endpoint [Text]
-eAPIs
-  = lens _eAPIs (\ s a -> s{_eAPIs = a}) . _Default .
-      _Coerce
 
 -- | Allowing
 -- [CORS](https:\/\/en.wikipedia.org\/wiki\/Cross-origin_resource_sharing),
@@ -4959,26 +5521,33 @@ eFeatures
       _Default
       . _Coerce
 
+-- | The specification of an Internet routable address of API frontend that
+-- will handle requests to this [API
+-- Endpoint](https:\/\/cloud.google.com\/apis\/design\/glossary). It should
+-- be either a valid IPv4 address or a fully-qualified domain name. For
+-- example, \"8.8.8.8\" or \"myservice.appspot.com\".
+eTarget :: Lens' Endpoint (Maybe Text)
+eTarget = lens _eTarget (\ s a -> s{_eTarget = a})
+
 instance FromJSON Endpoint where
         parseJSON
           = withObject "Endpoint"
               (\ o ->
                  Endpoint' <$>
-                   (o .:? "aliases" .!= mempty) <*>
-                     (o .:? "apis" .!= mempty)
-                     <*> (o .:? "allowCors")
+                   (o .:? "aliases" .!= mempty) <*> (o .:? "allowCors")
                      <*> (o .:? "name")
-                     <*> (o .:? "features" .!= mempty))
+                     <*> (o .:? "features" .!= mempty)
+                     <*> (o .:? "target"))
 
 instance ToJSON Endpoint where
         toJSON Endpoint'{..}
           = object
               (catMaybes
                  [("aliases" .=) <$> _eAliases,
-                  ("apis" .=) <$> _eAPIs,
                   ("allowCors" .=) <$> _eAllowCORS,
                   ("name" .=) <$> _eName,
-                  ("features" .=) <$> _eFeatures])
+                  ("features" .=) <$> _eFeatures,
+                  ("target" .=) <$> _eTarget])
 
 -- | OAuth scopes are a way to define data and permissions on data. For
 -- example, there are scopes defined for \"Read-only access to Google
@@ -5007,7 +5576,7 @@ newtype OAuthRequirements = OAuthRequirements'
 -- * 'oarCanonicalScopes'
 oAuthRequirements
     :: OAuthRequirements
-oAuthRequirements =
+oAuthRequirements = 
     OAuthRequirements'
     { _oarCanonicalScopes = Nothing
     }
@@ -5053,7 +5622,7 @@ data CustomError = CustomError'
 -- * 'ceTypes'
 customError
     :: CustomError
-customError =
+customError = 
     CustomError'
     { _ceRules = Nothing
     , _ceTypes = Nothing
@@ -5089,6 +5658,182 @@ instance ToJSON CustomError where
                  [("rules" .=) <$> _ceRules,
                   ("types" .=) <$> _ceTypes])
 
+-- | \`QuotaLimit\` defines a specific limit that applies over a specified
+-- duration for a limit type. There can be at most one limit for a duration
+-- and limit type combination defined within a \`QuotaGroup\`.
+--
+-- /See:/ 'quotaLimit' smart constructor.
+data QuotaLimit = QuotaLimit'
+    { _qlValues :: !(Maybe QuotaLimitValues)
+    , _qlFreeTier :: !(Maybe (Textual Int64))
+    , _qlMetric :: !(Maybe Text)
+    , _qlName :: !(Maybe Text)
+    , _qlDisplayName :: !(Maybe Text)
+    , _qlDuration :: !(Maybe Text)
+    , _qlDefaultLimit :: !(Maybe (Textual Int64))
+    , _qlDescription :: !(Maybe Text)
+    , _qlUnit :: !(Maybe Text)
+    , _qlMaxLimit :: !(Maybe (Textual Int64))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'QuotaLimit' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qlValues'
+--
+-- * 'qlFreeTier'
+--
+-- * 'qlMetric'
+--
+-- * 'qlName'
+--
+-- * 'qlDisplayName'
+--
+-- * 'qlDuration'
+--
+-- * 'qlDefaultLimit'
+--
+-- * 'qlDescription'
+--
+-- * 'qlUnit'
+--
+-- * 'qlMaxLimit'
+quotaLimit
+    :: QuotaLimit
+quotaLimit = 
+    QuotaLimit'
+    { _qlValues = Nothing
+    , _qlFreeTier = Nothing
+    , _qlMetric = Nothing
+    , _qlName = Nothing
+    , _qlDisplayName = Nothing
+    , _qlDuration = Nothing
+    , _qlDefaultLimit = Nothing
+    , _qlDescription = Nothing
+    , _qlUnit = Nothing
+    , _qlMaxLimit = Nothing
+    }
+
+-- | Tiered limit values. You must specify this as a key:value pair, with an
+-- integer value that is the maximum number of requests allowed for the
+-- specified unit. Currently only STANDARD is supported.
+qlValues :: Lens' QuotaLimit (Maybe QuotaLimitValues)
+qlValues = lens _qlValues (\ s a -> s{_qlValues = a})
+
+-- | Free tier value displayed in the Developers Console for this limit. The
+-- free tier is the number of tokens that will be subtracted from the
+-- billed amount when billing is enabled. This field can only be set on a
+-- limit with duration \"1d\", in a billable group; it is invalid on any
+-- other limit. If this field is not set, it defaults to 0, indicating that
+-- there is no free tier for this service. Used by group-based quotas only.
+qlFreeTier :: Lens' QuotaLimit (Maybe Int64)
+qlFreeTier
+  = lens _qlFreeTier (\ s a -> s{_qlFreeTier = a}) .
+      mapping _Coerce
+
+-- | The name of the metric this quota limit applies to. The quota limits
+-- with the same metric will be checked together during runtime. The metric
+-- must be defined within the service config.
+qlMetric :: Lens' QuotaLimit (Maybe Text)
+qlMetric = lens _qlMetric (\ s a -> s{_qlMetric = a})
+
+-- | Name of the quota limit. The name must be provided, and it must be
+-- unique within the service. The name can only include alphanumeric
+-- characters as well as \'-\'. The maximum length of the limit name is 64
+-- characters.
+qlName :: Lens' QuotaLimit (Maybe Text)
+qlName = lens _qlName (\ s a -> s{_qlName = a})
+
+-- | User-visible display name for this limit. Optional. If not set, the UI
+-- will provide a default display name based on the quota configuration.
+-- This field can be used to override the default display name generated
+-- from the configuration.
+qlDisplayName :: Lens' QuotaLimit (Maybe Text)
+qlDisplayName
+  = lens _qlDisplayName
+      (\ s a -> s{_qlDisplayName = a})
+
+-- | Duration of this limit in textual notation. Example: \"100s\", \"24h\",
+-- \"1d\". For duration longer than a day, only multiple of days is
+-- supported. We support only \"100s\" and \"1d\" for now. Additional
+-- support will be added in the future. \"0\" indicates indefinite
+-- duration. Used by group-based quotas only.
+qlDuration :: Lens' QuotaLimit (Maybe Text)
+qlDuration
+  = lens _qlDuration (\ s a -> s{_qlDuration = a})
+
+-- | Default number of tokens that can be consumed during the specified
+-- duration. This is the number of tokens assigned when a client
+-- application developer activates the service for his\/her project.
+-- Specifying a value of 0 will block all requests. This can be used if you
+-- are provisioning quota to selected consumers and blocking others.
+-- Similarly, a value of -1 will indicate an unlimited quota. No other
+-- negative values are allowed. Used by group-based quotas only.
+qlDefaultLimit :: Lens' QuotaLimit (Maybe Int64)
+qlDefaultLimit
+  = lens _qlDefaultLimit
+      (\ s a -> s{_qlDefaultLimit = a})
+      . mapping _Coerce
+
+-- | Optional. User-visible, extended description for this quota limit.
+-- Should be used only when more context is needed to understand this limit
+-- than provided by the limit\'s display name (see: \`display_name\`).
+qlDescription :: Lens' QuotaLimit (Maybe Text)
+qlDescription
+  = lens _qlDescription
+      (\ s a -> s{_qlDescription = a})
+
+-- | Specify the unit of the quota limit. It uses the same syntax as
+-- Metric.unit. The supported unit kinds are determined by the quota
+-- backend system. Here are some examples: * \"1\/min\/{project}\" for
+-- quota per minute per project. Note: the order of unit components is
+-- insignificant. The \"1\" at the beginning is required to follow the
+-- metric unit syntax.
+qlUnit :: Lens' QuotaLimit (Maybe Text)
+qlUnit = lens _qlUnit (\ s a -> s{_qlUnit = a})
+
+-- | Maximum number of tokens that can be consumed during the specified
+-- duration. Client application developers can override the default limit
+-- up to this maximum. If specified, this value cannot be set to a value
+-- less than the default limit. If not specified, it is set to the default
+-- limit. To allow clients to apply overrides with no upper bound, set this
+-- to -1, indicating unlimited maximum quota. Used by group-based quotas
+-- only.
+qlMaxLimit :: Lens' QuotaLimit (Maybe Int64)
+qlMaxLimit
+  = lens _qlMaxLimit (\ s a -> s{_qlMaxLimit = a}) .
+      mapping _Coerce
+
+instance FromJSON QuotaLimit where
+        parseJSON
+          = withObject "QuotaLimit"
+              (\ o ->
+                 QuotaLimit' <$>
+                   (o .:? "values") <*> (o .:? "freeTier") <*>
+                     (o .:? "metric")
+                     <*> (o .:? "name")
+                     <*> (o .:? "displayName")
+                     <*> (o .:? "duration")
+                     <*> (o .:? "defaultLimit")
+                     <*> (o .:? "description")
+                     <*> (o .:? "unit")
+                     <*> (o .:? "maxLimit"))
+
+instance ToJSON QuotaLimit where
+        toJSON QuotaLimit'{..}
+          = object
+              (catMaybes
+                 [("values" .=) <$> _qlValues,
+                  ("freeTier" .=) <$> _qlFreeTier,
+                  ("metric" .=) <$> _qlMetric, ("name" .=) <$> _qlName,
+                  ("displayName" .=) <$> _qlDisplayName,
+                  ("duration" .=) <$> _qlDuration,
+                  ("defaultLimit" .=) <$> _qlDefaultLimit,
+                  ("description" .=) <$> _qlDescription,
+                  ("unit" .=) <$> _qlUnit,
+                  ("maxLimit" .=) <$> _qlMaxLimit])
+
 -- | Provides the configuration for logging a type of permissions. Example: {
 -- \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\",
 -- \"exempted_members\": [ \"user:foo\'gmail.com\" ] }, { \"log_type\":
@@ -5097,7 +5842,7 @@ instance ToJSON CustomError where
 --
 -- /See:/ 'auditLogConfig' smart constructor.
 data AuditLogConfig = AuditLogConfig'
-    { _alcLogType         :: !(Maybe AuditLogConfigLogType)
+    { _alcLogType :: !(Maybe AuditLogConfigLogType)
     , _alcExemptedMembers :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5110,7 +5855,7 @@ data AuditLogConfig = AuditLogConfig'
 -- * 'alcExemptedMembers'
 auditLogConfig
     :: AuditLogConfig
-auditLogConfig =
+auditLogConfig = 
     AuditLogConfig'
     { _alcLogType = Nothing
     , _alcExemptedMembers = Nothing
@@ -5151,7 +5896,7 @@ instance ToJSON AuditLogConfig where
 -- /See:/ 'option' smart constructor.
 data Option = Option'
     { _optValue :: !(Maybe OptionValue)
-    , _optName  :: !(Maybe Text)
+    , _optName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Option' with the minimum fields required to make a request.
@@ -5163,7 +5908,7 @@ data Option = Option'
 -- * 'optName'
 option
     :: Option
-option =
+option = 
     Option'
     { _optValue = Nothing
     , _optName = Nothing
@@ -5197,6 +5942,131 @@ instance ToJSON Option where
                  [("value" .=) <$> _optValue,
                   ("name" .=) <$> _optName])
 
+-- | Billing related configuration of the service. The following example
+-- shows how to configure monitored resources and metrics for billing:
+-- monitored_resources: - type: library.googleapis.com\/branch labels: -
+-- key: \/city description: The city where the library branch is located
+-- in. - key: \/name description: The name of the branch. metrics: - name:
+-- library.googleapis.com\/book\/borrowed_count metric_kind: DELTA
+-- value_type: INT64 billing: consumer_destinations: - monitored_resource:
+-- library.googleapis.com\/branch metrics: -
+-- library.googleapis.com\/book\/borrowed_count
+--
+-- /See:/ 'billing' smart constructor.
+newtype Billing = Billing'
+    { _bConsumerDestinations :: Maybe [BillingDestination]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Billing' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bConsumerDestinations'
+billing
+    :: Billing
+billing = 
+    Billing'
+    { _bConsumerDestinations = Nothing
+    }
+
+-- | Billing configurations for sending metrics to the consumer project.
+-- There can be multiple consumer destinations per service, each one must
+-- have a different monitored resource type. A metric can be used in at
+-- most one consumer destination.
+bConsumerDestinations :: Lens' Billing [BillingDestination]
+bConsumerDestinations
+  = lens _bConsumerDestinations
+      (\ s a -> s{_bConsumerDestinations = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON Billing where
+        parseJSON
+          = withObject "Billing"
+              (\ o ->
+                 Billing' <$>
+                   (o .:? "consumerDestinations" .!= mempty))
+
+instance ToJSON Billing where
+        toJSON Billing'{..}
+          = object
+              (catMaybes
+                 [("consumerDestinations" .=) <$>
+                    _bConsumerDestinations])
+
+-- | Source information used to create a Service Config
+--
+-- /See:/ 'sourceInfo' smart constructor.
+newtype SourceInfo = SourceInfo'
+    { _siSourceFiles :: Maybe [SourceInfoSourceFilesItem]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SourceInfo' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'siSourceFiles'
+sourceInfo
+    :: SourceInfo
+sourceInfo = 
+    SourceInfo'
+    { _siSourceFiles = Nothing
+    }
+
+-- | All files used during config generation.
+siSourceFiles :: Lens' SourceInfo [SourceInfoSourceFilesItem]
+siSourceFiles
+  = lens _siSourceFiles
+      (\ s a -> s{_siSourceFiles = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON SourceInfo where
+        parseJSON
+          = withObject "SourceInfo"
+              (\ o ->
+                 SourceInfo' <$> (o .:? "sourceFiles" .!= mempty))
+
+instance ToJSON SourceInfo where
+        toJSON SourceInfo'{..}
+          = object
+              (catMaybes [("sourceFiles" .=) <$> _siSourceFiles])
+
+-- | Tiered limit values. You must specify this as a key:value pair, with an
+-- integer value that is the maximum number of requests allowed for the
+-- specified unit. Currently only STANDARD is supported.
+--
+-- /See:/ 'quotaLimitValues' smart constructor.
+newtype QuotaLimitValues = QuotaLimitValues'
+    { _qlvAddtional :: HashMap Text (Textual Int64)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'QuotaLimitValues' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qlvAddtional'
+quotaLimitValues
+    :: HashMap Text Int64 -- ^ 'qlvAddtional'
+    -> QuotaLimitValues
+quotaLimitValues pQlvAddtional_ = 
+    QuotaLimitValues'
+    { _qlvAddtional = _Coerce # pQlvAddtional_
+    }
+
+qlvAddtional :: Lens' QuotaLimitValues (HashMap Text Int64)
+qlvAddtional
+  = lens _qlvAddtional (\ s a -> s{_qlvAddtional = a})
+      . _Coerce
+
+instance FromJSON QuotaLimitValues where
+        parseJSON
+          = withObject "QuotaLimitValues"
+              (\ o -> QuotaLimitValues' <$> (parseJSONObject o))
+
+instance ToJSON QuotaLimitValues where
+        toJSON = toJSON . _qlvAddtional
+
 -- | A rollout resource that defines how service configuration versions are
 -- pushed to control plane systems. Typically, you create a new version of
 -- the service config, and then create a Rollout to push the service
@@ -5204,13 +6074,13 @@ instance ToJSON Option where
 --
 -- /See:/ 'rollout' smart constructor.
 data Rollout = Rollout'
-    { _rStatus                 :: !(Maybe RolloutStatus)
-    , _rDeleteServiceStrategy  :: !(Maybe DeleteServiceStrategy)
+    { _rStatus :: !(Maybe RolloutStatus)
+    , _rDeleteServiceStrategy :: !(Maybe DeleteServiceStrategy)
     , _rTrafficPercentStrategy :: !(Maybe TrafficPercentStrategy)
-    , _rCreatedBy              :: !(Maybe Text)
-    , _rServiceName            :: !(Maybe Text)
-    , _rRolloutId              :: !(Maybe Text)
-    , _rCreateTime             :: !(Maybe DateTime')
+    , _rCreatedBy :: !(Maybe Text)
+    , _rServiceName :: !(Maybe Text)
+    , _rRolloutId :: !(Maybe Text)
+    , _rCreateTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Rollout' with the minimum fields required to make a request.
@@ -5232,7 +6102,7 @@ data Rollout = Rollout'
 -- * 'rCreateTime'
 rollout
     :: Rollout
-rollout =
+rollout = 
     Rollout'
     { _rStatus = Nothing
     , _rDeleteServiceStrategy = Nothing
@@ -5315,100 +6185,15 @@ instance ToJSON Rollout where
                   ("rolloutId" .=) <$> _rRolloutId,
                   ("createTime" .=) <$> _rCreateTime])
 
--- | A condition to be met.
---
--- /See:/ 'condition' smart constructor.
-data Condition = Condition'
-    { _cOp     :: !(Maybe ConditionOp)
-    , _cIAM    :: !(Maybe ConditionIAM)
-    , _cValues :: !(Maybe [Text])
-    , _cValue  :: !(Maybe Text)
-    , _cSys    :: !(Maybe ConditionSys)
-    , _cSvc    :: !(Maybe Text)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'Condition' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'cOp'
---
--- * 'cIAM'
---
--- * 'cValues'
---
--- * 'cValue'
---
--- * 'cSys'
---
--- * 'cSvc'
-condition
-    :: Condition
-condition =
-    Condition'
-    { _cOp = Nothing
-    , _cIAM = Nothing
-    , _cValues = Nothing
-    , _cValue = Nothing
-    , _cSys = Nothing
-    , _cSvc = Nothing
-    }
-
--- | An operator to apply the subject with.
-cOp :: Lens' Condition (Maybe ConditionOp)
-cOp = lens _cOp (\ s a -> s{_cOp = a})
-
--- | Trusted attributes supplied by the IAM system.
-cIAM :: Lens' Condition (Maybe ConditionIAM)
-cIAM = lens _cIAM (\ s a -> s{_cIAM = a})
-
--- | The objects of the condition. This is mutually exclusive with \'value\'.
-cValues :: Lens' Condition [Text]
-cValues
-  = lens _cValues (\ s a -> s{_cValues = a}) . _Default
-      . _Coerce
-
--- | DEPRECATED. Use \'values\' instead.
-cValue :: Lens' Condition (Maybe Text)
-cValue = lens _cValue (\ s a -> s{_cValue = a})
-
--- | Trusted attributes supplied by any service that owns resources and uses
--- the IAM system for access control.
-cSys :: Lens' Condition (Maybe ConditionSys)
-cSys = lens _cSys (\ s a -> s{_cSys = a})
-
--- | Trusted attributes discharged by the service.
-cSvc :: Lens' Condition (Maybe Text)
-cSvc = lens _cSvc (\ s a -> s{_cSvc = a})
-
-instance FromJSON Condition where
-        parseJSON
-          = withObject "Condition"
-              (\ o ->
-                 Condition' <$>
-                   (o .:? "op") <*> (o .:? "iam") <*>
-                     (o .:? "values" .!= mempty)
-                     <*> (o .:? "value")
-                     <*> (o .:? "sys")
-                     <*> (o .:? "svc"))
-
-instance ToJSON Condition where
-        toJSON Condition'{..}
-          = object
-              (catMaybes
-                 [("op" .=) <$> _cOp, ("iam" .=) <$> _cIAM,
-                  ("values" .=) <$> _cValues, ("value" .=) <$> _cValue,
-                  ("sys" .=) <$> _cSys, ("svc" .=) <$> _cSvc])
-
 -- | Enum type definition.
 --
 -- /See:/ 'enum' smart constructor.
 data Enum' = Enum''
     { _enuSourceContext :: !(Maybe SourceContext)
-    , _enuEnumvalue     :: !(Maybe [EnumValue])
-    , _enuName          :: !(Maybe Text)
-    , _enuOptions       :: !(Maybe [Option])
-    , _enuSyntax        :: !(Maybe EnumSyntax)
+    , _enuEnumvalue :: !(Maybe [EnumValue])
+    , _enuName :: !(Maybe Text)
+    , _enuOptions :: !(Maybe [Option])
+    , _enuSyntax :: !(Maybe EnumSyntax)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Enum' with the minimum fields required to make a request.
@@ -5426,7 +6211,7 @@ data Enum' = Enum''
 -- * 'enuSyntax'
 enum
     :: Enum'
-enum =
+enum = 
     Enum''
     { _enuSourceContext = Nothing
     , _enuEnumvalue = Nothing
@@ -5514,7 +6299,7 @@ data Logging = Logging'
 -- * 'lConsumerDestinations'
 logging
     :: Logging
-logging =
+logging = 
     Logging'
     { _lProducerDestinations = Nothing
     , _lConsumerDestinations = Nothing
@@ -5573,7 +6358,7 @@ newtype ConfigRef = ConfigRef'
 -- * 'crName'
 configRef
     :: ConfigRef
-configRef =
+configRef = 
     ConfigRef'
     { _crName = Nothing
     }
@@ -5609,7 +6394,7 @@ data GenerateConfigReportRequest = GenerateConfigReportRequest'
 -- * 'gcrrNewConfig'
 generateConfigReportRequest
     :: GenerateConfigReportRequest
-generateConfigReportRequest =
+generateConfigReportRequest = 
     GenerateConfigReportRequest'
     { _gcrrOldConfig = Nothing
     , _gcrrNewConfig = Nothing
@@ -5647,17 +6432,125 @@ instance ToJSON GenerateConfigReportRequest where
                  [("oldConfig" .=) <$> _gcrrOldConfig,
                   ("newConfig" .=) <$> _gcrrNewConfig])
 
+--
+-- /See:/ 'sourceInfoSourceFilesItem' smart constructor.
+newtype SourceInfoSourceFilesItem = SourceInfoSourceFilesItem'
+    { _sisfiAddtional :: HashMap Text JSONValue
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SourceInfoSourceFilesItem' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sisfiAddtional'
+sourceInfoSourceFilesItem
+    :: HashMap Text JSONValue -- ^ 'sisfiAddtional'
+    -> SourceInfoSourceFilesItem
+sourceInfoSourceFilesItem pSisfiAddtional_ = 
+    SourceInfoSourceFilesItem'
+    { _sisfiAddtional = _Coerce # pSisfiAddtional_
+    }
+
+-- | Properties of the object. Contains field \'type with type URL.
+sisfiAddtional :: Lens' SourceInfoSourceFilesItem (HashMap Text JSONValue)
+sisfiAddtional
+  = lens _sisfiAddtional
+      (\ s a -> s{_sisfiAddtional = a})
+      . _Coerce
+
+instance FromJSON SourceInfoSourceFilesItem where
+        parseJSON
+          = withObject "SourceInfoSourceFilesItem"
+              (\ o ->
+                 SourceInfoSourceFilesItem' <$> (parseJSONObject o))
+
+instance ToJSON SourceInfoSourceFilesItem where
+        toJSON = toJSON . _sisfiAddtional
+
+-- | Quota configuration helps to achieve fairness and budgeting in service
+-- usage. The quota configuration works this way: - The service
+-- configuration defines a set of metrics. - For API calls, the
+-- quota.metric_rules maps methods to metrics with corresponding costs. -
+-- The quota.limits defines limits on the metrics, which will be used for
+-- quota checks at runtime. An example quota configuration in yaml format:
+-- quota: - name: apiWriteQpsPerProject metric:
+-- library.googleapis.com\/write_calls unit: \"1\/min\/{project}\" # rate
+-- limit for consumer projects values: STANDARD: 10000 # The metric rules
+-- bind all methods to the read_calls metric, # except for the UpdateBook
+-- and DeleteBook methods. These two methods # are mapped to the
+-- write_calls metric, with the UpdateBook method # consuming at twice rate
+-- as the DeleteBook method. metric_rules: - selector: \"*\" metric_costs:
+-- library.googleapis.com\/read_calls: 1 - selector:
+-- google.example.library.v1.LibraryService.UpdateBook metric_costs:
+-- library.googleapis.com\/write_calls: 2 - selector:
+-- google.example.library.v1.LibraryService.DeleteBook metric_costs:
+-- library.googleapis.com\/write_calls: 1 Corresponding Metric definition:
+-- metrics: - name: library.googleapis.com\/read_calls display_name: Read
+-- requests metric_kind: DELTA value_type: INT64 - name:
+-- library.googleapis.com\/write_calls display_name: Write requests
+-- metric_kind: DELTA value_type: INT64
+--
+-- /See:/ 'quota' smart constructor.
+data Quota = Quota'
+    { _qLimits :: !(Maybe [QuotaLimit])
+    , _qMetricRules :: !(Maybe [MetricRule])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Quota' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qLimits'
+--
+-- * 'qMetricRules'
+quota
+    :: Quota
+quota = 
+    Quota'
+    { _qLimits = Nothing
+    , _qMetricRules = Nothing
+    }
+
+-- | List of \`QuotaLimit\` definitions for the service.
+qLimits :: Lens' Quota [QuotaLimit]
+qLimits
+  = lens _qLimits (\ s a -> s{_qLimits = a}) . _Default
+      . _Coerce
+
+-- | List of \`MetricRule\` definitions, each one mapping a selected method
+-- to one or more metrics.
+qMetricRules :: Lens' Quota [MetricRule]
+qMetricRules
+  = lens _qMetricRules (\ s a -> s{_qMetricRules = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON Quota where
+        parseJSON
+          = withObject "Quota"
+              (\ o ->
+                 Quota' <$>
+                   (o .:? "limits" .!= mempty) <*>
+                     (o .:? "metricRules" .!= mempty))
+
+instance ToJSON Quota where
+        toJSON Quota'{..}
+          = object
+              (catMaybes
+                 [("limits" .=) <$> _qLimits,
+                  ("metricRules" .=) <$> _qMetricRules])
+
 -- | \`HttpRule\` defines the mapping of an RPC method to one or more HTTP
--- REST APIs. The mapping determines what portions of the request message
--- are populated from the path, query parameters, or body of the HTTP
--- request. The mapping is typically specified as an \`google.api.http\`
--- annotation, see \"google\/api\/annotations.proto\" for details. The
--- mapping consists of a field specifying the path template and method
--- kind. The path template can refer to fields in the request message, as
--- in the example below which describes a REST GET operation on a resource
--- collection of messages: service Messaging { rpc
--- GetMessage(GetMessageRequest) returns (Message) { option
--- (google.api.http).get =
+-- REST API methods. The mapping specifies how different portions of the
+-- RPC request message are mapped to URL path, URL query parameters, and
+-- HTTP request body. The mapping is typically specified as an
+-- \`google.api.http\` annotation on the RPC method, see
+-- \"google\/api\/annotations.proto\" for details. The mapping consists of
+-- a field specifying the path template and method kind. The path template
+-- can refer to fields in the request message, as in the example below
+-- which describes a REST GET operation on a resource collection of
+-- messages: service Messaging { rpc GetMessage(GetMessageRequest) returns
+-- (Message) { option (google.api.http).get =
 -- \"\/v1\/messages\/{message_id}\/{sub.subfield}\"; } } message
 -- GetMessageRequest { message SubMessage { string subfield = 1; } string
 -- message_id = 1; \/\/ mapped to the URL SubMessage sub = 2; \/\/
@@ -5674,12 +6567,14 @@ instance ToJSON GenerateConfigReportRequest where
 -- be repeated and must have a primitive (non-message) type. Any fields in
 -- the request message which are not bound by the path pattern
 -- automatically become (optional) HTTP query parameters. Assume the
--- following definition of the request message: message GetMessageRequest {
--- message SubMessage { string subfield = 1; } string message_id = 1; \/\/
--- mapped to the URL int64 revision = 2; \/\/ becomes a parameter
--- SubMessage sub = 3; \/\/ \`sub.subfield\` becomes a parameter } This
--- enables a HTTP JSON to RPC mapping as below: HTTP | RPC -----|-----
--- \`GET \/v1\/messages\/123456?revision=2&sub.subfield=foo\` |
+-- following definition of the request message: service Messaging { rpc
+-- GetMessage(GetMessageRequest) returns (Message) { option
+-- (google.api.http).get = \"\/v1\/messages\/{message_id}\"; } } message
+-- GetMessageRequest { message SubMessage { string subfield = 1; } string
+-- message_id = 1; \/\/ mapped to the URL int64 revision = 2; \/\/ becomes
+-- a parameter SubMessage sub = 3; \/\/ \`sub.subfield\` becomes a
+-- parameter } This enables a HTTP JSON to RPC mapping as below: HTTP | RPC
+-- -----|----- \`GET \/v1\/messages\/123456?revision=2&sub.subfield=foo\` |
 -- \`GetMessage(message_id: \"123456\" revision: 2 sub:
 -- SubMessage(subfield: \"foo\"))\` Note that fields which are mapped to
 -- HTTP parameters must have a primitive type or a repeated primitive type.
@@ -5724,48 +6619,54 @@ instance ToJSON GenerateConfigReportRequest where
 -- message_id: \"123456\")\` # Rules for HTTP mapping The rules for mapping
 -- HTTP path, query parameters, and body fields to the request message are
 -- as follows: 1. The \`body\` field specifies either \`*\` or a field
--- path, or is omitted. If omitted, it assumes there is no HTTP body. 2.
--- Leaf fields (recursive expansion of nested messages in the request) can
--- be classified into three types: (a) Matched in the URL template. (b)
--- Covered by body (if body is \`*\`, everything except (a) fields; else
--- everything under the body field) (c) All other fields. 3. URL query
--- parameters found in the HTTP request are mapped to (c) fields. 4. Any
--- body sent with an HTTP request can contain only (b) fields. The syntax
--- of the path template is as follows: Template = \"\/\" Segments [ Verb ]
--- ; Segments = Segment { \"\/\" Segment } ; Segment = \"*\" | \"**\" |
--- LITERAL | Variable ; Variable = \"{\" FieldPath [ \"=\" Segments ] \"}\"
--- ; FieldPath = IDENT { \".\" IDENT } ; Verb = \":\" LITERAL ; The syntax
--- \`*\` matches a single path segment. It follows the semantics of [RFC
+-- path, or is omitted. If omitted, it indicates there is no HTTP request
+-- body. 2. Leaf fields (recursive expansion of nested messages in the
+-- request) can be classified into three types: (a) Matched in the URL
+-- template. (b) Covered by body (if body is \`*\`, everything except (a)
+-- fields; else everything under the body field) (c) All other fields. 3.
+-- URL query parameters found in the HTTP request are mapped to (c) fields.
+-- 4. Any body sent with an HTTP request can contain only (b) fields. The
+-- syntax of the path template is as follows: Template = \"\/\" Segments [
+-- Verb ] ; Segments = Segment { \"\/\" Segment } ; Segment = \"*\" |
+-- \"**\" | LITERAL | Variable ; Variable = \"{\" FieldPath [ \"=\"
+-- Segments ] \"}\" ; FieldPath = IDENT { \".\" IDENT } ; Verb = \":\"
+-- LITERAL ; The syntax \`*\` matches a single path segment. The syntax
+-- \`**\` matches zero or more path segments, which must be the last part
+-- of the path except the \`Verb\`. The syntax \`LITERAL\` matches literal
+-- text in the path. The syntax \`Variable\` matches part of the URL path
+-- as specified by its template. A variable template must not contain other
+-- variables. If a variable matches a single path segment, its template may
+-- be omitted, e.g. \`{var}\` is equivalent to \`{var=*}\`. If a variable
+-- contains exactly one path segment, such as \`\"{var}\"\` or
+-- \`\"{var=*}\"\`, when such a variable is expanded into a URL path, all
+-- characters except \`[-_.~0-9a-zA-Z]\` are percent-encoded. Such
+-- variables show up in the Discovery Document as \`{var}\`. If a variable
+-- contains one or more path segments, such as \`\"{var=foo\/*}\"\` or
+-- \`\"{var=**}\"\`, when such a variable is expanded into a URL path, all
+-- characters except \`[-_.~\/0-9a-zA-Z]\` are percent-encoded. Such
+-- variables show up in the Discovery Document as \`{+var}\`. NOTE: While
+-- the single segment variable matches the semantics of [RFC
 -- 6570](https:\/\/tools.ietf.org\/html\/rfc6570) Section 3.2.2 Simple
--- String Expansion. The syntax \`**\` matches zero or more path segments.
--- It follows the semantics of [RFC
--- 6570](https:\/\/tools.ietf.org\/html\/rfc6570) Section 3.2.3 Reserved
--- Expansion. NOTE: it must be the last segment in the path except the
--- Verb. The syntax \`LITERAL\` matches literal text in the URL path. The
--- syntax \`Variable\` matches the entire path as specified by its
--- template; this nested template must not contain further variables. If a
--- variable matches a single path segment, its template may be omitted,
--- e.g. \`{var}\` is equivalent to \`{var=*}\`. NOTE: the field paths in
--- variables and in the \`body\` must not refer to repeated fields or map
--- fields. Use CustomHttpPattern to specify any HTTP method that is not
--- included in the \`pattern\` field, such as HEAD, or \"*\" to leave the
--- HTTP method unspecified for a given URL path rule. The wild-card rule is
--- useful for services that provide content to Web (HTML) clients.
+-- String Expansion, the multi segment variable **does not** match RFC 6570
+-- Reserved Expansion. The reason is that the Reserved Expansion does not
+-- expand special characters like \`?\` and \`#\`, which would lead to
+-- invalid URLs. NOTE: the field paths in variables and in the \`body\`
+-- must not refer to repeated fields or map fields.
 --
 -- /See:/ 'hTTPRule' smart constructor.
 data HTTPRule = HTTPRule'
-    { _httprMediaUpload        :: !(Maybe MediaUpload')
-    , _httprSelector           :: !(Maybe Text)
-    , _httprPost               :: !(Maybe Text)
-    , _httprMediaDownload      :: !(Maybe MediaDownload')
-    , _httprBody               :: !(Maybe Text)
-    , _httprCustom             :: !(Maybe CustomHTTPPattern)
-    , _httprResponseBody       :: !(Maybe Text)
-    , _httprPatch              :: !(Maybe Text)
-    , _httprGet                :: !(Maybe Text)
+    { _httprMediaUpload :: !(Maybe MediaUpload')
+    , _httprSelector :: !(Maybe Text)
+    , _httprPost :: !(Maybe Text)
+    , _httprMediaDownload :: !(Maybe MediaDownload')
+    , _httprBody :: !(Maybe Text)
+    , _httprCustom :: !(Maybe CustomHTTPPattern)
+    , _httprResponseBody :: !(Maybe Text)
+    , _httprPatch :: !(Maybe Text)
+    , _httprGet :: !(Maybe Text)
     , _httprAdditionalBindings :: !(Maybe [HTTPRule])
-    , _httprDelete             :: !(Maybe Text)
-    , _httprPut                :: !(Maybe Text)
+    , _httprDelete :: !(Maybe Text)
+    , _httprPut :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HTTPRule' with the minimum fields required to make a request.
@@ -5797,7 +6698,7 @@ data HTTPRule = HTTPRule'
 -- * 'httprPut'
 hTTPRule
     :: HTTPRule
-hTTPRule =
+hTTPRule = 
     HTTPRule'
     { _httprMediaUpload = Nothing
     , _httprSelector = Nothing
@@ -5813,8 +6714,9 @@ hTTPRule =
     , _httprPut = Nothing
     }
 
--- | Do not use this. For media support, add instead
--- [][google.bytestream.RestByteStream] as an API to your configuration.
+-- | Use this only for Scotty Requests. Do not use this for media support
+-- using Bytestream, add instead [][google.bytestream.RestByteStream] as an
+-- API to your configuration for Bytestream methods.
 httprMediaUpload :: Lens' HTTPRule (Maybe MediaUpload')
 httprMediaUpload
   = lens _httprMediaUpload
@@ -5832,7 +6734,8 @@ httprPost :: Lens' HTTPRule (Maybe Text)
 httprPost
   = lens _httprPost (\ s a -> s{_httprPost = a})
 
--- | Do not use this. For media support, add instead
+-- | Use this only for Scotty Requests. Do not use this for bytestream
+-- methods. For media support, add instead
 -- [][google.bytestream.RestByteStream] as an API to your configuration.
 httprMediaDownload :: Lens' HTTPRule (Maybe MediaDownload')
 httprMediaDownload
@@ -5847,7 +6750,10 @@ httprBody :: Lens' HTTPRule (Maybe Text)
 httprBody
   = lens _httprBody (\ s a -> s{_httprBody = a})
 
--- | Custom pattern is used for defining custom verbs.
+-- | The custom pattern is used for specifying an HTTP method that is not
+-- included in the \`pattern\` field, such as HEAD, or \"*\" to leave the
+-- HTTP method unspecified for this rule. The wild-card rule is useful for
+-- services that provide content to Web (HTML) clients.
 httprCustom :: Lens' HTTPRule (Maybe CustomHTTPPattern)
 httprCustom
   = lens _httprCustom (\ s a -> s{_httprCustom = a})
@@ -5947,7 +6853,7 @@ newtype OperationResponse = OperationResponse'
 operationResponse
     :: HashMap Text JSONValue -- ^ 'orAddtional'
     -> OperationResponse
-operationResponse pOrAddtional_ =
+operationResponse pOrAddtional_ = 
     OperationResponse'
     { _orAddtional = _Coerce # pOrAddtional_
     }
@@ -5966,88 +6872,17 @@ instance FromJSON OperationResponse where
 instance ToJSON OperationResponse where
         toJSON = toJSON . _orAddtional
 
--- | Specifies what kind of log the caller must write Increment a streamz
--- counter with the specified metric and field names. Metric names should
--- start with a \'\/\', generally be lowercase-only, and end in \"_count\".
--- Field names should not contain an initial slash. The actual exported
--- metric names will have \"\/iam\/policy\" prepended. Field names
--- correspond to IAM request parameters and field values are their
--- respective values. At present the only supported field names are -
--- \"iam_principal\", corresponding to IAMContext.principal; - \"\" (empty
--- string), resulting in one aggretated counter with no field. Examples:
--- counter { metric: \"\/debug_access_count\" field: \"iam_principal\" }
--- ==> increment counter \/iam\/policy\/backend_debug_access_count
--- {iam_principal=[value of IAMContext.principal]} At this time we do not
--- support: * multiple field names (though this may be supported in the
--- future) * decrementing the counter * incrementing it by anything other
--- than 1
---
--- /See:/ 'logConfig' smart constructor.
-data LogConfig = LogConfig'
-    { _lcCloudAudit :: !(Maybe CloudAuditOptions)
-    , _lcDataAccess :: !(Maybe DataAccessOptions)
-    , _lcCounter    :: !(Maybe CounterOptions)
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'LogConfig' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'lcCloudAudit'
---
--- * 'lcDataAccess'
---
--- * 'lcCounter'
-logConfig
-    :: LogConfig
-logConfig =
-    LogConfig'
-    { _lcCloudAudit = Nothing
-    , _lcDataAccess = Nothing
-    , _lcCounter = Nothing
-    }
-
--- | Cloud audit options.
-lcCloudAudit :: Lens' LogConfig (Maybe CloudAuditOptions)
-lcCloudAudit
-  = lens _lcCloudAudit (\ s a -> s{_lcCloudAudit = a})
-
--- | Data access options.
-lcDataAccess :: Lens' LogConfig (Maybe DataAccessOptions)
-lcDataAccess
-  = lens _lcDataAccess (\ s a -> s{_lcDataAccess = a})
-
--- | Counter options.
-lcCounter :: Lens' LogConfig (Maybe CounterOptions)
-lcCounter
-  = lens _lcCounter (\ s a -> s{_lcCounter = a})
-
-instance FromJSON LogConfig where
-        parseJSON
-          = withObject "LogConfig"
-              (\ o ->
-                 LogConfig' <$>
-                   (o .:? "cloudAudit") <*> (o .:? "dataAccess") <*>
-                     (o .:? "counter"))
-
-instance ToJSON LogConfig where
-        toJSON LogConfig'{..}
-          = object
-              (catMaybes
-                 [("cloudAudit" .=) <$> _lcCloudAudit,
-                  ("dataAccess" .=) <$> _lcDataAccess,
-                  ("counter" .=) <$> _lcCounter])
-
 -- | Configuration for an anthentication provider, including support for
 -- [JSON Web Token
 -- (JWT)](https:\/\/tools.ietf.org\/html\/draft-ietf-oauth-json-web-token-32).
 --
 -- /See:/ 'authProvider' smart constructor.
 data AuthProvider = AuthProvider'
-    { _apJWKsURI   :: !(Maybe Text)
+    { _apJWKsURI :: !(Maybe Text)
     , _apAudiences :: !(Maybe Text)
-    , _apId        :: !(Maybe Text)
-    , _apIssuer    :: !(Maybe Text)
+    , _apId :: !(Maybe Text)
+    , _apAuthorizationURL :: !(Maybe Text)
+    , _apIssuer :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AuthProvider' with the minimum fields required to make a request.
@@ -6060,14 +6895,17 @@ data AuthProvider = AuthProvider'
 --
 -- * 'apId'
 --
+-- * 'apAuthorizationURL'
+--
 -- * 'apIssuer'
 authProvider
     :: AuthProvider
-authProvider =
+authProvider = 
     AuthProvider'
     { _apJWKsURI = Nothing
     , _apAudiences = Nothing
     , _apId = Nothing
+    , _apAuthorizationURL = Nothing
     , _apIssuer = Nothing
     }
 
@@ -6102,6 +6940,13 @@ apAudiences
 apId :: Lens' AuthProvider (Maybe Text)
 apId = lens _apId (\ s a -> s{_apId = a})
 
+-- | Redirect URL if JWT token is required but no present or is expired.
+-- Implement authorizationUrl of securityDefinitions in OpenAPI spec.
+apAuthorizationURL :: Lens' AuthProvider (Maybe Text)
+apAuthorizationURL
+  = lens _apAuthorizationURL
+      (\ s a -> s{_apAuthorizationURL = a})
+
 -- | Identifies the principal that issued the JWT. See
 -- https:\/\/tools.ietf.org\/html\/draft-ietf-oauth-json-web-token-32#section-4.1.1
 -- Usually a URL or an email address. Example:
@@ -6117,6 +6962,7 @@ instance FromJSON AuthProvider where
                  AuthProvider' <$>
                    (o .:? "jwksUri") <*> (o .:? "audiences") <*>
                      (o .:? "id")
+                     <*> (o .:? "authorizationUrl")
                      <*> (o .:? "issuer"))
 
 instance ToJSON AuthProvider where
@@ -6125,14 +6971,17 @@ instance ToJSON AuthProvider where
               (catMaybes
                  [("jwksUri" .=) <$> _apJWKsURI,
                   ("audiences" .=) <$> _apAudiences,
-                  ("id" .=) <$> _apId, ("issuer" .=) <$> _apIssuer])
+                  ("id" .=) <$> _apId,
+                  ("authorizationUrl" .=) <$> _apAuthorizationURL,
+                  ("issuer" .=) <$> _apIssuer])
 
 -- | Associates \`members\` with a \`role\`.
 --
 -- /See:/ 'binding' smart constructor.
 data Binding = Binding'
     { _bMembers :: !(Maybe [Text])
-    , _bRole    :: !(Maybe Text)
+    , _bRole :: !(Maybe Text)
+    , _bCondition :: !(Maybe Expr)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Binding' with the minimum fields required to make a request.
@@ -6142,12 +6991,15 @@ data Binding = Binding'
 -- * 'bMembers'
 --
 -- * 'bRole'
+--
+-- * 'bCondition'
 binding
     :: Binding
-binding =
+binding = 
     Binding'
     { _bMembers = Nothing
     , _bRole = Nothing
+    , _bCondition = Nothing
     }
 
 -- | Specifies the identities requesting access for a Cloud Platform
@@ -6175,28 +7027,38 @@ bMembers
 bRole :: Lens' Binding (Maybe Text)
 bRole = lens _bRole (\ s a -> s{_bRole = a})
 
+-- | The condition that is associated with this binding. NOTE: an unsatisfied
+-- condition will not allow user access via current binding. Different
+-- bindings, including their conditions, are examined independently. This
+-- field is GOOGLE_INTERNAL.
+bCondition :: Lens' Binding (Maybe Expr)
+bCondition
+  = lens _bCondition (\ s a -> s{_bCondition = a})
+
 instance FromJSON Binding where
         parseJSON
           = withObject "Binding"
               (\ o ->
                  Binding' <$>
-                   (o .:? "members" .!= mempty) <*> (o .:? "role"))
+                   (o .:? "members" .!= mempty) <*> (o .:? "role") <*>
+                     (o .:? "condition"))
 
 instance ToJSON Binding where
         toJSON Binding'{..}
           = object
               (catMaybes
                  [("members" .=) <$> _bMembers,
-                  ("role" .=) <$> _bRole])
+                  ("role" .=) <$> _bRole,
+                  ("condition" .=) <$> _bCondition])
 
 -- | A context rule provides information about the context for an individual
 -- API element.
 --
 -- /See:/ 'contextRule' smart constructor.
 data ContextRule = ContextRule'
-    { _crSelector  :: !(Maybe Text)
+    { _crSelector :: !(Maybe Text)
     , _crRequested :: !(Maybe [Text])
-    , _crProvided  :: !(Maybe [Text])
+    , _crProvided :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContextRule' with the minimum fields required to make a request.
@@ -6210,7 +7072,7 @@ data ContextRule = ContextRule'
 -- * 'crProvided'
 contextRule
     :: ContextRule
-contextRule =
+contextRule = 
     ContextRule'
     { _crSelector = Nothing
     , _crRequested = Nothing

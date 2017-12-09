@@ -33,10 +33,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.APKs.Upload
     -- * Request Lenses
     , eapkuPackageName
     , eapkuEditId
+    , eapkuFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.apks.upload@ method which the
 -- 'EditsAPKsUpload' request conforms to.
@@ -48,7 +49,8 @@ type EditsAPKsUploadResource =
              "edits" :>
                Capture "editId" Text :>
                  "apks" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] APK
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] APK
        :<|>
        "upload" :>
          "androidpublisher" :>
@@ -58,15 +60,17 @@ type EditsAPKsUploadResource =
                  "edits" :>
                    Capture "editId" Text :>
                      "apks" :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" AltMedia :>
-                           AltMedia :> Post '[JSON] APK
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" AltMedia :>
+                             AltMedia :> Post '[JSON] APK
 
 --
 -- /See:/ 'editsAPKsUpload' smart constructor.
 data EditsAPKsUpload = EditsAPKsUpload'
     { _eapkuPackageName :: !Text
-    , _eapkuEditId      :: !Text
+    , _eapkuEditId :: !Text
+    , _eapkuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsAPKsUpload' with the minimum fields required to make a request.
@@ -76,14 +80,17 @@ data EditsAPKsUpload = EditsAPKsUpload'
 -- * 'eapkuPackageName'
 --
 -- * 'eapkuEditId'
+--
+-- * 'eapkuFields'
 editsAPKsUpload
     :: Text -- ^ 'eapkuPackageName'
     -> Text -- ^ 'eapkuEditId'
     -> EditsAPKsUpload
-editsAPKsUpload pEapkuPackageName_ pEapkuEditId_ =
+editsAPKsUpload pEapkuPackageName_ pEapkuEditId_ = 
     EditsAPKsUpload'
     { _eapkuPackageName = pEapkuPackageName_
     , _eapkuEditId = pEapkuEditId_
+    , _eapkuFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -98,12 +105,18 @@ eapkuEditId :: Lens' EditsAPKsUpload Text
 eapkuEditId
   = lens _eapkuEditId (\ s a -> s{_eapkuEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eapkuFields :: Lens' EditsAPKsUpload (Maybe Text)
+eapkuFields
+  = lens _eapkuFields (\ s a -> s{_eapkuFields = a})
+
 instance GoogleRequest EditsAPKsUpload where
         type Rs EditsAPKsUpload = APK
         type Scopes EditsAPKsUpload =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsAPKsUpload'{..}
-          = go _eapkuPackageName _eapkuEditId (Just AltJSON)
+          = go _eapkuPackageName _eapkuEditId _eapkuFields
+              (Just AltJSON)
               androidPublisherService
           where go :<|> _
                   = buildClient
@@ -116,7 +129,8 @@ instance GoogleRequest (MediaUpload EditsAPKsUpload)
         type Scopes (MediaUpload EditsAPKsUpload) =
              Scopes EditsAPKsUpload
         requestClient (MediaUpload EditsAPKsUpload'{..} body)
-          = go _eapkuPackageName _eapkuEditId (Just AltJSON)
+          = go _eapkuPackageName _eapkuEditId _eapkuFields
+              (Just AltJSON)
               (Just AltMedia)
               body
               androidPublisherService

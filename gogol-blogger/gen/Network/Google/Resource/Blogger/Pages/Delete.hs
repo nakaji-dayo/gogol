@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Pages.Delete
     -- * Request Lenses
     , pddBlogId
     , pddPageId
+    , pddFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.delete@ method which the
 -- 'PagesDelete' request conforms to.
@@ -49,7 +50,8 @@ type PagesDeleteResource =
            Capture "blogId" Text :>
              "pages" :>
                Capture "pageId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a page by ID.
 --
@@ -57,6 +59,7 @@ type PagesDeleteResource =
 data PagesDelete = PagesDelete'
     { _pddBlogId :: !Text
     , _pddPageId :: !Text
+    , _pddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PagesDelete = PagesDelete'
 -- * 'pddBlogId'
 --
 -- * 'pddPageId'
+--
+-- * 'pddFields'
 pagesDelete
     :: Text -- ^ 'pddBlogId'
     -> Text -- ^ 'pddPageId'
     -> PagesDelete
-pagesDelete pPddBlogId_ pPddPageId_ =
+pagesDelete pPddBlogId_ pPddPageId_ = 
     PagesDelete'
     { _pddBlogId = pPddBlogId_
     , _pddPageId = pPddPageId_
+    , _pddFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -86,12 +92,17 @@ pddPageId :: Lens' PagesDelete Text
 pddPageId
   = lens _pddPageId (\ s a -> s{_pddPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pddFields :: Lens' PagesDelete (Maybe Text)
+pddFields
+  = lens _pddFields (\ s a -> s{_pddFields = a})
+
 instance GoogleRequest PagesDelete where
         type Rs PagesDelete = ()
         type Scopes PagesDelete =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PagesDelete'{..}
-          = go _pddBlogId _pddPageId (Just AltJSON)
+          = go _pddBlogId _pddPageId _pddFields (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PagesDeleteResource)

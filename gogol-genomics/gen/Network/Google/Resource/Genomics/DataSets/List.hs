@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.DataSets.List
     , dslPageToken
     , dslProjectId
     , dslPageSize
+    , dslFields
     , dslCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.list@ method which the
 -- 'DataSetsList' request conforms to.
@@ -65,8 +66,9 @@ type DataSetsListResource =
                        QueryParam "projectId" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListDataSetsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListDataSetsResponse
 
 -- | Lists datasets within a project. For the definitions of datasets and
 -- other genomics resources, see [Fundamentals of Google
@@ -74,16 +76,17 @@ type DataSetsListResource =
 --
 -- /See:/ 'dataSetsList' smart constructor.
 data DataSetsList = DataSetsList'
-    { _dslXgafv          :: !(Maybe Xgafv)
+    { _dslXgafv :: !(Maybe Xgafv)
     , _dslUploadProtocol :: !(Maybe Text)
-    , _dslPp             :: !Bool
-    , _dslAccessToken    :: !(Maybe Text)
-    , _dslUploadType     :: !(Maybe Text)
-    , _dslBearerToken    :: !(Maybe Text)
-    , _dslPageToken      :: !(Maybe Text)
-    , _dslProjectId      :: !(Maybe Text)
-    , _dslPageSize       :: !(Maybe (Textual Int32))
-    , _dslCallback       :: !(Maybe Text)
+    , _dslPp :: !Bool
+    , _dslAccessToken :: !(Maybe Text)
+    , _dslUploadType :: !(Maybe Text)
+    , _dslBearerToken :: !(Maybe Text)
+    , _dslPageToken :: !(Maybe Text)
+    , _dslProjectId :: !(Maybe Text)
+    , _dslPageSize :: !(Maybe (Textual Int32))
+    , _dslFields :: !(Maybe Text)
+    , _dslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsList' with the minimum fields required to make a request.
@@ -108,10 +111,12 @@ data DataSetsList = DataSetsList'
 --
 -- * 'dslPageSize'
 --
+-- * 'dslFields'
+--
 -- * 'dslCallback'
 dataSetsList
     :: DataSetsList
-dataSetsList =
+dataSetsList = 
     DataSetsList'
     { _dslXgafv = Nothing
     , _dslUploadProtocol = Nothing
@@ -122,6 +127,7 @@ dataSetsList =
     , _dslPageToken = Nothing
     , _dslProjectId = Nothing
     , _dslPageSize = Nothing
+    , _dslFields = Nothing
     , _dslCallback = Nothing
     }
 
@@ -176,6 +182,11 @@ dslPageSize
   = lens _dslPageSize (\ s a -> s{_dslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dslFields :: Lens' DataSetsList (Maybe Text)
+dslFields
+  = lens _dslFields (\ s a -> s{_dslFields = a})
+
 -- | JSONP
 dslCallback :: Lens' DataSetsList (Maybe Text)
 dslCallback
@@ -196,6 +207,7 @@ instance GoogleRequest DataSetsList where
               _dslProjectId
               _dslPageSize
               _dslCallback
+              _dslFields
               (Just AltJSON)
               genomicsService
           where go

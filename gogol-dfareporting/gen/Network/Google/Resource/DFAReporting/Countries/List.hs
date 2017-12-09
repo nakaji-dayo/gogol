@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.Countries.List
 
     -- * Request Lenses
     , couProFileId
+    , couFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.countries.list@ method which the
 -- 'CountriesList' request conforms to.
 type CountriesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "countries" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] CountriesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] CountriesListResponse
 
 -- | Retrieves a list of countries.
 --
 -- /See:/ 'countriesList' smart constructor.
-newtype CountriesList = CountriesList'
-    { _couProFileId :: Textual Int64
+data CountriesList = CountriesList'
+    { _couProFileId :: !(Textual Int64)
+    , _couFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CountriesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype CountriesList = CountriesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'couProFileId'
+--
+-- * 'couFields'
 countriesList
     :: Int64 -- ^ 'couProFileId'
     -> CountriesList
-countriesList pCouProFileId_ =
+countriesList pCouProFileId_ = 
     CountriesList'
     { _couProFileId = _Coerce # pCouProFileId_
+    , _couFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,18 @@ couProFileId
   = lens _couProFileId (\ s a -> s{_couProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+couFields :: Lens' CountriesList (Maybe Text)
+couFields
+  = lens _couFields (\ s a -> s{_couFields = a})
+
 instance GoogleRequest CountriesList where
         type Rs CountriesList = CountriesListResponse
         type Scopes CountriesList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CountriesList'{..}
-          = go _couProFileId (Just AltJSON) dFAReportingService
+          = go _couProFileId _couFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy CountriesListResource)
                       mempty

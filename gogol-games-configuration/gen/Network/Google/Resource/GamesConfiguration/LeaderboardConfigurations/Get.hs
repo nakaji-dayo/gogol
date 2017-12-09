@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Get
 
     -- * Request Lenses
     , lcgLeaderboardId
+    , lcgFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.leaderboardConfigurations.get@ method which the
 -- 'LeaderboardConfigurationsGet' request conforms to.
@@ -47,15 +48,17 @@ type LeaderboardConfigurationsGetResource =
        "v1configuration" :>
          "leaderboards" :>
            Capture "leaderboardId" Text :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] LeaderboardConfiguration
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] LeaderboardConfiguration
 
 -- | Retrieves the metadata of the leaderboard configuration with the given
 -- ID.
 --
 -- /See:/ 'leaderboardConfigurationsGet' smart constructor.
-newtype LeaderboardConfigurationsGet = LeaderboardConfigurationsGet'
-    { _lcgLeaderboardId :: Text
+data LeaderboardConfigurationsGet = LeaderboardConfigurationsGet'
+    { _lcgLeaderboardId :: !Text
+    , _lcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationsGet' with the minimum fields required to make a request.
@@ -63,12 +66,15 @@ newtype LeaderboardConfigurationsGet = LeaderboardConfigurationsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'lcgLeaderboardId'
+--
+-- * 'lcgFields'
 leaderboardConfigurationsGet
     :: Text -- ^ 'lcgLeaderboardId'
     -> LeaderboardConfigurationsGet
-leaderboardConfigurationsGet pLcgLeaderboardId_ =
+leaderboardConfigurationsGet pLcgLeaderboardId_ = 
     LeaderboardConfigurationsGet'
     { _lcgLeaderboardId = pLcgLeaderboardId_
+    , _lcgFields = Nothing
     }
 
 -- | The ID of the leaderboard.
@@ -77,6 +83,11 @@ lcgLeaderboardId
   = lens _lcgLeaderboardId
       (\ s a -> s{_lcgLeaderboardId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcgFields :: Lens' LeaderboardConfigurationsGet (Maybe Text)
+lcgFields
+  = lens _lcgFields (\ s a -> s{_lcgFields = a})
+
 instance GoogleRequest LeaderboardConfigurationsGet
          where
         type Rs LeaderboardConfigurationsGet =
@@ -84,7 +95,7 @@ instance GoogleRequest LeaderboardConfigurationsGet
         type Scopes LeaderboardConfigurationsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient LeaderboardConfigurationsGet'{..}
-          = go _lcgLeaderboardId (Just AltJSON)
+          = go _lcgLeaderboardId _lcgFields (Just AltJSON)
               gamesConfigurationService
           where go
                   = buildClient

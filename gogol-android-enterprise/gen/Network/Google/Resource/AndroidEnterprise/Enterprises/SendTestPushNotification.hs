@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Sends a test push notification to validate the EMM integration with the
+-- Sends a test notification to validate the EMM integration with the
 -- Google Cloud Pub\/Sub service for this enterprise.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.enterprises.sendTestPushNotification@.
@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.SendTestPushNotific
 
     -- * Request Lenses
     , estpnEnterpriseId
+    , estpnFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.sendTestPushNotification@ method which the
 -- 'EnterprisesSendTestPushNotification' request conforms to.
@@ -48,16 +49,18 @@ type EnterprisesSendTestPushNotificationResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "sendTestPushNotification" :>
-               QueryParam "alt" AltJSON :>
-                 Post '[JSON]
-                   EnterprisesSendTestPushNotificationResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Post '[JSON]
+                     EnterprisesSendTestPushNotificationResponse
 
--- | Sends a test push notification to validate the EMM integration with the
+-- | Sends a test notification to validate the EMM integration with the
 -- Google Cloud Pub\/Sub service for this enterprise.
 --
 -- /See:/ 'enterprisesSendTestPushNotification' smart constructor.
-newtype EnterprisesSendTestPushNotification = EnterprisesSendTestPushNotification'
-    { _estpnEnterpriseId :: Text
+data EnterprisesSendTestPushNotification = EnterprisesSendTestPushNotification'
+    { _estpnEnterpriseId :: !Text
+    , _estpnFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesSendTestPushNotification' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype EnterprisesSendTestPushNotification = EnterprisesSendTestPushNotificatio
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'estpnEnterpriseId'
+--
+-- * 'estpnFields'
 enterprisesSendTestPushNotification
     :: Text -- ^ 'estpnEnterpriseId'
     -> EnterprisesSendTestPushNotification
-enterprisesSendTestPushNotification pEstpnEnterpriseId_ =
+enterprisesSendTestPushNotification pEstpnEnterpriseId_ = 
     EnterprisesSendTestPushNotification'
     { _estpnEnterpriseId = pEstpnEnterpriseId_
+    , _estpnFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -78,6 +84,11 @@ estpnEnterpriseId :: Lens' EnterprisesSendTestPushNotification Text
 estpnEnterpriseId
   = lens _estpnEnterpriseId
       (\ s a -> s{_estpnEnterpriseId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+estpnFields :: Lens' EnterprisesSendTestPushNotification (Maybe Text)
+estpnFields
+  = lens _estpnFields (\ s a -> s{_estpnFields = a})
 
 instance GoogleRequest
          EnterprisesSendTestPushNotification where
@@ -87,7 +98,7 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient
           EnterprisesSendTestPushNotification'{..}
-          = go _estpnEnterpriseId (Just AltJSON)
+          = go _estpnEnterpriseId _estpnFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

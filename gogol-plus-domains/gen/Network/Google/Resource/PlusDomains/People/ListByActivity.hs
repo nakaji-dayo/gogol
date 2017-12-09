@@ -38,10 +38,11 @@ module Network.Google.Resource.PlusDomains.People.ListByActivity
     , plbaCollection
     , plbaPageToken
     , plbaMaxResults
+    , plbaFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.people.listByActivity@ method which the
 -- 'PeopleListByActivity' request conforms to.
@@ -55,7 +56,8 @@ type PeopleListByActivityResource =
                  :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Word32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] PeopleFeed
 
 -- | List all of the people in the specified collection for a particular
 -- activity.
@@ -64,8 +66,9 @@ type PeopleListByActivityResource =
 data PeopleListByActivity = PeopleListByActivity'
     { _plbaActivityId :: !Text
     , _plbaCollection :: !PeopleListByActivityCollection
-    , _plbaPageToken  :: !(Maybe Text)
+    , _plbaPageToken :: !(Maybe Text)
     , _plbaMaxResults :: !(Textual Word32)
+    , _plbaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleListByActivity' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data PeopleListByActivity = PeopleListByActivity'
 -- * 'plbaPageToken'
 --
 -- * 'plbaMaxResults'
+--
+-- * 'plbaFields'
 peopleListByActivity
     :: Text -- ^ 'plbaActivityId'
     -> PeopleListByActivityCollection -- ^ 'plbaCollection'
     -> PeopleListByActivity
-peopleListByActivity pPlbaActivityId_ pPlbaCollection_ =
+peopleListByActivity pPlbaActivityId_ pPlbaCollection_ = 
     PeopleListByActivity'
     { _plbaActivityId = pPlbaActivityId_
     , _plbaCollection = pPlbaCollection_
     , _plbaPageToken = Nothing
     , _plbaMaxResults = 20
+    , _plbaFields = Nothing
     }
 
 -- | The ID of the activity to get the list of people for.
@@ -120,6 +126,11 @@ plbaMaxResults
       (\ s a -> s{_plbaMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plbaFields :: Lens' PeopleListByActivity (Maybe Text)
+plbaFields
+  = lens _plbaFields (\ s a -> s{_plbaFields = a})
+
 instance GoogleRequest PeopleListByActivity where
         type Rs PeopleListByActivity = PeopleFeed
         type Scopes PeopleListByActivity =
@@ -128,6 +139,7 @@ instance GoogleRequest PeopleListByActivity where
         requestClient PeopleListByActivity'{..}
           = go _plbaActivityId _plbaCollection _plbaPageToken
               (Just _plbaMaxResults)
+              _plbaFields
               (Just AltJSON)
               plusDomainsService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.Filters.Delete
     -- * Request Lenses
     , usfdUserId
     , usfdId
+    , usfdFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.filters.delete@ method which the
 -- 'UsersSettingsFiltersDelete' request conforms to.
@@ -50,14 +51,16 @@ type UsersSettingsFiltersDeleteResource =
              "settings" :>
                "filters" :>
                  Capture "id" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a filter.
 --
 -- /See:/ 'usersSettingsFiltersDelete' smart constructor.
 data UsersSettingsFiltersDelete = UsersSettingsFiltersDelete'
     { _usfdUserId :: !Text
-    , _usfdId     :: !Text
+    , _usfdId :: !Text
+    , _usfdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsFiltersDelete' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersSettingsFiltersDelete = UsersSettingsFiltersDelete'
 -- * 'usfdUserId'
 --
 -- * 'usfdId'
+--
+-- * 'usfdFields'
 usersSettingsFiltersDelete
     :: Text -- ^ 'usfdId'
     -> UsersSettingsFiltersDelete
-usersSettingsFiltersDelete pUsfdId_ =
+usersSettingsFiltersDelete pUsfdId_ = 
     UsersSettingsFiltersDelete'
     { _usfdUserId = "me"
     , _usfdId = pUsfdId_
+    , _usfdFields = Nothing
     }
 
 -- | User\'s email address. The special value \"me\" can be used to indicate
@@ -86,13 +92,19 @@ usfdUserId
 usfdId :: Lens' UsersSettingsFiltersDelete Text
 usfdId = lens _usfdId (\ s a -> s{_usfdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usfdFields :: Lens' UsersSettingsFiltersDelete (Maybe Text)
+usfdFields
+  = lens _usfdFields (\ s a -> s{_usfdFields = a})
+
 instance GoogleRequest UsersSettingsFiltersDelete
          where
         type Rs UsersSettingsFiltersDelete = ()
         type Scopes UsersSettingsFiltersDelete =
              '["https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsFiltersDelete'{..}
-          = go _usfdUserId _usfdId (Just AltJSON) gmailService
+          = go _usfdUserId _usfdId _usfdFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersSettingsFiltersDeleteResource)

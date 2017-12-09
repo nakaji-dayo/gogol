@@ -41,16 +41,17 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.List
     , aglPageToken
     , aglSortField
     , aglMaxResults
+    , aglFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.list@ method which the
 -- 'AdvertiserGroupsList' request conforms to.
 type AdvertiserGroupsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
@@ -62,8 +63,9 @@ type AdvertiserGroupsListResource =
                        QueryParam "sortField" AdvertiserGroupsListSortField
                          :>
                          QueryParam "maxResults" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] AdvertiserGroupsListResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] AdvertiserGroupsListResponse
 
 -- | Retrieves a list of advertiser groups, possibly filtered. This method
 -- supports paging.
@@ -71,12 +73,13 @@ type AdvertiserGroupsListResource =
 -- /See:/ 'advertiserGroupsList' smart constructor.
 data AdvertiserGroupsList = AdvertiserGroupsList'
     { _aglSearchString :: !(Maybe Text)
-    , _aglIds          :: !(Maybe [Textual Int64])
-    , _aglProFileId    :: !(Textual Int64)
-    , _aglSortOrder    :: !(Maybe AdvertiserGroupsListSortOrder)
-    , _aglPageToken    :: !(Maybe Text)
-    , _aglSortField    :: !(Maybe AdvertiserGroupsListSortField)
-    , _aglMaxResults   :: !(Maybe (Textual Int32))
+    , _aglIds :: !(Maybe [Textual Int64])
+    , _aglProFileId :: !(Textual Int64)
+    , _aglSortOrder :: !AdvertiserGroupsListSortOrder
+    , _aglPageToken :: !(Maybe Text)
+    , _aglSortField :: !AdvertiserGroupsListSortField
+    , _aglMaxResults :: !(Textual Int32)
+    , _aglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsList' with the minimum fields required to make a request.
@@ -96,18 +99,21 @@ data AdvertiserGroupsList = AdvertiserGroupsList'
 -- * 'aglSortField'
 --
 -- * 'aglMaxResults'
+--
+-- * 'aglFields'
 advertiserGroupsList
     :: Int64 -- ^ 'aglProFileId'
     -> AdvertiserGroupsList
-advertiserGroupsList pAglProFileId_ =
+advertiserGroupsList pAglProFileId_ = 
     AdvertiserGroupsList'
     { _aglSearchString = Nothing
     , _aglIds = Nothing
     , _aglProFileId = _Coerce # pAglProFileId_
-    , _aglSortOrder = Nothing
+    , _aglSortOrder = AGLSOAscending
     , _aglPageToken = Nothing
-    , _aglSortField = Nothing
-    , _aglMaxResults = Nothing
+    , _aglSortField = AGLSFID
+    , _aglMaxResults = 1000
+    , _aglFields = Nothing
     }
 
 -- | Allows searching for objects by name or ID. Wildcards (*) are allowed.
@@ -135,8 +141,8 @@ aglProFileId
   = lens _aglProFileId (\ s a -> s{_aglProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-aglSortOrder :: Lens' AdvertiserGroupsList (Maybe AdvertiserGroupsListSortOrder)
+-- | Order of sorted results.
+aglSortOrder :: Lens' AdvertiserGroupsList AdvertiserGroupsListSortOrder
 aglSortOrder
   = lens _aglSortOrder (\ s a -> s{_aglSortOrder = a})
 
@@ -146,16 +152,21 @@ aglPageToken
   = lens _aglPageToken (\ s a -> s{_aglPageToken = a})
 
 -- | Field by which to sort the list.
-aglSortField :: Lens' AdvertiserGroupsList (Maybe AdvertiserGroupsListSortField)
+aglSortField :: Lens' AdvertiserGroupsList AdvertiserGroupsListSortField
 aglSortField
   = lens _aglSortField (\ s a -> s{_aglSortField = a})
 
 -- | Maximum number of results to return.
-aglMaxResults :: Lens' AdvertiserGroupsList (Maybe Int32)
+aglMaxResults :: Lens' AdvertiserGroupsList Int32
 aglMaxResults
   = lens _aglMaxResults
       (\ s a -> s{_aglMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+aglFields :: Lens' AdvertiserGroupsList (Maybe Text)
+aglFields
+  = lens _aglFields (\ s a -> s{_aglFields = a})
 
 instance GoogleRequest AdvertiserGroupsList where
         type Rs AdvertiserGroupsList =
@@ -165,10 +176,11 @@ instance GoogleRequest AdvertiserGroupsList where
         requestClient AdvertiserGroupsList'{..}
           = go _aglProFileId _aglSearchString
               (_aglIds ^. _Default)
-              _aglSortOrder
+              (Just _aglSortOrder)
               _aglPageToken
-              _aglSortField
-              _aglMaxResults
+              (Just _aglSortField)
+              (Just _aglMaxResults)
+              _aglFields
               (Just AltJSON)
               dFAReportingService
           where go

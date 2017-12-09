@@ -35,10 +35,11 @@ module Network.Google.Resource.Discovery.APIs.List
     -- * Request Lenses
     , alPreferred
     , alName
+    , alFields
     ) where
 
-import           Network.Google.Discovery.Types
-import           Network.Google.Prelude
+import Network.Google.Discovery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @discovery.apis.list@ method which the
 -- 'APIsList' request conforms to.
@@ -48,14 +49,16 @@ type APIsListResource =
          "apis" :>
            QueryParam "preferred" Bool :>
              QueryParam "name" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] DirectoryList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] DirectoryList
 
 -- | Retrieve the list of APIs supported at this endpoint.
 --
 -- /See:/ 'apisList' smart constructor.
 data APIsList = APIsList'
     { _alPreferred :: !Bool
-    , _alName      :: !(Maybe Text)
+    , _alName :: !(Maybe Text)
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'APIsList' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data APIsList = APIsList'
 -- * 'alPreferred'
 --
 -- * 'alName'
+--
+-- * 'alFields'
 apisList
     :: APIsList
-apisList =
+apisList = 
     APIsList'
     { _alPreferred = False
     , _alName = Nothing
+    , _alFields = Nothing
     }
 
 -- | Return only the preferred version of an API.
@@ -82,11 +88,16 @@ alPreferred
 alName :: Lens' APIsList (Maybe Text)
 alName = lens _alName (\ s a -> s{_alName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' APIsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest APIsList where
         type Rs APIsList = DirectoryList
         type Scopes APIsList = '[]
         requestClient APIsList'{..}
-          = go (Just _alPreferred) _alName (Just AltJSON)
+          = go (Just _alPreferred) _alName _alFields
+              (Just AltJSON)
               discoveryService
           where go
                   = buildClient (Proxy :: Proxy APIsListResource)

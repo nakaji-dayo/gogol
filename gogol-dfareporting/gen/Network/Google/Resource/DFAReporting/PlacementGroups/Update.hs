@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.PlacementGroups.Update
     -- * Request Lenses
     , pguProFileId
     , pguPayload
+    , pguFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementGroups.update@ method which the
 -- 'PlacementGroupsUpdate' request conforms to.
 type PlacementGroupsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlacementGroup :>
-                   Put '[JSON] PlacementGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlacementGroup :>
+                     Put '[JSON] PlacementGroup
 
 -- | Updates an existing placement group.
 --
 -- /See:/ 'placementGroupsUpdate' smart constructor.
 data PlacementGroupsUpdate = PlacementGroupsUpdate'
     { _pguProFileId :: !(Textual Int64)
-    , _pguPayload   :: !PlacementGroup
+    , _pguPayload :: !PlacementGroup
+    , _pguFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroupsUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PlacementGroupsUpdate = PlacementGroupsUpdate'
 -- * 'pguProFileId'
 --
 -- * 'pguPayload'
+--
+-- * 'pguFields'
 placementGroupsUpdate
     :: Int64 -- ^ 'pguProFileId'
     -> PlacementGroup -- ^ 'pguPayload'
     -> PlacementGroupsUpdate
-placementGroupsUpdate pPguProFileId_ pPguPayload_ =
+placementGroupsUpdate pPguProFileId_ pPguPayload_ = 
     PlacementGroupsUpdate'
     { _pguProFileId = _Coerce # pPguProFileId_
     , _pguPayload = pPguPayload_
+    , _pguFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ pguPayload :: Lens' PlacementGroupsUpdate PlacementGroup
 pguPayload
   = lens _pguPayload (\ s a -> s{_pguPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pguFields :: Lens' PlacementGroupsUpdate (Maybe Text)
+pguFields
+  = lens _pguFields (\ s a -> s{_pguFields = a})
+
 instance GoogleRequest PlacementGroupsUpdate where
         type Rs PlacementGroupsUpdate = PlacementGroup
         type Scopes PlacementGroupsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementGroupsUpdate'{..}
-          = go _pguProFileId (Just AltJSON) _pguPayload
+          = go _pguProFileId _pguFields (Just AltJSON)
+              _pguPayload
               dFAReportingService
           where go
                   = buildClient

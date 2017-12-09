@@ -37,10 +37,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Resume
     , rRollingUpdate
     , rProject
     , rZone
+    , rFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.resume@ method which the
 -- 'RollingUpdatesResume' request conforms to.
@@ -54,7 +55,8 @@ type RollingUpdatesResumeResource =
                  "rollingUpdates" :>
                    Capture "rollingUpdate" Text :>
                      "resume" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Continues an update in PAUSED state. Has no effect if invoked when the
 -- state of the update is ROLLED_OUT.
@@ -62,8 +64,9 @@ type RollingUpdatesResumeResource =
 -- /See:/ 'rollingUpdatesResume' smart constructor.
 data RollingUpdatesResume = RollingUpdatesResume'
     { _rRollingUpdate :: !Text
-    , _rProject       :: !Text
-    , _rZone          :: !Text
+    , _rProject :: !Text
+    , _rZone :: !Text
+    , _rFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesResume' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data RollingUpdatesResume = RollingUpdatesResume'
 -- * 'rProject'
 --
 -- * 'rZone'
+--
+-- * 'rFields'
 rollingUpdatesResume
     :: Text -- ^ 'rRollingUpdate'
     -> Text -- ^ 'rProject'
     -> Text -- ^ 'rZone'
     -> RollingUpdatesResume
-rollingUpdatesResume pRRollingUpdate_ pRProject_ pRZone_ =
+rollingUpdatesResume pRRollingUpdate_ pRProject_ pRZone_ = 
     RollingUpdatesResume'
     { _rRollingUpdate = pRRollingUpdate_
     , _rProject = pRProject_
     , _rZone = pRZone_
+    , _rFields = Nothing
     }
 
 -- | The name of the update.
@@ -101,13 +107,18 @@ rProject = lens _rProject (\ s a -> s{_rProject = a})
 rZone :: Lens' RollingUpdatesResume Text
 rZone = lens _rZone (\ s a -> s{_rZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rFields :: Lens' RollingUpdatesResume (Maybe Text)
+rFields = lens _rFields (\ s a -> s{_rFields = a})
+
 instance GoogleRequest RollingUpdatesResume where
         type Rs RollingUpdatesResume = Operation
         type Scopes RollingUpdatesResume =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/replicapool"]
         requestClient RollingUpdatesResume'{..}
-          = go _rProject _rZone _rRollingUpdate (Just AltJSON)
+          = go _rProject _rZone _rRollingUpdate _rFields
+              (Just AltJSON)
               replicaPoolUpdaterService
           where go
                   = buildClient

@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.VariantSets.Export
     , vseUploadType
     , vsePayload
     , vseBearerToken
+    , vseFields
     , vseCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variantsets.export@ method which the
 -- 'VariantSetsExport' request conforms to.
@@ -63,9 +64,10 @@ type VariantSetsExportResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ExportVariantSetRequest :>
-                             Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ExportVariantSetRequest :>
+                               Post '[JSON] Operation
 
 -- | Exports variant set data to an external destination. For the definitions
 -- of variant sets and other genomics resources, see [Fundamentals of
@@ -74,15 +76,16 @@ type VariantSetsExportResource =
 --
 -- /See:/ 'variantSetsExport' smart constructor.
 data VariantSetsExport = VariantSetsExport'
-    { _vseXgafv          :: !(Maybe Xgafv)
+    { _vseXgafv :: !(Maybe Xgafv)
     , _vseUploadProtocol :: !(Maybe Text)
-    , _vsePp             :: !Bool
-    , _vseVariantSetId   :: !Text
-    , _vseAccessToken    :: !(Maybe Text)
-    , _vseUploadType     :: !(Maybe Text)
-    , _vsePayload        :: !ExportVariantSetRequest
-    , _vseBearerToken    :: !(Maybe Text)
-    , _vseCallback       :: !(Maybe Text)
+    , _vsePp :: !Bool
+    , _vseVariantSetId :: !Text
+    , _vseAccessToken :: !(Maybe Text)
+    , _vseUploadType :: !(Maybe Text)
+    , _vsePayload :: !ExportVariantSetRequest
+    , _vseBearerToken :: !(Maybe Text)
+    , _vseFields :: !(Maybe Text)
+    , _vseCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantSetsExport' with the minimum fields required to make a request.
@@ -105,12 +108,14 @@ data VariantSetsExport = VariantSetsExport'
 --
 -- * 'vseBearerToken'
 --
+-- * 'vseFields'
+--
 -- * 'vseCallback'
 variantSetsExport
     :: Text -- ^ 'vseVariantSetId'
     -> ExportVariantSetRequest -- ^ 'vsePayload'
     -> VariantSetsExport
-variantSetsExport pVseVariantSetId_ pVsePayload_ =
+variantSetsExport pVseVariantSetId_ pVsePayload_ = 
     VariantSetsExport'
     { _vseXgafv = Nothing
     , _vseUploadProtocol = Nothing
@@ -120,6 +125,7 @@ variantSetsExport pVseVariantSetId_ pVsePayload_ =
     , _vseUploadType = Nothing
     , _vsePayload = pVsePayload_
     , _vseBearerToken = Nothing
+    , _vseFields = Nothing
     , _vseCallback = Nothing
     }
 
@@ -168,6 +174,11 @@ vseBearerToken
   = lens _vseBearerToken
       (\ s a -> s{_vseBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vseFields :: Lens' VariantSetsExport (Maybe Text)
+vseFields
+  = lens _vseFields (\ s a -> s{_vseFields = a})
+
 -- | JSONP
 vseCallback :: Lens' VariantSetsExport (Maybe Text)
 vseCallback
@@ -186,6 +197,7 @@ instance GoogleRequest VariantSetsExport where
               _vseUploadType
               _vseBearerToken
               _vseCallback
+              _vseFields
               (Just AltJSON)
               _vsePayload
               genomicsService

@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.PlatformTypes.List
 
     -- * Request Lenses
     , ptlProFileId
+    , ptlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.platformTypes.list@ method which the
 -- 'PlatformTypesList' request conforms to.
 type PlatformTypesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "platformTypes" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] PlatformTypesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] PlatformTypesListResponse
 
 -- | Retrieves a list of platform types.
 --
 -- /See:/ 'platformTypesList' smart constructor.
-newtype PlatformTypesList = PlatformTypesList'
-    { _ptlProFileId :: Textual Int64
+data PlatformTypesList = PlatformTypesList'
+    { _ptlProFileId :: !(Textual Int64)
+    , _ptlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlatformTypesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype PlatformTypesList = PlatformTypesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ptlProFileId'
+--
+-- * 'ptlFields'
 platformTypesList
     :: Int64 -- ^ 'ptlProFileId'
     -> PlatformTypesList
-platformTypesList pPtlProFileId_ =
+platformTypesList pPtlProFileId_ = 
     PlatformTypesList'
     { _ptlProFileId = _Coerce # pPtlProFileId_
+    , _ptlFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,18 @@ ptlProFileId
   = lens _ptlProFileId (\ s a -> s{_ptlProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ptlFields :: Lens' PlatformTypesList (Maybe Text)
+ptlFields
+  = lens _ptlFields (\ s a -> s{_ptlFields = a})
+
 instance GoogleRequest PlatformTypesList where
         type Rs PlatformTypesList = PlatformTypesListResponse
         type Scopes PlatformTypesList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlatformTypesList'{..}
-          = go _ptlProFileId (Just AltJSON) dFAReportingService
+          = go _ptlProFileId _ptlFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy PlatformTypesListResource)

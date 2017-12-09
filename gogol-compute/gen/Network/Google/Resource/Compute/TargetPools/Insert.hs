@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.TargetPools.Insert
     , TargetPoolsInsert
 
     -- * Request Lenses
+    , tpiRequestId
     , tpiProject
     , tpiPayload
     , tpiRegion
+    , tpiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetPools.insert@ method which the
 -- 'TargetPoolsInsert' request conforms to.
@@ -52,39 +54,63 @@ type TargetPoolsInsertResource =
              "regions" :>
                Capture "region" Text :>
                  "targetPools" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] TargetPool :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] TargetPool :> Post '[JSON] Operation
 
 -- | Creates a target pool in the specified project and region using the data
 -- included in the request.
 --
 -- /See:/ 'targetPoolsInsert' smart constructor.
 data TargetPoolsInsert = TargetPoolsInsert'
-    { _tpiProject :: !Text
+    { _tpiRequestId :: !(Maybe Text)
+    , _tpiProject :: !Text
     , _tpiPayload :: !TargetPool
-    , _tpiRegion  :: !Text
+    , _tpiRegion :: !Text
+    , _tpiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetPoolsInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'tpiRequestId'
+--
 -- * 'tpiProject'
 --
 -- * 'tpiPayload'
 --
 -- * 'tpiRegion'
+--
+-- * 'tpiFields'
 targetPoolsInsert
     :: Text -- ^ 'tpiProject'
     -> TargetPool -- ^ 'tpiPayload'
     -> Text -- ^ 'tpiRegion'
     -> TargetPoolsInsert
-targetPoolsInsert pTpiProject_ pTpiPayload_ pTpiRegion_ =
+targetPoolsInsert pTpiProject_ pTpiPayload_ pTpiRegion_ = 
     TargetPoolsInsert'
-    { _tpiProject = pTpiProject_
+    { _tpiRequestId = Nothing
+    , _tpiProject = pTpiProject_
     , _tpiPayload = pTpiPayload_
     , _tpiRegion = pTpiRegion_
+    , _tpiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tpiRequestId :: Lens' TargetPoolsInsert (Maybe Text)
+tpiRequestId
+  = lens _tpiRequestId (\ s a -> s{_tpiRequestId = a})
 
 -- | Project ID for this request.
 tpiProject :: Lens' TargetPoolsInsert Text
@@ -101,13 +127,19 @@ tpiRegion :: Lens' TargetPoolsInsert Text
 tpiRegion
   = lens _tpiRegion (\ s a -> s{_tpiRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpiFields :: Lens' TargetPoolsInsert (Maybe Text)
+tpiFields
+  = lens _tpiFields (\ s a -> s{_tpiFields = a})
+
 instance GoogleRequest TargetPoolsInsert where
         type Rs TargetPoolsInsert = Operation
         type Scopes TargetPoolsInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetPoolsInsert'{..}
-          = go _tpiProject _tpiRegion (Just AltJSON)
+          = go _tpiProject _tpiRegion _tpiRequestId _tpiFields
+              (Just AltJSON)
               _tpiPayload
               computeService
           where go

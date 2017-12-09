@@ -35,10 +35,11 @@ module Network.Google.Resource.Mirror.Timeline.Patch
     -- * Request Lenses
     , tpPayload
     , tpId
+    , tpFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.patch@ method which the
 -- 'TimelinePatch' request conforms to.
@@ -47,16 +48,18 @@ type TimelinePatchResource =
        "v1" :>
          "timeline" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] TimelineItem :>
-                 Patch '[JSON] TimelineItem
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] TimelineItem :>
+                   Patch '[JSON] TimelineItem
 
 -- | Updates a timeline item in place. This method supports patch semantics.
 --
 -- /See:/ 'timelinePatch' smart constructor.
 data TimelinePatch = TimelinePatch'
     { _tpPayload :: !TimelineItem
-    , _tpId      :: !Text
+    , _tpId :: !Text
+    , _tpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelinePatch' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TimelinePatch = TimelinePatch'
 -- * 'tpPayload'
 --
 -- * 'tpId'
+--
+-- * 'tpFields'
 timelinePatch
     :: TimelineItem -- ^ 'tpPayload'
     -> Text -- ^ 'tpId'
     -> TimelinePatch
-timelinePatch pTpPayload_ pTpId_ =
+timelinePatch pTpPayload_ pTpId_ = 
     TimelinePatch'
     { _tpPayload = pTpPayload_
     , _tpId = pTpId_
+    , _tpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -85,13 +91,18 @@ tpPayload
 tpId :: Lens' TimelinePatch Text
 tpId = lens _tpId (\ s a -> s{_tpId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tpFields :: Lens' TimelinePatch (Maybe Text)
+tpFields = lens _tpFields (\ s a -> s{_tpFields = a})
+
 instance GoogleRequest TimelinePatch where
         type Rs TimelinePatch = TimelineItem
         type Scopes TimelinePatch =
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelinePatch'{..}
-          = go _tpId (Just AltJSON) _tpPayload mirrorService
+          = go _tpId _tpFields (Just AltJSON) _tpPayload
+              mirrorService
           where go
                   = buildClient (Proxy :: Proxy TimelinePatchResource)
                       mempty

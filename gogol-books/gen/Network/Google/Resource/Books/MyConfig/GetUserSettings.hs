@@ -32,10 +32,12 @@ module Network.Google.Resource.Books.MyConfig.GetUserSettings
     , myConfigGetUserSettings
     , MyConfigGetUserSettings
 
+    -- * Request Lenses
+    , mcgusFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.myconfig.getUserSettings@ method which the
 -- 'MyConfigGetUserSettings' request conforms to.
@@ -44,27 +46,39 @@ type MyConfigGetUserSettingsResource =
        "v1" :>
          "myconfig" :>
            "getUserSettings" :>
-             QueryParam "alt" AltJSON :> Get '[JSON] UserSettings
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] UserSettings
 
 -- | Gets the current settings for the user.
 --
 -- /See:/ 'myConfigGetUserSettings' smart constructor.
-data MyConfigGetUserSettings =
-    MyConfigGetUserSettings'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype MyConfigGetUserSettings = MyConfigGetUserSettings'
+    { _mcgusFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyConfigGetUserSettings' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mcgusFields'
 myConfigGetUserSettings
     :: MyConfigGetUserSettings
-myConfigGetUserSettings = MyConfigGetUserSettings'
+myConfigGetUserSettings = 
+    MyConfigGetUserSettings'
+    { _mcgusFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+mcgusFields :: Lens' MyConfigGetUserSettings (Maybe Text)
+mcgusFields
+  = lens _mcgusFields (\ s a -> s{_mcgusFields = a})
 
 instance GoogleRequest MyConfigGetUserSettings where
         type Rs MyConfigGetUserSettings = UserSettings
         type Scopes MyConfigGetUserSettings =
              '["https://www.googleapis.com/auth/books"]
-        requestClient MyConfigGetUserSettings'{}
-          = go (Just AltJSON) booksService
+        requestClient MyConfigGetUserSettings'{..}
+          = go _mcgusFields (Just AltJSON) booksService
           where go
                   = buildClient
                       (Proxy :: Proxy MyConfigGetUserSettingsResource)

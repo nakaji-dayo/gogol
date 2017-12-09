@@ -47,11 +47,12 @@ module Network.Google.Resource.YouTubeReporting.Jobs.Reports.List
     , jrlBearerToken
     , jrlPageToken
     , jrlPageSize
+    , jrlFields
     , jrlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.jobs.reports.list@ method which the
 -- 'JobsReportsList' request conforms to.
@@ -73,28 +74,30 @@ type JobsReportsListResource =
                                  QueryParam "pageToken" Text :>
                                    QueryParam "pageSize" (Textual Int32) :>
                                      QueryParam "callback" Text :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] ListReportsResponse
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] ListReportsResponse
 
 -- | Lists reports created by a specific job. Returns NOT_FOUND if the job
 -- does not exist.
 --
 -- /See:/ 'jobsReportsList' smart constructor.
 data JobsReportsList = JobsReportsList'
-    { _jrlCreatedAfter           :: !(Maybe DateTime')
-    , _jrlXgafv                  :: !(Maybe Xgafv)
-    , _jrlJobId                  :: !Text
-    , _jrlUploadProtocol         :: !(Maybe Text)
-    , _jrlPp                     :: !Bool
-    , _jrlAccessToken            :: !(Maybe Text)
-    , _jrlUploadType             :: !(Maybe Text)
-    , _jrlStartTimeAtOrAfter     :: !(Maybe DateTime')
-    , _jrlStartTimeBefore        :: !(Maybe DateTime')
+    { _jrlCreatedAfter :: !(Maybe DateTime')
+    , _jrlXgafv :: !(Maybe Xgafv)
+    , _jrlJobId :: !Text
+    , _jrlUploadProtocol :: !(Maybe Text)
+    , _jrlPp :: !Bool
+    , _jrlAccessToken :: !(Maybe Text)
+    , _jrlUploadType :: !(Maybe Text)
+    , _jrlStartTimeAtOrAfter :: !(Maybe DateTime')
+    , _jrlStartTimeBefore :: !(Maybe DateTime')
     , _jrlOnBehalfOfContentOwner :: !(Maybe Text)
-    , _jrlBearerToken            :: !(Maybe Text)
-    , _jrlPageToken              :: !(Maybe Text)
-    , _jrlPageSize               :: !(Maybe (Textual Int32))
-    , _jrlCallback               :: !(Maybe Text)
+    , _jrlBearerToken :: !(Maybe Text)
+    , _jrlPageToken :: !(Maybe Text)
+    , _jrlPageSize :: !(Maybe (Textual Int32))
+    , _jrlFields :: !(Maybe Text)
+    , _jrlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsReportsList' with the minimum fields required to make a request.
@@ -127,11 +130,13 @@ data JobsReportsList = JobsReportsList'
 --
 -- * 'jrlPageSize'
 --
+-- * 'jrlFields'
+--
 -- * 'jrlCallback'
 jobsReportsList
     :: Text -- ^ 'jrlJobId'
     -> JobsReportsList
-jobsReportsList pJrlJobId_ =
+jobsReportsList pJrlJobId_ = 
     JobsReportsList'
     { _jrlCreatedAfter = Nothing
     , _jrlXgafv = Nothing
@@ -146,6 +151,7 @@ jobsReportsList pJrlJobId_ =
     , _jrlBearerToken = Nothing
     , _jrlPageToken = Nothing
     , _jrlPageSize = Nothing
+    , _jrlFields = Nothing
     , _jrlCallback = Nothing
     }
 
@@ -230,6 +236,11 @@ jrlPageSize
   = lens _jrlPageSize (\ s a -> s{_jrlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+jrlFields :: Lens' JobsReportsList (Maybe Text)
+jrlFields
+  = lens _jrlFields (\ s a -> s{_jrlFields = a})
+
 -- | JSONP
 jrlCallback :: Lens' JobsReportsList (Maybe Text)
 jrlCallback
@@ -253,6 +264,7 @@ instance GoogleRequest JobsReportsList where
               _jrlPageToken
               _jrlPageSize
               _jrlCallback
+              _jrlFields
               (Just AltJSON)
               youTubeReportingService
           where go

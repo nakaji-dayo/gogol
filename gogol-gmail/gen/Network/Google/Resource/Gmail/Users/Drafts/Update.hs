@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Drafts.Update
     , uduPayload
     , uduUserId
     , uduId
+    , uduFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.drafts.update@ method which the
 -- 'UsersDraftsUpdate' request conforms to.
@@ -50,8 +51,9 @@ type UsersDraftsUpdateResource =
            Capture "userId" Text :>
              "drafts" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Draft :> Put '[JSON] Draft
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Draft :> Put '[JSON] Draft
        :<|>
        "upload" :>
          "gmail" :>
@@ -60,17 +62,19 @@ type UsersDraftsUpdateResource =
                Capture "userId" Text :>
                  "drafts" :>
                    Capture "id" Text :>
-                     QueryParam "alt" AltJSON :>
-                       QueryParam "uploadType" Multipart :>
-                         MultipartRelated '[JSON] Draft :> Put '[JSON] Draft
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" Multipart :>
+                           MultipartRelated '[JSON] Draft :> Put '[JSON] Draft
 
 -- | Replaces a draft\'s content.
 --
 -- /See:/ 'usersDraftsUpdate' smart constructor.
 data UsersDraftsUpdate = UsersDraftsUpdate'
     { _uduPayload :: !Draft
-    , _uduUserId  :: !Text
-    , _uduId      :: !Text
+    , _uduUserId :: !Text
+    , _uduId :: !Text
+    , _uduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDraftsUpdate' with the minimum fields required to make a request.
@@ -82,15 +86,18 @@ data UsersDraftsUpdate = UsersDraftsUpdate'
 -- * 'uduUserId'
 --
 -- * 'uduId'
+--
+-- * 'uduFields'
 usersDraftsUpdate
     :: Draft -- ^ 'uduPayload'
     -> Text -- ^ 'uduId'
     -> UsersDraftsUpdate
-usersDraftsUpdate pUduPayload_ pUduId_ =
+usersDraftsUpdate pUduPayload_ pUduId_ = 
     UsersDraftsUpdate'
     { _uduPayload = pUduPayload_
     , _uduUserId = "me"
     , _uduId = pUduId_
+    , _uduFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -108,6 +115,11 @@ uduUserId
 uduId :: Lens' UsersDraftsUpdate Text
 uduId = lens _uduId (\ s a -> s{_uduId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uduFields :: Lens' UsersDraftsUpdate (Maybe Text)
+uduFields
+  = lens _uduFields (\ s a -> s{_uduFields = a})
+
 instance GoogleRequest UsersDraftsUpdate where
         type Rs UsersDraftsUpdate = Draft
         type Scopes UsersDraftsUpdate =
@@ -115,7 +127,8 @@ instance GoogleRequest UsersDraftsUpdate where
                "https://www.googleapis.com/auth/gmail.compose",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersDraftsUpdate'{..}
-          = go _uduUserId _uduId (Just AltJSON) _uduPayload
+          = go _uduUserId _uduId _uduFields (Just AltJSON)
+              _uduPayload
               gmailService
           where go :<|> _
                   = buildClient
@@ -129,7 +142,7 @@ instance GoogleRequest
              Scopes UsersDraftsUpdate
         requestClient
           (MediaUpload UsersDraftsUpdate'{..} body)
-          = go _uduUserId _uduId (Just AltJSON)
+          = go _uduUserId _uduId _uduFields (Just AltJSON)
               (Just Multipart)
               _uduPayload
               body

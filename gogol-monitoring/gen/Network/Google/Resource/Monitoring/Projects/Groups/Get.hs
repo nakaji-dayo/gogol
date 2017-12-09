@@ -40,11 +40,12 @@ module Network.Google.Resource.Monitoring.Projects.Groups.Get
     , pggUploadType
     , pggBearerToken
     , pggName
+    , pggFields
     , pggCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.groups.get@ method which the
 -- 'ProjectsGroupsGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsGroupsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Group
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Group
 
 -- | Gets a single group.
 --
 -- /See:/ 'projectsGroupsGet' smart constructor.
 data ProjectsGroupsGet = ProjectsGroupsGet'
-    { _pggXgafv          :: !(Maybe Xgafv)
+    { _pggXgafv :: !(Maybe Xgafv)
     , _pggUploadProtocol :: !(Maybe Text)
-    , _pggPp             :: !Bool
-    , _pggAccessToken    :: !(Maybe Text)
-    , _pggUploadType     :: !(Maybe Text)
-    , _pggBearerToken    :: !(Maybe Text)
-    , _pggName           :: !Text
-    , _pggCallback       :: !(Maybe Text)
+    , _pggPp :: !Bool
+    , _pggAccessToken :: !(Maybe Text)
+    , _pggUploadType :: !(Maybe Text)
+    , _pggBearerToken :: !(Maybe Text)
+    , _pggName :: !Text
+    , _pggFields :: !(Maybe Text)
+    , _pggCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGroupsGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsGroupsGet = ProjectsGroupsGet'
 --
 -- * 'pggName'
 --
+-- * 'pggFields'
+--
 -- * 'pggCallback'
 projectsGroupsGet
     :: Text -- ^ 'pggName'
     -> ProjectsGroupsGet
-projectsGroupsGet pPggName_ =
+projectsGroupsGet pPggName_ = 
     ProjectsGroupsGet'
     { _pggXgafv = Nothing
     , _pggUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsGroupsGet pPggName_ =
     , _pggUploadType = Nothing
     , _pggBearerToken = Nothing
     , _pggName = pPggName_
+    , _pggFields = Nothing
     , _pggCallback = Nothing
     }
 
@@ -145,6 +151,11 @@ pggBearerToken
 pggName :: Lens' ProjectsGroupsGet Text
 pggName = lens _pggName (\ s a -> s{_pggName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pggFields :: Lens' ProjectsGroupsGet (Maybe Text)
+pggFields
+  = lens _pggFields (\ s a -> s{_pggFields = a})
+
 -- | JSONP
 pggCallback :: Lens' ProjectsGroupsGet (Maybe Text)
 pggCallback
@@ -163,6 +174,7 @@ instance GoogleRequest ProjectsGroupsGet where
               _pggUploadType
               _pggBearerToken
               _pggCallback
+              _pggFields
               (Just AltJSON)
               monitoringService
           where go

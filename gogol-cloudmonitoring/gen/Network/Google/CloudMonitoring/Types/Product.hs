@@ -17,8 +17,8 @@
 --
 module Network.Google.CloudMonitoring.Types.Product where
 
-import           Network.Google.CloudMonitoring.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types.Sum
+import Network.Google.Prelude
 
 -- | A type in a metric contains information about how the metric is
 -- collected and what its data points look like.
@@ -26,7 +26,7 @@ import           Network.Google.Prelude
 -- /See:/ 'metricDescriptorTypeDescriptor' smart constructor.
 data MetricDescriptorTypeDescriptor = MetricDescriptorTypeDescriptor'
     { _mdtdMetricType :: !(Maybe Text)
-    , _mdtdValueType  :: !(Maybe Text)
+    , _mdtdValueType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptorTypeDescriptor' with the minimum fields required to make a request.
@@ -38,7 +38,7 @@ data MetricDescriptorTypeDescriptor = MetricDescriptorTypeDescriptor'
 -- * 'mdtdValueType'
 metricDescriptorTypeDescriptor
     :: MetricDescriptorTypeDescriptor
-metricDescriptorTypeDescriptor =
+metricDescriptorTypeDescriptor = 
     MetricDescriptorTypeDescriptor'
     { _mdtdMetricType = Nothing
     , _mdtdValueType = Nothing
@@ -77,10 +77,10 @@ instance ToJSON MetricDescriptorTypeDescriptor where
 -- /See:/ 'listTimeseriesResponse' smart constructor.
 data ListTimeseriesResponse = ListTimeseriesResponse'
     { _ltrNextPageToken :: !(Maybe Text)
-    , _ltrKind          :: !Text
-    , _ltrOldest        :: !(Maybe DateTime')
-    , _ltrYoungest      :: !(Maybe DateTime')
-    , _ltrTimeseries    :: !(Maybe [Timeseries])
+    , _ltrKind :: !Text
+    , _ltrOldest :: !(Maybe DateTime')
+    , _ltrYoungest :: !(Maybe DateTime')
+    , _ltrTimeseries :: !(Maybe [Timeseries])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListTimeseriesResponse' with the minimum fields required to make a request.
@@ -98,7 +98,7 @@ data ListTimeseriesResponse = ListTimeseriesResponse'
 -- * 'ltrTimeseries'
 listTimeseriesResponse
     :: ListTimeseriesResponse
-listTimeseriesResponse =
+listTimeseriesResponse = 
     ListTimeseriesResponse'
     { _ltrNextPageToken = Nothing
     , _ltrKind = "cloudmonitoring#listTimeseriesResponse"
@@ -171,11 +171,11 @@ instance ToJSON ListTimeseriesResponse where
 --
 -- /See:/ 'metricDescriptor' smart constructor.
 data MetricDescriptor = MetricDescriptor'
-    { _mdProject        :: !(Maybe Text)
+    { _mdProject :: !(Maybe Text)
     , _mdTypeDescriptor :: !(Maybe MetricDescriptorTypeDescriptor)
-    , _mdName           :: !(Maybe Text)
-    , _mdLabels         :: !(Maybe [MetricDescriptorLabelDescriptor])
-    , _mdDescription    :: !(Maybe Text)
+    , _mdName :: !(Maybe Text)
+    , _mdLabels :: !(Maybe [MetricDescriptorLabelDescriptor])
+    , _mdDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptor' with the minimum fields required to make a request.
@@ -193,7 +193,7 @@ data MetricDescriptor = MetricDescriptor'
 -- * 'mdDescription'
 metricDescriptor
     :: MetricDescriptor
-metricDescriptor =
+metricDescriptor = 
     MetricDescriptor'
     { _mdProject = Nothing
     , _mdTypeDescriptor = Nothing
@@ -254,7 +254,7 @@ instance ToJSON MetricDescriptor where
 -- /See:/ 'writeTimeseriesRequest' smart constructor.
 data WriteTimeseriesRequest = WriteTimeseriesRequest'
     { _wtrCommonLabels :: !(Maybe WriteTimeseriesRequestCommonLabels)
-    , _wtrTimeseries   :: !(Maybe [TimeseriesPoint])
+    , _wtrTimeseries :: !(Maybe [TimeseriesPoint])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WriteTimeseriesRequest' with the minimum fields required to make a request.
@@ -266,7 +266,7 @@ data WriteTimeseriesRequest = WriteTimeseriesRequest'
 -- * 'wtrTimeseries'
 writeTimeseriesRequest
     :: WriteTimeseriesRequest
-writeTimeseriesRequest =
+writeTimeseriesRequest = 
     WriteTimeseriesRequest'
     { _wtrCommonLabels = Nothing
     , _wtrTimeseries = Nothing
@@ -318,7 +318,7 @@ newtype WriteTimeseriesRequestCommonLabels = WriteTimeseriesRequestCommonLabels'
 writeTimeseriesRequestCommonLabels
     :: HashMap Text Text -- ^ 'wtrclAddtional'
     -> WriteTimeseriesRequestCommonLabels
-writeTimeseriesRequestCommonLabels pWtrclAddtional_ =
+writeTimeseriesRequestCommonLabels pWtrclAddtional_ = 
     WriteTimeseriesRequestCommonLabels'
     { _wtrclAddtional = _Coerce # pWtrclAddtional_
     }
@@ -348,7 +348,7 @@ instance ToJSON WriteTimeseriesRequestCommonLabels
 --
 -- /See:/ 'metricDescriptorLabelDescriptor' smart constructor.
 data MetricDescriptorLabelDescriptor = MetricDescriptorLabelDescriptor'
-    { _mdldKey         :: !(Maybe Text)
+    { _mdldKey :: !(Maybe Text)
     , _mdldDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -361,7 +361,7 @@ data MetricDescriptorLabelDescriptor = MetricDescriptorLabelDescriptor'
 -- * 'mdldDescription'
 metricDescriptorLabelDescriptor
     :: MetricDescriptorLabelDescriptor
-metricDescriptorLabelDescriptor =
+metricDescriptorLabelDescriptor = 
     MetricDescriptorLabelDescriptor'
     { _mdldKey = Nothing
     , _mdldDescription = Nothing
@@ -399,7 +399,7 @@ instance ToJSON MetricDescriptorLabelDescriptor where
 -- /See:/ 'pointDistributionUnderflowBucket' smart constructor.
 data PointDistributionUnderflowBucket = PointDistributionUnderflowBucket'
     { _pdubUpperBound :: !(Maybe (Textual Double))
-    , _pdubCount      :: !(Maybe (Textual Int64))
+    , _pdubCount :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PointDistributionUnderflowBucket' with the minimum fields required to make a request.
@@ -411,7 +411,7 @@ data PointDistributionUnderflowBucket = PointDistributionUnderflowBucket'
 -- * 'pdubCount'
 pointDistributionUnderflowBucket
     :: PointDistributionUnderflowBucket
-pointDistributionUnderflowBucket =
+pointDistributionUnderflowBucket = 
     PointDistributionUnderflowBucket'
     { _pdubUpperBound = Nothing
     , _pdubCount = Nothing
@@ -451,9 +451,9 @@ instance ToJSON PointDistributionUnderflowBucket
 --
 -- /See:/ 'listMetricDescriptorsResponse' smart constructor.
 data ListMetricDescriptorsResponse = ListMetricDescriptorsResponse'
-    { _lmdrMetrics       :: !(Maybe [MetricDescriptor])
+    { _lmdrMetrics :: !(Maybe [MetricDescriptor])
     , _lmdrNextPageToken :: !(Maybe Text)
-    , _lmdrKind          :: !Text
+    , _lmdrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListMetricDescriptorsResponse' with the minimum fields required to make a request.
@@ -467,7 +467,7 @@ data ListMetricDescriptorsResponse = ListMetricDescriptorsResponse'
 -- * 'lmdrKind'
 listMetricDescriptorsResponse
     :: ListMetricDescriptorsResponse
-listMetricDescriptorsResponse =
+listMetricDescriptorsResponse = 
     ListMetricDescriptorsResponse'
     { _lmdrMetrics = Nothing
     , _lmdrNextPageToken = Nothing
@@ -527,7 +527,7 @@ newtype ListTimeseriesDescriptorsRequest = ListTimeseriesDescriptorsRequest'
 -- * 'ltdrKind'
 listTimeseriesDescriptorsRequest
     :: ListTimeseriesDescriptorsRequest
-listTimeseriesDescriptorsRequest =
+listTimeseriesDescriptorsRequest = 
     ListTimeseriesDescriptorsRequest'
     { _ltdrKind = "cloudmonitoring#listTimeseriesDescriptorsRequest"
     }
@@ -566,7 +566,7 @@ newtype TimeseriesDescriptorLabels = TimeseriesDescriptorLabels'
 timeseriesDescriptorLabels
     :: HashMap Text Text -- ^ 'tdlAddtional'
     -> TimeseriesDescriptorLabels
-timeseriesDescriptorLabels pTdlAddtional_ =
+timeseriesDescriptorLabels pTdlAddtional_ = 
     TimeseriesDescriptorLabels'
     { _tdlAddtional = _Coerce # pTdlAddtional_
     }
@@ -594,7 +594,7 @@ instance ToJSON TimeseriesDescriptorLabels where
 -- /See:/ 'pointDistributionBucket' smart constructor.
 data PointDistributionBucket = PointDistributionBucket'
     { _pdbUpperBound :: !(Maybe (Textual Double))
-    , _pdbCount      :: !(Maybe (Textual Int64))
+    , _pdbCount :: !(Maybe (Textual Int64))
     , _pdbLowerBound :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -609,7 +609,7 @@ data PointDistributionBucket = PointDistributionBucket'
 -- * 'pdbLowerBound'
 pointDistributionBucket
     :: PointDistributionBucket
-pointDistributionBucket =
+pointDistributionBucket = 
     PointDistributionBucket'
     { _pdbUpperBound = Nothing
     , _pdbCount = Nothing
@@ -667,7 +667,7 @@ newtype WriteTimeseriesResponse = WriteTimeseriesResponse'
 -- * 'wtrKind'
 writeTimeseriesResponse
     :: WriteTimeseriesResponse
-writeTimeseriesResponse =
+writeTimeseriesResponse = 
     WriteTimeseriesResponse'
     { _wtrKind = "cloudmonitoring#writeTimeseriesResponse"
     }
@@ -693,7 +693,7 @@ instance ToJSON WriteTimeseriesResponse where
 -- /See:/ 'timeseriesDescriptorLabel' smart constructor.
 data TimeseriesDescriptorLabel = TimeseriesDescriptorLabel'
     { _tdlValue :: !(Maybe Text)
-    , _tdlKey   :: !(Maybe Text)
+    , _tdlKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeseriesDescriptorLabel' with the minimum fields required to make a request.
@@ -705,7 +705,7 @@ data TimeseriesDescriptorLabel = TimeseriesDescriptorLabel'
 -- * 'tdlKey'
 timeseriesDescriptorLabel
     :: TimeseriesDescriptorLabel
-timeseriesDescriptorLabel =
+timeseriesDescriptorLabel = 
     TimeseriesDescriptorLabel'
     { _tdlValue = Nothing
     , _tdlKey = Nothing
@@ -739,8 +739,8 @@ instance ToJSON TimeseriesDescriptorLabel where
 --
 -- /See:/ 'pointDistribution' smart constructor.
 data PointDistribution = PointDistribution'
-    { _pdOverflowBucket  :: !(Maybe PointDistributionOverflowBucket)
-    , _pdBuckets         :: !(Maybe [PointDistributionBucket])
+    { _pdOverflowBucket :: !(Maybe PointDistributionOverflowBucket)
+    , _pdBuckets :: !(Maybe [PointDistributionBucket])
     , _pdUnderflowBucket :: !(Maybe PointDistributionUnderflowBucket)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -755,7 +755,7 @@ data PointDistribution = PointDistribution'
 -- * 'pdUnderflowBucket'
 pointDistribution
     :: PointDistribution
-pointDistribution =
+pointDistribution = 
     PointDistribution'
     { _pdOverflowBucket = Nothing
     , _pdBuckets = Nothing
@@ -803,13 +803,13 @@ instance ToJSON PointDistribution where
 --
 -- /See:/ 'point' smart constructor.
 data Point = Point'
-    { _pBoolValue         :: !(Maybe Bool)
-    , _pStart             :: !(Maybe DateTime')
-    , _pDoubleValue       :: !(Maybe (Textual Double))
-    , _pStringValue       :: !(Maybe Text)
+    { _pBoolValue :: !(Maybe Bool)
+    , _pStart :: !(Maybe DateTime')
+    , _pDoubleValue :: !(Maybe (Textual Double))
+    , _pStringValue :: !(Maybe Text)
     , _pDistributionValue :: !(Maybe PointDistribution)
-    , _pEnd               :: !(Maybe DateTime')
-    , _pInt64Value        :: !(Maybe (Textual Int64))
+    , _pEnd :: !(Maybe DateTime')
+    , _pInt64Value :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Point' with the minimum fields required to make a request.
@@ -831,7 +831,7 @@ data Point = Point'
 -- * 'pInt64Value'
 point
     :: Point
-point =
+point = 
     Point'
     { _pBoolValue = Nothing
     , _pStart = Nothing
@@ -924,7 +924,7 @@ instance ToJSON Point where
 --
 -- /See:/ 'pointDistributionOverflowBucket' smart constructor.
 data PointDistributionOverflowBucket = PointDistributionOverflowBucket'
-    { _pdobCount      :: !(Maybe (Textual Int64))
+    { _pdobCount :: !(Maybe (Textual Int64))
     , _pdobLowerBound :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -937,7 +937,7 @@ data PointDistributionOverflowBucket = PointDistributionOverflowBucket'
 -- * 'pdobLowerBound'
 pointDistributionOverflowBucket
     :: PointDistributionOverflowBucket
-pointDistributionOverflowBucket =
+pointDistributionOverflowBucket = 
     PointDistributionOverflowBucket'
     { _pdobCount = Nothing
     , _pdobLowerBound = Nothing
@@ -977,10 +977,10 @@ instance ToJSON PointDistributionOverflowBucket where
 -- /See:/ 'listTimeseriesDescriptorsResponse' smart constructor.
 data ListTimeseriesDescriptorsResponse = ListTimeseriesDescriptorsResponse'
     { _lNextPageToken :: !(Maybe Text)
-    , _lKind          :: !Text
-    , _lOldest        :: !(Maybe DateTime')
-    , _lYoungest      :: !(Maybe DateTime')
-    , _lTimeseries    :: !(Maybe [TimeseriesDescriptor])
+    , _lKind :: !Text
+    , _lOldest :: !(Maybe DateTime')
+    , _lYoungest :: !(Maybe DateTime')
+    , _lTimeseries :: !(Maybe [TimeseriesDescriptor])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListTimeseriesDescriptorsResponse' with the minimum fields required to make a request.
@@ -998,7 +998,7 @@ data ListTimeseriesDescriptorsResponse = ListTimeseriesDescriptorsResponse'
 -- * 'lTimeseries'
 listTimeseriesDescriptorsResponse
     :: ListTimeseriesDescriptorsResponse
-listTimeseriesDescriptorsResponse =
+listTimeseriesDescriptorsResponse = 
     ListTimeseriesDescriptorsResponse'
     { _lNextPageToken = Nothing
     , _lKind = "cloudmonitoring#listTimeseriesDescriptorsResponse"
@@ -1078,7 +1078,7 @@ newtype ListMetricDescriptorsRequest = ListMetricDescriptorsRequest'
 -- * 'lisKind'
 listMetricDescriptorsRequest
     :: ListMetricDescriptorsRequest
-listMetricDescriptorsRequest =
+listMetricDescriptorsRequest = 
     ListMetricDescriptorsRequest'
     { _lisKind = "cloudmonitoring#listMetricDescriptorsRequest"
     }
@@ -1106,7 +1106,7 @@ instance ToJSON ListMetricDescriptorsRequest where
 --
 -- /See:/ 'timeseriesPoint' smart constructor.
 data TimeseriesPoint = TimeseriesPoint'
-    { _tpPoint          :: !(Maybe Point)
+    { _tpPoint :: !(Maybe Point)
     , _tpTimeseriesDesc :: !(Maybe TimeseriesDescriptor)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1119,7 +1119,7 @@ data TimeseriesPoint = TimeseriesPoint'
 -- * 'tpTimeseriesDesc'
 timeseriesPoint
     :: TimeseriesPoint
-timeseriesPoint =
+timeseriesPoint = 
     TimeseriesPoint'
     { _tpPoint = Nothing
     , _tpTimeseriesDesc = Nothing
@@ -1163,7 +1163,7 @@ newtype DeleteMetricDescriptorResponse = DeleteMetricDescriptorResponse'
 -- * 'dmdrKind'
 deleteMetricDescriptorResponse
     :: DeleteMetricDescriptorResponse
-deleteMetricDescriptorResponse =
+deleteMetricDescriptorResponse = 
     DeleteMetricDescriptorResponse'
     { _dmdrKind = "cloudmonitoring#deleteMetricDescriptorResponse"
     }
@@ -1200,7 +1200,7 @@ newtype ListTimeseriesRequest = ListTimeseriesRequest'
 -- * 'ltrtKind'
 listTimeseriesRequest
     :: ListTimeseriesRequest
-listTimeseriesRequest =
+listTimeseriesRequest = 
     ListTimeseriesRequest'
     { _ltrtKind = "cloudmonitoring#listTimeseriesRequest"
     }
@@ -1227,8 +1227,8 @@ instance ToJSON ListTimeseriesRequest where
 -- /See:/ 'timeseriesDescriptor' smart constructor.
 data TimeseriesDescriptor = TimeseriesDescriptor'
     { _tdProject :: !(Maybe Text)
-    , _tdMetric  :: !(Maybe Text)
-    , _tdLabels  :: !(Maybe TimeseriesDescriptorLabels)
+    , _tdMetric :: !(Maybe Text)
+    , _tdLabels :: !(Maybe TimeseriesDescriptorLabels)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeseriesDescriptor' with the minimum fields required to make a request.
@@ -1242,7 +1242,7 @@ data TimeseriesDescriptor = TimeseriesDescriptor'
 -- * 'tdLabels'
 timeseriesDescriptor
     :: TimeseriesDescriptor
-timeseriesDescriptor =
+timeseriesDescriptor = 
     TimeseriesDescriptor'
     { _tdProject = Nothing
     , _tdMetric = Nothing
@@ -1285,7 +1285,7 @@ instance ToJSON TimeseriesDescriptor where
 --
 -- /See:/ 'timeseries' smart constructor.
 data Timeseries = Timeseries'
-    { _tPoints         :: !(Maybe [Point])
+    { _tPoints :: !(Maybe [Point])
     , _tTimeseriesDesc :: !(Maybe TimeseriesDescriptor)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1298,7 +1298,7 @@ data Timeseries = Timeseries'
 -- * 'tTimeseriesDesc'
 timeseries
     :: Timeseries
-timeseries =
+timeseries = 
     Timeseries'
     { _tPoints = Nothing
     , _tTimeseriesDesc = Nothing

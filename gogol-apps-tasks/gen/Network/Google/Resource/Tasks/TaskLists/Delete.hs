@@ -34,10 +34,11 @@ module Network.Google.Resource.Tasks.TaskLists.Delete
 
     -- * Request Lenses
     , tldTaskList
+    , tldFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasklists.delete@ method which the
 -- 'TaskListsDelete' request conforms to.
@@ -48,13 +49,15 @@ type TaskListsDeleteResource =
            "@me" :>
              "lists" :>
                Capture "tasklist" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the authenticated user\'s specified task list.
 --
 -- /See:/ 'taskListsDelete' smart constructor.
-newtype TaskListsDelete = TaskListsDelete'
-    { _tldTaskList :: Text
+data TaskListsDelete = TaskListsDelete'
+    { _tldTaskList :: !Text
+    , _tldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskListsDelete' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype TaskListsDelete = TaskListsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tldTaskList'
+--
+-- * 'tldFields'
 taskListsDelete
     :: Text -- ^ 'tldTaskList'
     -> TaskListsDelete
-taskListsDelete pTldTaskList_ =
+taskListsDelete pTldTaskList_ = 
     TaskListsDelete'
     { _tldTaskList = pTldTaskList_
+    , _tldFields = Nothing
     }
 
 -- | Task list identifier.
@@ -75,12 +81,18 @@ tldTaskList :: Lens' TaskListsDelete Text
 tldTaskList
   = lens _tldTaskList (\ s a -> s{_tldTaskList = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tldFields :: Lens' TaskListsDelete (Maybe Text)
+tldFields
+  = lens _tldFields (\ s a -> s{_tldFields = a})
+
 instance GoogleRequest TaskListsDelete where
         type Rs TaskListsDelete = ()
         type Scopes TaskListsDelete =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TaskListsDelete'{..}
-          = go _tldTaskList (Just AltJSON) appsTasksService
+          = go _tldTaskList _tldFields (Just AltJSON)
+              appsTasksService
           where go
                   = buildClient
                       (Proxy :: Proxy TaskListsDeleteResource)

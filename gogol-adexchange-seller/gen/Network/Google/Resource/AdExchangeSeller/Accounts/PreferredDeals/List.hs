@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.PreferredDeals.List
 
     -- * Request Lenses
     , apdlAccountId
+    , apdlFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.preferreddeals.list@ method which the
 -- 'AccountsPreferredDealsList' request conforms to.
@@ -47,14 +48,16 @@ type AccountsPreferredDealsListResource =
          "accounts" :>
            Capture "accountId" Text :>
              "preferreddeals" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] PreferredDeals
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] PreferredDeals
 
 -- | List the preferred deals for this Ad Exchange account.
 --
 -- /See:/ 'accountsPreferredDealsList' smart constructor.
-newtype AccountsPreferredDealsList = AccountsPreferredDealsList'
-    { _apdlAccountId :: Text
+data AccountsPreferredDealsList = AccountsPreferredDealsList'
+    { _apdlAccountId :: !Text
+    , _apdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsPreferredDealsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype AccountsPreferredDealsList = AccountsPreferredDealsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'apdlAccountId'
+--
+-- * 'apdlFields'
 accountsPreferredDealsList
     :: Text -- ^ 'apdlAccountId'
     -> AccountsPreferredDealsList
-accountsPreferredDealsList pApdlAccountId_ =
+accountsPreferredDealsList pApdlAccountId_ = 
     AccountsPreferredDealsList'
     { _apdlAccountId = pApdlAccountId_
+    , _apdlFields = Nothing
     }
 
 -- | Account owning the deals.
@@ -76,6 +82,11 @@ apdlAccountId
   = lens _apdlAccountId
       (\ s a -> s{_apdlAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+apdlFields :: Lens' AccountsPreferredDealsList (Maybe Text)
+apdlFields
+  = lens _apdlFields (\ s a -> s{_apdlFields = a})
+
 instance GoogleRequest AccountsPreferredDealsList
          where
         type Rs AccountsPreferredDealsList = PreferredDeals
@@ -83,7 +94,7 @@ instance GoogleRequest AccountsPreferredDealsList
              '["https://www.googleapis.com/auth/adexchange.seller",
                "https://www.googleapis.com/auth/adexchange.seller.readonly"]
         requestClient AccountsPreferredDealsList'{..}
-          = go _apdlAccountId (Just AltJSON)
+          = go _apdlAccountId _apdlFields (Just AltJSON)
               adExchangeSellerService
           where go
                   = buildClient

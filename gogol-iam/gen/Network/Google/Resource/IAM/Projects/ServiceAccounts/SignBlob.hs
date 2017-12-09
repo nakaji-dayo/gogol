@@ -41,41 +41,44 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.SignBlob
     , psasbPayload
     , psasbBearerToken
     , psasbName
+    , psasbFields
     , psasbCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.signBlob@ method which the
 -- 'ProjectsServiceAccountsSignBlob' request conforms to.
 type ProjectsServiceAccountsSignBlobResource =
      "v1" :>
        CaptureMode "name" "signBlob" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SignBlobRequest :>
-                           Post '[JSON] SignBlobResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SignBlobRequest :>
+                             Post '[JSON] SignBlobResponse
 
 -- | Signs a blob using a service account\'s system-managed private key.
 --
 -- /See:/ 'projectsServiceAccountsSignBlob' smart constructor.
 data ProjectsServiceAccountsSignBlob = ProjectsServiceAccountsSignBlob'
-    { _psasbXgafv          :: !(Maybe Text)
+    { _psasbXgafv :: !(Maybe Xgafv)
     , _psasbUploadProtocol :: !(Maybe Text)
-    , _psasbPp             :: !Bool
-    , _psasbAccessToken    :: !(Maybe Text)
-    , _psasbUploadType     :: !(Maybe Text)
-    , _psasbPayload        :: !SignBlobRequest
-    , _psasbBearerToken    :: !(Maybe Text)
-    , _psasbName           :: !Text
-    , _psasbCallback       :: !(Maybe Text)
+    , _psasbPp :: !Bool
+    , _psasbAccessToken :: !(Maybe Text)
+    , _psasbUploadType :: !(Maybe Text)
+    , _psasbPayload :: !SignBlobRequest
+    , _psasbBearerToken :: !(Maybe Text)
+    , _psasbName :: !Text
+    , _psasbFields :: !(Maybe Text)
+    , _psasbCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsSignBlob' with the minimum fields required to make a request.
@@ -98,12 +101,14 @@ data ProjectsServiceAccountsSignBlob = ProjectsServiceAccountsSignBlob'
 --
 -- * 'psasbName'
 --
+-- * 'psasbFields'
+--
 -- * 'psasbCallback'
 projectsServiceAccountsSignBlob
     :: SignBlobRequest -- ^ 'psasbPayload'
     -> Text -- ^ 'psasbName'
     -> ProjectsServiceAccountsSignBlob
-projectsServiceAccountsSignBlob pPsasbPayload_ pPsasbName_ =
+projectsServiceAccountsSignBlob pPsasbPayload_ pPsasbName_ = 
     ProjectsServiceAccountsSignBlob'
     { _psasbXgafv = Nothing
     , _psasbUploadProtocol = Nothing
@@ -113,11 +118,12 @@ projectsServiceAccountsSignBlob pPsasbPayload_ pPsasbName_ =
     , _psasbPayload = pPsasbPayload_
     , _psasbBearerToken = Nothing
     , _psasbName = pPsasbName_
+    , _psasbFields = Nothing
     , _psasbCallback = Nothing
     }
 
 -- | V1 error format.
-psasbXgafv :: Lens' ProjectsServiceAccountsSignBlob (Maybe Text)
+psasbXgafv :: Lens' ProjectsServiceAccountsSignBlob (Maybe Xgafv)
 psasbXgafv
   = lens _psasbXgafv (\ s a -> s{_psasbXgafv = a})
 
@@ -155,13 +161,18 @@ psasbBearerToken
       (\ s a -> s{_psasbBearerToken = a})
 
 -- | The resource name of the service account in the following format:
--- \`projects\/{project}\/serviceAccounts\/{account}\`. Using \`-\` as a
--- wildcard for the project will infer the project from the account. The
--- \`account\` value can be the \`email\` address or the \`unique_id\` of
--- the service account.
+-- \`projects\/{PROJECT_ID}\/serviceAccounts\/{ACCOUNT}\`. Using \`-\` as a
+-- wildcard for the \`PROJECT_ID\` will infer the project from the account.
+-- The \`ACCOUNT\` value can be the \`email\` address or the \`unique_id\`
+-- of the service account.
 psasbName :: Lens' ProjectsServiceAccountsSignBlob Text
 psasbName
   = lens _psasbName (\ s a -> s{_psasbName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psasbFields :: Lens' ProjectsServiceAccountsSignBlob (Maybe Text)
+psasbFields
+  = lens _psasbFields (\ s a -> s{_psasbFields = a})
 
 -- | JSONP
 psasbCallback :: Lens' ProjectsServiceAccountsSignBlob (Maybe Text)
@@ -182,6 +193,7 @@ instance GoogleRequest
               _psasbUploadType
               _psasbBearerToken
               _psasbCallback
+              _psasbFields
               (Just AltJSON)
               _psasbPayload
               iAMService

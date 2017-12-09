@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.SetIAMPolicy
     , ptsipPayload
     , ptsipBearerToken
     , ptsipResource
+    , ptsipFields
     , ptsipCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.setIamPolicy@ method which the
 -- 'ProjectsTopicsSetIAMPolicy' request conforms to.
@@ -60,24 +61,26 @@ type ProjectsTopicsSetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Sets the access control policy on the specified resource. Replaces any
 -- existing policy.
 --
 -- /See:/ 'projectsTopicsSetIAMPolicy' smart constructor.
 data ProjectsTopicsSetIAMPolicy = ProjectsTopicsSetIAMPolicy'
-    { _ptsipXgafv          :: !(Maybe Xgafv)
+    { _ptsipXgafv :: !(Maybe Xgafv)
     , _ptsipUploadProtocol :: !(Maybe Text)
-    , _ptsipPp             :: !Bool
-    , _ptsipAccessToken    :: !(Maybe Text)
-    , _ptsipUploadType     :: !(Maybe Text)
-    , _ptsipPayload        :: !SetIAMPolicyRequest
-    , _ptsipBearerToken    :: !(Maybe Text)
-    , _ptsipResource       :: !Text
-    , _ptsipCallback       :: !(Maybe Text)
+    , _ptsipPp :: !Bool
+    , _ptsipAccessToken :: !(Maybe Text)
+    , _ptsipUploadType :: !(Maybe Text)
+    , _ptsipPayload :: !SetIAMPolicyRequest
+    , _ptsipBearerToken :: !(Maybe Text)
+    , _ptsipResource :: !Text
+    , _ptsipFields :: !(Maybe Text)
+    , _ptsipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsSetIAMPolicy' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ProjectsTopicsSetIAMPolicy = ProjectsTopicsSetIAMPolicy'
 --
 -- * 'ptsipResource'
 --
+-- * 'ptsipFields'
+--
 -- * 'ptsipCallback'
 projectsTopicsSetIAMPolicy
     :: SetIAMPolicyRequest -- ^ 'ptsipPayload'
     -> Text -- ^ 'ptsipResource'
     -> ProjectsTopicsSetIAMPolicy
-projectsTopicsSetIAMPolicy pPtsipPayload_ pPtsipResource_ =
+projectsTopicsSetIAMPolicy pPtsipPayload_ pPtsipResource_ = 
     ProjectsTopicsSetIAMPolicy'
     { _ptsipXgafv = Nothing
     , _ptsipUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsTopicsSetIAMPolicy pPtsipPayload_ pPtsipResource_ =
     , _ptsipPayload = pPtsipPayload_
     , _ptsipBearerToken = Nothing
     , _ptsipResource = pPtsipResource_
+    , _ptsipFields = Nothing
     , _ptsipCallback = Nothing
     }
 
@@ -156,13 +162,17 @@ ptsipBearerToken
   = lens _ptsipBearerToken
       (\ s a -> s{_ptsipBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being specified.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being specified. See the
+-- operation documentation for the appropriate value for this field.
 ptsipResource :: Lens' ProjectsTopicsSetIAMPolicy Text
 ptsipResource
   = lens _ptsipResource
       (\ s a -> s{_ptsipResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ptsipFields :: Lens' ProjectsTopicsSetIAMPolicy (Maybe Text)
+ptsipFields
+  = lens _ptsipFields (\ s a -> s{_ptsipFields = a})
 
 -- | JSONP
 ptsipCallback :: Lens' ProjectsTopicsSetIAMPolicy (Maybe Text)
@@ -183,6 +193,7 @@ instance GoogleRequest ProjectsTopicsSetIAMPolicy
               _ptsipUploadType
               _ptsipBearerToken
               _ptsipCallback
+              _ptsipFields
               (Just AltJSON)
               _ptsipPayload
               pubSubService

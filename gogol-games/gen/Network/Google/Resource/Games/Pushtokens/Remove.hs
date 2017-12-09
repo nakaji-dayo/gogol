@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.Pushtokens.Remove
     -- * Request Lenses
     , prConsistencyToken
     , prPayload
+    , prFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.pushtokens.remove@ method which the
 -- 'PushtokensRemove' request conforms to.
@@ -49,8 +50,9 @@ type PushtokensRemoveResource =
          "pushtokens" :>
            "remove" :>
              QueryParam "consistencyToken" (Textual Int64) :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PushTokenId :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PushTokenId :> Post '[JSON] ()
 
 -- | Removes a push token for the current user and application. Removing a
 -- non-existent push token will report success.
@@ -58,7 +60,8 @@ type PushtokensRemoveResource =
 -- /See:/ 'pushtokensRemove' smart constructor.
 data PushtokensRemove = PushtokensRemove'
     { _prConsistencyToken :: !(Maybe (Textual Int64))
-    , _prPayload          :: !PushTokenId
+    , _prPayload :: !PushTokenId
+    , _prFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PushtokensRemove' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data PushtokensRemove = PushtokensRemove'
 -- * 'prConsistencyToken'
 --
 -- * 'prPayload'
+--
+-- * 'prFields'
 pushtokensRemove
     :: PushTokenId -- ^ 'prPayload'
     -> PushtokensRemove
-pushtokensRemove pPrPayload_ =
+pushtokensRemove pPrPayload_ = 
     PushtokensRemove'
     { _prConsistencyToken = Nothing
     , _prPayload = pPrPayload_
+    , _prFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -89,13 +95,18 @@ prPayload :: Lens' PushtokensRemove PushTokenId
 prPayload
   = lens _prPayload (\ s a -> s{_prPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prFields :: Lens' PushtokensRemove (Maybe Text)
+prFields = lens _prFields (\ s a -> s{_prFields = a})
+
 instance GoogleRequest PushtokensRemove where
         type Rs PushtokensRemove = ()
         type Scopes PushtokensRemove =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient PushtokensRemove'{..}
-          = go _prConsistencyToken (Just AltJSON) _prPayload
+          = go _prConsistencyToken _prFields (Just AltJSON)
+              _prPayload
               gamesService
           where go
                   = buildClient

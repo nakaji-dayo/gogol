@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.RemarketingAudience.Update
     , mrauPayload
     , mrauAccountId
     , mrauRemarketingAudienceId
+    , mrauFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.remarketingAudience.update@ method which the
 -- 'ManagementRemarketingAudienceUpdate' request conforms to.
@@ -54,18 +55,20 @@ type ManagementRemarketingAudienceUpdateResource =
                  Capture "webPropertyId" Text :>
                    "remarketingAudiences" :>
                      Capture "remarketingAudienceId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] RemarketingAudience :>
-                           Put '[JSON] RemarketingAudience
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] RemarketingAudience :>
+                             Put '[JSON] RemarketingAudience
 
 -- | Updates an existing remarketing audience.
 --
 -- /See:/ 'managementRemarketingAudienceUpdate' smart constructor.
 data ManagementRemarketingAudienceUpdate = ManagementRemarketingAudienceUpdate'
-    { _mrauWebPropertyId         :: !Text
-    , _mrauPayload               :: !RemarketingAudience
-    , _mrauAccountId             :: !Text
+    { _mrauWebPropertyId :: !Text
+    , _mrauPayload :: !RemarketingAudience
+    , _mrauAccountId :: !Text
     , _mrauRemarketingAudienceId :: !Text
+    , _mrauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementRemarketingAudienceUpdate' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementRemarketingAudienceUpdate = ManagementRemarketingAudienceUpdate'
 -- * 'mrauAccountId'
 --
 -- * 'mrauRemarketingAudienceId'
+--
+-- * 'mrauFields'
 managementRemarketingAudienceUpdate
     :: Text -- ^ 'mrauWebPropertyId'
     -> RemarketingAudience -- ^ 'mrauPayload'
     -> Text -- ^ 'mrauAccountId'
     -> Text -- ^ 'mrauRemarketingAudienceId'
     -> ManagementRemarketingAudienceUpdate
-managementRemarketingAudienceUpdate pMrauWebPropertyId_ pMrauPayload_ pMrauAccountId_ pMrauRemarketingAudienceId_ =
+managementRemarketingAudienceUpdate pMrauWebPropertyId_ pMrauPayload_ pMrauAccountId_ pMrauRemarketingAudienceId_ = 
     ManagementRemarketingAudienceUpdate'
     { _mrauWebPropertyId = pMrauWebPropertyId_
     , _mrauPayload = pMrauPayload_
     , _mrauAccountId = pMrauAccountId_
     , _mrauRemarketingAudienceId = pMrauRemarketingAudienceId_
+    , _mrauFields = Nothing
     }
 
 -- | The web property ID of the remarketing audience to update.
@@ -116,6 +122,11 @@ mrauRemarketingAudienceId
   = lens _mrauRemarketingAudienceId
       (\ s a -> s{_mrauRemarketingAudienceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mrauFields :: Lens' ManagementRemarketingAudienceUpdate (Maybe Text)
+mrauFields
+  = lens _mrauFields (\ s a -> s{_mrauFields = a})
+
 instance GoogleRequest
          ManagementRemarketingAudienceUpdate where
         type Rs ManagementRemarketingAudienceUpdate =
@@ -126,6 +137,7 @@ instance GoogleRequest
           ManagementRemarketingAudienceUpdate'{..}
           = go _mrauAccountId _mrauWebPropertyId
               _mrauRemarketingAudienceId
+              _mrauFields
               (Just AltJSON)
               _mrauPayload
               analyticsService

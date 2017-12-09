@@ -37,11 +37,12 @@ module Network.Google.Resource.SQL.Databases.Patch
     , dpProject
     , dpDatabase
     , dpPayload
+    , dpFields
     , dpInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.patch@ method which the
 -- 'DatabasesPatch' request conforms to.
@@ -54,17 +55,19 @@ type DatabasesPatchResource =
                Capture "instance" Text :>
                  "databases" :>
                    Capture "database" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Database :> Patch '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Database :> Patch '[JSON] Operation
 
 -- | Updates a resource containing information about a database inside a
 -- Cloud SQL instance. This method supports patch semantics.
 --
 -- /See:/ 'databasesPatch' smart constructor.
 data DatabasesPatch = DatabasesPatch'
-    { _dpProject  :: !Text
+    { _dpProject :: !Text
     , _dpDatabase :: !Text
-    , _dpPayload  :: !Database
+    , _dpPayload :: !Database
+    , _dpFields :: !(Maybe Text)
     , _dpInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -78,6 +81,8 @@ data DatabasesPatch = DatabasesPatch'
 --
 -- * 'dpPayload'
 --
+-- * 'dpFields'
+--
 -- * 'dpInstance'
 databasesPatch
     :: Text -- ^ 'dpProject'
@@ -85,11 +90,12 @@ databasesPatch
     -> Database -- ^ 'dpPayload'
     -> Text -- ^ 'dpInstance'
     -> DatabasesPatch
-databasesPatch pDpProject_ pDpDatabase_ pDpPayload_ pDpInstance_ =
+databasesPatch pDpProject_ pDpDatabase_ pDpPayload_ pDpInstance_ = 
     DatabasesPatch'
     { _dpProject = pDpProject_
     , _dpDatabase = pDpDatabase_
     , _dpPayload = pDpPayload_
+    , _dpFields = Nothing
     , _dpInstance = pDpInstance_
     }
 
@@ -108,6 +114,10 @@ dpPayload :: Lens' DatabasesPatch Database
 dpPayload
   = lens _dpPayload (\ s a -> s{_dpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dpFields :: Lens' DatabasesPatch (Maybe Text)
+dpFields = lens _dpFields (\ s a -> s{_dpFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 dpInstance :: Lens' DatabasesPatch Text
 dpInstance
@@ -119,7 +129,7 @@ instance GoogleRequest DatabasesPatch where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesPatch'{..}
-          = go _dpProject _dpInstance _dpDatabase
+          = go _dpProject _dpInstance _dpDatabase _dpFields
               (Just AltJSON)
               _dpPayload
               sQLAdminService

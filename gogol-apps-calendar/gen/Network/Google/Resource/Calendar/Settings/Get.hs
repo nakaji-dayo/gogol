@@ -34,10 +34,11 @@ module Network.Google.Resource.Calendar.Settings.Get
 
     -- * Request Lenses
     , sgSetting
+    , sgFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.settings.get@ method which the
 -- 'SettingsGet' request conforms to.
@@ -48,13 +49,15 @@ type SettingsGetResource =
            "me" :>
              "settings" :>
                Capture "setting" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Setting
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Setting
 
 -- | Returns a single user setting.
 --
 -- /See:/ 'settingsGet' smart constructor.
-newtype SettingsGet = SettingsGet'
-    { _sgSetting :: Text
+data SettingsGet = SettingsGet'
+    { _sgSetting :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SettingsGet' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype SettingsGet = SettingsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sgSetting'
+--
+-- * 'sgFields'
 settingsGet
     :: Text -- ^ 'sgSetting'
     -> SettingsGet
-settingsGet pSgSetting_ =
+settingsGet pSgSetting_ = 
     SettingsGet'
     { _sgSetting = pSgSetting_
+    , _sgFields = Nothing
     }
 
 -- | The id of the user setting.
@@ -75,13 +81,18 @@ sgSetting :: Lens' SettingsGet Text
 sgSetting
   = lens _sgSetting (\ s a -> s{_sgSetting = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SettingsGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest SettingsGet where
         type Rs SettingsGet = Setting
         type Scopes SettingsGet =
              '["https://www.googleapis.com/auth/calendar",
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient SettingsGet'{..}
-          = go _sgSetting (Just AltJSON) appsCalendarService
+          = go _sgSetting _sgFields (Just AltJSON)
+              appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy SettingsGetResource)
                       mempty

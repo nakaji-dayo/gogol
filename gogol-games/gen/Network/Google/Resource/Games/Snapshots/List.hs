@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.Snapshots.List
     , slPageToken
     , slPlayerId
     , slMaxResults
+    , slFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.snapshots.list@ method which the
 -- 'SnapshotsList' request conforms to.
@@ -56,8 +57,9 @@ type SnapshotsListResource =
                  QueryParam "language" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] SnapshotListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] SnapshotListResponse
 
 -- | Retrieves a list of snapshots created by your application for the player
 -- corresponding to the player ID.
@@ -65,10 +67,11 @@ type SnapshotsListResource =
 -- /See:/ 'snapshotsList' smart constructor.
 data SnapshotsList = SnapshotsList'
     { _slConsistencyToken :: !(Maybe (Textual Int64))
-    , _slLanguage         :: !(Maybe Text)
-    , _slPageToken        :: !(Maybe Text)
-    , _slPlayerId         :: !Text
-    , _slMaxResults       :: !(Maybe (Textual Int32))
+    , _slLanguage :: !(Maybe Text)
+    , _slPageToken :: !(Maybe Text)
+    , _slPlayerId :: !Text
+    , _slMaxResults :: !(Maybe (Textual Int32))
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SnapshotsList' with the minimum fields required to make a request.
@@ -84,16 +87,19 @@ data SnapshotsList = SnapshotsList'
 -- * 'slPlayerId'
 --
 -- * 'slMaxResults'
+--
+-- * 'slFields'
 snapshotsList
     :: Text -- ^ 'slPlayerId'
     -> SnapshotsList
-snapshotsList pSlPlayerId_ =
+snapshotsList pSlPlayerId_ = 
     SnapshotsList'
     { _slConsistencyToken = Nothing
     , _slLanguage = Nothing
     , _slPageToken = Nothing
     , _slPlayerId = pSlPlayerId_
     , _slMaxResults = Nothing
+    , _slFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -127,6 +133,10 @@ slMaxResults
   = lens _slMaxResults (\ s a -> s{_slMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SnapshotsList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SnapshotsList where
         type Rs SnapshotsList = SnapshotListResponse
         type Scopes SnapshotsList =
@@ -137,6 +147,7 @@ instance GoogleRequest SnapshotsList where
           = go _slPlayerId _slConsistencyToken _slLanguage
               _slPageToken
               _slMaxResults
+              _slFields
               (Just AltJSON)
               gamesService
           where go

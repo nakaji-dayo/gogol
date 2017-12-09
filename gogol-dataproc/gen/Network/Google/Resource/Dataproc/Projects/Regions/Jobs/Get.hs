@@ -42,11 +42,12 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Jobs.Get
     , prjgBearerToken
     , prjgRegion
     , prjgProjectId
+    , prjgFields
     , prjgCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.jobs.get@ method which the
 -- 'ProjectsRegionsJobsGet' request conforms to.
@@ -58,29 +59,31 @@ type ProjectsRegionsJobsGetResource =
              Capture "region" Text :>
                "jobs" :>
                  Capture "jobId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :> Get '[JSON] Job
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :> Get '[JSON] Job
 
 -- | Gets the resource representation for a job in a project.
 --
 -- /See:/ 'projectsRegionsJobsGet' smart constructor.
 data ProjectsRegionsJobsGet = ProjectsRegionsJobsGet'
-    { _prjgXgafv          :: !(Maybe Text)
-    , _prjgJobId          :: !Text
+    { _prjgXgafv :: !(Maybe Xgafv)
+    , _prjgJobId :: !Text
     , _prjgUploadProtocol :: !(Maybe Text)
-    , _prjgPp             :: !Bool
-    , _prjgAccessToken    :: !(Maybe Text)
-    , _prjgUploadType     :: !(Maybe Text)
-    , _prjgBearerToken    :: !(Maybe Text)
-    , _prjgRegion         :: !Text
-    , _prjgProjectId      :: !Text
-    , _prjgCallback       :: !(Maybe Text)
+    , _prjgPp :: !Bool
+    , _prjgAccessToken :: !(Maybe Text)
+    , _prjgUploadType :: !(Maybe Text)
+    , _prjgBearerToken :: !(Maybe Text)
+    , _prjgRegion :: !Text
+    , _prjgProjectId :: !Text
+    , _prjgFields :: !(Maybe Text)
+    , _prjgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsJobsGet' with the minimum fields required to make a request.
@@ -105,13 +108,15 @@ data ProjectsRegionsJobsGet = ProjectsRegionsJobsGet'
 --
 -- * 'prjgProjectId'
 --
+-- * 'prjgFields'
+--
 -- * 'prjgCallback'
 projectsRegionsJobsGet
     :: Text -- ^ 'prjgJobId'
     -> Text -- ^ 'prjgRegion'
     -> Text -- ^ 'prjgProjectId'
     -> ProjectsRegionsJobsGet
-projectsRegionsJobsGet pPrjgJobId_ pPrjgRegion_ pPrjgProjectId_ =
+projectsRegionsJobsGet pPrjgJobId_ pPrjgRegion_ pPrjgProjectId_ = 
     ProjectsRegionsJobsGet'
     { _prjgXgafv = Nothing
     , _prjgJobId = pPrjgJobId_
@@ -122,15 +127,16 @@ projectsRegionsJobsGet pPrjgJobId_ pPrjgRegion_ pPrjgProjectId_ =
     , _prjgBearerToken = Nothing
     , _prjgRegion = pPrjgRegion_
     , _prjgProjectId = pPrjgProjectId_
+    , _prjgFields = Nothing
     , _prjgCallback = Nothing
     }
 
 -- | V1 error format.
-prjgXgafv :: Lens' ProjectsRegionsJobsGet (Maybe Text)
+prjgXgafv :: Lens' ProjectsRegionsJobsGet (Maybe Xgafv)
 prjgXgafv
   = lens _prjgXgafv (\ s a -> s{_prjgXgafv = a})
 
--- | [Required] The job ID.
+-- | Required. The job ID.
 prjgJobId :: Lens' ProjectsRegionsJobsGet Text
 prjgJobId
   = lens _prjgJobId (\ s a -> s{_prjgJobId = a})
@@ -163,17 +169,22 @@ prjgBearerToken
   = lens _prjgBearerToken
       (\ s a -> s{_prjgBearerToken = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prjgRegion :: Lens' ProjectsRegionsJobsGet Text
 prjgRegion
   = lens _prjgRegion (\ s a -> s{_prjgRegion = a})
 
--- | [Required] The ID of the Google Cloud Platform project that the job
+-- | Required. The ID of the Google Cloud Platform project that the job
 -- belongs to.
 prjgProjectId :: Lens' ProjectsRegionsJobsGet Text
 prjgProjectId
   = lens _prjgProjectId
       (\ s a -> s{_prjgProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+prjgFields :: Lens' ProjectsRegionsJobsGet (Maybe Text)
+prjgFields
+  = lens _prjgFields (\ s a -> s{_prjgFields = a})
 
 -- | JSONP
 prjgCallback :: Lens' ProjectsRegionsJobsGet (Maybe Text)
@@ -192,6 +203,7 @@ instance GoogleRequest ProjectsRegionsJobsGet where
               _prjgUploadType
               _prjgBearerToken
               _prjgCallback
+              _prjgFields
               (Just AltJSON)
               dataprocService
           where go

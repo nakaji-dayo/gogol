@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.Filters.Create
     -- * Request Lenses
     , usfcPayload
     , usfcUserId
+    , usfcFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.filters.create@ method which the
 -- 'UsersSettingsFiltersCreate' request conforms to.
@@ -49,15 +50,17 @@ type UsersSettingsFiltersCreateResource =
            Capture "userId" Text :>
              "settings" :>
                "filters" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Filter :> Post '[JSON] Filter
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Filter :> Post '[JSON] Filter
 
 -- | Creates a filter.
 --
 -- /See:/ 'usersSettingsFiltersCreate' smart constructor.
 data UsersSettingsFiltersCreate = UsersSettingsFiltersCreate'
     { _usfcPayload :: !Filter
-    , _usfcUserId  :: !Text
+    , _usfcUserId :: !Text
+    , _usfcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsFiltersCreate' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersSettingsFiltersCreate = UsersSettingsFiltersCreate'
 -- * 'usfcPayload'
 --
 -- * 'usfcUserId'
+--
+-- * 'usfcFields'
 usersSettingsFiltersCreate
     :: Filter -- ^ 'usfcPayload'
     -> UsersSettingsFiltersCreate
-usersSettingsFiltersCreate pUsfcPayload_ =
+usersSettingsFiltersCreate pUsfcPayload_ = 
     UsersSettingsFiltersCreate'
     { _usfcPayload = pUsfcPayload_
     , _usfcUserId = "me"
+    , _usfcFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,13 +93,19 @@ usfcUserId :: Lens' UsersSettingsFiltersCreate Text
 usfcUserId
   = lens _usfcUserId (\ s a -> s{_usfcUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usfcFields :: Lens' UsersSettingsFiltersCreate (Maybe Text)
+usfcFields
+  = lens _usfcFields (\ s a -> s{_usfcFields = a})
+
 instance GoogleRequest UsersSettingsFiltersCreate
          where
         type Rs UsersSettingsFiltersCreate = Filter
         type Scopes UsersSettingsFiltersCreate =
              '["https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsFiltersCreate'{..}
-          = go _usfcUserId (Just AltJSON) _usfcPayload
+          = go _usfcUserId _usfcFields (Just AltJSON)
+              _usfcPayload
               gmailService
           where go
                   = buildClient

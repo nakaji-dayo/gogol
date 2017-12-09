@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.Labels.List
 
     -- * Request Lenses
     , ullUserId
+    , ullFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.list@ method which the
 -- 'UsersLabelsList' request conforms to.
@@ -47,14 +48,16 @@ type UsersLabelsListResource =
          "users" :>
            Capture "userId" Text :>
              "labels" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] ListLabelsResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ListLabelsResponse
 
 -- | Lists all labels in the user\'s mailbox.
 --
 -- /See:/ 'usersLabelsList' smart constructor.
-newtype UsersLabelsList = UsersLabelsList'
-    { _ullUserId :: Text
+data UsersLabelsList = UsersLabelsList'
+    { _ullUserId :: !Text
+    , _ullFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsList' with the minimum fields required to make a request.
@@ -62,11 +65,14 @@ newtype UsersLabelsList = UsersLabelsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ullUserId'
+--
+-- * 'ullFields'
 usersLabelsList
     :: UsersLabelsList
-usersLabelsList =
+usersLabelsList = 
     UsersLabelsList'
     { _ullUserId = "me"
+    , _ullFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -74,6 +80,11 @@ usersLabelsList =
 ullUserId :: Lens' UsersLabelsList Text
 ullUserId
   = lens _ullUserId (\ s a -> s{_ullUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ullFields :: Lens' UsersLabelsList (Maybe Text)
+ullFields
+  = lens _ullFields (\ s a -> s{_ullFields = a})
 
 instance GoogleRequest UsersLabelsList where
         type Rs UsersLabelsList = ListLabelsResponse
@@ -84,7 +95,8 @@ instance GoogleRequest UsersLabelsList where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersLabelsList'{..}
-          = go _ullUserId (Just AltJSON) gmailService
+          = go _ullUserId _ullFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersLabelsListResource)

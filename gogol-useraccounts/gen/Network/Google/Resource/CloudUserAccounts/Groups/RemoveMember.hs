@@ -36,10 +36,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.RemoveMember
     , grmProject
     , grmPayload
     , grmGroupName
+    , grmFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.removeMember@ method which the
 -- 'GroupsRemoveMember' request conforms to.
@@ -52,17 +53,19 @@ type GroupsRemoveMemberResource =
                "groups" :>
                  Capture "groupName" Text :>
                    "removeMember" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] GroupsRemoveMemberRequest :>
-                         Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] GroupsRemoveMemberRequest :>
+                           Post '[JSON] Operation
 
 -- | Removes users from the specified group.
 --
 -- /See:/ 'groupsRemoveMember' smart constructor.
 data GroupsRemoveMember = GroupsRemoveMember'
-    { _grmProject   :: !Text
-    , _grmPayload   :: !GroupsRemoveMemberRequest
+    { _grmProject :: !Text
+    , _grmPayload :: !GroupsRemoveMemberRequest
     , _grmGroupName :: !Text
+    , _grmFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsRemoveMember' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data GroupsRemoveMember = GroupsRemoveMember'
 -- * 'grmPayload'
 --
 -- * 'grmGroupName'
+--
+-- * 'grmFields'
 groupsRemoveMember
     :: Text -- ^ 'grmProject'
     -> GroupsRemoveMemberRequest -- ^ 'grmPayload'
     -> Text -- ^ 'grmGroupName'
     -> GroupsRemoveMember
-groupsRemoveMember pGrmProject_ pGrmPayload_ pGrmGroupName_ =
+groupsRemoveMember pGrmProject_ pGrmPayload_ pGrmGroupName_ = 
     GroupsRemoveMember'
     { _grmProject = pGrmProject_
     , _grmPayload = pGrmPayload_
     , _grmGroupName = pGrmGroupName_
+    , _grmFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,13 +107,19 @@ grmGroupName :: Lens' GroupsRemoveMember Text
 grmGroupName
   = lens _grmGroupName (\ s a -> s{_grmGroupName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+grmFields :: Lens' GroupsRemoveMember (Maybe Text)
+grmFields
+  = lens _grmFields (\ s a -> s{_grmFields = a})
+
 instance GoogleRequest GroupsRemoveMember where
         type Rs GroupsRemoveMember = Operation
         type Scopes GroupsRemoveMember =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient GroupsRemoveMember'{..}
-          = go _grmProject _grmGroupName (Just AltJSON)
+          = go _grmProject _grmGroupName _grmFields
+              (Just AltJSON)
               _grmPayload
               userAccountsService
           where go

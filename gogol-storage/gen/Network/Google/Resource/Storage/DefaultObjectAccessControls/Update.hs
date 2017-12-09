@@ -35,11 +35,13 @@ module Network.Google.Resource.Storage.DefaultObjectAccessControls.Update
     -- * Request Lenses
     , doacuBucket
     , doacuPayload
+    , doacuUserProject
     , doacuEntity
+    , doacuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.defaultObjectAccessControls.update@ method which the
 -- 'DefaultObjectAccessControlsUpdate' request conforms to.
@@ -50,17 +52,21 @@ type DefaultObjectAccessControlsUpdateResource =
            Capture "bucket" Text :>
              "defaultObjectAcl" :>
                Capture "entity" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ObjectAccessControl :>
-                     Put '[JSON] ObjectAccessControl
+                 QueryParam "userProject" Text :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ObjectAccessControl :>
+                         Put '[JSON] ObjectAccessControl
 
 -- | Updates a default object ACL entry on the specified bucket.
 --
 -- /See:/ 'defaultObjectAccessControlsUpdate' smart constructor.
 data DefaultObjectAccessControlsUpdate = DefaultObjectAccessControlsUpdate'
-    { _doacuBucket  :: !Text
+    { _doacuBucket :: !Text
     , _doacuPayload :: !ObjectAccessControl
-    , _doacuEntity  :: !Text
+    , _doacuUserProject :: !(Maybe Text)
+    , _doacuEntity :: !Text
+    , _doacuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DefaultObjectAccessControlsUpdate' with the minimum fields required to make a request.
@@ -71,17 +77,23 @@ data DefaultObjectAccessControlsUpdate = DefaultObjectAccessControlsUpdate'
 --
 -- * 'doacuPayload'
 --
+-- * 'doacuUserProject'
+--
 -- * 'doacuEntity'
+--
+-- * 'doacuFields'
 defaultObjectAccessControlsUpdate
     :: Text -- ^ 'doacuBucket'
     -> ObjectAccessControl -- ^ 'doacuPayload'
     -> Text -- ^ 'doacuEntity'
     -> DefaultObjectAccessControlsUpdate
-defaultObjectAccessControlsUpdate pDoacuBucket_ pDoacuPayload_ pDoacuEntity_ =
+defaultObjectAccessControlsUpdate pDoacuBucket_ pDoacuPayload_ pDoacuEntity_ = 
     DefaultObjectAccessControlsUpdate'
     { _doacuBucket = pDoacuBucket_
     , _doacuPayload = pDoacuPayload_
+    , _doacuUserProject = Nothing
     , _doacuEntity = pDoacuEntity_
+    , _doacuFields = Nothing
     }
 
 -- | Name of a bucket.
@@ -94,12 +106,24 @@ doacuPayload :: Lens' DefaultObjectAccessControlsUpdate ObjectAccessControl
 doacuPayload
   = lens _doacuPayload (\ s a -> s{_doacuPayload = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+doacuUserProject :: Lens' DefaultObjectAccessControlsUpdate (Maybe Text)
+doacuUserProject
+  = lens _doacuUserProject
+      (\ s a -> s{_doacuUserProject = a})
+
 -- | The entity holding the permission. Can be user-userId,
 -- user-emailAddress, group-groupId, group-emailAddress, allUsers, or
 -- allAuthenticatedUsers.
 doacuEntity :: Lens' DefaultObjectAccessControlsUpdate Text
 doacuEntity
   = lens _doacuEntity (\ s a -> s{_doacuEntity = a})
+
+-- | Selector specifying which fields to include in a partial response.
+doacuFields :: Lens' DefaultObjectAccessControlsUpdate (Maybe Text)
+doacuFields
+  = lens _doacuFields (\ s a -> s{_doacuFields = a})
 
 instance GoogleRequest
          DefaultObjectAccessControlsUpdate where
@@ -109,7 +133,9 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/devstorage.full_control"]
         requestClient DefaultObjectAccessControlsUpdate'{..}
-          = go _doacuBucket _doacuEntity (Just AltJSON)
+          = go _doacuBucket _doacuEntity _doacuUserProject
+              _doacuFields
+              (Just AltJSON)
               _doacuPayload
               storageService
           where go

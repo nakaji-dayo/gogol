@@ -44,11 +44,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Get
     , asvgAppsId
     , asvgView
     , asvgServicesId
+    , asvgFields
     , asvgCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.get@ method which the
 -- 'AppsServicesVersionsGet' request conforms to.
@@ -60,7 +61,7 @@ type AppsServicesVersionsGetResource =
              Capture "servicesId" Text :>
                "versions" :>
                  Capture "versionsId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
@@ -68,25 +69,27 @@ type AppsServicesVersionsGetResource =
                              QueryParam "bearer_token" Text :>
                                QueryParam "view" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] Version
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] Version
 
 -- | Gets the specified Version resource. By default, only a BASIC_VIEW will
 -- be returned. Specify the FULL_VIEW parameter to get the full resource.
 --
 -- /See:/ 'appsServicesVersionsGet' smart constructor.
 data AppsServicesVersionsGet = AppsServicesVersionsGet'
-    { _asvgXgafv          :: !(Maybe Text)
+    { _asvgXgafv :: !(Maybe Xgafv)
     , _asvgUploadProtocol :: !(Maybe Text)
-    , _asvgPp             :: !Bool
-    , _asvgAccessToken    :: !(Maybe Text)
-    , _asvgUploadType     :: !(Maybe Text)
-    , _asvgVersionsId     :: !Text
-    , _asvgBearerToken    :: !(Maybe Text)
-    , _asvgAppsId         :: !Text
-    , _asvgView           :: !(Maybe Text)
-    , _asvgServicesId     :: !Text
-    , _asvgCallback       :: !(Maybe Text)
+    , _asvgPp :: !Bool
+    , _asvgAccessToken :: !(Maybe Text)
+    , _asvgUploadType :: !(Maybe Text)
+    , _asvgVersionsId :: !Text
+    , _asvgBearerToken :: !(Maybe Text)
+    , _asvgAppsId :: !Text
+    , _asvgView :: !(Maybe Text)
+    , _asvgServicesId :: !Text
+    , _asvgFields :: !(Maybe Text)
+    , _asvgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsGet' with the minimum fields required to make a request.
@@ -113,13 +116,15 @@ data AppsServicesVersionsGet = AppsServicesVersionsGet'
 --
 -- * 'asvgServicesId'
 --
+-- * 'asvgFields'
+--
 -- * 'asvgCallback'
 appsServicesVersionsGet
     :: Text -- ^ 'asvgVersionsId'
     -> Text -- ^ 'asvgAppsId'
     -> Text -- ^ 'asvgServicesId'
     -> AppsServicesVersionsGet
-appsServicesVersionsGet pAsvgVersionsId_ pAsvgAppsId_ pAsvgServicesId_ =
+appsServicesVersionsGet pAsvgVersionsId_ pAsvgAppsId_ pAsvgServicesId_ = 
     AppsServicesVersionsGet'
     { _asvgXgafv = Nothing
     , _asvgUploadProtocol = Nothing
@@ -131,11 +136,12 @@ appsServicesVersionsGet pAsvgVersionsId_ pAsvgAppsId_ pAsvgServicesId_ =
     , _asvgAppsId = pAsvgAppsId_
     , _asvgView = Nothing
     , _asvgServicesId = pAsvgServicesId_
+    , _asvgFields = Nothing
     , _asvgCallback = Nothing
     }
 
 -- | V1 error format.
-asvgXgafv :: Lens' AppsServicesVersionsGet (Maybe Text)
+asvgXgafv :: Lens' AppsServicesVersionsGet (Maybe Xgafv)
 asvgXgafv
   = lens _asvgXgafv (\ s a -> s{_asvgXgafv = a})
 
@@ -189,6 +195,11 @@ asvgServicesId
   = lens _asvgServicesId
       (\ s a -> s{_asvgServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asvgFields :: Lens' AppsServicesVersionsGet (Maybe Text)
+asvgFields
+  = lens _asvgFields (\ s a -> s{_asvgFields = a})
+
 -- | JSONP
 asvgCallback :: Lens' AppsServicesVersionsGet (Maybe Text)
 asvgCallback
@@ -210,6 +221,7 @@ instance GoogleRequest AppsServicesVersionsGet where
               _asvgBearerToken
               _asvgView
               _asvgCallback
+              _asvgFields
               (Just AltJSON)
               appEngineService
           where go

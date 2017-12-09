@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Projects.Get
     -- * Request Lenses
     , proProFileId
     , proId
+    , proFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.projects.get@ method which the
 -- 'ProjectsGet' request conforms to.
 type ProjectsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Project
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Project
 
 -- | Gets one project by ID.
 --
 -- /See:/ 'projectsGet' smart constructor.
 data ProjectsGet = ProjectsGet'
     { _proProFileId :: !(Textual Int64)
-    , _proId        :: !(Textual Int64)
+    , _proId :: !(Textual Int64)
+    , _proFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ProjectsGet = ProjectsGet'
 -- * 'proProFileId'
 --
 -- * 'proId'
+--
+-- * 'proFields'
 projectsGet
     :: Int64 -- ^ 'proProFileId'
     -> Int64 -- ^ 'proId'
     -> ProjectsGet
-projectsGet pProProFileId_ pProId_ =
+projectsGet pProProFileId_ pProId_ = 
     ProjectsGet'
     { _proProFileId = _Coerce # pProProFileId_
     , _proId = _Coerce # pProId_
+    , _proFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ proId :: Lens' ProjectsGet Int64
 proId
   = lens _proId (\ s a -> s{_proId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+proFields :: Lens' ProjectsGet (Maybe Text)
+proFields
+  = lens _proFields (\ s a -> s{_proFields = a})
+
 instance GoogleRequest ProjectsGet where
         type Rs ProjectsGet = Project
         type Scopes ProjectsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ProjectsGet'{..}
-          = go _proProFileId _proId (Just AltJSON)
+          = go _proProFileId _proId _proFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy ProjectsGetResource)

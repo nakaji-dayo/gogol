@@ -35,10 +35,11 @@ module Network.Google.Resource.SQL.Instances.Insert
     -- * Request Lenses
     , insProject
     , insPayload
+    , insFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.insert@ method which the
 -- 'InstancesInsert' request conforms to.
@@ -48,9 +49,10 @@ type InstancesInsertResource =
          "projects" :>
            Capture "project" Text :>
              "instances" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DatabaseInstance :>
-                   Post '[JSON] Operation
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DatabaseInstance :>
+                     Post '[JSON] Operation
 
 -- | Creates a new Cloud SQL instance.
 --
@@ -58,6 +60,7 @@ type InstancesInsertResource =
 data InstancesInsert = InstancesInsert'
     { _insProject :: !Text
     , _insPayload :: !DatabaseInstance
+    , _insFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstancesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data InstancesInsert = InstancesInsert'
 -- * 'insProject'
 --
 -- * 'insPayload'
+--
+-- * 'insFields'
 instancesInsert
     :: Text -- ^ 'insProject'
     -> DatabaseInstance -- ^ 'insPayload'
     -> InstancesInsert
-instancesInsert pInsProject_ pInsPayload_ =
+instancesInsert pInsProject_ pInsPayload_ = 
     InstancesInsert'
     { _insProject = pInsProject_
     , _insPayload = pInsPayload_
+    , _insFields = Nothing
     }
 
 -- | Project ID of the project to which the newly created Cloud SQL instances
@@ -88,13 +94,19 @@ insPayload :: Lens' InstancesInsert DatabaseInstance
 insPayload
   = lens _insPayload (\ s a -> s{_insPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+insFields :: Lens' InstancesInsert (Maybe Text)
+insFields
+  = lens _insFields (\ s a -> s{_insFields = a})
+
 instance GoogleRequest InstancesInsert where
         type Rs InstancesInsert = Operation
         type Scopes InstancesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesInsert'{..}
-          = go _insProject (Just AltJSON) _insPayload
+          = go _insProject _insFields (Just AltJSON)
+              _insPayload
               sQLAdminService
           where go
                   = buildClient

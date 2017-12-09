@@ -139,14 +139,48 @@ module Network.Google.Drive
     -- ** drive.revisions.update
     , module Network.Google.Resource.Drive.Revisions.Update
 
+    -- ** drive.teamdrives.create
+    , module Network.Google.Resource.Drive.Teamdrives.Create
+
+    -- ** drive.teamdrives.delete
+    , module Network.Google.Resource.Drive.Teamdrives.Delete
+
+    -- ** drive.teamdrives.get
+    , module Network.Google.Resource.Drive.Teamdrives.Get
+
+    -- ** drive.teamdrives.list
+    , module Network.Google.Resource.Drive.Teamdrives.List
+
+    -- ** drive.teamdrives.update
+    , module Network.Google.Resource.Drive.Teamdrives.Update
+
     -- * Types
 
     -- ** FileList
     , FileList
     , fileList
     , flNextPageToken
+    , flIncompleteSearch
     , flKind
     , flFiles
+
+    -- ** TeamDriveCapabilities
+    , TeamDriveCapabilities
+    , teamDriveCapabilities
+    , tdcCanRename
+    , tdcCanComment
+    , tdcCanRenameTeamDrive
+    , tdcCanChangeTeamDriveBackgRound
+    , tdcCanDownload
+    , tdcCanAddChildren
+    , tdcCanRemoveChildren
+    , tdcCanDeleteTeamDrive
+    , tdcCanListChildren
+    , tdcCanEdit
+    , tdcCanManageMembers
+    , tdcCanReadRevisions
+    , tdcCanCopy
+    , tdcCanShare
 
     -- ** FilesListCorpus
     , FilesListCorpus (..)
@@ -186,8 +220,20 @@ module Network.Google.Drive
     -- ** FileCapabilities
     , FileCapabilities
     , fileCapabilities
+    , fcCanRename
     , fcCanComment
+    , fcCanDelete
+    , fcCanMoveItemIntoTeamDrive
+    , fcCanDownload
+    , fcCanTrash
+    , fcCanUntrash
+    , fcCanAddChildren
+    , fcCanRemoveChildren
+    , fcCanMoveTeamDriveItem
+    , fcCanReadTeamDrive
+    , fcCanListChildren
     , fcCanEdit
+    , fcCanChangeViewersCanCopyContent
     , fcCanReadRevisions
     , fcCanCopy
     , fcCanShare
@@ -205,6 +251,13 @@ module Network.Google.Drive
     , fchtImage
     , fchtMimeType
 
+    -- ** TeamDriveList
+    , TeamDriveList
+    , teamDriveList
+    , tdlNextPageToken
+    , tdlTeamDrives
+    , tdlKind
+
     -- ** Channel
     , Channel
     , channel
@@ -218,6 +271,21 @@ module Network.Google.Drive
     , cParams
     , cId
     , cType
+
+    -- ** AboutTeamDriveThemesItem
+    , AboutTeamDriveThemesItem
+    , aboutTeamDriveThemesItem
+    , atdtiColorRgb
+    , atdtiBackgRoundImageLink
+    , atdtiId
+
+    -- ** TeamDriveBackgRoundImageFile
+    , TeamDriveBackgRoundImageFile
+    , teamDriveBackgRoundImageFile
+    , tdbrifXCoordinate
+    , tdbrifYCoordinate
+    , tdbrifWidth
+    , tdbrifId
 
     -- ** FileVideoMediaMetadata
     , FileVideoMediaMetadata
@@ -237,8 +305,24 @@ module Network.Google.Drive
     , chaRemoved
     , chaTime
     , chaKind
+    , chaTeamDrive
+    , chaTeamDriveId
+    , chaType
     , chaFileId
     , chaFile
+
+    -- ** TeamDrive
+    , TeamDrive
+    , teamDrive
+    , tdThemeId
+    , tdBackgRoundImageFile
+    , tdColorRgb
+    , tdCreatedTime
+    , tdKind
+    , tdBackgRoundImageLink
+    , tdName
+    , tdId
+    , tdCapabilities
 
     -- ** AboutExportFormats
     , AboutExportFormats
@@ -295,6 +379,7 @@ module Network.Google.Drive
     , aUser
     , aStorageQuota
     , aMaxUploadSize
+    , aTeamDriveThemes
     , aFolderColorPalette
 
     -- ** FileImageMediaMetadataLocation
@@ -371,6 +456,7 @@ module Network.Google.Drive
     , Permission
     , permission
     , pPhotoLink
+    , pTeamDrivePermissionDetails
     , pKind
     , pDomain
     , pRole
@@ -378,6 +464,7 @@ module Network.Google.Drive
     , pAllowFileDiscovery
     , pDisplayName
     , pId
+    , pDeleted
     , pType
     , pExpirationTime
 
@@ -398,6 +485,7 @@ module Network.Google.Drive
     , fTrashed
     , fWebViewLink
     , fCreatedTime
+    , fTrashedTime
     , fOriginalFilename
     , fKind
     , fLastModifyingUser
@@ -408,6 +496,7 @@ module Network.Google.Drive
     , fExplicitlyTrashed
     , fShared
     , fMD5Checksum
+    , fTeamDriveId
     , fFolderColorRgb
     , fMimeType
     , fIsAppAuthorized
@@ -416,8 +505,11 @@ module Network.Google.Drive
     , fStarred
     , fSpaces
     , fVersion
+    , fHasAugmentedPermissions
     , fWritersCanShare
+    , fTrashingUser
     , fId
+    , fPermissionIds
     , fPermissions
     , fQuotaBytesUsed
     , fAppProperties
@@ -431,6 +523,14 @@ module Network.Google.Drive
     , fWebContentLink
     , fContentHints
     , fProperties
+
+    -- ** PermissionTeamDrivePermissionDetailsItem
+    , PermissionTeamDrivePermissionDetailsItem
+    , permissionTeamDrivePermissionDetailsItem
+    , ptdpdiInherited
+    , ptdpdiTeamDrivePermissionType
+    , ptdpdiRole
+    , ptdpdiInheritedFrom
 
     -- ** GeneratedIds
     , GeneratedIds
@@ -456,46 +556,52 @@ module Network.Google.Drive
     -- ** PermissionList
     , PermissionList
     , permissionList
+    , plNextPageToken
     , plKind
     , plPermissions
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Drive.About.Get
-import           Network.Google.Resource.Drive.Changes.GetStartPageToken
-import           Network.Google.Resource.Drive.Changes.List
-import           Network.Google.Resource.Drive.Changes.Watch
-import           Network.Google.Resource.Drive.Channels.Stop
-import           Network.Google.Resource.Drive.Comments.Create
-import           Network.Google.Resource.Drive.Comments.Delete
-import           Network.Google.Resource.Drive.Comments.Get
-import           Network.Google.Resource.Drive.Comments.List
-import           Network.Google.Resource.Drive.Comments.Update
-import           Network.Google.Resource.Drive.Files.Copy
-import           Network.Google.Resource.Drive.Files.Create
-import           Network.Google.Resource.Drive.Files.Delete
-import           Network.Google.Resource.Drive.Files.EmptyTrash
-import           Network.Google.Resource.Drive.Files.Export
-import           Network.Google.Resource.Drive.Files.GenerateIds
-import           Network.Google.Resource.Drive.Files.Get
-import           Network.Google.Resource.Drive.Files.List
-import           Network.Google.Resource.Drive.Files.Update
-import           Network.Google.Resource.Drive.Files.Watch
-import           Network.Google.Resource.Drive.Permissions.Create
-import           Network.Google.Resource.Drive.Permissions.Delete
-import           Network.Google.Resource.Drive.Permissions.Get
-import           Network.Google.Resource.Drive.Permissions.List
-import           Network.Google.Resource.Drive.Permissions.Update
-import           Network.Google.Resource.Drive.Replies.Create
-import           Network.Google.Resource.Drive.Replies.Delete
-import           Network.Google.Resource.Drive.Replies.Get
-import           Network.Google.Resource.Drive.Replies.List
-import           Network.Google.Resource.Drive.Replies.Update
-import           Network.Google.Resource.Drive.Revisions.Delete
-import           Network.Google.Resource.Drive.Revisions.Get
-import           Network.Google.Resource.Drive.Revisions.List
-import           Network.Google.Resource.Drive.Revisions.Update
+import Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Resource.Drive.About.Get
+import Network.Google.Resource.Drive.Changes.GetStartPageToken
+import Network.Google.Resource.Drive.Changes.List
+import Network.Google.Resource.Drive.Changes.Watch
+import Network.Google.Resource.Drive.Channels.Stop
+import Network.Google.Resource.Drive.Comments.Create
+import Network.Google.Resource.Drive.Comments.Delete
+import Network.Google.Resource.Drive.Comments.Get
+import Network.Google.Resource.Drive.Comments.List
+import Network.Google.Resource.Drive.Comments.Update
+import Network.Google.Resource.Drive.Files.Copy
+import Network.Google.Resource.Drive.Files.Create
+import Network.Google.Resource.Drive.Files.Delete
+import Network.Google.Resource.Drive.Files.EmptyTrash
+import Network.Google.Resource.Drive.Files.Export
+import Network.Google.Resource.Drive.Files.GenerateIds
+import Network.Google.Resource.Drive.Files.Get
+import Network.Google.Resource.Drive.Files.List
+import Network.Google.Resource.Drive.Files.Update
+import Network.Google.Resource.Drive.Files.Watch
+import Network.Google.Resource.Drive.Permissions.Create
+import Network.Google.Resource.Drive.Permissions.Delete
+import Network.Google.Resource.Drive.Permissions.Get
+import Network.Google.Resource.Drive.Permissions.List
+import Network.Google.Resource.Drive.Permissions.Update
+import Network.Google.Resource.Drive.Replies.Create
+import Network.Google.Resource.Drive.Replies.Delete
+import Network.Google.Resource.Drive.Replies.Get
+import Network.Google.Resource.Drive.Replies.List
+import Network.Google.Resource.Drive.Replies.Update
+import Network.Google.Resource.Drive.Revisions.Delete
+import Network.Google.Resource.Drive.Revisions.Get
+import Network.Google.Resource.Drive.Revisions.List
+import Network.Google.Resource.Drive.Revisions.Update
+import Network.Google.Resource.Drive.Teamdrives.Create
+import Network.Google.Resource.Drive.Teamdrives.Delete
+import Network.Google.Resource.Drive.Teamdrives.Get
+import Network.Google.Resource.Drive.Teamdrives.List
+import Network.Google.Resource.Drive.Teamdrives.Update
 
 {- $resources
 TODO
@@ -503,8 +609,12 @@ TODO
 
 -- | Represents the entirety of the methods and resources available for the Drive API service.
 type DriveAPI =
-     ChangesListResource :<|>
-       ChangesGetStartPageTokenResource
+     TeamdrivesListResource :<|> TeamdrivesGetResource
+       :<|> TeamdrivesCreateResource
+       :<|> TeamdrivesDeleteResource
+       :<|> TeamdrivesUpdateResource
+       :<|> ChangesListResource
+       :<|> ChangesGetStartPageTokenResource
        :<|> ChangesWatchResource
        :<|> ChannelsStopResource
        :<|> RepliesListResource

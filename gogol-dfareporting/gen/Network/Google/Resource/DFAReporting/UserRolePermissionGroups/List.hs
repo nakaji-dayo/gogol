@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.UserRolePermissionGroups.List
 
     -- * Request Lenses
     , urpglProFileId
+    , urpglFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRolePermissionGroups.list@ method which the
 -- 'UserRolePermissionGroupsList' request conforms to.
 type UserRolePermissionGroupsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRolePermissionGroups" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] UserRolePermissionGroupsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] UserRolePermissionGroupsListResponse
 
 -- | Gets a list of all supported user role permission groups.
 --
 -- /See:/ 'userRolePermissionGroupsList' smart constructor.
-newtype UserRolePermissionGroupsList = UserRolePermissionGroupsList'
-    { _urpglProFileId :: Textual Int64
+data UserRolePermissionGroupsList = UserRolePermissionGroupsList'
+    { _urpglProFileId :: !(Textual Int64)
+    , _urpglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolePermissionGroupsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype UserRolePermissionGroupsList = UserRolePermissionGroupsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'urpglProFileId'
+--
+-- * 'urpglFields'
 userRolePermissionGroupsList
     :: Int64 -- ^ 'urpglProFileId'
     -> UserRolePermissionGroupsList
-userRolePermissionGroupsList pUrpglProFileId_ =
+userRolePermissionGroupsList pUrpglProFileId_ = 
     UserRolePermissionGroupsList'
     { _urpglProFileId = _Coerce # pUrpglProFileId_
+    , _urpglFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -77,6 +83,11 @@ urpglProFileId
       (\ s a -> s{_urpglProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+urpglFields :: Lens' UserRolePermissionGroupsList (Maybe Text)
+urpglFields
+  = lens _urpglFields (\ s a -> s{_urpglFields = a})
+
 instance GoogleRequest UserRolePermissionGroupsList
          where
         type Rs UserRolePermissionGroupsList =
@@ -84,7 +95,7 @@ instance GoogleRequest UserRolePermissionGroupsList
         type Scopes UserRolePermissionGroupsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserRolePermissionGroupsList'{..}
-          = go _urpglProFileId (Just AltJSON)
+          = go _urpglProFileId _urpglFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

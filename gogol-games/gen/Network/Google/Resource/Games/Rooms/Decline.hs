@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.Rooms.Decline
     , rooConsistencyToken
     , rooRoomId
     , rooLanguage
+    , rooFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.rooms.decline@ method which the
 -- 'RoomsDecline' request conforms to.
@@ -52,7 +53,8 @@ type RoomsDeclineResource =
              "decline" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Room
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Room
 
 -- | Decline an invitation to join a room. For internal use by the Games SDK
 -- only. Calling this method directly is unsupported.
@@ -60,8 +62,9 @@ type RoomsDeclineResource =
 -- /See:/ 'roomsDecline' smart constructor.
 data RoomsDecline = RoomsDecline'
     { _rooConsistencyToken :: !(Maybe (Textual Int64))
-    , _rooRoomId           :: !Text
-    , _rooLanguage         :: !(Maybe Text)
+    , _rooRoomId :: !Text
+    , _rooLanguage :: !(Maybe Text)
+    , _rooFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RoomsDecline' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data RoomsDecline = RoomsDecline'
 -- * 'rooRoomId'
 --
 -- * 'rooLanguage'
+--
+-- * 'rooFields'
 roomsDecline
     :: Text -- ^ 'rooRoomId'
     -> RoomsDecline
-roomsDecline pRooRoomId_ =
+roomsDecline pRooRoomId_ = 
     RoomsDecline'
     { _rooConsistencyToken = Nothing
     , _rooRoomId = pRooRoomId_
     , _rooLanguage = Nothing
+    , _rooFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -100,6 +106,11 @@ rooLanguage :: Lens' RoomsDecline (Maybe Text)
 rooLanguage
   = lens _rooLanguage (\ s a -> s{_rooLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rooFields :: Lens' RoomsDecline (Maybe Text)
+rooFields
+  = lens _rooFields (\ s a -> s{_rooFields = a})
+
 instance GoogleRequest RoomsDecline where
         type Rs RoomsDecline = Room
         type Scopes RoomsDecline =
@@ -107,6 +118,7 @@ instance GoogleRequest RoomsDecline where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RoomsDecline'{..}
           = go _rooRoomId _rooConsistencyToken _rooLanguage
+              _rooFields
               (Just AltJSON)
               gamesService
           where go

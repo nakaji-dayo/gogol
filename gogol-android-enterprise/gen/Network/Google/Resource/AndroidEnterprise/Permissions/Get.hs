@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Permissions.Get
     -- * Request Lenses
     , pgLanguage
     , pgPermissionId
+    , pgFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.permissions.get@ method which the
 -- 'PermissionsGet' request conforms to.
@@ -49,15 +50,17 @@ type PermissionsGetResource =
          "permissions" :>
            Capture "permissionId" Text :>
              QueryParam "language" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Permission
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Permission
 
 -- | Retrieves details of an Android app permission for display to an
 -- enterprise admin.
 --
 -- /See:/ 'permissionsGet' smart constructor.
 data PermissionsGet = PermissionsGet'
-    { _pgLanguage     :: !(Maybe Text)
+    { _pgLanguage :: !(Maybe Text)
     , _pgPermissionId :: !Text
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PermissionsGet' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data PermissionsGet = PermissionsGet'
 -- * 'pgLanguage'
 --
 -- * 'pgPermissionId'
+--
+-- * 'pgFields'
 permissionsGet
     :: Text -- ^ 'pgPermissionId'
     -> PermissionsGet
-permissionsGet pPgPermissionId_ =
+permissionsGet pPgPermissionId_ = 
     PermissionsGet'
     { _pgLanguage = Nothing
     , _pgPermissionId = pPgPermissionId_
+    , _pgFields = Nothing
     }
 
 -- | The BCP47 tag for the user\'s preferred language (e.g. \"en-US\",
@@ -88,12 +94,17 @@ pgPermissionId
   = lens _pgPermissionId
       (\ s a -> s{_pgPermissionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' PermissionsGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest PermissionsGet where
         type Rs PermissionsGet = Permission
         type Scopes PermissionsGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient PermissionsGet'{..}
-          = go _pgPermissionId _pgLanguage (Just AltJSON)
+          = go _pgPermissionId _pgLanguage _pgFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy PermissionsGetResource)

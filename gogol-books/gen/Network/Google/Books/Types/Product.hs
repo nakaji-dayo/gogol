@@ -17,15 +17,15 @@
 --
 module Network.Google.Books.Types.Product where
 
-import           Network.Google.Books.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Books.Types.Sum
+import Network.Google.Prelude
 
 --
 -- /See:/ 'userSettings' smart constructor.
 data UserSettings = UserSettings'
     { _usNotification :: !(Maybe UserSettingsNotification)
-    , _usKind         :: !Text
-    , _usNotesExport  :: !(Maybe UserSettingsNotesExport)
+    , _usKind :: !Text
+    , _usNotesExport :: !(Maybe UserSettingsNotesExport)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserSettings' with the minimum fields required to make a request.
@@ -39,7 +39,7 @@ data UserSettings = UserSettings'
 -- * 'usNotesExport'
 userSettings
     :: UserSettings
-userSettings =
+userSettings = 
     UserSettings'
     { _usNotification = Nothing
     , _usKind = "books#usersettings"
@@ -81,10 +81,10 @@ instance ToJSON UserSettings where
 --
 -- /See:/ 'annotations' smart constructor.
 data Annotations = Annotations'
-    { _aTotalItems    :: !(Maybe (Textual Int32))
+    { _aTotalItems :: !(Maybe (Textual Int32))
     , _aNextPageToken :: !(Maybe Text)
-    , _aKind          :: !Text
-    , _aItems         :: !(Maybe [Annotation])
+    , _aKind :: !Text
+    , _aItems :: !(Maybe [Annotation])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Annotations' with the minimum fields required to make a request.
@@ -100,7 +100,7 @@ data Annotations = Annotations'
 -- * 'aItems'
 annotations
     :: Annotations
-annotations =
+annotations = 
     Annotations'
     { _aTotalItems = Nothing
     , _aNextPageToken = Nothing
@@ -152,10 +152,10 @@ instance ToJSON Annotations where
 --
 -- /See:/ 'annotationsData' smart constructor.
 data AnnotationsData = AnnotationsData'
-    { _adTotalItems    :: !(Maybe (Textual Int32))
+    { _adTotalItems :: !(Maybe (Textual Int32))
     , _adNextPageToken :: !(Maybe Text)
-    , _adKind          :: !Text
-    , _adItems         :: !(Maybe [AnnotationData])
+    , _adKind :: !Text
+    , _adItems :: !(Maybe [AnnotationData])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsData' with the minimum fields required to make a request.
@@ -171,7 +171,7 @@ data AnnotationsData = AnnotationsData'
 -- * 'adItems'
 annotationsData
     :: AnnotationsData
-annotationsData =
+annotationsData = 
     AnnotationsData'
     { _adTotalItems = Nothing
     , _adNextPageToken = Nothing
@@ -232,7 +232,7 @@ newtype UserSettingsNotificationMoreFromAuthors = UserSettingsNotificationMoreFr
 -- * 'usnmfaOptedState'
 userSettingsNotificationMoreFromAuthors
     :: UserSettingsNotificationMoreFromAuthors
-userSettingsNotificationMoreFromAuthors =
+userSettingsNotificationMoreFromAuthors = 
     UserSettingsNotificationMoreFromAuthors'
     { _usnmfaOptedState = Nothing
     }
@@ -261,11 +261,11 @@ instance ToJSON
 --
 -- /See:/ 'volumeannotations' smart constructor.
 data Volumeannotations = Volumeannotations'
-    { _vTotalItems    :: !(Maybe (Textual Int32))
+    { _vTotalItems :: !(Maybe (Textual Int32))
     , _vNextPageToken :: !(Maybe Text)
-    , _vKind          :: !Text
-    , _vItems         :: !(Maybe [Volumeannotation])
-    , _vVersion       :: !(Maybe Text)
+    , _vKind :: !Text
+    , _vItems :: !(Maybe [Volumeannotation])
+    , _vVersion :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Volumeannotations' with the minimum fields required to make a request.
@@ -283,7 +283,7 @@ data Volumeannotations = Volumeannotations'
 -- * 'vVersion'
 volumeannotations
     :: Volumeannotations
-volumeannotations =
+volumeannotations = 
     Volumeannotations'
     { _vTotalItems = Nothing
     , _vNextPageToken = Nothing
@@ -347,8 +347,8 @@ instance ToJSON Volumeannotations where
 -- /See:/ 'reviewSource' smart constructor.
 data ReviewSource = ReviewSource'
     { _rsExtraDescription :: !(Maybe Text)
-    , _rsURL              :: !(Maybe Text)
-    , _rsDescription      :: !(Maybe Text)
+    , _rsURL :: !(Maybe Text)
+    , _rsDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReviewSource' with the minimum fields required to make a request.
@@ -362,7 +362,7 @@ data ReviewSource = ReviewSource'
 -- * 'rsDescription'
 reviewSource
     :: ReviewSource
-reviewSource =
+reviewSource = 
     ReviewSource'
     { _rsExtraDescription = Nothing
     , _rsURL = Nothing
@@ -404,15 +404,15 @@ instance ToJSON ReviewSource where
 --
 -- /See:/ 'annotationData' smart constructor.
 data AnnotationData = AnnotationData'
-    { _annEncodedData    :: !(Maybe Bytes)
-    , _annKind           :: !Text
-    , _annData           :: !(Maybe JSONValue)
-    , _annSelfLink       :: !(Maybe Text)
+    { _annEncodedData :: !(Maybe Bytes)
+    , _annKind :: !Text
+    , _annData :: !(Maybe JSONValue)
+    , _annSelfLink :: !(Maybe Text)
     , _annAnnotationType :: !(Maybe Text)
-    , _annVolumeId       :: !(Maybe Text)
-    , _annId             :: !(Maybe Text)
-    , _annUpdated        :: !(Maybe DateTime')
-    , _annLayerId        :: !(Maybe Text)
+    , _annVolumeId :: !(Maybe Text)
+    , _annId :: !(Maybe Text)
+    , _annUpdated :: !(Maybe DateTime')
+    , _annLayerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationData' with the minimum fields required to make a request.
@@ -438,7 +438,7 @@ data AnnotationData = AnnotationData'
 -- * 'annLayerId'
 annotationData
     :: AnnotationData
-annotationData =
+annotationData = 
     AnnotationData'
     { _annEncodedData = Nothing
     , _annKind = "books#annotationdata"
@@ -527,20 +527,20 @@ instance ToJSON AnnotationData where
 --
 -- /See:/ 'volumeannotation' smart constructor.
 data Volumeannotation = Volumeannotation'
-    { _volSelectedText       :: !(Maybe Text)
+    { _volSelectedText :: !(Maybe Text)
     , _volAnnotationDataLink :: !(Maybe Text)
-    , _volPageIds            :: !(Maybe [Text])
-    , _volKind               :: !Text
-    , _volData               :: !(Maybe Text)
-    , _volSelfLink           :: !(Maybe Text)
-    , _volAnnotationType     :: !(Maybe Text)
-    , _volAnnotationDataId   :: !(Maybe Text)
-    , _volContentRanges      :: !(Maybe VolumeannotationContentRanges)
-    , _volVolumeId           :: !(Maybe Text)
-    , _volId                 :: !(Maybe Text)
-    , _volDeleted            :: !(Maybe Bool)
-    , _volUpdated            :: !(Maybe DateTime')
-    , _volLayerId            :: !(Maybe Text)
+    , _volPageIds :: !(Maybe [Text])
+    , _volKind :: !Text
+    , _volData :: !(Maybe Text)
+    , _volSelfLink :: !(Maybe Text)
+    , _volAnnotationType :: !(Maybe Text)
+    , _volAnnotationDataId :: !(Maybe Text)
+    , _volContentRanges :: !(Maybe VolumeannotationContentRanges)
+    , _volVolumeId :: !(Maybe Text)
+    , _volId :: !(Maybe Text)
+    , _volDeleted :: !(Maybe Bool)
+    , _volUpdated :: !(Maybe DateTime')
+    , _volLayerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Volumeannotation' with the minimum fields required to make a request.
@@ -576,7 +576,7 @@ data Volumeannotation = Volumeannotation'
 -- * 'volLayerId'
 volumeannotation
     :: Volumeannotation
-volumeannotation =
+volumeannotation = 
     Volumeannotation'
     { _volSelectedText = Nothing
     , _volAnnotationDataLink = Nothing
@@ -711,9 +711,9 @@ instance ToJSON Volumeannotation where
 -- /See:/ 'booksCloudLoadingResource' smart constructor.
 data BooksCloudLoadingResource = BooksCloudLoadingResource'
     { _bclrProcessingState :: !(Maybe Text)
-    , _bclrVolumeId        :: !(Maybe Text)
-    , _bclrAuthor          :: !(Maybe Text)
-    , _bclrTitle           :: !(Maybe Text)
+    , _bclrVolumeId :: !(Maybe Text)
+    , _bclrAuthor :: !(Maybe Text)
+    , _bclrTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BooksCloudLoadingResource' with the minimum fields required to make a request.
@@ -729,7 +729,7 @@ data BooksCloudLoadingResource = BooksCloudLoadingResource'
 -- * 'bclrTitle'
 booksCloudLoadingResource
     :: BooksCloudLoadingResource
-booksCloudLoadingResource =
+booksCloudLoadingResource = 
     BooksCloudLoadingResource'
     { _bclrProcessingState = Nothing
     , _bclrVolumeId = Nothing
@@ -775,7 +775,7 @@ instance ToJSON BooksCloudLoadingResource where
 --
 -- /See:/ 'volumeseriesInfoVolumeSeriesItemIssueItem' smart constructor.
 data VolumeseriesInfoVolumeSeriesItemIssueItem = VolumeseriesInfoVolumeSeriesItemIssueItem'
-    { _vivsiiiIssueOrderNumber   :: !(Maybe (Textual Int32))
+    { _vivsiiiIssueOrderNumber :: !(Maybe (Textual Int32))
     , _vivsiiiIssueDisplayNumber :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -788,7 +788,7 @@ data VolumeseriesInfoVolumeSeriesItemIssueItem = VolumeseriesInfoVolumeSeriesIte
 -- * 'vivsiiiIssueDisplayNumber'
 volumeseriesInfoVolumeSeriesItemIssueItem
     :: VolumeseriesInfoVolumeSeriesItemIssueItem
-volumeseriesInfoVolumeSeriesItemIssueItem =
+volumeseriesInfoVolumeSeriesItemIssueItem = 
     VolumeseriesInfoVolumeSeriesItemIssueItem'
     { _vivsiiiIssueOrderNumber = Nothing
     , _vivsiiiIssueDisplayNumber = Nothing
@@ -828,23 +828,23 @@ instance ToJSON
 --
 -- /See:/ 'annotation' smart constructor.
 data Annotation = Annotation'
-    { _aaSelectedText         :: !(Maybe Text)
-    , _aaLayerSummary         :: !(Maybe AnnotationLayerSummary)
-    , _aaHighlightStyle       :: !(Maybe Text)
-    , _aaClientVersionRanges  :: !(Maybe AnnotationClientVersionRanges)
-    , _aaPageIds              :: !(Maybe [Text])
-    , _aaKind                 :: !Text
-    , _aaData                 :: !(Maybe Text)
-    , _aaCreated              :: !(Maybe DateTime')
-    , _aaAfterSelectedText    :: !(Maybe Text)
-    , _aaSelfLink             :: !(Maybe Text)
+    { _aaSelectedText :: !(Maybe Text)
+    , _aaLayerSummary :: !(Maybe AnnotationLayerSummary)
+    , _aaHighlightStyle :: !(Maybe Text)
+    , _aaClientVersionRanges :: !(Maybe AnnotationClientVersionRanges)
+    , _aaPageIds :: !(Maybe [Text])
+    , _aaKind :: !Text
+    , _aaData :: !(Maybe Text)
+    , _aaCreated :: !(Maybe DateTime')
+    , _aaAfterSelectedText :: !(Maybe Text)
+    , _aaSelfLink :: !(Maybe Text)
     , _aaCurrentVersionRanges :: !(Maybe AnnotationCurrentVersionRanges)
-    , _aaVolumeId             :: !(Maybe Text)
-    , _aaBeforeSelectedText   :: !(Maybe Text)
-    , _aaId                   :: !(Maybe Text)
-    , _aaDeleted              :: !(Maybe Bool)
-    , _aaUpdated              :: !(Maybe DateTime')
-    , _aaLayerId              :: !(Maybe Text)
+    , _aaVolumeId :: !(Maybe Text)
+    , _aaBeforeSelectedText :: !(Maybe Text)
+    , _aaId :: !(Maybe Text)
+    , _aaDeleted :: !(Maybe Bool)
+    , _aaUpdated :: !(Maybe DateTime')
+    , _aaLayerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Annotation' with the minimum fields required to make a request.
@@ -886,7 +886,7 @@ data Annotation = Annotation'
 -- * 'aaLayerId'
 annotation
     :: Annotation
-annotation =
+annotation = 
     Annotation'
     { _aaSelectedText = Nothing
     , _aaLayerSummary = Nothing
@@ -1059,7 +1059,7 @@ newtype ReviewAuthor = ReviewAuthor'
 -- * 'raDisplayName'
 reviewAuthor
     :: ReviewAuthor
-reviewAuthor =
+reviewAuthor = 
     ReviewAuthor'
     { _raDisplayName = Nothing
     }
@@ -1098,7 +1098,7 @@ data GeolayerDataGeoViewport = GeolayerDataGeoViewport'
 -- * 'gdgvLo'
 geolayerDataGeoViewport
     :: GeolayerDataGeoViewport
-geolayerDataGeoViewport =
+geolayerDataGeoViewport = 
     GeolayerDataGeoViewport'
     { _gdgvHi = Nothing
     , _gdgvLo = Nothing
@@ -1128,24 +1128,24 @@ instance ToJSON GeolayerDataGeoViewport where
 --
 -- /See:/ 'volumeUserInfo' smart constructor.
 data VolumeUserInfo = VolumeUserInfo'
-    { _vuiIsFamilySharingAllowed       :: !(Maybe Bool)
-    , _vuiIsFamilySharedToUser         :: !(Maybe Bool)
-    , _vuiCopy                         :: !(Maybe VolumeUserInfoCopy)
-    , _vuiUserUploadedVolumeInfo       :: !(Maybe VolumeUserInfoUserUploadedVolumeInfo)
-    , _vuiIsPurchased                  :: !(Maybe Bool)
-    , _vuiEntitlementType              :: !(Maybe (Textual Int32))
-    , _vuiAcquisitionType              :: !(Maybe (Textual Int32))
-    , _vuiAcquiredTime                 :: !(Maybe DateTime')
-    , _vuiRentalState                  :: !(Maybe Text)
-    , _vuiIsPreOrdered                 :: !(Maybe Bool)
-    , _vuiReview                       :: !(Maybe Review)
-    , _vuiIsFamilySharedFromUser       :: !(Maybe Bool)
-    , _vuiRentalPeriod                 :: !(Maybe VolumeUserInfoRentalPeriod)
-    , _vuiUpdated                      :: !(Maybe DateTime')
-    , _vuiIsUploaded                   :: !(Maybe Bool)
-    , _vuiIsInMyBooks                  :: !(Maybe Bool)
-    , _vuiReadingPosition              :: !(Maybe ReadingPosition)
-    , _vuiFamilySharing                :: !(Maybe VolumeUserInfoFamilySharing)
+    { _vuiIsFamilySharingAllowed :: !(Maybe Bool)
+    , _vuiIsFamilySharedToUser :: !(Maybe Bool)
+    , _vuiCopy :: !(Maybe VolumeUserInfoCopy)
+    , _vuiUserUploadedVolumeInfo :: !(Maybe VolumeUserInfoUserUploadedVolumeInfo)
+    , _vuiIsPurchased :: !(Maybe Bool)
+    , _vuiEntitlementType :: !(Maybe (Textual Int32))
+    , _vuiAcquisitionType :: !(Maybe (Textual Int32))
+    , _vuiAcquiredTime :: !(Maybe DateTime')
+    , _vuiRentalState :: !(Maybe Text)
+    , _vuiIsPreOrdered :: !(Maybe Bool)
+    , _vuiReview :: !(Maybe Review)
+    , _vuiIsFamilySharedFromUser :: !(Maybe Bool)
+    , _vuiRentalPeriod :: !(Maybe VolumeUserInfoRentalPeriod)
+    , _vuiUpdated :: !(Maybe DateTime')
+    , _vuiIsUploaded :: !(Maybe Bool)
+    , _vuiIsInMyBooks :: !(Maybe Bool)
+    , _vuiReadingPosition :: !(Maybe ReadingPosition)
+    , _vuiFamilySharing :: !(Maybe VolumeUserInfoFamilySharing)
     , _vuiIsFamilySharingDisabledByFop :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1192,7 +1192,7 @@ data VolumeUserInfo = VolumeUserInfo'
 -- * 'vuiIsFamilySharingDisabledByFop'
 volumeUserInfo
     :: VolumeUserInfo
-volumeUserInfo =
+volumeUserInfo = 
     VolumeUserInfo'
     { _vuiIsFamilySharingAllowed = Nothing
     , _vuiIsFamilySharedToUser = Nothing
@@ -1392,19 +1392,19 @@ instance ToJSON VolumeUserInfo where
 --
 -- /See:/ 'layersummary' smart constructor.
 data Layersummary = Layersummary'
-    { _lAnnotationsDataLink      :: !(Maybe Text)
-    , _lAnnotationsLink          :: !(Maybe Text)
-    , _lKind                     :: !Text
-    , _lDataCount                :: !(Maybe (Textual Int32))
-    , _lContentVersion           :: !(Maybe Text)
+    { _lAnnotationsDataLink :: !(Maybe Text)
+    , _lAnnotationsLink :: !(Maybe Text)
+    , _lKind :: !Text
+    , _lDataCount :: !(Maybe (Textual Int32))
+    , _lContentVersion :: !(Maybe Text)
     , _lVolumeAnnotationsVersion :: !(Maybe Text)
-    , _lAnnotationCount          :: !(Maybe (Textual Int32))
-    , _lAnnotationTypes          :: !(Maybe [Text])
-    , _lSelfLink                 :: !(Maybe Text)
-    , _lVolumeId                 :: !(Maybe Text)
-    , _lId                       :: !(Maybe Text)
-    , _lUpdated                  :: !(Maybe DateTime')
-    , _lLayerId                  :: !(Maybe Text)
+    , _lAnnotationCount :: !(Maybe (Textual Int32))
+    , _lAnnotationTypes :: !(Maybe [Text])
+    , _lSelfLink :: !(Maybe Text)
+    , _lVolumeId :: !(Maybe Text)
+    , _lId :: !(Maybe Text)
+    , _lUpdated :: !(Maybe DateTime')
+    , _lLayerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Layersummary' with the minimum fields required to make a request.
@@ -1438,7 +1438,7 @@ data Layersummary = Layersummary'
 -- * 'lLayerId'
 layersummary
     :: Layersummary
-layersummary =
+layersummary = 
     Layersummary'
     { _lAnnotationsDataLink = Nothing
     , _lAnnotationsLink = Nothing
@@ -1573,10 +1573,10 @@ instance ToJSON Layersummary where
 --
 -- /See:/ 'volumeannotationContentRanges' smart constructor.
 data VolumeannotationContentRanges = VolumeannotationContentRanges'
-    { _vcrGbImageRange   :: !(Maybe BooksAnnotationsRange)
+    { _vcrGbImageRange :: !(Maybe BooksAnnotationsRange)
     , _vcrContentVersion :: !(Maybe Text)
-    , _vcrGbTextRange    :: !(Maybe BooksAnnotationsRange)
-    , _vcrCfiRange       :: !(Maybe BooksAnnotationsRange)
+    , _vcrGbTextRange :: !(Maybe BooksAnnotationsRange)
+    , _vcrCfiRange :: !(Maybe BooksAnnotationsRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeannotationContentRanges' with the minimum fields required to make a request.
@@ -1592,7 +1592,7 @@ data VolumeannotationContentRanges = VolumeannotationContentRanges'
 -- * 'vcrCfiRange'
 volumeannotationContentRanges
     :: VolumeannotationContentRanges
-volumeannotationContentRanges =
+volumeannotationContentRanges = 
     VolumeannotationContentRanges'
     { _vcrGbImageRange = Nothing
     , _vcrContentVersion = Nothing
@@ -1647,20 +1647,20 @@ instance ToJSON VolumeannotationContentRanges where
 --
 -- /See:/ 'volumeAccessInfo' smart constructor.
 data VolumeAccessInfo = VolumeAccessInfo'
-    { _vaiWebReaderLink                    :: !(Maybe Text)
-    , _vaiCountry                          :: !(Maybe Text)
-    , _vaiDriveImportedContentLink         :: !(Maybe Text)
+    { _vaiWebReaderLink :: !(Maybe Text)
+    , _vaiCountry :: !(Maybe Text)
+    , _vaiDriveImportedContentLink :: !(Maybe Text)
     , _vaiExplicitOfflineLicenseManagement :: !(Maybe Bool)
-    , _vaiViewability                      :: !(Maybe Text)
-    , _vaiQuoteSharingAllowed              :: !(Maybe Bool)
-    , _vaiEpub                             :: !(Maybe VolumeAccessInfoEpub)
-    , _vaiPdf                              :: !(Maybe VolumeAccessInfoPdf)
-    , _vaiTextToSpeechPermission           :: !(Maybe Text)
-    , _vaiEmbeddable                       :: !(Maybe Bool)
-    , _vaiAccessViewStatus                 :: !(Maybe Text)
-    , _vaiDownloadAccess                   :: !(Maybe DownloadAccessRestriction)
-    , _vaiViewOrderURL                     :: !(Maybe Text)
-    , _vaiPublicDomain                     :: !(Maybe Bool)
+    , _vaiViewability :: !(Maybe Text)
+    , _vaiQuoteSharingAllowed :: !(Maybe Bool)
+    , _vaiEpub :: !(Maybe VolumeAccessInfoEpub)
+    , _vaiPdf :: !(Maybe VolumeAccessInfoPdf)
+    , _vaiTextToSpeechPermission :: !(Maybe Text)
+    , _vaiEmbeddable :: !(Maybe Bool)
+    , _vaiAccessViewStatus :: !(Maybe Text)
+    , _vaiDownloadAccess :: !(Maybe DownloadAccessRestriction)
+    , _vaiViewOrderURL :: !(Maybe Text)
+    , _vaiPublicDomain :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeAccessInfo' with the minimum fields required to make a request.
@@ -1696,7 +1696,7 @@ data VolumeAccessInfo = VolumeAccessInfo'
 -- * 'vaiPublicDomain'
 volumeAccessInfo
     :: VolumeAccessInfo
-volumeAccessInfo =
+volumeAccessInfo = 
     VolumeAccessInfo'
     { _vaiWebReaderLink = Nothing
     , _vaiCountry = Nothing
@@ -1854,10 +1854,10 @@ instance ToJSON VolumeAccessInfo where
 --
 -- /See:/ 'volumeVolumeInfoPanelizationSummary' smart constructor.
 data VolumeVolumeInfoPanelizationSummary = VolumeVolumeInfoPanelizationSummary'
-    { _vvipsEpubBubbleVersion    :: !(Maybe Text)
+    { _vvipsEpubBubbleVersion :: !(Maybe Text)
     , _vvipsContainsImageBubbles :: !(Maybe Bool)
-    , _vvipsContainsEpubBubbles  :: !(Maybe Bool)
-    , _vvipsImageBubbleVersion   :: !(Maybe Text)
+    , _vvipsContainsEpubBubbles :: !(Maybe Bool)
+    , _vvipsImageBubbleVersion :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeVolumeInfoPanelizationSummary' with the minimum fields required to make a request.
@@ -1873,7 +1873,7 @@ data VolumeVolumeInfoPanelizationSummary = VolumeVolumeInfoPanelizationSummary'
 -- * 'vvipsImageBubbleVersion'
 volumeVolumeInfoPanelizationSummary
     :: VolumeVolumeInfoPanelizationSummary
-volumeVolumeInfoPanelizationSummary =
+volumeVolumeInfoPanelizationSummary = 
     VolumeVolumeInfoPanelizationSummary'
     { _vvipsEpubBubbleVersion = Nothing
     , _vvipsContainsImageBubbles = Nothing
@@ -1931,11 +1931,11 @@ instance ToJSON VolumeVolumeInfoPanelizationSummary
 --
 -- /See:/ 'volumeVolumeInfoImageLinks' smart constructor.
 data VolumeVolumeInfoImageLinks = VolumeVolumeInfoImageLinks'
-    { _vviilThumbnail      :: !(Maybe Text)
-    , _vviilSmall          :: !(Maybe Text)
-    , _vviilExtraLarge     :: !(Maybe Text)
-    , _vviilLarge          :: !(Maybe Text)
-    , _vviilMedium         :: !(Maybe Text)
+    { _vviilThumbnail :: !(Maybe Text)
+    , _vviilSmall :: !(Maybe Text)
+    , _vviilExtraLarge :: !(Maybe Text)
+    , _vviilLarge :: !(Maybe Text)
+    , _vviilMedium :: !(Maybe Text)
     , _vviilSmallThumbnail :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1956,7 +1956,7 @@ data VolumeVolumeInfoImageLinks = VolumeVolumeInfoImageLinks'
 -- * 'vviilSmallThumbnail'
 volumeVolumeInfoImageLinks
     :: VolumeVolumeInfoImageLinks
-volumeVolumeInfoImageLinks =
+volumeVolumeInfoImageLinks = 
     VolumeVolumeInfoImageLinks'
     { _vviilThumbnail = Nothing
     , _vviilSmall = Nothing
@@ -2037,7 +2037,7 @@ newtype VolumeUserInfoUserUploadedVolumeInfo = VolumeUserInfoUserUploadedVolumeI
 -- * 'vuiuuviProcessingState'
 volumeUserInfoUserUploadedVolumeInfo
     :: VolumeUserInfoUserUploadedVolumeInfo
-volumeUserInfoUserUploadedVolumeInfo =
+volumeUserInfoUserUploadedVolumeInfo = 
     VolumeUserInfoUserUploadedVolumeInfo'
     { _vuiuuviProcessingState = Nothing
     }
@@ -2066,9 +2066,9 @@ instance ToJSON VolumeUserInfoUserUploadedVolumeInfo
 --
 -- /See:/ 'volumeUserInfoCopy' smart constructor.
 data VolumeUserInfoCopy = VolumeUserInfoCopy'
-    { _vuicLimitType               :: !(Maybe Text)
-    , _vuicAllowedCharacterCount   :: !(Maybe (Textual Int32))
-    , _vuicUpdated                 :: !(Maybe DateTime')
+    { _vuicLimitType :: !(Maybe Text)
+    , _vuicAllowedCharacterCount :: !(Maybe (Textual Int32))
+    , _vuicUpdated :: !(Maybe DateTime')
     , _vuicRemainingCharacterCount :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2085,7 +2085,7 @@ data VolumeUserInfoCopy = VolumeUserInfoCopy'
 -- * 'vuicRemainingCharacterCount'
 volumeUserInfoCopy
     :: VolumeUserInfoCopy
-volumeUserInfoCopy =
+volumeUserInfoCopy = 
     VolumeUserInfoCopy'
     { _vuicLimitType = Nothing
     , _vuicAllowedCharacterCount = Nothing
@@ -2149,7 +2149,7 @@ newtype BooksVolumesRecommendedRateResponse = BooksVolumesRecommendedRateRespons
 -- * 'bvrrrConsistencyToken'
 booksVolumesRecommendedRateResponse
     :: BooksVolumesRecommendedRateResponse
-booksVolumesRecommendedRateResponse =
+booksVolumesRecommendedRateResponse = 
     BooksVolumesRecommendedRateResponse'
     { _bvrrrConsistencyToken = Nothing
     }
@@ -2178,10 +2178,10 @@ instance ToJSON BooksVolumesRecommendedRateResponse
 --
 -- /See:/ 'volumeseriesInfo' smart constructor.
 data VolumeseriesInfo = VolumeseriesInfo'
-    { _viBookDisplayNumber    :: !(Maybe Text)
-    , _viKind                 :: !Text
+    { _viBookDisplayNumber :: !(Maybe Text)
+    , _viKind :: !Text
     , _viShortSeriesBookTitle :: !(Maybe Text)
-    , _viVolumeSeries         :: !(Maybe [VolumeseriesInfoVolumeSeriesItem])
+    , _viVolumeSeries :: !(Maybe [VolumeseriesInfoVolumeSeriesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeseriesInfo' with the minimum fields required to make a request.
@@ -2197,7 +2197,7 @@ data VolumeseriesInfo = VolumeseriesInfo'
 -- * 'viVolumeSeries'
 volumeseriesInfo
     :: VolumeseriesInfo
-volumeseriesInfo =
+volumeseriesInfo = 
     VolumeseriesInfo'
     { _viBookDisplayNumber = Nothing
     , _viKind = "books#volume_series_info"
@@ -2252,16 +2252,16 @@ instance ToJSON VolumeseriesInfo where
 --
 -- /See:/ 'bookshelf' smart constructor.
 data Bookshelf = Bookshelf'
-    { _bAccess             :: !(Maybe Text)
+    { _bAccess :: !(Maybe Text)
     , _bVolumesLastUpdated :: !(Maybe DateTime')
-    , _bKind               :: !Text
-    , _bCreated            :: !(Maybe DateTime')
-    , _bVolumeCount        :: !(Maybe (Textual Int32))
-    , _bSelfLink           :: !(Maybe Text)
-    , _bId                 :: !(Maybe (Textual Int32))
-    , _bUpdated            :: !(Maybe DateTime')
-    , _bTitle              :: !(Maybe Text)
-    , _bDescription        :: !(Maybe Text)
+    , _bKind :: !Text
+    , _bCreated :: !(Maybe DateTime')
+    , _bVolumeCount :: !(Maybe (Textual Int32))
+    , _bSelfLink :: !(Maybe Text)
+    , _bId :: !(Maybe (Textual Int32))
+    , _bUpdated :: !(Maybe DateTime')
+    , _bTitle :: !(Maybe Text)
+    , _bDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Bookshelf' with the minimum fields required to make a request.
@@ -2289,7 +2289,7 @@ data Bookshelf = Bookshelf'
 -- * 'bDescription'
 bookshelf
     :: Bookshelf
-bookshelf =
+bookshelf = 
     Bookshelf'
     { _bAccess = Nothing
     , _bVolumesLastUpdated = Nothing
@@ -2390,20 +2390,20 @@ instance ToJSON Bookshelf where
 --
 -- /See:/ 'notification' smart constructor.
 data Notification = Notification'
-    { _nDocType                        :: !(Maybe Text)
-    , _nTargetURL                      :: !(Maybe Text)
+    { _nDocType :: !(Maybe Text)
+    , _nTargetURL :: !(Maybe Text)
     , _nShowNotificationSettingsAction :: !(Maybe Bool)
-    , _nDocId                          :: !(Maybe Text)
-    , _nKind                           :: !Text
-    , _nBody                           :: !(Maybe Text)
-    , _nCrmExperimentIds               :: !(Maybe [Textual Int64])
-    , _nPcampaignId                    :: !(Maybe Text)
-    , _nReason                         :: !(Maybe Text)
-    , _nDontShowNotification           :: !(Maybe Bool)
-    , _nNotificationType               :: !(Maybe Text)
-    , _nNotificationGroup              :: !(Maybe Text)
-    , _nIconURL                        :: !(Maybe Text)
-    , _nTitle                          :: !(Maybe Text)
+    , _nDocId :: !(Maybe Text)
+    , _nKind :: !Text
+    , _nBody :: !(Maybe Text)
+    , _nCrmExperimentIds :: !(Maybe [Textual Int64])
+    , _nPcampaignId :: !(Maybe Text)
+    , _nReason :: !(Maybe Text)
+    , _nDontShowNotification :: !(Maybe Bool)
+    , _nNotificationType :: !(Maybe Text)
+    , _nNotificationGroup :: !(Maybe Text)
+    , _nIconURL :: !(Maybe Text)
+    , _nTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Notification' with the minimum fields required to make a request.
@@ -2439,7 +2439,7 @@ data Notification = Notification'
 -- * 'nTitle'
 notification
     :: Notification
-notification =
+notification = 
     Notification'
     { _nDocType = Nothing
     , _nTargetURL = Nothing
@@ -2557,10 +2557,10 @@ instance ToJSON Notification where
 --
 -- /See:/ 'annotationsSummaryLayersItem' smart constructor.
 data AnnotationsSummaryLayersItem = AnnotationsSummaryLayersItem'
-    { _asliLimitType               :: !(Maybe Text)
-    , _asliAllowedCharacterCount   :: !(Maybe (Textual Int32))
-    , _asliUpdated                 :: !(Maybe DateTime')
-    , _asliLayerId                 :: !(Maybe Text)
+    { _asliLimitType :: !(Maybe Text)
+    , _asliAllowedCharacterCount :: !(Maybe (Textual Int32))
+    , _asliUpdated :: !(Maybe DateTime')
+    , _asliLayerId :: !(Maybe Text)
     , _asliRemainingCharacterCount :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2579,7 +2579,7 @@ data AnnotationsSummaryLayersItem = AnnotationsSummaryLayersItem'
 -- * 'asliRemainingCharacterCount'
 annotationsSummaryLayersItem
     :: AnnotationsSummaryLayersItem
-annotationsSummaryLayersItem =
+annotationsSummaryLayersItem = 
     AnnotationsSummaryLayersItem'
     { _asliLimitType = Nothing
     , _asliAllowedCharacterCount = Nothing
@@ -2642,7 +2642,7 @@ instance ToJSON AnnotationsSummaryLayersItem where
 -- /See:/ 'volumeSaleInfoOffersItemRentalDuration' smart constructor.
 data VolumeSaleInfoOffersItemRentalDuration = VolumeSaleInfoOffersItemRentalDuration'
     { _vsioirdCount :: !(Maybe (Textual Double))
-    , _vsioirdUnit  :: !(Maybe Text)
+    , _vsioirdUnit :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeSaleInfoOffersItemRentalDuration' with the minimum fields required to make a request.
@@ -2654,7 +2654,7 @@ data VolumeSaleInfoOffersItemRentalDuration = VolumeSaleInfoOffersItemRentalDura
 -- * 'vsioirdUnit'
 volumeSaleInfoOffersItemRentalDuration
     :: VolumeSaleInfoOffersItemRentalDuration
-volumeSaleInfoOffersItemRentalDuration =
+volumeSaleInfoOffersItemRentalDuration = 
     VolumeSaleInfoOffersItemRentalDuration'
     { _vsioirdCount = Nothing
     , _vsioirdUnit = Nothing
@@ -2688,7 +2688,7 @@ instance ToJSON
 --
 -- /See:/ 'dictlayerDataDictWordsItemExamplesItem' smart constructor.
 data DictlayerDataDictWordsItemExamplesItem = DictlayerDataDictWordsItemExamplesItem'
-    { _dddwieiText   :: !(Maybe Text)
+    { _dddwieiText :: !(Maybe Text)
     , _dddwieiSource :: !(Maybe DictlayerDataDictWordsItemExamplesItemSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2701,7 +2701,7 @@ data DictlayerDataDictWordsItemExamplesItem = DictlayerDataDictWordsItemExamples
 -- * 'dddwieiSource'
 dictlayerDataDictWordsItemExamplesItem
     :: DictlayerDataDictWordsItemExamplesItem
-dictlayerDataDictWordsItemExamplesItem =
+dictlayerDataDictWordsItemExamplesItem = 
     DictlayerDataDictWordsItemExamplesItem'
     { _dddwieiText = Nothing
     , _dddwieiSource = Nothing
@@ -2735,9 +2735,9 @@ instance ToJSON
 --
 -- /See:/ 'offersItemsItem' smart constructor.
 data OffersItemsItem = OffersItemsItem'
-    { _oiiItems        :: !(Maybe [OffersItemsItemItemsItem])
-    , _oiiArtURL       :: !(Maybe Text)
-    , _oiiId           :: !(Maybe Text)
+    { _oiiItems :: !(Maybe [OffersItemsItemItemsItem])
+    , _oiiArtURL :: !(Maybe Text)
+    , _oiiId :: !(Maybe Text)
     , _oiiGServicesKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2754,7 +2754,7 @@ data OffersItemsItem = OffersItemsItem'
 -- * 'oiiGServicesKey'
 offersItemsItem
     :: OffersItemsItem
-offersItemsItem =
+offersItemsItem = 
     OffersItemsItem'
     { _oiiItems = Nothing
     , _oiiArtURL = Nothing
@@ -2800,8 +2800,8 @@ instance ToJSON OffersItemsItem where
 --
 -- /See:/ 'annotationLayerSummary' smart constructor.
 data AnnotationLayerSummary = AnnotationLayerSummary'
-    { _alsLimitType               :: !(Maybe Text)
-    , _alsAllowedCharacterCount   :: !(Maybe (Textual Int32))
+    { _alsLimitType :: !(Maybe Text)
+    , _alsAllowedCharacterCount :: !(Maybe (Textual Int32))
     , _alsRemainingCharacterCount :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2816,7 +2816,7 @@ data AnnotationLayerSummary = AnnotationLayerSummary'
 -- * 'alsRemainingCharacterCount'
 annotationLayerSummary
     :: AnnotationLayerSummary
-annotationLayerSummary =
+annotationLayerSummary = 
     AnnotationLayerSummary'
     { _alsLimitType = Nothing
     , _alsAllowedCharacterCount = Nothing
@@ -2878,7 +2878,7 @@ newtype VolumeSearchInfo = VolumeSearchInfo'
 -- * 'vsiTextSnippet'
 volumeSearchInfo
     :: VolumeSearchInfo
-volumeSearchInfo =
+volumeSearchInfo = 
     VolumeSearchInfo'
     { _vsiTextSnippet = Nothing
     }
@@ -2902,7 +2902,7 @@ instance ToJSON VolumeSearchInfo where
 --
 -- /See:/ 'annotationsSummary' smart constructor.
 data AnnotationsSummary = AnnotationsSummary'
-    { _asKind   :: !Text
+    { _asKind :: !Text
     , _asLayers :: !(Maybe [AnnotationsSummaryLayersItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2915,7 +2915,7 @@ data AnnotationsSummary = AnnotationsSummary'
 -- * 'asLayers'
 annotationsSummary
     :: AnnotationsSummary
-annotationsSummary =
+annotationsSummary = 
     AnnotationsSummary'
     { _asKind = "books#annotationsSummary"
     , _asLayers = Nothing
@@ -2948,7 +2948,7 @@ instance ToJSON AnnotationsSummary where
 --
 -- /See:/ 'category' smart constructor.
 data Category = Category'
-    { _cKind  :: !Text
+    { _cKind :: !Text
     , _cItems :: !(Maybe [CategoryItemsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2961,7 +2961,7 @@ data Category = Category'
 -- * 'cItems'
 category
     :: Category
-category =
+category = 
     Category'
     { _cKind = "onboarding#category"
     , _cItems = Nothing
@@ -2994,12 +2994,12 @@ instance ToJSON Category where
 --
 -- /See:/ 'discoveryclustersClustersItemBanner_with_content_container' smart constructor.
 data DiscoveryclustersClustersItemBanner_with_content_container = DiscoveryclustersClustersItemBanner_with_content_container'
-    { _dcibFillColorArgb  :: !(Maybe Text)
-    , _dcibMoreButtonURL  :: !(Maybe Text)
-    , _dcibTextColorArgb  :: !(Maybe Text)
+    { _dcibFillColorArgb :: !(Maybe Text)
+    , _dcibMoreButtonURL :: !(Maybe Text)
+    , _dcibTextColorArgb :: !(Maybe Text)
     , _dcibMoreButtonText :: !(Maybe Text)
-    , _dcibImageURL       :: !(Maybe Text)
-    , _dcibMaskColorArgb  :: !(Maybe Text)
+    , _dcibImageURL :: !(Maybe Text)
+    , _dcibMaskColorArgb :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DiscoveryclustersClustersItemBanner_with_content_container' with the minimum fields required to make a request.
@@ -3019,7 +3019,7 @@ data DiscoveryclustersClustersItemBanner_with_content_container = Discoveryclust
 -- * 'dcibMaskColorArgb'
 discoveryclustersClustersItemBanner_with_content_container
     :: DiscoveryclustersClustersItemBanner_with_content_container
-discoveryclustersClustersItemBanner_with_content_container =
+discoveryclustersClustersItemBanner_with_content_container = 
     DiscoveryclustersClustersItemBanner_with_content_container'
     { _dcibFillColorArgb = Nothing
     , _dcibMoreButtonURL = Nothing
@@ -3090,17 +3090,17 @@ instance ToJSON
 --
 -- /See:/ 'volume' smart constructor.
 data Volume = Volume'
-    { _vvUserInfo        :: !(Maybe VolumeUserInfo)
-    , _vvEtag            :: !(Maybe Text)
-    , _vvAccessInfo      :: !(Maybe VolumeAccessInfo)
-    , _vvKind            :: !Text
-    , _vvSearchInfo      :: !(Maybe VolumeSearchInfo)
-    , _vvSelfLink        :: !(Maybe Text)
-    , _vvLayerInfo       :: !(Maybe VolumeLayerInfo)
-    , _vvSaleInfo        :: !(Maybe VolumeSaleInfo)
-    , _vvId              :: !(Maybe Text)
+    { _vvUserInfo :: !(Maybe VolumeUserInfo)
+    , _vvEtag :: !(Maybe Text)
+    , _vvAccessInfo :: !(Maybe VolumeAccessInfo)
+    , _vvKind :: !Text
+    , _vvSearchInfo :: !(Maybe VolumeSearchInfo)
+    , _vvSelfLink :: !(Maybe Text)
+    , _vvLayerInfo :: !(Maybe VolumeLayerInfo)
+    , _vvSaleInfo :: !(Maybe VolumeSaleInfo)
+    , _vvId :: !(Maybe Text)
     , _vvRecommendedInfo :: !(Maybe VolumeRecommendedInfo)
-    , _vvVolumeInfo      :: !(Maybe VolumeVolumeInfo)
+    , _vvVolumeInfo :: !(Maybe VolumeVolumeInfo)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Volume' with the minimum fields required to make a request.
@@ -3130,7 +3130,7 @@ data Volume = Volume'
 -- * 'vvVolumeInfo'
 volume
     :: Volume
-volume =
+volume = 
     Volume'
     { _vvUserInfo = Nothing
     , _vvEtag = Nothing
@@ -3239,7 +3239,7 @@ instance ToJSON Volume where
 --
 -- /See:/ 'geolayerDataGeoBoundaryItemItem' smart constructor.
 data GeolayerDataGeoBoundaryItemItem = GeolayerDataGeoBoundaryItemItem'
-    { _gdgbiiLatitude  :: !(Maybe (Textual Word32))
+    { _gdgbiiLatitude :: !(Maybe (Textual Word32))
     , _gdgbiiLongitude :: !(Maybe (Textual Word32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3252,7 +3252,7 @@ data GeolayerDataGeoBoundaryItemItem = GeolayerDataGeoBoundaryItemItem'
 -- * 'gdgbiiLongitude'
 geolayerDataGeoBoundaryItemItem
     :: GeolayerDataGeoBoundaryItemItem
-geolayerDataGeoBoundaryItemItem =
+geolayerDataGeoBoundaryItemItem = 
     GeolayerDataGeoBoundaryItemItem'
     { _gdgbiiLatitude = Nothing
     , _gdgbiiLongitude = Nothing
@@ -3288,7 +3288,7 @@ instance ToJSON GeolayerDataGeoBoundaryItemItem where
 --
 -- /See:/ 'series' smart constructor.
 data Series = Series'
-    { _sKind   :: !Text
+    { _sKind :: !Text
     , _sSeries :: !(Maybe [SeriesSeriesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3301,7 +3301,7 @@ data Series = Series'
 -- * 'sSeries'
 series
     :: Series
-series =
+series = 
     Series'
     { _sKind = "books#series"
     , _sSeries = Nothing
@@ -3335,11 +3335,11 @@ instance ToJSON Series where
 -- /See:/ 'offersItemsItemItemsItem' smart constructor.
 data OffersItemsItemItemsItem = OffersItemsItemItemsItem'
     { _oiiiiCanonicalVolumeLink :: !(Maybe Text)
-    , _oiiiiCoverURL            :: !(Maybe Text)
-    , _oiiiiVolumeId            :: !(Maybe Text)
-    , _oiiiiAuthor              :: !(Maybe Text)
-    , _oiiiiTitle               :: !(Maybe Text)
-    , _oiiiiDescription         :: !(Maybe Text)
+    , _oiiiiCoverURL :: !(Maybe Text)
+    , _oiiiiVolumeId :: !(Maybe Text)
+    , _oiiiiAuthor :: !(Maybe Text)
+    , _oiiiiTitle :: !(Maybe Text)
+    , _oiiiiDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OffersItemsItemItemsItem' with the minimum fields required to make a request.
@@ -3359,7 +3359,7 @@ data OffersItemsItemItemsItem = OffersItemsItemItemsItem'
 -- * 'oiiiiDescription'
 offersItemsItemItemsItem
     :: OffersItemsItemItemsItem
-offersItemsItemItemsItem =
+offersItemsItemItemsItem = 
     OffersItemsItemItemsItem'
     { _oiiiiCanonicalVolumeLink = Nothing
     , _oiiiiCoverURL = Nothing
@@ -3423,7 +3423,7 @@ instance ToJSON OffersItemsItemItemsItem where
 --
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource' smart constructor.
 data DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource = DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource'
-    { _dddwisidieisURL         :: !(Maybe Text)
+    { _dddwisidieisURL :: !(Maybe Text)
     , _dddwisidieisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3436,7 +3436,7 @@ data DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource = Dic
 -- * 'dddwisidieisAttribution'
 dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource
     :: DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource
-dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource =
+dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource = 
     DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource'
     { _dddwisidieisURL = Nothing
     , _dddwisidieisAttribution = Nothing
@@ -3475,10 +3475,10 @@ instance ToJSON
 --
 -- /See:/ 'geolayerDataCommon' smart constructor.
 data GeolayerDataCommon = GeolayerDataCommon'
-    { _gdcSnippet         :: !(Maybe Text)
-    , _gdcSnippetURL      :: !(Maybe Text)
-    , _gdcLang            :: !(Maybe Text)
-    , _gdcTitle           :: !(Maybe Text)
+    { _gdcSnippet :: !(Maybe Text)
+    , _gdcSnippetURL :: !(Maybe Text)
+    , _gdcLang :: !(Maybe Text)
+    , _gdcTitle :: !(Maybe Text)
     , _gdcPreviewImageURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3497,7 +3497,7 @@ data GeolayerDataCommon = GeolayerDataCommon'
 -- * 'gdcPreviewImageURL'
 geolayerDataCommon
     :: GeolayerDataCommon
-geolayerDataCommon =
+geolayerDataCommon = 
     GeolayerDataCommon'
     { _gdcSnippet = Nothing
     , _gdcSnippetURL = Nothing
@@ -3554,14 +3554,14 @@ instance ToJSON GeolayerDataCommon where
 --
 -- /See:/ 'geolayerDataGeo' smart constructor.
 data GeolayerDataGeo = GeolayerDataGeo'
-    { _gdgMapType     :: !(Maybe Text)
+    { _gdgMapType :: !(Maybe Text)
     , _gdgCachePolicy :: !(Maybe Text)
-    , _gdgViewport    :: !(Maybe GeolayerDataGeoViewport)
-    , _gdgBoundary    :: !(Maybe [[GeolayerDataGeoBoundaryItemItem]])
-    , _gdgLatitude    :: !(Maybe (Textual Double))
-    , _gdgZoom        :: !(Maybe (Textual Int32))
+    , _gdgViewport :: !(Maybe GeolayerDataGeoViewport)
+    , _gdgBoundary :: !(Maybe [[GeolayerDataGeoBoundaryItemItem]])
+    , _gdgLatitude :: !(Maybe (Textual Double))
+    , _gdgZoom :: !(Maybe (Textual Int32))
     , _gdgCountryCode :: !(Maybe Text)
-    , _gdgLongitude   :: !(Maybe (Textual Double))
+    , _gdgLongitude :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GeolayerDataGeo' with the minimum fields required to make a request.
@@ -3585,7 +3585,7 @@ data GeolayerDataGeo = GeolayerDataGeo'
 -- * 'gdgLongitude'
 geolayerDataGeo
     :: GeolayerDataGeo
-geolayerDataGeo =
+geolayerDataGeo = 
     GeolayerDataGeo'
     { _gdgMapType = Nothing
     , _gdgCachePolicy = Nothing
@@ -3680,10 +3680,10 @@ instance ToJSON GeolayerDataGeo where
 --
 -- /See:/ 'dictlayerDataDictWordsItem' smart constructor.
 data DictlayerDataDictWordsItem = DictlayerDataDictWordsItem'
-    { _dddwiSenses      :: !(Maybe [DictlayerDataDictWordsItemSensesItem])
-    , _dddwiSource      :: !(Maybe DictlayerDataDictWordsItemSource)
+    { _dddwiSenses :: !(Maybe [DictlayerDataDictWordsItemSensesItem])
+    , _dddwiSource :: !(Maybe DictlayerDataDictWordsItemSource)
     , _dddwiDerivatives :: !(Maybe [DictlayerDataDictWordsItemDerivativesItem])
-    , _dddwiExamples    :: !(Maybe [DictlayerDataDictWordsItemExamplesItem])
+    , _dddwiExamples :: !(Maybe [DictlayerDataDictWordsItemExamplesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictlayerDataDictWordsItem' with the minimum fields required to make a request.
@@ -3699,7 +3699,7 @@ data DictlayerDataDictWordsItem = DictlayerDataDictWordsItem'
 -- * 'dddwiExamples'
 dictlayerDataDictWordsItem
     :: DictlayerDataDictWordsItem
-dictlayerDataDictWordsItem =
+dictlayerDataDictWordsItem = 
     DictlayerDataDictWordsItem'
     { _dddwiSenses = Nothing
     , _dddwiSource = Nothing
@@ -3754,9 +3754,9 @@ instance ToJSON DictlayerDataDictWordsItem where
 --
 -- /See:/ 'categoryItemsItem' smart constructor.
 data CategoryItemsItem = CategoryItemsItem'
-    { _ciiName       :: !(Maybe Text)
+    { _ciiName :: !(Maybe Text)
     , _ciiCategoryId :: !(Maybe Text)
-    , _ciiBadgeURL   :: !(Maybe Text)
+    , _ciiBadgeURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CategoryItemsItem' with the minimum fields required to make a request.
@@ -3770,7 +3770,7 @@ data CategoryItemsItem = CategoryItemsItem'
 -- * 'ciiBadgeURL'
 categoryItemsItem
     :: CategoryItemsItem
-categoryItemsItem =
+categoryItemsItem = 
     CategoryItemsItem'
     { _ciiName = Nothing
     , _ciiCategoryId = Nothing
@@ -3808,7 +3808,7 @@ instance ToJSON CategoryItemsItem where
 --
 -- /See:/ 'dictlayerDataDictWordsItemDerivativesItemSource' smart constructor.
 data DictlayerDataDictWordsItemDerivativesItemSource = DictlayerDataDictWordsItemDerivativesItemSource'
-    { _dddwidisURL         :: !(Maybe Text)
+    { _dddwidisURL :: !(Maybe Text)
     , _dddwidisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3821,7 +3821,7 @@ data DictlayerDataDictWordsItemDerivativesItemSource = DictlayerDataDictWordsIte
 -- * 'dddwidisAttribution'
 dictlayerDataDictWordsItemDerivativesItemSource
     :: DictlayerDataDictWordsItemDerivativesItemSource
-dictlayerDataDictWordsItemDerivativesItemSource =
+dictlayerDataDictWordsItemDerivativesItemSource = 
     DictlayerDataDictWordsItemDerivativesItemSource'
     { _dddwidisURL = Nothing
     , _dddwidisAttribution = Nothing
@@ -3857,8 +3857,8 @@ instance ToJSON
 --
 -- /See:/ 'geolayerData' smart constructor.
 data GeolayerData = GeolayerData'
-    { _gdKind   :: !Text
-    , _gdGeo    :: !(Maybe GeolayerDataGeo)
+    { _gdKind :: !Text
+    , _gdGeo :: !(Maybe GeolayerDataGeo)
     , _gdCommon :: !(Maybe GeolayerDataCommon)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3873,7 +3873,7 @@ data GeolayerData = GeolayerData'
 -- * 'gdCommon'
 geolayerData
     :: GeolayerData
-geolayerData =
+geolayerData = 
     GeolayerData'
     { _gdKind = "books#geolayerdata"
     , _gdGeo = Nothing
@@ -3910,7 +3910,7 @@ instance ToJSON GeolayerData where
 --
 -- /See:/ 'dictlayerDataDictWordsItemSource' smart constructor.
 data DictlayerDataDictWordsItemSource = DictlayerDataDictWordsItemSource'
-    { _dddwisURL         :: !(Maybe Text)
+    { _dddwisURL :: !(Maybe Text)
     , _dddwisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3923,7 +3923,7 @@ data DictlayerDataDictWordsItemSource = DictlayerDataDictWordsItemSource'
 -- * 'dddwisAttribution'
 dictlayerDataDictWordsItemSource
     :: DictlayerDataDictWordsItemSource
-dictlayerDataDictWordsItemSource =
+dictlayerDataDictWordsItemSource = 
     DictlayerDataDictWordsItemSource'
     { _dddwisURL = Nothing
     , _dddwisAttribution = Nothing
@@ -3957,7 +3957,7 @@ instance ToJSON DictlayerDataDictWordsItemSource
 --
 -- /See:/ 'dictlayerDataDictWordsItemDerivativesItem' smart constructor.
 data DictlayerDataDictWordsItemDerivativesItem = DictlayerDataDictWordsItemDerivativesItem'
-    { _dddwidiText   :: !(Maybe Text)
+    { _dddwidiText :: !(Maybe Text)
     , _dddwidiSource :: !(Maybe DictlayerDataDictWordsItemDerivativesItemSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3970,7 +3970,7 @@ data DictlayerDataDictWordsItemDerivativesItem = DictlayerDataDictWordsItemDeriv
 -- * 'dddwidiSource'
 dictlayerDataDictWordsItemDerivativesItem
     :: DictlayerDataDictWordsItemDerivativesItem
-dictlayerDataDictWordsItemDerivativesItem =
+dictlayerDataDictWordsItemDerivativesItem = 
     DictlayerDataDictWordsItemDerivativesItem'
     { _dddwidiText = Nothing
     , _dddwidiSource = Nothing
@@ -4005,7 +4005,7 @@ instance ToJSON
 --
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem' smart constructor.
 data DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem = DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem'
-    { _dddwisidieiText   :: !(Maybe Text)
+    { _dddwisidieiText :: !(Maybe Text)
     , _dddwisidieiSource :: !(Maybe DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItemSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4018,7 +4018,7 @@ data DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem = Dictlayer
 -- * 'dddwisidieiSource'
 dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem
     :: DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem
-dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem =
+dictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem = 
     DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem'
     { _dddwisidieiText = Nothing
     , _dddwisidieiSource = Nothing
@@ -4055,10 +4055,48 @@ instance ToJSON
                   ("source" .=) <$> _dddwisidieiSource])
 
 --
+-- /See:/ 'userSettingsNotificationRewardExpirations' smart constructor.
+newtype UserSettingsNotificationRewardExpirations = UserSettingsNotificationRewardExpirations'
+    { _usnreOptedState :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UserSettingsNotificationRewardExpirations' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'usnreOptedState'
+userSettingsNotificationRewardExpirations
+    :: UserSettingsNotificationRewardExpirations
+userSettingsNotificationRewardExpirations = 
+    UserSettingsNotificationRewardExpirations'
+    { _usnreOptedState = Nothing
+    }
+
+usnreOptedState :: Lens' UserSettingsNotificationRewardExpirations (Maybe Text)
+usnreOptedState
+  = lens _usnreOptedState
+      (\ s a -> s{_usnreOptedState = a})
+
+instance FromJSON
+         UserSettingsNotificationRewardExpirations where
+        parseJSON
+          = withObject
+              "UserSettingsNotificationRewardExpirations"
+              (\ o ->
+                 UserSettingsNotificationRewardExpirations' <$>
+                   (o .:? "opted_state"))
+
+instance ToJSON
+         UserSettingsNotificationRewardExpirations where
+        toJSON UserSettingsNotificationRewardExpirations'{..}
+          = object
+              (catMaybes [("opted_state" .=) <$> _usnreOptedState])
+
+--
 -- /See:/ 'dictlayerData' smart constructor.
 data DictlayerData = DictlayerData'
-    { _ddKind   :: !Text
-    , _ddDict   :: !(Maybe DictlayerDataDict)
+    { _ddKind :: !Text
+    , _ddDict :: !(Maybe DictlayerDataDict)
     , _ddCommon :: !(Maybe DictlayerDataCommon)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4073,7 +4111,7 @@ data DictlayerData = DictlayerData'
 -- * 'ddCommon'
 dictlayerData
     :: DictlayerData
-dictlayerData =
+dictlayerData = 
     DictlayerData'
     { _ddKind = "books#dictlayerdata"
     , _ddDict = Nothing
@@ -4108,7 +4146,7 @@ instance ToJSON DictlayerData where
 --
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemSynonymsItemSource' smart constructor.
 data DictlayerDataDictWordsItemSensesItemSynonymsItemSource = DictlayerDataDictWordsItemSensesItemSynonymsItemSource'
-    { _dddwisisisURL         :: !(Maybe Text)
+    { _dddwisisisURL :: !(Maybe Text)
     , _dddwisisisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4121,7 +4159,7 @@ data DictlayerDataDictWordsItemSensesItemSynonymsItemSource = DictlayerDataDictW
 -- * 'dddwisisisAttribution'
 dictlayerDataDictWordsItemSensesItemSynonymsItemSource
     :: DictlayerDataDictWordsItemSensesItemSynonymsItemSource
-dictlayerDataDictWordsItemSensesItemSynonymsItemSource =
+dictlayerDataDictWordsItemSensesItemSynonymsItemSource = 
     DictlayerDataDictWordsItemSensesItemSynonymsItemSource'
     { _dddwisisisURL = Nothing
     , _dddwisisisAttribution = Nothing
@@ -4161,8 +4199,8 @@ instance ToJSON
 -- /See:/ 'seriesmembership' smart constructor.
 data Seriesmembership = Seriesmembership'
     { _serNextPageToken :: !(Maybe Text)
-    , _serKind          :: !Text
-    , _serMember        :: !(Maybe [Volume])
+    , _serKind :: !Text
+    , _serMember :: !(Maybe [Volume])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Seriesmembership' with the minimum fields required to make a request.
@@ -4176,7 +4214,7 @@ data Seriesmembership = Seriesmembership'
 -- * 'serMember'
 seriesmembership
     :: Seriesmembership
-seriesmembership =
+seriesmembership = 
     Seriesmembership'
     { _serNextPageToken = Nothing
     , _serKind = "books#series#membership"
@@ -4218,24 +4256,33 @@ instance ToJSON Seriesmembership where
 --
 -- /See:/ 'userSettingsNotification' smart constructor.
 data UserSettingsNotification = UserSettingsNotification'
-    { _usnMoreFromAuthors :: !(Maybe UserSettingsNotificationMoreFromAuthors)
-    , _usnMoreFromSeries  :: !(Maybe UserSettingsNotificationMoreFromSeries)
+    { _usnRewardExpirations :: !(Maybe UserSettingsNotificationRewardExpirations)
+    , _usnMoreFromAuthors :: !(Maybe UserSettingsNotificationMoreFromAuthors)
+    , _usnMoreFromSeries :: !(Maybe UserSettingsNotificationMoreFromSeries)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserSettingsNotification' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'usnRewardExpirations'
+--
 -- * 'usnMoreFromAuthors'
 --
 -- * 'usnMoreFromSeries'
 userSettingsNotification
     :: UserSettingsNotification
-userSettingsNotification =
+userSettingsNotification = 
     UserSettingsNotification'
-    { _usnMoreFromAuthors = Nothing
+    { _usnRewardExpirations = Nothing
+    , _usnMoreFromAuthors = Nothing
     , _usnMoreFromSeries = Nothing
     }
+
+usnRewardExpirations :: Lens' UserSettingsNotification (Maybe UserSettingsNotificationRewardExpirations)
+usnRewardExpirations
+  = lens _usnRewardExpirations
+      (\ s a -> s{_usnRewardExpirations = a})
 
 usnMoreFromAuthors :: Lens' UserSettingsNotification (Maybe UserSettingsNotificationMoreFromAuthors)
 usnMoreFromAuthors
@@ -4252,20 +4299,22 @@ instance FromJSON UserSettingsNotification where
           = withObject "UserSettingsNotification"
               (\ o ->
                  UserSettingsNotification' <$>
-                   (o .:? "moreFromAuthors") <*>
-                     (o .:? "moreFromSeries"))
+                   (o .:? "rewardExpirations") <*>
+                     (o .:? "moreFromAuthors")
+                     <*> (o .:? "moreFromSeries"))
 
 instance ToJSON UserSettingsNotification where
         toJSON UserSettingsNotification'{..}
           = object
               (catMaybes
-                 [("moreFromAuthors" .=) <$> _usnMoreFromAuthors,
+                 [("rewardExpirations" .=) <$> _usnRewardExpirations,
+                  ("moreFromAuthors" .=) <$> _usnMoreFromAuthors,
                   ("moreFromSeries" .=) <$> _usnMoreFromSeries])
 
 --
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemSynonymsItem' smart constructor.
 data DictlayerDataDictWordsItemSensesItemSynonymsItem = DictlayerDataDictWordsItemSensesItemSynonymsItem'
-    { _dddwisisiText   :: !(Maybe Text)
+    { _dddwisisiText :: !(Maybe Text)
     , _dddwisisiSource :: !(Maybe DictlayerDataDictWordsItemSensesItemSynonymsItemSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4278,7 +4327,7 @@ data DictlayerDataDictWordsItemSensesItemSynonymsItem = DictlayerDataDictWordsIt
 -- * 'dddwisisiSource'
 dictlayerDataDictWordsItemSensesItemSynonymsItem
     :: DictlayerDataDictWordsItemSensesItemSynonymsItem
-dictlayerDataDictWordsItemSensesItemSynonymsItem =
+dictlayerDataDictWordsItemSensesItemSynonymsItem = 
     DictlayerDataDictWordsItemSensesItemSynonymsItem'
     { _dddwisisiText = Nothing
     , _dddwisisiSource = Nothing
@@ -4317,7 +4366,7 @@ instance ToJSON
 --
 -- /See:/ 'geolayerDataGeoViewportLo' smart constructor.
 data GeolayerDataGeoViewportLo = GeolayerDataGeoViewportLo'
-    { _gdgvlLatitude  :: !(Maybe (Textual Double))
+    { _gdgvlLatitude :: !(Maybe (Textual Double))
     , _gdgvlLongitude :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4330,7 +4379,7 @@ data GeolayerDataGeoViewportLo = GeolayerDataGeoViewportLo'
 -- * 'gdgvlLongitude'
 geolayerDataGeoViewportLo
     :: GeolayerDataGeoViewportLo
-geolayerDataGeoViewportLo =
+geolayerDataGeoViewportLo = 
     GeolayerDataGeoViewportLo'
     { _gdgvlLatitude = Nothing
     , _gdgvlLongitude = Nothing
@@ -4366,7 +4415,7 @@ instance ToJSON GeolayerDataGeoViewportLo where
 --
 -- /See:/ 'volumeSaleInfoOffersItemListPrice' smart constructor.
 data VolumeSaleInfoOffersItemListPrice = VolumeSaleInfoOffersItemListPrice'
-    { _vsioilpCurrencyCode   :: !(Maybe Text)
+    { _vsioilpCurrencyCode :: !(Maybe Text)
     , _vsioilpAmountInMicros :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4379,7 +4428,7 @@ data VolumeSaleInfoOffersItemListPrice = VolumeSaleInfoOffersItemListPrice'
 -- * 'vsioilpAmountInMicros'
 volumeSaleInfoOffersItemListPrice
     :: VolumeSaleInfoOffersItemListPrice
-volumeSaleInfoOffersItemListPrice =
+volumeSaleInfoOffersItemListPrice = 
     VolumeSaleInfoOffersItemListPrice'
     { _vsioilpCurrencyCode = Nothing
     , _vsioilpAmountInMicros = Nothing
@@ -4415,18 +4464,18 @@ instance ToJSON VolumeSaleInfoOffersItemListPrice
 --
 -- /See:/ 'downloadAccessRestriction' smart constructor.
 data DownloadAccessRestriction = DownloadAccessRestriction'
-    { _darJustAcquired       :: !(Maybe Bool)
-    , _darSignature          :: !(Maybe Text)
-    , _darKind               :: !Text
+    { _darJustAcquired :: !(Maybe Bool)
+    , _darSignature :: !(Maybe Text)
+    , _darKind :: !Text
     , _darMaxDownloadDevices :: !(Maybe (Textual Int32))
-    , _darDownloadsAcquired  :: !(Maybe (Textual Int32))
-    , _darReasonCode         :: !(Maybe Text)
-    , _darVolumeId           :: !(Maybe Text)
-    , _darRestricted         :: !(Maybe Bool)
-    , _darSource             :: !(Maybe Text)
-    , _darDeviceAllowed      :: !(Maybe Bool)
-    , _darMessage            :: !(Maybe Text)
-    , _darNonce              :: !(Maybe Text)
+    , _darDownloadsAcquired :: !(Maybe (Textual Int32))
+    , _darReasonCode :: !(Maybe Text)
+    , _darVolumeId :: !(Maybe Text)
+    , _darRestricted :: !(Maybe Bool)
+    , _darSource :: !(Maybe Text)
+    , _darDeviceAllowed :: !(Maybe Bool)
+    , _darMessage :: !(Maybe Text)
+    , _darNonce :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DownloadAccessRestriction' with the minimum fields required to make a request.
@@ -4458,7 +4507,7 @@ data DownloadAccessRestriction = DownloadAccessRestriction'
 -- * 'darNonce'
 downloadAccessRestriction
     :: DownloadAccessRestriction
-downloadAccessRestriction =
+downloadAccessRestriction = 
     DownloadAccessRestriction'
     { _darJustAcquired = Nothing
     , _darSignature = Nothing
@@ -4594,7 +4643,7 @@ newtype DictlayerDataCommon = DictlayerDataCommon'
 -- * 'ddcTitle'
 dictlayerDataCommon
     :: DictlayerDataCommon
-dictlayerDataCommon =
+dictlayerDataCommon = 
     DictlayerDataCommon'
     { _ddcTitle = Nothing
     }
@@ -4617,11 +4666,11 @@ instance ToJSON DictlayerDataCommon where
 -- /See:/ 'discoveryclustersClustersItem' smart constructor.
 data DiscoveryclustersClustersItem = DiscoveryclustersClustersItem'
     { _dciBannerWithContentContainer :: !(Maybe DiscoveryclustersClustersItemBanner_with_content_container)
-    , _dciUid                        :: !(Maybe Text)
-    , _dciTotalVolumes               :: !(Maybe (Textual Int32))
-    , _dciSubTitle                   :: !(Maybe Text)
-    , _dciTitle                      :: !(Maybe Text)
-    , _dciVolumes                    :: !(Maybe [Volume])
+    , _dciUid :: !(Maybe Text)
+    , _dciTotalVolumes :: !(Maybe (Textual Int32))
+    , _dciSubTitle :: !(Maybe Text)
+    , _dciTitle :: !(Maybe Text)
+    , _dciVolumes :: !(Maybe [Volume])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DiscoveryclustersClustersItem' with the minimum fields required to make a request.
@@ -4641,7 +4690,7 @@ data DiscoveryclustersClustersItem = DiscoveryclustersClustersItem'
 -- * 'dciVolumes'
 discoveryclustersClustersItem
     :: DiscoveryclustersClustersItem
-discoveryclustersClustersItem =
+discoveryclustersClustersItem = 
     DiscoveryclustersClustersItem'
     { _dciBannerWithContentContainer = Nothing
     , _dciUid = Nothing
@@ -4708,7 +4757,7 @@ instance ToJSON DiscoveryclustersClustersItem where
 --
 -- /See:/ 'volumeSaleInfoRetailPrice' smart constructor.
 data VolumeSaleInfoRetailPrice = VolumeSaleInfoRetailPrice'
-    { _vsirpAmount       :: !(Maybe (Textual Double))
+    { _vsirpAmount :: !(Maybe (Textual Double))
     , _vsirpCurrencyCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4721,7 +4770,7 @@ data VolumeSaleInfoRetailPrice = VolumeSaleInfoRetailPrice'
 -- * 'vsirpCurrencyCode'
 volumeSaleInfoRetailPrice
     :: VolumeSaleInfoRetailPrice
-volumeSaleInfoRetailPrice =
+volumeSaleInfoRetailPrice = 
     VolumeSaleInfoRetailPrice'
     { _vsirpAmount = Nothing
     , _vsirpCurrencyCode = Nothing
@@ -4757,7 +4806,7 @@ instance ToJSON VolumeSaleInfoRetailPrice where
 --
 -- /See:/ 'volumeSaleInfoListPrice' smart constructor.
 data VolumeSaleInfoListPrice = VolumeSaleInfoListPrice'
-    { _vsilpAmount       :: !(Maybe (Textual Double))
+    { _vsilpAmount :: !(Maybe (Textual Double))
     , _vsilpCurrencyCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4770,7 +4819,7 @@ data VolumeSaleInfoListPrice = VolumeSaleInfoListPrice'
 -- * 'vsilpCurrencyCode'
 volumeSaleInfoListPrice
     :: VolumeSaleInfoListPrice
-volumeSaleInfoListPrice =
+volumeSaleInfoListPrice = 
     VolumeSaleInfoListPrice'
     { _vsilpAmount = Nothing
     , _vsilpCurrencyCode = Nothing
@@ -4806,7 +4855,7 @@ instance ToJSON VolumeSaleInfoListPrice where
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemConjugationsItem' smart constructor.
 data DictlayerDataDictWordsItemSensesItemConjugationsItem = DictlayerDataDictWordsItemSensesItemConjugationsItem'
     { _dddwisiciValue :: !(Maybe Text)
-    , _dddwisiciType  :: !(Maybe Text)
+    , _dddwisiciType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictlayerDataDictWordsItemSensesItemConjugationsItem' with the minimum fields required to make a request.
@@ -4818,7 +4867,7 @@ data DictlayerDataDictWordsItemSensesItemConjugationsItem = DictlayerDataDictWor
 -- * 'dddwisiciType'
 dictlayerDataDictWordsItemSensesItemConjugationsItem
     :: DictlayerDataDictWordsItemSensesItemConjugationsItem
-dictlayerDataDictWordsItemSensesItemConjugationsItem =
+dictlayerDataDictWordsItemSensesItemConjugationsItem = 
     DictlayerDataDictWordsItemSensesItemConjugationsItem'
     { _dddwisiciValue = Nothing
     , _dddwisiciType = Nothing
@@ -4858,8 +4907,8 @@ instance ToJSON
 -- /See:/ 'volume2' smart constructor.
 data Volume2 = Volume2'
     { _voloNextPageToken :: !(Maybe Text)
-    , _voloKind          :: !Text
-    , _voloItems         :: !(Maybe [Volume])
+    , _voloKind :: !Text
+    , _voloItems :: !(Maybe [Volume])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Volume2' with the minimum fields required to make a request.
@@ -4873,7 +4922,7 @@ data Volume2 = Volume2'
 -- * 'voloItems'
 volume2
     :: Volume2
-volume2 =
+volume2 = 
     Volume2'
     { _voloNextPageToken = Nothing
     , _voloKind = "onboarding#volume"
@@ -4916,16 +4965,16 @@ instance ToJSON Volume2 where
 --
 -- /See:/ 'review' smart constructor.
 data Review = Review'
-    { _rRating      :: !(Maybe Text)
-    , _rKind        :: !Text
-    , _rContent     :: !(Maybe Text)
-    , _rDate        :: !(Maybe Text)
-    , _rVolumeId    :: !(Maybe Text)
-    , _rAuthor      :: !(Maybe ReviewAuthor)
-    , _rSource      :: !(Maybe ReviewSource)
+    { _rRating :: !(Maybe Text)
+    , _rKind :: !Text
+    , _rContent :: !(Maybe Text)
+    , _rDate :: !(Maybe Text)
+    , _rVolumeId :: !(Maybe Text)
+    , _rAuthor :: !(Maybe ReviewAuthor)
+    , _rSource :: !(Maybe ReviewSource)
     , _rFullTextURL :: !(Maybe Text)
-    , _rTitle       :: !(Maybe Text)
-    , _rType        :: !(Maybe Text)
+    , _rTitle :: !(Maybe Text)
+    , _rType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Review' with the minimum fields required to make a request.
@@ -4953,7 +5002,7 @@ data Review = Review'
 -- * 'rType'
 review
     :: Review
-review =
+review = 
     Review'
     { _rRating = Nothing
     , _rKind = "books#review"
@@ -5044,7 +5093,7 @@ instance ToJSON Review where
 --
 -- /See:/ 'volumeUserInfoRentalPeriod' smart constructor.
 data VolumeUserInfoRentalPeriod = VolumeUserInfoRentalPeriod'
-    { _vuirpEndUtcSec   :: !(Maybe (Textual Int64))
+    { _vuirpEndUtcSec :: !(Maybe (Textual Int64))
     , _vuirpStartUtcSec :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5057,7 +5106,7 @@ data VolumeUserInfoRentalPeriod = VolumeUserInfoRentalPeriod'
 -- * 'vuirpStartUtcSec'
 volumeUserInfoRentalPeriod
     :: VolumeUserInfoRentalPeriod
-volumeUserInfoRentalPeriod =
+volumeUserInfoRentalPeriod = 
     VolumeUserInfoRentalPeriod'
     { _vuirpEndUtcSec = Nothing
     , _vuirpStartUtcSec = Nothing
@@ -5096,13 +5145,13 @@ instance ToJSON VolumeUserInfoRentalPeriod where
 --
 -- /See:/ 'volumeSaleInfo' smart constructor.
 data VolumeSaleInfo = VolumeSaleInfo'
-    { _vsiCountry     :: !(Maybe Text)
-    , _vsiOnSaleDate  :: !(Maybe DateTime')
-    , _vsiListPrice   :: !(Maybe VolumeSaleInfoListPrice)
+    { _vsiCountry :: !(Maybe Text)
+    , _vsiOnSaleDate :: !(Maybe DateTime')
+    , _vsiListPrice :: !(Maybe VolumeSaleInfoListPrice)
     , _vsiRetailPrice :: !(Maybe VolumeSaleInfoRetailPrice)
-    , _vsiOffers      :: !(Maybe [VolumeSaleInfoOffersItem])
-    , _vsiBuyLink     :: !(Maybe Text)
-    , _vsiIsEbook     :: !(Maybe Bool)
+    , _vsiOffers :: !(Maybe [VolumeSaleInfoOffersItem])
+    , _vsiBuyLink :: !(Maybe Text)
+    , _vsiIsEbook :: !(Maybe Bool)
     , _vsiSaleability :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5127,7 +5176,7 @@ data VolumeSaleInfo = VolumeSaleInfo'
 -- * 'vsiSaleability'
 volumeSaleInfo
     :: VolumeSaleInfo
-volumeSaleInfo =
+volumeSaleInfo = 
     VolumeSaleInfo'
     { _vsiCountry = Nothing
     , _vsiOnSaleDate = Nothing
@@ -5222,11 +5271,11 @@ instance ToJSON VolumeSaleInfo where
 --
 -- /See:/ 'seriesSeriesItem' smart constructor.
 data SeriesSeriesItem = SeriesSeriesItem'
-    { _ssiSeriesId       :: !(Maybe Text)
-    , _ssiImageURL       :: !(Maybe Text)
+    { _ssiSeriesId :: !(Maybe Text)
+    , _ssiImageURL :: !(Maybe Text)
     , _ssiBannerImageURL :: !(Maybe Text)
-    , _ssiTitle          :: !(Maybe Text)
-    , _ssiSeriesType     :: !(Maybe Text)
+    , _ssiTitle :: !(Maybe Text)
+    , _ssiSeriesType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SeriesSeriesItem' with the minimum fields required to make a request.
@@ -5244,7 +5293,7 @@ data SeriesSeriesItem = SeriesSeriesItem'
 -- * 'ssiSeriesType'
 seriesSeriesItem
     :: SeriesSeriesItem
-seriesSeriesItem =
+seriesSeriesItem = 
     SeriesSeriesItem'
     { _ssiSeriesId = Nothing
     , _ssiImageURL = Nothing
@@ -5297,7 +5346,7 @@ instance ToJSON SeriesSeriesItem where
 --
 -- /See:/ 'metadata' smart constructor.
 data Metadata = Metadata'
-    { _mKind  :: !Text
+    { _mKind :: !Text
     , _mItems :: !(Maybe [MetadataItemsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5310,7 +5359,7 @@ data Metadata = Metadata'
 -- * 'mItems'
 metadata
     :: Metadata
-metadata =
+metadata = 
     Metadata'
     { _mKind = "dictionary#metadata"
     , _mItems = Nothing
@@ -5354,7 +5403,7 @@ newtype VolumeLayerInfo = VolumeLayerInfo'
 -- * 'vliLayers'
 volumeLayerInfo
     :: VolumeLayerInfo
-volumeLayerInfo =
+volumeLayerInfo = 
     VolumeLayerInfo'
     { _vliLayers = Nothing
     }
@@ -5381,8 +5430,8 @@ instance ToJSON VolumeLayerInfo where
 --
 -- /See:/ 'volumeVolumeInfoDimensions' smart constructor.
 data VolumeVolumeInfoDimensions = VolumeVolumeInfoDimensions'
-    { _vvidHeight    :: !(Maybe Text)
-    , _vvidWidth     :: !(Maybe Text)
+    { _vvidHeight :: !(Maybe Text)
+    , _vvidWidth :: !(Maybe Text)
     , _vvidThickness :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5397,7 +5446,7 @@ data VolumeVolumeInfoDimensions = VolumeVolumeInfoDimensions'
 -- * 'vvidThickness'
 volumeVolumeInfoDimensions
     :: VolumeVolumeInfoDimensions
-volumeVolumeInfoDimensions =
+volumeVolumeInfoDimensions = 
     VolumeVolumeInfoDimensions'
     { _vvidHeight = Nothing
     , _vvidWidth = Nothing
@@ -5440,8 +5489,8 @@ instance ToJSON VolumeVolumeInfoDimensions where
 -- /See:/ 'requestAccess' smart constructor.
 data RequestAccess = RequestAccess'
     { _raConcurrentAccess :: !(Maybe ConcurrentAccessRestriction)
-    , _raKind             :: !Text
-    , _raDownloadAccess   :: !(Maybe DownloadAccessRestriction)
+    , _raKind :: !Text
+    , _raDownloadAccess :: !(Maybe DownloadAccessRestriction)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RequestAccess' with the minimum fields required to make a request.
@@ -5455,7 +5504,7 @@ data RequestAccess = RequestAccess'
 -- * 'raDownloadAccess'
 requestAccess
     :: RequestAccess
-requestAccess =
+requestAccess = 
     RequestAccess'
     { _raConcurrentAccess = Nothing
     , _raKind = "books#requestAccess"
@@ -5499,11 +5548,11 @@ instance ToJSON RequestAccess where
 --
 -- /See:/ 'annotationClientVersionRanges' smart constructor.
 data AnnotationClientVersionRanges = AnnotationClientVersionRanges'
-    { _acvrGbImageRange   :: !(Maybe BooksAnnotationsRange)
+    { _acvrGbImageRange :: !(Maybe BooksAnnotationsRange)
     , _acvrContentVersion :: !(Maybe Text)
-    , _acvrImageCfiRange  :: !(Maybe BooksAnnotationsRange)
-    , _acvrGbTextRange    :: !(Maybe BooksAnnotationsRange)
-    , _acvrCfiRange       :: !(Maybe BooksAnnotationsRange)
+    , _acvrImageCfiRange :: !(Maybe BooksAnnotationsRange)
+    , _acvrGbTextRange :: !(Maybe BooksAnnotationsRange)
+    , _acvrCfiRange :: !(Maybe BooksAnnotationsRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationClientVersionRanges' with the minimum fields required to make a request.
@@ -5521,7 +5570,7 @@ data AnnotationClientVersionRanges = AnnotationClientVersionRanges'
 -- * 'acvrCfiRange'
 annotationClientVersionRanges
     :: AnnotationClientVersionRanges
-annotationClientVersionRanges =
+annotationClientVersionRanges = 
     AnnotationClientVersionRanges'
     { _acvrGbImageRange = Nothing
     , _acvrContentVersion = Nothing
@@ -5583,7 +5632,7 @@ instance ToJSON AnnotationClientVersionRanges where
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemDefinitionsItem' smart constructor.
 data DictlayerDataDictWordsItemSensesItemDefinitionsItem = DictlayerDataDictWordsItemSensesItemDefinitionsItem'
     { _dddwisidiDefinition :: !(Maybe Text)
-    , _dddwisidiExamples   :: !(Maybe [DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem])
+    , _dddwisidiExamples :: !(Maybe [DictlayerDataDictWordsItemSensesItemDefinitionsItemExamplesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictlayerDataDictWordsItemSensesItemDefinitionsItem' with the minimum fields required to make a request.
@@ -5595,7 +5644,7 @@ data DictlayerDataDictWordsItemSensesItemDefinitionsItem = DictlayerDataDictWord
 -- * 'dddwisidiExamples'
 dictlayerDataDictWordsItemSensesItemDefinitionsItem
     :: DictlayerDataDictWordsItemSensesItemDefinitionsItem
-dictlayerDataDictWordsItemSensesItemDefinitionsItem =
+dictlayerDataDictWordsItemSensesItemDefinitionsItem = 
     DictlayerDataDictWordsItemSensesItemDefinitionsItem'
     { _dddwisidiDefinition = Nothing
     , _dddwisidiExamples = Nothing
@@ -5639,7 +5688,7 @@ instance ToJSON
 -- /See:/ 'volumeLayerInfoLayersItem' smart constructor.
 data VolumeLayerInfoLayersItem = VolumeLayerInfoLayersItem'
     { _vliliVolumeAnnotationsVersion :: !(Maybe Text)
-    , _vliliLayerId                  :: !(Maybe Text)
+    , _vliliLayerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeLayerInfoLayersItem' with the minimum fields required to make a request.
@@ -5651,7 +5700,7 @@ data VolumeLayerInfoLayersItem = VolumeLayerInfoLayersItem'
 -- * 'vliliLayerId'
 volumeLayerInfoLayersItem
     :: VolumeLayerInfoLayersItem
-volumeLayerInfoLayersItem =
+volumeLayerInfoLayersItem = 
     VolumeLayerInfoLayersItem'
     { _vliliVolumeAnnotationsVersion = Nothing
     , _vliliLayerId = Nothing
@@ -5690,11 +5739,11 @@ instance ToJSON VolumeLayerInfoLayersItem where
 --
 -- /See:/ 'annotationCurrentVersionRanges' smart constructor.
 data AnnotationCurrentVersionRanges = AnnotationCurrentVersionRanges'
-    { _aGbImageRange   :: !(Maybe BooksAnnotationsRange)
+    { _aGbImageRange :: !(Maybe BooksAnnotationsRange)
     , _aContentVersion :: !(Maybe Text)
-    , _aImageCfiRange  :: !(Maybe BooksAnnotationsRange)
-    , _aGbTextRange    :: !(Maybe BooksAnnotationsRange)
-    , _aCfiRange       :: !(Maybe BooksAnnotationsRange)
+    , _aImageCfiRange :: !(Maybe BooksAnnotationsRange)
+    , _aGbTextRange :: !(Maybe BooksAnnotationsRange)
+    , _aCfiRange :: !(Maybe BooksAnnotationsRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationCurrentVersionRanges' with the minimum fields required to make a request.
@@ -5712,7 +5761,7 @@ data AnnotationCurrentVersionRanges = AnnotationCurrentVersionRanges'
 -- * 'aCfiRange'
 annotationCurrentVersionRanges
     :: AnnotationCurrentVersionRanges
-annotationCurrentVersionRanges =
+annotationCurrentVersionRanges = 
     AnnotationCurrentVersionRanges'
     { _aGbImageRange = Nothing
     , _aContentVersion = Nothing
@@ -5775,7 +5824,7 @@ instance ToJSON AnnotationCurrentVersionRanges where
 -- /See:/ 'volumeAccessInfoPdf' smart constructor.
 data VolumeAccessInfoPdf = VolumeAccessInfoPdf'
     { _vaipAcsTokenLink :: !(Maybe Text)
-    , _vaipIsAvailable  :: !(Maybe Bool)
+    , _vaipIsAvailable :: !(Maybe Bool)
     , _vaipDownloadLink :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5790,7 +5839,7 @@ data VolumeAccessInfoPdf = VolumeAccessInfoPdf'
 -- * 'vaipDownloadLink'
 volumeAccessInfoPdf
     :: VolumeAccessInfoPdf
-volumeAccessInfoPdf =
+volumeAccessInfoPdf = 
     VolumeAccessInfoPdf'
     { _vaipAcsTokenLink = Nothing
     , _vaipIsAvailable = Nothing
@@ -5835,7 +5884,7 @@ instance ToJSON VolumeAccessInfoPdf where
 --
 -- /See:/ 'dictlayerDataDictWordsItemExamplesItemSource' smart constructor.
 data DictlayerDataDictWordsItemExamplesItemSource = DictlayerDataDictWordsItemExamplesItemSource'
-    { _dddwieisURL         :: !(Maybe Text)
+    { _dddwieisURL :: !(Maybe Text)
     , _dddwieisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5848,7 +5897,7 @@ data DictlayerDataDictWordsItemExamplesItemSource = DictlayerDataDictWordsItemEx
 -- * 'dddwieisAttribution'
 dictlayerDataDictWordsItemExamplesItemSource
     :: DictlayerDataDictWordsItemExamplesItemSource
-dictlayerDataDictWordsItemExamplesItemSource =
+dictlayerDataDictWordsItemExamplesItemSource = 
     DictlayerDataDictWordsItemExamplesItemSource'
     { _dddwieisURL = Nothing
     , _dddwieisAttribution = Nothing
@@ -5886,7 +5935,7 @@ instance ToJSON
 -- /See:/ 'volumeAccessInfoEpub' smart constructor.
 data VolumeAccessInfoEpub = VolumeAccessInfoEpub'
     { _vaieAcsTokenLink :: !(Maybe Text)
-    , _vaieIsAvailable  :: !(Maybe Bool)
+    , _vaieIsAvailable :: !(Maybe Bool)
     , _vaieDownloadLink :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5901,7 +5950,7 @@ data VolumeAccessInfoEpub = VolumeAccessInfoEpub'
 -- * 'vaieDownloadLink'
 volumeAccessInfoEpub
     :: VolumeAccessInfoEpub
-volumeAccessInfoEpub =
+volumeAccessInfoEpub = 
     VolumeAccessInfoEpub'
     { _vaieAcsTokenLink = Nothing
     , _vaieIsAvailable = Nothing
@@ -5947,12 +5996,12 @@ instance ToJSON VolumeAccessInfoEpub where
 -- /See:/ 'readingPosition' smart constructor.
 data ReadingPosition = ReadingPosition'
     { _rpEpubCfiPosition :: !(Maybe Text)
-    , _rpKind            :: !Text
+    , _rpKind :: !Text
     , _rpGbImagePosition :: !(Maybe Text)
-    , _rpPdfPosition     :: !(Maybe Text)
-    , _rpVolumeId        :: !(Maybe Text)
-    , _rpUpdated         :: !(Maybe DateTime')
-    , _rpGbTextPosition  :: !(Maybe Text)
+    , _rpPdfPosition :: !(Maybe Text)
+    , _rpVolumeId :: !(Maybe Text)
+    , _rpUpdated :: !(Maybe DateTime')
+    , _rpGbTextPosition :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadingPosition' with the minimum fields required to make a request.
@@ -5974,7 +6023,7 @@ data ReadingPosition = ReadingPosition'
 -- * 'rpGbTextPosition'
 readingPosition
     :: ReadingPosition
-readingPosition =
+readingPosition = 
     ReadingPosition'
     { _rpEpubCfiPosition = Nothing
     , _rpKind = "books#readingPosition"
@@ -6054,10 +6103,10 @@ instance ToJSON ReadingPosition where
 -- /See:/ 'volumeSaleInfoOffersItem' smart constructor.
 data VolumeSaleInfoOffersItem = VolumeSaleInfoOffersItem'
     { _vsioiFinskyOfferType :: !(Maybe (Textual Int32))
-    , _vsioiRentalDuration  :: !(Maybe VolumeSaleInfoOffersItemRentalDuration)
-    , _vsioiListPrice       :: !(Maybe VolumeSaleInfoOffersItemListPrice)
-    , _vsioiRetailPrice     :: !(Maybe VolumeSaleInfoOffersItemRetailPrice)
-    , _vsioiGiftable        :: !(Maybe Bool)
+    , _vsioiRentalDuration :: !(Maybe VolumeSaleInfoOffersItemRentalDuration)
+    , _vsioiListPrice :: !(Maybe VolumeSaleInfoOffersItemListPrice)
+    , _vsioiRetailPrice :: !(Maybe VolumeSaleInfoOffersItemRetailPrice)
+    , _vsioiGiftable :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeSaleInfoOffersItem' with the minimum fields required to make a request.
@@ -6075,7 +6124,7 @@ data VolumeSaleInfoOffersItem = VolumeSaleInfoOffersItem'
 -- * 'vsioiGiftable'
 volumeSaleInfoOffersItem
     :: VolumeSaleInfoOffersItem
-volumeSaleInfoOffersItem =
+volumeSaleInfoOffersItem = 
     VolumeSaleInfoOffersItem'
     { _vsioiFinskyOfferType = Nothing
     , _vsioiRentalDuration = Nothing
@@ -6140,7 +6189,7 @@ instance ToJSON VolumeSaleInfoOffersItem where
 -- /See:/ 'dictlayerDataDict' smart constructor.
 data DictlayerDataDict = DictlayerDataDict'
     { _dddSource :: !(Maybe DictlayerDataDictSource)
-    , _dddWords  :: !(Maybe [DictlayerDataDictWordsItem])
+    , _dddWords :: !(Maybe [DictlayerDataDictWordsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictlayerDataDict' with the minimum fields required to make a request.
@@ -6152,7 +6201,7 @@ data DictlayerDataDict = DictlayerDataDict'
 -- * 'dddWords'
 dictlayerDataDict
     :: DictlayerDataDict
-dictlayerDataDict =
+dictlayerDataDict = 
     DictlayerDataDict'
     { _dddSource = Nothing
     , _dddWords = Nothing
@@ -6187,13 +6236,13 @@ instance ToJSON DictlayerDataDict where
 -- /See:/ 'dictlayerDataDictWordsItemSensesItem' smart constructor.
 data DictlayerDataDictWordsItemSensesItem = DictlayerDataDictWordsItemSensesItem'
     { _dddwisiPronunciationURL :: !(Maybe Text)
-    , _dddwisiConjugations     :: !(Maybe [DictlayerDataDictWordsItemSensesItemConjugationsItem])
-    , _dddwisiPronunciation    :: !(Maybe Text)
-    , _dddwisiSynonyms         :: !(Maybe [DictlayerDataDictWordsItemSensesItemSynonymsItem])
-    , _dddwisiSource           :: !(Maybe DictlayerDataDictWordsItemSensesItemSource)
-    , _dddwisiPartOfSpeech     :: !(Maybe Text)
-    , _dddwisiDefinitions      :: !(Maybe [DictlayerDataDictWordsItemSensesItemDefinitionsItem])
-    , _dddwisiSyllabification  :: !(Maybe Text)
+    , _dddwisiConjugations :: !(Maybe [DictlayerDataDictWordsItemSensesItemConjugationsItem])
+    , _dddwisiPronunciation :: !(Maybe Text)
+    , _dddwisiSynonyms :: !(Maybe [DictlayerDataDictWordsItemSensesItemSynonymsItem])
+    , _dddwisiSource :: !(Maybe DictlayerDataDictWordsItemSensesItemSource)
+    , _dddwisiPartOfSpeech :: !(Maybe Text)
+    , _dddwisiDefinitions :: !(Maybe [DictlayerDataDictWordsItemSensesItemDefinitionsItem])
+    , _dddwisiSyllabification :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DictlayerDataDictWordsItemSensesItem' with the minimum fields required to make a request.
@@ -6217,7 +6266,7 @@ data DictlayerDataDictWordsItemSensesItem = DictlayerDataDictWordsItemSensesItem
 -- * 'dddwisiSyllabification'
 dictlayerDataDictWordsItemSensesItem
     :: DictlayerDataDictWordsItemSensesItem
-dictlayerDataDictWordsItemSensesItem =
+dictlayerDataDictWordsItemSensesItem = 
     DictlayerDataDictWordsItemSensesItem'
     { _dddwisiPronunciationURL = Nothing
     , _dddwisiConjugations = Nothing
@@ -6319,7 +6368,7 @@ newtype VolumeRecommendedInfo = VolumeRecommendedInfo'
 -- * 'vriExplanation'
 volumeRecommendedInfo
     :: VolumeRecommendedInfo
-volumeRecommendedInfo =
+volumeRecommendedInfo = 
     VolumeRecommendedInfo'
     { _vriExplanation = Nothing
     }
@@ -6344,7 +6393,7 @@ instance ToJSON VolumeRecommendedInfo where
 --
 -- /See:/ 'offers' smart constructor.
 data Offers = Offers'
-    { _oKind  :: !Text
+    { _oKind :: !Text
     , _oItems :: !(Maybe [OffersItemsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6357,7 +6406,7 @@ data Offers = Offers'
 -- * 'oItems'
 offers
     :: Offers
-offers =
+offers = 
     Offers'
     { _oKind = "promooffer#offers"
     , _oItems = Nothing
@@ -6390,9 +6439,9 @@ instance ToJSON Offers where
 --
 -- /See:/ 'discoveryclusters' smart constructor.
 data Discoveryclusters = Discoveryclusters'
-    { _dKind          :: !Text
+    { _dKind :: !Text
     , _dTotalClusters :: !(Maybe (Textual Int32))
-    , _dClusters      :: !(Maybe [DiscoveryclustersClustersItem])
+    , _dClusters :: !(Maybe [DiscoveryclustersClustersItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Discoveryclusters' with the minimum fields required to make a request.
@@ -6406,7 +6455,7 @@ data Discoveryclusters = Discoveryclusters'
 -- * 'dClusters'
 discoveryclusters
     :: Discoveryclusters
-discoveryclusters =
+discoveryclusters = 
     Discoveryclusters'
     { _dKind = "books#discovery#clusters"
     , _dTotalClusters = Nothing
@@ -6449,10 +6498,10 @@ instance ToJSON Discoveryclusters where
 --
 -- /See:/ 'volumeseriesInfoVolumeSeriesItem' smart constructor.
 data VolumeseriesInfoVolumeSeriesItem = VolumeseriesInfoVolumeSeriesItem'
-    { _vivsiSeriesId       :: !(Maybe Text)
+    { _vivsiSeriesId :: !(Maybe Text)
     , _vivsiSeriesBookType :: !(Maybe Text)
-    , _vivsiOrderNumber    :: !(Maybe (Textual Int32))
-    , _vivsiIssue          :: !(Maybe [VolumeseriesInfoVolumeSeriesItemIssueItem])
+    , _vivsiOrderNumber :: !(Maybe (Textual Int32))
+    , _vivsiIssue :: !(Maybe [VolumeseriesInfoVolumeSeriesItemIssueItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeseriesInfoVolumeSeriesItem' with the minimum fields required to make a request.
@@ -6468,7 +6517,7 @@ data VolumeseriesInfoVolumeSeriesItem = VolumeseriesInfoVolumeSeriesItem'
 -- * 'vivsiIssue'
 volumeseriesInfoVolumeSeriesItem
     :: VolumeseriesInfoVolumeSeriesItem
-volumeseriesInfoVolumeSeriesItem =
+volumeseriesInfoVolumeSeriesItem = 
     VolumeseriesInfoVolumeSeriesItem'
     { _vivsiSeriesId = Nothing
     , _vivsiSeriesBookType = Nothing
@@ -6528,7 +6577,7 @@ instance ToJSON VolumeseriesInfoVolumeSeriesItem
 -- /See:/ 'userSettingsNotesExport' smart constructor.
 data UserSettingsNotesExport = UserSettingsNotesExport'
     { _usneFolderName :: !(Maybe Text)
-    , _usneIsEnabled  :: !(Maybe Bool)
+    , _usneIsEnabled :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserSettingsNotesExport' with the minimum fields required to make a request.
@@ -6540,7 +6589,7 @@ data UserSettingsNotesExport = UserSettingsNotesExport'
 -- * 'usneIsEnabled'
 userSettingsNotesExport
     :: UserSettingsNotesExport
-userSettingsNotesExport =
+userSettingsNotesExport = 
     UserSettingsNotesExport'
     { _usneFolderName = Nothing
     , _usneIsEnabled = Nothing
@@ -6574,16 +6623,16 @@ instance ToJSON UserSettingsNotesExport where
 -- /See:/ 'concurrentAccessRestriction' smart constructor.
 data ConcurrentAccessRestriction = ConcurrentAccessRestriction'
     { _carMaxConcurrentDevices :: !(Maybe (Textual Int32))
-    , _carSignature            :: !(Maybe Text)
-    , _carTimeWindowSeconds    :: !(Maybe (Textual Int32))
-    , _carKind                 :: !Text
-    , _carReasonCode           :: !(Maybe Text)
-    , _carVolumeId             :: !(Maybe Text)
-    , _carRestricted           :: !(Maybe Bool)
-    , _carSource               :: !(Maybe Text)
-    , _carDeviceAllowed        :: !(Maybe Bool)
-    , _carMessage              :: !(Maybe Text)
-    , _carNonce                :: !(Maybe Text)
+    , _carSignature :: !(Maybe Text)
+    , _carTimeWindowSeconds :: !(Maybe (Textual Int32))
+    , _carKind :: !Text
+    , _carReasonCode :: !(Maybe Text)
+    , _carVolumeId :: !(Maybe Text)
+    , _carRestricted :: !(Maybe Bool)
+    , _carSource :: !(Maybe Text)
+    , _carDeviceAllowed :: !(Maybe Bool)
+    , _carMessage :: !(Maybe Text)
+    , _carNonce :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConcurrentAccessRestriction' with the minimum fields required to make a request.
@@ -6613,7 +6662,7 @@ data ConcurrentAccessRestriction = ConcurrentAccessRestriction'
 -- * 'carNonce'
 concurrentAccessRestriction
     :: ConcurrentAccessRestriction
-concurrentAccessRestriction =
+concurrentAccessRestriction = 
     ConcurrentAccessRestriction'
     { _carMaxConcurrentDevices = Nothing
     , _carSignature = Nothing
@@ -6730,8 +6779,8 @@ instance ToJSON ConcurrentAccessRestriction where
 -- /See:/ 'volumes' smart constructor.
 data Volumes = Volumes'
     { _v1TotalItems :: !(Maybe (Textual Int32))
-    , _v1Kind       :: !Text
-    , _v1Items      :: !(Maybe [Volume])
+    , _v1Kind :: !Text
+    , _v1Items :: !(Maybe [Volume])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Volumes' with the minimum fields required to make a request.
@@ -6745,7 +6794,7 @@ data Volumes = Volumes'
 -- * 'v1Items'
 volumes
     :: Volumes
-volumes =
+volumes = 
     Volumes'
     { _v1TotalItems = Nothing
     , _v1Kind = "books#volumes"
@@ -6788,7 +6837,7 @@ instance ToJSON Volumes where
 --
 -- /See:/ 'bookshelves' smart constructor.
 data Bookshelves = Bookshelves'
-    { _booKind  :: !Text
+    { _booKind :: !Text
     , _booItems :: !(Maybe [Bookshelf])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6801,7 +6850,7 @@ data Bookshelves = Bookshelves'
 -- * 'booItems'
 bookshelves
     :: Bookshelves
-bookshelves =
+bookshelves = 
     Bookshelves'
     { _booKind = "books#bookshelves"
     , _booItems = Nothing
@@ -6837,7 +6886,7 @@ instance ToJSON Bookshelves where
 --
 -- /See:/ 'dictlayerDataDictSource' smart constructor.
 data DictlayerDataDictSource = DictlayerDataDictSource'
-    { _dddsURL         :: !(Maybe Text)
+    { _dddsURL :: !(Maybe Text)
     , _dddsAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6850,7 +6899,7 @@ data DictlayerDataDictSource = DictlayerDataDictSource'
 -- * 'dddsAttribution'
 dictlayerDataDictSource
     :: DictlayerDataDictSource
-dictlayerDataDictSource =
+dictlayerDataDictSource = 
     DictlayerDataDictSource'
     { _dddsURL = Nothing
     , _dddsAttribution = Nothing
@@ -6881,7 +6930,7 @@ instance ToJSON DictlayerDataDictSource where
 --
 -- /See:/ 'downloadAccesses' smart constructor.
 data DownloadAccesses = DownloadAccesses'
-    { _daKind               :: !Text
+    { _daKind :: !Text
     , _daDownloadAccessList :: !(Maybe [DownloadAccessRestriction])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6894,7 +6943,7 @@ data DownloadAccesses = DownloadAccesses'
 -- * 'daDownloadAccessList'
 downloadAccesses
     :: DownloadAccesses
-downloadAccesses =
+downloadAccesses = 
     DownloadAccesses'
     { _daKind = "books#downloadAccesses"
     , _daDownloadAccessList = Nothing
@@ -6930,7 +6979,7 @@ instance ToJSON DownloadAccesses where
 --
 -- /See:/ 'geolayerDataGeoViewportHi' smart constructor.
 data GeolayerDataGeoViewportHi = GeolayerDataGeoViewportHi'
-    { _gdgvhLatitude  :: !(Maybe (Textual Double))
+    { _gdgvhLatitude :: !(Maybe (Textual Double))
     , _gdgvhLongitude :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6943,7 +6992,7 @@ data GeolayerDataGeoViewportHi = GeolayerDataGeoViewportHi'
 -- * 'gdgvhLongitude'
 geolayerDataGeoViewportHi
     :: GeolayerDataGeoViewportHi
-geolayerDataGeoViewportHi =
+geolayerDataGeoViewportHi = 
     GeolayerDataGeoViewportHi'
     { _gdgvhLatitude = Nothing
     , _gdgvhLongitude = Nothing
@@ -6979,33 +7028,33 @@ instance ToJSON GeolayerDataGeoViewportHi where
 --
 -- /See:/ 'volumeVolumeInfo' smart constructor.
 data VolumeVolumeInfo = VolumeVolumeInfo'
-    { _vviImageLinks          :: !(Maybe VolumeVolumeInfoImageLinks)
+    { _vviImageLinks :: !(Maybe VolumeVolumeInfoImageLinks)
     , _vviPanelizationSummary :: !(Maybe VolumeVolumeInfoPanelizationSummary)
-    , _vviAverageRating       :: !(Maybe (Textual Double))
-    , _vviRatingsCount        :: !(Maybe (Textual Int32))
+    , _vviAverageRating :: !(Maybe (Textual Double))
+    , _vviRatingsCount :: !(Maybe (Textual Int32))
     , _vviCanonicalVolumeLink :: !(Maybe Text)
-    , _vviReadingModes        :: !(Maybe JSONValue)
+    , _vviReadingModes :: !(Maybe JSONValue)
     , _vviIndustryIdentifiers :: !(Maybe [VolumeVolumeInfoIndustryIdentifiersItem])
-    , _vviSeriesInfo          :: !(Maybe VolumeseriesInfo)
-    , _vviPrintedPageCount    :: !(Maybe (Textual Int32))
-    , _vviMainCategory        :: !(Maybe Text)
-    , _vviContentVersion      :: !(Maybe Text)
-    , _vviSamplePageCount     :: !(Maybe (Textual Int32))
-    , _vviCategories          :: !(Maybe [Text])
-    , _vviAuthors             :: !(Maybe [Text])
-    , _vviAllowAnonLogging    :: !(Maybe Bool)
-    , _vviSubtitle            :: !(Maybe Text)
-    , _vviPublishedDate       :: !(Maybe Text)
-    , _vviMaturityRating      :: !(Maybe Text)
-    , _vviPreviewLink         :: !(Maybe Text)
-    , _vviLanguage            :: !(Maybe Text)
-    , _vviTitle               :: !(Maybe Text)
-    , _vviPageCount           :: !(Maybe (Textual Int32))
-    , _vviDimensions          :: !(Maybe VolumeVolumeInfoDimensions)
-    , _vviInfoLink            :: !(Maybe Text)
-    , _vviPublisher           :: !(Maybe Text)
-    , _vviDescription         :: !(Maybe Text)
-    , _vviPrintType           :: !(Maybe Text)
+    , _vviSeriesInfo :: !(Maybe VolumeseriesInfo)
+    , _vviPrintedPageCount :: !(Maybe (Textual Int32))
+    , _vviMainCategory :: !(Maybe Text)
+    , _vviContentVersion :: !(Maybe Text)
+    , _vviSamplePageCount :: !(Maybe (Textual Int32))
+    , _vviCategories :: !(Maybe [Text])
+    , _vviAuthors :: !(Maybe [Text])
+    , _vviAllowAnonLogging :: !(Maybe Bool)
+    , _vviSubtitle :: !(Maybe Text)
+    , _vviPublishedDate :: !(Maybe Text)
+    , _vviMaturityRating :: !(Maybe Text)
+    , _vviPreviewLink :: !(Maybe Text)
+    , _vviLanguage :: !(Maybe Text)
+    , _vviTitle :: !(Maybe Text)
+    , _vviPageCount :: !(Maybe (Textual Int32))
+    , _vviDimensions :: !(Maybe VolumeVolumeInfoDimensions)
+    , _vviInfoLink :: !(Maybe Text)
+    , _vviPublisher :: !(Maybe Text)
+    , _vviDescription :: !(Maybe Text)
+    , _vviPrintType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeVolumeInfo' with the minimum fields required to make a request.
@@ -7067,7 +7116,7 @@ data VolumeVolumeInfo = VolumeVolumeInfo'
 -- * 'vviPrintType'
 volumeVolumeInfo
     :: VolumeVolumeInfo
-volumeVolumeInfo =
+volumeVolumeInfo = 
     VolumeVolumeInfo'
     { _vviImageLinks = Nothing
     , _vviPanelizationSummary = Nothing
@@ -7340,10 +7389,10 @@ instance ToJSON VolumeVolumeInfo where
 --
 -- /See:/ 'metadataItemsItem' smart constructor.
 data MetadataItemsItem = MetadataItemsItem'
-    { _miiSize         :: !(Maybe (Textual Int64))
-    , _miiVersion      :: !(Maybe (Textual Int64))
-    , _miiLanguage     :: !(Maybe Text)
-    , _miiDownloadURL  :: !(Maybe Text)
+    { _miiSize :: !(Maybe (Textual Int64))
+    , _miiVersion :: !(Maybe (Textual Int64))
+    , _miiLanguage :: !(Maybe Text)
+    , _miiDownloadURL :: !(Maybe Text)
     , _miiEncryptedKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7362,7 +7411,7 @@ data MetadataItemsItem = MetadataItemsItem'
 -- * 'miiEncryptedKey'
 metadataItemsItem
     :: MetadataItemsItem
-metadataItemsItem =
+metadataItemsItem = 
     MetadataItemsItem'
     { _miiSize = Nothing
     , _miiVersion = Nothing
@@ -7418,7 +7467,7 @@ instance ToJSON MetadataItemsItem where
 --
 -- /See:/ 'dictlayerDataDictWordsItemSensesItemSource' smart constructor.
 data DictlayerDataDictWordsItemSensesItemSource = DictlayerDataDictWordsItemSensesItemSource'
-    { _dddwisisURL         :: !(Maybe Text)
+    { _dddwisisURL :: !(Maybe Text)
     , _dddwisisAttribution :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7431,7 +7480,7 @@ data DictlayerDataDictWordsItemSensesItemSource = DictlayerDataDictWordsItemSens
 -- * 'dddwisisAttribution'
 dictlayerDataDictWordsItemSensesItemSource
     :: DictlayerDataDictWordsItemSensesItemSource
-dictlayerDataDictWordsItemSensesItemSource =
+dictlayerDataDictWordsItemSensesItemSource = 
     DictlayerDataDictWordsItemSensesItemSource'
     { _dddwisisURL = Nothing
     , _dddwisisAttribution = Nothing
@@ -7468,7 +7517,7 @@ instance ToJSON
 --
 -- /See:/ 'volumeSaleInfoOffersItemRetailPrice' smart constructor.
 data VolumeSaleInfoOffersItemRetailPrice = VolumeSaleInfoOffersItemRetailPrice'
-    { _vsioirpCurrencyCode   :: !(Maybe Text)
+    { _vsioirpCurrencyCode :: !(Maybe Text)
     , _vsioirpAmountInMicros :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7481,7 +7530,7 @@ data VolumeSaleInfoOffersItemRetailPrice = VolumeSaleInfoOffersItemRetailPrice'
 -- * 'vsioirpAmountInMicros'
 volumeSaleInfoOffersItemRetailPrice
     :: VolumeSaleInfoOffersItemRetailPrice
-volumeSaleInfoOffersItemRetailPrice =
+volumeSaleInfoOffersItemRetailPrice = 
     VolumeSaleInfoOffersItemRetailPrice'
     { _vsioirpCurrencyCode = Nothing
     , _vsioirpAmountInMicros = Nothing
@@ -7518,8 +7567,8 @@ instance ToJSON VolumeSaleInfoOffersItemRetailPrice
 --
 -- /See:/ 'volumeUserInfoFamilySharing' smart constructor.
 data VolumeUserInfoFamilySharing = VolumeUserInfoFamilySharing'
-    { _vuifsFamilyRole             :: !(Maybe Text)
-    , _vuifsIsSharingAllowed       :: !(Maybe Bool)
+    { _vuifsFamilyRole :: !(Maybe Text)
+    , _vuifsIsSharingAllowed :: !(Maybe Bool)
     , _vuifsIsSharingDisabledByFop :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7534,7 +7583,7 @@ data VolumeUserInfoFamilySharing = VolumeUserInfoFamilySharing'
 -- * 'vuifsIsSharingDisabledByFop'
 volumeUserInfoFamilySharing
     :: VolumeUserInfoFamilySharing
-volumeUserInfoFamilySharing =
+volumeUserInfoFamilySharing = 
     VolumeUserInfoFamilySharing'
     { _vuifsFamilyRole = Nothing
     , _vuifsIsSharingAllowed = Nothing
@@ -7592,7 +7641,7 @@ newtype UserSettingsNotificationMoreFromSeries = UserSettingsNotificationMoreFro
 -- * 'usnmfsOptedState'
 userSettingsNotificationMoreFromSeries
     :: UserSettingsNotificationMoreFromSeries
-userSettingsNotificationMoreFromSeries =
+userSettingsNotificationMoreFromSeries = 
     UserSettingsNotificationMoreFromSeries'
     { _usnmfsOptedState = Nothing
     }
@@ -7621,7 +7670,7 @@ instance ToJSON
 -- /See:/ 'volumeVolumeInfoIndustryIdentifiersItem' smart constructor.
 data VolumeVolumeInfoIndustryIdentifiersItem = VolumeVolumeInfoIndustryIdentifiersItem'
     { _vviiiiIdentifier :: !(Maybe Text)
-    , _vviiiiType       :: !(Maybe Text)
+    , _vviiiiType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumeVolumeInfoIndustryIdentifiersItem' with the minimum fields required to make a request.
@@ -7633,7 +7682,7 @@ data VolumeVolumeInfoIndustryIdentifiersItem = VolumeVolumeInfoIndustryIdentifie
 -- * 'vviiiiType'
 volumeVolumeInfoIndustryIdentifiersItem
     :: VolumeVolumeInfoIndustryIdentifiersItem
-volumeVolumeInfoIndustryIdentifiersItem =
+volumeVolumeInfoIndustryIdentifiersItem = 
     VolumeVolumeInfoIndustryIdentifiersItem'
     { _vviiiiIdentifier = Nothing
     , _vviiiiType = Nothing
@@ -7670,9 +7719,9 @@ instance ToJSON
 --
 -- /See:/ 'booksAnnotationsRange' smart constructor.
 data BooksAnnotationsRange = BooksAnnotationsRange'
-    { _barStartOffSet   :: !(Maybe Text)
-    , _barEndOffSet     :: !(Maybe Text)
-    , _barEndPosition   :: !(Maybe Text)
+    { _barStartOffSet :: !(Maybe Text)
+    , _barEndOffSet :: !(Maybe Text)
+    , _barEndPosition :: !(Maybe Text)
     , _barStartPosition :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7689,7 +7738,7 @@ data BooksAnnotationsRange = BooksAnnotationsRange'
 -- * 'barStartPosition'
 booksAnnotationsRange
     :: BooksAnnotationsRange
-booksAnnotationsRange =
+booksAnnotationsRange = 
     BooksAnnotationsRange'
     { _barStartOffSet = Nothing
     , _barEndOffSet = Nothing
@@ -7742,8 +7791,8 @@ instance ToJSON BooksAnnotationsRange where
 -- /See:/ 'layersummaries' smart constructor.
 data Layersummaries = Layersummaries'
     { _layTotalItems :: !(Maybe (Textual Int32))
-    , _layKind       :: !Text
-    , _layItems      :: !(Maybe [Layersummary])
+    , _layKind :: !Text
+    , _layItems :: !(Maybe [Layersummary])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Layersummaries' with the minimum fields required to make a request.
@@ -7757,7 +7806,7 @@ data Layersummaries = Layersummaries'
 -- * 'layItems'
 layersummaries
     :: Layersummaries
-layersummaries =
+layersummaries = 
     Layersummaries'
     { _layTotalItems = Nothing
     , _layKind = "books#layersummaries"

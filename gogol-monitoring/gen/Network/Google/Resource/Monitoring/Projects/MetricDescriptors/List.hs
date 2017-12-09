@@ -44,11 +44,12 @@ module Network.Google.Resource.Monitoring.Projects.MetricDescriptors.List
     , pmdlFilter
     , pmdlPageToken
     , pmdlPageSize
+    , pmdlFields
     , pmdlCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.metricDescriptors.list@ method which the
 -- 'ProjectsMetricDescriptorsList' request conforms to.
@@ -66,25 +67,27 @@ type ProjectsMetricDescriptorsListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListMetricDescriptorsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListMetricDescriptorsResponse
 
 -- | Lists metric descriptors that match a filter. This method does not
 -- require a Stackdriver account.
 --
 -- /See:/ 'projectsMetricDescriptorsList' smart constructor.
 data ProjectsMetricDescriptorsList = ProjectsMetricDescriptorsList'
-    { _pmdlXgafv          :: !(Maybe Xgafv)
+    { _pmdlXgafv :: !(Maybe Xgafv)
     , _pmdlUploadProtocol :: !(Maybe Text)
-    , _pmdlPp             :: !Bool
-    , _pmdlAccessToken    :: !(Maybe Text)
-    , _pmdlUploadType     :: !(Maybe Text)
-    , _pmdlBearerToken    :: !(Maybe Text)
-    , _pmdlName           :: !Text
-    , _pmdlFilter         :: !(Maybe Text)
-    , _pmdlPageToken      :: !(Maybe Text)
-    , _pmdlPageSize       :: !(Maybe (Textual Int32))
-    , _pmdlCallback       :: !(Maybe Text)
+    , _pmdlPp :: !Bool
+    , _pmdlAccessToken :: !(Maybe Text)
+    , _pmdlUploadType :: !(Maybe Text)
+    , _pmdlBearerToken :: !(Maybe Text)
+    , _pmdlName :: !Text
+    , _pmdlFilter :: !(Maybe Text)
+    , _pmdlPageToken :: !(Maybe Text)
+    , _pmdlPageSize :: !(Maybe (Textual Int32))
+    , _pmdlFields :: !(Maybe Text)
+    , _pmdlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricDescriptorsList' with the minimum fields required to make a request.
@@ -111,11 +114,13 @@ data ProjectsMetricDescriptorsList = ProjectsMetricDescriptorsList'
 --
 -- * 'pmdlPageSize'
 --
+-- * 'pmdlFields'
+--
 -- * 'pmdlCallback'
 projectsMetricDescriptorsList
     :: Text -- ^ 'pmdlName'
     -> ProjectsMetricDescriptorsList
-projectsMetricDescriptorsList pPmdlName_ =
+projectsMetricDescriptorsList pPmdlName_ = 
     ProjectsMetricDescriptorsList'
     { _pmdlXgafv = Nothing
     , _pmdlUploadProtocol = Nothing
@@ -127,6 +132,7 @@ projectsMetricDescriptorsList pPmdlName_ =
     , _pmdlFilter = Nothing
     , _pmdlPageToken = Nothing
     , _pmdlPageSize = Nothing
+    , _pmdlFields = Nothing
     , _pmdlCallback = Nothing
     }
 
@@ -190,6 +196,11 @@ pmdlPageSize
   = lens _pmdlPageSize (\ s a -> s{_pmdlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pmdlFields :: Lens' ProjectsMetricDescriptorsList (Maybe Text)
+pmdlFields
+  = lens _pmdlFields (\ s a -> s{_pmdlFields = a})
+
 -- | JSONP
 pmdlCallback :: Lens' ProjectsMetricDescriptorsList (Maybe Text)
 pmdlCallback
@@ -214,6 +225,7 @@ instance GoogleRequest ProjectsMetricDescriptorsList
               _pmdlPageToken
               _pmdlPageSize
               _pmdlCallback
+              _pmdlFields
               (Just AltJSON)
               monitoringService
           where go

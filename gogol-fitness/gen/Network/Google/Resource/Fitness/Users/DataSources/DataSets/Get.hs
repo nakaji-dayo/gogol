@@ -42,10 +42,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.DataSets.Get
     , udsdsgDataSetId
     , udsdsgLimit
     , udsdsgPageToken
+    , udsdsgFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.datasets.get@ method which the
 -- 'UsersDataSourcesDataSetsGet' request conforms to.
@@ -60,7 +61,8 @@ type UsersDataSourcesDataSetsGetResource =
                    Capture "datasetId" Text :>
                      QueryParam "limit" (Textual Int32) :>
                        QueryParam "pageToken" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] DataSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] DataSet
 
 -- | Returns a dataset containing all data points whose start and end times
 -- overlap with the specified range of the dataset minimum start time and
@@ -71,10 +73,11 @@ type UsersDataSourcesDataSetsGetResource =
 -- /See:/ 'usersDataSourcesDataSetsGet' smart constructor.
 data UsersDataSourcesDataSetsGet = UsersDataSourcesDataSetsGet'
     { _udsdsgDataSourceId :: !Text
-    , _udsdsgUserId       :: !Text
-    , _udsdsgDataSetId    :: !Text
-    , _udsdsgLimit        :: !(Maybe (Textual Int32))
-    , _udsdsgPageToken    :: !(Maybe Text)
+    , _udsdsgUserId :: !Text
+    , _udsdsgDataSetId :: !Text
+    , _udsdsgLimit :: !(Maybe (Textual Int32))
+    , _udsdsgPageToken :: !(Maybe Text)
+    , _udsdsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesDataSetsGet' with the minimum fields required to make a request.
@@ -90,18 +93,21 @@ data UsersDataSourcesDataSetsGet = UsersDataSourcesDataSetsGet'
 -- * 'udsdsgLimit'
 --
 -- * 'udsdsgPageToken'
+--
+-- * 'udsdsgFields'
 usersDataSourcesDataSetsGet
     :: Text -- ^ 'udsdsgDataSourceId'
     -> Text -- ^ 'udsdsgUserId'
     -> Text -- ^ 'udsdsgDataSetId'
     -> UsersDataSourcesDataSetsGet
-usersDataSourcesDataSetsGet pUdsdsgDataSourceId_ pUdsdsgUserId_ pUdsdsgDataSetId_ =
+usersDataSourcesDataSetsGet pUdsdsgDataSourceId_ pUdsdsgUserId_ pUdsdsgDataSetId_ = 
     UsersDataSourcesDataSetsGet'
     { _udsdsgDataSourceId = pUdsdsgDataSourceId_
     , _udsdsgUserId = pUdsdsgUserId_
     , _udsdsgDataSetId = pUdsdsgDataSetId_
     , _udsdsgLimit = Nothing
     , _udsdsgPageToken = Nothing
+    , _udsdsgFields = Nothing
     }
 
 -- | The data stream ID of the data source that created the dataset.
@@ -143,6 +149,11 @@ udsdsgPageToken
   = lens _udsdsgPageToken
       (\ s a -> s{_udsdsgPageToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udsdsgFields :: Lens' UsersDataSourcesDataSetsGet (Maybe Text)
+udsdsgFields
+  = lens _udsdsgFields (\ s a -> s{_udsdsgFields = a})
+
 instance GoogleRequest UsersDataSourcesDataSetsGet
          where
         type Rs UsersDataSourcesDataSetsGet = DataSet
@@ -170,6 +181,7 @@ instance GoogleRequest UsersDataSourcesDataSetsGet
               _udsdsgDataSetId
               _udsdsgLimit
               _udsdsgPageToken
+              _udsdsgFields
               (Just AltJSON)
               fitnessService
           where go

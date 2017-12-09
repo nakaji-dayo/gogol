@@ -17,13 +17,13 @@
 --
 module Network.Google.YouTubeAnalytics.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types.Sum
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types.Sum
 
 --
 -- /See:/ 'groupContentDetails' smart constructor.
 data GroupContentDetails = GroupContentDetails'
-    { _gcdItemType  :: !(Maybe Text)
+    { _gcdItemType :: !(Maybe Text)
     , _gcdItemCount :: !(Maybe (Textual Word64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -36,7 +36,7 @@ data GroupContentDetails = GroupContentDetails'
 -- * 'gcdItemCount'
 groupContentDetails
     :: GroupContentDetails
-groupContentDetails =
+groupContentDetails = 
     GroupContentDetails'
     { _gcdItemType = Nothing
     , _gcdItemCount = Nothing
@@ -68,11 +68,11 @@ instance ToJSON GroupContentDetails where
 --
 -- /See:/ 'group'' smart constructor.
 data Group = Group'
-    { _gEtag           :: !(Maybe Text)
-    , _gSnippet        :: !(Maybe GroupSnippet)
-    , _gKind           :: !Text
+    { _gEtag :: !(Maybe Text)
+    , _gSnippet :: !(Maybe GroupSnippet)
+    , _gKind :: !Text
     , _gContentDetails :: !(Maybe GroupContentDetails)
-    , _gId             :: !(Maybe Text)
+    , _gId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Group' with the minimum fields required to make a request.
@@ -90,7 +90,7 @@ data Group = Group'
 -- * 'gId'
 group'
     :: Group
-group' =
+group' = 
     Group'
     { _gEtag = Nothing
     , _gSnippet = Nothing
@@ -140,7 +140,7 @@ instance ToJSON Group where
 -- /See:/ 'groupItemResource' smart constructor.
 data GroupItemResource = GroupItemResource'
     { _girKind :: !(Maybe Text)
-    , _girId   :: !(Maybe Text)
+    , _girId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupItemResource' with the minimum fields required to make a request.
@@ -152,7 +152,7 @@ data GroupItemResource = GroupItemResource'
 -- * 'girId'
 groupItemResource
     :: GroupItemResource
-groupItemResource =
+groupItemResource = 
     GroupItemResource'
     { _girKind = Nothing
     , _girId = Nothing
@@ -181,8 +181,8 @@ instance ToJSON GroupItemResource where
 -- /See:/ 'resultTableColumnHeadersItem' smart constructor.
 data ResultTableColumnHeadersItem = ResultTableColumnHeadersItem'
     { _rtchiColumnType :: !(Maybe Text)
-    , _rtchiName       :: !(Maybe Text)
-    , _rtchiDataType   :: !(Maybe Text)
+    , _rtchiName :: !(Maybe Text)
+    , _rtchiDataType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResultTableColumnHeadersItem' with the minimum fields required to make a request.
@@ -196,7 +196,7 @@ data ResultTableColumnHeadersItem = ResultTableColumnHeadersItem'
 -- * 'rtchiDataType'
 resultTableColumnHeadersItem
     :: ResultTableColumnHeadersItem
-resultTableColumnHeadersItem =
+resultTableColumnHeadersItem = 
     ResultTableColumnHeadersItem'
     { _rtchiColumnType = Nothing
     , _rtchiName = Nothing
@@ -243,8 +243,8 @@ instance ToJSON ResultTableColumnHeadersItem where
 --
 -- /See:/ 'resultTable' smart constructor.
 data ResultTable = ResultTable'
-    { _rtKind          :: !Text
-    , _rtRows          :: !(Maybe [[JSONValue]])
+    { _rtKind :: !Text
+    , _rtRows :: !(Maybe [[JSONValue]])
     , _rtColumnHeaders :: !(Maybe [ResultTableColumnHeadersItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -259,7 +259,7 @@ data ResultTable = ResultTable'
 -- * 'rtColumnHeaders'
 resultTable
     :: ResultTable
-resultTable =
+resultTable = 
     ResultTable'
     { _rtKind = "youtubeAnalytics#resultTable"
     , _rtRows = Nothing
@@ -321,7 +321,7 @@ instance ToJSON ResultTable where
 -- /See:/ 'groupSnippet' smart constructor.
 data GroupSnippet = GroupSnippet'
     { _gsPublishedAt :: !(Maybe DateTime')
-    , _gsTitle       :: !(Maybe Text)
+    , _gsTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupSnippet' with the minimum fields required to make a request.
@@ -333,7 +333,7 @@ data GroupSnippet = GroupSnippet'
 -- * 'gsTitle'
 groupSnippet
     :: GroupSnippet
-groupSnippet =
+groupSnippet = 
     GroupSnippet'
     { _gsPublishedAt = Nothing
     , _gsTitle = Nothing
@@ -365,11 +365,11 @@ instance ToJSON GroupSnippet where
 --
 -- /See:/ 'groupItem' smart constructor.
 data GroupItem = GroupItem'
-    { _giEtag     :: !(Maybe Text)
-    , _giKind     :: !Text
+    { _giEtag :: !(Maybe Text)
+    , _giKind :: !Text
     , _giResource :: !(Maybe GroupItemResource)
-    , _giGroupId  :: !(Maybe Text)
-    , _giId       :: !(Maybe Text)
+    , _giGroupId :: !(Maybe Text)
+    , _giId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupItem' with the minimum fields required to make a request.
@@ -387,7 +387,7 @@ data GroupItem = GroupItem'
 -- * 'giId'
 groupItem
     :: GroupItem
-groupItem =
+groupItem = 
     GroupItem'
     { _giEtag = Nothing
     , _giKind = "youtube#groupItem"
@@ -437,8 +437,8 @@ instance ToJSON GroupItem where
 --
 -- /See:/ 'groupItemListResponse' smart constructor.
 data GroupItemListResponse = GroupItemListResponse'
-    { _gilrEtag  :: !(Maybe Text)
-    , _gilrKind  :: !Text
+    { _gilrEtag :: !(Maybe Text)
+    , _gilrKind :: !Text
     , _gilrItems :: !(Maybe [GroupItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -453,7 +453,7 @@ data GroupItemListResponse = GroupItemListResponse'
 -- * 'gilrItems'
 groupItemListResponse
     :: GroupItemListResponse
-groupItemListResponse =
+groupItemListResponse = 
     GroupItemListResponse'
     { _gilrEtag = Nothing
     , _gilrKind = "youtube#groupItemListResponse"
@@ -494,10 +494,10 @@ instance ToJSON GroupItemListResponse where
 --
 -- /See:/ 'groupListResponse' smart constructor.
 data GroupListResponse = GroupListResponse'
-    { _glrEtag          :: !(Maybe Text)
+    { _glrEtag :: !(Maybe Text)
     , _glrNextPageToken :: !(Maybe Text)
-    , _glrKind          :: !Text
-    , _glrItems         :: !(Maybe [Group])
+    , _glrKind :: !Text
+    , _glrItems :: !(Maybe [Group])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupListResponse' with the minimum fields required to make a request.
@@ -513,7 +513,7 @@ data GroupListResponse = GroupListResponse'
 -- * 'glrItems'
 groupListResponse
     :: GroupListResponse
-groupListResponse =
+groupListResponse = 
     GroupListResponse'
     { _glrEtag = Nothing
     , _glrNextPageToken = Nothing

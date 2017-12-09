@@ -17,15 +17,15 @@
 --
 module Network.Google.DFAReporting.Types.Product where
 
-import           Network.Google.DFAReporting.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types.Sum
+import Network.Google.Prelude
 
 -- | Video Offset
 --
 -- /See:/ 'videoOffSet' smart constructor.
 data VideoOffSet = VideoOffSet'
     { _vosOffSetPercentage :: !(Maybe (Textual Int32))
-    , _vosOffSetSeconds    :: !(Maybe (Textual Int32))
+    , _vosOffSetSeconds :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoOffSet' with the minimum fields required to make a request.
@@ -37,14 +37,14 @@ data VideoOffSet = VideoOffSet'
 -- * 'vosOffSetSeconds'
 videoOffSet
     :: VideoOffSet
-videoOffSet =
+videoOffSet = 
     VideoOffSet'
     { _vosOffSetPercentage = Nothing
     , _vosOffSetSeconds = Nothing
     }
 
 -- | Duration, as a percentage of video duration. Do not set when
--- offsetSeconds is set.
+-- offsetSeconds is set. Acceptable values are 0 to 100, inclusive.
 vosOffSetPercentage :: Lens' VideoOffSet (Maybe Int32)
 vosOffSetPercentage
   = lens _vosOffSetPercentage
@@ -52,6 +52,7 @@ vosOffSetPercentage
       . mapping _Coerce
 
 -- | Duration, in seconds. Do not set when offsetPercentage is set.
+-- Acceptable values are 0 to 86399, inclusive.
 vosOffSetSeconds :: Lens' VideoOffSet (Maybe Int32)
 vosOffSetSeconds
   = lens _vosOffSetSeconds
@@ -77,10 +78,10 @@ instance ToJSON VideoOffSet where
 --
 -- /See:/ 'fileList' smart constructor.
 data FileList = FileList'
-    { _flEtag          :: !(Maybe Text)
+    { _flEtag :: !(Maybe Text)
     , _flNextPageToken :: !(Maybe Text)
-    , _flKind          :: !Text
-    , _flItems         :: !(Maybe [File])
+    , _flKind :: !Text
+    , _flItems :: !(Maybe [File])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FileList' with the minimum fields required to make a request.
@@ -96,7 +97,7 @@ data FileList = FileList'
 -- * 'flItems'
 fileList
     :: FileList
-fileList =
+fileList = 
     FileList'
     { _flEtag = Nothing
     , _flNextPageToken = Nothing
@@ -148,8 +149,8 @@ instance ToJSON FileList where
 --
 -- /See:/ 'optimizationActivity' smart constructor.
 data OptimizationActivity = OptimizationActivity'
-    { _oaWeight                             :: !(Maybe (Textual Int32))
-    , _oaFloodlightActivityId               :: !(Maybe (Textual Int64))
+    { _oaWeight :: !(Maybe (Textual Int32))
+    , _oaFloodlightActivityId :: !(Maybe (Textual Int64))
     , _oaFloodlightActivityIdDimensionValue :: !(Maybe DimensionValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -164,16 +165,16 @@ data OptimizationActivity = OptimizationActivity'
 -- * 'oaFloodlightActivityIdDimensionValue'
 optimizationActivity
     :: OptimizationActivity
-optimizationActivity =
+optimizationActivity = 
     OptimizationActivity'
     { _oaWeight = Nothing
     , _oaFloodlightActivityId = Nothing
     , _oaFloodlightActivityIdDimensionValue = Nothing
     }
 
--- | Weight associated with this optimization. Must be greater than 1. The
--- weight assigned will be understood in proportion to the weights assigned
--- to the other optimization activities.
+-- | Weight associated with this optimization. The weight assigned will be
+-- understood in proportion to the weights assigned to the other
+-- optimization activities. Value must be greater than or equal to 1.
 oaWeight :: Lens' OptimizationActivity (Maybe Int32)
 oaWeight
   = lens _oaWeight (\ s a -> s{_oaWeight = a}) .
@@ -228,7 +229,7 @@ newtype ListPopulationClause = ListPopulationClause'
 -- * 'lpcTerms'
 listPopulationClause
     :: ListPopulationClause
-listPopulationClause =
+listPopulationClause = 
     ListPopulationClause'
     { _lpcTerms = Nothing
     }
@@ -251,20 +252,104 @@ instance ToJSON ListPopulationClause where
         toJSON ListPopulationClause'{..}
           = object (catMaybes [("terms" .=) <$> _lpcTerms])
 
+-- | Campaign ad blocking settings.
+--
+-- /See:/ 'adBlockingConfiguration' smart constructor.
+data AdBlockingConfiguration = AdBlockingConfiguration'
+    { _abcCreativeBundleId :: !(Maybe (Textual Int64))
+    , _abcOverrideClickThroughURL :: !(Maybe Bool)
+    , _abcEnabled :: !(Maybe Bool)
+    , _abcClickThroughURL :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AdBlockingConfiguration' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'abcCreativeBundleId'
+--
+-- * 'abcOverrideClickThroughURL'
+--
+-- * 'abcEnabled'
+--
+-- * 'abcClickThroughURL'
+adBlockingConfiguration
+    :: AdBlockingConfiguration
+adBlockingConfiguration = 
+    AdBlockingConfiguration'
+    { _abcCreativeBundleId = Nothing
+    , _abcOverrideClickThroughURL = Nothing
+    , _abcEnabled = Nothing
+    , _abcClickThroughURL = Nothing
+    }
+
+-- | ID of a creative bundle to use for this campaign. If set, brand-neutral
+-- ads will select creatives from this bundle. Otherwise, a default
+-- transparent pixel will be used.
+abcCreativeBundleId :: Lens' AdBlockingConfiguration (Maybe Int64)
+abcCreativeBundleId
+  = lens _abcCreativeBundleId
+      (\ s a -> s{_abcCreativeBundleId = a})
+      . mapping _Coerce
+
+-- | Whether the brand-neutral ad\'s click-through URL comes from the
+-- campaign\'s creative bundle or the override URL. Must be set to true if
+-- ad blocking is enabled and no creative bundle is configured.
+abcOverrideClickThroughURL :: Lens' AdBlockingConfiguration (Maybe Bool)
+abcOverrideClickThroughURL
+  = lens _abcOverrideClickThroughURL
+      (\ s a -> s{_abcOverrideClickThroughURL = a})
+
+-- | Whether this campaign has enabled ad blocking. When true, ad blocking is
+-- enabled for placements in the campaign, but this may be overridden by
+-- site and placement settings. When false, ad blocking is disabled for all
+-- placements under the campaign, regardless of site and placement
+-- settings.
+abcEnabled :: Lens' AdBlockingConfiguration (Maybe Bool)
+abcEnabled
+  = lens _abcEnabled (\ s a -> s{_abcEnabled = a})
+
+-- | Click-through URL used by brand-neutral ads. This is a required field
+-- when overrideClickThroughUrl is set to true.
+abcClickThroughURL :: Lens' AdBlockingConfiguration (Maybe Text)
+abcClickThroughURL
+  = lens _abcClickThroughURL
+      (\ s a -> s{_abcClickThroughURL = a})
+
+instance FromJSON AdBlockingConfiguration where
+        parseJSON
+          = withObject "AdBlockingConfiguration"
+              (\ o ->
+                 AdBlockingConfiguration' <$>
+                   (o .:? "creativeBundleId") <*>
+                     (o .:? "overrideClickThroughUrl")
+                     <*> (o .:? "enabled")
+                     <*> (o .:? "clickThroughUrl"))
+
+instance ToJSON AdBlockingConfiguration where
+        toJSON AdBlockingConfiguration'{..}
+          = object
+              (catMaybes
+                 [("creativeBundleId" .=) <$> _abcCreativeBundleId,
+                  ("overrideClickThroughUrl" .=) <$>
+                    _abcOverrideClickThroughURL,
+                  ("enabled" .=) <$> _abcEnabled,
+                  ("clickThroughUrl" .=) <$> _abcClickThroughURL])
+
 -- | Creative Custom Event.
 --
 -- /See:/ 'creativeCustomEvent' smart constructor.
 data CreativeCustomEvent = CreativeCustomEvent'
-    { _cceAdvertiserCustomEventId   :: !(Maybe (Textual Int64))
+    { _cceAdvertiserCustomEventId :: !(Maybe (Textual Int64))
     , _cceAdvertiserCustomEventType :: !(Maybe CreativeCustomEventAdvertiserCustomEventType)
     , _cceAdvertiserCustomEventName :: !(Maybe Text)
-    , _cceExitURL                   :: !(Maybe Text)
-    , _cceTargetType                :: !(Maybe CreativeCustomEventTargetType)
-    , _ccePopupWindowProperties     :: !(Maybe PopupWindowProperties)
-    , _cceVideoReportingId          :: !(Maybe Text)
-    , _cceId                        :: !(Maybe (Textual Int64))
-    , _cceArtworkLabel              :: !(Maybe Text)
-    , _cceArtworkType               :: !(Maybe CreativeCustomEventArtworkType)
+    , _cceExitClickThroughURL :: !(Maybe CreativeClickThroughURL)
+    , _cceTargetType :: !(Maybe CreativeCustomEventTargetType)
+    , _ccePopupWindowProperties :: !(Maybe PopupWindowProperties)
+    , _cceVideoReportingId :: !(Maybe Text)
+    , _cceId :: !(Maybe (Textual Int64))
+    , _cceArtworkLabel :: !(Maybe Text)
+    , _cceArtworkType :: !(Maybe CreativeCustomEventArtworkType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeCustomEvent' with the minimum fields required to make a request.
@@ -277,7 +362,7 @@ data CreativeCustomEvent = CreativeCustomEvent'
 --
 -- * 'cceAdvertiserCustomEventName'
 --
--- * 'cceExitURL'
+-- * 'cceExitClickThroughURL'
 --
 -- * 'cceTargetType'
 --
@@ -292,12 +377,12 @@ data CreativeCustomEvent = CreativeCustomEvent'
 -- * 'cceArtworkType'
 creativeCustomEvent
     :: CreativeCustomEvent
-creativeCustomEvent =
+creativeCustomEvent = 
     CreativeCustomEvent'
     { _cceAdvertiserCustomEventId = Nothing
     , _cceAdvertiserCustomEventType = Nothing
     , _cceAdvertiserCustomEventName = Nothing
-    , _cceExitURL = Nothing
+    , _cceExitClickThroughURL = Nothing
     , _cceTargetType = Nothing
     , _ccePopupWindowProperties = Nothing
     , _cceVideoReportingId = Nothing
@@ -326,10 +411,12 @@ cceAdvertiserCustomEventName
   = lens _cceAdvertiserCustomEventName
       (\ s a -> s{_cceAdvertiserCustomEventName = a})
 
--- | Exit URL of the event. This field is used only for exit events.
-cceExitURL :: Lens' CreativeCustomEvent (Maybe Text)
-cceExitURL
-  = lens _cceExitURL (\ s a -> s{_cceExitURL = a})
+-- | Exit click-through URL for the event. This field is used only for exit
+-- events.
+cceExitClickThroughURL :: Lens' CreativeCustomEvent (Maybe CreativeClickThroughURL)
+cceExitClickThroughURL
+  = lens _cceExitClickThroughURL
+      (\ s a -> s{_cceExitClickThroughURL = a})
 
 -- | Target type used by the event.
 cceTargetType :: Lens' CreativeCustomEvent (Maybe CreativeCustomEventTargetType)
@@ -380,7 +467,7 @@ instance FromJSON CreativeCustomEvent where
                    (o .:? "advertiserCustomEventId") <*>
                      (o .:? "advertiserCustomEventType")
                      <*> (o .:? "advertiserCustomEventName")
-                     <*> (o .:? "exitUrl")
+                     <*> (o .:? "exitClickThroughUrl")
                      <*> (o .:? "targetType")
                      <*> (o .:? "popupWindowProperties")
                      <*> (o .:? "videoReportingId")
@@ -398,7 +485,8 @@ instance ToJSON CreativeCustomEvent where
                     _cceAdvertiserCustomEventType,
                   ("advertiserCustomEventName" .=) <$>
                     _cceAdvertiserCustomEventName,
-                  ("exitUrl" .=) <$> _cceExitURL,
+                  ("exitClickThroughUrl" .=) <$>
+                    _cceExitClickThroughURL,
                   ("targetType" .=) <$> _cceTargetType,
                   ("popupWindowProperties" .=) <$>
                     _ccePopupWindowProperties,
@@ -411,8 +499,8 @@ instance ToJSON CreativeCustomEvent where
 --
 -- /See:/ 'clickTag' smart constructor.
 data ClickTag = ClickTag'
-    { _ctValue     :: !(Maybe Text)
-    , _ctName      :: !(Maybe Text)
+    { _ctClickThroughURL :: !(Maybe CreativeClickThroughURL)
+    , _ctName :: !(Maybe Text)
     , _ctEventName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -420,24 +508,26 @@ data ClickTag = ClickTag'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'ctValue'
+-- * 'ctClickThroughURL'
 --
 -- * 'ctName'
 --
 -- * 'ctEventName'
 clickTag
     :: ClickTag
-clickTag =
+clickTag = 
     ClickTag'
-    { _ctValue = Nothing
+    { _ctClickThroughURL = Nothing
     , _ctName = Nothing
     , _ctEventName = Nothing
     }
 
 -- | Parameter value for the specified click tag. This field contains a
 -- click-through url.
-ctValue :: Lens' ClickTag (Maybe Text)
-ctValue = lens _ctValue (\ s a -> s{_ctValue = a})
+ctClickThroughURL :: Lens' ClickTag (Maybe CreativeClickThroughURL)
+ctClickThroughURL
+  = lens _ctClickThroughURL
+      (\ s a -> s{_ctClickThroughURL = a})
 
 -- | Parameter name for the specified click tag. For DISPLAY_IMAGE_GALLERY
 -- creative assets, this field must match the value of the creative
@@ -457,14 +547,15 @@ instance FromJSON ClickTag where
           = withObject "ClickTag"
               (\ o ->
                  ClickTag' <$>
-                   (o .:? "value") <*> (o .:? "name") <*>
+                   (o .:? "clickThroughUrl") <*> (o .:? "name") <*>
                      (o .:? "eventName"))
 
 instance ToJSON ClickTag where
         toJSON ClickTag'{..}
           = object
               (catMaybes
-                 [("value" .=) <$> _ctValue, ("name" .=) <$> _ctName,
+                 [("clickThroughUrl" .=) <$> _ctClickThroughURL,
+                  ("name" .=) <$> _ctName,
                   ("eventName" .=) <$> _ctEventName])
 
 -- | Campaign List Response
@@ -472,8 +563,8 @@ instance ToJSON ClickTag where
 -- /See:/ 'campaignsListResponse' smart constructor.
 data CampaignsListResponse = CampaignsListResponse'
     { _clrNextPageToken :: !(Maybe Text)
-    , _clrCampaigns     :: !(Maybe [Campaign])
-    , _clrKind          :: !Text
+    , _clrCampaigns :: !(Maybe [Campaign])
+    , _clrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CampaignsListResponse' with the minimum fields required to make a request.
@@ -487,7 +578,7 @@ data CampaignsListResponse = CampaignsListResponse'
 -- * 'clrKind'
 campaignsListResponse
     :: CampaignsListResponse
-campaignsListResponse =
+campaignsListResponse = 
     CampaignsListResponse'
     { _clrNextPageToken = Nothing
     , _clrCampaigns = Nothing
@@ -535,12 +626,12 @@ instance ToJSON CampaignsListResponse where
 --
 -- /See:/ 'geoTargeting' smart constructor.
 data GeoTargeting = GeoTargeting'
-    { _gtRegions          :: !(Maybe [Region])
-    , _gtCountries        :: !(Maybe [Country])
-    , _gtCities           :: !(Maybe [City])
-    , _gtMetros           :: !(Maybe [Metro])
+    { _gtRegions :: !(Maybe [Region])
+    , _gtCountries :: !(Maybe [Country])
+    , _gtCities :: !(Maybe [City])
+    , _gtMetros :: !(Maybe [Metro])
     , _gtExcludeCountries :: !(Maybe Bool)
-    , _gtPostalCodes      :: !(Maybe [PostalCode])
+    , _gtPostalCodes :: !(Maybe [PostalCode])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GeoTargeting' with the minimum fields required to make a request.
@@ -560,7 +651,7 @@ data GeoTargeting = GeoTargeting'
 -- * 'gtPostalCodes'
 geoTargeting
     :: GeoTargeting
-geoTargeting =
+geoTargeting = 
     GeoTargeting'
     { _gtRegions = Nothing
     , _gtCountries = Nothing
@@ -656,9 +747,10 @@ instance ToJSON GeoTargeting where
 --
 -- /See:/ 'videoSettings' smart constructor.
 data VideoSettings = VideoSettings'
-    { _vsKind              :: !Text
+    { _vsKind :: !Text
     , _vsCompanionSettings :: !(Maybe CompanionSetting)
     , _vsTranscodeSettings :: !(Maybe TranscodeSetting)
+    , _vsOrientation :: !(Maybe VideoSettingsOrientation)
     , _vsSkippableSettings :: !(Maybe SkippableSetting)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -672,14 +764,17 @@ data VideoSettings = VideoSettings'
 --
 -- * 'vsTranscodeSettings'
 --
+-- * 'vsOrientation'
+--
 -- * 'vsSkippableSettings'
 videoSettings
     :: VideoSettings
-videoSettings =
+videoSettings = 
     VideoSettings'
     { _vsKind = "dfareporting#videoSettings"
     , _vsCompanionSettings = Nothing
     , _vsTranscodeSettings = Nothing
+    , _vsOrientation = Nothing
     , _vsSkippableSettings = Nothing
     }
 
@@ -703,6 +798,13 @@ vsTranscodeSettings
   = lens _vsTranscodeSettings
       (\ s a -> s{_vsTranscodeSettings = a})
 
+-- | Orientation of a video placement. If this value is set, placement will
+-- return assets matching the specified orientation.
+vsOrientation :: Lens' VideoSettings (Maybe VideoSettingsOrientation)
+vsOrientation
+  = lens _vsOrientation
+      (\ s a -> s{_vsOrientation = a})
+
 -- | Settings for the skippability of video creatives served to this
 -- placement. If this object is provided, the creative-level skippable
 -- settings will be overridden.
@@ -719,6 +821,7 @@ instance FromJSON VideoSettings where
                    (o .:? "kind" .!= "dfareporting#videoSettings") <*>
                      (o .:? "companionSettings")
                      <*> (o .:? "transcodeSettings")
+                     <*> (o .:? "orientation")
                      <*> (o .:? "skippableSettings"))
 
 instance ToJSON VideoSettings where
@@ -728,6 +831,7 @@ instance ToJSON VideoSettings where
                  [Just ("kind" .= _vsKind),
                   ("companionSettings" .=) <$> _vsCompanionSettings,
                   ("transcodeSettings" .=) <$> _vsTranscodeSettings,
+                  ("orientation" .=) <$> _vsOrientation,
                   ("skippableSettings" .=) <$> _vsSkippableSettings])
 
 -- | Represents fields that are compatible to be selected for a report of
@@ -735,12 +839,12 @@ instance ToJSON VideoSettings where
 --
 -- /See:/ 'reachReportCompatibleFields' smart constructor.
 data ReachReportCompatibleFields = ReachReportCompatibleFields'
-    { _rrcfMetrics                 :: !(Maybe [Metric])
+    { _rrcfMetrics :: !(Maybe [Metric])
     , _rrcfReachByFrequencyMetrics :: !(Maybe [Metric])
-    , _rrcfKind                    :: !Text
-    , _rrcfDimensionFilters        :: !(Maybe [Dimension])
-    , _rrcfPivotedActivityMetrics  :: !(Maybe [Metric])
-    , _rrcfDimensions              :: !(Maybe [Dimension])
+    , _rrcfKind :: !Text
+    , _rrcfDimensionFilters :: !(Maybe [Dimension])
+    , _rrcfPivotedActivityMetrics :: !(Maybe [Metric])
+    , _rrcfDimensions :: !(Maybe [Dimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReachReportCompatibleFields' with the minimum fields required to make a request.
@@ -760,7 +864,7 @@ data ReachReportCompatibleFields = ReachReportCompatibleFields'
 -- * 'rrcfDimensions'
 reachReportCompatibleFields
     :: ReachReportCompatibleFields
-reachReportCompatibleFields =
+reachReportCompatibleFields = 
     ReachReportCompatibleFields'
     { _rrcfMetrics = Nothing
     , _rrcfReachByFrequencyMetrics = Nothing
@@ -850,12 +954,12 @@ instance ToJSON ReachReportCompatibleFields where
 --
 -- /See:/ 'browser' smart constructor.
 data Browser = Browser'
-    { _bMinorVersion     :: !(Maybe Text)
-    , _bKind             :: !Text
+    { _bMinorVersion :: !(Maybe Text)
+    , _bKind :: !Text
     , _bBrowserVersionId :: !(Maybe (Textual Int64))
-    , _bMajorVersion     :: !(Maybe Text)
-    , _bName             :: !(Maybe Text)
-    , _bDartId           :: !(Maybe (Textual Int64))
+    , _bMajorVersion :: !(Maybe Text)
+    , _bName :: !(Maybe Text)
+    , _bDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Browser' with the minimum fields required to make a request.
@@ -875,7 +979,7 @@ data Browser = Browser'
 -- * 'bDartId'
 browser
     :: Browser
-browser =
+browser = 
     Browser'
     { _bMinorVersion = Nothing
     , _bKind = "dfareporting#browser"
@@ -961,7 +1065,7 @@ instance ToJSON Browser where
 -- /See:/ 'creativeGroupAssignment' smart constructor.
 data CreativeGroupAssignment = CreativeGroupAssignment'
     { _cgaCreativeGroupNumber :: !(Maybe CreativeGroupAssignmentCreativeGroupNumber)
-    , _cgaCreativeGroupId     :: !(Maybe (Textual Int64))
+    , _cgaCreativeGroupId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupAssignment' with the minimum fields required to make a request.
@@ -973,7 +1077,7 @@ data CreativeGroupAssignment = CreativeGroupAssignment'
 -- * 'cgaCreativeGroupId'
 creativeGroupAssignment
     :: CreativeGroupAssignment
-creativeGroupAssignment =
+creativeGroupAssignment = 
     CreativeGroupAssignment'
     { _cgaCreativeGroupNumber = Nothing
     , _cgaCreativeGroupId = Nothing
@@ -1012,13 +1116,13 @@ instance ToJSON CreativeGroupAssignment where
 --
 -- /See:/ 'directorySiteSettings' smart constructor.
 data DirectorySiteSettings = DirectorySiteSettings'
-    { _dssInterstitialPlacementAccepted  :: !(Maybe Bool)
-    , _dssDfpSettings                    :: !(Maybe DfpSettings)
-    , _dssVerificationTagOptOut          :: !(Maybe Bool)
-    , _dssActiveViewOptOut               :: !(Maybe Bool)
-    , _dssVideoActiveViewOptOut          :: !(Maybe Bool)
+    { _dssInterstitialPlacementAccepted :: !(Maybe Bool)
     , _dssInstreamVideoPlacementAccepted :: !(Maybe Bool)
-    , _dssNielsenOCROptOut               :: !(Maybe Bool)
+    , _dssVerificationTagOptOut :: !(Maybe Bool)
+    , _dssActiveViewOptOut :: !(Maybe Bool)
+    , _dssDfpSettings :: !(Maybe DfpSettings)
+    , _dssVideoActiveViewOptOut :: !(Maybe Bool)
+    , _dssNielsenOCROptOut :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySiteSettings' with the minimum fields required to make a request.
@@ -1027,27 +1131,27 @@ data DirectorySiteSettings = DirectorySiteSettings'
 --
 -- * 'dssInterstitialPlacementAccepted'
 --
--- * 'dssDfpSettings'
+-- * 'dssInstreamVideoPlacementAccepted'
 --
 -- * 'dssVerificationTagOptOut'
 --
 -- * 'dssActiveViewOptOut'
 --
--- * 'dssVideoActiveViewOptOut'
+-- * 'dssDfpSettings'
 --
--- * 'dssInstreamVideoPlacementAccepted'
+-- * 'dssVideoActiveViewOptOut'
 --
 -- * 'dssNielsenOCROptOut'
 directorySiteSettings
     :: DirectorySiteSettings
-directorySiteSettings =
+directorySiteSettings = 
     DirectorySiteSettings'
     { _dssInterstitialPlacementAccepted = Nothing
-    , _dssDfpSettings = Nothing
+    , _dssInstreamVideoPlacementAccepted = Nothing
     , _dssVerificationTagOptOut = Nothing
     , _dssActiveViewOptOut = Nothing
+    , _dssDfpSettings = Nothing
     , _dssVideoActiveViewOptOut = Nothing
-    , _dssInstreamVideoPlacementAccepted = Nothing
     , _dssNielsenOCROptOut = Nothing
     }
 
@@ -1057,11 +1161,11 @@ dssInterstitialPlacementAccepted
   = lens _dssInterstitialPlacementAccepted
       (\ s a -> s{_dssInterstitialPlacementAccepted = a})
 
--- | Directory site DFP settings.
-dssDfpSettings :: Lens' DirectorySiteSettings (Maybe DfpSettings)
-dssDfpSettings
-  = lens _dssDfpSettings
-      (\ s a -> s{_dssDfpSettings = a})
+-- | Whether this site accepts in-stream video ads.
+dssInstreamVideoPlacementAccepted :: Lens' DirectorySiteSettings (Maybe Bool)
+dssInstreamVideoPlacementAccepted
+  = lens _dssInstreamVideoPlacementAccepted
+      (\ s a -> s{_dssInstreamVideoPlacementAccepted = a})
 
 -- | Whether this directory site has disabled generation of Verification ins
 -- tags.
@@ -1076,18 +1180,18 @@ dssActiveViewOptOut
   = lens _dssActiveViewOptOut
       (\ s a -> s{_dssActiveViewOptOut = a})
 
+-- | Directory site DFP settings.
+dssDfpSettings :: Lens' DirectorySiteSettings (Maybe DfpSettings)
+dssDfpSettings
+  = lens _dssDfpSettings
+      (\ s a -> s{_dssDfpSettings = a})
+
 -- | Whether this directory site has disabled active view for in-stream video
--- creatives.
+-- creatives. This is a read-only field.
 dssVideoActiveViewOptOut :: Lens' DirectorySiteSettings (Maybe Bool)
 dssVideoActiveViewOptOut
   = lens _dssVideoActiveViewOptOut
       (\ s a -> s{_dssVideoActiveViewOptOut = a})
-
--- | Whether this site accepts in-stream video ads.
-dssInstreamVideoPlacementAccepted :: Lens' DirectorySiteSettings (Maybe Bool)
-dssInstreamVideoPlacementAccepted
-  = lens _dssInstreamVideoPlacementAccepted
-      (\ s a -> s{_dssInstreamVideoPlacementAccepted = a})
 
 -- | Whether this directory site has disabled Nielsen OCR reach ratings.
 dssNielsenOCROptOut :: Lens' DirectorySiteSettings (Maybe Bool)
@@ -1101,11 +1205,11 @@ instance FromJSON DirectorySiteSettings where
               (\ o ->
                  DirectorySiteSettings' <$>
                    (o .:? "interstitialPlacementAccepted") <*>
-                     (o .:? "dfp_settings")
+                     (o .:? "instreamVideoPlacementAccepted")
                      <*> (o .:? "verificationTagOptOut")
                      <*> (o .:? "activeViewOptOut")
+                     <*> (o .:? "dfpSettings")
                      <*> (o .:? "videoActiveViewOptOut")
-                     <*> (o .:? "instream_video_placement_accepted")
                      <*> (o .:? "nielsenOcrOptOut"))
 
 instance ToJSON DirectorySiteSettings where
@@ -1114,14 +1218,14 @@ instance ToJSON DirectorySiteSettings where
               (catMaybes
                  [("interstitialPlacementAccepted" .=) <$>
                     _dssInterstitialPlacementAccepted,
-                  ("dfp_settings" .=) <$> _dssDfpSettings,
+                  ("instreamVideoPlacementAccepted" .=) <$>
+                    _dssInstreamVideoPlacementAccepted,
                   ("verificationTagOptOut" .=) <$>
                     _dssVerificationTagOptOut,
                   ("activeViewOptOut" .=) <$> _dssActiveViewOptOut,
+                  ("dfpSettings" .=) <$> _dssDfpSettings,
                   ("videoActiveViewOptOut" .=) <$>
                     _dssVideoActiveViewOptOut,
-                  ("instream_video_placement_accepted" .=) <$>
-                    _dssInstreamVideoPlacementAccepted,
                   ("nielsenOcrOptOut" .=) <$> _dssNielsenOCROptOut])
 
 -- | Remarketing List Population Rule.
@@ -1129,8 +1233,8 @@ instance ToJSON DirectorySiteSettings where
 -- /See:/ 'listPopulationRule' smart constructor.
 data ListPopulationRule = ListPopulationRule'
     { _lprFloodlightActivityName :: !(Maybe Text)
-    , _lprFloodlightActivityId   :: !(Maybe (Textual Int64))
-    , _lprListPopulationClauses  :: !(Maybe [ListPopulationClause])
+    , _lprFloodlightActivityId :: !(Maybe (Textual Int64))
+    , _lprListPopulationClauses :: !(Maybe [ListPopulationClause])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListPopulationRule' with the minimum fields required to make a request.
@@ -1144,7 +1248,7 @@ data ListPopulationRule = ListPopulationRule'
 -- * 'lprListPopulationClauses'
 listPopulationRule
     :: ListPopulationRule
-listPopulationRule =
+listPopulationRule = 
     ListPopulationRule'
     { _lprFloodlightActivityName = Nothing
     , _lprFloodlightActivityId = Nothing
@@ -1200,7 +1304,7 @@ instance ToJSON ListPopulationRule where
 --
 -- /See:/ 'sizesListResponse' smart constructor.
 data SizesListResponse = SizesListResponse'
-    { _slrKind  :: !Text
+    { _slrKind :: !Text
     , _slrSizes :: !(Maybe [Size])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1213,7 +1317,7 @@ data SizesListResponse = SizesListResponse'
 -- * 'slrSizes'
 sizesListResponse
     :: SizesListResponse
-sizesListResponse =
+sizesListResponse = 
     SizesListResponse'
     { _slrKind = "dfareporting#sizesListResponse"
     , _slrSizes = Nothing
@@ -1250,10 +1354,10 @@ instance ToJSON SizesListResponse where
 --
 -- /See:/ 'creativeRotation' smart constructor.
 data CreativeRotation = CreativeRotation'
-    { _crWeightCalculationStrategy           :: !(Maybe CreativeRotationWeightCalculationStrategy)
-    , _crCreativeAssignments                 :: !(Maybe [CreativeAssignment])
+    { _crWeightCalculationStrategy :: !(Maybe CreativeRotationWeightCalculationStrategy)
+    , _crCreativeAssignments :: !(Maybe [CreativeAssignment])
     , _crCreativeOptimizationConfigurationId :: !(Maybe (Textual Int64))
-    , _crType                                :: !(Maybe CreativeRotationType)
+    , _crType :: !(Maybe CreativeRotationType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeRotation' with the minimum fields required to make a request.
@@ -1269,7 +1373,7 @@ data CreativeRotation = CreativeRotation'
 -- * 'crType'
 creativeRotation
     :: CreativeRotation
-creativeRotation =
+creativeRotation = 
     CreativeRotation'
     { _crWeightCalculationStrategy = Nothing
     , _crCreativeAssignments = Nothing
@@ -1334,12 +1438,12 @@ instance ToJSON CreativeRotation where
 --
 -- /See:/ 'technologyTargeting' smart constructor.
 data TechnologyTargeting = TechnologyTargeting'
-    { _ttMobileCarriers          :: !(Maybe [MobileCarrier])
+    { _ttMobileCarriers :: !(Maybe [MobileCarrier])
     , _ttOperatingSystemVersions :: !(Maybe [OperatingSystemVersion])
-    , _ttPlatformTypes           :: !(Maybe [PlatformType])
-    , _ttBrowsers                :: !(Maybe [Browser])
-    , _ttConnectionTypes         :: !(Maybe [ConnectionType])
-    , _ttOperatingSystems        :: !(Maybe [OperatingSystem])
+    , _ttPlatformTypes :: !(Maybe [PlatformType])
+    , _ttBrowsers :: !(Maybe [Browser])
+    , _ttConnectionTypes :: !(Maybe [ConnectionType])
+    , _ttOperatingSystems :: !(Maybe [OperatingSystem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TechnologyTargeting' with the minimum fields required to make a request.
@@ -1359,7 +1463,7 @@ data TechnologyTargeting = TechnologyTargeting'
 -- * 'ttOperatingSystems'
 technologyTargeting
     :: TechnologyTargeting
-technologyTargeting =
+technologyTargeting = 
     TechnologyTargeting'
     { _ttMobileCarriers = Nothing
     , _ttOperatingSystemVersions = Nothing
@@ -1463,26 +1567,26 @@ instance ToJSON TechnologyTargeting where
 --
 -- /See:/ 'inventoryItem' smart constructor.
 data InventoryItem = InventoryItem'
-    { _iiPlacementStrategyId       :: !(Maybe (Textual Int64))
+    { _iiPlacementStrategyId :: !(Maybe (Textual Int64))
     , _iiEstimatedClickThroughRate :: !(Maybe (Textual Int64))
-    , _iiPricing                   :: !(Maybe Pricing)
-    , _iiKind                      :: !Text
-    , _iiAdvertiserId              :: !(Maybe (Textual Int64))
-    , _iiRfpId                     :: !(Maybe (Textual Int64))
-    , _iiContentCategoryId         :: !(Maybe (Textual Int64))
-    , _iiInPlan                    :: !(Maybe Bool)
-    , _iiAccountId                 :: !(Maybe (Textual Int64))
-    , _iiName                      :: !(Maybe Text)
-    , _iiAdSlots                   :: !(Maybe [AdSlot])
-    , _iiNegotiationChannelId      :: !(Maybe (Textual Int64))
-    , _iiLastModifiedInfo          :: !(Maybe LastModifiedInfo)
-    , _iiId                        :: !(Maybe (Textual Int64))
-    , _iiEstimatedConversionRate   :: !(Maybe (Textual Int64))
-    , _iiProjectId                 :: !(Maybe (Textual Int64))
-    , _iiSubAccountId              :: !(Maybe (Textual Int64))
-    , _iiType                      :: !(Maybe InventoryItemType)
-    , _iiOrderId                   :: !(Maybe (Textual Int64))
-    , _iiSiteId                    :: !(Maybe (Textual Int64))
+    , _iiPricing :: !(Maybe Pricing)
+    , _iiKind :: !Text
+    , _iiAdvertiserId :: !(Maybe (Textual Int64))
+    , _iiRfpId :: !(Maybe (Textual Int64))
+    , _iiContentCategoryId :: !(Maybe (Textual Int64))
+    , _iiInPlan :: !(Maybe Bool)
+    , _iiAccountId :: !(Maybe (Textual Int64))
+    , _iiName :: !(Maybe Text)
+    , _iiAdSlots :: !(Maybe [AdSlot])
+    , _iiNegotiationChannelId :: !(Maybe (Textual Int64))
+    , _iiLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _iiId :: !(Maybe (Textual Int64))
+    , _iiEstimatedConversionRate :: !(Maybe (Textual Int64))
+    , _iiProjectId :: !(Maybe (Textual Int64))
+    , _iiSubAccountId :: !(Maybe (Textual Int64))
+    , _iiType :: !(Maybe InventoryItemType)
+    , _iiOrderId :: !(Maybe (Textual Int64))
+    , _iiSiteId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InventoryItem' with the minimum fields required to make a request.
@@ -1530,7 +1634,7 @@ data InventoryItem = InventoryItem'
 -- * 'iiSiteId'
 inventoryItem
     :: InventoryItem
-inventoryItem =
+inventoryItem = 
     InventoryItem'
     { _iiPlacementStrategyId = Nothing
     , _iiEstimatedClickThroughRate = Nothing
@@ -1739,8 +1843,8 @@ instance ToJSON InventoryItem where
 -- /See:/ 'projectsListResponse' smart constructor.
 data ProjectsListResponse = ProjectsListResponse'
     { _plrNextPageToken :: !(Maybe Text)
-    , _plrKind          :: !Text
-    , _plrProjects      :: !(Maybe [Project])
+    , _plrKind :: !Text
+    , _plrProjects :: !(Maybe [Project])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsListResponse' with the minimum fields required to make a request.
@@ -1754,7 +1858,7 @@ data ProjectsListResponse = ProjectsListResponse'
 -- * 'plrProjects'
 projectsListResponse
     :: ProjectsListResponse
-projectsListResponse =
+projectsListResponse = 
     ProjectsListResponse'
     { _plrNextPageToken = Nothing
     , _plrKind = "dfareporting#projectsListResponse"
@@ -1802,8 +1906,8 @@ instance ToJSON ProjectsListResponse where
 -- /See:/ 'adsListResponse' smart constructor.
 data AdsListResponse = AdsListResponse'
     { _alrNextPageToken :: !(Maybe Text)
-    , _alrKind          :: !Text
-    , _alrAds           :: !(Maybe [Ad])
+    , _alrKind :: !Text
+    , _alrAds :: !(Maybe [Ad])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdsListResponse' with the minimum fields required to make a request.
@@ -1817,7 +1921,7 @@ data AdsListResponse = AdsListResponse'
 -- * 'alrAds'
 adsListResponse
     :: AdsListResponse
-adsListResponse =
+adsListResponse = 
     AdsListResponse'
     { _alrNextPageToken = Nothing
     , _alrKind = "dfareporting#adsListResponse"
@@ -1861,14 +1965,14 @@ instance ToJSON AdsListResponse where
 --
 -- /See:/ 'listPopulationTerm' smart constructor.
 data ListPopulationTerm = ListPopulationTerm'
-    { _lptOperator             :: !(Maybe ListPopulationTermOperator)
-    , _lptValue                :: !(Maybe Text)
+    { _lptOperator :: !(Maybe ListPopulationTermOperator)
+    , _lptValue :: !(Maybe Text)
     , _lptVariableFriendlyName :: !(Maybe Text)
-    , _lptNegation             :: !(Maybe Bool)
-    , _lptVariableName         :: !(Maybe Text)
-    , _lptRemarketingListId    :: !(Maybe (Textual Int64))
-    , _lptType                 :: !(Maybe ListPopulationTermType)
-    , _lptContains             :: !(Maybe Bool)
+    , _lptNegation :: !(Maybe Bool)
+    , _lptVariableName :: !(Maybe Text)
+    , _lptRemarketingListId :: !(Maybe (Textual Int64))
+    , _lptType :: !(Maybe ListPopulationTermType)
+    , _lptContains :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListPopulationTerm' with the minimum fields required to make a request.
@@ -1892,7 +1996,7 @@ data ListPopulationTerm = ListPopulationTerm'
 -- * 'lptContains'
 listPopulationTerm
     :: ListPopulationTerm
-listPopulationTerm =
+listPopulationTerm = 
     ListPopulationTerm'
     { _lptOperator = Nothing
     , _lptValue = Nothing
@@ -1995,7 +2099,7 @@ instance ToJSON ListPopulationTerm where
 -- /See:/ 'tagSettings' smart constructor.
 data TagSettings = TagSettings'
     { _tsDynamicTagEnabled :: !(Maybe Bool)
-    , _tsImageTagEnabled   :: !(Maybe Bool)
+    , _tsImageTagEnabled :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TagSettings' with the minimum fields required to make a request.
@@ -2007,7 +2111,7 @@ data TagSettings = TagSettings'
 -- * 'tsImageTagEnabled'
 tagSettings
     :: TagSettings
-tagSettings =
+tagSettings = 
     TagSettings'
     { _tsDynamicTagEnabled = Nothing
     , _tsImageTagEnabled = Nothing
@@ -2045,8 +2149,8 @@ instance ToJSON TagSettings where
 -- /See:/ 'subAccountsListResponse' smart constructor.
 data SubAccountsListResponse = SubAccountsListResponse'
     { _salrNextPageToken :: !(Maybe Text)
-    , _salrKind          :: !Text
-    , _salrSubAccounts   :: !(Maybe [SubAccount])
+    , _salrKind :: !Text
+    , _salrSubAccounts :: !(Maybe [SubAccount])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubAccountsListResponse' with the minimum fields required to make a request.
@@ -2060,7 +2164,7 @@ data SubAccountsListResponse = SubAccountsListResponse'
 -- * 'salrSubAccounts'
 subAccountsListResponse
     :: SubAccountsListResponse
-subAccountsListResponse =
+subAccountsListResponse = 
     SubAccountsListResponse'
     { _salrNextPageToken = Nothing
     , _salrKind = "dfareporting#subaccountsListResponse"
@@ -2108,16 +2212,16 @@ instance ToJSON SubAccountsListResponse where
 --
 -- /See:/ 'directorySiteContact' smart constructor.
 data DirectorySiteContact = DirectorySiteContact'
-    { _dscEmail     :: !(Maybe Text)
-    , _dscPhone     :: !(Maybe Text)
-    , _dscLastName  :: !(Maybe Text)
-    , _dscKind      :: !Text
-    , _dscAddress   :: !(Maybe Text)
-    , _dscRole      :: !(Maybe DirectorySiteContactRole)
+    { _dscEmail :: !(Maybe Text)
+    , _dscPhone :: !(Maybe Text)
+    , _dscLastName :: !(Maybe Text)
+    , _dscKind :: !Text
+    , _dscAddress :: !(Maybe Text)
+    , _dscRole :: !(Maybe DirectorySiteContactRole)
     , _dscFirstName :: !(Maybe Text)
-    , _dscId        :: !(Maybe (Textual Int64))
-    , _dscTitle     :: !(Maybe Text)
-    , _dscType      :: !(Maybe DirectorySiteContactType)
+    , _dscId :: !(Maybe (Textual Int64))
+    , _dscTitle :: !(Maybe Text)
+    , _dscType :: !(Maybe DirectorySiteContactType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySiteContact' with the minimum fields required to make a request.
@@ -2145,7 +2249,7 @@ data DirectorySiteContact = DirectorySiteContact'
 -- * 'dscType'
 directorySiteContact
     :: DirectorySiteContact
-directorySiteContact =
+directorySiteContact = 
     DirectorySiteContact'
     { _dscEmail = Nothing
     , _dscPhone = Nothing
@@ -2241,7 +2345,7 @@ instance ToJSON DirectorySiteContact where
 --
 -- /See:/ 'regionsListResponse' smart constructor.
 data RegionsListResponse = RegionsListResponse'
-    { _rlrKind    :: !Text
+    { _rlrKind :: !Text
     , _rlrRegions :: !(Maybe [Region])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2254,7 +2358,7 @@ data RegionsListResponse = RegionsListResponse'
 -- * 'rlrRegions'
 regionsListResponse
     :: RegionsListResponse
-regionsListResponse =
+regionsListResponse = 
     RegionsListResponse'
     { _rlrKind = "dfareporting#regionsListResponse"
     , _rlrRegions = Nothing
@@ -2291,9 +2395,9 @@ instance ToJSON RegionsListResponse where
 --
 -- /See:/ 'floodlightActivityDynamicTag' smart constructor.
 data FloodlightActivityDynamicTag = FloodlightActivityDynamicTag'
-    { _fadtTag  :: !(Maybe Text)
+    { _fadtTag :: !(Maybe Text)
     , _fadtName :: !(Maybe Text)
-    , _fadtId   :: !(Maybe (Textual Int64))
+    , _fadtId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivityDynamicTag' with the minimum fields required to make a request.
@@ -2307,7 +2411,7 @@ data FloodlightActivityDynamicTag = FloodlightActivityDynamicTag'
 -- * 'fadtId'
 floodlightActivityDynamicTag
     :: FloodlightActivityDynamicTag
-floodlightActivityDynamicTag =
+floodlightActivityDynamicTag = 
     FloodlightActivityDynamicTag'
     { _fadtTag = Nothing
     , _fadtName = Nothing
@@ -2346,11 +2450,11 @@ instance ToJSON FloodlightActivityDynamicTag where
 --
 -- /See:/ 'videoFormat' smart constructor.
 data VideoFormat = VideoFormat'
-    { _vfKind          :: !Text
-    , _vfFileType      :: !(Maybe VideoFormatFileType)
-    , _vfResolution    :: !(Maybe Size)
+    { _vfKind :: !Text
+    , _vfFileType :: !(Maybe VideoFormatFileType)
+    , _vfResolution :: !(Maybe Size)
     , _vfTargetBitRate :: !(Maybe (Textual Int32))
-    , _vfId            :: !(Maybe (Textual Int32))
+    , _vfId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoFormat' with the minimum fields required to make a request.
@@ -2368,7 +2472,7 @@ data VideoFormat = VideoFormat'
 -- * 'vfId'
 videoFormat
     :: VideoFormat
-videoFormat =
+videoFormat = 
     VideoFormat'
     { _vfKind = "dfareporting#videoFormat"
     , _vfFileType = Nothing
@@ -2432,20 +2536,20 @@ instance ToJSON VideoFormat where
 --
 -- /See:/ 'directorySite' smart constructor.
 data DirectorySite = DirectorySite'
-    { _dsCurrencyId             :: !(Maybe (Textual Int64))
-    , _dsSettings               :: !(Maybe DirectorySiteSettings)
+    { _dsCurrencyId :: !(Maybe (Textual Int64))
+    , _dsSettings :: !(Maybe DirectorySiteSettings)
     , _dsInterstitialTagFormats :: !(Maybe [DirectorySiteInterstitialTagFormatsItem])
-    , _dsKind                   :: !Text
-    , _dsURL                    :: !(Maybe Text)
-    , _dsIdDimensionValue       :: !(Maybe DimensionValue)
-    , _dsInpageTagFormats       :: !(Maybe [DirectorySiteInpageTagFormatsItem])
-    , _dsActive                 :: !(Maybe Bool)
-    , _dsName                   :: !(Maybe Text)
-    , _dsId                     :: !(Maybe (Textual Int64))
-    , _dsCountryId              :: !(Maybe (Textual Int64))
-    , _dsContactAssignments     :: !(Maybe [DirectorySiteContactAssignment])
-    , _dsDescription            :: !(Maybe Text)
-    , _dsParentId               :: !(Maybe (Textual Int64))
+    , _dsKind :: !Text
+    , _dsURL :: !(Maybe Text)
+    , _dsIdDimensionValue :: !(Maybe DimensionValue)
+    , _dsInpageTagFormats :: !(Maybe [DirectorySiteInpageTagFormatsItem])
+    , _dsActive :: !(Maybe Bool)
+    , _dsName :: !(Maybe Text)
+    , _dsId :: !(Maybe (Textual Int64))
+    , _dsCountryId :: !(Maybe (Textual Int64))
+    , _dsContactAssignments :: !(Maybe [DirectorySiteContactAssignment])
+    , _dsDescription :: !(Maybe Text)
+    , _dsParentId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySite' with the minimum fields required to make a request.
@@ -2481,7 +2585,7 @@ data DirectorySite = DirectorySite'
 -- * 'dsParentId'
 directorySite
     :: DirectorySite
-directorySite =
+directorySite = 
     DirectorySite'
     { _dsCurrencyId = Nothing
     , _dsSettings = Nothing
@@ -2499,19 +2603,20 @@ directorySite =
     , _dsParentId = Nothing
     }
 
--- | Currency ID of this directory site. Possible values are: - \"1\" for USD
--- - \"2\" for GBP - \"3\" for ESP - \"4\" for SEK - \"5\" for CAD - \"6\"
--- for JPY - \"7\" for DEM - \"8\" for AUD - \"9\" for FRF - \"10\" for ITL
--- - \"11\" for DKK - \"12\" for NOK - \"13\" for FIM - \"14\" for ZAR -
--- \"15\" for IEP - \"16\" for NLG - \"17\" for EUR - \"18\" for KRW -
--- \"19\" for TWD - \"20\" for SGD - \"21\" for CNY - \"22\" for HKD -
--- \"23\" for NZD - \"24\" for MYR - \"25\" for BRL - \"26\" for PTE -
--- \"27\" for MXP - \"28\" for CLP - \"29\" for TRY - \"30\" for ARS -
--- \"31\" for PEN - \"32\" for ILS - \"33\" for CHF - \"34\" for VEF -
--- \"35\" for COP - \"36\" for GTQ - \"37\" for PLN - \"39\" for INR -
--- \"40\" for THB - \"41\" for IDR - \"42\" for CZK - \"43\" for RON -
--- \"44\" for HUF - \"45\" for RUB - \"46\" for AED - \"47\" for BGN -
--- \"48\" for HRK
+-- | Currency ID of this directory site. This is a read-only field. Possible
+-- values are: - \"1\" for USD - \"2\" for GBP - \"3\" for ESP - \"4\" for
+-- SEK - \"5\" for CAD - \"6\" for JPY - \"7\" for DEM - \"8\" for AUD -
+-- \"9\" for FRF - \"10\" for ITL - \"11\" for DKK - \"12\" for NOK -
+-- \"13\" for FIM - \"14\" for ZAR - \"15\" for IEP - \"16\" for NLG -
+-- \"17\" for EUR - \"18\" for KRW - \"19\" for TWD - \"20\" for SGD -
+-- \"21\" for CNY - \"22\" for HKD - \"23\" for NZD - \"24\" for MYR -
+-- \"25\" for BRL - \"26\" for PTE - \"27\" for MXP - \"28\" for CLP -
+-- \"29\" for TRY - \"30\" for ARS - \"31\" for PEN - \"32\" for ILS -
+-- \"33\" for CHF - \"34\" for VEF - \"35\" for COP - \"36\" for GTQ -
+-- \"37\" for PLN - \"39\" for INR - \"40\" for THB - \"41\" for IDR -
+-- \"42\" for CZK - \"43\" for RON - \"44\" for HUF - \"45\" for RUB -
+-- \"46\" for AED - \"47\" for BGN - \"48\" for HRK - \"49\" for MXN -
+-- \"50\" for NGN
 dsCurrencyId :: Lens' DirectorySite (Maybe Int64)
 dsCurrencyId
   = lens _dsCurrencyId (\ s a -> s{_dsCurrencyId = a})
@@ -2572,7 +2677,7 @@ dsId
   = lens _dsId (\ s a -> s{_dsId = a}) .
       mapping _Coerce
 
--- | Country ID of this directory site.
+-- | Country ID of this directory site. This is a read-only field.
 dsCountryId :: Lens' DirectorySite (Maybe Int64)
 dsCountryId
   = lens _dsCountryId (\ s a -> s{_dsCountryId = a}) .
@@ -2586,7 +2691,7 @@ dsContactAssignments
       . _Default
       . _Coerce
 
--- | Description of this directory site.
+-- | Description of this directory site. This is a read-only field.
 dsDescription :: Lens' DirectorySite (Maybe Text)
 dsDescription
   = lens _dsDescription
@@ -2639,9 +2744,9 @@ instance ToJSON DirectorySite where
 --
 -- /See:/ 'reportFloodlightCriteriaReportProperties' smart constructor.
 data ReportFloodlightCriteriaReportProperties = ReportFloodlightCriteriaReportProperties'
-    { _rfcrpIncludeUnattributedIPConversions     :: !(Maybe Bool)
+    { _rfcrpIncludeUnattributedIPConversions :: !(Maybe Bool)
     , _rfcrpIncludeUnattributedCookieConversions :: !(Maybe Bool)
-    , _rfcrpIncludeAttributedIPConversions       :: !(Maybe Bool)
+    , _rfcrpIncludeAttributedIPConversions :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportFloodlightCriteriaReportProperties' with the minimum fields required to make a request.
@@ -2655,7 +2760,7 @@ data ReportFloodlightCriteriaReportProperties = ReportFloodlightCriteriaReportPr
 -- * 'rfcrpIncludeAttributedIPConversions'
 reportFloodlightCriteriaReportProperties
     :: ReportFloodlightCriteriaReportProperties
-reportFloodlightCriteriaReportProperties =
+reportFloodlightCriteriaReportProperties = 
     ReportFloodlightCriteriaReportProperties'
     { _rfcrpIncludeUnattributedIPConversions = Nothing
     , _rfcrpIncludeUnattributedCookieConversions = Nothing
@@ -2715,17 +2820,17 @@ instance ToJSON
 --
 -- /See:/ 'floodlightActivityGroup' smart constructor.
 data FloodlightActivityGroup = FloodlightActivityGroup'
-    { _fagTagString                               :: !(Maybe Text)
-    , _fagFloodlightConfigurationId               :: !(Maybe (Textual Int64))
-    , _fagKind                                    :: !Text
-    , _fagAdvertiserId                            :: !(Maybe (Textual Int64))
-    , _fagAdvertiserIdDimensionValue              :: !(Maybe DimensionValue)
-    , _fagIdDimensionValue                        :: !(Maybe DimensionValue)
-    , _fagAccountId                               :: !(Maybe (Textual Int64))
-    , _fagName                                    :: !(Maybe Text)
-    , _fagId                                      :: !(Maybe (Textual Int64))
-    , _fagSubAccountId                            :: !(Maybe (Textual Int64))
-    , _fagType                                    :: !(Maybe FloodlightActivityGroupType)
+    { _fagTagString :: !(Maybe Text)
+    , _fagFloodlightConfigurationId :: !(Maybe (Textual Int64))
+    , _fagKind :: !Text
+    , _fagAdvertiserId :: !(Maybe (Textual Int64))
+    , _fagAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _fagIdDimensionValue :: !(Maybe DimensionValue)
+    , _fagAccountId :: !(Maybe (Textual Int64))
+    , _fagName :: !(Maybe Text)
+    , _fagId :: !(Maybe (Textual Int64))
+    , _fagSubAccountId :: !(Maybe (Textual Int64))
+    , _fagType :: !(Maybe FloodlightActivityGroupType)
     , _fagFloodlightConfigurationIdDimensionValue :: !(Maybe DimensionValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2758,7 +2863,7 @@ data FloodlightActivityGroup = FloodlightActivityGroup'
 -- * 'fagFloodlightConfigurationIdDimensionValue'
 floodlightActivityGroup
     :: FloodlightActivityGroup
-floodlightActivityGroup =
+floodlightActivityGroup = 
     FloodlightActivityGroup'
     { _fagTagString = Nothing
     , _fagFloodlightConfigurationId = Nothing
@@ -2907,11 +3012,11 @@ instance ToJSON FloodlightActivityGroup where
 --
 -- /See:/ 'crossDimensionReachReportCompatibleFields' smart constructor.
 data CrossDimensionReachReportCompatibleFields = CrossDimensionReachReportCompatibleFields'
-    { _cdrrcfMetrics          :: !(Maybe [Metric])
-    , _cdrrcfBreakdown        :: !(Maybe [Dimension])
-    , _cdrrcfKind             :: !Text
+    { _cdrrcfMetrics :: !(Maybe [Metric])
+    , _cdrrcfBreakdown :: !(Maybe [Dimension])
+    , _cdrrcfKind :: !Text
     , _cdrrcfDimensionFilters :: !(Maybe [Dimension])
-    , _cdrrcfOverlapMetrics   :: !(Maybe [Metric])
+    , _cdrrcfOverlapMetrics :: !(Maybe [Metric])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CrossDimensionReachReportCompatibleFields' with the minimum fields required to make a request.
@@ -2929,7 +3034,7 @@ data CrossDimensionReachReportCompatibleFields = CrossDimensionReachReportCompat
 -- * 'cdrrcfOverlapMetrics'
 crossDimensionReachReportCompatibleFields
     :: CrossDimensionReachReportCompatibleFields
-crossDimensionReachReportCompatibleFields =
+crossDimensionReachReportCompatibleFields = 
     CrossDimensionReachReportCompatibleFields'
     { _cdrrcfMetrics = Nothing
     , _cdrrcfBreakdown = Nothing
@@ -3011,10 +3116,10 @@ instance ToJSON
 -- /See:/ 'fsCommand' smart constructor.
 data FsCommand = FsCommand'
     { _fcPositionOption :: !(Maybe FsCommandPositionOption)
-    , _fcLeft           :: !(Maybe (Textual Int32))
-    , _fcWindowHeight   :: !(Maybe (Textual Int32))
-    , _fcWindowWidth    :: !(Maybe (Textual Int32))
-    , _fcTop            :: !(Maybe (Textual Int32))
+    , _fcLeft :: !(Maybe (Textual Int32))
+    , _fcWindowHeight :: !(Maybe (Textual Int32))
+    , _fcWindowWidth :: !(Maybe (Textual Int32))
+    , _fcTop :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FsCommand' with the minimum fields required to make a request.
@@ -3032,7 +3137,7 @@ data FsCommand = FsCommand'
 -- * 'fcTop'
 fsCommand
     :: FsCommand
-fsCommand =
+fsCommand = 
     FsCommand'
     { _fcPositionOption = Nothing
     , _fcLeft = Nothing
@@ -3099,10 +3204,10 @@ instance ToJSON FsCommand where
 --
 -- /See:/ 'placementAssignment' smart constructor.
 data PlacementAssignment = PlacementAssignment'
-    { _paPlacementId               :: !(Maybe (Textual Int64))
+    { _paPlacementId :: !(Maybe (Textual Int64))
     , _paPlacementIdDimensionValue :: !(Maybe DimensionValue)
-    , _paActive                    :: !(Maybe Bool)
-    , _paSSLRequired               :: !(Maybe Bool)
+    , _paActive :: !(Maybe Bool)
+    , _paSSLRequired :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementAssignment' with the minimum fields required to make a request.
@@ -3118,7 +3223,7 @@ data PlacementAssignment = PlacementAssignment'
 -- * 'paSSLRequired'
 placementAssignment
     :: PlacementAssignment
-placementAssignment =
+placementAssignment = 
     PlacementAssignment'
     { _paPlacementId = Nothing
     , _paPlacementIdDimensionValue = Nothing
@@ -3176,9 +3281,9 @@ instance ToJSON PlacementAssignment where
 --
 -- /See:/ 'creativeFieldValue' smart constructor.
 data CreativeFieldValue = CreativeFieldValue'
-    { _cfvKind  :: !Text
+    { _cfvKind :: !Text
     , _cfvValue :: !(Maybe Text)
-    , _cfvId    :: !(Maybe (Textual Int64))
+    , _cfvId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValue' with the minimum fields required to make a request.
@@ -3192,7 +3297,7 @@ data CreativeFieldValue = CreativeFieldValue'
 -- * 'cfvId'
 creativeFieldValue
     :: CreativeFieldValue
-creativeFieldValue =
+creativeFieldValue = 
     CreativeFieldValue'
     { _cfvKind = "dfareporting#creativeFieldValue"
     , _cfvValue = Nothing
@@ -3236,10 +3341,10 @@ instance ToJSON CreativeFieldValue where
 --
 -- /See:/ 'dimensionValueRequest' smart constructor.
 data DimensionValueRequest = DimensionValueRequest'
-    { _dvrKind          :: !Text
-    , _dvrEndDate       :: !(Maybe Date')
-    , _dvrFilters       :: !(Maybe [DimensionFilter])
-    , _dvrStartDate     :: !(Maybe Date')
+    { _dvrKind :: !Text
+    , _dvrEndDate :: !(Maybe Date')
+    , _dvrFilters :: !(Maybe [DimensionFilter])
+    , _dvrStartDate :: !(Maybe Date')
     , _dvrDimensionName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3258,7 +3363,7 @@ data DimensionValueRequest = DimensionValueRequest'
 -- * 'dvrDimensionName'
 dimensionValueRequest
     :: DimensionValueRequest
-dimensionValueRequest =
+dimensionValueRequest = 
     DimensionValueRequest'
     { _dvrKind = "dfareporting#dimensionValueRequest"
     , _dvrEndDate = Nothing
@@ -3325,7 +3430,7 @@ instance ToJSON DimensionValueRequest where
 --
 -- /See:/ 'floodlightConfigurationsListResponse' smart constructor.
 data FloodlightConfigurationsListResponse = FloodlightConfigurationsListResponse'
-    { _fclrKind                     :: !Text
+    { _fclrKind :: !Text
     , _fclrFloodlightConfigurations :: !(Maybe [FloodlightConfiguration])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3338,7 +3443,7 @@ data FloodlightConfigurationsListResponse = FloodlightConfigurationsListResponse
 -- * 'fclrFloodlightConfigurations'
 floodlightConfigurationsListResponse
     :: FloodlightConfigurationsListResponse
-floodlightConfigurationsListResponse =
+floodlightConfigurationsListResponse = 
     FloodlightConfigurationsListResponse'
     { _fclrKind = "dfareporting#floodlightConfigurationsListResponse"
     , _fclrFloodlightConfigurations = Nothing
@@ -3380,8 +3485,8 @@ instance ToJSON FloodlightConfigurationsListResponse
 --
 -- /See:/ 'floodlightActivitiesListResponse' smart constructor.
 data FloodlightActivitiesListResponse = FloodlightActivitiesListResponse'
-    { _falrNextPageToken        :: !(Maybe Text)
-    , _falrKind                 :: !Text
+    { _falrNextPageToken :: !(Maybe Text)
+    , _falrKind :: !Text
     , _falrFloodlightActivities :: !(Maybe [FloodlightActivity])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3396,7 +3501,7 @@ data FloodlightActivitiesListResponse = FloodlightActivitiesListResponse'
 -- * 'falrFloodlightActivities'
 floodlightActivitiesListResponse
     :: FloodlightActivitiesListResponse
-floodlightActivitiesListResponse =
+floodlightActivitiesListResponse = 
     FloodlightActivitiesListResponse'
     { _falrNextPageToken = Nothing
     , _falrKind = "dfareporting#floodlightActivitiesListResponse"
@@ -3447,7 +3552,7 @@ instance ToJSON FloodlightActivitiesListResponse
 --
 -- /See:/ 'creativeFieldAssignment' smart constructor.
 data CreativeFieldAssignment = CreativeFieldAssignment'
-    { _cfaCreativeFieldId      :: !(Maybe (Textual Int64))
+    { _cfaCreativeFieldId :: !(Maybe (Textual Int64))
     , _cfaCreativeFieldValueId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3460,7 +3565,7 @@ data CreativeFieldAssignment = CreativeFieldAssignment'
 -- * 'cfaCreativeFieldValueId'
 creativeFieldAssignment
     :: CreativeFieldAssignment
-creativeFieldAssignment =
+creativeFieldAssignment = 
     CreativeFieldAssignment'
     { _cfaCreativeFieldId = Nothing
     , _cfaCreativeFieldValueId = Nothing
@@ -3501,10 +3606,10 @@ instance ToJSON CreativeFieldAssignment where
 --
 -- /See:/ 'advertiserGroup' smart constructor.
 data AdvertiserGroup = AdvertiserGroup'
-    { _agKind      :: !Text
+    { _agKind :: !Text
     , _agAccountId :: !(Maybe (Textual Int64))
-    , _agName      :: !(Maybe Text)
-    , _agId        :: !(Maybe (Textual Int64))
+    , _agName :: !(Maybe Text)
+    , _agId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroup' with the minimum fields required to make a request.
@@ -3520,7 +3625,7 @@ data AdvertiserGroup = AdvertiserGroup'
 -- * 'agId'
 advertiserGroup
     :: AdvertiserGroup
-advertiserGroup =
+advertiserGroup = 
     AdvertiserGroup'
     { _agKind = "dfareporting#advertiserGroup"
     , _agAccountId = Nothing
@@ -3574,10 +3679,10 @@ instance ToJSON AdvertiserGroup where
 --
 -- /See:/ 'tagData' smart constructor.
 data TagData = TagData'
-    { _tdClickTag      :: !(Maybe Text)
-    , _tdFormat        :: !(Maybe TagDataFormat)
-    , _tdCreativeId    :: !(Maybe (Textual Int64))
-    , _tdAdId          :: !(Maybe (Textual Int64))
+    { _tdClickTag :: !(Maybe Text)
+    , _tdFormat :: !(Maybe TagDataFormat)
+    , _tdCreativeId :: !(Maybe (Textual Int64))
+    , _tdAdId :: !(Maybe (Textual Int64))
     , _tdImpressionTag :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3596,7 +3701,7 @@ data TagData = TagData'
 -- * 'tdImpressionTag'
 tagData
     :: TagData
-tagData =
+tagData = 
     TagData'
     { _tdClickTag = Nothing
     , _tdFormat = Nothing
@@ -3614,13 +3719,15 @@ tdClickTag
 tdFormat :: Lens' TagData (Maybe TagDataFormat)
 tdFormat = lens _tdFormat (\ s a -> s{_tdFormat = a})
 
--- | Creative associated with this placement tag.
+-- | Creative associated with this placement tag. Applicable only when format
+-- is PLACEMENT_TAG_TRACKING.
 tdCreativeId :: Lens' TagData (Maybe Int64)
 tdCreativeId
   = lens _tdCreativeId (\ s a -> s{_tdCreativeId = a})
       . mapping _Coerce
 
--- | Ad associated with this placement tag.
+-- | Ad associated with this placement tag. Applicable only when format is
+-- PLACEMENT_TAG_TRACKING.
 tdAdId :: Lens' TagData (Maybe Int64)
 tdAdId
   = lens _tdAdId (\ s a -> s{_tdAdId = a}) .
@@ -3656,8 +3763,8 @@ instance ToJSON TagData where
 --
 -- /See:/ 'dayPartTargeting' smart constructor.
 data DayPartTargeting = DayPartTargeting'
-    { _dptDaysOfWeek    :: !(Maybe [DayPartTargetingDaysOfWeekItem])
-    , _dptHoursOfDay    :: !(Maybe [Textual Int32])
+    { _dptDaysOfWeek :: !(Maybe [DayPartTargetingDaysOfWeekItem])
+    , _dptHoursOfDay :: !(Maybe [Textual Int32])
     , _dptUserLocalTime :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3672,7 +3779,7 @@ data DayPartTargeting = DayPartTargeting'
 -- * 'dptUserLocalTime'
 dayPartTargeting
     :: DayPartTargeting
-dayPartTargeting =
+dayPartTargeting = 
     DayPartTargeting'
     { _dptDaysOfWeek = Nothing
     , _dptHoursOfDay = Nothing
@@ -3689,13 +3796,13 @@ dptDaysOfWeek
       . _Default
       . _Coerce
 
--- | Hours of the day when the ad will serve. Must be an integer between 0
--- and 23 (inclusive), where 0 is midnight to 1 AM, and 23 is 11 PM to
--- midnight. Can be specified with days of week, in which case the ad would
--- serve during these hours on the specified days. For example, if Monday,
--- Wednesday, Friday are the days of week specified and 9-10am, 3-5pm
--- (hours 9, 15, and 16) is specified, the ad would serve Monday,
--- Wednesdays, and Fridays at 9-10am and 3-5pm.
+-- | Hours of the day when the ad will serve, where 0 is midnight to 1 AM and
+-- 23 is 11 PM to midnight. Can be specified with days of week, in which
+-- case the ad would serve during these hours on the specified days. For
+-- example if Monday, Wednesday, Friday are the days of week specified and
+-- 9-10am, 3-5pm (hours 9, 15, and 16) is specified, the ad would serve
+-- Monday, Wednesdays, and Fridays at 9-10am and 3-5pm. Acceptable values
+-- are 0 to 23, inclusive.
 dptHoursOfDay :: Lens' DayPartTargeting [Int32]
 dptHoursOfDay
   = lens _dptHoursOfDay
@@ -3731,10 +3838,10 @@ instance ToJSON DayPartTargeting where
 --
 -- /See:/ 'creativeOptimizationConfiguration' smart constructor.
 data CreativeOptimizationConfiguration = CreativeOptimizationConfiguration'
-    { _cocOptimizationModel     :: !(Maybe CreativeOptimizationConfigurationOptimizationModel)
-    , _cocName                  :: !(Maybe Text)
+    { _cocOptimizationModel :: !(Maybe CreativeOptimizationConfigurationOptimizationModel)
+    , _cocName :: !(Maybe Text)
     , _cocOptimizationActivitys :: !(Maybe [OptimizationActivity])
-    , _cocId                    :: !(Maybe (Textual Int64))
+    , _cocId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeOptimizationConfiguration' with the minimum fields required to make a request.
@@ -3750,7 +3857,7 @@ data CreativeOptimizationConfiguration = CreativeOptimizationConfiguration'
 -- * 'cocId'
 creativeOptimizationConfiguration
     :: CreativeOptimizationConfiguration
-creativeOptimizationConfiguration =
+creativeOptimizationConfiguration = 
     CreativeOptimizationConfiguration'
     { _cocOptimizationModel = Nothing
     , _cocName = Nothing
@@ -3806,16 +3913,86 @@ instance ToJSON CreativeOptimizationConfiguration
                     _cocOptimizationActivitys,
                   ("id" .=) <$> _cocId])
 
+-- | Click-through URL
+--
+-- /See:/ 'creativeClickThroughURL' smart constructor.
+data CreativeClickThroughURL = CreativeClickThroughURL'
+    { _cctuComputedClickThroughURL :: !(Maybe Text)
+    , _cctuCustomClickThroughURL :: !(Maybe Text)
+    , _cctuLandingPageId :: !(Maybe (Textual Int64))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CreativeClickThroughURL' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cctuComputedClickThroughURL'
+--
+-- * 'cctuCustomClickThroughURL'
+--
+-- * 'cctuLandingPageId'
+creativeClickThroughURL
+    :: CreativeClickThroughURL
+creativeClickThroughURL = 
+    CreativeClickThroughURL'
+    { _cctuComputedClickThroughURL = Nothing
+    , _cctuCustomClickThroughURL = Nothing
+    , _cctuLandingPageId = Nothing
+    }
+
+-- | Read-only convenience field representing the actual URL that will be
+-- used for this click-through. The URL is computed as follows: - If
+-- landingPageId is specified then that landing page\'s URL is assigned to
+-- this field. - Otherwise, the customClickThroughUrl is assigned to this
+-- field.
+cctuComputedClickThroughURL :: Lens' CreativeClickThroughURL (Maybe Text)
+cctuComputedClickThroughURL
+  = lens _cctuComputedClickThroughURL
+      (\ s a -> s{_cctuComputedClickThroughURL = a})
+
+-- | Custom click-through URL. Applicable if the landingPageId field is left
+-- unset.
+cctuCustomClickThroughURL :: Lens' CreativeClickThroughURL (Maybe Text)
+cctuCustomClickThroughURL
+  = lens _cctuCustomClickThroughURL
+      (\ s a -> s{_cctuCustomClickThroughURL = a})
+
+-- | ID of the landing page for the click-through URL.
+cctuLandingPageId :: Lens' CreativeClickThroughURL (Maybe Int64)
+cctuLandingPageId
+  = lens _cctuLandingPageId
+      (\ s a -> s{_cctuLandingPageId = a})
+      . mapping _Coerce
+
+instance FromJSON CreativeClickThroughURL where
+        parseJSON
+          = withObject "CreativeClickThroughURL"
+              (\ o ->
+                 CreativeClickThroughURL' <$>
+                   (o .:? "computedClickThroughUrl") <*>
+                     (o .:? "customClickThroughUrl")
+                     <*> (o .:? "landingPageId"))
+
+instance ToJSON CreativeClickThroughURL where
+        toJSON CreativeClickThroughURL'{..}
+          = object
+              (catMaybes
+                 [("computedClickThroughUrl" .=) <$>
+                    _cctuComputedClickThroughURL,
+                  ("customClickThroughUrl" .=) <$>
+                    _cctuCustomClickThroughURL,
+                  ("landingPageId" .=) <$> _cctuLandingPageId])
+
 -- | The report criteria for a report of type \"STANDARD\".
 --
 -- /See:/ 'reportCriteria' smart constructor.
 data ReportCriteria = ReportCriteria'
-    { _rcMetricNames           :: !(Maybe [Text])
+    { _rcMetricNames :: !(Maybe [Text])
     , _rcCustomRichMediaEvents :: !(Maybe CustomRichMediaEvents)
-    , _rcDimensionFilters      :: !(Maybe [DimensionValue])
-    , _rcActivities            :: !(Maybe Activities)
-    , _rcDateRange             :: !(Maybe DateRange)
-    , _rcDimensions            :: !(Maybe [SortedDimension])
+    , _rcDimensionFilters :: !(Maybe [DimensionValue])
+    , _rcActivities :: !(Maybe Activities)
+    , _rcDateRange :: !(Maybe DateRange)
+    , _rcDimensions :: !(Maybe [SortedDimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportCriteria' with the minimum fields required to make a request.
@@ -3835,7 +4012,7 @@ data ReportCriteria = ReportCriteria'
 -- * 'rcDimensions'
 reportCriteria
     :: ReportCriteria
-reportCriteria =
+reportCriteria = 
     ReportCriteria'
     { _rcMetricNames = Nothing
     , _rcCustomRichMediaEvents = Nothing
@@ -3915,8 +4092,8 @@ instance ToJSON ReportCriteria where
 -- /See:/ 'placementStrategiesListResponse' smart constructor.
 data PlacementStrategiesListResponse = PlacementStrategiesListResponse'
     { _pslrPlacementStrategies :: !(Maybe [PlacementStrategy])
-    , _pslrNextPageToken       :: !(Maybe Text)
-    , _pslrKind                :: !Text
+    , _pslrNextPageToken :: !(Maybe Text)
+    , _pslrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategiesListResponse' with the minimum fields required to make a request.
@@ -3930,7 +4107,7 @@ data PlacementStrategiesListResponse = PlacementStrategiesListResponse'
 -- * 'pslrKind'
 placementStrategiesListResponse
     :: PlacementStrategiesListResponse
-placementStrategiesListResponse =
+placementStrategiesListResponse = 
     PlacementStrategiesListResponse'
     { _pslrPlacementStrategies = Nothing
     , _pslrNextPageToken = Nothing
@@ -3977,15 +4154,80 @@ instance ToJSON PlacementStrategiesListResponse where
                   ("nextPageToken" .=) <$> _pslrNextPageToken,
                   Just ("kind" .= _pslrKind)])
 
+-- | Update Conversions Response.
+--
+-- /See:/ 'conversionsBatchUpdateResponse' smart constructor.
+data ConversionsBatchUpdateResponse = ConversionsBatchUpdateResponse'
+    { _cburStatus :: !(Maybe [ConversionStatus])
+    , _cburKind :: !Text
+    , _cburHasFailures :: !(Maybe Bool)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ConversionsBatchUpdateResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cburStatus'
+--
+-- * 'cburKind'
+--
+-- * 'cburHasFailures'
+conversionsBatchUpdateResponse
+    :: ConversionsBatchUpdateResponse
+conversionsBatchUpdateResponse = 
+    ConversionsBatchUpdateResponse'
+    { _cburStatus = Nothing
+    , _cburKind = "dfareporting#conversionsBatchUpdateResponse"
+    , _cburHasFailures = Nothing
+    }
+
+-- | The update status of each conversion. Statuses are returned in the same
+-- order that conversions are updated.
+cburStatus :: Lens' ConversionsBatchUpdateResponse [ConversionStatus]
+cburStatus
+  = lens _cburStatus (\ s a -> s{_cburStatus = a}) .
+      _Default
+      . _Coerce
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"dfareporting#conversionsBatchUpdateResponse\".
+cburKind :: Lens' ConversionsBatchUpdateResponse Text
+cburKind = lens _cburKind (\ s a -> s{_cburKind = a})
+
+-- | Indicates that some or all conversions failed to update.
+cburHasFailures :: Lens' ConversionsBatchUpdateResponse (Maybe Bool)
+cburHasFailures
+  = lens _cburHasFailures
+      (\ s a -> s{_cburHasFailures = a})
+
+instance FromJSON ConversionsBatchUpdateResponse
+         where
+        parseJSON
+          = withObject "ConversionsBatchUpdateResponse"
+              (\ o ->
+                 ConversionsBatchUpdateResponse' <$>
+                   (o .:? "status" .!= mempty) <*>
+                     (o .:? "kind" .!=
+                        "dfareporting#conversionsBatchUpdateResponse")
+                     <*> (o .:? "hasFailures"))
+
+instance ToJSON ConversionsBatchUpdateResponse where
+        toJSON ConversionsBatchUpdateResponse'{..}
+          = object
+              (catMaybes
+                 [("status" .=) <$> _cburStatus,
+                  Just ("kind" .= _cburKind),
+                  ("hasFailures" .=) <$> _cburHasFailures])
+
 -- | Contains properties of a DCM subaccount.
 --
 -- /See:/ 'subAccount' smart constructor.
 data SubAccount = SubAccount'
-    { _saKind                   :: !Text
+    { _saKind :: !Text
     , _saAvailablePermissionIds :: !(Maybe [Textual Int64])
-    , _saAccountId              :: !(Maybe (Textual Int64))
-    , _saName                   :: !(Maybe Text)
-    , _saId                     :: !(Maybe (Textual Int64))
+    , _saAccountId :: !(Maybe (Textual Int64))
+    , _saName :: !(Maybe Text)
+    , _saId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubAccount' with the minimum fields required to make a request.
@@ -4003,7 +4245,7 @@ data SubAccount = SubAccount'
 -- * 'saId'
 subAccount
     :: SubAccount
-subAccount =
+subAccount = 
     SubAccount'
     { _saKind = "dfareporting#subaccount"
     , _saAvailablePermissionIds = Nothing
@@ -4069,8 +4311,8 @@ instance ToJSON SubAccount where
 -- /See:/ 'inventoryItemsListResponse' smart constructor.
 data InventoryItemsListResponse = InventoryItemsListResponse'
     { _iilrInventoryItems :: !(Maybe [InventoryItem])
-    , _iilrNextPageToken  :: !(Maybe Text)
-    , _iilrKind           :: !Text
+    , _iilrNextPageToken :: !(Maybe Text)
+    , _iilrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InventoryItemsListResponse' with the minimum fields required to make a request.
@@ -4084,7 +4326,7 @@ data InventoryItemsListResponse = InventoryItemsListResponse'
 -- * 'iilrKind'
 inventoryItemsListResponse
     :: InventoryItemsListResponse
-inventoryItemsListResponse =
+inventoryItemsListResponse = 
     InventoryItemsListResponse'
     { _iilrInventoryItems = Nothing
     , _iilrNextPageToken = Nothing
@@ -4129,49 +4371,98 @@ instance ToJSON InventoryItemsListResponse where
                   ("nextPageToken" .=) <$> _iilrNextPageToken,
                   Just ("kind" .= _iilrKind)])
 
+-- | A Universal Ad ID as per the VAST 4.0 spec. Applicable to the following
+-- creative types: INSTREAM_VIDEO and VPAID.
+--
+-- /See:/ 'universalAdId' smart constructor.
+data UniversalAdId = UniversalAdId'
+    { _uaiValue :: !(Maybe Text)
+    , _uaiRegistry :: !(Maybe UniversalAdIdRegistry)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UniversalAdId' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uaiValue'
+--
+-- * 'uaiRegistry'
+universalAdId
+    :: UniversalAdId
+universalAdId = 
+    UniversalAdId'
+    { _uaiValue = Nothing
+    , _uaiRegistry = Nothing
+    }
+
+-- | ID value for this creative. Only alphanumeric characters and the
+-- following symbols are valid: \"_\/\\-\". Maximum length is 64
+-- characters. Read only when registry is DCM.
+uaiValue :: Lens' UniversalAdId (Maybe Text)
+uaiValue = lens _uaiValue (\ s a -> s{_uaiValue = a})
+
+-- | Registry used for the Ad ID value.
+uaiRegistry :: Lens' UniversalAdId (Maybe UniversalAdIdRegistry)
+uaiRegistry
+  = lens _uaiRegistry (\ s a -> s{_uaiRegistry = a})
+
+instance FromJSON UniversalAdId where
+        parseJSON
+          = withObject "UniversalAdId"
+              (\ o ->
+                 UniversalAdId' <$>
+                   (o .:? "value") <*> (o .:? "registry"))
+
+instance ToJSON UniversalAdId where
+        toJSON UniversalAdId'{..}
+          = object
+              (catMaybes
+                 [("value" .=) <$> _uaiValue,
+                  ("registry" .=) <$> _uaiRegistry])
+
 -- | Contains properties of a DCM ad.
 --
 -- /See:/ 'ad' smart constructor.
 data Ad = Ad'
-    { _aTargetingTemplateId                   :: !(Maybe (Textual Int64))
-    , _aCreativeGroupAssignments              :: !(Maybe [CreativeGroupAssignment])
-    , _aGeoTargeting                          :: !(Maybe GeoTargeting)
-    , _aCreativeRotation                      :: !(Maybe CreativeRotation)
-    , _aTechnologyTargeting                   :: !(Maybe TechnologyTargeting)
-    , _aAudienceSegmentId                     :: !(Maybe (Textual Int64))
-    , _aDayPartTargeting                      :: !(Maybe DayPartTargeting)
-    , _aSize                                  :: !(Maybe Size)
-    , _aStartTime                             :: !(Maybe DateTime')
-    , _aKind                                  :: !Text
-    , _aClickThroughURLSuffixProperties       :: !(Maybe ClickThroughURLSuffixProperties)
-    , _aCampaignIdDimensionValue              :: !(Maybe DimensionValue)
-    , _aAdvertiserId                          :: !(Maybe (Textual Int64))
-    , _aAdvertiserIdDimensionValue            :: !(Maybe DimensionValue)
-    , _aSSLCompliant                          :: !(Maybe Bool)
-    , _aCampaignId                            :: !(Maybe (Textual Int64))
-    , _aIdDimensionValue                      :: !(Maybe DimensionValue)
-    , _aClickThroughURL                       :: !(Maybe ClickThroughURL)
-    , _aDeliverySchedule                      :: !(Maybe DeliverySchedule)
-    , _aEventTagOverrides                     :: !(Maybe [EventTagOverride])
-    , _aActive                                :: !(Maybe Bool)
-    , _aAccountId                             :: !(Maybe (Textual Int64))
-    , _aName                                  :: !(Maybe Text)
-    , _aKeyValueTargetingExpression           :: !(Maybe KeyValueTargetingExpression)
-    , _aEndTime                               :: !(Maybe DateTime')
-    , _aCreateInfo                            :: !(Maybe LastModifiedInfo)
-    , _aLastModifiedInfo                      :: !(Maybe LastModifiedInfo)
-    , _aId                                    :: !(Maybe (Textual Int64))
-    , _aSSLRequired                           :: !(Maybe Bool)
-    , _aComments                              :: !(Maybe Text)
-    , _aSubAccountId                          :: !(Maybe (Textual Int64))
-    , _aType                                  :: !(Maybe AdType)
-    , _aRemarketingListExpression             :: !(Maybe ListTargetingExpression)
-    , _aLanguageTargeting                     :: !(Maybe LanguageTargeting)
-    , _aDynamicClickTracker                   :: !(Maybe Bool)
-    , _aCompatibility                         :: !(Maybe AdCompatibility)
-    , _aArchived                              :: !(Maybe Bool)
+    { _aTargetingTemplateId :: !(Maybe (Textual Int64))
+    , _aCreativeGroupAssignments :: !(Maybe [CreativeGroupAssignment])
+    , _aGeoTargeting :: !(Maybe GeoTargeting)
+    , _aCreativeRotation :: !(Maybe CreativeRotation)
+    , _aTechnologyTargeting :: !(Maybe TechnologyTargeting)
+    , _aAudienceSegmentId :: !(Maybe (Textual Int64))
+    , _aDayPartTargeting :: !(Maybe DayPartTargeting)
+    , _aSize :: !(Maybe Size)
+    , _aStartTime :: !(Maybe DateTime')
+    , _aKind :: !Text
+    , _aClickThroughURLSuffixProperties :: !(Maybe ClickThroughURLSuffixProperties)
+    , _aCampaignIdDimensionValue :: !(Maybe DimensionValue)
+    , _aAdvertiserId :: !(Maybe (Textual Int64))
+    , _aAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _aSSLCompliant :: !(Maybe Bool)
+    , _aCampaignId :: !(Maybe (Textual Int64))
+    , _aIdDimensionValue :: !(Maybe DimensionValue)
+    , _aClickThroughURL :: !(Maybe ClickThroughURL)
+    , _aDeliverySchedule :: !(Maybe DeliverySchedule)
+    , _aEventTagOverrides :: !(Maybe [EventTagOverride])
+    , _aActive :: !(Maybe Bool)
+    , _aAccountId :: !(Maybe (Textual Int64))
+    , _aName :: !(Maybe Text)
+    , _aKeyValueTargetingExpression :: !(Maybe KeyValueTargetingExpression)
+    , _aEndTime :: !(Maybe DateTime')
+    , _aCreateInfo :: !(Maybe LastModifiedInfo)
+    , _aLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _aId :: !(Maybe (Textual Int64))
+    , _aSSLRequired :: !(Maybe Bool)
+    , _aComments :: !(Maybe Text)
+    , _aSubAccountId :: !(Maybe (Textual Int64))
+    , _aType :: !(Maybe AdType)
+    , _aRemarketingListExpression :: !(Maybe ListTargetingExpression)
+    , _aLanguageTargeting :: !(Maybe LanguageTargeting)
+    , _aDynamicClickTracker :: !(Maybe Bool)
+    , _aCompatibility :: !(Maybe AdCompatibility)
+    , _aArchived :: !(Maybe Bool)
     , _aDefaultClickThroughEventTagProperties :: !(Maybe DefaultClickThroughEventTagProperties)
-    , _aPlacementAssignments                  :: !(Maybe [PlacementAssignment])
+    , _aPlacementAssignments :: !(Maybe [PlacementAssignment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Ad' with the minimum fields required to make a request.
@@ -4257,7 +4548,7 @@ data Ad = Ad'
 -- * 'aPlacementAssignments'
 ad
     :: Ad
-ad =
+ad = 
     Ad'
     { _aTargetingTemplateId = Nothing
     , _aCreativeGroupAssignments = Nothing
@@ -4682,28 +4973,28 @@ instance ToJSON Ad where
 --
 -- /See:/ 'project' smart constructor.
 data Project = Project'
-    { _pTargetClicks             :: !(Maybe (Textual Int64))
-    , _pClientBillingCode        :: !(Maybe Text)
-    , _pTargetCpmNanos           :: !(Maybe (Textual Int64))
-    , _pTargetConversions        :: !(Maybe (Textual Int64))
-    , _pBudget                   :: !(Maybe (Textual Int64))
-    , _pKind                     :: !Text
-    , _pAdvertiserId             :: !(Maybe (Textual Int64))
-    , _pEndDate                  :: !(Maybe Date')
-    , _pOverview                 :: !(Maybe Text)
-    , _pTargetImpressions        :: !(Maybe (Textual Int64))
-    , _pStartDate                :: !(Maybe Date')
-    , _pTargetCpcNanos           :: !(Maybe (Textual Int64))
-    , _pAccountId                :: !(Maybe (Textual Int64))
-    , _pName                     :: !(Maybe Text)
-    , _pLastModifiedInfo         :: !(Maybe LastModifiedInfo)
-    , _pId                       :: !(Maybe (Textual Int64))
-    , _pAudienceAgeGroup         :: !(Maybe ProjectAudienceAgeGroup)
-    , _pSubAccountId             :: !(Maybe (Textual Int64))
+    { _pTargetClicks :: !(Maybe (Textual Int64))
+    , _pClientBillingCode :: !(Maybe Text)
+    , _pTargetCpmNanos :: !(Maybe (Textual Int64))
+    , _pTargetConversions :: !(Maybe (Textual Int64))
+    , _pBudget :: !(Maybe (Textual Int64))
+    , _pKind :: !Text
+    , _pAdvertiserId :: !(Maybe (Textual Int64))
+    , _pEndDate :: !(Maybe Date')
+    , _pOverview :: !(Maybe Text)
+    , _pTargetImpressions :: !(Maybe (Textual Int64))
+    , _pStartDate :: !(Maybe Date')
+    , _pTargetCpcNanos :: !(Maybe (Textual Int64))
+    , _pAccountId :: !(Maybe (Textual Int64))
+    , _pName :: !(Maybe Text)
+    , _pLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _pId :: !(Maybe (Textual Int64))
+    , _pAudienceAgeGroup :: !(Maybe ProjectAudienceAgeGroup)
+    , _pSubAccountId :: !(Maybe (Textual Int64))
     , _pTargetCpmActiveViewNanos :: !(Maybe (Textual Int64))
-    , _pAudienceGender           :: !(Maybe ProjectAudienceGender)
-    , _pClientName               :: !(Maybe Text)
-    , _pTargetCpaNanos           :: !(Maybe (Textual Int64))
+    , _pAudienceGender :: !(Maybe ProjectAudienceGender)
+    , _pClientName :: !(Maybe Text)
+    , _pTargetCpaNanos :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Project' with the minimum fields required to make a request.
@@ -4755,7 +5046,7 @@ data Project = Project'
 -- * 'pTargetCpaNanos'
 project
     :: Project
-project =
+project = 
     Project'
     { _pTargetClicks = Nothing
     , _pClientBillingCode = Nothing
@@ -4978,13 +5269,13 @@ instance ToJSON Project where
 --
 -- /See:/ 'reportFloodlightCriteria' smart constructor.
 data ReportFloodlightCriteria = ReportFloodlightCriteria'
-    { _rfcReportProperties      :: !(Maybe ReportFloodlightCriteriaReportProperties)
-    , _rfcMetricNames           :: !(Maybe [Text])
+    { _rfcReportProperties :: !(Maybe ReportFloodlightCriteriaReportProperties)
+    , _rfcMetricNames :: !(Maybe [Text])
     , _rfcCustomRichMediaEvents :: !(Maybe [DimensionValue])
-    , _rfcDimensionFilters      :: !(Maybe [DimensionValue])
-    , _rfcDateRange             :: !(Maybe DateRange)
-    , _rfcFloodlightConfigId    :: !(Maybe DimensionValue)
-    , _rfcDimensions            :: !(Maybe [SortedDimension])
+    , _rfcDimensionFilters :: !(Maybe [DimensionValue])
+    , _rfcDateRange :: !(Maybe DateRange)
+    , _rfcFloodlightConfigId :: !(Maybe DimensionValue)
+    , _rfcDimensions :: !(Maybe [SortedDimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportFloodlightCriteria' with the minimum fields required to make a request.
@@ -5006,7 +5297,7 @@ data ReportFloodlightCriteria = ReportFloodlightCriteria'
 -- * 'rfcDimensions'
 reportFloodlightCriteria
     :: ReportFloodlightCriteria
-reportFloodlightCriteria =
+reportFloodlightCriteria = 
     ReportFloodlightCriteria'
     { _rfcReportProperties = Nothing
     , _rfcMetricNames = Nothing
@@ -5102,10 +5393,10 @@ instance ToJSON ReportFloodlightCriteria where
 -- /See:/ 'size' smart constructor.
 data Size = Size'
     { _sHeight :: !(Maybe (Textual Int32))
-    , _sKind   :: !Text
-    , _sWidth  :: !(Maybe (Textual Int32))
-    , _sIab    :: !(Maybe Bool)
-    , _sId     :: !(Maybe (Textual Int64))
+    , _sKind :: !Text
+    , _sWidth :: !(Maybe (Textual Int32))
+    , _sIab :: !(Maybe Bool)
+    , _sId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Size' with the minimum fields required to make a request.
@@ -5123,7 +5414,7 @@ data Size = Size'
 -- * 'sId'
 size
     :: Size
-size =
+size = 
     Size'
     { _sHeight = Nothing
     , _sKind = "dfareporting#size"
@@ -5132,7 +5423,7 @@ size =
     , _sId = Nothing
     }
 
--- | Height of this size.
+-- | Height of this size. Acceptable values are 0 to 32767, inclusive.
 sHeight :: Lens' Size (Maybe Int32)
 sHeight
   = lens _sHeight (\ s a -> s{_sHeight = a}) .
@@ -5143,7 +5434,7 @@ sHeight
 sKind :: Lens' Size Text
 sKind = lens _sKind (\ s a -> s{_sKind = a})
 
--- | Width of this size.
+-- | Width of this size. Acceptable values are 0 to 32767, inclusive.
 sWidth :: Lens' Size (Maybe Int32)
 sWidth
   = lens _sWidth (\ s a -> s{_sWidth = a}) .
@@ -5181,8 +5472,8 @@ instance ToJSON Size where
 --
 -- /See:/ 'objectFilter' smart constructor.
 data ObjectFilter = ObjectFilter'
-    { _ofStatus    :: !(Maybe ObjectFilterStatus)
-    , _ofKind      :: !Text
+    { _ofStatus :: !(Maybe ObjectFilterStatus)
+    , _ofKind :: !Text
     , _ofObjectIds :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5197,7 +5488,7 @@ data ObjectFilter = ObjectFilter'
 -- * 'ofObjectIds'
 objectFilter
     :: ObjectFilter
-objectFilter =
+objectFilter = 
     ObjectFilter'
     { _ofStatus = Nothing
     , _ofKind = "dfareporting#objectFilter"
@@ -5244,10 +5535,10 @@ instance ToJSON ObjectFilter where
 --
 -- /See:/ 'skippableSetting' smart constructor.
 data SkippableSetting = SkippableSetting'
-    { _ssSkipOffSet     :: !(Maybe VideoOffSet)
+    { _ssSkipOffSet :: !(Maybe VideoOffSet)
     , _ssProgressOffSet :: !(Maybe VideoOffSet)
-    , _ssKind           :: !Text
-    , _ssSkippable      :: !(Maybe Bool)
+    , _ssKind :: !Text
+    , _ssSkippable :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SkippableSetting' with the minimum fields required to make a request.
@@ -5263,7 +5554,7 @@ data SkippableSetting = SkippableSetting'
 -- * 'ssSkippable'
 skippableSetting
     :: SkippableSetting
-skippableSetting =
+skippableSetting = 
     SkippableSetting'
     { _ssSkipOffSet = Nothing
     , _ssProgressOffSet = Nothing
@@ -5317,8 +5608,8 @@ instance ToJSON SkippableSetting where
 -- /See:/ 'reportsConfiguration' smart constructor.
 data ReportsConfiguration = ReportsConfiguration'
     { _rcExposureToConversionEnabled :: !(Maybe Bool)
-    , _rcReportGenerationTimeZoneId  :: !(Maybe (Textual Int64))
-    , _rcLookbackConfiguration       :: !(Maybe LookbackConfiguration)
+    , _rcReportGenerationTimeZoneId :: !(Maybe (Textual Int64))
+    , _rcLookbackConfiguration :: !(Maybe LookbackConfiguration)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsConfiguration' with the minimum fields required to make a request.
@@ -5332,7 +5623,7 @@ data ReportsConfiguration = ReportsConfiguration'
 -- * 'rcLookbackConfiguration'
 reportsConfiguration
     :: ReportsConfiguration
-reportsConfiguration =
+reportsConfiguration = 
     ReportsConfiguration'
     { _rcExposureToConversionEnabled = Nothing
     , _rcReportGenerationTimeZoneId = Nothing
@@ -5392,15 +5683,15 @@ instance ToJSON ReportsConfiguration where
 --
 -- /See:/ 'pricingSchedule' smart constructor.
 data PricingSchedule = PricingSchedule'
-    { _psTestingStartDate      :: !(Maybe Date')
-    , _psFloodlightActivityId  :: !(Maybe (Textual Int64))
-    , _psEndDate               :: !(Maybe Date')
+    { _psTestingStartDate :: !(Maybe Date')
+    , _psFloodlightActivityId :: !(Maybe (Textual Int64))
+    , _psEndDate :: !(Maybe Date')
     , _psDisregardOverdelivery :: !(Maybe Bool)
-    , _psStartDate             :: !(Maybe Date')
-    , _psCapCostOption         :: !(Maybe PricingScheduleCapCostOption)
-    , _psPricingType           :: !(Maybe PricingSchedulePricingType)
-    , _psPricingPeriods        :: !(Maybe [PricingSchedulePricingPeriod])
-    , _psFlighted              :: !(Maybe Bool)
+    , _psStartDate :: !(Maybe Date')
+    , _psCapCostOption :: !(Maybe PricingScheduleCapCostOption)
+    , _psPricingType :: !(Maybe PricingSchedulePricingType)
+    , _psPricingPeriods :: !(Maybe [PricingSchedulePricingPeriod])
+    , _psFlighted :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PricingSchedule' with the minimum fields required to make a request.
@@ -5426,7 +5717,7 @@ data PricingSchedule = PricingSchedule'
 -- * 'psFlighted'
 pricingSchedule
     :: PricingSchedule
-pricingSchedule =
+pricingSchedule = 
     PricingSchedule'
     { _psTestingStartDate = Nothing
     , _psFloodlightActivityId = Nothing
@@ -5542,10 +5833,10 @@ instance ToJSON PricingSchedule where
 --
 -- /See:/ 'postalCode' smart constructor.
 data PostalCode = PostalCode'
-    { _pcKind          :: !Text
-    , _pcCode          :: !(Maybe Text)
-    , _pcCountryCode   :: !(Maybe Text)
-    , _pcId            :: !(Maybe Text)
+    { _pcKind :: !Text
+    , _pcCode :: !(Maybe Text)
+    , _pcCountryCode :: !(Maybe Text)
+    , _pcId :: !(Maybe Text)
     , _pcCountryDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5564,7 +5855,7 @@ data PostalCode = PostalCode'
 -- * 'pcCountryDartId'
 postalCode
     :: PostalCode
-postalCode =
+postalCode = 
     PostalCode'
     { _pcKind = "dfareporting#postalCode"
     , _pcCode = Nothing
@@ -5623,7 +5914,7 @@ instance ToJSON PostalCode where
 --
 -- /See:/ 'accountPermissionsListResponse' smart constructor.
 data AccountPermissionsListResponse = AccountPermissionsListResponse'
-    { _aplrKind               :: !Text
+    { _aplrKind :: !Text
     , _aplrAccountPermissions :: !(Maybe [AccountPermission])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5636,7 +5927,7 @@ data AccountPermissionsListResponse = AccountPermissionsListResponse'
 -- * 'aplrAccountPermissions'
 accountPermissionsListResponse
     :: AccountPermissionsListResponse
-accountPermissionsListResponse =
+accountPermissionsListResponse = 
     AccountPermissionsListResponse'
     { _aplrKind = "dfareporting#accountPermissionsListResponse"
     , _aplrAccountPermissions = Nothing
@@ -5677,11 +5968,11 @@ instance ToJSON AccountPermissionsListResponse where
 --
 -- /See:/ 'country' smart constructor.
 data Country = Country'
-    { _cKind        :: !Text
-    , _cName        :: !(Maybe Text)
+    { _cKind :: !Text
+    , _cName :: !(Maybe Text)
     , _cCountryCode :: !(Maybe Text)
-    , _cDartId      :: !(Maybe (Textual Int64))
-    , _cSSLEnabled  :: !(Maybe Bool)
+    , _cDartId :: !(Maybe (Textual Int64))
+    , _cSSLEnabled :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Country' with the minimum fields required to make a request.
@@ -5699,7 +5990,7 @@ data Country = Country'
 -- * 'cSSLEnabled'
 country
     :: Country
-country =
+country = 
     Country'
     { _cKind = "dfareporting#country"
     , _cName = Nothing
@@ -5758,7 +6049,7 @@ instance ToJSON Country where
 --
 -- /See:/ 'operatingSystemVersionsListResponse' smart constructor.
 data OperatingSystemVersionsListResponse = OperatingSystemVersionsListResponse'
-    { _osvlrKind                    :: !Text
+    { _osvlrKind :: !Text
     , _osvlrOperatingSystemVersions :: !(Maybe [OperatingSystemVersion])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5771,7 +6062,7 @@ data OperatingSystemVersionsListResponse = OperatingSystemVersionsListResponse'
 -- * 'osvlrOperatingSystemVersions'
 operatingSystemVersionsListResponse
     :: OperatingSystemVersionsListResponse
-operatingSystemVersionsListResponse =
+operatingSystemVersionsListResponse = 
     OperatingSystemVersionsListResponse'
     { _osvlrKind = "dfareporting#operatingSystemVersionsListResponse"
     , _osvlrOperatingSystemVersions = Nothing
@@ -5815,7 +6106,7 @@ instance ToJSON OperatingSystemVersionsListResponse
 -- /See:/ 'clickThroughURLSuffixProperties' smart constructor.
 data ClickThroughURLSuffixProperties = ClickThroughURLSuffixProperties'
     { _ctuspOverrideInheritedSuffix :: !(Maybe Bool)
-    , _ctuspClickThroughURLSuffix   :: !(Maybe Text)
+    , _ctuspClickThroughURLSuffix :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ClickThroughURLSuffixProperties' with the minimum fields required to make a request.
@@ -5827,7 +6118,7 @@ data ClickThroughURLSuffixProperties = ClickThroughURLSuffixProperties'
 -- * 'ctuspClickThroughURLSuffix'
 clickThroughURLSuffixProperties
     :: ClickThroughURLSuffixProperties
-clickThroughURLSuffixProperties =
+clickThroughURLSuffixProperties = 
     ClickThroughURLSuffixProperties'
     { _ctuspOverrideInheritedSuffix = Nothing
     , _ctuspClickThroughURLSuffix = Nothing
@@ -5869,11 +6160,11 @@ instance ToJSON ClickThroughURLSuffixProperties where
 --
 -- /See:/ 'pricing' smart constructor.
 data Pricing = Pricing'
-    { _priEndDate     :: !(Maybe Date')
-    , _priStartDate   :: !(Maybe Date')
-    , _priGroupType   :: !(Maybe PricingGroupType)
+    { _priEndDate :: !(Maybe Date')
+    , _priStartDate :: !(Maybe Date')
+    , _priGroupType :: !(Maybe PricingGroupType)
     , _priPricingType :: !(Maybe PricingPricingType)
-    , _priFlights     :: !(Maybe [Flight])
+    , _priFlights :: !(Maybe [Flight])
     , _priCapCostType :: !(Maybe PricingCapCostType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5894,7 +6185,7 @@ data Pricing = Pricing'
 -- * 'priCapCostType'
 pricing
     :: Pricing
-pricing =
+pricing = 
     Pricing'
     { _priEndDate = Nothing
     , _priStartDate = Nothing
@@ -5976,8 +6267,8 @@ instance ToJSON Pricing where
 -- /See:/ 'audienceSegmentGroup' smart constructor.
 data AudienceSegmentGroup = AudienceSegmentGroup'
     { _asgAudienceSegments :: !(Maybe [AudienceSegment])
-    , _asgName             :: !(Maybe Text)
-    , _asgId               :: !(Maybe (Textual Int64))
+    , _asgName :: !(Maybe Text)
+    , _asgId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AudienceSegmentGroup' with the minimum fields required to make a request.
@@ -5991,7 +6282,7 @@ data AudienceSegmentGroup = AudienceSegmentGroup'
 -- * 'asgId'
 audienceSegmentGroup
     :: AudienceSegmentGroup
-audienceSegmentGroup =
+audienceSegmentGroup = 
     AudienceSegmentGroup'
     { _asgAudienceSegments = Nothing
     , _asgName = Nothing
@@ -6041,10 +6332,10 @@ instance ToJSON AudienceSegmentGroup where
 -- /See:/ 'operatingSystem' smart constructor.
 data OperatingSystem = OperatingSystem'
     { _osDesktop :: !(Maybe Bool)
-    , _osKind    :: !Text
-    , _osName    :: !(Maybe Text)
-    , _osMobile  :: !(Maybe Bool)
-    , _osDartId  :: !(Maybe (Textual Int64))
+    , _osKind :: !Text
+    , _osName :: !(Maybe Text)
+    , _osMobile :: !(Maybe Bool)
+    , _osDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperatingSystem' with the minimum fields required to make a request.
@@ -6062,7 +6353,7 @@ data OperatingSystem = OperatingSystem'
 -- * 'osDartId'
 operatingSystem
     :: OperatingSystem
-operatingSystem =
+operatingSystem = 
     OperatingSystem'
     { _osDesktop = Nothing
     , _osKind = "dfareporting#operatingSystem"
@@ -6120,9 +6411,9 @@ instance ToJSON OperatingSystem where
 -- /See:/ 'flight' smart constructor.
 data Flight = Flight'
     { _fRateOrCost :: !(Maybe (Textual Int64))
-    , _fEndDate    :: !(Maybe Date')
-    , _fStartDate  :: !(Maybe Date')
-    , _fUnits      :: !(Maybe (Textual Int64))
+    , _fEndDate :: !(Maybe Date')
+    , _fStartDate :: !(Maybe Date')
+    , _fUnits :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Flight' with the minimum fields required to make a request.
@@ -6138,7 +6429,7 @@ data Flight = Flight'
 -- * 'fUnits'
 flight
     :: Flight
-flight =
+flight = 
     Flight'
     { _fRateOrCost = Nothing
     , _fEndDate = Nothing
@@ -6192,7 +6483,7 @@ instance ToJSON Flight where
 --
 -- /See:/ 'citiesListResponse' smart constructor.
 data CitiesListResponse = CitiesListResponse'
-    { _citKind   :: !Text
+    { _citKind :: !Text
     , _citCities :: !(Maybe [City])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6205,7 +6496,7 @@ data CitiesListResponse = CitiesListResponse'
 -- * 'citCities'
 citiesListResponse
     :: CitiesListResponse
-citiesListResponse =
+citiesListResponse = 
     CitiesListResponse'
     { _citKind = "dfareporting#citiesListResponse"
     , _citCities = Nothing
@@ -6255,7 +6546,7 @@ data Dimension = Dimension'
 -- * 'dName'
 dimension
     :: Dimension
-dimension =
+dimension = 
     Dimension'
     { _dKind = "dfareporting#dimension"
     , _dName = Nothing
@@ -6287,14 +6578,14 @@ instance ToJSON Dimension where
 --
 -- /See:/ 'reportReachCriteria' smart constructor.
 data ReportReachCriteria = ReportReachCriteria'
-    { _rrcReachByFrequencyMetricNames    :: !(Maybe [Text])
+    { _rrcReachByFrequencyMetricNames :: !(Maybe [Text])
     , _rrcEnableAllDimensionCombinations :: !(Maybe Bool)
-    , _rrcMetricNames                    :: !(Maybe [Text])
-    , _rrcCustomRichMediaEvents          :: !(Maybe CustomRichMediaEvents)
-    , _rrcDimensionFilters               :: !(Maybe [DimensionValue])
-    , _rrcActivities                     :: !(Maybe Activities)
-    , _rrcDateRange                      :: !(Maybe DateRange)
-    , _rrcDimensions                     :: !(Maybe [SortedDimension])
+    , _rrcMetricNames :: !(Maybe [Text])
+    , _rrcCustomRichMediaEvents :: !(Maybe CustomRichMediaEvents)
+    , _rrcDimensionFilters :: !(Maybe [DimensionValue])
+    , _rrcActivities :: !(Maybe Activities)
+    , _rrcDateRange :: !(Maybe DateRange)
+    , _rrcDimensions :: !(Maybe [SortedDimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportReachCriteria' with the minimum fields required to make a request.
@@ -6318,7 +6609,7 @@ data ReportReachCriteria = ReportReachCriteria'
 -- * 'rrcDimensions'
 reportReachCriteria
     :: ReportReachCriteria
-reportReachCriteria =
+reportReachCriteria = 
     ReportReachCriteria'
     { _rrcReachByFrequencyMetricNames = Nothing
     , _rrcEnableAllDimensionCombinations = Nothing
@@ -6341,7 +6632,7 @@ rrcReachByFrequencyMetricNames
 
 -- | Whether to enable all reach dimension combinations in the report.
 -- Defaults to false. If enabled, the date range of the report should be
--- within the last three months.
+-- within the last 42 days.
 rrcEnableAllDimensionCombinations :: Lens' ReportReachCriteria (Maybe Bool)
 rrcEnableAllDimensionCombinations
   = lens _rrcEnableAllDimensionCombinations
@@ -6424,7 +6715,7 @@ instance ToJSON ReportReachCriteria where
 --
 -- /See:/ 'customRichMediaEvents' smart constructor.
 data CustomRichMediaEvents = CustomRichMediaEvents'
-    { _crmeKind             :: !Text
+    { _crmeKind :: !Text
     , _crmeFilteredEventIds :: !(Maybe [DimensionValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6437,7 +6728,7 @@ data CustomRichMediaEvents = CustomRichMediaEvents'
 -- * 'crmeFilteredEventIds'
 customRichMediaEvents
     :: CustomRichMediaEvents
-customRichMediaEvents =
+customRichMediaEvents = 
     CustomRichMediaEvents'
     { _crmeKind = "dfareporting#customRichMediaEvents"
     , _crmeFilteredEventIds = Nothing
@@ -6477,7 +6768,7 @@ instance ToJSON CustomRichMediaEvents where
 --
 -- /See:/ 'languagesListResponse' smart constructor.
 data LanguagesListResponse = LanguagesListResponse'
-    { _llrKind      :: !Text
+    { _llrKind :: !Text
     , _llrLanguages :: !(Maybe [Language])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6490,7 +6781,7 @@ data LanguagesListResponse = LanguagesListResponse'
 -- * 'llrLanguages'
 languagesListResponse
     :: LanguagesListResponse
-languagesListResponse =
+languagesListResponse = 
     LanguagesListResponse'
     { _llrKind = "dfareporting#languagesListResponse"
     , _llrLanguages = Nothing
@@ -6528,8 +6819,8 @@ instance ToJSON LanguagesListResponse where
 --
 -- /See:/ 'targetableRemarketingListsListResponse' smart constructor.
 data TargetableRemarketingListsListResponse = TargetableRemarketingListsListResponse'
-    { _trllrNextPageToken              :: !(Maybe Text)
-    , _trllrKind                       :: !Text
+    { _trllrNextPageToken :: !(Maybe Text)
+    , _trllrKind :: !Text
     , _trllrTargetableRemarketingLists :: !(Maybe [TargetableRemarketingList])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6544,7 +6835,7 @@ data TargetableRemarketingListsListResponse = TargetableRemarketingListsListResp
 -- * 'trllrTargetableRemarketingLists'
 targetableRemarketingListsListResponse
     :: TargetableRemarketingListsListResponse
-targetableRemarketingListsListResponse =
+targetableRemarketingListsListResponse = 
     TargetableRemarketingListsListResponse'
     { _trllrNextPageToken = Nothing
     , _trllrKind = "dfareporting#targetableRemarketingListsListResponse"
@@ -6597,8 +6888,8 @@ instance ToJSON
 -- /See:/ 'changeLogsListResponse' smart constructor.
 data ChangeLogsListResponse = ChangeLogsListResponse'
     { _cllrNextPageToken :: !(Maybe Text)
-    , _cllrKind          :: !Text
-    , _cllrChangeLogs    :: !(Maybe [ChangeLog])
+    , _cllrKind :: !Text
+    , _cllrChangeLogs :: !(Maybe [ChangeLog])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangeLogsListResponse' with the minimum fields required to make a request.
@@ -6612,7 +6903,7 @@ data ChangeLogsListResponse = ChangeLogsListResponse'
 -- * 'cllrChangeLogs'
 changeLogsListResponse
     :: ChangeLogsListResponse
-changeLogsListResponse =
+changeLogsListResponse = 
     ChangeLogsListResponse'
     { _cllrNextPageToken = Nothing
     , _cllrKind = "dfareporting#changeLogsListResponse"
@@ -6662,22 +6953,22 @@ instance ToJSON ChangeLogsListResponse where
 --
 -- /See:/ 'accountUserProFile' smart constructor.
 data AccountUserProFile = AccountUserProFile'
-    { _aupfEmail            :: !(Maybe Text)
-    , _aupfUserRoleFilter   :: !(Maybe ObjectFilter)
+    { _aupfEmail :: !(Maybe Text)
+    , _aupfUserRoleFilter :: !(Maybe ObjectFilter)
     , _aupfAdvertiserFilter :: !(Maybe ObjectFilter)
-    , _aupfUserRoleId       :: !(Maybe (Textual Int64))
-    , _aupfKind             :: !Text
-    , _aupfLocale           :: !(Maybe Text)
-    , _aupfSiteFilter       :: !(Maybe ObjectFilter)
-    , _aupfTraffickerType   :: !(Maybe AccountUserProFileTraffickerType)
-    , _aupfActive           :: !(Maybe Bool)
-    , _aupfAccountId        :: !(Maybe (Textual Int64))
-    , _aupfName             :: !(Maybe Text)
-    , _aupfId               :: !(Maybe (Textual Int64))
-    , _aupfUserAccessType   :: !(Maybe AccountUserProFileUserAccessType)
-    , _aupfComments         :: !(Maybe Text)
-    , _aupfSubAccountId     :: !(Maybe (Textual Int64))
-    , _aupfCampaignFilter   :: !(Maybe ObjectFilter)
+    , _aupfUserRoleId :: !(Maybe (Textual Int64))
+    , _aupfKind :: !Text
+    , _aupfLocale :: !(Maybe Text)
+    , _aupfSiteFilter :: !(Maybe ObjectFilter)
+    , _aupfTraffickerType :: !(Maybe AccountUserProFileTraffickerType)
+    , _aupfActive :: !(Maybe Bool)
+    , _aupfAccountId :: !(Maybe (Textual Int64))
+    , _aupfName :: !(Maybe Text)
+    , _aupfId :: !(Maybe (Textual Int64))
+    , _aupfUserAccessType :: !(Maybe AccountUserProFileUserAccessType)
+    , _aupfComments :: !(Maybe Text)
+    , _aupfSubAccountId :: !(Maybe (Textual Int64))
+    , _aupfCampaignFilter :: !(Maybe ObjectFilter)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFile' with the minimum fields required to make a request.
@@ -6717,7 +7008,7 @@ data AccountUserProFile = AccountUserProFile'
 -- * 'aupfCampaignFilter'
 accountUserProFile
     :: AccountUserProFile
-accountUserProFile =
+accountUserProFile = 
     AccountUserProFile'
     { _aupfEmail = Nothing
     , _aupfUserRoleFilter = Nothing
@@ -6889,12 +7180,12 @@ instance ToJSON AccountUserProFile where
 --
 -- /See:/ 'dimensionValue' smart constructor.
 data DimensionValue = DimensionValue'
-    { _dvEtag          :: !(Maybe Text)
-    , _dvKind          :: !Text
-    , _dvValue         :: !(Maybe Text)
-    , _dvMatchType     :: !(Maybe DimensionValueMatchType)
+    { _dvEtag :: !(Maybe Text)
+    , _dvKind :: !Text
+    , _dvValue :: !(Maybe Text)
+    , _dvMatchType :: !(Maybe DimensionValueMatchType)
     , _dvDimensionName :: !(Maybe Text)
-    , _dvId            :: !(Maybe Text)
+    , _dvId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DimensionValue' with the minimum fields required to make a request.
@@ -6914,7 +7205,7 @@ data DimensionValue = DimensionValue'
 -- * 'dvId'
 dimensionValue
     :: DimensionValue
-dimensionValue =
+dimensionValue = 
     DimensionValue'
     { _dvEtag = Nothing
     , _dvKind = "dfareporting#dimensionValue"
@@ -6981,9 +7272,9 @@ instance ToJSON DimensionValue where
 --
 -- /See:/ 'activities' smart constructor.
 data Activities = Activities'
-    { _actKind        :: !Text
+    { _actKind :: !Text
     , _actMetricNames :: !(Maybe [Text])
-    , _actFilters     :: !(Maybe [DimensionValue])
+    , _actFilters :: !(Maybe [DimensionValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Activities' with the minimum fields required to make a request.
@@ -6997,7 +7288,7 @@ data Activities = Activities'
 -- * 'actFilters'
 activities
     :: Activities
-activities =
+activities = 
     Activities'
     { _actKind = "dfareporting#activities"
     , _actMetricNames = Nothing
@@ -7046,7 +7337,7 @@ instance ToJSON Activities where
 -- /See:/ 'userRolePermissionGroupsListResponse' smart constructor.
 data UserRolePermissionGroupsListResponse = UserRolePermissionGroupsListResponse'
     { _urpglrUserRolePermissionGroups :: !(Maybe [UserRolePermissionGroup])
-    , _urpglrKind                     :: !Text
+    , _urpglrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolePermissionGroupsListResponse' with the minimum fields required to make a request.
@@ -7058,7 +7349,7 @@ data UserRolePermissionGroupsListResponse = UserRolePermissionGroupsListResponse
 -- * 'urpglrKind'
 userRolePermissionGroupsListResponse
     :: UserRolePermissionGroupsListResponse
-userRolePermissionGroupsListResponse =
+userRolePermissionGroupsListResponse = 
     UserRolePermissionGroupsListResponse'
     { _urpglrUserRolePermissionGroups = Nothing
     , _urpglrKind = "dfareporting#userRolePermissionGroupsListResponse"
@@ -7102,7 +7393,7 @@ instance ToJSON UserRolePermissionGroupsListResponse
 -- /See:/ 'placementTag' smart constructor.
 data PlacementTag = PlacementTag'
     { _ptPlacementId :: !(Maybe (Textual Int64))
-    , _ptTagDatas    :: !(Maybe [TagData])
+    , _ptTagDatas :: !(Maybe [TagData])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementTag' with the minimum fields required to make a request.
@@ -7114,7 +7405,7 @@ data PlacementTag = PlacementTag'
 -- * 'ptTagDatas'
 placementTag
     :: PlacementTag
-placementTag =
+placementTag = 
     PlacementTag'
     { _ptPlacementId = Nothing
     , _ptTagDatas = Nothing
@@ -7153,9 +7444,9 @@ instance ToJSON PlacementTag where
 --
 -- /See:/ 'remarketingListsListResponse' smart constructor.
 data RemarketingListsListResponse = RemarketingListsListResponse'
-    { _rllrNextPageToken    :: !(Maybe Text)
+    { _rllrNextPageToken :: !(Maybe Text)
     , _rllrRemarketingLists :: !(Maybe [RemarketingList])
-    , _rllrKind             :: !Text
+    , _rllrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListsListResponse' with the minimum fields required to make a request.
@@ -7169,7 +7460,7 @@ data RemarketingListsListResponse = RemarketingListsListResponse'
 -- * 'rllrKind'
 remarketingListsListResponse
     :: RemarketingListsListResponse
-remarketingListsListResponse =
+remarketingListsListResponse = 
     RemarketingListsListResponse'
     { _rllrNextPageToken = Nothing
     , _rllrRemarketingLists = Nothing
@@ -7224,9 +7515,9 @@ instance ToJSON RemarketingListsListResponse where
 -- /See:/ 'dynamicTargetingKey' smart constructor.
 data DynamicTargetingKey = DynamicTargetingKey'
     { _dtkObjectType :: !(Maybe DynamicTargetingKeyObjectType)
-    , _dtkKind       :: !Text
-    , _dtkObjectId   :: !(Maybe (Textual Int64))
-    , _dtkName       :: !(Maybe Text)
+    , _dtkKind :: !Text
+    , _dtkObjectId :: !(Maybe (Textual Int64))
+    , _dtkName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DynamicTargetingKey' with the minimum fields required to make a request.
@@ -7242,7 +7533,7 @@ data DynamicTargetingKey = DynamicTargetingKey'
 -- * 'dtkName'
 dynamicTargetingKey
     :: DynamicTargetingKey
-dynamicTargetingKey =
+dynamicTargetingKey = 
     DynamicTargetingKey'
     { _dtkObjectType = Nothing
     , _dtkKind = "dfareporting#dynamicTargetingKey"
@@ -7298,68 +7589,70 @@ instance ToJSON DynamicTargetingKey where
 --
 -- /See:/ 'creative' smart constructor.
 data Creative = Creative'
-    { _creConvertFlashToHTML5                 :: !(Maybe Bool)
-    , _creBackupImageTargetWindow             :: !(Maybe TargetWindow)
-    , _creRenderingIdDimensionValue           :: !(Maybe DimensionValue)
-    , _creCustomKeyValues                     :: !(Maybe [Text])
-    , _creSkipOffSet                          :: !(Maybe VideoOffSet)
-    , _creVideoDuration                       :: !(Maybe (Textual Double))
-    , _creRenderingId                         :: !(Maybe (Textual Int64))
+    { _creConvertFlashToHTML5 :: !(Maybe Bool)
+    , _creBackupImageTargetWindow :: !(Maybe TargetWindow)
+    , _creRenderingIdDimensionValue :: !(Maybe DimensionValue)
+    , _creCustomKeyValues :: !(Maybe [Text])
+    , _creSkipOffSet :: !(Maybe VideoOffSet)
+    , _creVideoDuration :: !(Maybe (Textual Double))
+    , _creRenderingId :: !(Maybe (Textual Int64))
     , _creThirdPartyBackupImageImpressionsURL :: !(Maybe Text)
-    , _creFsCommand                           :: !(Maybe FsCommand)
-    , _creAllowScriptAccess                   :: !(Maybe Bool)
-    , _creHTMLCodeLocked                      :: !(Maybe Bool)
-    , _creRequiredFlashPluginVersion          :: !(Maybe Text)
-    , _creAuthoringTool                       :: !(Maybe CreativeAuthoringTool)
-    , _creSize                                :: !(Maybe Size)
-    , _creThirdPartyURLs                      :: !(Maybe [ThirdPartyTrackingURL])
-    , _creProgressOffSet                      :: !(Maybe VideoOffSet)
-    , _creCounterCustomEvents                 :: !(Maybe [CreativeCustomEvent])
-    , _creKind                                :: !Text
-    , _creSSLOverride                         :: !(Maybe Bool)
-    , _creHTMLCode                            :: !(Maybe Text)
-    , _creAdvertiserId                        :: !(Maybe (Textual Int64))
-    , _creRequiredFlashVersion                :: !(Maybe (Textual Int32))
-    , _creBackgRoundColor                     :: !(Maybe Text)
-    , _creAdTagKeys                           :: !(Maybe [Text])
-    , _creSkippable                           :: !(Maybe Bool)
-    , _creSSLCompliant                        :: !(Maybe Bool)
-    , _creIdDimensionValue                    :: !(Maybe DimensionValue)
-    , _creBackupImageReportingLabel           :: !(Maybe Text)
-    , _creCommercialId                        :: !(Maybe Text)
-    , _creActive                              :: !(Maybe Bool)
-    , _creExitCustomEvents                    :: !(Maybe [CreativeCustomEvent])
-    , _creAccountId                           :: !(Maybe (Textual Int64))
-    , _creBackupImageClickThroughURL          :: !(Maybe Text)
-    , _creName                                :: !(Maybe Text)
-    , _creOverrideCss                         :: !(Maybe Text)
-    , _creVideoDescription                    :: !(Maybe Text)
-    , _creClickTags                           :: !(Maybe [ClickTag])
-    , _creAdParameters                        :: !(Maybe Text)
-    , _creVersion                             :: !(Maybe (Textual Int32))
-    , _creLatestTraffickedCreativeId          :: !(Maybe (Textual Int64))
-    , _creThirdPartyRichMediaImpressionsURL   :: !(Maybe Text)
-    , _creDynamicAssetSelection               :: !(Maybe Bool)
-    , _creLastModifiedInfo                    :: !(Maybe LastModifiedInfo)
-    , _creId                                  :: !(Maybe (Textual Int64))
-    , _creAuthoringSource                     :: !(Maybe CreativeAuthoringSource)
-    , _creStudioAdvertiserId                  :: !(Maybe (Textual Int64))
-    , _creCreativeAssets                      :: !(Maybe [CreativeAsset])
-    , _creSubAccountId                        :: !(Maybe (Textual Int64))
-    , _creType                                :: !(Maybe CreativeType)
-    , _creTimerCustomEvents                   :: !(Maybe [CreativeCustomEvent])
-    , _creCreativeAssetSelection              :: !(Maybe CreativeAssetSelection)
-    , _creStudioCreativeId                    :: !(Maybe (Textual Int64))
-    , _creCompatibility                       :: !(Maybe [CreativeCompatibilityItem])
-    , _creBackupImageFeatures                 :: !(Maybe [CreativeBackupImageFeaturesItem])
-    , _creArtworkType                         :: !(Maybe CreativeArtworkType)
-    , _creArchived                            :: !(Maybe Bool)
-    , _creCompanionCreatives                  :: !(Maybe [Textual Int64])
-    , _creTotalFileSize                       :: !(Maybe (Textual Int64))
-    , _creStudioTraffickedCreativeId          :: !(Maybe (Textual Int64))
-    , _creRedirectURL                         :: !(Maybe Text)
-    , _creAutoAdvanceImages                   :: !(Maybe Bool)
-    , _creCreativeFieldAssignments            :: !(Maybe [CreativeFieldAssignment])
+    , _creFsCommand :: !(Maybe FsCommand)
+    , _creAllowScriptAccess :: !(Maybe Bool)
+    , _creHTMLCodeLocked :: !(Maybe Bool)
+    , _creRequiredFlashPluginVersion :: !(Maybe Text)
+    , _creUniversalAdId :: !(Maybe UniversalAdId)
+    , _creAuthoringTool :: !(Maybe CreativeAuthoringTool)
+    , _creSize :: !(Maybe Size)
+    , _creThirdPartyURLs :: !(Maybe [ThirdPartyTrackingURL])
+    , _creProgressOffSet :: !(Maybe VideoOffSet)
+    , _creCounterCustomEvents :: !(Maybe [CreativeCustomEvent])
+    , _creKind :: !Text
+    , _creSSLOverride :: !(Maybe Bool)
+    , _creHTMLCode :: !(Maybe Text)
+    , _creAdvertiserId :: !(Maybe (Textual Int64))
+    , _creRequiredFlashVersion :: !(Maybe (Textual Int32))
+    , _creBackgRoundColor :: !(Maybe Text)
+    , _creAdTagKeys :: !(Maybe [Text])
+    , _creSkippable :: !(Maybe Bool)
+    , _creSSLCompliant :: !(Maybe Bool)
+    , _creIdDimensionValue :: !(Maybe DimensionValue)
+    , _creBackupImageReportingLabel :: !(Maybe Text)
+    , _creCommercialId :: !(Maybe Text)
+    , _creActive :: !(Maybe Bool)
+    , _creExitCustomEvents :: !(Maybe [CreativeCustomEvent])
+    , _creAccountId :: !(Maybe (Textual Int64))
+    , _creBackupImageClickThroughURL :: !(Maybe CreativeClickThroughURL)
+    , _creName :: !(Maybe Text)
+    , _creOverrideCss :: !(Maybe Text)
+    , _creVideoDescription :: !(Maybe Text)
+    , _creClickTags :: !(Maybe [ClickTag])
+    , _creAdParameters :: !(Maybe Text)
+    , _creVersion :: !(Maybe (Textual Int32))
+    , _creLatestTraffickedCreativeId :: !(Maybe (Textual Int64))
+    , _creThirdPartyRichMediaImpressionsURL :: !(Maybe Text)
+    , _creDynamicAssetSelection :: !(Maybe Bool)
+    , _creLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _creId :: !(Maybe (Textual Int64))
+    , _creAuthoringSource :: !(Maybe CreativeAuthoringSource)
+    , _crePoliteLoadAssetId :: !(Maybe (Textual Int64))
+    , _creStudioAdvertiserId :: !(Maybe (Textual Int64))
+    , _creCreativeAssets :: !(Maybe [CreativeAsset])
+    , _creSubAccountId :: !(Maybe (Textual Int64))
+    , _creType :: !(Maybe CreativeType)
+    , _creTimerCustomEvents :: !(Maybe [CreativeCustomEvent])
+    , _creCreativeAssetSelection :: !(Maybe CreativeAssetSelection)
+    , _creStudioCreativeId :: !(Maybe (Textual Int64))
+    , _creCompatibility :: !(Maybe [CreativeCompatibilityItem])
+    , _creBackupImageFeatures :: !(Maybe [CreativeBackupImageFeaturesItem])
+    , _creArtworkType :: !(Maybe CreativeArtworkType)
+    , _creArchived :: !(Maybe Bool)
+    , _creCompanionCreatives :: !(Maybe [Textual Int64])
+    , _creTotalFileSize :: !(Maybe (Textual Int64))
+    , _creStudioTraffickedCreativeId :: !(Maybe (Textual Int64))
+    , _creAutoAdvanceImages :: !(Maybe Bool)
+    , _creRedirectURL :: !(Maybe Text)
+    , _creCreativeFieldAssignments :: !(Maybe [CreativeFieldAssignment])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Creative' with the minimum fields required to make a request.
@@ -7389,6 +7682,8 @@ data Creative = Creative'
 -- * 'creHTMLCodeLocked'
 --
 -- * 'creRequiredFlashPluginVersion'
+--
+-- * 'creUniversalAdId'
 --
 -- * 'creAuthoringTool'
 --
@@ -7456,6 +7751,8 @@ data Creative = Creative'
 --
 -- * 'creAuthoringSource'
 --
+-- * 'crePoliteLoadAssetId'
+--
 -- * 'creStudioAdvertiserId'
 --
 -- * 'creCreativeAssets'
@@ -7484,14 +7781,14 @@ data Creative = Creative'
 --
 -- * 'creStudioTraffickedCreativeId'
 --
--- * 'creRedirectURL'
---
 -- * 'creAutoAdvanceImages'
+--
+-- * 'creRedirectURL'
 --
 -- * 'creCreativeFieldAssignments'
 creative
     :: Creative
-creative =
+creative = 
     Creative'
     { _creConvertFlashToHTML5 = Nothing
     , _creBackupImageTargetWindow = Nothing
@@ -7505,6 +7802,7 @@ creative =
     , _creAllowScriptAccess = Nothing
     , _creHTMLCodeLocked = Nothing
     , _creRequiredFlashPluginVersion = Nothing
+    , _creUniversalAdId = Nothing
     , _creAuthoringTool = Nothing
     , _creSize = Nothing
     , _creThirdPartyURLs = Nothing
@@ -7538,6 +7836,7 @@ creative =
     , _creLastModifiedInfo = Nothing
     , _creId = Nothing
     , _creAuthoringSource = Nothing
+    , _crePoliteLoadAssetId = Nothing
     , _creStudioAdvertiserId = Nothing
     , _creCreativeAssets = Nothing
     , _creSubAccountId = Nothing
@@ -7552,8 +7851,8 @@ creative =
     , _creCompanionCreatives = Nothing
     , _creTotalFileSize = Nothing
     , _creStudioTraffickedCreativeId = Nothing
-    , _creRedirectURL = Nothing
     , _creAutoAdvanceImages = Nothing
+    , _creRedirectURL = Nothing
     , _creCreativeFieldAssignments = Nothing
     }
 
@@ -7660,6 +7959,13 @@ creRequiredFlashPluginVersion
   = lens _creRequiredFlashPluginVersion
       (\ s a -> s{_creRequiredFlashPluginVersion = a})
 
+-- | A Universal Ad ID as per the VAST 4.0 spec. Applicable to the following
+-- creative types: INSTREAM_VIDEO and VPAID.
+creUniversalAdId :: Lens' Creative (Maybe UniversalAdId)
+creUniversalAdId
+  = lens _creUniversalAdId
+      (\ s a -> s{_creUniversalAdId = a})
+
 -- | Authoring tool for HTML5 banner creatives. This is a read-only field.
 -- Applicable to the following creative types: HTML5_BANNER.
 creAuthoringTool :: Lens' Creative (Maybe CreativeAuthoringTool)
@@ -7719,7 +8025,7 @@ creSSLOverride
       (\ s a -> s{_creSSLOverride = a})
 
 -- | HTML code for the creative. This is a required field when applicable.
--- This field is ignored if htmlCodeLocked is false. Applicable to the
+-- This field is ignored if htmlCodeLocked is true. Applicable to the
 -- following creative types: all CUSTOM, FLASH_INPAGE, and HTML5_BANNER,
 -- and all RICH_MEDIA.
 creHTMLCode :: Lens' Creative (Maybe Text)
@@ -7792,8 +8098,7 @@ creBackupImageReportingLabel
       (\ s a -> s{_creBackupImageReportingLabel = a})
 
 -- | Industry standard ID assigned to creative for reach and frequency.
--- Applicable to the following creative types: all INSTREAM_VIDEO and all
--- VPAID.
+-- Applicable to INSTREAM_VIDEO_REDIRECT creatives.
 creCommercialId :: Lens' Creative (Maybe Text)
 creCommercialId
   = lens _creCommercialId
@@ -7825,10 +8130,9 @@ creAccountId
   = lens _creAccountId (\ s a -> s{_creAccountId = a})
       . mapping _Coerce
 
--- | Click-through URL for backup image. Applicable to the following creative
--- types: FLASH_INPAGE and HTML5_BANNER. Applicable to DISPLAY when the
--- primary asset type is not HTML_IMAGE.
-creBackupImageClickThroughURL :: Lens' Creative (Maybe Text)
+-- | Click-through URL for backup image. Applicable to ENHANCED_BANNER when
+-- the primary asset type is not HTML_IMAGE.
+creBackupImageClickThroughURL :: Lens' Creative (Maybe CreativeClickThroughURL)
 creBackupImageClickThroughURL
   = lens _creBackupImageClickThroughURL
       (\ s a -> s{_creBackupImageClickThroughURL = a})
@@ -7938,6 +8242,14 @@ creAuthoringSource :: Lens' Creative (Maybe CreativeAuthoringSource)
 creAuthoringSource
   = lens _creAuthoringSource
       (\ s a -> s{_creAuthoringSource = a})
+
+-- | The asset ID of the polite load image asset. Applicable to the creative
+-- type: DISPLAY.
+crePoliteLoadAssetId :: Lens' Creative (Maybe Int64)
+crePoliteLoadAssetId
+  = lens _crePoliteLoadAssetId
+      (\ s a -> s{_crePoliteLoadAssetId = a})
+      . mapping _Coerce
 
 -- | Studio advertiser ID associated with rich media and VPAID creatives.
 -- This is a read-only field. Applicable to the following creative types:
@@ -8076,6 +8388,13 @@ creStudioTraffickedCreativeId
       (\ s a -> s{_creStudioTraffickedCreativeId = a})
       . mapping _Coerce
 
+-- | Whether images are automatically advanced for image gallery creatives.
+-- Applicable to the following creative types: DISPLAY_IMAGE_GALLERY.
+creAutoAdvanceImages :: Lens' Creative (Maybe Bool)
+creAutoAdvanceImages
+  = lens _creAutoAdvanceImages
+      (\ s a -> s{_creAutoAdvanceImages = a})
+
 -- | URL of hosted image or hosted video or another ad tag. For
 -- INSTREAM_VIDEO_REDIRECT creatives this is the in-stream video redirect
 -- URL. The standard for a VAST (Video Ad Serving Template) ad response
@@ -8087,13 +8406,6 @@ creRedirectURL :: Lens' Creative (Maybe Text)
 creRedirectURL
   = lens _creRedirectURL
       (\ s a -> s{_creRedirectURL = a})
-
--- | Whether images are automatically advanced for image gallery creatives.
--- Applicable to the following creative types: DISPLAY_IMAGE_GALLERY.
-creAutoAdvanceImages :: Lens' Creative (Maybe Bool)
-creAutoAdvanceImages
-  = lens _creAutoAdvanceImages
-      (\ s a -> s{_creAutoAdvanceImages = a})
 
 -- | Creative field assignments for this creative. Applicable to all creative
 -- types.
@@ -8121,6 +8433,7 @@ instance FromJSON Creative where
                      <*> (o .:? "allowScriptAccess")
                      <*> (o .:? "htmlCodeLocked")
                      <*> (o .:? "requiredFlashPluginVersion")
+                     <*> (o .:? "universalAdId")
                      <*> (o .:? "authoringTool")
                      <*> (o .:? "size")
                      <*> (o .:? "thirdPartyUrls" .!= mempty)
@@ -8154,6 +8467,7 @@ instance FromJSON Creative where
                      <*> (o .:? "lastModifiedInfo")
                      <*> (o .:? "id")
                      <*> (o .:? "authoringSource")
+                     <*> (o .:? "politeLoadAssetId")
                      <*> (o .:? "studioAdvertiserId")
                      <*> (o .:? "creativeAssets" .!= mempty)
                      <*> (o .:? "subaccountId")
@@ -8168,8 +8482,8 @@ instance FromJSON Creative where
                      <*> (o .:? "companionCreatives" .!= mempty)
                      <*> (o .:? "totalFileSize")
                      <*> (o .:? "studioTraffickedCreativeId")
+                     <*> (o .:? "autoAdvanceImages")
                      <*> (o .:? "redirectUrl")
-                     <*> (o .:? "auto_advance_images")
                      <*> (o .:? "creativeFieldAssignments" .!= mempty))
 
 instance ToJSON Creative where
@@ -8193,6 +8507,7 @@ instance ToJSON Creative where
                   ("htmlCodeLocked" .=) <$> _creHTMLCodeLocked,
                   ("requiredFlashPluginVersion" .=) <$>
                     _creRequiredFlashPluginVersion,
+                  ("universalAdId" .=) <$> _creUniversalAdId,
                   ("authoringTool" .=) <$> _creAuthoringTool,
                   ("size" .=) <$> _creSize,
                   ("thirdPartyUrls" .=) <$> _creThirdPartyURLs,
@@ -8233,6 +8548,7 @@ instance ToJSON Creative where
                   ("lastModifiedInfo" .=) <$> _creLastModifiedInfo,
                   ("id" .=) <$> _creId,
                   ("authoringSource" .=) <$> _creAuthoringSource,
+                  ("politeLoadAssetId" .=) <$> _crePoliteLoadAssetId,
                   ("studioAdvertiserId" .=) <$> _creStudioAdvertiserId,
                   ("creativeAssets" .=) <$> _creCreativeAssets,
                   ("subaccountId" .=) <$> _creSubAccountId,
@@ -8250,8 +8566,8 @@ instance ToJSON Creative where
                   ("totalFileSize" .=) <$> _creTotalFileSize,
                   ("studioTraffickedCreativeId" .=) <$>
                     _creStudioTraffickedCreativeId,
+                  ("autoAdvanceImages" .=) <$> _creAutoAdvanceImages,
                   ("redirectUrl" .=) <$> _creRedirectURL,
-                  ("auto_advance_images" .=) <$> _creAutoAdvanceImages,
                   ("creativeFieldAssignments" .=) <$>
                     _creCreativeFieldAssignments])
 
@@ -8259,13 +8575,13 @@ instance ToJSON Creative where
 --
 -- /See:/ 'siteContact' smart constructor.
 data SiteContact = SiteContact'
-    { _scEmail       :: !(Maybe Text)
-    , _scPhone       :: !(Maybe Text)
-    , _scLastName    :: !(Maybe Text)
-    , _scAddress     :: !(Maybe Text)
-    , _scFirstName   :: !(Maybe Text)
-    , _scId          :: !(Maybe (Textual Int64))
-    , _scTitle       :: !(Maybe Text)
+    { _scEmail :: !(Maybe Text)
+    , _scPhone :: !(Maybe Text)
+    , _scLastName :: !(Maybe Text)
+    , _scAddress :: !(Maybe Text)
+    , _scFirstName :: !(Maybe Text)
+    , _scId :: !(Maybe (Textual Int64))
+    , _scTitle :: !(Maybe Text)
     , _scContactType :: !(Maybe SiteContactContactType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8290,7 +8606,7 @@ data SiteContact = SiteContact'
 -- * 'scContactType'
 siteContact
     :: SiteContact
-siteContact =
+siteContact = 
     SiteContact'
     { _scEmail = Nothing
     , _scPhone = Nothing
@@ -8371,8 +8687,8 @@ instance ToJSON SiteContact where
 -- /See:/ 'accountsListResponse' smart constructor.
 data AccountsListResponse = AccountsListResponse'
     { _accNextPageToken :: !(Maybe Text)
-    , _accAccounts      :: !(Maybe [Account])
-    , _accKind          :: !Text
+    , _accAccounts :: !(Maybe [Account])
+    , _accKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsListResponse' with the minimum fields required to make a request.
@@ -8386,7 +8702,7 @@ data AccountsListResponse = AccountsListResponse'
 -- * 'accKind'
 accountsListResponse
     :: AccountsListResponse
-accountsListResponse =
+accountsListResponse = 
     AccountsListResponse'
     { _accNextPageToken = Nothing
     , _accAccounts = Nothing
@@ -8434,9 +8750,9 @@ instance ToJSON AccountsListResponse where
 --
 -- /See:/ 'dateRange' smart constructor.
 data DateRange = DateRange'
-    { _drKind              :: !Text
-    , _drEndDate           :: !(Maybe Date')
-    , _drStartDate         :: !(Maybe Date')
+    { _drKind :: !Text
+    , _drEndDate :: !(Maybe Date')
+    , _drStartDate :: !(Maybe Date')
     , _drRelativeDateRange :: !(Maybe DateRangeRelativeDateRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8453,7 +8769,7 @@ data DateRange = DateRange'
 -- * 'drRelativeDateRange'
 dateRange
     :: DateRange
-dateRange =
+dateRange = 
     DateRange'
     { _drKind = "dfareporting#dateRange"
     , _drEndDate = Nothing
@@ -8508,24 +8824,24 @@ instance ToJSON DateRange where
 --
 -- /See:/ 'report' smart constructor.
 data Report = Report'
-    { _rDelivery                    :: !(Maybe ReportDelivery)
-    , _rEtag                        :: !(Maybe Text)
-    , _rOwnerProFileId              :: !(Maybe (Textual Int64))
-    , _rSchedule                    :: !(Maybe ReportSchedule)
-    , _rPathToConversionCriteria    :: !(Maybe ReportPathToConversionCriteria)
-    , _rKind                        :: !Text
-    , _rFormat                      :: !(Maybe ReportFormat)
-    , _rReachCriteria               :: !(Maybe ReportReachCriteria)
-    , _rLastModifiedTime            :: !(Maybe (Textual Word64))
-    , _rAccountId                   :: !(Maybe (Textual Int64))
-    , _rName                        :: !(Maybe Text)
-    , _rId                          :: !(Maybe (Textual Int64))
+    { _rDelivery :: !(Maybe ReportDelivery)
+    , _rEtag :: !(Maybe Text)
+    , _rOwnerProFileId :: !(Maybe (Textual Int64))
+    , _rSchedule :: !(Maybe ReportSchedule)
+    , _rPathToConversionCriteria :: !(Maybe ReportPathToConversionCriteria)
+    , _rKind :: !Text
+    , _rFormat :: !(Maybe ReportFormat)
+    , _rReachCriteria :: !(Maybe ReportReachCriteria)
+    , _rLastModifiedTime :: !(Maybe (Textual Word64))
+    , _rAccountId :: !(Maybe (Textual Int64))
+    , _rName :: !(Maybe Text)
+    , _rId :: !(Maybe (Textual Int64))
     , _rCrossDimensionReachCriteria :: !(Maybe ReportCrossDimensionReachCriteria)
-    , _rType                        :: !(Maybe ReportType)
-    , _rSubAccountId                :: !(Maybe (Textual Int64))
-    , _rFloodlightCriteria          :: !(Maybe ReportFloodlightCriteria)
-    , _rCriteria                    :: !(Maybe ReportCriteria)
-    , _rFileName                    :: !(Maybe Text)
+    , _rType :: !(Maybe ReportType)
+    , _rSubAccountId :: !(Maybe (Textual Int64))
+    , _rFloodlightCriteria :: !(Maybe ReportFloodlightCriteria)
+    , _rCriteria :: !(Maybe ReportCriteria)
+    , _rFileName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Report' with the minimum fields required to make a request.
@@ -8569,7 +8885,7 @@ data Report = Report'
 -- * 'rFileName'
 report
     :: Report
-report =
+report = 
     Report'
     { _rDelivery = Nothing
     , _rEtag = Nothing
@@ -8744,8 +9060,8 @@ instance ToJSON Report where
 -- /See:/ 'rule' smart constructor.
 data Rule = Rule'
     { _rulTargetingTemplateId :: !(Maybe (Textual Int64))
-    , _rulName                :: !(Maybe Text)
-    , _rulAssetId             :: !(Maybe (Textual Int64))
+    , _rulName :: !(Maybe Text)
+    , _rulAssetId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Rule' with the minimum fields required to make a request.
@@ -8759,7 +9075,7 @@ data Rule = Rule'
 -- * 'rulAssetId'
 rule
     :: Rule
-rule =
+rule = 
     Rule'
     { _rulTargetingTemplateId = Nothing
     , _rulName = Nothing
@@ -8807,38 +9123,42 @@ instance ToJSON Rule where
 --
 -- /See:/ 'campaign' smart constructor.
 data Campaign = Campaign'
-    { _camCreativeOptimizationConfiguration            :: !(Maybe CreativeOptimizationConfiguration)
-    , _camCreativeGroupIds                             :: !(Maybe [Textual Int64])
-    , _camNielsenOCREnabled                            :: !(Maybe Bool)
-    , _camKind                                         :: !Text
-    , _camClickThroughURLSuffixProperties              :: !(Maybe ClickThroughURLSuffixProperties)
-    , _camAdvertiserId                                 :: !(Maybe (Textual Int64))
-    , _camEndDate                                      :: !(Maybe Date')
-    , _camAdvertiserIdDimensionValue                   :: !(Maybe DimensionValue)
-    , _camIdDimensionValue                             :: !(Maybe DimensionValue)
-    , _camEventTagOverrides                            :: !(Maybe [EventTagOverride])
-    , _camLookbackConfiguration                        :: !(Maybe LookbackConfiguration)
-    , _camStartDate                                    :: !(Maybe Date')
-    , _camAccountId                                    :: !(Maybe (Textual Int64))
-    , _camName                                         :: !(Maybe Text)
-    , _camAdvertiserGroupId                            :: !(Maybe (Textual Int64))
-    , _camBillingInvoiceCode                           :: !(Maybe Text)
-    , _camCreateInfo                                   :: !(Maybe LastModifiedInfo)
-    , _camLastModifiedInfo                             :: !(Maybe LastModifiedInfo)
-    , _camId                                           :: !(Maybe (Textual Int64))
-    , _camSubAccountId                                 :: !(Maybe (Textual Int64))
+    { _camAdBlockingConfiguration :: !(Maybe AdBlockingConfiguration)
+    , _camCreativeOptimizationConfiguration :: !(Maybe CreativeOptimizationConfiguration)
+    , _camCreativeGroupIds :: !(Maybe [Textual Int64])
+    , _camNielsenOCREnabled :: !(Maybe Bool)
+    , _camKind :: !Text
+    , _camClickThroughURLSuffixProperties :: !(Maybe ClickThroughURLSuffixProperties)
+    , _camAdvertiserId :: !(Maybe (Textual Int64))
+    , _camEndDate :: !(Maybe Date')
+    , _camAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _camIdDimensionValue :: !(Maybe DimensionValue)
+    , _camEventTagOverrides :: !(Maybe [EventTagOverride])
+    , _camLookbackConfiguration :: !(Maybe LookbackConfiguration)
+    , _camStartDate :: !(Maybe Date')
+    , _camAccountId :: !(Maybe (Textual Int64))
+    , _camName :: !(Maybe Text)
+    , _camAdvertiserGroupId :: !(Maybe (Textual Int64))
+    , _camBillingInvoiceCode :: !(Maybe Text)
+    , _camDefaultLandingPageId :: !(Maybe (Textual Int64))
+    , _camCreateInfo :: !(Maybe LastModifiedInfo)
+    , _camLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _camId :: !(Maybe (Textual Int64))
+    , _camSubAccountId :: !(Maybe (Textual Int64))
     , _camAdditionalCreativeOptimizationConfigurations :: !(Maybe [CreativeOptimizationConfiguration])
-    , _camExternalId                                   :: !(Maybe Text)
-    , _camComment                                      :: !(Maybe Text)
-    , _camAudienceSegmentGroups                        :: !(Maybe [AudienceSegmentGroup])
-    , _camArchived                                     :: !(Maybe Bool)
-    , _camTraffickerEmails                             :: !(Maybe [Text])
-    , _camDefaultClickThroughEventTagProperties        :: !(Maybe DefaultClickThroughEventTagProperties)
+    , _camExternalId :: !(Maybe Text)
+    , _camComment :: !(Maybe Text)
+    , _camAudienceSegmentGroups :: !(Maybe [AudienceSegmentGroup])
+    , _camArchived :: !(Maybe Bool)
+    , _camTraffickerEmails :: !(Maybe [Text])
+    , _camDefaultClickThroughEventTagProperties :: !(Maybe DefaultClickThroughEventTagProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Campaign' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'camAdBlockingConfiguration'
 --
 -- * 'camCreativeOptimizationConfiguration'
 --
@@ -8872,6 +9192,8 @@ data Campaign = Campaign'
 --
 -- * 'camBillingInvoiceCode'
 --
+-- * 'camDefaultLandingPageId'
+--
 -- * 'camCreateInfo'
 --
 -- * 'camLastModifiedInfo'
@@ -8895,9 +9217,10 @@ data Campaign = Campaign'
 -- * 'camDefaultClickThroughEventTagProperties'
 campaign
     :: Campaign
-campaign =
+campaign = 
     Campaign'
-    { _camCreativeOptimizationConfiguration = Nothing
+    { _camAdBlockingConfiguration = Nothing
+    , _camCreativeOptimizationConfiguration = Nothing
     , _camCreativeGroupIds = Nothing
     , _camNielsenOCREnabled = Nothing
     , _camKind = "dfareporting#campaign"
@@ -8913,6 +9236,7 @@ campaign =
     , _camName = Nothing
     , _camAdvertiserGroupId = Nothing
     , _camBillingInvoiceCode = Nothing
+    , _camDefaultLandingPageId = Nothing
     , _camCreateInfo = Nothing
     , _camLastModifiedInfo = Nothing
     , _camId = Nothing
@@ -8925,6 +9249,12 @@ campaign =
     , _camTraffickerEmails = Nothing
     , _camDefaultClickThroughEventTagProperties = Nothing
     }
+
+-- | Ad blocking settings for this campaign.
+camAdBlockingConfiguration :: Lens' Campaign (Maybe AdBlockingConfiguration)
+camAdBlockingConfiguration
+  = lens _camAdBlockingConfiguration
+      (\ s a -> s{_camAdBlockingConfiguration = a})
 
 -- | Creative optimization configuration for the campaign.
 camCreativeOptimizationConfiguration :: Lens' Campaign (Maybe CreativeOptimizationConfiguration)
@@ -9040,6 +9370,13 @@ camBillingInvoiceCode
   = lens _camBillingInvoiceCode
       (\ s a -> s{_camBillingInvoiceCode = a})
 
+-- | The default landing page ID for this campaign.
+camDefaultLandingPageId :: Lens' Campaign (Maybe Int64)
+camDefaultLandingPageId
+  = lens _camDefaultLandingPageId
+      (\ s a -> s{_camDefaultLandingPageId = a})
+      . mapping _Coerce
+
 -- | Information about the creation of this campaign. This is a read-only
 -- field.
 camCreateInfo :: Lens' Campaign (Maybe LastModifiedInfo)
@@ -9125,8 +9462,9 @@ instance FromJSON Campaign where
           = withObject "Campaign"
               (\ o ->
                  Campaign' <$>
-                   (o .:? "creativeOptimizationConfiguration") <*>
-                     (o .:? "creativeGroupIds" .!= mempty)
+                   (o .:? "adBlockingConfiguration") <*>
+                     (o .:? "creativeOptimizationConfiguration")
+                     <*> (o .:? "creativeGroupIds" .!= mempty)
                      <*> (o .:? "nielsenOcrEnabled")
                      <*> (o .:? "kind" .!= "dfareporting#campaign")
                      <*> (o .:? "clickThroughUrlSuffixProperties")
@@ -9141,6 +9479,7 @@ instance FromJSON Campaign where
                      <*> (o .:? "name")
                      <*> (o .:? "advertiserGroupId")
                      <*> (o .:? "billingInvoiceCode")
+                     <*> (o .:? "defaultLandingPageId")
                      <*> (o .:? "createInfo")
                      <*> (o .:? "lastModifiedInfo")
                      <*> (o .:? "id")
@@ -9159,7 +9498,9 @@ instance ToJSON Campaign where
         toJSON Campaign'{..}
           = object
               (catMaybes
-                 [("creativeOptimizationConfiguration" .=) <$>
+                 [("adBlockingConfiguration" .=) <$>
+                    _camAdBlockingConfiguration,
+                  ("creativeOptimizationConfiguration" .=) <$>
                     _camCreativeOptimizationConfiguration,
                   ("creativeGroupIds" .=) <$> _camCreativeGroupIds,
                   ("nielsenOcrEnabled" .=) <$> _camNielsenOCREnabled,
@@ -9179,6 +9520,8 @@ instance ToJSON Campaign where
                   ("name" .=) <$> _camName,
                   ("advertiserGroupId" .=) <$> _camAdvertiserGroupId,
                   ("billingInvoiceCode" .=) <$> _camBillingInvoiceCode,
+                  ("defaultLandingPageId" .=) <$>
+                    _camDefaultLandingPageId,
                   ("createInfo" .=) <$> _camCreateInfo,
                   ("lastModifiedInfo" .=) <$> _camLastModifiedInfo,
                   ("id" .=) <$> _camId,
@@ -9199,7 +9542,7 @@ instance ToJSON Campaign where
 -- /See:/ 'thirdPartyAuthenticationToken' smart constructor.
 data ThirdPartyAuthenticationToken = ThirdPartyAuthenticationToken'
     { _tpatValue :: !(Maybe Text)
-    , _tpatName  :: !(Maybe Text)
+    , _tpatName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ThirdPartyAuthenticationToken' with the minimum fields required to make a request.
@@ -9211,7 +9554,7 @@ data ThirdPartyAuthenticationToken = ThirdPartyAuthenticationToken'
 -- * 'tpatName'
 thirdPartyAuthenticationToken
     :: ThirdPartyAuthenticationToken
-thirdPartyAuthenticationToken =
+thirdPartyAuthenticationToken = 
     ThirdPartyAuthenticationToken'
     { _tpatValue = Nothing
     , _tpatName = Nothing
@@ -9245,10 +9588,10 @@ instance ToJSON ThirdPartyAuthenticationToken where
 --
 -- /See:/ 'clickThroughURL' smart constructor.
 data ClickThroughURL = ClickThroughURL'
-    { _ctuDefaultLandingPage      :: !(Maybe Bool)
+    { _ctuDefaultLandingPage :: !(Maybe Bool)
     , _ctuComputedClickThroughURL :: !(Maybe Text)
-    , _ctuCustomClickThroughURL   :: !(Maybe Text)
-    , _ctuLandingPageId           :: !(Maybe (Textual Int64))
+    , _ctuCustomClickThroughURL :: !(Maybe Text)
+    , _ctuLandingPageId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ClickThroughURL' with the minimum fields required to make a request.
@@ -9264,7 +9607,7 @@ data ClickThroughURL = ClickThroughURL'
 -- * 'ctuLandingPageId'
 clickThroughURL
     :: ClickThroughURL
-clickThroughURL =
+clickThroughURL = 
     ClickThroughURL'
     { _ctuDefaultLandingPage = Nothing
     , _ctuComputedClickThroughURL = Nothing
@@ -9331,7 +9674,7 @@ instance ToJSON ClickThroughURL where
 --
 -- /See:/ 'browsersListResponse' smart constructor.
 data BrowsersListResponse = BrowsersListResponse'
-    { _blrKind     :: !Text
+    { _blrKind :: !Text
     , _blrBrowsers :: !(Maybe [Browser])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -9344,7 +9687,7 @@ data BrowsersListResponse = BrowsersListResponse'
 -- * 'blrBrowsers'
 browsersListResponse
     :: BrowsersListResponse
-browsersListResponse =
+browsersListResponse = 
     BrowsersListResponse'
     { _blrKind = "dfareporting#browsersListResponse"
     , _blrBrowsers = Nothing
@@ -9382,14 +9725,14 @@ instance ToJSON BrowsersListResponse where
 --
 -- /See:/ 'siteSettings' smart constructor.
 data SiteSettings = SiteSettings'
-    { _ssDisableNewCookie              :: !(Maybe Bool)
+    { _ssDisableNewCookie :: !(Maybe Bool)
     , _ssVideoActiveViewOptOutTemplate :: !(Maybe Bool)
-    , _ssDisableBrandSafeAds           :: !(Maybe Bool)
-    , _ssLookbackConfiguration         :: !(Maybe LookbackConfiguration)
-    , _ssTagSetting                    :: !(Maybe TagSetting)
-    , _ssActiveViewOptOut              :: !(Maybe Bool)
-    , _ssVpaidAdapterChoiceTemplate    :: !(Maybe SiteSettingsVpaidAdapterChoiceTemplate)
-    , _ssCreativeSettings              :: !(Maybe CreativeSettings)
+    , _ssAdBlockingOptOut :: !(Maybe Bool)
+    , _ssLookbackConfiguration :: !(Maybe LookbackConfiguration)
+    , _ssTagSetting :: !(Maybe TagSetting)
+    , _ssActiveViewOptOut :: !(Maybe Bool)
+    , _ssVpaidAdapterChoiceTemplate :: !(Maybe SiteSettingsVpaidAdapterChoiceTemplate)
+    , _ssCreativeSettings :: !(Maybe CreativeSettings)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SiteSettings' with the minimum fields required to make a request.
@@ -9400,7 +9743,7 @@ data SiteSettings = SiteSettings'
 --
 -- * 'ssVideoActiveViewOptOutTemplate'
 --
--- * 'ssDisableBrandSafeAds'
+-- * 'ssAdBlockingOptOut'
 --
 -- * 'ssLookbackConfiguration'
 --
@@ -9413,11 +9756,11 @@ data SiteSettings = SiteSettings'
 -- * 'ssCreativeSettings'
 siteSettings
     :: SiteSettings
-siteSettings =
+siteSettings = 
     SiteSettings'
     { _ssDisableNewCookie = Nothing
     , _ssVideoActiveViewOptOutTemplate = Nothing
-    , _ssDisableBrandSafeAds = Nothing
+    , _ssAdBlockingOptOut = Nothing
     , _ssLookbackConfiguration = Nothing
     , _ssTagSetting = Nothing
     , _ssActiveViewOptOut = Nothing
@@ -9440,11 +9783,14 @@ ssVideoActiveViewOptOutTemplate
   = lens _ssVideoActiveViewOptOutTemplate
       (\ s a -> s{_ssVideoActiveViewOptOutTemplate = a})
 
--- | Whether brand safe ads are disabled for this site.
-ssDisableBrandSafeAds :: Lens' SiteSettings (Maybe Bool)
-ssDisableBrandSafeAds
-  = lens _ssDisableBrandSafeAds
-      (\ s a -> s{_ssDisableBrandSafeAds = a})
+-- | Whether this site opts out of ad blocking. When true, ad blocking is
+-- disabled for all placements under the site, regardless of the individual
+-- placement settings. When false, the campaign and placement settings take
+-- effect.
+ssAdBlockingOptOut :: Lens' SiteSettings (Maybe Bool)
+ssAdBlockingOptOut
+  = lens _ssAdBlockingOptOut
+      (\ s a -> s{_ssAdBlockingOptOut = a})
 
 -- | Lookback window settings for this site.
 ssLookbackConfiguration :: Lens' SiteSettings (Maybe LookbackConfiguration)
@@ -9470,8 +9816,9 @@ ssActiveViewOptOut
 -- use for in-stream video creatives assigned to the placement. The
 -- publisher\'s specifications will typically determine this setting. For
 -- VPAID creatives, the adapter format will match the VPAID format (HTML5
--- VPAID creatives use the HTML5 adapter, and Flash VPAID creatives use the
--- Flash adapter).
+-- VPAID creatives use the HTML5 adapter). Note: Flash is no longer
+-- supported. This field now defaults to HTML5 when the following values
+-- are provided: FLASH, BOTH.
 ssVpaidAdapterChoiceTemplate :: Lens' SiteSettings (Maybe SiteSettingsVpaidAdapterChoiceTemplate)
 ssVpaidAdapterChoiceTemplate
   = lens _ssVpaidAdapterChoiceTemplate
@@ -9490,7 +9837,7 @@ instance FromJSON SiteSettings where
                  SiteSettings' <$>
                    (o .:? "disableNewCookie") <*>
                      (o .:? "videoActiveViewOptOutTemplate")
-                     <*> (o .:? "disableBrandSafeAds")
+                     <*> (o .:? "adBlockingOptOut")
                      <*> (o .:? "lookbackConfiguration")
                      <*> (o .:? "tagSetting")
                      <*> (o .:? "activeViewOptOut")
@@ -9504,8 +9851,7 @@ instance ToJSON SiteSettings where
                  [("disableNewCookie" .=) <$> _ssDisableNewCookie,
                   ("videoActiveViewOptOutTemplate" .=) <$>
                     _ssVideoActiveViewOptOutTemplate,
-                  ("disableBrandSafeAds" .=) <$>
-                    _ssDisableBrandSafeAds,
+                  ("adBlockingOptOut" .=) <$> _ssAdBlockingOptOut,
                   ("lookbackConfiguration" .=) <$>
                     _ssLookbackConfiguration,
                   ("tagSetting" .=) <$> _ssTagSetting,
@@ -9518,8 +9864,8 @@ instance ToJSON SiteSettings where
 --
 -- /See:/ 'contentCategoriesListResponse' smart constructor.
 data ContentCategoriesListResponse = ContentCategoriesListResponse'
-    { _cclrNextPageToken     :: !(Maybe Text)
-    , _cclrKind              :: !Text
+    { _cclrNextPageToken :: !(Maybe Text)
+    , _cclrKind :: !Text
     , _cclrContentCategories :: !(Maybe [ContentCategory])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -9534,7 +9880,7 @@ data ContentCategoriesListResponse = ContentCategoriesListResponse'
 -- * 'cclrContentCategories'
 contentCategoriesListResponse
     :: ContentCategoriesListResponse
-contentCategoriesListResponse =
+contentCategoriesListResponse = 
     ContentCategoriesListResponse'
     { _cclrNextPageToken = Nothing
     , _cclrKind = "dfareporting#contentCategoriesListResponse"
@@ -9583,8 +9929,8 @@ instance ToJSON ContentCategoriesListResponse where
 -- /See:/ 'creativesListResponse' smart constructor.
 data CreativesListResponse = CreativesListResponse'
     { _clrlNextPageToken :: !(Maybe Text)
-    , _clrlKind          :: !Text
-    , _clrlCreatives     :: !(Maybe [Creative])
+    , _clrlKind :: !Text
+    , _clrlCreatives :: !(Maybe [Creative])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesListResponse' with the minimum fields required to make a request.
@@ -9598,7 +9944,7 @@ data CreativesListResponse = CreativesListResponse'
 -- * 'clrlCreatives'
 creativesListResponse
     :: CreativesListResponse
-creativesListResponse =
+creativesListResponse = 
     CreativesListResponse'
     { _clrlNextPageToken = Nothing
     , _clrlKind = "dfareporting#creativesListResponse"
@@ -9646,25 +9992,25 @@ instance ToJSON CreativesListResponse where
 --
 -- /See:/ 'account' smart constructor.
 data Account = Account'
-    { _aaAccountPermissionIds    :: !(Maybe [Textual Int64])
-    , _aaMaximumImageSize        :: !(Maybe (Textual Int64))
-    , _aaCurrencyId              :: !(Maybe (Textual Int64))
-    , _aaReportsConfiguration    :: !(Maybe ReportsConfiguration)
-    , _aaNielsenOCREnabled       :: !(Maybe Bool)
-    , _aaKind                    :: !Text
-    , _aaLocale                  :: !(Maybe Text)
-    , _aaActive                  :: !(Maybe Bool)
-    , _aaAvailablePermissionIds  :: !(Maybe [Textual Int64])
-    , _aaTeaserSizeLimit         :: !(Maybe (Textual Int64))
-    , _aaActiveViewOptOut        :: !(Maybe Bool)
+    { _aaAccountPermissionIds :: !(Maybe [Textual Int64])
+    , _aaMaximumImageSize :: !(Maybe (Textual Int64))
+    , _aaCurrencyId :: !(Maybe (Textual Int64))
+    , _aaReportsConfiguration :: !(Maybe ReportsConfiguration)
+    , _aaNielsenOCREnabled :: !(Maybe Bool)
+    , _aaKind :: !Text
+    , _aaLocale :: !(Maybe Text)
+    , _aaActive :: !(Maybe Bool)
+    , _aaAvailablePermissionIds :: !(Maybe [Textual Int64])
+    , _aaTeaserSizeLimit :: !(Maybe (Textual Int64))
+    , _aaActiveViewOptOut :: !(Maybe Bool)
     , _aaShareReportsWithTwitter :: !(Maybe Bool)
-    , _aaName                    :: !(Maybe Text)
-    , _aaAccountProFile          :: !(Maybe AccountAccountProFile)
-    , _aaId                      :: !(Maybe (Textual Int64))
-    , _aaCountryId               :: !(Maybe (Textual Int64))
-    , _aaActiveAdsLimitTier      :: !(Maybe AccountActiveAdsLimitTier)
-    , _aaDefaultCreativeSizeId   :: !(Maybe (Textual Int64))
-    , _aaDescription             :: !(Maybe Text)
+    , _aaName :: !(Maybe Text)
+    , _aaAccountProFile :: !(Maybe AccountAccountProFile)
+    , _aaId :: !(Maybe (Textual Int64))
+    , _aaCountryId :: !(Maybe (Textual Int64))
+    , _aaActiveAdsLimitTier :: !(Maybe AccountActiveAdsLimitTier)
+    , _aaDefaultCreativeSizeId :: !(Maybe (Textual Int64))
+    , _aaDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Account' with the minimum fields required to make a request.
@@ -9710,7 +10056,7 @@ data Account = Account'
 -- * 'aaDescription'
 account
     :: Account
-account =
+account = 
     Account'
     { _aaAccountPermissionIds = Nothing
     , _aaMaximumImageSize = Nothing
@@ -9741,7 +10087,8 @@ aaAccountPermissionIds
       . _Default
       . _Coerce
 
--- | Maximum image size allowed for this account.
+-- | Maximum image size allowed for this account, in kilobytes. Value must be
+-- greater than or equal to 1.
 aaMaximumImageSize :: Lens' Account (Maybe Int64)
 aaMaximumImageSize
   = lens _aaMaximumImageSize
@@ -9760,7 +10107,8 @@ aaMaximumImageSize
 -- \"33\" for CHF - \"34\" for VEF - \"35\" for COP - \"36\" for GTQ -
 -- \"37\" for PLN - \"39\" for INR - \"40\" for THB - \"41\" for IDR -
 -- \"42\" for CZK - \"43\" for RON - \"44\" for HUF - \"45\" for RUB -
--- \"46\" for AED - \"47\" for BGN - \"48\" for HRK
+-- \"46\" for AED - \"47\" for BGN - \"48\" for HRK - \"49\" for MXN -
+-- \"50\" for NGN
 aaCurrencyId :: Lens' Account (Maybe Int64)
 aaCurrencyId
   = lens _aaCurrencyId (\ s a -> s{_aaCurrencyId = a})
@@ -9805,8 +10153,8 @@ aaAvailablePermissionIds
       . _Default
       . _Coerce
 
--- | File size limit in kilobytes of Rich Media teaser creatives. Must be
--- between 1 and 10240.
+-- | File size limit in kilobytes of Rich Media teaser creatives. Acceptable
+-- values are 1 to 10240, inclusive.
 aaTeaserSizeLimit :: Lens' Account (Maybe Int64)
 aaTeaserSizeLimit
   = lens _aaTeaserSizeLimit
@@ -9927,8 +10275,8 @@ instance ToJSON Account where
 --
 -- /See:/ 'conversionsBatchInsertRequest' smart constructor.
 data ConversionsBatchInsertRequest = ConversionsBatchInsertRequest'
-    { _cbirKind           :: !Text
-    , _cbirConversions    :: !(Maybe [Conversion])
+    { _cbirKind :: !Text
+    , _cbirConversions :: !(Maybe [Conversion])
     , _cbirEncryptionInfo :: !(Maybe EncryptionInfo)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -9943,7 +10291,7 @@ data ConversionsBatchInsertRequest = ConversionsBatchInsertRequest'
 -- * 'cbirEncryptionInfo'
 conversionsBatchInsertRequest
     :: ConversionsBatchInsertRequest
-conversionsBatchInsertRequest =
+conversionsBatchInsertRequest = 
     ConversionsBatchInsertRequest'
     { _cbirKind = "dfareporting#conversionsBatchInsertRequest"
     , _cbirConversions = Nothing
@@ -9993,9 +10341,9 @@ instance ToJSON ConversionsBatchInsertRequest where
 --
 -- /See:/ 'accountUserProFilesListResponse' smart constructor.
 data AccountUserProFilesListResponse = AccountUserProFilesListResponse'
-    { _aupflrNextPageToken       :: !(Maybe Text)
+    { _aupflrNextPageToken :: !(Maybe Text)
     , _aupflrAccountUserProFiles :: !(Maybe [AccountUserProFile])
-    , _aupflrKind                :: !Text
+    , _aupflrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesListResponse' with the minimum fields required to make a request.
@@ -10009,7 +10357,7 @@ data AccountUserProFilesListResponse = AccountUserProFilesListResponse'
 -- * 'aupflrKind'
 accountUserProFilesListResponse
     :: AccountUserProFilesListResponse
-accountUserProFilesListResponse =
+accountUserProFilesListResponse = 
     AccountUserProFilesListResponse'
     { _aupflrNextPageToken = Nothing
     , _aupflrAccountUserProFiles = Nothing
@@ -10062,10 +10410,10 @@ instance ToJSON AccountUserProFilesListResponse where
 --
 -- /See:/ 'contentCategory' smart constructor.
 data ContentCategory = ContentCategory'
-    { _conKind      :: !Text
+    { _conKind :: !Text
     , _conAccountId :: !(Maybe (Textual Int64))
-    , _conName      :: !(Maybe Text)
-    , _conId        :: !(Maybe (Textual Int64))
+    , _conName :: !(Maybe Text)
+    , _conId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategory' with the minimum fields required to make a request.
@@ -10081,7 +10429,7 @@ data ContentCategory = ContentCategory'
 -- * 'conId'
 contentCategory
     :: ContentCategory
-contentCategory =
+contentCategory = 
     ContentCategory'
     { _conKind = "dfareporting#contentCategory"
     , _conAccountId = Nothing
@@ -10136,11 +10484,11 @@ instance ToJSON ContentCategory where
 --
 -- /See:/ 'reportCompatibleFields' smart constructor.
 data ReportCompatibleFields = ReportCompatibleFields'
-    { _rcfMetrics                :: !(Maybe [Metric])
-    , _rcfKind                   :: !Text
-    , _rcfDimensionFilters       :: !(Maybe [Dimension])
+    { _rcfMetrics :: !(Maybe [Metric])
+    , _rcfKind :: !Text
+    , _rcfDimensionFilters :: !(Maybe [Dimension])
     , _rcfPivotedActivityMetrics :: !(Maybe [Metric])
-    , _rcfDimensions             :: !(Maybe [Dimension])
+    , _rcfDimensions :: !(Maybe [Dimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportCompatibleFields' with the minimum fields required to make a request.
@@ -10158,7 +10506,7 @@ data ReportCompatibleFields = ReportCompatibleFields'
 -- * 'rcfDimensions'
 reportCompatibleFields
     :: ReportCompatibleFields
-reportCompatibleFields =
+reportCompatibleFields = 
     ReportCompatibleFields'
     { _rcfMetrics = Nothing
     , _rcfKind = "dfareporting#reportCompatibleFields"
@@ -10234,10 +10582,10 @@ instance ToJSON ReportCompatibleFields where
 --
 -- /See:/ 'deliverySchedule' smart constructor.
 data DeliverySchedule = DeliverySchedule'
-    { _dsHardCutoff      :: !(Maybe Bool)
-    , _dsPriority        :: !(Maybe DeliverySchedulePriority)
+    { _dsHardCutoff :: !(Maybe Bool)
+    , _dsPriority :: !(Maybe DeliverySchedulePriority)
     , _dsImpressionRatio :: !(Maybe (Textual Int64))
-    , _dsFrequencyCap    :: !(Maybe FrequencyCap)
+    , _dsFrequencyCap :: !(Maybe FrequencyCap)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeliverySchedule' with the minimum fields required to make a request.
@@ -10253,7 +10601,7 @@ data DeliverySchedule = DeliverySchedule'
 -- * 'dsFrequencyCap'
 deliverySchedule
     :: DeliverySchedule
-deliverySchedule =
+deliverySchedule = 
     DeliverySchedule'
     { _dsHardCutoff = Nothing
     , _dsPriority = Nothing
@@ -10277,7 +10625,8 @@ dsPriority
 -- | Impression ratio for this ad. This ratio determines how often each ad is
 -- served relative to the others. For example, if ad A has an impression
 -- ratio of 1 and ad B has an impression ratio of 3, then DCM will serve ad
--- B three times as often as ad A. Must be between 1 and 10.
+-- B three times as often as ad A. Acceptable values are 1 to 10,
+-- inclusive.
 dsImpressionRatio :: Lens' DeliverySchedule (Maybe Int64)
 dsImpressionRatio
   = lens _dsImpressionRatio
@@ -10319,19 +10668,19 @@ instance ToJSON DeliverySchedule where
 --
 -- /See:/ 'remarketingList' smart constructor.
 data RemarketingList = RemarketingList'
-    { _rlListSize                   :: !(Maybe (Textual Int64))
-    , _rlListPopulationRule         :: !(Maybe ListPopulationRule)
-    , _rlLifeSpan                   :: !(Maybe (Textual Int64))
-    , _rlKind                       :: !Text
-    , _rlAdvertiserId               :: !(Maybe (Textual Int64))
+    { _rlListSize :: !(Maybe (Textual Int64))
+    , _rlListPopulationRule :: !(Maybe ListPopulationRule)
+    , _rlLifeSpan :: !(Maybe (Textual Int64))
+    , _rlKind :: !Text
+    , _rlAdvertiserId :: !(Maybe (Textual Int64))
     , _rlAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
-    , _rlActive                     :: !(Maybe Bool)
-    , _rlAccountId                  :: !(Maybe (Textual Int64))
-    , _rlName                       :: !(Maybe Text)
-    , _rlListSource                 :: !(Maybe RemarketingListListSource)
-    , _rlId                         :: !(Maybe (Textual Int64))
-    , _rlSubAccountId               :: !(Maybe (Textual Int64))
-    , _rlDescription                :: !(Maybe Text)
+    , _rlActive :: !(Maybe Bool)
+    , _rlAccountId :: !(Maybe (Textual Int64))
+    , _rlName :: !(Maybe Text)
+    , _rlListSource :: !(Maybe RemarketingListListSource)
+    , _rlId :: !(Maybe (Textual Int64))
+    , _rlSubAccountId :: !(Maybe (Textual Int64))
+    , _rlDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingList' with the minimum fields required to make a request.
@@ -10365,7 +10714,7 @@ data RemarketingList = RemarketingList'
 -- * 'rlDescription'
 remarketingList
     :: RemarketingList
-remarketingList =
+remarketingList = 
     RemarketingList'
     { _rlListSize = Nothing
     , _rlListPopulationRule = Nothing
@@ -10395,7 +10744,7 @@ rlListPopulationRule
       (\ s a -> s{_rlListPopulationRule = a})
 
 -- | Number of days that a user should remain in the remarketing list without
--- an impression.
+-- an impression. Acceptable values are 1 to 540, inclusive.
 rlLifeSpan :: Lens' RemarketingList (Maybe Int64)
 rlLifeSpan
   = lens _rlLifeSpan (\ s a -> s{_rlLifeSpan = a}) .
@@ -10503,7 +10852,7 @@ instance ToJSON RemarketingList where
 --
 -- /See:/ 'dynamicTargetingKeysListResponse' smart constructor.
 data DynamicTargetingKeysListResponse = DynamicTargetingKeysListResponse'
-    { _dtklrKind                 :: !Text
+    { _dtklrKind :: !Text
     , _dtklrDynamicTargetingKeys :: !(Maybe [DynamicTargetingKey])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -10516,7 +10865,7 @@ data DynamicTargetingKeysListResponse = DynamicTargetingKeysListResponse'
 -- * 'dtklrDynamicTargetingKeys'
 dynamicTargetingKeysListResponse
     :: DynamicTargetingKeysListResponse
-dynamicTargetingKeysListResponse =
+dynamicTargetingKeysListResponse = 
     DynamicTargetingKeysListResponse'
     { _dtklrKind = "dfareporting#dynamicTargetingKeysListResponse"
     , _dtklrDynamicTargetingKeys = Nothing
@@ -10559,10 +10908,10 @@ instance ToJSON DynamicTargetingKeysListResponse
 --
 -- /See:/ 'dimensionValueList' smart constructor.
 data DimensionValueList = DimensionValueList'
-    { _dvlEtag          :: !(Maybe Text)
+    { _dvlEtag :: !(Maybe Text)
     , _dvlNextPageToken :: !(Maybe Text)
-    , _dvlKind          :: !Text
-    , _dvlItems         :: !(Maybe [DimensionValue])
+    , _dvlKind :: !Text
+    , _dvlItems :: !(Maybe [DimensionValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DimensionValueList' with the minimum fields required to make a request.
@@ -10578,7 +10927,7 @@ data DimensionValueList = DimensionValueList'
 -- * 'dvlItems'
 dimensionValueList
     :: DimensionValueList
-dimensionValueList =
+dimensionValueList = 
     DimensionValueList'
     { _dvlEtag = Nothing
     , _dvlNextPageToken = Nothing
@@ -10633,10 +10982,10 @@ instance ToJSON DimensionValueList where
 --
 -- /See:/ 'floodlightReportCompatibleFields' smart constructor.
 data FloodlightReportCompatibleFields = FloodlightReportCompatibleFields'
-    { _frcfMetrics          :: !(Maybe [Metric])
-    , _frcfKind             :: !Text
+    { _frcfMetrics :: !(Maybe [Metric])
+    , _frcfKind :: !Text
     , _frcfDimensionFilters :: !(Maybe [Dimension])
-    , _frcfDimensions       :: !(Maybe [Dimension])
+    , _frcfDimensions :: !(Maybe [Dimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightReportCompatibleFields' with the minimum fields required to make a request.
@@ -10652,7 +11001,7 @@ data FloodlightReportCompatibleFields = FloodlightReportCompatibleFields'
 -- * 'frcfDimensions'
 floodlightReportCompatibleFields
     :: FloodlightReportCompatibleFields
-floodlightReportCompatibleFields =
+floodlightReportCompatibleFields = 
     FloodlightReportCompatibleFields'
     { _frcfMetrics = Nothing
     , _frcfKind = "dfareporting#floodlightReportCompatibleFields"
@@ -10719,7 +11068,7 @@ instance ToJSON FloodlightReportCompatibleFields
 data UserRolePermissionGroup = UserRolePermissionGroup'
     { _urpgKind :: !Text
     , _urpgName :: !(Maybe Text)
-    , _urpgId   :: !(Maybe (Textual Int64))
+    , _urpgId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolePermissionGroup' with the minimum fields required to make a request.
@@ -10733,7 +11082,7 @@ data UserRolePermissionGroup = UserRolePermissionGroup'
 -- * 'urpgId'
 userRolePermissionGroup
     :: UserRolePermissionGroup
-userRolePermissionGroup =
+userRolePermissionGroup = 
     UserRolePermissionGroup'
     { _urpgKind = "dfareporting#userRolePermissionGroup"
     , _urpgName = Nothing
@@ -10776,10 +11125,10 @@ instance ToJSON UserRolePermissionGroup where
 --
 -- /See:/ 'tagSetting' smart constructor.
 data TagSetting = TagSetting'
-    { _tsKeywordOption           :: !(Maybe TagSettingKeywordOption)
+    { _tsKeywordOption :: !(Maybe TagSettingKeywordOption)
     , _tsIncludeClickThroughURLs :: !(Maybe Bool)
-    , _tsIncludeClickTracking    :: !(Maybe Bool)
-    , _tsAdditionalKeyValues     :: !(Maybe Text)
+    , _tsIncludeClickTracking :: !(Maybe Bool)
+    , _tsAdditionalKeyValues :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TagSetting' with the minimum fields required to make a request.
@@ -10795,7 +11144,7 @@ data TagSetting = TagSetting'
 -- * 'tsAdditionalKeyValues'
 tagSetting
     :: TagSetting
-tagSetting =
+tagSetting = 
     TagSetting'
     { _tsKeywordOption = Nothing
     , _tsIncludeClickThroughURLs = Nothing
@@ -10860,15 +11209,15 @@ instance ToJSON TagSetting where
 --
 -- /See:/ 'reportPathToConversionCriteriaReportProperties' smart constructor.
 data ReportPathToConversionCriteriaReportProperties = ReportPathToConversionCriteriaReportProperties'
-    { _rptccrpMaximumInteractionGap                :: !(Maybe (Textual Int32))
-    , _rptccrpMaximumClickInteractions             :: !(Maybe (Textual Int32))
-    , _rptccrpPivotOnInteractionPath               :: !(Maybe Bool)
-    , _rptccrpMaximumImpressionInteractions        :: !(Maybe (Textual Int32))
-    , _rptccrpIncludeUnattributedIPConversions     :: !(Maybe Bool)
-    , _rptccrpImpressionsLookbackWindow            :: !(Maybe (Textual Int32))
-    , _rptccrpClicksLookbackWindow                 :: !(Maybe (Textual Int32))
+    { _rptccrpMaximumInteractionGap :: !(Maybe (Textual Int32))
+    , _rptccrpMaximumClickInteractions :: !(Maybe (Textual Int32))
+    , _rptccrpPivotOnInteractionPath :: !(Maybe Bool)
+    , _rptccrpMaximumImpressionInteractions :: !(Maybe (Textual Int32))
+    , _rptccrpIncludeUnattributedIPConversions :: !(Maybe Bool)
+    , _rptccrpImpressionsLookbackWindow :: !(Maybe (Textual Int32))
+    , _rptccrpClicksLookbackWindow :: !(Maybe (Textual Int32))
     , _rptccrpIncludeUnattributedCookieConversions :: !(Maybe Bool)
-    , _rptccrpIncludeAttributedIPConversions       :: !(Maybe Bool)
+    , _rptccrpIncludeAttributedIPConversions :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportPathToConversionCriteriaReportProperties' with the minimum fields required to make a request.
@@ -10894,7 +11243,7 @@ data ReportPathToConversionCriteriaReportProperties = ReportPathToConversionCrit
 -- * 'rptccrpIncludeAttributedIPConversions'
 reportPathToConversionCriteriaReportProperties
     :: ReportPathToConversionCriteriaReportProperties
-reportPathToConversionCriteriaReportProperties =
+reportPathToConversionCriteriaReportProperties = 
     ReportPathToConversionCriteriaReportProperties'
     { _rptccrpMaximumInteractionGap = Nothing
     , _rptccrpMaximumClickInteractions = Nothing
@@ -11033,7 +11382,7 @@ instance ToJSON
 --
 -- /See:/ 'userRolePermissionsListResponse' smart constructor.
 data UserRolePermissionsListResponse = UserRolePermissionsListResponse'
-    { _urplrKind                :: !Text
+    { _urplrKind :: !Text
     , _urplrUserRolePermissions :: !(Maybe [UserRolePermission])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11046,7 +11395,7 @@ data UserRolePermissionsListResponse = UserRolePermissionsListResponse'
 -- * 'urplrUserRolePermissions'
 userRolePermissionsListResponse
     :: UserRolePermissionsListResponse
-userRolePermissionsListResponse =
+userRolePermissionsListResponse = 
     UserRolePermissionsListResponse'
     { _urplrKind = "dfareporting#userRolePermissionsListResponse"
     , _urplrUserRolePermissions = Nothing
@@ -11088,8 +11437,8 @@ instance ToJSON UserRolePermissionsListResponse where
 --
 -- /See:/ 'placementGroupsListResponse' smart constructor.
 data PlacementGroupsListResponse = PlacementGroupsListResponse'
-    { _pglrNextPageToken   :: !(Maybe Text)
-    , _pglrKind            :: !Text
+    { _pglrNextPageToken :: !(Maybe Text)
+    , _pglrKind :: !Text
     , _pglrPlacementGroups :: !(Maybe [PlacementGroup])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11104,7 +11453,7 @@ data PlacementGroupsListResponse = PlacementGroupsListResponse'
 -- * 'pglrPlacementGroups'
 placementGroupsListResponse
     :: PlacementGroupsListResponse
-placementGroupsListResponse =
+placementGroupsListResponse = 
     PlacementGroupsListResponse'
     { _pglrNextPageToken = Nothing
     , _pglrKind = "dfareporting#placementGroupsListResponse"
@@ -11152,10 +11501,10 @@ instance ToJSON PlacementGroupsListResponse where
 --
 -- /See:/ 'mobileCarrier' smart constructor.
 data MobileCarrier = MobileCarrier'
-    { _mcKind          :: !Text
-    , _mcName          :: !(Maybe Text)
-    , _mcCountryCode   :: !(Maybe Text)
-    , _mcId            :: !(Maybe (Textual Int64))
+    { _mcKind :: !Text
+    , _mcName :: !(Maybe Text)
+    , _mcCountryCode :: !(Maybe Text)
+    , _mcId :: !(Maybe (Textual Int64))
     , _mcCountryDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11174,7 +11523,7 @@ data MobileCarrier = MobileCarrier'
 -- * 'mcCountryDartId'
 mobileCarrier
     :: MobileCarrier
-mobileCarrier =
+mobileCarrier = 
     MobileCarrier'
     { _mcKind = "dfareporting#mobileCarrier"
     , _mcName = Nothing
@@ -11236,11 +11585,12 @@ instance ToJSON MobileCarrier where
 --
 -- /See:/ 'landingPage' smart constructor.
 data LandingPage = LandingPage'
-    { _lpKind    :: !Text
-    , _lpDefault :: !(Maybe Bool)
-    , _lpURL     :: !(Maybe Text)
-    , _lpName    :: !(Maybe Text)
-    , _lpId      :: !(Maybe (Textual Int64))
+    { _lpKind :: !Text
+    , _lpAdvertiserId :: !(Maybe (Textual Int64))
+    , _lpURL :: !(Maybe Text)
+    , _lpName :: !(Maybe Text)
+    , _lpId :: !(Maybe (Textual Int64))
+    , _lpArchived :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LandingPage' with the minimum fields required to make a request.
@@ -11249,22 +11599,25 @@ data LandingPage = LandingPage'
 --
 -- * 'lpKind'
 --
--- * 'lpDefault'
+-- * 'lpAdvertiserId'
 --
 -- * 'lpURL'
 --
 -- * 'lpName'
 --
 -- * 'lpId'
+--
+-- * 'lpArchived'
 landingPage
     :: LandingPage
-landingPage =
+landingPage = 
     LandingPage'
     { _lpKind = "dfareporting#landingPage"
-    , _lpDefault = Nothing
+    , _lpAdvertiserId = Nothing
     , _lpURL = Nothing
     , _lpName = Nothing
     , _lpId = Nothing
+    , _lpArchived = Nothing
     }
 
 -- | Identifies what kind of resource this is. Value: the fixed string
@@ -11272,20 +11625,19 @@ landingPage =
 lpKind :: Lens' LandingPage Text
 lpKind = lens _lpKind (\ s a -> s{_lpKind = a})
 
--- | Whether or not this landing page will be assigned to any ads or
--- creatives that do not have a landing page assigned explicitly. Only one
--- default landing page is allowed per campaign.
-lpDefault :: Lens' LandingPage (Maybe Bool)
-lpDefault
-  = lens _lpDefault (\ s a -> s{_lpDefault = a})
+-- | Advertiser ID of this landing page. This is a required field.
+lpAdvertiserId :: Lens' LandingPage (Maybe Int64)
+lpAdvertiserId
+  = lens _lpAdvertiserId
+      (\ s a -> s{_lpAdvertiserId = a})
+      . mapping _Coerce
 
 -- | URL of this landing page. This is a required field.
 lpURL :: Lens' LandingPage (Maybe Text)
 lpURL = lens _lpURL (\ s a -> s{_lpURL = a})
 
 -- | Name of this landing page. This is a required field. It must be less
--- than 256 characters long, and must be unique among landing pages of the
--- same campaign.
+-- than 256 characters long.
 lpName :: Lens' LandingPage (Maybe Text)
 lpName = lens _lpName (\ s a -> s{_lpName = a})
 
@@ -11295,30 +11647,38 @@ lpId
   = lens _lpId (\ s a -> s{_lpId = a}) .
       mapping _Coerce
 
+-- | Whether this landing page has been archived.
+lpArchived :: Lens' LandingPage (Maybe Bool)
+lpArchived
+  = lens _lpArchived (\ s a -> s{_lpArchived = a})
+
 instance FromJSON LandingPage where
         parseJSON
           = withObject "LandingPage"
               (\ o ->
                  LandingPage' <$>
                    (o .:? "kind" .!= "dfareporting#landingPage") <*>
-                     (o .:? "default")
+                     (o .:? "advertiserId")
                      <*> (o .:? "url")
                      <*> (o .:? "name")
-                     <*> (o .:? "id"))
+                     <*> (o .:? "id")
+                     <*> (o .:? "archived"))
 
 instance ToJSON LandingPage where
         toJSON LandingPage'{..}
           = object
               (catMaybes
                  [Just ("kind" .= _lpKind),
-                  ("default" .=) <$> _lpDefault, ("url" .=) <$> _lpURL,
-                  ("name" .=) <$> _lpName, ("id" .=) <$> _lpId])
+                  ("advertiserId" .=) <$> _lpAdvertiserId,
+                  ("url" .=) <$> _lpURL, ("name" .=) <$> _lpName,
+                  ("id" .=) <$> _lpId,
+                  ("archived" .=) <$> _lpArchived])
 
 -- | Connection Type List Response
 --
 -- /See:/ 'connectionTypesListResponse' smart constructor.
 data ConnectionTypesListResponse = ConnectionTypesListResponse'
-    { _ctlrKind            :: !Text
+    { _ctlrKind :: !Text
     , _ctlrConnectionTypes :: !(Maybe [ConnectionType])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11331,7 +11691,7 @@ data ConnectionTypesListResponse = ConnectionTypesListResponse'
 -- * 'ctlrConnectionTypes'
 connectionTypesListResponse
     :: ConnectionTypesListResponse
-connectionTypesListResponse =
+connectionTypesListResponse = 
     ConnectionTypesListResponse'
     { _ctlrKind = "dfareporting#connectionTypesListResponse"
     , _ctlrConnectionTypes = Nothing
@@ -11371,8 +11731,8 @@ instance ToJSON ConnectionTypesListResponse where
 -- /See:/ 'ordersListResponse' smart constructor.
 data OrdersListResponse = OrdersListResponse'
     { _olrNextPageToken :: !(Maybe Text)
-    , _olrKind          :: !Text
-    , _olrOrders        :: !(Maybe [Order])
+    , _olrKind :: !Text
+    , _olrOrders :: !(Maybe [Order])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersListResponse' with the minimum fields required to make a request.
@@ -11386,7 +11746,7 @@ data OrdersListResponse = OrdersListResponse'
 -- * 'olrOrders'
 ordersListResponse
     :: OrdersListResponse
-ordersListResponse =
+ordersListResponse = 
     OrdersListResponse'
     { _olrNextPageToken = Nothing
     , _olrKind = "dfareporting#ordersListResponse"
@@ -11432,10 +11792,10 @@ instance ToJSON OrdersListResponse where
 --
 -- /See:/ 'reportList' smart constructor.
 data ReportList = ReportList'
-    { _repEtag          :: !(Maybe Text)
+    { _repEtag :: !(Maybe Text)
     , _repNextPageToken :: !(Maybe Text)
-    , _repKind          :: !Text
-    , _repItems         :: !(Maybe [Report])
+    , _repKind :: !Text
+    , _repItems :: !(Maybe [Report])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportList' with the minimum fields required to make a request.
@@ -11451,7 +11811,7 @@ data ReportList = ReportList'
 -- * 'repItems'
 reportList
     :: ReportList
-reportList =
+reportList = 
     ReportList'
     { _repEtag = Nothing
     , _repNextPageToken = Nothing
@@ -11505,14 +11865,14 @@ instance ToJSON ReportList where
 --
 -- /See:/ 'creativeGroup' smart constructor.
 data CreativeGroup = CreativeGroup'
-    { _cgKind                       :: !Text
-    , _cgAdvertiserId               :: !(Maybe (Textual Int64))
+    { _cgKind :: !Text
+    , _cgAdvertiserId :: !(Maybe (Textual Int64))
     , _cgAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
-    , _cgGroupNumber                :: !(Maybe (Textual Int32))
-    , _cgAccountId                  :: !(Maybe (Textual Int64))
-    , _cgName                       :: !(Maybe Text)
-    , _cgId                         :: !(Maybe (Textual Int64))
-    , _cgSubAccountId               :: !(Maybe (Textual Int64))
+    , _cgGroupNumber :: !(Maybe (Textual Int32))
+    , _cgAccountId :: !(Maybe (Textual Int64))
+    , _cgName :: !(Maybe Text)
+    , _cgId :: !(Maybe (Textual Int64))
+    , _cgSubAccountId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroup' with the minimum fields required to make a request.
@@ -11536,7 +11896,7 @@ data CreativeGroup = CreativeGroup'
 -- * 'cgSubAccountId'
 creativeGroup
     :: CreativeGroup
-creativeGroup =
+creativeGroup = 
     CreativeGroup'
     { _cgKind = "dfareporting#creativeGroup"
     , _cgAdvertiserId = Nothing
@@ -11568,10 +11928,10 @@ cgAdvertiserIdDimensionValue
   = lens _cgAdvertiserIdDimensionValue
       (\ s a -> s{_cgAdvertiserIdDimensionValue = a})
 
--- | Subgroup of the creative group. Assign your creative groups to one of
--- the following subgroups in order to filter or manage them more easily.
--- This field is required on insertion and is read-only after insertion.
--- Acceptable values are: - 1 - 2
+-- | Subgroup of the creative group. Assign your creative groups to a
+-- subgroup in order to filter or manage them more easily. This field is
+-- required on insertion and is read-only after insertion. Acceptable
+-- values are 1 to 2, inclusive.
 cgGroupNumber :: Lens' CreativeGroup (Maybe Int32)
 cgGroupNumber
   = lens _cgGroupNumber
@@ -11636,7 +11996,7 @@ instance ToJSON CreativeGroup where
 --
 -- /See:/ 'campaignCreativeAssociation' smart constructor.
 data CampaignCreativeAssociation = CampaignCreativeAssociation'
-    { _ccaKind       :: !Text
+    { _ccaKind :: !Text
     , _ccaCreativeId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11649,7 +12009,7 @@ data CampaignCreativeAssociation = CampaignCreativeAssociation'
 -- * 'ccaCreativeId'
 campaignCreativeAssociation
     :: CampaignCreativeAssociation
-campaignCreativeAssociation =
+campaignCreativeAssociation = 
     CampaignCreativeAssociation'
     { _ccaKind = "dfareporting#campaignCreativeAssociation"
     , _ccaCreativeId = Nothing
@@ -11689,9 +12049,9 @@ instance ToJSON CampaignCreativeAssociation where
 --
 -- /See:/ 'conversionStatus' smart constructor.
 data ConversionStatus = ConversionStatus'
-    { _csKind       :: !Text
+    { _csKind :: !Text
     , _csConversion :: !(Maybe Conversion)
-    , _csErrors     :: !(Maybe [ConversionError])
+    , _csErrors :: !(Maybe [ConversionError])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConversionStatus' with the minimum fields required to make a request.
@@ -11705,7 +12065,7 @@ data ConversionStatus = ConversionStatus'
 -- * 'csErrors'
 conversionStatus
     :: ConversionStatus
-conversionStatus =
+conversionStatus = 
     ConversionStatus'
     { _csKind = "dfareporting#conversionStatus"
     , _csConversion = Nothing
@@ -11750,7 +12110,7 @@ instance ToJSON ConversionStatus where
 --
 -- /See:/ 'lookbackConfiguration' smart constructor.
 data LookbackConfiguration = LookbackConfiguration'
-    { _lcClickDuration                    :: !(Maybe (Textual Int32))
+    { _lcClickDuration :: !(Maybe (Textual Int32))
     , _lcPostImpressionActivitiesDuration :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11763,7 +12123,7 @@ data LookbackConfiguration = LookbackConfiguration'
 -- * 'lcPostImpressionActivitiesDuration'
 lookbackConfiguration
     :: LookbackConfiguration
-lookbackConfiguration =
+lookbackConfiguration = 
     LookbackConfiguration'
     { _lcClickDuration = Nothing
     , _lcPostImpressionActivitiesDuration = Nothing
@@ -11772,7 +12132,8 @@ lookbackConfiguration =
 -- | Lookback window, in days, from the last time a given user clicked on one
 -- of your ads. If you enter 0, clicks will not be considered as triggering
 -- events for floodlight tracking. If you leave this field blank, the
--- default value for your account will be used.
+-- default value for your account will be used. Acceptable values are 0 to
+-- 90, inclusive.
 lcClickDuration :: Lens' LookbackConfiguration (Maybe Int32)
 lcClickDuration
   = lens _lcClickDuration
@@ -11782,7 +12143,8 @@ lcClickDuration
 -- | Lookback window, in days, from the last time a given user viewed one of
 -- your ads. If you enter 0, impressions will not be considered as
 -- triggering events for floodlight tracking. If you leave this field
--- blank, the default value for your account will be used.
+-- blank, the default value for your account will be used. Acceptable
+-- values are 0 to 90, inclusive.
 lcPostImpressionActivitiesDuration :: Lens' LookbackConfiguration (Maybe Int32)
 lcPostImpressionActivitiesDuration
   = lens _lcPostImpressionActivitiesDuration
@@ -11809,12 +12171,12 @@ instance ToJSON LookbackConfiguration where
 --
 -- /See:/ 'floodlightActivityPublisherDynamicTag' smart constructor.
 data FloodlightActivityPublisherDynamicTag = FloodlightActivityPublisherDynamicTag'
-    { _fapdtClickThrough         :: !(Maybe Bool)
+    { _fapdtClickThrough :: !(Maybe Bool)
     , _fapdtSiteIdDimensionValue :: !(Maybe DimensionValue)
-    , _fapdtDynamicTag           :: !(Maybe FloodlightActivityDynamicTag)
-    , _fapdtDirectorySiteId      :: !(Maybe (Textual Int64))
-    , _fapdtSiteId               :: !(Maybe (Textual Int64))
-    , _fapdtViewThrough          :: !(Maybe Bool)
+    , _fapdtDynamicTag :: !(Maybe FloodlightActivityDynamicTag)
+    , _fapdtDirectorySiteId :: !(Maybe (Textual Int64))
+    , _fapdtSiteId :: !(Maybe (Textual Int64))
+    , _fapdtViewThrough :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivityPublisherDynamicTag' with the minimum fields required to make a request.
@@ -11834,7 +12196,7 @@ data FloodlightActivityPublisherDynamicTag = FloodlightActivityPublisherDynamicT
 -- * 'fapdtViewThrough'
 floodlightActivityPublisherDynamicTag
     :: FloodlightActivityPublisherDynamicTag
-floodlightActivityPublisherDynamicTag =
+floodlightActivityPublisherDynamicTag = 
     FloodlightActivityPublisherDynamicTag'
     { _fapdtClickThrough = Nothing
     , _fapdtSiteIdDimensionValue = Nothing
@@ -11914,10 +12276,10 @@ instance ToJSON FloodlightActivityPublisherDynamicTag
 --
 -- /See:/ 'accountActiveAdSummary' smart constructor.
 data AccountActiveAdSummary = AccountActiveAdSummary'
-    { _aaasAvailableAds       :: !(Maybe (Textual Int64))
-    , _aaasKind               :: !Text
-    , _aaasAccountId          :: !(Maybe (Textual Int64))
-    , _aaasActiveAds          :: !(Maybe (Textual Int64))
+    { _aaasAvailableAds :: !(Maybe (Textual Int64))
+    , _aaasKind :: !Text
+    , _aaasAccountId :: !(Maybe (Textual Int64))
+    , _aaasActiveAds :: !(Maybe (Textual Int64))
     , _aaasActiveAdsLimitTier :: !(Maybe AccountActiveAdSummaryActiveAdsLimitTier)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -11936,7 +12298,7 @@ data AccountActiveAdSummary = AccountActiveAdSummary'
 -- * 'aaasActiveAdsLimitTier'
 accountActiveAdSummary
     :: AccountActiveAdSummary
-accountActiveAdSummary =
+accountActiveAdSummary = 
     AccountActiveAdSummary'
     { _aaasAvailableAds = Nothing
     , _aaasKind = "dfareporting#accountActiveAdSummary"
@@ -12005,7 +12367,7 @@ instance ToJSON AccountActiveAdSummary where
 -- /See:/ 'offSetPosition' smart constructor.
 data OffSetPosition = OffSetPosition'
     { _ospLeft :: !(Maybe (Textual Int32))
-    , _ospTop  :: !(Maybe (Textual Int32))
+    , _ospTop :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OffSetPosition' with the minimum fields required to make a request.
@@ -12017,7 +12379,7 @@ data OffSetPosition = OffSetPosition'
 -- * 'ospTop'
 offSetPosition
     :: OffSetPosition
-offSetPosition =
+offSetPosition = 
     OffSetPosition'
     { _ospLeft = Nothing
     , _ospTop = Nothing
@@ -12064,7 +12426,7 @@ data Metric = Metric'
 -- * 'mName'
 metric
     :: Metric
-metric =
+metric = 
     Metric'
     { _mKind = "dfareporting#metric"
     , _mName = Nothing
@@ -12100,9 +12462,9 @@ instance ToJSON Metric where
 -- /See:/ 'remarketingListShare' smart constructor.
 data RemarketingListShare = RemarketingListShare'
     { _rlsSharedAdvertiserIds :: !(Maybe [Textual Int64])
-    , _rlsKind                :: !Text
-    , _rlsRemarketingListId   :: !(Maybe (Textual Int64))
-    , _rlsSharedAccountIds    :: !(Maybe [Textual Int64])
+    , _rlsKind :: !Text
+    , _rlsRemarketingListId :: !(Maybe (Textual Int64))
+    , _rlsSharedAccountIds :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListShare' with the minimum fields required to make a request.
@@ -12118,7 +12480,7 @@ data RemarketingListShare = RemarketingListShare'
 -- * 'rlsSharedAccountIds'
 remarketingListShare
     :: RemarketingListShare
-remarketingListShare =
+remarketingListShare = 
     RemarketingListShare'
     { _rlsSharedAdvertiserIds = Nothing
     , _rlsKind = "dfareporting#remarketingListShare"
@@ -12179,7 +12541,7 @@ instance ToJSON RemarketingListShare where
 --
 -- /See:/ 'eventTagsListResponse' smart constructor.
 data EventTagsListResponse = EventTagsListResponse'
-    { _etlrKind      :: !Text
+    { _etlrKind :: !Text
     , _etlrEventTags :: !(Maybe [EventTag])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -12192,7 +12554,7 @@ data EventTagsListResponse = EventTagsListResponse'
 -- * 'etlrEventTags'
 eventTagsListResponse
     :: EventTagsListResponse
-eventTagsListResponse =
+eventTagsListResponse = 
     EventTagsListResponse'
     { _etlrKind = "dfareporting#eventTagsListResponse"
     , _etlrEventTags = Nothing
@@ -12232,8 +12594,8 @@ instance ToJSON EventTagsListResponse where
 -- /See:/ 'userRolesListResponse' smart constructor.
 data UserRolesListResponse = UserRolesListResponse'
     { _urlrNextPageToken :: !(Maybe Text)
-    , _urlrKind          :: !Text
-    , _urlrUserRoles     :: !(Maybe [UserRole])
+    , _urlrKind :: !Text
+    , _urlrUserRoles :: !(Maybe [UserRole])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolesListResponse' with the minimum fields required to make a request.
@@ -12247,7 +12609,7 @@ data UserRolesListResponse = UserRolesListResponse'
 -- * 'urlrUserRoles'
 userRolesListResponse
     :: UserRolesListResponse
-userRolesListResponse =
+userRolesListResponse = 
     UserRolesListResponse'
     { _urlrNextPageToken = Nothing
     , _urlrKind = "dfareporting#userRolesListResponse"
@@ -12295,12 +12657,12 @@ instance ToJSON UserRolesListResponse where
 --
 -- /See:/ 'compatibleFields' smart constructor.
 data CompatibleFields = CompatibleFields'
-    { _cfReachReportCompatibleFields               :: !(Maybe ReachReportCompatibleFields)
+    { _cfReachReportCompatibleFields :: !(Maybe ReachReportCompatibleFields)
     , _cfCrossDimensionReachReportCompatibleFields :: !(Maybe CrossDimensionReachReportCompatibleFields)
-    , _cfKind                                      :: !Text
-    , _cfFloodlightReportCompatibleFields          :: !(Maybe FloodlightReportCompatibleFields)
-    , _cfReportCompatibleFields                    :: !(Maybe ReportCompatibleFields)
-    , _cfPathToConversionReportCompatibleFields    :: !(Maybe PathToConversionReportCompatibleFields)
+    , _cfKind :: !Text
+    , _cfFloodlightReportCompatibleFields :: !(Maybe FloodlightReportCompatibleFields)
+    , _cfReportCompatibleFields :: !(Maybe ReportCompatibleFields)
+    , _cfPathToConversionReportCompatibleFields :: !(Maybe PathToConversionReportCompatibleFields)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CompatibleFields' with the minimum fields required to make a request.
@@ -12320,7 +12682,7 @@ data CompatibleFields = CompatibleFields'
 -- * 'cfPathToConversionReportCompatibleFields'
 compatibleFields
     :: CompatibleFields
-compatibleFields =
+compatibleFields = 
     CompatibleFields'
     { _cfReachReportCompatibleFields = Nothing
     , _cfCrossDimensionReachReportCompatibleFields = Nothing
@@ -12405,8 +12767,8 @@ instance ToJSON CompatibleFields where
 --
 -- /See:/ 'audienceSegment' smart constructor.
 data AudienceSegment = AudienceSegment'
-    { _asName       :: !(Maybe Text)
-    , _asId         :: !(Maybe (Textual Int64))
+    { _asName :: !(Maybe Text)
+    , _asId :: !(Maybe (Textual Int64))
     , _asAllocation :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -12421,7 +12783,7 @@ data AudienceSegment = AudienceSegment'
 -- * 'asAllocation'
 audienceSegment
     :: AudienceSegment
-audienceSegment =
+audienceSegment = 
     AudienceSegment'
     { _asName = Nothing
     , _asId = Nothing
@@ -12439,9 +12801,9 @@ asId
   = lens _asId (\ s a -> s{_asId = a}) .
       mapping _Coerce
 
--- | Weight allocated to this segment. Must be between 1 and 1000. The weight
--- assigned will be understood in proportion to the weights assigned to
--- other segments in the same segment group.
+-- | Weight allocated to this segment. The weight assigned will be understood
+-- in proportion to the weights assigned to other segments in the same
+-- segment group. Acceptable values are 1 to 1000, inclusive.
 asAllocation :: Lens' AudienceSegment (Maybe Int32)
 asAllocation
   = lens _asAllocation (\ s a -> s{_asAllocation = a})
@@ -12462,15 +12824,81 @@ instance ToJSON AudienceSegment where
                  [("name" .=) <$> _asName, ("id" .=) <$> _asId,
                   ("allocation" .=) <$> _asAllocation])
 
+-- | Update Conversions Request.
+--
+-- /See:/ 'conversionsBatchUpdateRequest' smart constructor.
+data ConversionsBatchUpdateRequest = ConversionsBatchUpdateRequest'
+    { _cburbKind :: !Text
+    , _cburbConversions :: !(Maybe [Conversion])
+    , _cburbEncryptionInfo :: !(Maybe EncryptionInfo)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ConversionsBatchUpdateRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cburbKind'
+--
+-- * 'cburbConversions'
+--
+-- * 'cburbEncryptionInfo'
+conversionsBatchUpdateRequest
+    :: ConversionsBatchUpdateRequest
+conversionsBatchUpdateRequest = 
+    ConversionsBatchUpdateRequest'
+    { _cburbKind = "dfareporting#conversionsBatchUpdateRequest"
+    , _cburbConversions = Nothing
+    , _cburbEncryptionInfo = Nothing
+    }
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"dfareporting#conversionsBatchUpdateRequest\".
+cburbKind :: Lens' ConversionsBatchUpdateRequest Text
+cburbKind
+  = lens _cburbKind (\ s a -> s{_cburbKind = a})
+
+-- | The set of conversions to update.
+cburbConversions :: Lens' ConversionsBatchUpdateRequest [Conversion]
+cburbConversions
+  = lens _cburbConversions
+      (\ s a -> s{_cburbConversions = a})
+      . _Default
+      . _Coerce
+
+-- | Describes how encryptedUserId is encrypted. This is a required field if
+-- encryptedUserId is used.
+cburbEncryptionInfo :: Lens' ConversionsBatchUpdateRequest (Maybe EncryptionInfo)
+cburbEncryptionInfo
+  = lens _cburbEncryptionInfo
+      (\ s a -> s{_cburbEncryptionInfo = a})
+
+instance FromJSON ConversionsBatchUpdateRequest where
+        parseJSON
+          = withObject "ConversionsBatchUpdateRequest"
+              (\ o ->
+                 ConversionsBatchUpdateRequest' <$>
+                   (o .:? "kind" .!=
+                      "dfareporting#conversionsBatchUpdateRequest")
+                     <*> (o .:? "conversions" .!= mempty)
+                     <*> (o .:? "encryptionInfo"))
+
+instance ToJSON ConversionsBatchUpdateRequest where
+        toJSON ConversionsBatchUpdateRequest'{..}
+          = object
+              (catMaybes
+                 [Just ("kind" .= _cburbKind),
+                  ("conversions" .=) <$> _cburbConversions,
+                  ("encryptionInfo" .=) <$> _cburbEncryptionInfo])
+
 -- | DFP Settings
 --
 -- /See:/ 'dfpSettings' smart constructor.
 data DfpSettings = DfpSettings'
-    { _dsPubPaidPlacementAccepted      :: !(Maybe Bool)
-    , _dsDfpNetworkName                :: !(Maybe Text)
-    , _dsPublisherPortalOnly           :: !(Maybe Bool)
+    { _dsPubPaidPlacementAccepted :: !(Maybe Bool)
+    , _dsDfpNetworkName :: !(Maybe Text)
+    , _dsPublisherPortalOnly :: !(Maybe Bool)
     , _dsProgrammaticPlacementAccepted :: !(Maybe Bool)
-    , _dsDfpNetworkCode                :: !(Maybe Text)
+    , _dsDfpNetworkCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DfpSettings' with the minimum fields required to make a request.
@@ -12488,7 +12916,7 @@ data DfpSettings = DfpSettings'
 -- * 'dsDfpNetworkCode'
 dfpSettings
     :: DfpSettings
-dfpSettings =
+dfpSettings = 
     DfpSettings'
     { _dsPubPaidPlacementAccepted = Nothing
     , _dsDfpNetworkName = Nothing
@@ -12534,10 +12962,10 @@ instance FromJSON DfpSettings where
               (\ o ->
                  DfpSettings' <$>
                    (o .:? "pubPaidPlacementAccepted") <*>
-                     (o .:? "dfp_network_name")
+                     (o .:? "dfpNetworkName")
                      <*> (o .:? "publisherPortalOnly")
                      <*> (o .:? "programmaticPlacementAccepted")
-                     <*> (o .:? "dfp_network_code"))
+                     <*> (o .:? "dfpNetworkCode"))
 
 instance ToJSON DfpSettings where
         toJSON DfpSettings'{..}
@@ -12545,23 +12973,23 @@ instance ToJSON DfpSettings where
               (catMaybes
                  [("pubPaidPlacementAccepted" .=) <$>
                     _dsPubPaidPlacementAccepted,
-                  ("dfp_network_name" .=) <$> _dsDfpNetworkName,
+                  ("dfpNetworkName" .=) <$> _dsDfpNetworkName,
                   ("publisherPortalOnly" .=) <$>
                     _dsPublisherPortalOnly,
                   ("programmaticPlacementAccepted" .=) <$>
                     _dsProgrammaticPlacementAccepted,
-                  ("dfp_network_code" .=) <$> _dsDfpNetworkCode])
+                  ("dfpNetworkCode" .=) <$> _dsDfpNetworkCode])
 
 -- | Represents fields that are compatible to be selected for a report of
 -- type \"PATH_TO_CONVERSION\".
 --
 -- /See:/ 'pathToConversionReportCompatibleFields' smart constructor.
 data PathToConversionReportCompatibleFields = PathToConversionReportCompatibleFields'
-    { _ptcrcfMetrics                   :: !(Maybe [Metric])
-    , _ptcrcfKind                      :: !Text
-    , _ptcrcfConversionDimensions      :: !(Maybe [Dimension])
+    { _ptcrcfMetrics :: !(Maybe [Metric])
+    , _ptcrcfKind :: !Text
+    , _ptcrcfConversionDimensions :: !(Maybe [Dimension])
     , _ptcrcfCustomFloodlightVariables :: !(Maybe [Dimension])
-    , _ptcrcfPerInteractionDimensions  :: !(Maybe [Dimension])
+    , _ptcrcfPerInteractionDimensions :: !(Maybe [Dimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PathToConversionReportCompatibleFields' with the minimum fields required to make a request.
@@ -12579,7 +13007,7 @@ data PathToConversionReportCompatibleFields = PathToConversionReportCompatibleFi
 -- * 'ptcrcfPerInteractionDimensions'
 pathToConversionReportCompatibleFields
     :: PathToConversionReportCompatibleFields
-pathToConversionReportCompatibleFields =
+pathToConversionReportCompatibleFields = 
     PathToConversionReportCompatibleFields'
     { _ptcrcfMetrics = Nothing
     , _ptcrcfKind = "dfareporting#pathToConversionReportCompatibleFields"
@@ -12661,15 +13089,15 @@ instance ToJSON
 --
 -- /See:/ 'city' smart constructor.
 data City = City'
-    { _ccMetroCode     :: !(Maybe Text)
-    , _ccRegionCode    :: !(Maybe Text)
-    , _ccKind          :: !Text
-    , _ccRegionDartId  :: !(Maybe (Textual Int64))
-    , _ccMetroDmaId    :: !(Maybe (Textual Int64))
-    , _ccName          :: !(Maybe Text)
-    , _ccCountryCode   :: !(Maybe Text)
+    { _ccMetroCode :: !(Maybe Text)
+    , _ccRegionCode :: !(Maybe Text)
+    , _ccKind :: !Text
+    , _ccRegionDartId :: !(Maybe (Textual Int64))
+    , _ccMetroDmaId :: !(Maybe (Textual Int64))
+    , _ccName :: !(Maybe Text)
+    , _ccCountryCode :: !(Maybe Text)
     , _ccCountryDartId :: !(Maybe (Textual Int64))
-    , _ccDartId        :: !(Maybe (Textual Int64))
+    , _ccDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'City' with the minimum fields required to make a request.
@@ -12695,7 +13123,7 @@ data City = City'
 -- * 'ccDartId'
 city
     :: City
-city =
+city = 
     City'
     { _ccMetroCode = Nothing
     , _ccRegionCode = Nothing
@@ -12794,7 +13222,7 @@ instance ToJSON City where
 data PlatformType = PlatformType'
     { _ptKind :: !Text
     , _ptName :: !(Maybe Text)
-    , _ptId   :: !(Maybe (Textual Int64))
+    , _ptId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlatformType' with the minimum fields required to make a request.
@@ -12808,7 +13236,7 @@ data PlatformType = PlatformType'
 -- * 'ptId'
 platformType
     :: PlatformType
-platformType =
+platformType = 
     PlatformType'
     { _ptKind = "dfareporting#platformType"
     , _ptName = Nothing
@@ -12860,7 +13288,7 @@ newtype KeyValueTargetingExpression = KeyValueTargetingExpression'
 -- * 'kvteExpression'
 keyValueTargetingExpression
     :: KeyValueTargetingExpression
-keyValueTargetingExpression =
+keyValueTargetingExpression = 
     KeyValueTargetingExpression'
     { _kvteExpression = Nothing
     }
@@ -12887,7 +13315,7 @@ instance ToJSON KeyValueTargetingExpression where
 --
 -- /See:/ 'companionClickThroughOverride' smart constructor.
 data CompanionClickThroughOverride = CompanionClickThroughOverride'
-    { _cctoCreativeId      :: !(Maybe (Textual Int64))
+    { _cctoCreativeId :: !(Maybe (Textual Int64))
     , _cctoClickThroughURL :: !(Maybe ClickThroughURL)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -12900,7 +13328,7 @@ data CompanionClickThroughOverride = CompanionClickThroughOverride'
 -- * 'cctoClickThroughURL'
 companionClickThroughOverride
     :: CompanionClickThroughOverride
-companionClickThroughOverride =
+companionClickThroughOverride = 
     CompanionClickThroughOverride'
     { _cctoCreativeId = Nothing
     , _cctoClickThroughURL = Nothing
@@ -12938,8 +13366,8 @@ instance ToJSON CompanionClickThroughOverride where
 -- /See:/ 'advertisersListResponse' smart constructor.
 data AdvertisersListResponse = AdvertisersListResponse'
     { _advNextPageToken :: !(Maybe Text)
-    , _advKind          :: !Text
-    , _advAdvertisers   :: !(Maybe [Advertiser])
+    , _advKind :: !Text
+    , _advAdvertisers :: !(Maybe [Advertiser])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertisersListResponse' with the minimum fields required to make a request.
@@ -12953,7 +13381,7 @@ data AdvertisersListResponse = AdvertisersListResponse'
 -- * 'advAdvertisers'
 advertisersListResponse
     :: AdvertisersListResponse
-advertisersListResponse =
+advertisersListResponse = 
     AdvertisersListResponse'
     { _advNextPageToken = Nothing
     , _advKind = "dfareporting#advertisersListResponse"
@@ -13001,7 +13429,7 @@ instance ToJSON AdvertisersListResponse where
 --
 -- /See:/ 'countriesListResponse' smart constructor.
 data CountriesListResponse = CountriesListResponse'
-    { _couKind      :: !Text
+    { _couKind :: !Text
     , _couCountries :: !(Maybe [Country])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13014,7 +13442,7 @@ data CountriesListResponse = CountriesListResponse'
 -- * 'couCountries'
 countriesListResponse
     :: CountriesListResponse
-countriesListResponse =
+countriesListResponse = 
     CountriesListResponse'
     { _couKind = "dfareporting#countriesListResponse"
     , _couCountries = Nothing
@@ -13052,7 +13480,7 @@ instance ToJSON CountriesListResponse where
 --
 -- /See:/ 'accountPermissionGroupsListResponse' smart constructor.
 data AccountPermissionGroupsListResponse = AccountPermissionGroupsListResponse'
-    { _apglrKind                    :: !Text
+    { _apglrKind :: !Text
     , _apglrAccountPermissionGroups :: !(Maybe [AccountPermissionGroup])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13065,7 +13493,7 @@ data AccountPermissionGroupsListResponse = AccountPermissionGroupsListResponse'
 -- * 'apglrAccountPermissionGroups'
 accountPermissionGroupsListResponse
     :: AccountPermissionGroupsListResponse
-accountPermissionGroupsListResponse =
+accountPermissionGroupsListResponse = 
     AccountPermissionGroupsListResponse'
     { _apglrKind = "dfareporting#accountPermissionGroupsListResponse"
     , _apglrAccountPermissionGroups = Nothing
@@ -13108,15 +13536,15 @@ instance ToJSON AccountPermissionGroupsListResponse
 --
 -- /See:/ 'popupWindowProperties' smart constructor.
 data PopupWindowProperties = PopupWindowProperties'
-    { _pwpOffSet         :: !(Maybe OffSetPosition)
-    , _pwpDimension      :: !(Maybe Size)
-    , _pwpShowStatusBar  :: !(Maybe Bool)
-    , _pwpShowMenuBar    :: !(Maybe Bool)
-    , _pwpPositionType   :: !(Maybe PopupWindowPropertiesPositionType)
+    { _pwpOffSet :: !(Maybe OffSetPosition)
+    , _pwpDimension :: !(Maybe Size)
+    , _pwpShowStatusBar :: !(Maybe Bool)
+    , _pwpShowMenuBar :: !(Maybe Bool)
+    , _pwpPositionType :: !(Maybe PopupWindowPropertiesPositionType)
     , _pwpShowAddressBar :: !(Maybe Bool)
-    , _pwpShowScrollBar  :: !(Maybe Bool)
-    , _pwpShowToolBar    :: !(Maybe Bool)
-    , _pwpTitle          :: !(Maybe Text)
+    , _pwpShowScrollBar :: !(Maybe Bool)
+    , _pwpShowToolBar :: !(Maybe Bool)
+    , _pwpTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PopupWindowProperties' with the minimum fields required to make a request.
@@ -13142,7 +13570,7 @@ data PopupWindowProperties = PopupWindowProperties'
 -- * 'pwpTitle'
 popupWindowProperties
     :: PopupWindowProperties
-popupWindowProperties =
+popupWindowProperties = 
     PopupWindowProperties'
     { _pwpOffSet = Nothing
     , _pwpDimension = Nothing
@@ -13240,7 +13668,7 @@ instance ToJSON PopupWindowProperties where
 -- /See:/ 'eventTagOverride' smart constructor.
 data EventTagOverride = EventTagOverride'
     { _etoEnabled :: !(Maybe Bool)
-    , _etoId      :: !(Maybe (Textual Int64))
+    , _etoId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTagOverride' with the minimum fields required to make a request.
@@ -13252,7 +13680,7 @@ data EventTagOverride = EventTagOverride'
 -- * 'etoId'
 eventTagOverride
     :: EventTagOverride
-eventTagOverride =
+eventTagOverride = 
     EventTagOverride'
     { _etoEnabled = Nothing
     , _etoId = Nothing
@@ -13289,12 +13717,12 @@ instance ToJSON EventTagOverride where
 --
 -- /See:/ 'operatingSystemVersion' smart constructor.
 data OperatingSystemVersion = OperatingSystemVersion'
-    { _osvMinorVersion    :: !(Maybe Text)
-    , _osvKind            :: !Text
+    { _osvMinorVersion :: !(Maybe Text)
+    , _osvKind :: !Text
     , _osvOperatingSystem :: !(Maybe OperatingSystem)
-    , _osvMajorVersion    :: !(Maybe Text)
-    , _osvName            :: !(Maybe Text)
-    , _osvId              :: !(Maybe (Textual Int64))
+    , _osvMajorVersion :: !(Maybe Text)
+    , _osvName :: !(Maybe Text)
+    , _osvId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperatingSystemVersion' with the minimum fields required to make a request.
@@ -13314,7 +13742,7 @@ data OperatingSystemVersion = OperatingSystemVersion'
 -- * 'osvId'
 operatingSystemVersion
     :: OperatingSystemVersion
-operatingSystemVersion =
+operatingSystemVersion = 
     OperatingSystemVersion'
     { _osvMinorVersion = Nothing
     , _osvKind = "dfareporting#operatingSystemVersion"
@@ -13387,11 +13815,11 @@ instance ToJSON OperatingSystemVersion where
 --
 -- /See:/ 'accountPermission' smart constructor.
 data AccountPermission = AccountPermission'
-    { _acccKind              :: !Text
-    , _acccAccountProFiles   :: !(Maybe [AccountPermissionAccountProFilesItem])
-    , _acccName              :: !(Maybe Text)
-    , _acccId                :: !(Maybe (Textual Int64))
-    , _acccLevel             :: !(Maybe AccountPermissionLevel)
+    { _acccKind :: !Text
+    , _acccAccountProFiles :: !(Maybe [AccountPermissionAccountProFilesItem])
+    , _acccName :: !(Maybe Text)
+    , _acccId :: !(Maybe (Textual Int64))
+    , _acccLevel :: !(Maybe AccountPermissionLevel)
     , _acccPermissionGroupId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13412,7 +13840,7 @@ data AccountPermission = AccountPermission'
 -- * 'acccPermissionGroupId'
 accountPermission
     :: AccountPermission
-accountPermission =
+accountPermission = 
     AccountPermission'
     { _acccKind = "dfareporting#accountPermission"
     , _acccAccountProFiles = Nothing
@@ -13484,14 +13912,14 @@ instance ToJSON AccountPermission where
 --
 -- /See:/ 'userProFile' smart constructor.
 data UserProFile = UserProFile'
-    { _upfEtag           :: !(Maybe Text)
-    , _upfKind           :: !Text
-    , _upfAccountName    :: !(Maybe Text)
-    , _upfProFileId      :: !(Maybe (Textual Int64))
-    , _upfUserName       :: !(Maybe Text)
-    , _upfAccountId      :: !(Maybe (Textual Int64))
+    { _upfEtag :: !(Maybe Text)
+    , _upfKind :: !Text
+    , _upfAccountName :: !(Maybe Text)
+    , _upfProFileId :: !(Maybe (Textual Int64))
+    , _upfUserName :: !(Maybe Text)
+    , _upfAccountId :: !(Maybe (Textual Int64))
     , _upfSubAccountName :: !(Maybe Text)
-    , _upfSubAccountId   :: !(Maybe (Textual Int64))
+    , _upfSubAccountId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFile' with the minimum fields required to make a request.
@@ -13515,7 +13943,7 @@ data UserProFile = UserProFile'
 -- * 'upfSubAccountId'
 userProFile
     :: UserProFile
-userProFile =
+userProFile = 
     UserProFile'
     { _upfEtag = Nothing
     , _upfKind = "dfareporting#userProfile"
@@ -13601,7 +14029,7 @@ instance ToJSON UserProFile where
 --
 -- /See:/ 'operatingSystemsListResponse' smart constructor.
 data OperatingSystemsListResponse = OperatingSystemsListResponse'
-    { _oslrKind             :: !Text
+    { _oslrKind :: !Text
     , _oslrOperatingSystems :: !(Maybe [OperatingSystem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13614,7 +14042,7 @@ data OperatingSystemsListResponse = OperatingSystemsListResponse'
 -- * 'oslrOperatingSystems'
 operatingSystemsListResponse
     :: OperatingSystemsListResponse
-operatingSystemsListResponse =
+operatingSystemsListResponse = 
     OperatingSystemsListResponse'
     { _oslrKind = "dfareporting#operatingSystemsListResponse"
     , _oslrOperatingSystems = Nothing
@@ -13653,9 +14081,9 @@ instance ToJSON OperatingSystemsListResponse where
 --
 -- /See:/ 'reportDelivery' smart constructor.
 data ReportDelivery = ReportDelivery'
-    { _rdEmailOwner             :: !(Maybe Bool)
-    , _rdRecipients             :: !(Maybe [Recipient])
-    , _rdMessage                :: !(Maybe Text)
+    { _rdEmailOwner :: !(Maybe Bool)
+    , _rdRecipients :: !(Maybe [Recipient])
+    , _rdMessage :: !(Maybe Text)
     , _rdEmailOwnerDeliveryType :: !(Maybe ReportDeliveryEmailOwnerDeliveryType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13672,7 +14100,7 @@ data ReportDelivery = ReportDelivery'
 -- * 'rdEmailOwnerDeliveryType'
 reportDelivery
     :: ReportDelivery
-reportDelivery =
+reportDelivery = 
     ReportDelivery'
     { _rdEmailOwner = Nothing
     , _rdRecipients = Nothing
@@ -13734,18 +14162,18 @@ instance ToJSON ReportDelivery where
 --
 -- /See:/ 'targetableRemarketingList' smart constructor.
 data TargetableRemarketingList = TargetableRemarketingList'
-    { _trlListSize                   :: !(Maybe (Textual Int64))
-    , _trlLifeSpan                   :: !(Maybe (Textual Int64))
-    , _trlKind                       :: !Text
-    , _trlAdvertiserId               :: !(Maybe (Textual Int64))
+    { _trlListSize :: !(Maybe (Textual Int64))
+    , _trlLifeSpan :: !(Maybe (Textual Int64))
+    , _trlKind :: !Text
+    , _trlAdvertiserId :: !(Maybe (Textual Int64))
     , _trlAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
-    , _trlActive                     :: !(Maybe Bool)
-    , _trlAccountId                  :: !(Maybe (Textual Int64))
-    , _trlName                       :: !(Maybe Text)
-    , _trlListSource                 :: !(Maybe TargetableRemarketingListListSource)
-    , _trlId                         :: !(Maybe (Textual Int64))
-    , _trlSubAccountId               :: !(Maybe (Textual Int64))
-    , _trlDescription                :: !(Maybe Text)
+    , _trlActive :: !(Maybe Bool)
+    , _trlAccountId :: !(Maybe (Textual Int64))
+    , _trlName :: !(Maybe Text)
+    , _trlListSource :: !(Maybe TargetableRemarketingListListSource)
+    , _trlId :: !(Maybe (Textual Int64))
+    , _trlSubAccountId :: !(Maybe (Textual Int64))
+    , _trlDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetableRemarketingList' with the minimum fields required to make a request.
@@ -13777,7 +14205,7 @@ data TargetableRemarketingList = TargetableRemarketingList'
 -- * 'trlDescription'
 targetableRemarketingList
     :: TargetableRemarketingList
-targetableRemarketingList =
+targetableRemarketingList = 
     TargetableRemarketingList'
     { _trlListSize = Nothing
     , _trlLifeSpan = Nothing
@@ -13908,7 +14336,7 @@ instance ToJSON TargetableRemarketingList where
 --
 -- /See:/ 'postalCodesListResponse' smart constructor.
 data PostalCodesListResponse = PostalCodesListResponse'
-    { _pclrKind        :: !Text
+    { _pclrKind :: !Text
     , _pclrPostalCodes :: !(Maybe [PostalCode])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -13921,7 +14349,7 @@ data PostalCodesListResponse = PostalCodesListResponse'
 -- * 'pclrPostalCodes'
 postalCodesListResponse
     :: PostalCodesListResponse
-postalCodesListResponse =
+postalCodesListResponse = 
     PostalCodesListResponse'
     { _pclrKind = "dfareporting#postalCodesListResponse"
     , _pclrPostalCodes = Nothing
@@ -13960,20 +14388,20 @@ instance ToJSON PostalCodesListResponse where
 --
 -- /See:/ 'changeLog' smart constructor.
 data ChangeLog = ChangeLog'
-    { _chaUserProFileId   :: !(Maybe (Textual Int64))
-    , _chaObjectType      :: !(Maybe Text)
+    { _chaUserProFileId :: !(Maybe (Textual Int64))
+    , _chaObjectType :: !(Maybe Text)
     , _chaUserProFileName :: !(Maybe Text)
-    , _chaKind            :: !Text
-    , _chaObjectId        :: !(Maybe (Textual Int64))
-    , _chaAction          :: !(Maybe Text)
-    , _chaTransactionId   :: !(Maybe (Textual Int64))
-    , _chaOldValue        :: !(Maybe Text)
-    , _chaAccountId       :: !(Maybe (Textual Int64))
-    , _chaNewValue        :: !(Maybe Text)
-    , _chaFieldName       :: !(Maybe Text)
-    , _chaId              :: !(Maybe (Textual Int64))
-    , _chaSubAccountId    :: !(Maybe (Textual Int64))
-    , _chaChangeTime      :: !(Maybe DateTime')
+    , _chaKind :: !Text
+    , _chaObjectId :: !(Maybe (Textual Int64))
+    , _chaAction :: !(Maybe Text)
+    , _chaTransactionId :: !(Maybe (Textual Int64))
+    , _chaOldValue :: !(Maybe Text)
+    , _chaAccountId :: !(Maybe (Textual Int64))
+    , _chaNewValue :: !(Maybe Text)
+    , _chaFieldName :: !(Maybe Text)
+    , _chaId :: !(Maybe (Textual Int64))
+    , _chaSubAccountId :: !(Maybe (Textual Int64))
+    , _chaChangeTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangeLog' with the minimum fields required to make a request.
@@ -14009,7 +14437,7 @@ data ChangeLog = ChangeLog'
 -- * 'chaChangeTime'
 changeLog
     :: ChangeLog
-changeLog =
+changeLog = 
     ChangeLog'
     { _chaUserProFileId = Nothing
     , _chaObjectType = Nothing
@@ -14156,9 +14584,9 @@ instance ToJSON ChangeLog where
 -- /See:/ 'language' smart constructor.
 data Language = Language'
     { _lLanguageCode :: !(Maybe Text)
-    , _lKind         :: !Text
-    , _lName         :: !(Maybe Text)
-    , _lId           :: !(Maybe (Textual Int64))
+    , _lKind :: !Text
+    , _lName :: !(Maybe Text)
+    , _lId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Language' with the minimum fields required to make a request.
@@ -14174,7 +14602,7 @@ data Language = Language'
 -- * 'lId'
 language
     :: Language
-language =
+language = 
     Language'
     { _lLanguageCode = Nothing
     , _lKind = "dfareporting#language"
@@ -14227,10 +14655,10 @@ instance ToJSON Language where
 --
 -- /See:/ 'placementStrategy' smart constructor.
 data PlacementStrategy = PlacementStrategy'
-    { _psKind      :: !Text
+    { _psKind :: !Text
     , _psAccountId :: !(Maybe (Textual Int64))
-    , _psName      :: !(Maybe Text)
-    , _psId        :: !(Maybe (Textual Int64))
+    , _psName :: !(Maybe Text)
+    , _psId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategy' with the minimum fields required to make a request.
@@ -14246,7 +14674,7 @@ data PlacementStrategy = PlacementStrategy'
 -- * 'psId'
 placementStrategy
     :: PlacementStrategy
-placementStrategy =
+placementStrategy = 
     PlacementStrategy'
     { _psKind = "dfareporting#placementStrategy"
     , _psAccountId = Nothing
@@ -14301,33 +14729,33 @@ instance ToJSON PlacementStrategy where
 --
 -- /See:/ 'floodlightActivity' smart constructor.
 data FloodlightActivity = FloodlightActivity'
-    { _faCountingMethod                          :: !(Maybe FloodlightActivityCountingMethod)
-    , _faTagString                               :: !(Maybe Text)
-    , _faSecure                                  :: !(Maybe Bool)
-    , _faExpectedURL                             :: !(Maybe Text)
-    , _faFloodlightActivityGroupTagString        :: !(Maybe Text)
-    , _faFloodlightConfigurationId               :: !(Maybe (Textual Int64))
-    , _faKind                                    :: !Text
-    , _faImageTagEnabled                         :: !(Maybe Bool)
-    , _faAdvertiserId                            :: !(Maybe (Textual Int64))
-    , _faAdvertiserIdDimensionValue              :: !(Maybe DimensionValue)
-    , _faSSLCompliant                            :: !(Maybe Bool)
-    , _faIdDimensionValue                        :: !(Maybe DimensionValue)
-    , _faTagFormat                               :: !(Maybe FloodlightActivityTagFormat)
-    , _faCacheBustingType                        :: !(Maybe FloodlightActivityCacheBustingType)
-    , _faAccountId                               :: !(Maybe (Textual Int64))
-    , _faName                                    :: !(Maybe Text)
-    , _faPublisherTags                           :: !(Maybe [FloodlightActivityPublisherDynamicTag])
-    , _faFloodlightActivityGroupId               :: !(Maybe (Textual Int64))
-    , _faHidden                                  :: !(Maybe Bool)
-    , _faFloodlightActivityGroupType             :: !(Maybe FloodlightActivityFloodlightActivityGroupType)
-    , _faDefaultTags                             :: !(Maybe [FloodlightActivityDynamicTag])
-    , _faFloodlightActivityGroupName             :: !(Maybe Text)
-    , _faId                                      :: !(Maybe (Textual Int64))
-    , _faSSLRequired                             :: !(Maybe Bool)
-    , _faUserDefinedVariableTypes                :: !(Maybe [FloodlightActivityUserDefinedVariableTypesItem])
-    , _faSubAccountId                            :: !(Maybe (Textual Int64))
-    , _faNotes                                   :: !(Maybe Text)
+    { _faCountingMethod :: !(Maybe FloodlightActivityCountingMethod)
+    , _faTagString :: !(Maybe Text)
+    , _faSecure :: !(Maybe Bool)
+    , _faExpectedURL :: !(Maybe Text)
+    , _faFloodlightActivityGroupTagString :: !(Maybe Text)
+    , _faFloodlightConfigurationId :: !(Maybe (Textual Int64))
+    , _faKind :: !Text
+    , _faAdvertiserId :: !(Maybe (Textual Int64))
+    , _faAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _faSSLCompliant :: !(Maybe Bool)
+    , _faIdDimensionValue :: !(Maybe DimensionValue)
+    , _faTagFormat :: !(Maybe FloodlightActivityTagFormat)
+    , _faCacheBustingType :: !(Maybe FloodlightActivityCacheBustingType)
+    , _faAccountId :: !(Maybe (Textual Int64))
+    , _faName :: !(Maybe Text)
+    , _faPublisherTags :: !(Maybe [FloodlightActivityPublisherDynamicTag])
+    , _faFloodlightActivityGroupId :: !(Maybe (Textual Int64))
+    , _faHidden :: !(Maybe Bool)
+    , _faFloodlightActivityGroupType :: !(Maybe FloodlightActivityFloodlightActivityGroupType)
+    , _faDefaultTags :: !(Maybe [FloodlightActivityDynamicTag])
+    , _faFloodlightTagType :: !(Maybe FloodlightActivityFloodlightTagType)
+    , _faFloodlightActivityGroupName :: !(Maybe Text)
+    , _faId :: !(Maybe (Textual Int64))
+    , _faSSLRequired :: !(Maybe Bool)
+    , _faUserDefinedVariableTypes :: !(Maybe [FloodlightActivityUserDefinedVariableTypesItem])
+    , _faSubAccountId :: !(Maybe (Textual Int64))
+    , _faNotes :: !(Maybe Text)
     , _faFloodlightConfigurationIdDimensionValue :: !(Maybe DimensionValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -14348,8 +14776,6 @@ data FloodlightActivity = FloodlightActivity'
 -- * 'faFloodlightConfigurationId'
 --
 -- * 'faKind'
---
--- * 'faImageTagEnabled'
 --
 -- * 'faAdvertiserId'
 --
@@ -14377,6 +14803,8 @@ data FloodlightActivity = FloodlightActivity'
 --
 -- * 'faDefaultTags'
 --
+-- * 'faFloodlightTagType'
+--
 -- * 'faFloodlightActivityGroupName'
 --
 -- * 'faId'
@@ -14392,7 +14820,7 @@ data FloodlightActivity = FloodlightActivity'
 -- * 'faFloodlightConfigurationIdDimensionValue'
 floodlightActivity
     :: FloodlightActivity
-floodlightActivity =
+floodlightActivity = 
     FloodlightActivity'
     { _faCountingMethod = Nothing
     , _faTagString = Nothing
@@ -14401,7 +14829,6 @@ floodlightActivity =
     , _faFloodlightActivityGroupTagString = Nothing
     , _faFloodlightConfigurationId = Nothing
     , _faKind = "dfareporting#floodlightActivity"
-    , _faImageTagEnabled = Nothing
     , _faAdvertiserId = Nothing
     , _faAdvertiserIdDimensionValue = Nothing
     , _faSSLCompliant = Nothing
@@ -14415,6 +14842,7 @@ floodlightActivity =
     , _faHidden = Nothing
     , _faFloodlightActivityGroupType = Nothing
     , _faDefaultTags = Nothing
+    , _faFloodlightTagType = Nothing
     , _faFloodlightActivityGroupName = Nothing
     , _faId = Nothing
     , _faSSLRequired = Nothing
@@ -14431,7 +14859,7 @@ faCountingMethod
   = lens _faCountingMethod
       (\ s a -> s{_faCountingMethod = a})
 
--- | Value of the cat= paramter in the floodlight tag, which the ad servers
+-- | Value of the cat= parameter in the floodlight tag, which the ad servers
 -- use to identify the activity. This is optional: if empty, a new tag
 -- string will be generated for you. This string must be 1 to 8 characters
 -- long, with valid characters being [a-z][A-Z][0-9][-][ _ ]. This tag
@@ -14474,12 +14902,6 @@ faFloodlightConfigurationId
 faKind :: Lens' FloodlightActivity Text
 faKind = lens _faKind (\ s a -> s{_faKind = a})
 
--- | Whether the image tag is enabled for this activity.
-faImageTagEnabled :: Lens' FloodlightActivity (Maybe Bool)
-faImageTagEnabled
-  = lens _faImageTagEnabled
-      (\ s a -> s{_faImageTagEnabled = a})
-
 -- | Advertiser ID of this floodlight activity. If this field is left blank,
 -- the value will be copied over either from the activity group\'s
 -- advertiser or the existing activity\'s advertiser.
@@ -14516,7 +14938,9 @@ faTagFormat :: Lens' FloodlightActivity (Maybe FloodlightActivityTagFormat)
 faTagFormat
   = lens _faTagFormat (\ s a -> s{_faTagFormat = a})
 
--- | Code type used for cache busting in the generated tag.
+-- | Code type used for cache busting in the generated tag. Applicable only
+-- when floodlightActivityGroupType is COUNTER and countingMethod is
+-- STANDARD_COUNTING or UNIQUE_COUNTING.
 faCacheBustingType :: Lens' FloodlightActivity (Maybe FloodlightActivityCacheBustingType)
 faCacheBustingType
   = lens _faCacheBustingType
@@ -14569,6 +14993,13 @@ faDefaultTags
       . _Default
       . _Coerce
 
+-- | The type of Floodlight tag this activity will generate. This is a
+-- required field.
+faFloodlightTagType :: Lens' FloodlightActivity (Maybe FloodlightActivityFloodlightTagType)
+faFloodlightTagType
+  = lens _faFloodlightTagType
+      (\ s a -> s{_faFloodlightTagType = a})
+
 -- | Name of the associated floodlight activity group. This is a read-only
 -- field.
 faFloodlightActivityGroupName :: Lens' FloodlightActivity (Maybe Text)
@@ -14590,11 +15021,8 @@ faSSLRequired
       (\ s a -> s{_faSSLRequired = a})
 
 -- | List of the user-defined variables used by this conversion tag. These
--- map to the \"u[1-20]=\" in the tags. Each of these can have a user
--- defined type. Acceptable values are: - \"U1\" - \"U2\" - \"U3\" - \"U4\"
--- - \"U5\" - \"U6\" - \"U7\" - \"U8\" - \"U9\" - \"U10\" - \"U11\" -
--- \"U12\" - \"U13\" - \"U14\" - \"U15\" - \"U16\" - \"U17\" - \"U18\" -
--- \"U19\" - \"U20\"
+-- map to the \"u[1-100]=\" in the tags. Each of these can have a user
+-- defined type. Acceptable values are U1 to U100, inclusive.
 faUserDefinedVariableTypes :: Lens' FloodlightActivity [FloodlightActivityUserDefinedVariableTypesItem]
 faUserDefinedVariableTypes
   = lens _faUserDefinedVariableTypes
@@ -14634,7 +15062,6 @@ instance FromJSON FloodlightActivity where
                      <*> (o .:? "floodlightConfigurationId")
                      <*>
                      (o .:? "kind" .!= "dfareporting#floodlightActivity")
-                     <*> (o .:? "imageTagEnabled")
                      <*> (o .:? "advertiserId")
                      <*> (o .:? "advertiserIdDimensionValue")
                      <*> (o .:? "sslCompliant")
@@ -14648,6 +15075,7 @@ instance FromJSON FloodlightActivity where
                      <*> (o .:? "hidden")
                      <*> (o .:? "floodlightActivityGroupType")
                      <*> (o .:? "defaultTags" .!= mempty)
+                     <*> (o .:? "floodlightTagType")
                      <*> (o .:? "floodlightActivityGroupName")
                      <*> (o .:? "id")
                      <*> (o .:? "sslRequired")
@@ -14670,7 +15098,6 @@ instance ToJSON FloodlightActivity where
                   ("floodlightConfigurationId" .=) <$>
                     _faFloodlightConfigurationId,
                   Just ("kind" .= _faKind),
-                  ("imageTagEnabled" .=) <$> _faImageTagEnabled,
                   ("advertiserId" .=) <$> _faAdvertiserId,
                   ("advertiserIdDimensionValue" .=) <$>
                     _faAdvertiserIdDimensionValue,
@@ -14687,6 +15114,7 @@ instance ToJSON FloodlightActivity where
                   ("floodlightActivityGroupType" .=) <$>
                     _faFloodlightActivityGroupType,
                   ("defaultTags" .=) <$> _faDefaultTags,
+                  ("floodlightTagType" .=) <$> _faFloodlightTagType,
                   ("floodlightActivityGroupName" .=) <$>
                     _faFloodlightActivityGroupName,
                   ("id" .=) <$> _faId,
@@ -14702,9 +15130,9 @@ instance ToJSON FloodlightActivity where
 --
 -- /See:/ 'customFloodlightVariable' smart constructor.
 data CustomFloodlightVariable = CustomFloodlightVariable'
-    { _cusKind  :: !Text
+    { _cusKind :: !Text
     , _cusValue :: !(Maybe Text)
-    , _cusType  :: !(Maybe CustomFloodlightVariableType)
+    , _cusType :: !(Maybe CustomFloodlightVariableType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomFloodlightVariable' with the minimum fields required to make a request.
@@ -14718,7 +15146,7 @@ data CustomFloodlightVariable = CustomFloodlightVariable'
 -- * 'cusType'
 customFloodlightVariable
     :: CustomFloodlightVariable
-customFloodlightVariable =
+customFloodlightVariable = 
     CustomFloodlightVariable'
     { _cusKind = "dfareporting#customFloodlightVariable"
     , _cusValue = Nothing
@@ -14762,7 +15190,7 @@ instance ToJSON CustomFloodlightVariable where
 --
 -- /See:/ 'platformTypesListResponse' smart constructor.
 data PlatformTypesListResponse = PlatformTypesListResponse'
-    { _ptlrKind          :: !Text
+    { _ptlrKind :: !Text
     , _ptlrPlatformTypes :: !(Maybe [PlatformType])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -14775,7 +15203,7 @@ data PlatformTypesListResponse = PlatformTypesListResponse'
 -- * 'ptlrPlatformTypes'
 platformTypesListResponse
     :: PlatformTypesListResponse
-platformTypesListResponse =
+platformTypesListResponse = 
     PlatformTypesListResponse'
     { _ptlrKind = "dfareporting#platformTypesListResponse"
     , _ptlrPlatformTypes = Nothing
@@ -14824,7 +15252,7 @@ newtype LastModifiedInfo = LastModifiedInfo'
 -- * 'lmiTime'
 lastModifiedInfo
     :: LastModifiedInfo
-lastModifiedInfo =
+lastModifiedInfo = 
     LastModifiedInfo'
     { _lmiTime = Nothing
     }
@@ -14848,7 +15276,7 @@ instance ToJSON LastModifiedInfo where
 --
 -- /See:/ 'targetWindow' smart constructor.
 data TargetWindow = TargetWindow'
-    { _twCustomHTML         :: !(Maybe Text)
+    { _twCustomHTML :: !(Maybe Text)
     , _twTargetWindowOption :: !(Maybe TargetWindowTargetWindowOption)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -14861,7 +15289,7 @@ data TargetWindow = TargetWindow'
 -- * 'twTargetWindowOption'
 targetWindow
     :: TargetWindow
-targetWindow =
+targetWindow = 
     TargetWindow'
     { _twCustomHTML = Nothing
     , _twTargetWindowOption = Nothing
@@ -14901,7 +15329,7 @@ instance ToJSON TargetWindow where
 data AccountPermissionGroup = AccountPermissionGroup'
     { _apgpKind :: !Text
     , _apgpName :: !(Maybe Text)
-    , _apgpId   :: !(Maybe (Textual Int64))
+    , _apgpId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountPermissionGroup' with the minimum fields required to make a request.
@@ -14915,7 +15343,7 @@ data AccountPermissionGroup = AccountPermissionGroup'
 -- * 'apgpId'
 accountPermissionGroup
     :: AccountPermissionGroup
-accountPermissionGroup =
+accountPermissionGroup = 
     AccountPermissionGroup'
     { _apgpKind = "dfareporting#accountPermissionGroup"
     , _apgpName = Nothing
@@ -14958,21 +15386,21 @@ instance ToJSON AccountPermissionGroup where
 --
 -- /See:/ 'advertiser' smart constructor.
 data Advertiser = Advertiser'
-    { _advdOriginalFloodlightConfigurationId       :: !(Maybe (Textual Int64))
-    , _advdStatus                                  :: !(Maybe AdvertiserStatus)
-    , _advdFloodlightConfigurationId               :: !(Maybe (Textual Int64))
-    , _advdKind                                    :: !Text
-    , _advdSuspended                               :: !(Maybe Bool)
-    , _advdIdDimensionValue                        :: !(Maybe DimensionValue)
-    , _advdAccountId                               :: !(Maybe (Textual Int64))
-    , _advdDefaultEmail                            :: !(Maybe Text)
-    , _advdName                                    :: !(Maybe Text)
-    , _advdAdvertiserGroupId                       :: !(Maybe (Textual Int64))
-    , _advdDefaultClickThroughEventTagId           :: !(Maybe (Textual Int64))
-    , _advdId                                      :: !(Maybe (Textual Int64))
-    , _advdSubAccountId                            :: !(Maybe (Textual Int64))
+    { _advdOriginalFloodlightConfigurationId :: !(Maybe (Textual Int64))
+    , _advdStatus :: !(Maybe AdvertiserStatus)
+    , _advdFloodlightConfigurationId :: !(Maybe (Textual Int64))
+    , _advdKind :: !Text
+    , _advdSuspended :: !(Maybe Bool)
+    , _advdIdDimensionValue :: !(Maybe DimensionValue)
+    , _advdAccountId :: !(Maybe (Textual Int64))
+    , _advdDefaultEmail :: !(Maybe Text)
+    , _advdName :: !(Maybe Text)
+    , _advdAdvertiserGroupId :: !(Maybe (Textual Int64))
+    , _advdDefaultClickThroughEventTagId :: !(Maybe (Textual Int64))
+    , _advdId :: !(Maybe (Textual Int64))
+    , _advdSubAccountId :: !(Maybe (Textual Int64))
     , _advdFloodlightConfigurationIdDimensionValue :: !(Maybe DimensionValue)
-    , _advdClickThroughURLSuffix                   :: !(Maybe Text)
+    , _advdClickThroughURLSuffix :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Advertiser' with the minimum fields required to make a request.
@@ -15010,7 +15438,7 @@ data Advertiser = Advertiser'
 -- * 'advdClickThroughURLSuffix'
 advertiser
     :: Advertiser
-advertiser =
+advertiser = 
     Advertiser'
     { _advdOriginalFloodlightConfigurationId = Nothing
     , _advdStatus = Nothing
@@ -15196,13 +15624,13 @@ instance ToJSON Advertiser where
 -- /See:/ 'userRole' smart constructor.
 data UserRole = UserRole'
     { _urParentUserRoleId :: !(Maybe (Textual Int64))
-    , _urKind             :: !Text
-    , _urDefaultUserRole  :: !(Maybe Bool)
-    , _urAccountId        :: !(Maybe (Textual Int64))
-    , _urName             :: !(Maybe Text)
-    , _urId               :: !(Maybe (Textual Int64))
-    , _urPermissions      :: !(Maybe [UserRolePermission])
-    , _urSubAccountId     :: !(Maybe (Textual Int64))
+    , _urKind :: !Text
+    , _urDefaultUserRole :: !(Maybe Bool)
+    , _urAccountId :: !(Maybe (Textual Int64))
+    , _urName :: !(Maybe Text)
+    , _urId :: !(Maybe (Textual Int64))
+    , _urPermissions :: !(Maybe [UserRolePermission])
+    , _urSubAccountId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRole' with the minimum fields required to make a request.
@@ -15226,7 +15654,7 @@ data UserRole = UserRole'
 -- * 'urSubAccountId'
 userRole
     :: UserRole
-userRole =
+userRole = 
     UserRole'
     { _urParentUserRoleId = Nothing
     , _urKind = "dfareporting#userRole"
@@ -15327,7 +15755,7 @@ instance ToJSON UserRole where
 --
 -- /See:/ 'videoFormatsListResponse' smart constructor.
 data VideoFormatsListResponse = VideoFormatsListResponse'
-    { _vflrKind         :: !Text
+    { _vflrKind :: !Text
     , _vflrVideoFormats :: !(Maybe [VideoFormat])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -15340,7 +15768,7 @@ data VideoFormatsListResponse = VideoFormatsListResponse'
 -- * 'vflrVideoFormats'
 videoFormatsListResponse
     :: VideoFormatsListResponse
-videoFormatsListResponse =
+videoFormatsListResponse = 
     VideoFormatsListResponse'
     { _vflrKind = "dfareporting#videoFormatsListResponse"
     , _vflrVideoFormats = Nothing
@@ -15379,8 +15807,8 @@ instance ToJSON VideoFormatsListResponse where
 --
 -- /See:/ 'directorySitesListResponse' smart constructor.
 data DirectorySitesListResponse = DirectorySitesListResponse'
-    { _dslrNextPageToken  :: !(Maybe Text)
-    , _dslrKind           :: !Text
+    { _dslrNextPageToken :: !(Maybe Text)
+    , _dslrKind :: !Text
     , _dslrDirectorySites :: !(Maybe [DirectorySite])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -15395,7 +15823,7 @@ data DirectorySitesListResponse = DirectorySitesListResponse'
 -- * 'dslrDirectorySites'
 directorySitesListResponse
     :: DirectorySitesListResponse
-directorySitesListResponse =
+directorySitesListResponse = 
     DirectorySitesListResponse'
     { _dslrNextPageToken = Nothing
     , _dslrKind = "dfareporting#directorySitesListResponse"
@@ -15444,8 +15872,8 @@ instance ToJSON DirectorySitesListResponse where
 --
 -- /See:/ 'conversionError' smart constructor.
 data ConversionError = ConversionError'
-    { _ceKind    :: !Text
-    , _ceCode    :: !(Maybe ConversionErrorCode)
+    { _ceKind :: !Text
+    , _ceCode :: !(Maybe ConversionErrorCode)
     , _ceMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -15460,7 +15888,7 @@ data ConversionError = ConversionError'
 -- * 'ceMessage'
 conversionError
     :: ConversionError
-conversionError =
+conversionError = 
     ConversionError'
     { _ceKind = "dfareporting#conversionError"
     , _ceCode = Nothing
@@ -15501,11 +15929,11 @@ instance ToJSON ConversionError where
 --
 -- /See:/ 'pricingSchedulePricingPeriod' smart constructor.
 data PricingSchedulePricingPeriod = PricingSchedulePricingPeriod'
-    { _psppEndDate         :: !(Maybe Date')
+    { _psppEndDate :: !(Maybe Date')
     , _psppRateOrCostNanos :: !(Maybe (Textual Int64))
-    , _psppStartDate       :: !(Maybe Date')
-    , _psppUnits           :: !(Maybe (Textual Int64))
-    , _psppPricingComment  :: !(Maybe Text)
+    , _psppStartDate :: !(Maybe Date')
+    , _psppUnits :: !(Maybe (Textual Int64))
+    , _psppPricingComment :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PricingSchedulePricingPeriod' with the minimum fields required to make a request.
@@ -15523,7 +15951,7 @@ data PricingSchedulePricingPeriod = PricingSchedulePricingPeriod'
 -- * 'psppPricingComment'
 pricingSchedulePricingPeriod
     :: PricingSchedulePricingPeriod
-pricingSchedulePricingPeriod =
+pricingSchedulePricingPeriod = 
     PricingSchedulePricingPeriod'
     { _psppEndDate = Nothing
     , _psppRateOrCostNanos = Nothing
@@ -15544,7 +15972,8 @@ psppEndDate
   = lens _psppEndDate (\ s a -> s{_psppEndDate = a}) .
       mapping _Date
 
--- | Rate or cost of this pricing period.
+-- | Rate or cost of this pricing period in nanos (i.e., multipled by
+-- 1000000000). Acceptable values are 0 to 1000000000000000000, inclusive.
 psppRateOrCostNanos :: Lens' PricingSchedulePricingPeriod (Maybe Int64)
 psppRateOrCostNanos
   = lens _psppRateOrCostNanos
@@ -15560,7 +15989,8 @@ psppStartDate
       (\ s a -> s{_psppStartDate = a})
       . mapping _Date
 
--- | Units of this pricing period.
+-- | Units of this pricing period. Acceptable values are 0 to 10000000000,
+-- inclusive.
 psppUnits :: Lens' PricingSchedulePricingPeriod (Maybe Int64)
 psppUnits
   = lens _psppUnits (\ s a -> s{_psppUnits = a}) .
@@ -15596,8 +16026,8 @@ instance ToJSON PricingSchedulePricingPeriod where
 --
 -- /See:/ 'directorySiteContactsListResponse' smart constructor.
 data DirectorySiteContactsListResponse = DirectorySiteContactsListResponse'
-    { _dsclrNextPageToken         :: !(Maybe Text)
-    , _dsclrKind                  :: !Text
+    { _dsclrNextPageToken :: !(Maybe Text)
+    , _dsclrKind :: !Text
     , _dsclrDirectorySiteContacts :: !(Maybe [DirectorySiteContact])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -15612,7 +16042,7 @@ data DirectorySiteContactsListResponse = DirectorySiteContactsListResponse'
 -- * 'dsclrDirectorySiteContacts'
 directorySiteContactsListResponse
     :: DirectorySiteContactsListResponse
-directorySiteContactsListResponse =
+directorySiteContactsListResponse = 
     DirectorySiteContactsListResponse'
     { _dsclrNextPageToken = Nothing
     , _dsclrKind = "dfareporting#directorySiteContactsListResponse"
@@ -15664,12 +16094,12 @@ instance ToJSON DirectorySiteContactsListResponse
 --
 -- /See:/ 'region' smart constructor.
 data Region = Region'
-    { _regRegionCode    :: !(Maybe Text)
-    , _regKind          :: !Text
-    , _regName          :: !(Maybe Text)
-    , _regCountryCode   :: !(Maybe Text)
+    { _regRegionCode :: !(Maybe Text)
+    , _regKind :: !Text
+    , _regName :: !(Maybe Text)
+    , _regCountryCode :: !(Maybe Text)
     , _regCountryDartId :: !(Maybe (Textual Int64))
-    , _regDartId        :: !(Maybe (Textual Int64))
+    , _regDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Region' with the minimum fields required to make a request.
@@ -15689,7 +16119,7 @@ data Region = Region'
 -- * 'regDartId'
 region
     :: Region
-region =
+region = 
     Region'
     { _regRegionCode = Nothing
     , _regKind = "dfareporting#region"
@@ -15759,8 +16189,8 @@ instance ToJSON Region where
 --
 -- /See:/ 'advertiserGroupsListResponse' smart constructor.
 data AdvertiserGroupsListResponse = AdvertiserGroupsListResponse'
-    { _aglrNextPageToken    :: !(Maybe Text)
-    , _aglrKind             :: !Text
+    { _aglrNextPageToken :: !(Maybe Text)
+    , _aglrKind :: !Text
     , _aglrAdvertiserGroups :: !(Maybe [AdvertiserGroup])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -15775,7 +16205,7 @@ data AdvertiserGroupsListResponse = AdvertiserGroupsListResponse'
 -- * 'aglrAdvertiserGroups'
 advertiserGroupsListResponse
     :: AdvertiserGroupsListResponse
-advertiserGroupsListResponse =
+advertiserGroupsListResponse = 
     AdvertiserGroupsListResponse'
     { _aglrNextPageToken = Nothing
     , _aglrKind = "dfareporting#advertiserGroupsListResponse"
@@ -15823,19 +16253,19 @@ instance ToJSON AdvertiserGroupsListResponse where
 --
 -- /See:/ 'creativeAssignment' smart constructor.
 data CreativeAssignment = CreativeAssignment'
-    { _caCreativeGroupAssignments   :: !(Maybe [CreativeGroupAssignment])
-    , _caStartTime                  :: !(Maybe DateTime')
-    , _caWeight                     :: !(Maybe (Textual Int32))
-    , _caRichMediaExitOverrides     :: !(Maybe [RichMediaExitOverride])
-    , _caSSLCompliant               :: !(Maybe Bool)
-    , _caCreativeId                 :: !(Maybe (Textual Int64))
-    , _caClickThroughURL            :: !(Maybe ClickThroughURL)
-    , _caApplyEventTags             :: !(Maybe Bool)
-    , _caActive                     :: !(Maybe Bool)
-    , _caSequence                   :: !(Maybe (Textual Int32))
-    , _caEndTime                    :: !(Maybe DateTime')
+    { _caCreativeGroupAssignments :: !(Maybe [CreativeGroupAssignment])
+    , _caStartTime :: !(Maybe DateTime')
+    , _caWeight :: !(Maybe (Textual Int32))
+    , _caRichMediaExitOverrides :: !(Maybe [RichMediaExitOverride])
+    , _caSSLCompliant :: !(Maybe Bool)
+    , _caCreativeId :: !(Maybe (Textual Int64))
+    , _caClickThroughURL :: !(Maybe ClickThroughURL)
+    , _caApplyEventTags :: !(Maybe Bool)
+    , _caActive :: !(Maybe Bool)
+    , _caSequence :: !(Maybe (Textual Int32))
+    , _caEndTime :: !(Maybe DateTime')
     , _caCompanionCreativeOverrides :: !(Maybe [CompanionClickThroughOverride])
-    , _caCreativeIdDimensionValue   :: !(Maybe DimensionValue)
+    , _caCreativeIdDimensionValue :: !(Maybe DimensionValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeAssignment' with the minimum fields required to make a request.
@@ -15869,7 +16299,7 @@ data CreativeAssignment = CreativeAssignment'
 -- * 'caCreativeIdDimensionValue'
 creativeAssignment
     :: CreativeAssignment
-creativeAssignment =
+creativeAssignment = 
     CreativeAssignment'
     { _caCreativeGroupAssignments = Nothing
     , _caStartTime = Nothing
@@ -15903,18 +16333,18 @@ caStartTime
       mapping _DateTime
 
 -- | Weight of the creative assignment, applicable when the rotation type is
--- CREATIVE_ROTATION_TYPE_RANDOM.
+-- CREATIVE_ROTATION_TYPE_RANDOM. Value must be greater than or equal to 1.
 caWeight :: Lens' CreativeAssignment (Maybe Int32)
 caWeight
   = lens _caWeight (\ s a -> s{_caWeight = a}) .
       mapping _Coerce
 
 -- | Rich media exit overrides for this creative assignment. Applicable when
--- the creative type is any of the following: - RICH_MEDIA_INPAGE -
--- RICH_MEDIA_INPAGE_FLOATING - RICH_MEDIA_IM_EXPAND - RICH_MEDIA_EXPANDING
--- - RICH_MEDIA_INTERSTITIAL_FLOAT - RICH_MEDIA_MOBILE_IN_APP -
--- RICH_MEDIA_MULTI_FLOATING - RICH_MEDIA_PEEL_DOWN - ADVANCED_BANNER -
--- VPAID_LINEAR - VPAID_NON_LINEAR
+-- the creative type is any of the following: - DISPLAY - RICH_MEDIA_INPAGE
+-- - RICH_MEDIA_INPAGE_FLOATING - RICH_MEDIA_IM_EXPAND -
+-- RICH_MEDIA_EXPANDING - RICH_MEDIA_INTERSTITIAL_FLOAT -
+-- RICH_MEDIA_MOBILE_IN_APP - RICH_MEDIA_MULTI_FLOATING -
+-- RICH_MEDIA_PEEL_DOWN - VPAID_LINEAR - VPAID_NON_LINEAR
 caRichMediaExitOverrides :: Lens' CreativeAssignment [RichMediaExitOverride]
 caRichMediaExitOverrides
   = lens _caRichMediaExitOverrides
@@ -15957,7 +16387,8 @@ caActive :: Lens' CreativeAssignment (Maybe Bool)
 caActive = lens _caActive (\ s a -> s{_caActive = a})
 
 -- | Sequence number of the creative assignment, applicable when the rotation
--- type is CREATIVE_ROTATION_TYPE_SEQUENTIAL.
+-- type is CREATIVE_ROTATION_TYPE_SEQUENTIAL. Acceptable values are 1 to
+-- 65535, inclusive.
 caSequence :: Lens' CreativeAssignment (Maybe Int32)
 caSequence
   = lens _caSequence (\ s a -> s{_caSequence = a}) .
@@ -16031,8 +16462,8 @@ instance ToJSON CreativeAssignment where
 --
 -- /See:/ 'dimensionFilter' smart constructor.
 data DimensionFilter = DimensionFilter'
-    { _dfKind          :: !Text
-    , _dfValue         :: !(Maybe Text)
+    { _dfKind :: !Text
+    , _dfValue :: !(Maybe Text)
     , _dfDimensionName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -16047,7 +16478,7 @@ data DimensionFilter = DimensionFilter'
 -- * 'dfDimensionName'
 dimensionFilter
     :: DimensionFilter
-dimensionFilter =
+dimensionFilter = 
     DimensionFilter'
     { _dfKind = "dfareporting#dimensionFilter"
     , _dfValue = Nothing
@@ -16088,8 +16519,8 @@ instance ToJSON DimensionFilter where
 --
 -- /See:/ 'userProFileList' smart constructor.
 data UserProFileList = UserProFileList'
-    { _upflEtag  :: !(Maybe Text)
-    , _upflKind  :: !Text
+    { _upflEtag :: !(Maybe Text)
+    , _upflKind :: !Text
     , _upflItems :: !(Maybe [UserProFile])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -16104,7 +16535,7 @@ data UserProFileList = UserProFileList'
 -- * 'upflItems'
 userProFileList
     :: UserProFileList
-userProFileList =
+userProFileList = 
     UserProFileList'
     { _upflEtag = Nothing
     , _upflKind = "dfareporting#userProfileList"
@@ -16147,24 +16578,23 @@ instance ToJSON UserProFileList where
 --
 -- /See:/ 'floodlightConfiguration' smart constructor.
 data FloodlightConfiguration = FloodlightConfiguration'
-    { _fcTagSettings                              :: !(Maybe TagSettings)
-    , _fcExposureToConversionEnabled              :: !(Maybe Bool)
-    , _fcInAppAttributionTrackingEnabled          :: !(Maybe Bool)
-    , _fcThirdPartyAuthenticationTokens           :: !(Maybe [ThirdPartyAuthenticationToken])
-    , _fcKind                                     :: !Text
-    , _fcAdvertiserId                             :: !(Maybe (Textual Int64))
-    , _fcAnalyticsDataSharingEnabled              :: !(Maybe Bool)
-    , _fcAdvertiserIdDimensionValue               :: !(Maybe DimensionValue)
-    , _fcIdDimensionValue                         :: !(Maybe DimensionValue)
-    , _fcLookbackConfiguration                    :: !(Maybe LookbackConfiguration)
-    , _fcAccountId                                :: !(Maybe (Textual Int64))
-    , _fcId                                       :: !(Maybe (Textual Int64))
+    { _fcTagSettings :: !(Maybe TagSettings)
+    , _fcExposureToConversionEnabled :: !(Maybe Bool)
+    , _fcInAppAttributionTrackingEnabled :: !(Maybe Bool)
+    , _fcThirdPartyAuthenticationTokens :: !(Maybe [ThirdPartyAuthenticationToken])
+    , _fcKind :: !Text
+    , _fcAdvertiserId :: !(Maybe (Textual Int64))
+    , _fcAnalyticsDataSharingEnabled :: !(Maybe Bool)
+    , _fcAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _fcIdDimensionValue :: !(Maybe DimensionValue)
+    , _fcLookbackConfiguration :: !(Maybe LookbackConfiguration)
+    , _fcAccountId :: !(Maybe (Textual Int64))
+    , _fcId :: !(Maybe (Textual Int64))
     , _fcNATuralSearchConversionAttributionOption :: !(Maybe FloodlightConfigurationNATuralSearchConversionAttributionOption)
-    , _fcUserDefinedVariableConfigurations        :: !(Maybe [UserDefinedVariableConfiguration])
-    , _fcSubAccountId                             :: !(Maybe (Textual Int64))
-    , _fcFirstDayOfWeek                           :: !(Maybe FloodlightConfigurationFirstDayOfWeek)
-    , _fcOmnitureSettings                         :: !(Maybe OmnitureSettings)
-    , _fcStandardVariableTypes                    :: !(Maybe [FloodlightConfigurationStandardVariableTypesItem])
+    , _fcUserDefinedVariableConfigurations :: !(Maybe [UserDefinedVariableConfiguration])
+    , _fcSubAccountId :: !(Maybe (Textual Int64))
+    , _fcFirstDayOfWeek :: !(Maybe FloodlightConfigurationFirstDayOfWeek)
+    , _fcOmnitureSettings :: !(Maybe OmnitureSettings)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightConfiguration' with the minimum fields required to make a request.
@@ -16204,11 +16634,9 @@ data FloodlightConfiguration = FloodlightConfiguration'
 -- * 'fcFirstDayOfWeek'
 --
 -- * 'fcOmnitureSettings'
---
--- * 'fcStandardVariableTypes'
 floodlightConfiguration
     :: FloodlightConfiguration
-floodlightConfiguration =
+floodlightConfiguration = 
     FloodlightConfiguration'
     { _fcTagSettings = Nothing
     , _fcExposureToConversionEnabled = Nothing
@@ -16227,7 +16655,6 @@ floodlightConfiguration =
     , _fcSubAccountId = Nothing
     , _fcFirstDayOfWeek = Nothing
     , _fcOmnitureSettings = Nothing
-    , _fcStandardVariableTypes = Nothing
     }
 
 -- | Configuration settings for dynamic and image floodlight tags.
@@ -16348,15 +16775,6 @@ fcOmnitureSettings
   = lens _fcOmnitureSettings
       (\ s a -> s{_fcOmnitureSettings = a})
 
--- | List of standard variables enabled for this configuration. Acceptable
--- values are: - \"ORD\" - \"NUM\"
-fcStandardVariableTypes :: Lens' FloodlightConfiguration [FloodlightConfigurationStandardVariableTypesItem]
-fcStandardVariableTypes
-  = lens _fcStandardVariableTypes
-      (\ s a -> s{_fcStandardVariableTypes = a})
-      . _Default
-      . _Coerce
-
 instance FromJSON FloodlightConfiguration where
         parseJSON
           = withObject "FloodlightConfiguration"
@@ -16384,8 +16802,7 @@ instance FromJSON FloodlightConfiguration where
                         mempty)
                      <*> (o .:? "subaccountId")
                      <*> (o .:? "firstDayOfWeek")
-                     <*> (o .:? "omnitureSettings")
-                     <*> (o .:? "standardVariableTypes" .!= mempty))
+                     <*> (o .:? "omnitureSettings"))
 
 instance ToJSON FloodlightConfiguration where
         toJSON FloodlightConfiguration'{..}
@@ -16415,18 +16832,16 @@ instance ToJSON FloodlightConfiguration where
                     _fcUserDefinedVariableConfigurations,
                   ("subaccountId" .=) <$> _fcSubAccountId,
                   ("firstDayOfWeek" .=) <$> _fcFirstDayOfWeek,
-                  ("omnitureSettings" .=) <$> _fcOmnitureSettings,
-                  ("standardVariableTypes" .=) <$>
-                    _fcStandardVariableTypes])
+                  ("omnitureSettings" .=) <$> _fcOmnitureSettings])
 
 -- | Companion Settings
 --
 -- /See:/ 'companionSetting' smart constructor.
 data CompanionSetting = CompanionSetting'
-    { _comKind               :: !Text
-    , _comImageOnly          :: !(Maybe Bool)
+    { _comKind :: !Text
+    , _comImageOnly :: !(Maybe Bool)
     , _comCompanionsDisabled :: !(Maybe Bool)
-    , _comEnabledSizes       :: !(Maybe [Size])
+    , _comEnabledSizes :: !(Maybe [Size])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CompanionSetting' with the minimum fields required to make a request.
@@ -16442,7 +16857,7 @@ data CompanionSetting = CompanionSetting'
 -- * 'comEnabledSizes'
 companionSetting
     :: CompanionSetting
-companionSetting =
+companionSetting = 
     CompanionSetting'
     { _comKind = "dfareporting#companionSetting"
     , _comImageOnly = Nothing
@@ -16498,8 +16913,8 @@ instance ToJSON CompanionSetting where
 --
 -- /See:/ 'floodlightActivityGroupsListResponse' smart constructor.
 data FloodlightActivityGroupsListResponse = FloodlightActivityGroupsListResponse'
-    { _faglrNextPageToken            :: !(Maybe Text)
-    , _faglrKind                     :: !Text
+    { _faglrNextPageToken :: !(Maybe Text)
+    , _faglrKind :: !Text
     , _faglrFloodlightActivityGroups :: !(Maybe [FloodlightActivityGroup])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -16514,7 +16929,7 @@ data FloodlightActivityGroupsListResponse = FloodlightActivityGroupsListResponse
 -- * 'faglrFloodlightActivityGroups'
 floodlightActivityGroupsListResponse
     :: FloodlightActivityGroupsListResponse
-floodlightActivityGroupsListResponse =
+floodlightActivityGroupsListResponse = 
     FloodlightActivityGroupsListResponse'
     { _faglrNextPageToken = Nothing
     , _faglrKind = "dfareporting#floodlightActivityGroupsListResponse"
@@ -16568,18 +16983,19 @@ instance ToJSON FloodlightActivityGroupsListResponse
 -- /See:/ 'conversion' smart constructor.
 data Conversion = Conversion'
     { _conoEncryptedUserIdCandidates :: !(Maybe [Text])
-    , _conoTimestampMicros           :: !(Maybe (Textual Int64))
-    , _conoLimitAdTracking           :: !(Maybe Bool)
-    , _conoEncryptedUserId           :: !(Maybe Text)
-    , _conoMobileDeviceId            :: !(Maybe Text)
+    , _conoTimestampMicros :: !(Maybe (Textual Int64))
+    , _conoLimitAdTracking :: !(Maybe Bool)
+    , _conoEncryptedUserId :: !(Maybe Text)
+    , _conoMobileDeviceId :: !(Maybe Text)
     , _conoFloodlightConfigurationId :: !(Maybe (Textual Int64))
-    , _conoKind                      :: !Text
-    , _conoFloodlightActivityId      :: !(Maybe (Textual Int64))
-    , _conoQuantity                  :: !(Maybe (Textual Int64))
-    , _conoValue                     :: !(Maybe (Textual Double))
-    , _conoCustomVariables           :: !(Maybe [CustomFloodlightVariable])
-    , _conoChildDirectedTreatment    :: !(Maybe Bool)
-    , _conoOrdinal                   :: !(Maybe Text)
+    , _conoKind :: !Text
+    , _conoFloodlightActivityId :: !(Maybe (Textual Int64))
+    , _conoQuantity :: !(Maybe (Textual Int64))
+    , _conoValue :: !(Maybe (Textual Double))
+    , _conoCustomVariables :: !(Maybe [CustomFloodlightVariable])
+    , _conoChildDirectedTreatment :: !(Maybe Bool)
+    , _conoGclid :: !(Maybe Text)
+    , _conoOrdinal :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Conversion' with the minimum fields required to make a request.
@@ -16610,10 +17026,12 @@ data Conversion = Conversion'
 --
 -- * 'conoChildDirectedTreatment'
 --
+-- * 'conoGclid'
+--
 -- * 'conoOrdinal'
 conversion
     :: Conversion
-conversion =
+conversion = 
     Conversion'
     { _conoEncryptedUserIdCandidates = Nothing
     , _conoTimestampMicros = Nothing
@@ -16627,6 +17045,7 @@ conversion =
     , _conoValue = Nothing
     , _conoCustomVariables = Nothing
     , _conoChildDirectedTreatment = Nothing
+    , _conoGclid = Nothing
     , _conoOrdinal = Nothing
     }
 
@@ -16634,10 +17053,10 @@ conversion =
 -- prior to the conversion timestamp will be used in the inserted
 -- conversion. If no such user ID is found then the conversion will be
 -- rejected with NO_COOKIE_MATCH_FOUND error. When set, encryptionInfo
--- should also be specified. This field should only be used when calling
--- conversions.batchinsert. This field is mutually exclusive with
--- encryptedUserId and mobileDeviceId. This or encryptedUserId or
--- mobileDeviceId is a required field.
+-- should also be specified. This field may only be used when calling
+-- batchinsert; it is not supported by batchupdate. This field is mutually
+-- exclusive with encryptedUserId, mobileDeviceId and gclid. This or
+-- encryptedUserId or mobileDeviceId or gclid is a required field.
 conoEncryptedUserIdCandidates :: Lens' Conversion [Text]
 conoEncryptedUserIdCandidates
   = lens _conoEncryptedUserIdCandidates
@@ -16663,16 +17082,18 @@ conoLimitAdTracking
 
 -- | The alphanumeric encrypted user ID. When set, encryptionInfo should also
 -- be specified. This field is mutually exclusive with
--- encryptedUserIdCandidates[] and mobileDeviceId. This or
--- encryptedUserIdCandidates[] or mobileDeviceId is a required field.
+-- encryptedUserIdCandidates[], mobileDeviceId and gclid. This or
+-- encryptedUserIdCandidates[] or mobileDeviceId or gclid is a required
+-- field.
 conoEncryptedUserId :: Lens' Conversion (Maybe Text)
 conoEncryptedUserId
   = lens _conoEncryptedUserId
       (\ s a -> s{_conoEncryptedUserId = a})
 
 -- | The mobile device ID. This field is mutually exclusive with
--- encryptedUserId and encryptedUserIdCandidates[]. This or encryptedUserId
--- or encryptedUserIdCandidates[] is a required field.
+-- encryptedUserId, encryptedUserIdCandidates[] and gclid. This or
+-- encryptedUserId or encryptedUserIdCandidates[] or gclid is a required
+-- field.
 conoMobileDeviceId :: Lens' Conversion (Maybe Text)
 conoMobileDeviceId
   = lens _conoMobileDeviceId
@@ -16724,6 +17145,14 @@ conoChildDirectedTreatment
   = lens _conoChildDirectedTreatment
       (\ s a -> s{_conoChildDirectedTreatment = a})
 
+-- | The Google click ID. This field is mutually exclusive with
+-- encryptedUserId, encryptedUserIdCandidates[] and mobileDeviceId. This or
+-- encryptedUserId or encryptedUserIdCandidates[] or mobileDeviceId is a
+-- required field.
+conoGclid :: Lens' Conversion (Maybe Text)
+conoGclid
+  = lens _conoGclid (\ s a -> s{_conoGclid = a})
+
 -- | The ordinal of the conversion. Use this field to control how conversions
 -- of the same user and day are de-duplicated. This is a required field.
 conoOrdinal :: Lens' Conversion (Maybe Text)
@@ -16747,6 +17176,7 @@ instance FromJSON Conversion where
                      <*> (o .:? "value")
                      <*> (o .:? "customVariables" .!= mempty)
                      <*> (o .:? "childDirectedTreatment")
+                     <*> (o .:? "gclid")
                      <*> (o .:? "ordinal"))
 
 instance ToJSON Conversion where
@@ -16769,14 +17199,15 @@ instance ToJSON Conversion where
                   ("customVariables" .=) <$> _conoCustomVariables,
                   ("childDirectedTreatment" .=) <$>
                     _conoChildDirectedTreatment,
+                  ("gclid" .=) <$> _conoGclid,
                   ("ordinal" .=) <$> _conoOrdinal])
 
 -- | Creative Field Value List Response
 --
 -- /See:/ 'creativeFieldValuesListResponse' smart constructor.
 data CreativeFieldValuesListResponse = CreativeFieldValuesListResponse'
-    { _cfvlrNextPageToken       :: !(Maybe Text)
-    , _cfvlrKind                :: !Text
+    { _cfvlrNextPageToken :: !(Maybe Text)
+    , _cfvlrKind :: !Text
     , _cfvlrCreativeFieldValues :: !(Maybe [CreativeFieldValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -16791,7 +17222,7 @@ data CreativeFieldValuesListResponse = CreativeFieldValuesListResponse'
 -- * 'cfvlrCreativeFieldValues'
 creativeFieldValuesListResponse
     :: CreativeFieldValuesListResponse
-creativeFieldValuesListResponse =
+creativeFieldValuesListResponse = 
     CreativeFieldValuesListResponse'
     { _cfvlrNextPageToken = Nothing
     , _cfvlrKind = "dfareporting#creativeFieldValuesListResponse"
@@ -16842,9 +17273,9 @@ instance ToJSON CreativeFieldValuesListResponse where
 --
 -- /See:/ 'richMediaExitOverride' smart constructor.
 data RichMediaExitOverride = RichMediaExitOverride'
-    { _rmeoEnabled         :: !(Maybe Bool)
+    { _rmeoEnabled :: !(Maybe Bool)
     , _rmeoClickThroughURL :: !(Maybe ClickThroughURL)
-    , _rmeoExitId          :: !(Maybe (Textual Int64))
+    , _rmeoExitId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RichMediaExitOverride' with the minimum fields required to make a request.
@@ -16858,7 +17289,7 @@ data RichMediaExitOverride = RichMediaExitOverride'
 -- * 'rmeoExitId'
 richMediaExitOverride
     :: RichMediaExitOverride
-richMediaExitOverride =
+richMediaExitOverride = 
     RichMediaExitOverride'
     { _rmeoEnabled = Nothing
     , _rmeoClickThroughURL = Nothing
@@ -16900,13 +17331,81 @@ instance ToJSON RichMediaExitOverride where
                   ("clickThroughUrl" .=) <$> _rmeoClickThroughURL,
                   ("exitId" .=) <$> _rmeoExitId])
 
+-- | Landing Page List Response
+--
+-- /See:/ 'advertiserLandingPagesListResponse' smart constructor.
+data AdvertiserLandingPagesListResponse = AdvertiserLandingPagesListResponse'
+    { _alplrLandingPages :: !(Maybe [LandingPage])
+    , _alplrNextPageToken :: !(Maybe Text)
+    , _alplrKind :: !Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AdvertiserLandingPagesListResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'alplrLandingPages'
+--
+-- * 'alplrNextPageToken'
+--
+-- * 'alplrKind'
+advertiserLandingPagesListResponse
+    :: AdvertiserLandingPagesListResponse
+advertiserLandingPagesListResponse = 
+    AdvertiserLandingPagesListResponse'
+    { _alplrLandingPages = Nothing
+    , _alplrNextPageToken = Nothing
+    , _alplrKind = "dfareporting#advertiserLandingPagesListResponse"
+    }
+
+-- | Landing page collection
+alplrLandingPages :: Lens' AdvertiserLandingPagesListResponse [LandingPage]
+alplrLandingPages
+  = lens _alplrLandingPages
+      (\ s a -> s{_alplrLandingPages = a})
+      . _Default
+      . _Coerce
+
+-- | Pagination token to be used for the next list operation.
+alplrNextPageToken :: Lens' AdvertiserLandingPagesListResponse (Maybe Text)
+alplrNextPageToken
+  = lens _alplrNextPageToken
+      (\ s a -> s{_alplrNextPageToken = a})
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"dfareporting#advertiserLandingPagesListResponse\".
+alplrKind :: Lens' AdvertiserLandingPagesListResponse Text
+alplrKind
+  = lens _alplrKind (\ s a -> s{_alplrKind = a})
+
+instance FromJSON AdvertiserLandingPagesListResponse
+         where
+        parseJSON
+          = withObject "AdvertiserLandingPagesListResponse"
+              (\ o ->
+                 AdvertiserLandingPagesListResponse' <$>
+                   (o .:? "landingPages" .!= mempty) <*>
+                     (o .:? "nextPageToken")
+                     <*>
+                     (o .:? "kind" .!=
+                        "dfareporting#advertiserLandingPagesListResponse"))
+
+instance ToJSON AdvertiserLandingPagesListResponse
+         where
+        toJSON AdvertiserLandingPagesListResponse'{..}
+          = object
+              (catMaybes
+                 [("landingPages" .=) <$> _alplrLandingPages,
+                  ("nextPageToken" .=) <$> _alplrNextPageToken,
+                  Just ("kind" .= _alplrKind)])
+
 -- | Represents a sorted dimension.
 --
 -- /See:/ 'sortedDimension' smart constructor.
 data SortedDimension = SortedDimension'
-    { _sdKind      :: !Text
+    { _sdKind :: !Text
     , _sdSortOrder :: !(Maybe SortedDimensionSortOrder)
-    , _sdName      :: !(Maybe Text)
+    , _sdName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SortedDimension' with the minimum fields required to make a request.
@@ -16920,7 +17419,7 @@ data SortedDimension = SortedDimension'
 -- * 'sdName'
 sortedDimension
     :: SortedDimension
-sortedDimension =
+sortedDimension = 
     SortedDimension'
     { _sdKind = "dfareporting#sortedDimension"
     , _sdSortOrder = Nothing
@@ -16961,8 +17460,8 @@ instance ToJSON SortedDimension where
 --
 -- /See:/ 'creativeFieldsListResponse' smart constructor.
 data CreativeFieldsListResponse = CreativeFieldsListResponse'
-    { _cflrNextPageToken  :: !(Maybe Text)
-    , _cflrKind           :: !Text
+    { _cflrNextPageToken :: !(Maybe Text)
+    , _cflrKind :: !Text
     , _cflrCreativeFields :: !(Maybe [CreativeField])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -16977,7 +17476,7 @@ data CreativeFieldsListResponse = CreativeFieldsListResponse'
 -- * 'cflrCreativeFields'
 creativeFieldsListResponse
     :: CreativeFieldsListResponse
-creativeFieldsListResponse =
+creativeFieldsListResponse = 
     CreativeFieldsListResponse'
     { _cflrNextPageToken = Nothing
     , _cflrKind = "dfareporting#creativeFieldsListResponse"
@@ -17025,8 +17524,8 @@ instance ToJSON CreativeFieldsListResponse where
 --
 -- /See:/ 'targetingTemplatesListResponse' smart constructor.
 data TargetingTemplatesListResponse = TargetingTemplatesListResponse'
-    { _ttlrNextPageToken      :: !(Maybe Text)
-    , _ttlrKind               :: !Text
+    { _ttlrNextPageToken :: !(Maybe Text)
+    , _ttlrKind :: !Text
     , _ttlrTargetingTemplates :: !(Maybe [TargetingTemplate])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -17041,7 +17540,7 @@ data TargetingTemplatesListResponse = TargetingTemplatesListResponse'
 -- * 'ttlrTargetingTemplates'
 targetingTemplatesListResponse
     :: TargetingTemplatesListResponse
-targetingTemplatesListResponse =
+targetingTemplatesListResponse = 
     TargetingTemplatesListResponse'
     { _ttlrNextPageToken = Nothing
     , _ttlrKind = "dfareporting#targetingTemplatesListResponse"
@@ -17091,7 +17590,7 @@ instance ToJSON TargetingTemplatesListResponse where
 --
 -- /See:/ 'placementsGenerateTagsResponse' smart constructor.
 data PlacementsGenerateTagsResponse = PlacementsGenerateTagsResponse'
-    { _pgtrKind          :: !Text
+    { _pgtrKind :: !Text
     , _pgtrPlacementTags :: !(Maybe [PlacementTag])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -17104,7 +17603,7 @@ data PlacementsGenerateTagsResponse = PlacementsGenerateTagsResponse'
 -- * 'pgtrPlacementTags'
 placementsGenerateTagsResponse
     :: PlacementsGenerateTagsResponse
-placementsGenerateTagsResponse =
+placementsGenerateTagsResponse = 
     PlacementsGenerateTagsResponse'
     { _pgtrKind = "dfareporting#placementsGenerateTagsResponse"
     , _pgtrPlacementTags = Nothing
@@ -17144,50 +17643,51 @@ instance ToJSON PlacementsGenerateTagsResponse where
 --
 -- /See:/ 'creativeAsset' smart constructor.
 data CreativeAsset = CreativeAsset'
-    { _caaZIndex                :: !(Maybe (Textual Int32))
-    , _caaPushdown              :: !(Maybe Bool)
-    , _caaVideoDuration         :: !(Maybe (Textual Double))
-    , _caaOriginalBackup        :: !(Maybe Bool)
-    , _caaWindowMode            :: !(Maybe CreativeAssetWindowMode)
-    , _caaFlashVersion          :: !(Maybe (Textual Int32))
-    , _caaPushdownDuration      :: !(Maybe (Textual Double))
-    , _caaSize                  :: !(Maybe Size)
-    , _caaVerticallyLocked      :: !(Maybe Bool)
-    , _caaOffSet                :: !(Maybe OffSetPosition)
-    , _caaStreamingServingURL   :: !(Maybe Text)
-    , _caaZipFilesize           :: !(Maybe Text)
-    , _caaTransparency          :: !(Maybe Bool)
-    , _caaHideSelectionBoxes    :: !(Maybe Bool)
-    , _caaSSLCompliant          :: !(Maybe Bool)
-    , _caaFileSize              :: !(Maybe (Textual Int64))
-    , _caaAssetIdentifier       :: !(Maybe CreativeAssetId)
-    , _caaCompanionCreativeIds  :: !(Maybe [Textual Int64])
-    , _caaDurationType          :: !(Maybe CreativeAssetDurationType)
+    { _caaZIndex :: !(Maybe (Textual Int32))
+    , _caaPushdown :: !(Maybe Bool)
+    , _caaVideoDuration :: !(Maybe (Textual Double))
+    , _caaOriginalBackup :: !(Maybe Bool)
+    , _caaWindowMode :: !(Maybe CreativeAssetWindowMode)
+    , _caaFlashVersion :: !(Maybe (Textual Int32))
+    , _caaPushdownDuration :: !(Maybe (Textual Double))
+    , _caaSize :: !(Maybe Size)
+    , _caaVerticallyLocked :: !(Maybe Bool)
+    , _caaOffSet :: !(Maybe OffSetPosition)
+    , _caaStreamingServingURL :: !(Maybe Text)
+    , _caaZipFilesize :: !(Maybe Text)
+    , _caaTransparency :: !(Maybe Bool)
+    , _caaHideSelectionBoxes :: !(Maybe Bool)
+    , _caaSSLCompliant :: !(Maybe Bool)
+    , _caaFileSize :: !(Maybe (Textual Int64))
+    , _caaAssetIdentifier :: !(Maybe CreativeAssetId)
+    , _caaCompanionCreativeIds :: !(Maybe [Textual Int64])
+    , _caaDurationType :: !(Maybe CreativeAssetDurationType)
     , _caaProgressiveServingURL :: !(Maybe Text)
-    , _caaIdDimensionValue      :: !(Maybe DimensionValue)
-    , _caaActive                :: !(Maybe Bool)
-    , _caaRole                  :: !(Maybe CreativeAssetRole)
-    , _caaMimeType              :: !(Maybe Text)
-    , _caaPositionTopUnit       :: !(Maybe CreativeAssetPositionTopUnit)
-    , _caaPositionLeftUnit      :: !(Maybe CreativeAssetPositionLeftUnit)
-    , _caaAlignment             :: !(Maybe CreativeAssetAlignment)
-    , _caaExpandedDimension     :: !(Maybe Size)
-    , _caaZipFilename           :: !(Maybe Text)
-    , _caaActionScript3         :: !(Maybe Bool)
-    , _caaDisplayType           :: !(Maybe CreativeAssetDisplayType)
-    , _caaChildAssetType        :: !(Maybe CreativeAssetChildAssetType)
-    , _caaCollapsedSize         :: !(Maybe Size)
-    , _caaId                    :: !(Maybe (Textual Int64))
-    , _caaBitRate               :: !(Maybe (Textual Int32))
-    , _caaCustomStartTimeValue  :: !(Maybe (Textual Int32))
-    , _caaStartTimeType         :: !(Maybe CreativeAssetStartTimeType)
-    , _caaDuration              :: !(Maybe (Textual Int32))
-    , _caaArtworkType           :: !(Maybe CreativeAssetArtworkType)
-    , _caaHideFlashObjects      :: !(Maybe Bool)
-    , _caaDetectedFeatures      :: !(Maybe [CreativeAssetDetectedFeaturesItem])
-    , _caaBackupImageExit       :: !(Maybe CreativeCustomEvent)
-    , _caaPosition              :: !(Maybe OffSetPosition)
-    , _caaHorizontallyLocked    :: !(Maybe Bool)
+    , _caaIdDimensionValue :: !(Maybe DimensionValue)
+    , _caaActive :: !(Maybe Bool)
+    , _caaRole :: !(Maybe CreativeAssetRole)
+    , _caaMimeType :: !(Maybe Text)
+    , _caaPositionTopUnit :: !(Maybe CreativeAssetPositionTopUnit)
+    , _caaPositionLeftUnit :: !(Maybe CreativeAssetPositionLeftUnit)
+    , _caaAlignment :: !(Maybe CreativeAssetAlignment)
+    , _caaExpandedDimension :: !(Maybe Size)
+    , _caaZipFilename :: !(Maybe Text)
+    , _caaActionScript3 :: !(Maybe Bool)
+    , _caaDisplayType :: !(Maybe CreativeAssetDisplayType)
+    , _caaChildAssetType :: !(Maybe CreativeAssetChildAssetType)
+    , _caaCollapsedSize :: !(Maybe Size)
+    , _caaId :: !(Maybe (Textual Int64))
+    , _caaBitRate :: !(Maybe (Textual Int32))
+    , _caaCustomStartTimeValue :: !(Maybe (Textual Int32))
+    , _caaStartTimeType :: !(Maybe CreativeAssetStartTimeType)
+    , _caaDuration :: !(Maybe (Textual Int32))
+    , _caaOrientation :: !(Maybe CreativeAssetOrientation)
+    , _caaArtworkType :: !(Maybe CreativeAssetArtworkType)
+    , _caaHideFlashObjects :: !(Maybe Bool)
+    , _caaDetectedFeatures :: !(Maybe [CreativeAssetDetectedFeaturesItem])
+    , _caaBackupImageExit :: !(Maybe CreativeCustomEvent)
+    , _caaPosition :: !(Maybe OffSetPosition)
+    , _caaHorizontallyLocked :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeAsset' with the minimum fields required to make a request.
@@ -17270,6 +17770,8 @@ data CreativeAsset = CreativeAsset'
 --
 -- * 'caaDuration'
 --
+-- * 'caaOrientation'
+--
 -- * 'caaArtworkType'
 --
 -- * 'caaHideFlashObjects'
@@ -17283,7 +17785,7 @@ data CreativeAsset = CreativeAsset'
 -- * 'caaHorizontallyLocked'
 creativeAsset
     :: CreativeAsset
-creativeAsset =
+creativeAsset = 
     CreativeAsset'
     { _caaZIndex = Nothing
     , _caaPushdown = Nothing
@@ -17323,6 +17825,7 @@ creativeAsset =
     , _caaCustomStartTimeValue = Nothing
     , _caaStartTimeType = Nothing
     , _caaDuration = Nothing
+    , _caaOrientation = Nothing
     , _caaArtworkType = Nothing
     , _caaHideFlashObjects = Nothing
     , _caaDetectedFeatures = Nothing
@@ -17331,10 +17834,11 @@ creativeAsset =
     , _caaHorizontallyLocked = Nothing
     }
 
--- | zIndex value of an asset. This is a read-only field. Applicable to the
--- following creative types: all RICH_MEDIA.Additionally, only applicable
--- to assets whose displayType is NOT one of the following types:
--- ASSET_DISPLAY_TYPE_INPAGE or ASSET_DISPLAY_TYPE_OVERLAY.
+-- | zIndex value of an asset. Applicable to the following creative types:
+-- all RICH_MEDIA.Additionally, only applicable to assets whose displayType
+-- is NOT one of the following types: ASSET_DISPLAY_TYPE_INPAGE or
+-- ASSET_DISPLAY_TYPE_OVERLAY. Acceptable values are -999999999 to
+-- 999999999, inclusive.
 caaZIndex :: Lens' CreativeAsset (Maybe Int32)
 caaZIndex
   = lens _caaZIndex (\ s a -> s{_caaZIndex = a}) .
@@ -17382,11 +17886,11 @@ caaFlashVersion
       (\ s a -> s{_caaFlashVersion = a})
       . mapping _Coerce
 
--- | Pushdown duration in seconds for an asset. Must be between 0 and 9.99.
--- Applicable to the following creative types: all RICH_MEDIA.Additionally,
--- only applicable when the asset pushdown field is true, the offsets are
--- 0, the collapsedSize.width matches size.width, and the
--- collapsedSize.height is less than size.height.
+-- | Pushdown duration in seconds for an asset. Applicable to the following
+-- creative types: all RICH_MEDIA.Additionally, only applicable when the
+-- asset pushdown field is true, the offsets are 0, the collapsedSize.width
+-- matches size.width, and the collapsedSize.height is less than
+-- size.height. Acceptable values are 0 to 9.99, inclusive.
 caaPushdownDuration :: Lens' CreativeAsset (Maybe Double)
 caaPushdownDuration
   = lens _caaPushdownDuration
@@ -17625,7 +18129,8 @@ caaBitRate
       mapping _Coerce
 
 -- | Custom start time in seconds for making the asset visible. Applicable to
--- the following creative types: all RICH_MEDIA.
+-- the following creative types: all RICH_MEDIA. Value must be greater than
+-- or equal to 0.
 caaCustomStartTimeValue :: Lens' CreativeAsset (Maybe Int32)
 caaCustomStartTimeValue
   = lens _caaCustomStartTimeValue
@@ -17641,10 +18146,17 @@ caaStartTimeType
 
 -- | Duration in seconds for which an asset will be displayed. Applicable to
 -- the following creative types: INSTREAM_VIDEO and VPAID_LINEAR_VIDEO.
+-- Value must be greater than or equal to 1.
 caaDuration :: Lens' CreativeAsset (Maybe Int32)
 caaDuration
   = lens _caaDuration (\ s a -> s{_caaDuration = a}) .
       mapping _Coerce
+
+-- | Orientation of video asset. This is a read-only, auto-generated field.
+caaOrientation :: Lens' CreativeAsset (Maybe CreativeAssetOrientation)
+caaOrientation
+  = lens _caaOrientation
+      (\ s a -> s{_caaOrientation = a})
 
 -- | Artwork type of rich media creative. This is a read-only field.
 -- Applicable to the following creative types: all RICH_MEDIA.
@@ -17735,6 +18247,7 @@ instance FromJSON CreativeAsset where
                      <*> (o .:? "customStartTimeValue")
                      <*> (o .:? "startTimeType")
                      <*> (o .:? "duration")
+                     <*> (o .:? "orientation")
                      <*> (o .:? "artworkType")
                      <*> (o .:? "hideFlashObjects")
                      <*> (o .:? "detectedFeatures" .!= mempty)
@@ -17787,6 +18300,7 @@ instance ToJSON CreativeAsset where
                     _caaCustomStartTimeValue,
                   ("startTimeType" .=) <$> _caaStartTimeType,
                   ("duration" .=) <$> _caaDuration,
+                  ("orientation" .=) <$> _caaOrientation,
                   ("artworkType" .=) <$> _caaArtworkType,
                   ("hideFlashObjects" .=) <$> _caaHideFlashObjects,
                   ("detectedFeatures" .=) <$> _caaDetectedFeatures,
@@ -17809,7 +18323,7 @@ newtype LanguageTargeting = LanguageTargeting'
 -- * 'ltLanguages'
 languageTargeting
     :: LanguageTargeting
-languageTargeting =
+languageTargeting = 
     LanguageTargeting'
     { _ltLanguages = Nothing
     }
@@ -17840,7 +18354,7 @@ instance ToJSON LanguageTargeting where
 --
 -- /See:/ 'creativeAssetSelection' smart constructor.
 data CreativeAssetSelection = CreativeAssetSelection'
-    { _casRules          :: !(Maybe [Rule])
+    { _casRules :: !(Maybe [Rule])
     , _casDefaultAssetId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -17853,7 +18367,7 @@ data CreativeAssetSelection = CreativeAssetSelection'
 -- * 'casDefaultAssetId'
 creativeAssetSelection
     :: CreativeAssetSelection
-creativeAssetSelection =
+creativeAssetSelection = 
     CreativeAssetSelection'
     { _casRules = Nothing
     , _casDefaultAssetId = Nothing
@@ -17897,8 +18411,8 @@ instance ToJSON CreativeAssetSelection where
 -- /See:/ 'placementsListResponse' smart constructor.
 data PlacementsListResponse = PlacementsListResponse'
     { _plaNextPageToken :: !(Maybe Text)
-    , _plaKind          :: !Text
-    , _plaPlacements    :: !(Maybe [Placement])
+    , _plaKind :: !Text
+    , _plaPlacements :: !(Maybe [Placement])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementsListResponse' with the minimum fields required to make a request.
@@ -17912,7 +18426,7 @@ data PlacementsListResponse = PlacementsListResponse'
 -- * 'plaPlacements'
 placementsListResponse
     :: PlacementsListResponse
-placementsListResponse =
+placementsListResponse = 
     PlacementsListResponse'
     { _plaNextPageToken = Nothing
     , _plaKind = "dfareporting#placementsListResponse"
@@ -17961,12 +18475,12 @@ instance ToJSON PlacementsListResponse where
 --
 -- /See:/ 'reportSchedule' smart constructor.
 data ReportSchedule = ReportSchedule'
-    { _rsEvery             :: !(Maybe (Textual Int32))
-    , _rsActive            :: !(Maybe Bool)
-    , _rsRepeats           :: !(Maybe Text)
-    , _rsStartDate         :: !(Maybe Date')
-    , _rsExpirationDate    :: !(Maybe Date')
-    , _rsRunsOnDayOfMonth  :: !(Maybe ReportScheduleRunsOnDayOfMonth)
+    { _rsEvery :: !(Maybe (Textual Int32))
+    , _rsActive :: !(Maybe Bool)
+    , _rsRepeats :: !(Maybe Text)
+    , _rsStartDate :: !(Maybe Date')
+    , _rsExpirationDate :: !(Maybe Date')
+    , _rsRunsOnDayOfMonth :: !(Maybe ReportScheduleRunsOnDayOfMonth)
     , _rsRepeatsOnWeekDays :: !(Maybe [ReportScheduleRepeatsOnWeekDaysItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -17989,7 +18503,7 @@ data ReportSchedule = ReportSchedule'
 -- * 'rsRepeatsOnWeekDays'
 reportSchedule
     :: ReportSchedule
-reportSchedule =
+reportSchedule = 
     ReportSchedule'
     { _rsEvery = Nothing
     , _rsActive = Nothing
@@ -18081,15 +18595,15 @@ instance ToJSON ReportSchedule where
 --
 -- /See:/ 'reportPathToConversionCriteria' smart constructor.
 data ReportPathToConversionCriteria = ReportPathToConversionCriteria'
-    { _rptccReportProperties          :: !(Maybe ReportPathToConversionCriteriaReportProperties)
-    , _rptccMetricNames               :: !(Maybe [Text])
-    , _rptccCustomRichMediaEvents     :: !(Maybe [DimensionValue])
-    , _rptccDateRange                 :: !(Maybe DateRange)
-    , _rptccConversionDimensions      :: !(Maybe [SortedDimension])
+    { _rptccReportProperties :: !(Maybe ReportPathToConversionCriteriaReportProperties)
+    , _rptccMetricNames :: !(Maybe [Text])
+    , _rptccCustomRichMediaEvents :: !(Maybe [DimensionValue])
+    , _rptccDateRange :: !(Maybe DateRange)
+    , _rptccConversionDimensions :: !(Maybe [SortedDimension])
     , _rptccCustomFloodlightVariables :: !(Maybe [SortedDimension])
-    , _rptccFloodlightConfigId        :: !(Maybe DimensionValue)
-    , _rptccActivityFilters           :: !(Maybe [DimensionValue])
-    , _rptccPerInteractionDimensions  :: !(Maybe [SortedDimension])
+    , _rptccFloodlightConfigId :: !(Maybe DimensionValue)
+    , _rptccActivityFilters :: !(Maybe [DimensionValue])
+    , _rptccPerInteractionDimensions :: !(Maybe [SortedDimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportPathToConversionCriteria' with the minimum fields required to make a request.
@@ -18115,7 +18629,7 @@ data ReportPathToConversionCriteria = ReportPathToConversionCriteria'
 -- * 'rptccPerInteractionDimensions'
 reportPathToConversionCriteria
     :: ReportPathToConversionCriteria
-reportPathToConversionCriteria =
+reportPathToConversionCriteria = 
     ReportPathToConversionCriteria'
     { _rptccReportProperties = Nothing
     , _rptccMetricNames = Nothing
@@ -18235,7 +18749,7 @@ instance ToJSON ReportPathToConversionCriteria where
 --
 -- /See:/ 'metrosListResponse' smart constructor.
 data MetrosListResponse = MetrosListResponse'
-    { _mlrKind   :: !Text
+    { _mlrKind :: !Text
     , _mlrMetros :: !(Maybe [Metro])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18248,7 +18762,7 @@ data MetrosListResponse = MetrosListResponse'
 -- * 'mlrMetros'
 metrosListResponse
     :: MetrosListResponse
-metrosListResponse =
+metrosListResponse = 
     MetrosListResponse'
     { _mlrKind = "dfareporting#metrosListResponse"
     , _mlrMetros = Nothing
@@ -18285,8 +18799,8 @@ instance ToJSON MetrosListResponse where
 --
 -- /See:/ 'conversionsBatchInsertResponse' smart constructor.
 data ConversionsBatchInsertResponse = ConversionsBatchInsertResponse'
-    { _cbirbStatus      :: !(Maybe [ConversionStatus])
-    , _cbirbKind        :: !Text
+    { _cbirbStatus :: !(Maybe [ConversionStatus])
+    , _cbirbKind :: !Text
     , _cbirbHasFailures :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18301,15 +18815,15 @@ data ConversionsBatchInsertResponse = ConversionsBatchInsertResponse'
 -- * 'cbirbHasFailures'
 conversionsBatchInsertResponse
     :: ConversionsBatchInsertResponse
-conversionsBatchInsertResponse =
+conversionsBatchInsertResponse = 
     ConversionsBatchInsertResponse'
     { _cbirbStatus = Nothing
     , _cbirbKind = "dfareporting#conversionsBatchInsertResponse"
     , _cbirbHasFailures = Nothing
     }
 
--- | The status of each conversion\'s insertion status. The status is
--- returned in the same order that conversions are inserted.
+-- | The insert status of each conversion. Statuses are returned in the same
+-- order that conversions are inserted.
 cbirbStatus :: Lens' ConversionsBatchInsertResponse [ConversionStatus]
 cbirbStatus
   = lens _cbirbStatus (\ s a -> s{_cbirbStatus = a}) .
@@ -18351,8 +18865,8 @@ instance ToJSON ConversionsBatchInsertResponse where
 --
 -- /See:/ 'orderDocumentsListResponse' smart constructor.
 data OrderDocumentsListResponse = OrderDocumentsListResponse'
-    { _odlrNextPageToken  :: !(Maybe Text)
-    , _odlrKind           :: !Text
+    { _odlrNextPageToken :: !(Maybe Text)
+    , _odlrKind :: !Text
     , _odlrOrderDocuments :: !(Maybe [OrderDocument])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18367,7 +18881,7 @@ data OrderDocumentsListResponse = OrderDocumentsListResponse'
 -- * 'odlrOrderDocuments'
 orderDocumentsListResponse
     :: OrderDocumentsListResponse
-orderDocumentsListResponse =
+orderDocumentsListResponse = 
     OrderDocumentsListResponse'
     { _odlrNextPageToken = Nothing
     , _odlrKind = "dfareporting#orderDocumentsListResponse"
@@ -18415,8 +18929,8 @@ instance ToJSON OrderDocumentsListResponse where
 --
 -- /See:/ 'recipient' smart constructor.
 data Recipient = Recipient'
-    { _recEmail        :: !(Maybe Text)
-    , _recKind         :: !Text
+    { _recEmail :: !(Maybe Text)
+    , _recKind :: !Text
     , _recDeliveryType :: !(Maybe RecipientDeliveryType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18431,7 +18945,7 @@ data Recipient = Recipient'
 -- * 'recDeliveryType'
 recipient
     :: Recipient
-recipient =
+recipient = 
     Recipient'
     { _recEmail = Nothing
     , _recKind = "dfareporting#recipient"
@@ -18473,18 +18987,18 @@ instance ToJSON Recipient where
 --
 -- /See:/ 'site' smart constructor.
 data Site = Site'
-    { _sitiKind                          :: !Text
-    , _sitiKeyName                       :: !(Maybe Text)
-    , _sitiSiteContacts                  :: !(Maybe [SiteContact])
-    , _sitiSiteSettings                  :: !(Maybe SiteSettings)
-    , _sitiIdDimensionValue              :: !(Maybe DimensionValue)
+    { _sitiKind :: !Text
+    , _sitiKeyName :: !(Maybe Text)
+    , _sitiSiteContacts :: !(Maybe [SiteContact])
+    , _sitiSiteSettings :: !(Maybe SiteSettings)
+    , _sitiIdDimensionValue :: !(Maybe DimensionValue)
     , _sitiDirectorySiteIdDimensionValue :: !(Maybe DimensionValue)
-    , _sitiAccountId                     :: !(Maybe (Textual Int64))
-    , _sitiName                          :: !(Maybe Text)
-    , _sitiDirectorySiteId               :: !(Maybe (Textual Int64))
-    , _sitiId                            :: !(Maybe (Textual Int64))
-    , _sitiSubAccountId                  :: !(Maybe (Textual Int64))
-    , _sitiApproved                      :: !(Maybe Bool)
+    , _sitiAccountId :: !(Maybe (Textual Int64))
+    , _sitiName :: !(Maybe Text)
+    , _sitiDirectorySiteId :: !(Maybe (Textual Int64))
+    , _sitiId :: !(Maybe (Textual Int64))
+    , _sitiSubAccountId :: !(Maybe (Textual Int64))
+    , _sitiApproved :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Site' with the minimum fields required to make a request.
@@ -18516,7 +19030,7 @@ data Site = Site'
 -- * 'sitiApproved'
 site
     :: Site
-site =
+site = 
     Site'
     { _sitiKind = "dfareporting#site"
     , _sitiKeyName = Nothing
@@ -18653,8 +19167,8 @@ instance ToJSON Site where
 --
 -- /See:/ 'userDefinedVariableConfiguration' smart constructor.
 data UserDefinedVariableConfiguration = UserDefinedVariableConfiguration'
-    { _udvcReportName   :: !(Maybe Text)
-    , _udvcDataType     :: !(Maybe UserDefinedVariableConfigurationDataType)
+    { _udvcReportName :: !(Maybe Text)
+    , _udvcDataType :: !(Maybe UserDefinedVariableConfigurationDataType)
     , _udvcVariableType :: !(Maybe UserDefinedVariableConfigurationVariableType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18669,7 +19183,7 @@ data UserDefinedVariableConfiguration = UserDefinedVariableConfiguration'
 -- * 'udvcVariableType'
 userDefinedVariableConfiguration
     :: UserDefinedVariableConfiguration
-userDefinedVariableConfiguration =
+userDefinedVariableConfiguration = 
     UserDefinedVariableConfiguration'
     { _udvcReportName = Nothing
     , _udvcDataType = Nothing
@@ -18717,12 +19231,12 @@ instance ToJSON UserDefinedVariableConfiguration
 --
 -- /See:/ 'reportCrossDimensionReachCriteria' smart constructor.
 data ReportCrossDimensionReachCriteria = ReportCrossDimensionReachCriteria'
-    { _rcdrcPivoted            :: !(Maybe Bool)
-    , _rcdrcBreakdown          :: !(Maybe [SortedDimension])
-    , _rcdrcDimension          :: !(Maybe ReportCrossDimensionReachCriteriaDimension)
-    , _rcdrcMetricNames        :: !(Maybe [Text])
-    , _rcdrcDimensionFilters   :: !(Maybe [DimensionValue])
-    , _rcdrcDateRange          :: !(Maybe DateRange)
+    { _rcdrcPivoted :: !(Maybe Bool)
+    , _rcdrcBreakdown :: !(Maybe [SortedDimension])
+    , _rcdrcDimension :: !(Maybe ReportCrossDimensionReachCriteriaDimension)
+    , _rcdrcMetricNames :: !(Maybe [Text])
+    , _rcdrcDimensionFilters :: !(Maybe [DimensionValue])
+    , _rcdrcDateRange :: !(Maybe DateRange)
     , _rcdrcOverlapMetricNames :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -18745,7 +19259,7 @@ data ReportCrossDimensionReachCriteria = ReportCrossDimensionReachCriteria'
 -- * 'rcdrcOverlapMetricNames'
 reportCrossDimensionReachCriteria
     :: ReportCrossDimensionReachCriteria
-reportCrossDimensionReachCriteria =
+reportCrossDimensionReachCriteria = 
     ReportCrossDimensionReachCriteria'
     { _rcdrcPivoted = Nothing
     , _rcdrcBreakdown = Nothing
@@ -18837,7 +19351,7 @@ instance ToJSON ReportCrossDimensionReachCriteria
 -- /See:/ 'fileURLs' smart constructor.
 data FileURLs = FileURLs'
     { _fuBrowserURL :: !(Maybe Text)
-    , _fuAPIURL     :: !(Maybe Text)
+    , _fuAPIURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FileURLs' with the minimum fields required to make a request.
@@ -18849,7 +19363,7 @@ data FileURLs = FileURLs'
 -- * 'fuAPIURL'
 fileURLs
     :: FileURLs
-fileURLs =
+fileURLs = 
     FileURLs'
     { _fuBrowserURL = Nothing
     , _fuAPIURL = Nothing
@@ -18883,8 +19397,8 @@ instance ToJSON FileURLs where
 -- /See:/ 'campaignCreativeAssociationsListResponse' smart constructor.
 data CampaignCreativeAssociationsListResponse = CampaignCreativeAssociationsListResponse'
     { _ccalrCampaignCreativeAssociations :: !(Maybe [CampaignCreativeAssociation])
-    , _ccalrNextPageToken                :: !(Maybe Text)
-    , _ccalrKind                         :: !Text
+    , _ccalrNextPageToken :: !(Maybe Text)
+    , _ccalrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CampaignCreativeAssociationsListResponse' with the minimum fields required to make a request.
@@ -18898,7 +19412,7 @@ data CampaignCreativeAssociationsListResponse = CampaignCreativeAssociationsList
 -- * 'ccalrKind'
 campaignCreativeAssociationsListResponse
     :: CampaignCreativeAssociationsListResponse
-campaignCreativeAssociationsListResponse =
+campaignCreativeAssociationsListResponse = 
     CampaignCreativeAssociationsListResponse'
     { _ccalrCampaignCreativeAssociations = Nothing
     , _ccalrNextPageToken = Nothing
@@ -18952,25 +19466,25 @@ instance ToJSON
 --
 -- /See:/ 'order' smart constructor.
 data Order = Order'
-    { _oSellerOrderId          :: !(Maybe Text)
+    { _oSellerOrderId :: !(Maybe Text)
     , _oSellerOrganizationName :: !(Maybe Text)
-    , _oKind                   :: !Text
-    , _oAdvertiserId           :: !(Maybe (Textual Int64))
-    , _oPlanningTermId         :: !(Maybe (Textual Int64))
-    , _oAccountId              :: !(Maybe (Textual Int64))
-    , _oName                   :: !(Maybe Text)
-    , _oSiteNames              :: !(Maybe [Text])
-    , _oLastModifiedInfo       :: !(Maybe LastModifiedInfo)
-    , _oBuyerOrganizationName  :: !(Maybe Text)
-    , _oId                     :: !(Maybe (Textual Int64))
-    , _oBuyerInvoiceId         :: !(Maybe Text)
-    , _oComments               :: !(Maybe Text)
-    , _oProjectId              :: !(Maybe (Textual Int64))
-    , _oSubAccountId           :: !(Maybe (Textual Int64))
-    , _oNotes                  :: !(Maybe Text)
-    , _oContacts               :: !(Maybe [OrderContact])
-    , _oSiteId                 :: !(Maybe [Textual Int64])
-    , _oTermsAndConditions     :: !(Maybe Text)
+    , _oKind :: !Text
+    , _oAdvertiserId :: !(Maybe (Textual Int64))
+    , _oPlanningTermId :: !(Maybe (Textual Int64))
+    , _oAccountId :: !(Maybe (Textual Int64))
+    , _oName :: !(Maybe Text)
+    , _oSiteNames :: !(Maybe [Text])
+    , _oLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _oBuyerOrganizationName :: !(Maybe Text)
+    , _oId :: !(Maybe (Textual Int64))
+    , _oBuyerInvoiceId :: !(Maybe Text)
+    , _oComments :: !(Maybe Text)
+    , _oProjectId :: !(Maybe (Textual Int64))
+    , _oSubAccountId :: !(Maybe (Textual Int64))
+    , _oNotes :: !(Maybe Text)
+    , _oContacts :: !(Maybe [OrderContact])
+    , _oSiteId :: !(Maybe [Textual Int64])
+    , _oTermsAndConditions :: !(Maybe Text)
     , _oApproverUserProFileIds :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -19019,7 +19533,7 @@ data Order = Order'
 -- * 'oApproverUserProFileIds'
 order
     :: Order
-order =
+order = 
     Order'
     { _oSellerOrderId = Nothing
     , _oSellerOrganizationName = Nothing
@@ -19234,7 +19748,7 @@ data CreativeAssetId = CreativeAssetId'
 -- * 'caiType'
 creativeAssetId
     :: CreativeAssetId
-creativeAssetId =
+creativeAssetId = 
     CreativeAssetId'
     { _caiName = Nothing
     , _caiType = Nothing
@@ -19271,7 +19785,7 @@ instance ToJSON CreativeAssetId where
 -- /See:/ 'frequencyCap' smart constructor.
 data FrequencyCap = FrequencyCap'
     { _fcImpressions :: !(Maybe (Textual Int64))
-    , _fcDuration    :: !(Maybe (Textual Int64))
+    , _fcDuration :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FrequencyCap' with the minimum fields required to make a request.
@@ -19283,14 +19797,14 @@ data FrequencyCap = FrequencyCap'
 -- * 'fcDuration'
 frequencyCap
     :: FrequencyCap
-frequencyCap =
+frequencyCap = 
     FrequencyCap'
     { _fcImpressions = Nothing
     , _fcDuration = Nothing
     }
 
 -- | Number of times an individual user can be served the ad within the
--- specified duration. The maximum allowed is 15.
+-- specified duration. Acceptable values are 1 to 15, inclusive.
 fcImpressions :: Lens' FrequencyCap (Maybe Int64)
 fcImpressions
   = lens _fcImpressions
@@ -19298,7 +19812,7 @@ fcImpressions
       . mapping _Coerce
 
 -- | Duration of time, in seconds, for this frequency cap. The maximum
--- duration is 90 days in seconds, or 7,776,000.
+-- duration is 90 days. Acceptable values are 1 to 7776000, inclusive.
 fcDuration :: Lens' FrequencyCap (Maybe Int64)
 fcDuration
   = lens _fcDuration (\ s a -> s{_fcDuration = a}) .
@@ -19325,16 +19839,16 @@ instance ToJSON FrequencyCap where
 --
 -- /See:/ 'file' smart constructor.
 data File = File'
-    { _filStatus           :: !(Maybe FileStatus)
-    , _filEtag             :: !(Maybe Text)
-    , _filKind             :: !Text
-    , _filURLs             :: !(Maybe FileURLs)
-    , _filReportId         :: !(Maybe (Textual Int64))
-    , _filDateRange        :: !(Maybe DateRange)
-    , _filFormat           :: !(Maybe FileFormat)
+    { _filStatus :: !(Maybe FileStatus)
+    , _filEtag :: !(Maybe Text)
+    , _filKind :: !Text
+    , _filURLs :: !(Maybe FileURLs)
+    , _filReportId :: !(Maybe (Textual Int64))
+    , _filDateRange :: !(Maybe DateRange)
+    , _filFormat :: !(Maybe FileFormat)
     , _filLastModifiedTime :: !(Maybe (Textual Int64))
-    , _filId               :: !(Maybe (Textual Int64))
-    , _filFileName         :: !(Maybe Text)
+    , _filId :: !(Maybe (Textual Int64))
+    , _filFileName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'File' with the minimum fields required to make a request.
@@ -19362,7 +19876,7 @@ data File = File'
 -- * 'filFileName'
 file
     :: File
-file =
+file = 
     File'
     { _filStatus = Nothing
     , _filEtag = Nothing
@@ -19476,7 +19990,7 @@ data CreativeSettings = CreativeSettings'
 -- * 'csIFrameFooter'
 creativeSettings
     :: CreativeSettings
-creativeSettings =
+creativeSettings = 
     CreativeSettings'
     { _csIFrameHeader = Nothing
     , _csIFrameFooter = Nothing
@@ -19515,8 +20029,8 @@ instance ToJSON CreativeSettings where
 -- /See:/ 'creativeGroupsListResponse' smart constructor.
 data CreativeGroupsListResponse = CreativeGroupsListResponse'
     { _cglrCreativeGroups :: !(Maybe [CreativeGroup])
-    , _cglrNextPageToken  :: !(Maybe Text)
-    , _cglrKind           :: !Text
+    , _cglrNextPageToken :: !(Maybe Text)
+    , _cglrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsListResponse' with the minimum fields required to make a request.
@@ -19530,7 +20044,7 @@ data CreativeGroupsListResponse = CreativeGroupsListResponse'
 -- * 'cglrKind'
 creativeGroupsListResponse
     :: CreativeGroupsListResponse
-creativeGroupsListResponse =
+creativeGroupsListResponse = 
     CreativeGroupsListResponse'
     { _cglrCreativeGroups = Nothing
     , _cglrNextPageToken = Nothing
@@ -19580,7 +20094,7 @@ instance ToJSON CreativeGroupsListResponse where
 -- /See:/ 'mobileCarriersListResponse' smart constructor.
 data MobileCarriersListResponse = MobileCarriersListResponse'
     { _mclrMobileCarriers :: !(Maybe [MobileCarrier])
-    , _mclrKind           :: !Text
+    , _mclrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileCarriersListResponse' with the minimum fields required to make a request.
@@ -19592,7 +20106,7 @@ data MobileCarriersListResponse = MobileCarriersListResponse'
 -- * 'mclrKind'
 mobileCarriersListResponse
     :: MobileCarriersListResponse
-mobileCarriersListResponse =
+mobileCarriersListResponse = 
     MobileCarriersListResponse'
     { _mclrMobileCarriers = Nothing
     , _mclrKind = "dfareporting#mobileCarriersListResponse"
@@ -19627,71 +20141,19 @@ instance ToJSON MobileCarriersListResponse where
                  [("mobileCarriers" .=) <$> _mclrMobileCarriers,
                   Just ("kind" .= _mclrKind)])
 
--- | Landing Page List Response
---
--- /See:/ 'landingPagesListResponse' smart constructor.
-data LandingPagesListResponse = LandingPagesListResponse'
-    { _lplrLandingPages :: !(Maybe [LandingPage])
-    , _lplrKind         :: !Text
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'LandingPagesListResponse' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'lplrLandingPages'
---
--- * 'lplrKind'
-landingPagesListResponse
-    :: LandingPagesListResponse
-landingPagesListResponse =
-    LandingPagesListResponse'
-    { _lplrLandingPages = Nothing
-    , _lplrKind = "dfareporting#landingPagesListResponse"
-    }
-
--- | Landing page collection
-lplrLandingPages :: Lens' LandingPagesListResponse [LandingPage]
-lplrLandingPages
-  = lens _lplrLandingPages
-      (\ s a -> s{_lplrLandingPages = a})
-      . _Default
-      . _Coerce
-
--- | Identifies what kind of resource this is. Value: the fixed string
--- \"dfareporting#landingPagesListResponse\".
-lplrKind :: Lens' LandingPagesListResponse Text
-lplrKind = lens _lplrKind (\ s a -> s{_lplrKind = a})
-
-instance FromJSON LandingPagesListResponse where
-        parseJSON
-          = withObject "LandingPagesListResponse"
-              (\ o ->
-                 LandingPagesListResponse' <$>
-                   (o .:? "landingPages" .!= mempty) <*>
-                     (o .:? "kind" .!=
-                        "dfareporting#landingPagesListResponse"))
-
-instance ToJSON LandingPagesListResponse where
-        toJSON LandingPagesListResponse'{..}
-          = object
-              (catMaybes
-                 [("landingPages" .=) <$> _lplrLandingPages,
-                  Just ("kind" .= _lplrKind)])
-
 -- | CreativeAssets contains properties of a creative asset file which will
 -- be uploaded or has already been uploaded. Refer to the creative sample
 -- code for how to upload assets and insert a creative.
 --
 -- /See:/ 'creativeAssetMetadata' smart constructor.
 data CreativeAssetMetadata = CreativeAssetMetadata'
-    { _camaKind                  :: !Text
-    , _camaAssetIdentifier       :: !(Maybe CreativeAssetId)
-    , _camaIdDimensionValue      :: !(Maybe DimensionValue)
-    , _camaClickTags             :: !(Maybe [ClickTag])
+    { _camaKind :: !Text
+    , _camaAssetIdentifier :: !(Maybe CreativeAssetId)
+    , _camaIdDimensionValue :: !(Maybe DimensionValue)
+    , _camaClickTags :: !(Maybe [ClickTag])
     , _camaWarnedValidationRules :: !(Maybe [CreativeAssetMetadataWarnedValidationRulesItem])
-    , _camaId                    :: !(Maybe (Textual Int64))
-    , _camaDetectedFeatures      :: !(Maybe [CreativeAssetMetadataDetectedFeaturesItem])
+    , _camaId :: !(Maybe (Textual Int64))
+    , _camaDetectedFeatures :: !(Maybe [CreativeAssetMetadataDetectedFeaturesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeAssetMetadata' with the minimum fields required to make a request.
@@ -19713,7 +20175,7 @@ data CreativeAssetMetadata = CreativeAssetMetadata'
 -- * 'camaDetectedFeatures'
 creativeAssetMetadata
     :: CreativeAssetMetadata
-creativeAssetMetadata =
+creativeAssetMetadata = 
     CreativeAssetMetadata'
     { _camaKind = "dfareporting#creativeAssetMetadata"
     , _camaAssetIdentifier = Nothing
@@ -19819,7 +20281,7 @@ instance ToJSON CreativeAssetMetadata where
 --
 -- /See:/ 'omnitureSettings' smart constructor.
 data OmnitureSettings = OmnitureSettings'
-    { _osOmnitureCostDataEnabled    :: !(Maybe Bool)
+    { _osOmnitureCostDataEnabled :: !(Maybe Bool)
     , _osOmnitureIntegrationEnabled :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -19832,7 +20294,7 @@ data OmnitureSettings = OmnitureSettings'
 -- * 'osOmnitureIntegrationEnabled'
 omnitureSettings
     :: OmnitureSettings
-omnitureSettings =
+omnitureSettings = 
     OmnitureSettings'
     { _osOmnitureCostDataEnabled = Nothing
     , _osOmnitureIntegrationEnabled = Nothing
@@ -19877,7 +20339,7 @@ instance ToJSON OmnitureSettings where
 data ConnectionType = ConnectionType'
     { _cttKind :: !Text
     , _cttName :: !(Maybe Text)
-    , _cttId   :: !(Maybe (Textual Int64))
+    , _cttId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConnectionType' with the minimum fields required to make a request.
@@ -19891,7 +20353,7 @@ data ConnectionType = ConnectionType'
 -- * 'cttId'
 connectionType
     :: ConnectionType
-connectionType =
+connectionType = 
     ConnectionType'
     { _cttKind = "dfareporting#connectionType"
     , _cttName = Nothing
@@ -19933,32 +20395,32 @@ instance ToJSON ConnectionType where
 --
 -- /See:/ 'placementGroup' smart constructor.
 data PlacementGroup = PlacementGroup'
-    { _plalPlacementStrategyId              :: !(Maybe (Textual Int64))
-    , _plalSiteIdDimensionValue             :: !(Maybe DimensionValue)
-    , _plalPricingSchedule                  :: !(Maybe PricingSchedule)
-    , _plalKind                             :: !Text
-    , _plalCampaignIdDimensionValue         :: !(Maybe DimensionValue)
-    , _plalAdvertiserId                     :: !(Maybe (Textual Int64))
-    , _plalAdvertiserIdDimensionValue       :: !(Maybe DimensionValue)
-    , _plalCampaignId                       :: !(Maybe (Textual Int64))
-    , _plalIdDimensionValue                 :: !(Maybe DimensionValue)
-    , _plalPlacementGroupType               :: !(Maybe PlacementGroupPlacementGroupType)
-    , _plalContentCategoryId                :: !(Maybe (Textual Int64))
-    , _plalDirectorySiteIdDimensionValue    :: !(Maybe DimensionValue)
-    , _plalAccountId                        :: !(Maybe (Textual Int64))
-    , _plalName                             :: !(Maybe Text)
-    , _plalDirectorySiteId                  :: !(Maybe (Textual Int64))
-    , _plalCreateInfo                       :: !(Maybe LastModifiedInfo)
-    , _plalChildPlacementIds                :: !(Maybe [Textual Int64])
-    , _plalLastModifiedInfo                 :: !(Maybe LastModifiedInfo)
-    , _plalId                               :: !(Maybe (Textual Int64))
-    , _plalPrimaryPlacementId               :: !(Maybe (Textual Int64))
-    , _plalSubAccountId                     :: !(Maybe (Textual Int64))
-    , _plalExternalId                       :: !(Maybe Text)
-    , _plalComment                          :: !(Maybe Text)
+    { _plalPlacementStrategyId :: !(Maybe (Textual Int64))
+    , _plalSiteIdDimensionValue :: !(Maybe DimensionValue)
+    , _plalPricingSchedule :: !(Maybe PricingSchedule)
+    , _plalKind :: !Text
+    , _plalCampaignIdDimensionValue :: !(Maybe DimensionValue)
+    , _plalAdvertiserId :: !(Maybe (Textual Int64))
+    , _plalAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _plalCampaignId :: !(Maybe (Textual Int64))
+    , _plalIdDimensionValue :: !(Maybe DimensionValue)
+    , _plalPlacementGroupType :: !(Maybe PlacementGroupPlacementGroupType)
+    , _plalContentCategoryId :: !(Maybe (Textual Int64))
+    , _plalDirectorySiteIdDimensionValue :: !(Maybe DimensionValue)
+    , _plalAccountId :: !(Maybe (Textual Int64))
+    , _plalName :: !(Maybe Text)
+    , _plalDirectorySiteId :: !(Maybe (Textual Int64))
+    , _plalCreateInfo :: !(Maybe LastModifiedInfo)
+    , _plalChildPlacementIds :: !(Maybe [Textual Int64])
+    , _plalLastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _plalId :: !(Maybe (Textual Int64))
+    , _plalPrimaryPlacementId :: !(Maybe (Textual Int64))
+    , _plalSubAccountId :: !(Maybe (Textual Int64))
+    , _plalExternalId :: !(Maybe Text)
+    , _plalComment :: !(Maybe Text)
     , _plalPrimaryPlacementIdDimensionValue :: !(Maybe DimensionValue)
-    , _plalSiteId                           :: !(Maybe (Textual Int64))
-    , _plalArchived                         :: !(Maybe Bool)
+    , _plalSiteId :: !(Maybe (Textual Int64))
+    , _plalArchived :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroup' with the minimum fields required to make a request.
@@ -20018,7 +20480,7 @@ data PlacementGroup = PlacementGroup'
 -- * 'plalArchived'
 placementGroup
     :: PlacementGroup
-placementGroup =
+placementGroup = 
     PlacementGroup'
     { _plalPlacementStrategyId = Nothing
     , _plalSiteIdDimensionValue = Nothing
@@ -20313,24 +20775,24 @@ instance ToJSON PlacementGroup where
 --
 -- /See:/ 'eventTag' smart constructor.
 data EventTag = EventTag'
-    { _etStatus                     :: !(Maybe EventTagStatus)
-    , _etExcludeFromAdxRequests     :: !(Maybe Bool)
-    , _etEnabledByDefault           :: !(Maybe Bool)
-    , _etKind                       :: !Text
-    , _etCampaignIdDimensionValue   :: !(Maybe DimensionValue)
-    , _etAdvertiserId               :: !(Maybe (Textual Int64))
-    , _etURL                        :: !(Maybe Text)
+    { _etStatus :: !(Maybe EventTagStatus)
+    , _etExcludeFromAdxRequests :: !(Maybe Bool)
+    , _etEnabledByDefault :: !(Maybe Bool)
+    , _etKind :: !Text
+    , _etCampaignIdDimensionValue :: !(Maybe DimensionValue)
+    , _etAdvertiserId :: !(Maybe (Textual Int64))
+    , _etURL :: !(Maybe Text)
     , _etAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
-    , _etSSLCompliant               :: !(Maybe Bool)
-    , _etCampaignId                 :: !(Maybe (Textual Int64))
-    , _etAccountId                  :: !(Maybe (Textual Int64))
-    , _etName                       :: !(Maybe Text)
-    , _etURLEscapeLevels            :: !(Maybe (Textual Int32))
-    , _etSiteIds                    :: !(Maybe [Textual Int64])
-    , _etId                         :: !(Maybe (Textual Int64))
-    , _etSubAccountId               :: !(Maybe (Textual Int64))
-    , _etType                       :: !(Maybe EventTagType)
-    , _etSiteFilterType             :: !(Maybe EventTagSiteFilterType)
+    , _etSSLCompliant :: !(Maybe Bool)
+    , _etCampaignId :: !(Maybe (Textual Int64))
+    , _etAccountId :: !(Maybe (Textual Int64))
+    , _etName :: !(Maybe Text)
+    , _etURLEscapeLevels :: !(Maybe (Textual Int32))
+    , _etSiteIds :: !(Maybe [Textual Int64])
+    , _etId :: !(Maybe (Textual Int64))
+    , _etSubAccountId :: !(Maybe (Textual Int64))
+    , _etType :: !(Maybe EventTagType)
+    , _etSiteFilterType :: !(Maybe EventTagSiteFilterType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTag' with the minimum fields required to make a request.
@@ -20374,7 +20836,7 @@ data EventTag = EventTag'
 -- * 'etSiteFilterType'
 eventTag
     :: EventTag
-eventTag =
+eventTag = 
     EventTag'
     { _etStatus = Nothing
     , _etExcludeFromAdxRequests = Nothing
@@ -20572,10 +21034,10 @@ instance ToJSON EventTag where
 --
 -- /See:/ 'userRolePermission' smart constructor.
 data UserRolePermission = UserRolePermission'
-    { _useKind              :: !Text
-    , _useAvailability      :: !(Maybe UserRolePermissionAvailability)
-    , _useName              :: !(Maybe Text)
-    , _useId                :: !(Maybe (Textual Int64))
+    { _useKind :: !Text
+    , _useAvailability :: !(Maybe UserRolePermissionAvailability)
+    , _useName :: !(Maybe Text)
+    , _useId :: !(Maybe (Textual Int64))
     , _usePermissionGroupId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -20594,7 +21056,7 @@ data UserRolePermission = UserRolePermission'
 -- * 'usePermissionGroupId'
 userRolePermission
     :: UserRolePermission
-userRolePermission =
+userRolePermission = 
     UserRolePermission'
     { _useKind = "dfareporting#userRolePermission"
     , _useAvailability = Nothing
@@ -20656,10 +21118,10 @@ instance ToJSON UserRolePermission where
 -- /See:/ 'orderContact' smart constructor.
 data OrderContact = OrderContact'
     { _ocSignatureUserProFileId :: !(Maybe (Textual Int64))
-    , _ocContactName            :: !(Maybe Text)
-    , _ocContactTitle           :: !(Maybe Text)
-    , _ocContactType            :: !(Maybe OrderContactContactType)
-    , _ocContactInfo            :: !(Maybe Text)
+    , _ocContactName :: !(Maybe Text)
+    , _ocContactTitle :: !(Maybe Text)
+    , _ocContactType :: !(Maybe OrderContactContactType)
+    , _ocContactInfo :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrderContact' with the minimum fields required to make a request.
@@ -20677,7 +21139,7 @@ data OrderContact = OrderContact'
 -- * 'ocContactInfo'
 orderContact
     :: OrderContact
-orderContact =
+orderContact = 
     OrderContact'
     { _ocSignatureUserProFileId = Nothing
     , _ocContactName = Nothing
@@ -20746,7 +21208,7 @@ instance ToJSON OrderContact where
 --
 -- /See:/ 'transcodeSetting' smart constructor.
 data TranscodeSetting = TranscodeSetting'
-    { _tsKind                :: !Text
+    { _tsKind :: !Text
     , _tsEnabledVideoFormats :: !(Maybe [Textual Int32])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -20759,7 +21221,7 @@ data TranscodeSetting = TranscodeSetting'
 -- * 'tsEnabledVideoFormats'
 transcodeSetting
     :: TranscodeSetting
-transcodeSetting =
+transcodeSetting = 
     TranscodeSetting'
     { _tsKind = "dfareporting#transcodeSetting"
     , _tsEnabledVideoFormats = Nothing
@@ -20799,26 +21261,40 @@ instance ToJSON TranscodeSetting where
 --
 -- /See:/ 'floodlightActivitiesGenerateTagResponse' smart constructor.
 data FloodlightActivitiesGenerateTagResponse = FloodlightActivitiesGenerateTagResponse'
-    { _fagtrFloodlightActivityTag :: !(Maybe Text)
-    , _fagtrKind                  :: !Text
+    { _fagtrGlobalSiteTagGlobalSnippet :: !(Maybe Text)
+    , _fagtrFloodlightActivityTag :: !(Maybe Text)
+    , _fagtrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivitiesGenerateTagResponse' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'fagtrGlobalSiteTagGlobalSnippet'
+--
 -- * 'fagtrFloodlightActivityTag'
 --
 -- * 'fagtrKind'
 floodlightActivitiesGenerateTagResponse
     :: FloodlightActivitiesGenerateTagResponse
-floodlightActivitiesGenerateTagResponse =
+floodlightActivitiesGenerateTagResponse = 
     FloodlightActivitiesGenerateTagResponse'
-    { _fagtrFloodlightActivityTag = Nothing
+    { _fagtrGlobalSiteTagGlobalSnippet = Nothing
+    , _fagtrFloodlightActivityTag = Nothing
     , _fagtrKind = "dfareporting#floodlightActivitiesGenerateTagResponse"
     }
 
--- | Generated tag for this floodlight activity.
+-- | The global snippet section of a global site tag. The global site tag
+-- sets new cookies on your domain, which will store a unique identifier
+-- for a user or the ad click that brought the user to your site. Learn
+-- more.
+fagtrGlobalSiteTagGlobalSnippet :: Lens' FloodlightActivitiesGenerateTagResponse (Maybe Text)
+fagtrGlobalSiteTagGlobalSnippet
+  = lens _fagtrGlobalSiteTagGlobalSnippet
+      (\ s a -> s{_fagtrGlobalSiteTagGlobalSnippet = a})
+
+-- | Generated tag for this Floodlight activity. For global site tags, this
+-- is the event snippet.
 fagtrFloodlightActivityTag :: Lens' FloodlightActivitiesGenerateTagResponse (Maybe Text)
 fagtrFloodlightActivityTag
   = lens _fagtrFloodlightActivityTag
@@ -20837,7 +21313,9 @@ instance FromJSON
               "FloodlightActivitiesGenerateTagResponse"
               (\ o ->
                  FloodlightActivitiesGenerateTagResponse' <$>
-                   (o .:? "floodlightActivityTag") <*>
+                   (o .:? "globalSiteTagGlobalSnippet") <*>
+                     (o .:? "floodlightActivityTag")
+                     <*>
                      (o .:? "kind" .!=
                         "dfareporting#floodlightActivitiesGenerateTagResponse"))
 
@@ -20846,7 +21324,9 @@ instance ToJSON
         toJSON FloodlightActivitiesGenerateTagResponse'{..}
           = object
               (catMaybes
-                 [("floodlightActivityTag" .=) <$>
+                 [("globalSiteTagGlobalSnippet" .=) <$>
+                    _fagtrGlobalSiteTagGlobalSnippet,
+                  ("floodlightActivityTag" .=) <$>
                     _fagtrFloodlightActivityTag,
                   Just ("kind" .= _fagtrKind)])
 
@@ -20855,7 +21335,7 @@ instance ToJSON
 -- /See:/ 'directorySiteContactAssignment' smart constructor.
 data DirectorySiteContactAssignment = DirectorySiteContactAssignment'
     { _dscaVisibility :: !(Maybe DirectorySiteContactAssignmentVisibility)
-    , _dscaContactId  :: !(Maybe (Textual Int64))
+    , _dscaContactId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySiteContactAssignment' with the minimum fields required to make a request.
@@ -20867,7 +21347,7 @@ data DirectorySiteContactAssignment = DirectorySiteContactAssignment'
 -- * 'dscaContactId'
 directorySiteContactAssignment
     :: DirectorySiteContactAssignment
-directorySiteContactAssignment =
+directorySiteContactAssignment = 
     DirectorySiteContactAssignment'
     { _dscaVisibility = Nothing
     , _dscaContactId = Nothing
@@ -20908,14 +21388,14 @@ instance ToJSON DirectorySiteContactAssignment where
 --
 -- /See:/ 'adSlot' smart constructor.
 data AdSlot = AdSlot'
-    { _assHeight            :: !(Maybe (Textual Int64))
+    { _assHeight :: !(Maybe (Textual Int64))
     , _assPaymentSourceType :: !(Maybe AdSlotPaymentSourceType)
     , _assLinkedPlacementId :: !(Maybe (Textual Int64))
-    , _assWidth             :: !(Maybe (Textual Int64))
-    , _assPrimary           :: !(Maybe Bool)
-    , _assName              :: !(Maybe Text)
-    , _assComment           :: !(Maybe Text)
-    , _assCompatibility     :: !(Maybe AdSlotCompatibility)
+    , _assWidth :: !(Maybe (Textual Int64))
+    , _assPrimary :: !(Maybe Bool)
+    , _assName :: !(Maybe Text)
+    , _assComment :: !(Maybe Text)
+    , _assCompatibility :: !(Maybe AdSlotCompatibility)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdSlot' with the minimum fields required to make a request.
@@ -20939,7 +21419,7 @@ data AdSlot = AdSlot'
 -- * 'assCompatibility'
 adSlot
     :: AdSlot
-adSlot =
+adSlot = 
     AdSlot'
     { _assHeight = Nothing
     , _assPaymentSourceType = Nothing
@@ -21031,7 +21511,7 @@ instance ToJSON AdSlot where
 --
 -- /See:/ 'thirdPartyTrackingURL' smart constructor.
 data ThirdPartyTrackingURL = ThirdPartyTrackingURL'
-    { _tptuURL               :: !(Maybe Text)
+    { _tptuURL :: !(Maybe Text)
     , _tptuThirdPartyURLType :: !(Maybe ThirdPartyTrackingURLThirdPartyURLType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -21044,7 +21524,7 @@ data ThirdPartyTrackingURL = ThirdPartyTrackingURL'
 -- * 'tptuThirdPartyURLType'
 thirdPartyTrackingURL
     :: ThirdPartyTrackingURL
-thirdPartyTrackingURL =
+thirdPartyTrackingURL = 
     ThirdPartyTrackingURL'
     { _tptuURL = Nothing
     , _tptuThirdPartyURLType = Nothing
@@ -21078,23 +21558,23 @@ instance ToJSON ThirdPartyTrackingURL where
 --
 -- /See:/ 'orderDocument' smart constructor.
 data OrderDocument = OrderDocument'
-    { _odSigned                   :: !(Maybe Bool)
-    , _odKind                     :: !Text
-    , _odAdvertiserId             :: !(Maybe (Textual Int64))
-    , _odLastSentTime             :: !(Maybe DateTime')
-    , _odAmendedOrderDocumentId   :: !(Maybe (Textual Int64))
-    , _odLastSentRecipients       :: !(Maybe [Text])
-    , _odEffectiveDate            :: !(Maybe Date')
+    { _odSigned :: !(Maybe Bool)
+    , _odKind :: !Text
+    , _odAdvertiserId :: !(Maybe (Textual Int64))
+    , _odLastSentTime :: !(Maybe DateTime')
+    , _odAmendedOrderDocumentId :: !(Maybe (Textual Int64))
+    , _odLastSentRecipients :: !(Maybe [Text])
+    , _odEffectiveDate :: !(Maybe Date')
     , _odApprovedByUserProFileIds :: !(Maybe [Textual Int64])
-    , _odAccountId                :: !(Maybe (Textual Int64))
-    , _odId                       :: !(Maybe (Textual Int64))
-    , _odProjectId                :: !(Maybe (Textual Int64))
-    , _odTitle                    :: !(Maybe Text)
-    , _odSubAccountId             :: !(Maybe (Textual Int64))
-    , _odType                     :: !(Maybe OrderDocumentType)
-    , _odOrderId                  :: !(Maybe (Textual Int64))
-    , _odCancelled                :: !(Maybe Bool)
-    , _odCreatedInfo              :: !(Maybe LastModifiedInfo)
+    , _odAccountId :: !(Maybe (Textual Int64))
+    , _odId :: !(Maybe (Textual Int64))
+    , _odProjectId :: !(Maybe (Textual Int64))
+    , _odTitle :: !(Maybe Text)
+    , _odSubAccountId :: !(Maybe (Textual Int64))
+    , _odType :: !(Maybe OrderDocumentType)
+    , _odOrderId :: !(Maybe (Textual Int64))
+    , _odCancelled :: !(Maybe Bool)
+    , _odCreatedInfo :: !(Maybe LastModifiedInfo)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrderDocument' with the minimum fields required to make a request.
@@ -21136,7 +21616,7 @@ data OrderDocument = OrderDocument'
 -- * 'odCreatedInfo'
 orderDocument
     :: OrderDocument
-orderDocument =
+orderDocument = 
     OrderDocument'
     { _odSigned = Nothing
     , _odKind = "dfareporting#orderDocument"
@@ -21313,13 +21793,13 @@ instance ToJSON OrderDocument where
 --
 -- /See:/ 'metro' smart constructor.
 data Metro = Metro'
-    { _metMetroCode     :: !(Maybe Text)
-    , _metKind          :: !Text
-    , _metName          :: !(Maybe Text)
-    , _metCountryCode   :: !(Maybe Text)
-    , _metDmaId         :: !(Maybe (Textual Int64))
+    { _metMetroCode :: !(Maybe Text)
+    , _metKind :: !Text
+    , _metName :: !(Maybe Text)
+    , _metCountryCode :: !(Maybe Text)
+    , _metDmaId :: !(Maybe (Textual Int64))
     , _metCountryDartId :: !(Maybe (Textual Int64))
-    , _metDartId        :: !(Maybe (Textual Int64))
+    , _metDartId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Metro' with the minimum fields required to make a request.
@@ -21341,7 +21821,7 @@ data Metro = Metro'
 -- * 'metDartId'
 metro
     :: Metro
-metro =
+metro = 
     Metro'
     { _metMetroCode = Nothing
     , _metKind = "dfareporting#metro"
@@ -21420,45 +21900,46 @@ instance ToJSON Metro where
 --
 -- /See:/ 'placement' smart constructor.
 data Placement = Placement'
-    { _p1Status                         :: !(Maybe PlacementStatus)
-    , _p1VideoSettings                  :: !(Maybe VideoSettings)
-    , _p1PlacementStrategyId            :: !(Maybe (Textual Int64))
-    , _p1TagFormats                     :: !(Maybe [PlacementTagFormatsItem])
-    , _p1SiteIdDimensionValue           :: !(Maybe DimensionValue)
-    , _p1PricingSchedule                :: !(Maybe PricingSchedule)
-    , _p1Size                           :: !(Maybe Size)
-    , _p1Kind                           :: !Text
-    , _p1KeyName                        :: !(Maybe Text)
-    , _p1CampaignIdDimensionValue       :: !(Maybe DimensionValue)
-    , _p1AdvertiserId                   :: !(Maybe (Textual Int64))
-    , _p1AdvertiserIdDimensionValue     :: !(Maybe DimensionValue)
-    , _p1CampaignId                     :: !(Maybe (Textual Int64))
-    , _p1IdDimensionValue               :: !(Maybe DimensionValue)
-    , _p1VpaidAdapterChoice             :: !(Maybe PlacementVpaidAdapterChoice)
-    , _p1Primary                        :: !(Maybe Bool)
-    , _p1LookbackConfiguration          :: !(Maybe LookbackConfiguration)
-    , _p1TagSetting                     :: !(Maybe TagSetting)
-    , _p1ContentCategoryId              :: !(Maybe (Textual Int64))
-    , _p1DirectorySiteIdDimensionValue  :: !(Maybe DimensionValue)
-    , _p1AccountId                      :: !(Maybe (Textual Int64))
-    , _p1PaymentSource                  :: !(Maybe PlacementPaymentSource)
-    , _p1Name                           :: !(Maybe Text)
-    , _p1DirectorySiteId                :: !(Maybe (Textual Int64))
-    , _p1CreateInfo                     :: !(Maybe LastModifiedInfo)
-    , _p1VideoActiveViewOptOut          :: !(Maybe Bool)
-    , _p1LastModifiedInfo               :: !(Maybe LastModifiedInfo)
-    , _p1Id                             :: !(Maybe (Textual Int64))
-    , _p1SSLRequired                    :: !(Maybe Bool)
-    , _p1SubAccountId                   :: !(Maybe (Textual Int64))
+    { _p1Status :: !(Maybe PlacementStatus)
+    , _p1VideoSettings :: !(Maybe VideoSettings)
+    , _p1PlacementStrategyId :: !(Maybe (Textual Int64))
+    , _p1TagFormats :: !(Maybe [PlacementTagFormatsItem])
+    , _p1SiteIdDimensionValue :: !(Maybe DimensionValue)
+    , _p1PricingSchedule :: !(Maybe PricingSchedule)
+    , _p1Size :: !(Maybe Size)
+    , _p1Kind :: !Text
+    , _p1KeyName :: !(Maybe Text)
+    , _p1CampaignIdDimensionValue :: !(Maybe DimensionValue)
+    , _p1AdvertiserId :: !(Maybe (Textual Int64))
+    , _p1AdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _p1CampaignId :: !(Maybe (Textual Int64))
+    , _p1IdDimensionValue :: !(Maybe DimensionValue)
+    , _p1VpaidAdapterChoice :: !(Maybe PlacementVpaidAdapterChoice)
+    , _p1AdBlockingOptOut :: !(Maybe Bool)
+    , _p1Primary :: !(Maybe Bool)
+    , _p1LookbackConfiguration :: !(Maybe LookbackConfiguration)
+    , _p1TagSetting :: !(Maybe TagSetting)
+    , _p1ContentCategoryId :: !(Maybe (Textual Int64))
+    , _p1DirectorySiteIdDimensionValue :: !(Maybe DimensionValue)
+    , _p1AccountId :: !(Maybe (Textual Int64))
+    , _p1PaymentSource :: !(Maybe PlacementPaymentSource)
+    , _p1Name :: !(Maybe Text)
+    , _p1DirectorySiteId :: !(Maybe (Textual Int64))
+    , _p1CreateInfo :: !(Maybe LastModifiedInfo)
+    , _p1VideoActiveViewOptOut :: !(Maybe Bool)
+    , _p1LastModifiedInfo :: !(Maybe LastModifiedInfo)
+    , _p1Id :: !(Maybe (Textual Int64))
+    , _p1SSLRequired :: !(Maybe Bool)
+    , _p1SubAccountId :: !(Maybe (Textual Int64))
     , _p1PlacementGroupIdDimensionValue :: !(Maybe DimensionValue)
-    , _p1ExternalId                     :: !(Maybe Text)
-    , _p1PlacementGroupId               :: !(Maybe (Textual Int64))
-    , _p1Comment                        :: !(Maybe Text)
-    , _p1SiteId                         :: !(Maybe (Textual Int64))
-    , _p1Compatibility                  :: !(Maybe PlacementCompatibility)
-    , _p1Archived                       :: !(Maybe Bool)
-    , _p1PaymentApproved                :: !(Maybe Bool)
-    , _p1PublisherUpdateInfo            :: !(Maybe LastModifiedInfo)
+    , _p1ExternalId :: !(Maybe Text)
+    , _p1PlacementGroupId :: !(Maybe (Textual Int64))
+    , _p1Comment :: !(Maybe Text)
+    , _p1SiteId :: !(Maybe (Textual Int64))
+    , _p1Compatibility :: !(Maybe PlacementCompatibility)
+    , _p1Archived :: !(Maybe Bool)
+    , _p1PaymentApproved :: !(Maybe Bool)
+    , _p1PublisherUpdateInfo :: !(Maybe LastModifiedInfo)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Placement' with the minimum fields required to make a request.
@@ -21494,6 +21975,8 @@ data Placement = Placement'
 -- * 'p1IdDimensionValue'
 --
 -- * 'p1VpaidAdapterChoice'
+--
+-- * 'p1AdBlockingOptOut'
 --
 -- * 'p1Primary'
 --
@@ -21544,7 +22027,7 @@ data Placement = Placement'
 -- * 'p1PublisherUpdateInfo'
 placement
     :: Placement
-placement =
+placement = 
     Placement'
     { _p1Status = Nothing
     , _p1VideoSettings = Nothing
@@ -21561,6 +22044,7 @@ placement =
     , _p1CampaignId = Nothing
     , _p1IdDimensionValue = Nothing
     , _p1VpaidAdapterChoice = Nothing
+    , _p1AdBlockingOptOut = Nothing
     , _p1Primary = Nothing
     , _p1LookbackConfiguration = Nothing
     , _p1TagSetting = Nothing
@@ -21614,8 +22098,10 @@ p1PlacementStrategyId
 -- \"PLACEMENT_TAG_INTERSTITIAL_INTERNAL_REDIRECT\" -
 -- \"PLACEMENT_TAG_INTERSTITIAL_JAVASCRIPT\" -
 -- \"PLACEMENT_TAG_CLICK_COMMANDS\" -
--- \"PLACEMENT_TAG_INSTREAM_VIDEO_PREFETCH\" - \"PLACEMENT_TAG_TRACKING\" -
--- \"PLACEMENT_TAG_TRACKING_IFRAME\" -
+-- \"PLACEMENT_TAG_INSTREAM_VIDEO_PREFETCH\" -
+-- \"PLACEMENT_TAG_INSTREAM_VIDEO_PREFETCH_VAST_3\" -
+-- \"PLACEMENT_TAG_INSTREAM_VIDEO_PREFETCH_VAST_4\" -
+-- \"PLACEMENT_TAG_TRACKING\" - \"PLACEMENT_TAG_TRACKING_IFRAME\" -
 -- \"PLACEMENT_TAG_TRACKING_JAVASCRIPT\"
 p1TagFormats :: Lens' Placement [PlacementTagFormatsItem]
 p1TagFormats
@@ -21690,11 +22176,20 @@ p1IdDimensionValue
 
 -- | VPAID adapter setting for this placement. Controls which VPAID format
 -- the measurement adapter will use for in-stream video creatives assigned
--- to this placement.
+-- to this placement. Note: Flash is no longer supported. This field now
+-- defaults to HTML5 when the following values are provided: FLASH, BOTH.
 p1VpaidAdapterChoice :: Lens' Placement (Maybe PlacementVpaidAdapterChoice)
 p1VpaidAdapterChoice
   = lens _p1VpaidAdapterChoice
       (\ s a -> s{_p1VpaidAdapterChoice = a})
+
+-- | Whether this placement opts out of ad blocking. When true, ad blocking
+-- is disabled for this placement. When false, the campaign and site
+-- settings take effect.
+p1AdBlockingOptOut :: Lens' Placement (Maybe Bool)
+p1AdBlockingOptOut
+  = lens _p1AdBlockingOptOut
+      (\ s a -> s{_p1AdBlockingOptOut = a})
 
 -- | Whether this placement is the primary placement of a roadblock
 -- (placement group). You cannot change this field from true to false.
@@ -21885,6 +22380,7 @@ instance FromJSON Placement where
                      <*> (o .:? "campaignId")
                      <*> (o .:? "idDimensionValue")
                      <*> (o .:? "vpaidAdapterChoice")
+                     <*> (o .:? "adBlockingOptOut")
                      <*> (o .:? "primary")
                      <*> (o .:? "lookbackConfiguration")
                      <*> (o .:? "tagSetting")
@@ -21932,6 +22428,7 @@ instance ToJSON Placement where
                   ("campaignId" .=) <$> _p1CampaignId,
                   ("idDimensionValue" .=) <$> _p1IdDimensionValue,
                   ("vpaidAdapterChoice" .=) <$> _p1VpaidAdapterChoice,
+                  ("adBlockingOptOut" .=) <$> _p1AdBlockingOptOut,
                   ("primary" .=) <$> _p1Primary,
                   ("lookbackConfiguration" .=) <$>
                     _p1LookbackConfiguration,
@@ -21966,10 +22463,10 @@ instance ToJSON Placement where
 --
 -- /See:/ 'encryptionInfo' smart constructor.
 data EncryptionInfo = EncryptionInfo'
-    { _eiEncryptionSource     :: !(Maybe EncryptionInfoEncryptionSource)
-    , _eiKind                 :: !Text
+    { _eiEncryptionSource :: !(Maybe EncryptionInfoEncryptionSource)
+    , _eiKind :: !Text
     , _eiEncryptionEntityType :: !(Maybe EncryptionInfoEncryptionEntityType)
-    , _eiEncryptionEntityId   :: !(Maybe (Textual Int64))
+    , _eiEncryptionEntityId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EncryptionInfo' with the minimum fields required to make a request.
@@ -21985,7 +22482,7 @@ data EncryptionInfo = EncryptionInfo'
 -- * 'eiEncryptionEntityId'
 encryptionInfo
     :: EncryptionInfo
-encryptionInfo =
+encryptionInfo = 
     EncryptionInfo'
     { _eiEncryptionSource = Nothing
     , _eiKind = "dfareporting#encryptionInfo"
@@ -22045,8 +22542,8 @@ instance ToJSON EncryptionInfo where
 -- /See:/ 'sitesListResponse' smart constructor.
 data SitesListResponse = SitesListResponse'
     { _sitNextPageToken :: !(Maybe Text)
-    , _sitKind          :: !Text
-    , _sitSites         :: !(Maybe [Site])
+    , _sitKind :: !Text
+    , _sitSites :: !(Maybe [Site])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesListResponse' with the minimum fields required to make a request.
@@ -22060,7 +22557,7 @@ data SitesListResponse = SitesListResponse'
 -- * 'sitSites'
 sitesListResponse
     :: SitesListResponse
-sitesListResponse =
+sitesListResponse = 
     SitesListResponse'
     { _sitNextPageToken = Nothing
     , _sitKind = "dfareporting#sitesListResponse"
@@ -22108,19 +22605,19 @@ instance ToJSON SitesListResponse where
 --
 -- /See:/ 'targetingTemplate' smart constructor.
 data TargetingTemplate = TargetingTemplate'
-    { _ttGeoTargeting                :: !(Maybe GeoTargeting)
-    , _ttTechnologyTargeting         :: !(Maybe TechnologyTargeting)
-    , _ttDayPartTargeting            :: !(Maybe DayPartTargeting)
-    , _ttKind                        :: !Text
-    , _ttAdvertiserId                :: !(Maybe (Textual Int64))
-    , _ttAdvertiserIdDimensionValue  :: !(Maybe DimensionValue)
-    , _ttAccountId                   :: !(Maybe (Textual Int64))
-    , _ttName                        :: !(Maybe Text)
+    { _ttGeoTargeting :: !(Maybe GeoTargeting)
+    , _ttTechnologyTargeting :: !(Maybe TechnologyTargeting)
+    , _ttDayPartTargeting :: !(Maybe DayPartTargeting)
+    , _ttKind :: !Text
+    , _ttAdvertiserId :: !(Maybe (Textual Int64))
+    , _ttAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
+    , _ttAccountId :: !(Maybe (Textual Int64))
+    , _ttName :: !(Maybe Text)
     , _ttKeyValueTargetingExpression :: !(Maybe KeyValueTargetingExpression)
-    , _ttId                          :: !(Maybe (Textual Int64))
-    , _ttSubAccountId                :: !(Maybe (Textual Int64))
-    , _ttLanguageTargeting           :: !(Maybe LanguageTargeting)
-    , _ttListTargetingExpression     :: !(Maybe ListTargetingExpression)
+    , _ttId :: !(Maybe (Textual Int64))
+    , _ttSubAccountId :: !(Maybe (Textual Int64))
+    , _ttLanguageTargeting :: !(Maybe LanguageTargeting)
+    , _ttListTargetingExpression :: !(Maybe ListTargetingExpression)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingTemplate' with the minimum fields required to make a request.
@@ -22154,7 +22651,7 @@ data TargetingTemplate = TargetingTemplate'
 -- * 'ttListTargetingExpression'
 targetingTemplate
     :: TargetingTemplate
-targetingTemplate =
+targetingTemplate = 
     TargetingTemplate'
     { _ttGeoTargeting = Nothing
     , _ttTechnologyTargeting = Nothing
@@ -22300,13 +22797,13 @@ instance ToJSON TargetingTemplate where
 --
 -- /See:/ 'creativeField' smart constructor.
 data CreativeField = CreativeField'
-    { _cffKind                       :: !Text
-    , _cffAdvertiserId               :: !(Maybe (Textual Int64))
+    { _cffKind :: !Text
+    , _cffAdvertiserId :: !(Maybe (Textual Int64))
     , _cffAdvertiserIdDimensionValue :: !(Maybe DimensionValue)
-    , _cffAccountId                  :: !(Maybe (Textual Int64))
-    , _cffName                       :: !(Maybe Text)
-    , _cffId                         :: !(Maybe (Textual Int64))
-    , _cffSubAccountId               :: !(Maybe (Textual Int64))
+    , _cffAccountId :: !(Maybe (Textual Int64))
+    , _cffName :: !(Maybe Text)
+    , _cffId :: !(Maybe (Textual Int64))
+    , _cffSubAccountId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeField' with the minimum fields required to make a request.
@@ -22328,7 +22825,7 @@ data CreativeField = CreativeField'
 -- * 'cffSubAccountId'
 creativeField
     :: CreativeField
-creativeField =
+creativeField = 
     CreativeField'
     { _cffKind = "dfareporting#creativeField"
     , _cffAdvertiserId = Nothing
@@ -22417,7 +22914,7 @@ instance ToJSON CreativeField where
 --
 -- /See:/ 'defaultClickThroughEventTagProperties' smart constructor.
 data DefaultClickThroughEventTagProperties = DefaultClickThroughEventTagProperties'
-    { _dctetpOverrideInheritedEventTag     :: !(Maybe Bool)
+    { _dctetpOverrideInheritedEventTag :: !(Maybe Bool)
     , _dctetpDefaultClickThroughEventTagId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -22430,7 +22927,7 @@ data DefaultClickThroughEventTagProperties = DefaultClickThroughEventTagProperti
 -- * 'dctetpDefaultClickThroughEventTagId'
 defaultClickThroughEventTagProperties
     :: DefaultClickThroughEventTagProperties
-defaultClickThroughEventTagProperties =
+defaultClickThroughEventTagProperties = 
     DefaultClickThroughEventTagProperties'
     { _dctetpOverrideInheritedEventTag = Nothing
     , _dctetpDefaultClickThroughEventTagId = Nothing
@@ -22485,7 +22982,7 @@ newtype ListTargetingExpression = ListTargetingExpression'
 -- * 'lteExpression'
 listTargetingExpression
     :: ListTargetingExpression
-listTargetingExpression =
+listTargetingExpression = 
     ListTargetingExpression'
     { _lteExpression = Nothing
     }

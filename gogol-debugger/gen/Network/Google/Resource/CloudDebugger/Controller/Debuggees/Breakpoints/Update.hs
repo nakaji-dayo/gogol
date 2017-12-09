@@ -24,7 +24,7 @@
 -- message must be sent back to the controller service. Updates to active
 -- breakpoint fields are only allowed if the new value does not change the
 -- breakpoint specification. Updates to the \`location\`, \`condition\` and
--- \`expression\` fields should not alter the breakpoint semantics. These
+-- \`expressions\` fields should not alter the breakpoint semantics. These
 -- may only make changes such as canonicalizing a value or snapping the
 -- location to the correct line of code.
 --
@@ -48,11 +48,12 @@ module Network.Google.Resource.CloudDebugger.Controller.Debuggees.Breakpoints.Up
     , cdbuBearerToken
     , cdbuId
     , cdbuDebuggeeId
+    , cdbuFields
     , cdbuCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.controller.debuggees.breakpoints.update@ method which the
 -- 'ControllerDebuggeesBreakpointsUpdate' request conforms to.
@@ -70,30 +71,33 @@ type ControllerDebuggeesBreakpointsUpdateResource =
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] UpdateActiveBreakpointRequest
-                                   :> Put '[JSON] UpdateActiveBreakpointResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON] UpdateActiveBreakpointRequest
+                                     :>
+                                     Put '[JSON] UpdateActiveBreakpointResponse
 
 -- | Updates the breakpoint state or mutable fields. The entire Breakpoint
 -- message must be sent back to the controller service. Updates to active
 -- breakpoint fields are only allowed if the new value does not change the
 -- breakpoint specification. Updates to the \`location\`, \`condition\` and
--- \`expression\` fields should not alter the breakpoint semantics. These
+-- \`expressions\` fields should not alter the breakpoint semantics. These
 -- may only make changes such as canonicalizing a value or snapping the
 -- location to the correct line of code.
 --
 -- /See:/ 'controllerDebuggeesBreakpointsUpdate' smart constructor.
 data ControllerDebuggeesBreakpointsUpdate = ControllerDebuggeesBreakpointsUpdate'
-    { _cdbuXgafv          :: !(Maybe Xgafv)
+    { _cdbuXgafv :: !(Maybe Xgafv)
     , _cdbuUploadProtocol :: !(Maybe Text)
-    , _cdbuPp             :: !Bool
-    , _cdbuAccessToken    :: !(Maybe Text)
-    , _cdbuUploadType     :: !(Maybe Text)
-    , _cdbuPayload        :: !UpdateActiveBreakpointRequest
-    , _cdbuBearerToken    :: !(Maybe Text)
-    , _cdbuId             :: !Text
-    , _cdbuDebuggeeId     :: !Text
-    , _cdbuCallback       :: !(Maybe Text)
+    , _cdbuPp :: !Bool
+    , _cdbuAccessToken :: !(Maybe Text)
+    , _cdbuUploadType :: !(Maybe Text)
+    , _cdbuPayload :: !UpdateActiveBreakpointRequest
+    , _cdbuBearerToken :: !(Maybe Text)
+    , _cdbuId :: !Text
+    , _cdbuDebuggeeId :: !Text
+    , _cdbuFields :: !(Maybe Text)
+    , _cdbuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ControllerDebuggeesBreakpointsUpdate' with the minimum fields required to make a request.
@@ -118,13 +122,15 @@ data ControllerDebuggeesBreakpointsUpdate = ControllerDebuggeesBreakpointsUpdate
 --
 -- * 'cdbuDebuggeeId'
 --
+-- * 'cdbuFields'
+--
 -- * 'cdbuCallback'
 controllerDebuggeesBreakpointsUpdate
     :: UpdateActiveBreakpointRequest -- ^ 'cdbuPayload'
     -> Text -- ^ 'cdbuId'
     -> Text -- ^ 'cdbuDebuggeeId'
     -> ControllerDebuggeesBreakpointsUpdate
-controllerDebuggeesBreakpointsUpdate pCdbuPayload_ pCdbuId_ pCdbuDebuggeeId_ =
+controllerDebuggeesBreakpointsUpdate pCdbuPayload_ pCdbuId_ pCdbuDebuggeeId_ = 
     ControllerDebuggeesBreakpointsUpdate'
     { _cdbuXgafv = Nothing
     , _cdbuUploadProtocol = Nothing
@@ -135,6 +141,7 @@ controllerDebuggeesBreakpointsUpdate pCdbuPayload_ pCdbuId_ pCdbuDebuggeeId_ =
     , _cdbuBearerToken = Nothing
     , _cdbuId = pCdbuId_
     , _cdbuDebuggeeId = pCdbuDebuggeeId_
+    , _cdbuFields = Nothing
     , _cdbuCallback = Nothing
     }
 
@@ -186,6 +193,11 @@ cdbuDebuggeeId
   = lens _cdbuDebuggeeId
       (\ s a -> s{_cdbuDebuggeeId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdbuFields :: Lens' ControllerDebuggeesBreakpointsUpdate (Maybe Text)
+cdbuFields
+  = lens _cdbuFields (\ s a -> s{_cdbuFields = a})
+
 -- | JSONP
 cdbuCallback :: Lens' ControllerDebuggeesBreakpointsUpdate (Maybe Text)
 cdbuCallback
@@ -207,6 +219,7 @@ instance GoogleRequest
               _cdbuUploadType
               _cdbuBearerToken
               _cdbuCallback
+              _cdbuFields
               (Just AltJSON)
               _cdbuPayload
               debuggerService

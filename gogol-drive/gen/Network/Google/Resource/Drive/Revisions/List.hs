@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Revisions.List
     , rllPageToken
     , rllFileId
     , rllPageSize
+    , rllFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.revisions.list@ method which the
 -- 'RevisionsList' request conforms to.
@@ -51,15 +52,17 @@ type RevisionsListResource =
              "revisions" :>
                QueryParam "pageToken" Text :>
                  QueryParam "pageSize" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] RevisionList
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] RevisionList
 
 -- | Lists a file\'s revisions.
 --
 -- /See:/ 'revisionsList' smart constructor.
 data RevisionsList = RevisionsList'
     { _rllPageToken :: !(Maybe Text)
-    , _rllFileId    :: !Text
-    , _rllPageSize  :: !(Textual Int32)
+    , _rllFileId :: !Text
+    , _rllPageSize :: !(Textual Int32)
+    , _rllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionsList' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data RevisionsList = RevisionsList'
 -- * 'rllFileId'
 --
 -- * 'rllPageSize'
+--
+-- * 'rllFields'
 revisionsList
     :: Text -- ^ 'rllFileId'
     -> RevisionsList
-revisionsList pRllFileId_ =
+revisionsList pRllFileId_ = 
     RevisionsList'
     { _rllPageToken = Nothing
     , _rllFileId = pRllFileId_
     , _rllPageSize = 200
+    , _rllFields = Nothing
     }
 
 -- | The token for continuing a previous list request on the next page. This
@@ -99,6 +105,11 @@ rllPageSize
   = lens _rllPageSize (\ s a -> s{_rllPageSize = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rllFields :: Lens' RevisionsList (Maybe Text)
+rllFields
+  = lens _rllFields (\ s a -> s{_rllFields = a})
+
 instance GoogleRequest RevisionsList where
         type Rs RevisionsList = RevisionList
         type Scopes RevisionsList =
@@ -111,6 +122,7 @@ instance GoogleRequest RevisionsList where
                "https://www.googleapis.com/auth/drive.readonly"]
         requestClient RevisionsList'{..}
           = go _rllFileId _rllPageToken (Just _rllPageSize)
+              _rllFields
               (Just AltJSON)
               driveService
           where go

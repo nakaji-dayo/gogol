@@ -38,10 +38,11 @@ module Network.Google.Resource.Blogger.Blogs.ListByUser
     , blbuUserId
     , blbuRole
     , blbuView
+    , blbuFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.blogs.listByUser@ method which the
 -- 'BlogsListByUser' request conforms to.
@@ -55,17 +56,19 @@ type BlogsListByUserResource =
                  QueryParam "fetchUserInfo" Bool :>
                    QueryParams "role" BlogsListByUserRole :>
                      QueryParam "view" BlogsListByUserView :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] BlogList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] BlogList
 
 -- | Retrieves a list of blogs, possibly filtered.
 --
 -- /See:/ 'blogsListByUser' smart constructor.
 data BlogsListByUser = BlogsListByUser'
-    { _blbuStatus        :: ![BlogsListByUserStatus]
+    { _blbuStatus :: ![BlogsListByUserStatus]
     , _blbuFetchUserInfo :: !(Maybe Bool)
-    , _blbuUserId        :: !Text
-    , _blbuRole          :: !(Maybe [BlogsListByUserRole])
-    , _blbuView          :: !(Maybe BlogsListByUserView)
+    , _blbuUserId :: !Text
+    , _blbuRole :: !(Maybe [BlogsListByUserRole])
+    , _blbuView :: !(Maybe BlogsListByUserView)
+    , _blbuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BlogsListByUser' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data BlogsListByUser = BlogsListByUser'
 -- * 'blbuRole'
 --
 -- * 'blbuView'
+--
+-- * 'blbuFields'
 blogsListByUser
     :: Text -- ^ 'blbuUserId'
     -> BlogsListByUser
-blogsListByUser pBlbuUserId_ =
+blogsListByUser pBlbuUserId_ = 
     BlogsListByUser'
     { _blbuStatus = [BLBUSLive]
     , _blbuFetchUserInfo = Nothing
     , _blbuUserId = pBlbuUserId_
     , _blbuRole = Nothing
     , _blbuView = Nothing
+    , _blbuFields = Nothing
     }
 
 -- | Blog statuses to include in the result (default: Live blogs only). Note
@@ -127,6 +133,11 @@ blbuRole
 blbuView :: Lens' BlogsListByUser (Maybe BlogsListByUserView)
 blbuView = lens _blbuView (\ s a -> s{_blbuView = a})
 
+-- | Selector specifying which fields to include in a partial response.
+blbuFields :: Lens' BlogsListByUser (Maybe Text)
+blbuFields
+  = lens _blbuFields (\ s a -> s{_blbuFields = a})
+
 instance GoogleRequest BlogsListByUser where
         type Rs BlogsListByUser = BlogList
         type Scopes BlogsListByUser =
@@ -136,6 +147,7 @@ instance GoogleRequest BlogsListByUser where
           = go _blbuUserId _blbuStatus _blbuFetchUserInfo
               (_blbuRole ^. _Default)
               _blbuView
+              _blbuFields
               (Just AltJSON)
               bloggerService
           where go

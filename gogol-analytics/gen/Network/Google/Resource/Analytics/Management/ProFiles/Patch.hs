@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.Patch
     , mpfpProFileId
     , mpfpPayload
     , mpfpAccountId
+    , mpfpFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.patch@ method which the
 -- 'ManagementProFilesPatch' request conforms to.
@@ -55,8 +56,9 @@ type ManagementProFilesPatchResource =
                  Capture "webPropertyId" Text :>
                    "profiles" :>
                      Capture "profileId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ProFile :> Patch '[JSON] ProFile
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ProFile :> Patch '[JSON] ProFile
 
 -- | Updates an existing view (profile). This method supports patch
 -- semantics.
@@ -64,9 +66,10 @@ type ManagementProFilesPatchResource =
 -- /See:/ 'managementProFilesPatch' smart constructor.
 data ManagementProFilesPatch = ManagementProFilesPatch'
     { _mpfpWebPropertyId :: !Text
-    , _mpfpProFileId     :: !Text
-    , _mpfpPayload       :: !ProFile
-    , _mpfpAccountId     :: !Text
+    , _mpfpProFileId :: !Text
+    , _mpfpPayload :: !ProFile
+    , _mpfpAccountId :: !Text
+    , _mpfpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesPatch' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementProFilesPatch = ManagementProFilesPatch'
 -- * 'mpfpPayload'
 --
 -- * 'mpfpAccountId'
+--
+-- * 'mpfpFields'
 managementProFilesPatch
     :: Text -- ^ 'mpfpWebPropertyId'
     -> Text -- ^ 'mpfpProFileId'
     -> ProFile -- ^ 'mpfpPayload'
     -> Text -- ^ 'mpfpAccountId'
     -> ManagementProFilesPatch
-managementProFilesPatch pMpfpWebPropertyId_ pMpfpProFileId_ pMpfpPayload_ pMpfpAccountId_ =
+managementProFilesPatch pMpfpWebPropertyId_ pMpfpProFileId_ pMpfpPayload_ pMpfpAccountId_ = 
     ManagementProFilesPatch'
     { _mpfpWebPropertyId = pMpfpWebPropertyId_
     , _mpfpProFileId = pMpfpProFileId_
     , _mpfpPayload = pMpfpPayload_
     , _mpfpAccountId = pMpfpAccountId_
+    , _mpfpFields = Nothing
     }
 
 -- | Web property ID to which the view (profile) belongs
@@ -117,12 +123,18 @@ mpfpAccountId
   = lens _mpfpAccountId
       (\ s a -> s{_mpfpAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfpFields :: Lens' ManagementProFilesPatch (Maybe Text)
+mpfpFields
+  = lens _mpfpFields (\ s a -> s{_mpfpFields = a})
+
 instance GoogleRequest ManagementProFilesPatch where
         type Rs ManagementProFilesPatch = ProFile
         type Scopes ManagementProFilesPatch =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementProFilesPatch'{..}
           = go _mpfpAccountId _mpfpWebPropertyId _mpfpProFileId
+              _mpfpFields
               (Just AltJSON)
               _mpfpPayload
               analyticsService

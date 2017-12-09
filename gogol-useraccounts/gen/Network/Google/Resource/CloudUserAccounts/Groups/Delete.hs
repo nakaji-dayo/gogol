@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.Delete
     -- * Request Lenses
     , gdProject
     , gdGroupName
+    , gdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.delete@ method which the
 -- 'GroupsDelete' request conforms to.
@@ -50,14 +51,16 @@ type GroupsDeleteResource =
              "global" :>
                "groups" :>
                  Capture "groupName" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified Group resource.
 --
 -- /See:/ 'groupsDelete' smart constructor.
 data GroupsDelete = GroupsDelete'
-    { _gdProject   :: !Text
+    { _gdProject :: !Text
     , _gdGroupName :: !Text
+    , _gdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data GroupsDelete = GroupsDelete'
 -- * 'gdProject'
 --
 -- * 'gdGroupName'
+--
+-- * 'gdFields'
 groupsDelete
     :: Text -- ^ 'gdProject'
     -> Text -- ^ 'gdGroupName'
     -> GroupsDelete
-groupsDelete pGdProject_ pGdGroupName_ =
+groupsDelete pGdProject_ pGdGroupName_ = 
     GroupsDelete'
     { _gdProject = pGdProject_
     , _gdGroupName = pGdGroupName_
+    , _gdFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,13 +93,17 @@ gdGroupName :: Lens' GroupsDelete Text
 gdGroupName
   = lens _gdGroupName (\ s a -> s{_gdGroupName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gdFields :: Lens' GroupsDelete (Maybe Text)
+gdFields = lens _gdFields (\ s a -> s{_gdFields = a})
+
 instance GoogleRequest GroupsDelete where
         type Rs GroupsDelete = Operation
         type Scopes GroupsDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient GroupsDelete'{..}
-          = go _gdProject _gdGroupName (Just AltJSON)
+          = go _gdProject _gdGroupName _gdFields (Just AltJSON)
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy GroupsDeleteResource)

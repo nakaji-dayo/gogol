@@ -34,12 +34,14 @@ module Network.Google.Resource.Compute.TargetHTTPProxies.Insert
     , TargetHTTPProxiesInsert
 
     -- * Request Lenses
+    , thttppiRequestId
     , thttppiProject
     , thttppiPayload
+    , thttppiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetHttpProxies.insert@ method which the
 -- 'TargetHTTPProxiesInsert' request conforms to.
@@ -50,35 +52,60 @@ type TargetHTTPProxiesInsertResource =
            Capture "project" Text :>
              "global" :>
                "targetHttpProxies" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] TargetHTTPProxy :>
-                     Post '[JSON] Operation
+                 QueryParam "requestId" Text :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] TargetHTTPProxy :>
+                         Post '[JSON] Operation
 
 -- | Creates a TargetHttpProxy resource in the specified project using the
 -- data included in the request.
 --
 -- /See:/ 'targetHTTPProxiesInsert' smart constructor.
 data TargetHTTPProxiesInsert = TargetHTTPProxiesInsert'
-    { _thttppiProject :: !Text
+    { _thttppiRequestId :: !(Maybe Text)
+    , _thttppiProject :: !Text
     , _thttppiPayload :: !TargetHTTPProxy
+    , _thttppiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetHTTPProxiesInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'thttppiRequestId'
+--
 -- * 'thttppiProject'
 --
 -- * 'thttppiPayload'
+--
+-- * 'thttppiFields'
 targetHTTPProxiesInsert
     :: Text -- ^ 'thttppiProject'
     -> TargetHTTPProxy -- ^ 'thttppiPayload'
     -> TargetHTTPProxiesInsert
-targetHTTPProxiesInsert pThttppiProject_ pThttppiPayload_ =
+targetHTTPProxiesInsert pThttppiProject_ pThttppiPayload_ = 
     TargetHTTPProxiesInsert'
-    { _thttppiProject = pThttppiProject_
+    { _thttppiRequestId = Nothing
+    , _thttppiProject = pThttppiProject_
     , _thttppiPayload = pThttppiPayload_
+    , _thttppiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+thttppiRequestId :: Lens' TargetHTTPProxiesInsert (Maybe Text)
+thttppiRequestId
+  = lens _thttppiRequestId
+      (\ s a -> s{_thttppiRequestId = a})
 
 -- | Project ID for this request.
 thttppiProject :: Lens' TargetHTTPProxiesInsert Text
@@ -92,13 +119,21 @@ thttppiPayload
   = lens _thttppiPayload
       (\ s a -> s{_thttppiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+thttppiFields :: Lens' TargetHTTPProxiesInsert (Maybe Text)
+thttppiFields
+  = lens _thttppiFields
+      (\ s a -> s{_thttppiFields = a})
+
 instance GoogleRequest TargetHTTPProxiesInsert where
         type Rs TargetHTTPProxiesInsert = Operation
         type Scopes TargetHTTPProxiesInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetHTTPProxiesInsert'{..}
-          = go _thttppiProject (Just AltJSON) _thttppiPayload
+          = go _thttppiProject _thttppiRequestId _thttppiFields
+              (Just AltJSON)
+              _thttppiPayload
               computeService
           where go
                   = buildClient

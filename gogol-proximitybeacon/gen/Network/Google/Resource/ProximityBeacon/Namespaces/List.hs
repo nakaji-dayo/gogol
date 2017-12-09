@@ -46,18 +46,19 @@ module Network.Google.Resource.ProximityBeacon.Namespaces.List
     , nlUploadType
     , nlBearerToken
     , nlProjectId
+    , nlFields
     , nlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.namespaces.list@ method which the
 -- 'NamespacesList' request conforms to.
 type NamespacesListResource =
      "v1beta1" :>
        "namespaces" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -65,8 +66,9 @@ type NamespacesListResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ListNamespacesResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ListNamespacesResponse
 
 -- | Lists all attachment namespaces owned by your Google Developers Console
 -- project. Attachment data associated with a beacon must include a
@@ -78,14 +80,15 @@ type NamespacesListResource =
 --
 -- /See:/ 'namespacesList' smart constructor.
 data NamespacesList = NamespacesList'
-    { _nlXgafv          :: !(Maybe Text)
+    { _nlXgafv :: !(Maybe Xgafv)
     , _nlUploadProtocol :: !(Maybe Text)
-    , _nlPp             :: !Bool
-    , _nlAccessToken    :: !(Maybe Text)
-    , _nlUploadType     :: !(Maybe Text)
-    , _nlBearerToken    :: !(Maybe Text)
-    , _nlProjectId      :: !(Maybe Text)
-    , _nlCallback       :: !(Maybe Text)
+    , _nlPp :: !Bool
+    , _nlAccessToken :: !(Maybe Text)
+    , _nlUploadType :: !(Maybe Text)
+    , _nlBearerToken :: !(Maybe Text)
+    , _nlProjectId :: !(Maybe Text)
+    , _nlFields :: !(Maybe Text)
+    , _nlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NamespacesList' with the minimum fields required to make a request.
@@ -106,10 +109,12 @@ data NamespacesList = NamespacesList'
 --
 -- * 'nlProjectId'
 --
+-- * 'nlFields'
+--
 -- * 'nlCallback'
 namespacesList
     :: NamespacesList
-namespacesList =
+namespacesList = 
     NamespacesList'
     { _nlXgafv = Nothing
     , _nlUploadProtocol = Nothing
@@ -118,11 +123,12 @@ namespacesList =
     , _nlUploadType = Nothing
     , _nlBearerToken = Nothing
     , _nlProjectId = Nothing
+    , _nlFields = Nothing
     , _nlCallback = Nothing
     }
 
 -- | V1 error format.
-nlXgafv :: Lens' NamespacesList (Maybe Text)
+nlXgafv :: Lens' NamespacesList (Maybe Xgafv)
 nlXgafv = lens _nlXgafv (\ s a -> s{_nlXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -157,6 +163,10 @@ nlProjectId :: Lens' NamespacesList (Maybe Text)
 nlProjectId
   = lens _nlProjectId (\ s a -> s{_nlProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+nlFields :: Lens' NamespacesList (Maybe Text)
+nlFields = lens _nlFields (\ s a -> s{_nlFields = a})
+
 -- | JSONP
 nlCallback :: Lens' NamespacesList (Maybe Text)
 nlCallback
@@ -173,6 +183,7 @@ instance GoogleRequest NamespacesList where
               _nlBearerToken
               _nlProjectId
               _nlCallback
+              _nlFields
               (Just AltJSON)
               proximityBeaconService
           where go

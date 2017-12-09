@@ -17,8 +17,8 @@
 --
 module Network.Google.CivicInfo.Types.Product where
 
-import           Network.Google.CivicInfo.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types.Sum
+import Network.Google.Prelude
 
 -- | Political geographic divisions that contain the requested address.
 --
@@ -35,7 +35,7 @@ newtype RepresentativeInfoResponseDivisions = RepresentativeInfoResponseDivision
 representativeInfoResponseDivisions
     :: HashMap Text GeographicDivision -- ^ 'rirdAddtional'
     -> RepresentativeInfoResponseDivisions
-representativeInfoResponseDivisions pRirdAddtional_ =
+representativeInfoResponseDivisions pRirdAddtional_ = 
     RepresentativeInfoResponseDivisions'
     { _rirdAddtional = _Coerce # pRirdAddtional_
     }
@@ -63,17 +63,17 @@ instance ToJSON RepresentativeInfoResponseDivisions
 --
 -- /See:/ 'voterInfoResponse' smart constructor.
 data VoterInfoResponse = VoterInfoResponse'
-    { _virOtherElections   :: !(Maybe [Election])
-    , _virContests         :: !(Maybe [Contest])
-    , _virState            :: !(Maybe [AdministrationRegion])
-    , _virKind             :: !Text
+    { _virOtherElections :: !(Maybe [Election])
+    , _virContests :: !(Maybe [Contest])
+    , _virState :: !(Maybe [AdministrationRegion])
+    , _virKind :: !Text
     , _virDropOffLocations :: !(Maybe [PollingLocation])
-    , _virElection         :: !(Maybe Election)
-    , _virNormalizedInput  :: !(Maybe SimpleAddressType)
-    , _virMailOnly         :: !(Maybe Bool)
-    , _virEarlyVoteSites   :: !(Maybe [PollingLocation])
+    , _virElection :: !(Maybe Election)
+    , _virNormalizedInput :: !(Maybe SimpleAddressType)
+    , _virMailOnly :: !(Maybe Bool)
+    , _virEarlyVoteSites :: !(Maybe [PollingLocation])
     , _virPollingLocations :: !(Maybe [PollingLocation])
-    , _virPrecinctId       :: !(Maybe Text)
+    , _virPrecinctId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VoterInfoResponse' with the minimum fields required to make a request.
@@ -103,7 +103,7 @@ data VoterInfoResponse = VoterInfoResponse'
 -- * 'virPrecinctId'
 voterInfoResponse
     :: VoterInfoResponse
-voterInfoResponse =
+voterInfoResponse = 
     VoterInfoResponse'
     { _virOtherElections = Nothing
     , _virContests = Nothing
@@ -240,14 +240,14 @@ instance ToJSON VoterInfoResponse where
 -- /See:/ 'pollingLocation' smart constructor.
 data PollingLocation = PollingLocation'
     { _plVoterServices :: !(Maybe Text)
-    , _plEndDate       :: !(Maybe Text)
-    , _plSources       :: !(Maybe [Source])
-    , _plAddress       :: !(Maybe SimpleAddressType)
-    , _plStartDate     :: !(Maybe Text)
-    , _plPollingHours  :: !(Maybe Text)
-    , _plName          :: !(Maybe Text)
-    , _plId            :: !(Maybe Text)
-    , _plNotes         :: !(Maybe Text)
+    , _plEndDate :: !(Maybe Text)
+    , _plSources :: !(Maybe [Source])
+    , _plAddress :: !(Maybe SimpleAddressType)
+    , _plStartDate :: !(Maybe Text)
+    , _plPollingHours :: !(Maybe Text)
+    , _plName :: !(Maybe Text)
+    , _plId :: !(Maybe Text)
+    , _plNotes :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PollingLocation' with the minimum fields required to make a request.
@@ -273,7 +273,7 @@ data PollingLocation = PollingLocation'
 -- * 'plNotes'
 pollingLocation
     :: PollingLocation
-pollingLocation =
+pollingLocation = 
     PollingLocation'
     { _plVoterServices = Nothing
     , _plEndDate = Nothing
@@ -370,9 +370,9 @@ instance ToJSON PollingLocation where
 --
 -- /See:/ 'geographicDivision' smart constructor.
 data GeographicDivision = GeographicDivision'
-    { _gdName          :: !(Maybe Text)
+    { _gdName :: !(Maybe Text)
     , _gdOfficeIndices :: !(Maybe [Textual Word32])
-    , _gdAlsoKnownAs   :: !(Maybe [Text])
+    , _gdAlsoKnownAs :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GeographicDivision' with the minimum fields required to make a request.
@@ -386,7 +386,7 @@ data GeographicDivision = GeographicDivision'
 -- * 'gdAlsoKnownAs'
 geographicDivision
     :: GeographicDivision
-geographicDivision =
+geographicDivision = 
     GeographicDivision'
     { _gdName = Nothing
     , _gdOfficeIndices = Nothing
@@ -443,14 +443,14 @@ instance ToJSON GeographicDivision where
 --
 -- /See:/ 'candidate' smart constructor.
 data Candidate = Candidate'
-    { _cEmail         :: !(Maybe Text)
-    , _cPhone         :: !(Maybe Text)
-    , _cPhotoURL      :: !(Maybe Text)
-    , _cChannels      :: !(Maybe [Channel])
-    , _cCandidateURL  :: !(Maybe Text)
+    { _cEmail :: !(Maybe Text)
+    , _cPhone :: !(Maybe Text)
+    , _cPhotoURL :: !(Maybe Text)
+    , _cChannels :: !(Maybe [Channel])
+    , _cCandidateURL :: !(Maybe Text)
     , _cOrderOnBallot :: !(Maybe (Textual Int64))
-    , _cName          :: !(Maybe Text)
-    , _cParty         :: !(Maybe Text)
+    , _cName :: !(Maybe Text)
+    , _cParty :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Candidate' with the minimum fields required to make a request.
@@ -474,7 +474,7 @@ data Candidate = Candidate'
 -- * 'cParty'
 candidate
     :: Candidate
-candidate =
+candidate = 
     Candidate'
     { _cEmail = Nothing
     , _cPhone = Nothing
@@ -558,12 +558,12 @@ instance ToJSON Candidate where
 --
 -- /See:/ 'office' smart constructor.
 data Office = Office'
-    { _oDivisionId      :: !(Maybe Text)
-    , _oRoles           :: !(Maybe [Text])
+    { _oDivisionId :: !(Maybe Text)
+    , _oRoles :: !(Maybe [Text])
     , _oOfficialIndices :: !(Maybe [Textual Word32])
-    , _oSources         :: !(Maybe [Source])
-    , _oName            :: !(Maybe Text)
-    , _oLevels          :: !(Maybe [Text])
+    , _oSources :: !(Maybe [Source])
+    , _oName :: !(Maybe Text)
+    , _oLevels :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Office' with the minimum fields required to make a request.
@@ -583,7 +583,7 @@ data Office = Office'
 -- * 'oLevels'
 office
     :: Office
-office =
+office = 
     Office'
     { _oDivisionId = Nothing
     , _oRoles = Nothing
@@ -672,7 +672,7 @@ newtype ElectionsQueryRequest = ElectionsQueryRequest'
 -- * 'eqrContextParams'
 electionsQueryRequest
     :: ElectionsQueryRequest
-electionsQueryRequest =
+electionsQueryRequest = 
     ElectionsQueryRequest'
     { _eqrContextParams = Nothing
     }
@@ -698,7 +698,7 @@ instance ToJSON ElectionsQueryRequest where
 --
 -- /See:/ 'channel' smart constructor.
 data Channel = Channel'
-    { _cId   :: !(Maybe Text)
+    { _cId :: !(Maybe Text)
     , _cType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -711,7 +711,7 @@ data Channel = Channel'
 -- * 'cType'
 channel
     :: Channel
-channel =
+channel = 
     Channel'
     { _cId = Nothing
     , _cType = Nothing
@@ -743,9 +743,9 @@ instance ToJSON Channel where
 -- /See:/ 'election' smart constructor.
 data Election = Election'
     { _eOcdDivisionId :: !(Maybe Text)
-    , _eElectionDay   :: !(Maybe Text)
-    , _eName          :: !(Maybe Text)
-    , _eId            :: !(Maybe (Textual Int64))
+    , _eElectionDay :: !(Maybe Text)
+    , _eName :: !(Maybe Text)
+    , _eId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Election' with the minimum fields required to make a request.
@@ -761,7 +761,7 @@ data Election = Election'
 -- * 'eId'
 election
     :: Election
-election =
+election = 
     Election'
     { _eOcdDivisionId = Nothing
     , _eElectionDay = Nothing
@@ -814,11 +814,11 @@ instance ToJSON Election where
 --
 -- /See:/ 'representativeInfoResponse' smart constructor.
 data RepresentativeInfoResponse = RepresentativeInfoResponse'
-    { _rirKind            :: !Text
+    { _rirKind :: !Text
     , _rirNormalizedInput :: !(Maybe SimpleAddressType)
-    , _rirOfficials       :: !(Maybe [Official])
-    , _rirDivisions       :: !(Maybe RepresentativeInfoResponseDivisions)
-    , _rirOffices         :: !(Maybe [Office])
+    , _rirOfficials :: !(Maybe [Official])
+    , _rirDivisions :: !(Maybe RepresentativeInfoResponseDivisions)
+    , _rirOffices :: !(Maybe [Office])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepresentativeInfoResponse' with the minimum fields required to make a request.
@@ -836,7 +836,7 @@ data RepresentativeInfoResponse = RepresentativeInfoResponse'
 -- * 'rirOffices'
 representativeInfoResponse
     :: RepresentativeInfoResponse
-representativeInfoResponse =
+representativeInfoResponse = 
     RepresentativeInfoResponse'
     { _rirKind = "civicinfo#representativeInfoResponse"
     , _rirNormalizedInput = Nothing
@@ -902,10 +902,10 @@ instance ToJSON RepresentativeInfoResponse where
 --
 -- /See:/ 'voterInfoSegmentResult' smart constructor.
 data VoterInfoSegmentResult = VoterInfoSegmentResult'
-    { _visrResponse        :: !(Maybe VoterInfoResponse)
+    { _visrResponse :: !(Maybe VoterInfoResponse)
     , _visrGeneratedMillis :: !(Maybe (Textual Int64))
-    , _visrPostalAddress   :: !(Maybe PostalAddress)
-    , _visrRequest         :: !(Maybe VoterInfoRequest)
+    , _visrPostalAddress :: !(Maybe PostalAddress)
+    , _visrRequest :: !(Maybe VoterInfoRequest)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VoterInfoSegmentResult' with the minimum fields required to make a request.
@@ -921,7 +921,7 @@ data VoterInfoSegmentResult = VoterInfoSegmentResult'
 -- * 'visrRequest'
 voterInfoSegmentResult
     :: VoterInfoSegmentResult
-voterInfoSegmentResult =
+voterInfoSegmentResult = 
     VoterInfoSegmentResult'
     { _visrResponse = Nothing
     , _visrGeneratedMillis = Nothing
@@ -972,8 +972,8 @@ instance ToJSON VoterInfoSegmentResult where
 -- /See:/ 'divisionSearchResult' smart constructor.
 data DivisionSearchResult = DivisionSearchResult'
     { _dsrAliases :: !(Maybe [Text])
-    , _dsrName    :: !(Maybe Text)
-    , _dsrOcdId   :: !(Maybe Text)
+    , _dsrName :: !(Maybe Text)
+    , _dsrOcdId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DivisionSearchResult' with the minimum fields required to make a request.
@@ -987,7 +987,7 @@ data DivisionSearchResult = DivisionSearchResult'
 -- * 'dsrOcdId'
 divisionSearchResult
     :: DivisionSearchResult
-divisionSearchResult =
+divisionSearchResult = 
     DivisionSearchResult'
     { _dsrAliases = Nothing
     , _dsrName = Nothing
@@ -1044,7 +1044,7 @@ newtype DivisionSearchRequest = DivisionSearchRequest'
 -- * 'dsrContextParams'
 divisionSearchRequest
     :: DivisionSearchRequest
-divisionSearchRequest =
+divisionSearchRequest = 
     DivisionSearchRequest'
     { _dsrContextParams = Nothing
     }
@@ -1071,20 +1071,20 @@ instance ToJSON DivisionSearchRequest where
 --
 -- /See:/ 'administrativeBody' smart constructor.
 data AdministrativeBody = AdministrativeBody'
-    { _abCorrespondenceAddress               :: !(Maybe SimpleAddressType)
-    , _abAbsenteeVotingInfoURL               :: !(Maybe Text)
-    , _abHoursOfOperation                    :: !(Maybe Text)
-    , _abBallotInfoURL                       :: !(Maybe Text)
-    , _abPhysicalAddress                     :: !(Maybe SimpleAddressType)
+    { _abCorrespondenceAddress :: !(Maybe SimpleAddressType)
+    , _abAbsenteeVotingInfoURL :: !(Maybe Text)
+    , _abHoursOfOperation :: !(Maybe Text)
+    , _abBallotInfoURL :: !(Maybe Text)
+    , _abPhysicalAddress :: !(Maybe SimpleAddressType)
     , _abElectionRegistrationConfirmationURL :: !(Maybe Text)
-    , _abElectionInfoURL                     :: !(Maybe Text)
-    , _abVotingLocationFinderURL             :: !(Maybe Text)
-    , _abElectionOfficials                   :: !(Maybe [ElectionOfficial])
-    , _abName                                :: !(Maybe Text)
-    , _abElectionRulesURL                    :: !(Maybe Text)
-    , _abAddressLines                        :: !(Maybe [Text])
-    , _abVoterServices                       :: !(Maybe [Text])
-    , _abElectionRegistrationURL             :: !(Maybe Text)
+    , _abElectionInfoURL :: !(Maybe Text)
+    , _abVotingLocationFinderURL :: !(Maybe Text)
+    , _abElectionOfficials :: !(Maybe [ElectionOfficial])
+    , _abName :: !(Maybe Text)
+    , _abElectionRulesURL :: !(Maybe Text)
+    , _abAddressLines :: !(Maybe [Text])
+    , _abVoterServices :: !(Maybe [Text])
+    , _abElectionRegistrationURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdministrativeBody' with the minimum fields required to make a request.
@@ -1120,7 +1120,7 @@ data AdministrativeBody = AdministrativeBody'
 -- * 'abElectionRegistrationURL'
 administrativeBody
     :: AdministrativeBody
-administrativeBody =
+administrativeBody = 
     AdministrativeBody'
     { _abCorrespondenceAddress = Nothing
     , _abAbsenteeVotingInfoURL = Nothing
@@ -1291,7 +1291,7 @@ newtype RepresentativeInfoRequest = RepresentativeInfoRequest'
 -- * 'rirContextParams'
 representativeInfoRequest
     :: RepresentativeInfoRequest
-representativeInfoRequest =
+representativeInfoRequest = 
     RepresentativeInfoRequest'
     { _rirContextParams = Nothing
     }
@@ -1319,29 +1319,29 @@ instance ToJSON RepresentativeInfoRequest where
 -- /See:/ 'contest' smart constructor.
 data Contest = Contest'
     { _conReferendumPassageThreshold :: !(Maybe Text)
-    , _conRoles                      :: !(Maybe [Text])
-    , _conReferendumURL              :: !(Maybe Text)
-    , _conReferendumEffectOfAbstain  :: !(Maybe Text)
-    , _conReferendumSubtitle         :: !(Maybe Text)
-    , _conNumberVotingFor            :: !(Maybe (Textual Int64))
-    , _conOffice                     :: !(Maybe Text)
-    , _conReferendumConStatement     :: !(Maybe Text)
-    , _conSources                    :: !(Maybe [Source])
-    , _conReferendumProStatement     :: !(Maybe Text)
-    , _conReferendumBallotResponses  :: !(Maybe [Text])
-    , _conNumberElected              :: !(Maybe (Textual Int64))
-    , _conSpecial                    :: !(Maybe Text)
-    , _conReferendumText             :: !(Maybe Text)
-    , _conPrimaryParty               :: !(Maybe Text)
-    , _conId                         :: !(Maybe Text)
-    , _conType                       :: !(Maybe Text)
-    , _conElectorateSpecifications   :: !(Maybe Text)
-    , _conReferendumBrief            :: !(Maybe Text)
-    , _conDistrict                   :: !(Maybe ElectoralDistrict)
-    , _conLevel                      :: !(Maybe [Text])
-    , _conCandidates                 :: !(Maybe [Candidate])
-    , _conReferendumTitle            :: !(Maybe Text)
-    , _conBallotPlacement            :: !(Maybe (Textual Int64))
+    , _conRoles :: !(Maybe [Text])
+    , _conReferendumURL :: !(Maybe Text)
+    , _conReferendumEffectOfAbstain :: !(Maybe Text)
+    , _conReferendumSubtitle :: !(Maybe Text)
+    , _conNumberVotingFor :: !(Maybe (Textual Int64))
+    , _conOffice :: !(Maybe Text)
+    , _conReferendumConStatement :: !(Maybe Text)
+    , _conSources :: !(Maybe [Source])
+    , _conReferendumProStatement :: !(Maybe Text)
+    , _conReferendumBallotResponses :: !(Maybe [Text])
+    , _conNumberElected :: !(Maybe (Textual Int64))
+    , _conSpecial :: !(Maybe Text)
+    , _conReferendumText :: !(Maybe Text)
+    , _conPrimaryParty :: !(Maybe Text)
+    , _conId :: !(Maybe Text)
+    , _conType :: !(Maybe Text)
+    , _conElectorateSpecifications :: !(Maybe Text)
+    , _conReferendumBrief :: !(Maybe Text)
+    , _conDistrict :: !(Maybe ElectoralDistrict)
+    , _conLevel :: !(Maybe [Text])
+    , _conCandidates :: !(Maybe [Candidate])
+    , _conReferendumTitle :: !(Maybe Text)
+    , _conBallotPlacement :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Contest' with the minimum fields required to make a request.
@@ -1397,7 +1397,7 @@ data Contest = Contest'
 -- * 'conBallotPlacement'
 contest
     :: Contest
-contest =
+contest = 
     Contest'
     { _conReferendumPassageThreshold = Nothing
     , _conRoles = Nothing
@@ -1670,7 +1670,7 @@ instance ToJSON Contest where
 -- /See:/ 'divisionSearchResponse' smart constructor.
 data DivisionSearchResponse = DivisionSearchResponse'
     { _dsrResults :: !(Maybe [DivisionSearchResult])
-    , _dsrKind    :: !Text
+    , _dsrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DivisionSearchResponse' with the minimum fields required to make a request.
@@ -1682,7 +1682,7 @@ data DivisionSearchResponse = DivisionSearchResponse'
 -- * 'dsrKind'
 divisionSearchResponse
     :: DivisionSearchResponse
-divisionSearchResponse =
+divisionSearchResponse = 
     DivisionSearchResponse'
     { _dsrResults = Nothing
     , _dsrKind = "civicinfo#divisionSearchResponse"
@@ -1730,7 +1730,7 @@ newtype RepresentativeInfoDataDivisions = RepresentativeInfoDataDivisions'
 representativeInfoDataDivisions
     :: HashMap Text GeographicDivision -- ^ 'riddAddtional'
     -> RepresentativeInfoDataDivisions
-representativeInfoDataDivisions pRiddAddtional_ =
+representativeInfoDataDivisions pRiddAddtional_ = 
     RepresentativeInfoDataDivisions'
     { _riddAddtional = _Coerce # pRiddAddtional_
     }
@@ -1757,11 +1757,11 @@ instance ToJSON RepresentativeInfoDataDivisions where
 --
 -- /See:/ 'electionOfficial' smart constructor.
 data ElectionOfficial = ElectionOfficial'
-    { _eoFaxNumber         :: !(Maybe Text)
-    , _eoName              :: !(Maybe Text)
+    { _eoFaxNumber :: !(Maybe Text)
+    , _eoName :: !(Maybe Text)
     , _eoOfficePhoneNumber :: !(Maybe Text)
-    , _eoEmailAddress      :: !(Maybe Text)
-    , _eoTitle             :: !(Maybe Text)
+    , _eoEmailAddress :: !(Maybe Text)
+    , _eoTitle :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ElectionOfficial' with the minimum fields required to make a request.
@@ -1779,7 +1779,7 @@ data ElectionOfficial = ElectionOfficial'
 -- * 'eoTitle'
 electionOfficial
     :: ElectionOfficial
-electionOfficial =
+electionOfficial = 
     ElectionOfficial'
     { _eoFaxNumber = Nothing
     , _eoName = Nothing
@@ -1838,7 +1838,7 @@ instance ToJSON ElectionOfficial where
 data RepresentativeInfoData = RepresentativeInfoData'
     { _ridOfficials :: !(Maybe [Official])
     , _ridDivisions :: !(Maybe RepresentativeInfoDataDivisions)
-    , _ridOffices   :: !(Maybe [Office])
+    , _ridOffices :: !(Maybe [Office])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepresentativeInfoData' with the minimum fields required to make a request.
@@ -1852,7 +1852,7 @@ data RepresentativeInfoData = RepresentativeInfoData'
 -- * 'ridOffices'
 representativeInfoData
     :: RepresentativeInfoData
-representativeInfoData =
+representativeInfoData = 
     RepresentativeInfoData'
     { _ridOfficials = Nothing
     , _ridDivisions = Nothing
@@ -1902,7 +1902,7 @@ instance ToJSON RepresentativeInfoData where
 --
 -- /See:/ 'source' smart constructor.
 data Source = Source'
-    { _sName     :: !(Maybe Text)
+    { _sName :: !(Maybe Text)
     , _sOfficial :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1915,7 +1915,7 @@ data Source = Source'
 -- * 'sOfficial'
 source
     :: Source
-source =
+source = 
     Source'
     { _sName = Nothing
     , _sOfficial = Nothing
@@ -1957,7 +1957,7 @@ newtype DivisionRepresentativeInfoRequest = DivisionRepresentativeInfoRequest'
 -- * 'drirContextParams'
 divisionRepresentativeInfoRequest
     :: DivisionRepresentativeInfoRequest
-divisionRepresentativeInfoRequest =
+divisionRepresentativeInfoRequest = 
     DivisionRepresentativeInfoRequest'
     { _drirContextParams = Nothing
     }
@@ -1987,9 +1987,9 @@ instance ToJSON DivisionRepresentativeInfoRequest
 -- /See:/ 'electoralDistrict' smart constructor.
 data ElectoralDistrict = ElectoralDistrict'
     { _edKgForeignKey :: !(Maybe Text)
-    , _edName         :: !(Maybe Text)
-    , _edScope        :: !(Maybe Text)
-    , _edId           :: !(Maybe Text)
+    , _edName :: !(Maybe Text)
+    , _edScope :: !(Maybe Text)
+    , _edId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ElectoralDistrict' with the minimum fields required to make a request.
@@ -2005,7 +2005,7 @@ data ElectoralDistrict = ElectoralDistrict'
 -- * 'edId'
 electoralDistrict
     :: ElectoralDistrict
-electoralDistrict =
+electoralDistrict = 
     ElectoralDistrict'
     { _edKgForeignKey = Nothing
     , _edName = Nothing
@@ -2057,7 +2057,7 @@ instance ToJSON ElectoralDistrict where
 -- /See:/ 'voterInfoRequest' smart constructor.
 data VoterInfoRequest = VoterInfoRequest'
     { _virVoterInfoSegmentResult :: !(Maybe VoterInfoSegmentResult)
-    , _virContextParams          :: !(Maybe ContextParams)
+    , _virContextParams :: !(Maybe ContextParams)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VoterInfoRequest' with the minimum fields required to make a request.
@@ -2069,7 +2069,7 @@ data VoterInfoRequest = VoterInfoRequest'
 -- * 'virContextParams'
 voterInfoRequest
     :: VoterInfoRequest
-voterInfoRequest =
+voterInfoRequest = 
     VoterInfoRequest'
     { _virVoterInfoSegmentResult = Nothing
     , _virContextParams = Nothing
@@ -2105,12 +2105,12 @@ instance ToJSON VoterInfoRequest where
 --
 -- /See:/ 'simpleAddressType' smart constructor.
 data SimpleAddressType = SimpleAddressType'
-    { _satLine2        :: !(Maybe Text)
-    , _satState        :: !(Maybe Text)
-    , _satLine3        :: !(Maybe Text)
-    , _satZip          :: !(Maybe Text)
-    , _satCity         :: !(Maybe Text)
-    , _satLine1        :: !(Maybe Text)
+    { _satLine2 :: !(Maybe Text)
+    , _satState :: !(Maybe Text)
+    , _satLine3 :: !(Maybe Text)
+    , _satZip :: !(Maybe Text)
+    , _satCity :: !(Maybe Text)
+    , _satLine1 :: !(Maybe Text)
     , _satLocationName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2133,7 +2133,7 @@ data SimpleAddressType = SimpleAddressType'
 -- * 'satLocationName'
 simpleAddressType
     :: SimpleAddressType
-simpleAddressType =
+simpleAddressType = 
     SimpleAddressType'
     { _satLine2 = Nothing
     , _satState = Nothing
@@ -2209,7 +2209,7 @@ newtype ContextParams = ContextParams'
 -- * 'cpClientProFile'
 contextParams
     :: ContextParams
-contextParams =
+contextParams = 
     ContextParams'
     { _cpClientProFile = Nothing
     }
@@ -2233,37 +2233,37 @@ instance ToJSON ContextParams where
 --
 -- /See:/ 'postalAddress' smart constructor.
 data PostalAddress = PostalAddress'
-    { _paAdministrativeAreaName             :: !(Maybe Text)
-    , _paRecipientName                      :: !(Maybe Text)
-    , _paLanguageCode                       :: !(Maybe Text)
-    , _paSortingCode                        :: !(Maybe Text)
-    , _paPremiseName                        :: !(Maybe Text)
-    , _paPostalCodeNumberExtension          :: !(Maybe Text)
-    , _paCountryNameCode                    :: !(Maybe Text)
-    , _paDependentThoroughfaresConnector    :: !(Maybe Text)
-    , _paThoroughfareLeadingType            :: !(Maybe Text)
-    , _paSubAdministrativeAreaName          :: !(Maybe Text)
-    , _paThoroughfareTrailingType           :: !(Maybe Text)
-    , _paPostBoxNumber                      :: !(Maybe Text)
-    , _paThoroughfarePreDirection           :: !(Maybe Text)
-    , _paLocalityName                       :: !(Maybe Text)
-    , _paDependentThoroughfaresType         :: !(Maybe Text)
-    , _paThoroughfarePostDirection          :: !(Maybe Text)
-    , _paIsDisputed                         :: !(Maybe Bool)
-    , _paDependentThoroughfarePreDirection  :: !(Maybe Text)
-    , _paThoroughfareNumber                 :: !(Maybe Text)
-    , _paDependentThoroughfaresIndicator    :: !(Maybe Text)
-    , _paDependentLocalityName              :: !(Maybe Text)
-    , _paFirmName                           :: !(Maybe Text)
-    , _paCountryName                        :: !(Maybe Text)
-    , _paDependentThoroughfareTrailingType  :: !(Maybe Text)
-    , _paDependentThoroughfareName          :: !(Maybe Text)
+    { _paAdministrativeAreaName :: !(Maybe Text)
+    , _paRecipientName :: !(Maybe Text)
+    , _paLanguageCode :: !(Maybe Text)
+    , _paSortingCode :: !(Maybe Text)
+    , _paPremiseName :: !(Maybe Text)
+    , _paPostalCodeNumberExtension :: !(Maybe Text)
+    , _paCountryNameCode :: !(Maybe Text)
+    , _paDependentThoroughfaresConnector :: !(Maybe Text)
+    , _paThoroughfareLeadingType :: !(Maybe Text)
+    , _paSubAdministrativeAreaName :: !(Maybe Text)
+    , _paThoroughfareTrailingType :: !(Maybe Text)
+    , _paPostBoxNumber :: !(Maybe Text)
+    , _paThoroughfarePreDirection :: !(Maybe Text)
+    , _paLocalityName :: !(Maybe Text)
+    , _paDependentThoroughfaresType :: !(Maybe Text)
+    , _paThoroughfarePostDirection :: !(Maybe Text)
+    , _paIsDisputed :: !(Maybe Bool)
+    , _paDependentThoroughfarePreDirection :: !(Maybe Text)
+    , _paThoroughfareNumber :: !(Maybe Text)
+    , _paDependentThoroughfaresIndicator :: !(Maybe Text)
+    , _paDependentLocalityName :: !(Maybe Text)
+    , _paFirmName :: !(Maybe Text)
+    , _paCountryName :: !(Maybe Text)
+    , _paDependentThoroughfareTrailingType :: !(Maybe Text)
+    , _paDependentThoroughfareName :: !(Maybe Text)
     , _paDependentThoroughfarePostDirection :: !(Maybe Text)
-    , _paAddressLines                       :: !(Maybe [Text])
-    , _paPostalCodeNumber                   :: !(Maybe Text)
-    , _paThoroughfareName                   :: !(Maybe Text)
-    , _paSubPremiseName                     :: !(Maybe Text)
-    , _paDependentThoroughfareLeadingType   :: !(Maybe Text)
+    , _paAddressLines :: !(Maybe [Text])
+    , _paPostalCodeNumber :: !(Maybe Text)
+    , _paThoroughfareName :: !(Maybe Text)
+    , _paSubPremiseName :: !(Maybe Text)
+    , _paDependentThoroughfareLeadingType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostalAddress' with the minimum fields required to make a request.
@@ -2333,7 +2333,7 @@ data PostalAddress = PostalAddress'
 -- * 'paDependentThoroughfareLeadingType'
 postalAddress
     :: PostalAddress
-postalAddress =
+postalAddress = 
     PostalAddress'
     { _paAdministrativeAreaName = Nothing
     , _paRecipientName = Nothing
@@ -2619,11 +2619,11 @@ instance ToJSON PostalAddress where
 --
 -- /See:/ 'administrationRegion' smart constructor.
 data AdministrationRegion = AdministrationRegion'
-    { _arLocalJurisdiction          :: !(Maybe AdministrationRegion)
-    , _arSources                    :: !(Maybe [Source])
-    , _arName                       :: !(Maybe Text)
+    { _arLocalJurisdiction :: !(Maybe AdministrationRegion)
+    , _arSources :: !(Maybe [Source])
+    , _arName :: !(Maybe Text)
     , _arElectionAdministrationBody :: !(Maybe AdministrativeBody)
-    , _arId                         :: !(Maybe Text)
+    , _arId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdministrationRegion' with the minimum fields required to make a request.
@@ -2641,7 +2641,7 @@ data AdministrationRegion = AdministrationRegion'
 -- * 'arId'
 administrationRegion
     :: AdministrationRegion
-administrationRegion =
+administrationRegion = 
     AdministrationRegion'
     { _arLocalJurisdiction = Nothing
     , _arSources = Nothing
@@ -2707,7 +2707,7 @@ instance ToJSON AdministrationRegion where
 --
 -- /See:/ 'electionsQueryResponse' smart constructor.
 data ElectionsQueryResponse = ElectionsQueryResponse'
-    { _eqrKind      :: !Text
+    { _eqrKind :: !Text
     , _eqrElections :: !(Maybe [Election])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2720,7 +2720,7 @@ data ElectionsQueryResponse = ElectionsQueryResponse'
 -- * 'eqrElections'
 electionsQueryResponse
     :: ElectionsQueryResponse
-electionsQueryResponse =
+electionsQueryResponse = 
     ElectionsQueryResponse'
     { _eqrKind = "civicinfo#electionsQueryResponse"
     , _eqrElections = Nothing
@@ -2758,13 +2758,13 @@ instance ToJSON ElectionsQueryResponse where
 -- /See:/ 'official' smart constructor.
 data Official = Official'
     { _offPhotoURL :: !(Maybe Text)
-    , _offURLs     :: !(Maybe [Text])
+    , _offURLs :: !(Maybe [Text])
     , _offChannels :: !(Maybe [Channel])
-    , _offAddress  :: !(Maybe [SimpleAddressType])
-    , _offPhones   :: !(Maybe [Text])
-    , _offName     :: !(Maybe Text)
-    , _offEmails   :: !(Maybe [Text])
-    , _offParty    :: !(Maybe Text)
+    , _offAddress :: !(Maybe [SimpleAddressType])
+    , _offPhones :: !(Maybe [Text])
+    , _offName :: !(Maybe Text)
+    , _offEmails :: !(Maybe [Text])
+    , _offParty :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Official' with the minimum fields required to make a request.
@@ -2788,7 +2788,7 @@ data Official = Official'
 -- * 'offParty'
 official
     :: Official
-official =
+official = 
     Official'
     { _offPhotoURL = Nothing
     , _offURLs = Nothing

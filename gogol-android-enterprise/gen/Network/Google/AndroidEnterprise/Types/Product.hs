@@ -17,34 +17,32 @@
 --
 module Network.Google.AndroidEnterprise.Types.Product where
 
-import           Network.Google.AndroidEnterprise.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types.Sum
+import Network.Google.Prelude
 
--- | A group license object indicates a product that an enterprise admin has
--- approved for use in the enterprise. The product may be free or paid. For
--- free products, a group license object is created in these cases: if the
--- enterprise admin approves a product in Google Play, if the product is
--- added to a collection, or if an entitlement for the product is created
--- for a user via the API. For paid products, a group license object is
--- only created as part of the first bulk purchase of that product in
--- Google Play by the enterprise admin. The API can be used to query group
--- licenses; the available information includes the total number of
--- licenses purchased (for paid products) and the total number of licenses
--- that have been provisioned, that is, the total number of user
--- entitlements in existence for the product. Group license objects are
--- never deleted. If, for example, a free app is added to a collection and
--- then removed, the group license will remain, allowing the enterprise
--- admin to keep track of any remaining entitlements. An enterprise admin
--- may indicate they are no longer interested in the group license by
--- marking it as unapproved in Google Play.
+-- | Group license objects allow you to keep track of licenses (called
+-- entitlements) for both free and paid apps. For a free app, a group
+-- license is created when an enterprise admin first approves the product
+-- in Google Play or when the first entitlement for the product is created
+-- for a user via the API. For a paid app, a group license object is only
+-- created when an enterprise admin purchases the product in Google Play
+-- for the first time. Use the API to query group licenses. A Grouplicenses
+-- resource includes the total number of licenses purchased (paid apps
+-- only) and the total number of licenses currently in use. In other words,
+-- the total number of Entitlements that exist for the product. Only one
+-- group license object is created per product and group license objects
+-- are never deleted. If a product is unapproved, its group license
+-- remains. This allows enterprise admins to keep track of any remaining
+-- entitlements for the product.
 --
 -- /See:/ 'groupLicense' smart constructor.
 data GroupLicense = GroupLicense'
-    { _glKind            :: !Text
-    , _glNumProvisioned  :: !(Maybe (Textual Int32))
-    , _glNumPurchased    :: !(Maybe (Textual Int32))
-    , _glApproval        :: !(Maybe Text)
-    , _glProductId       :: !(Maybe Text)
+    { _glKind :: !Text
+    , _glNumProvisioned :: !(Maybe (Textual Int32))
+    , _glNumPurchased :: !(Maybe (Textual Int32))
+    , _glApproval :: !(Maybe Text)
+    , _glPermissions :: !(Maybe Text)
+    , _glProductId :: !(Maybe Text)
     , _glAcquisitionKind :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -60,17 +58,20 @@ data GroupLicense = GroupLicense'
 --
 -- * 'glApproval'
 --
+-- * 'glPermissions'
+--
 -- * 'glProductId'
 --
 -- * 'glAcquisitionKind'
 groupLicense
     :: GroupLicense
-groupLicense =
+groupLicense = 
     GroupLicense'
     { _glKind = "androidenterprise#groupLicense"
     , _glNumProvisioned = Nothing
     , _glNumPurchased = Nothing
     , _glApproval = Nothing
+    , _glPermissions = Nothing
     , _glProductId = Nothing
     , _glAcquisitionKind = Nothing
     }
@@ -89,8 +90,9 @@ glNumProvisioned
       . mapping _Coerce
 
 -- | The number of purchased licenses (possibly in multiple purchases). If
--- this field is omitted then there is no limit on the number of licenses
--- that can be provisioned (e.g. if the acquisition kind is \"free\").
+-- this field is omitted, then there is no limit on the number of licenses
+-- that can be provisioned (for example, if the acquisition kind is
+-- \"free\").
 glNumPurchased :: Lens' GroupLicense (Maybe Int32)
 glNumPurchased
   = lens _glNumPurchased
@@ -98,24 +100,39 @@ glNumPurchased
       . mapping _Coerce
 
 -- | Whether the product to which this group license relates is currently
--- approved by the enterprise, as either \"approved\" or \"unapproved\".
--- Products are approved when a group license is first created, but this
--- approval may be revoked by an enterprise admin via Google Play.
--- Unapproved products will not be visible to end users in collections and
--- new entitlements to them should not normally be created.
+-- approved by the enterprise. Products are approved when a group license
+-- is first created, but this approval may be revoked by an enterprise
+-- admin via Google Play. Unapproved products will not be visible to end
+-- users in collections, and new entitlements to them should not normally
+-- be created.
 glApproval :: Lens' GroupLicense (Maybe Text)
 glApproval
   = lens _glApproval (\ s a -> s{_glApproval = a})
 
--- | The ID of the product that the license is for, e.g.
+-- | The permission approval status of the product. This field is only set if
+-- the product is approved. Possible states are: - \"currentApproved\", the
+-- current set of permissions is approved, but additional permissions will
+-- require the administrator to reapprove the product (If the product was
+-- approved without specifying the approved permissions setting, then this
+-- is the default behavior.), - \"needsReapproval\", the product has
+-- unapproved permissions. No additional product licenses can be assigned
+-- until the product is reapproved, - \"allCurrentAndFutureApproved\", the
+-- current permissions are approved and any future permission updates will
+-- be automatically approved without administrator review.
+glPermissions :: Lens' GroupLicense (Maybe Text)
+glPermissions
+  = lens _glPermissions
+      (\ s a -> s{_glPermissions = a})
+
+-- | The ID of the product that the license is for. For example,
 -- \"app:com.google.android.gm\".
 glProductId :: Lens' GroupLicense (Maybe Text)
 glProductId
   = lens _glProductId (\ s a -> s{_glProductId = a})
 
 -- | How this group license was acquired. \"bulkPurchase\" means that this
--- group license object was created because the enterprise purchased
--- licenses for this product; this is \"free\" otherwise (for free
+-- Grouplicenses resource was created because the enterprise purchased
+-- licenses for this product; otherwise, the value is \"free\" (for free
 -- products).
 glAcquisitionKind :: Lens' GroupLicense (Maybe Text)
 glAcquisitionKind
@@ -131,6 +148,7 @@ instance FromJSON GroupLicense where
                      <*> (o .:? "numProvisioned")
                      <*> (o .:? "numPurchased")
                      <*> (o .:? "approval")
+                     <*> (o .:? "permissions")
                      <*> (o .:? "productId")
                      <*> (o .:? "acquisitionKind"))
 
@@ -142,6 +160,7 @@ instance ToJSON GroupLicense where
                   ("numProvisioned" .=) <$> _glNumProvisioned,
                   ("numPurchased" .=) <$> _glNumPurchased,
                   ("approval" .=) <$> _glApproval,
+                  ("permissions" .=) <$> _glPermissions,
                   ("productId" .=) <$> _glProductId,
                   ("acquisitionKind" .=) <$> _glAcquisitionKind])
 
@@ -162,7 +181,7 @@ data StoreLayoutPagesListResponse = StoreLayoutPagesListResponse'
 -- * 'slplrPage'
 storeLayoutPagesListResponse
     :: StoreLayoutPagesListResponse
-storeLayoutPagesListResponse =
+storeLayoutPagesListResponse = 
     StoreLayoutPagesListResponse'
     { _slplrKind = "androidenterprise#storeLayoutPagesListResponse"
     , _slplrPage = Nothing
@@ -202,7 +221,7 @@ instance ToJSON StoreLayoutPagesListResponse where
 --
 -- /See:/ 'enterpriseAccount' smart constructor.
 data EnterpriseAccount = EnterpriseAccount'
-    { _eaKind         :: !Text
+    { _eaKind :: !Text
     , _eaAccountEmail :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -215,7 +234,7 @@ data EnterpriseAccount = EnterpriseAccount'
 -- * 'eaAccountEmail'
 enterpriseAccount
     :: EnterpriseAccount
-enterpriseAccount =
+enterpriseAccount = 
     EnterpriseAccount'
     { _eaKind = "androidenterprise#enterpriseAccount"
     , _eaAccountEmail = Nothing
@@ -253,10 +272,10 @@ instance ToJSON EnterpriseAccount where
 -- /See:/ 'appRestrictionsSchemaRestrictionRestrictionValue' smart constructor.
 data AppRestrictionsSchemaRestrictionRestrictionValue = AppRestrictionsSchemaRestrictionRestrictionValue'
     { _arsrrvValueMultiselect :: !(Maybe [Text])
-    , _arsrrvValueBool        :: !(Maybe Bool)
-    , _arsrrvValueInteger     :: !(Maybe (Textual Int32))
-    , _arsrrvType             :: !(Maybe Text)
-    , _arsrrvValueString      :: !(Maybe Text)
+    , _arsrrvValueBool :: !(Maybe Bool)
+    , _arsrrvValueInteger :: !(Maybe (Textual Int32))
+    , _arsrrvType :: !(Maybe Text)
+    , _arsrrvValueString :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppRestrictionsSchemaRestrictionRestrictionValue' with the minimum fields required to make a request.
@@ -274,7 +293,7 @@ data AppRestrictionsSchemaRestrictionRestrictionValue = AppRestrictionsSchemaRes
 -- * 'arsrrvValueString'
 appRestrictionsSchemaRestrictionRestrictionValue
     :: AppRestrictionsSchemaRestrictionRestrictionValue
-appRestrictionsSchemaRestrictionRestrictionValue =
+appRestrictionsSchemaRestrictionRestrictionValue = 
     AppRestrictionsSchemaRestrictionRestrictionValue'
     { _arsrrvValueMultiselect = Nothing
     , _arsrrvValueBool = Nothing
@@ -349,7 +368,7 @@ instance ToJSON
 --
 -- /See:/ 'deviceState' smart constructor.
 data DeviceState = DeviceState'
-    { _dsKind         :: !Text
+    { _dsKind :: !Text
     , _dsAccountState :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -362,7 +381,7 @@ data DeviceState = DeviceState'
 -- * 'dsAccountState'
 deviceState
     :: DeviceState
-deviceState =
+deviceState = 
     DeviceState'
     { _dsKind = "androidenterprise#deviceState"
     , _dsAccountState = Nothing
@@ -414,7 +433,7 @@ data GroupLicenseUsersListResponse = GroupLicenseUsersListResponse'
 -- * 'glulrUser'
 groupLicenseUsersListResponse
     :: GroupLicenseUsersListResponse
-groupLicenseUsersListResponse =
+groupLicenseUsersListResponse = 
     GroupLicenseUsersListResponse'
     { _glulrKind = "androidenterprise#groupLicenseUsersListResponse"
     , _glulrUser = Nothing
@@ -452,7 +471,7 @@ instance ToJSON GroupLicenseUsersListResponse where
 --
 -- /See:/ 'tokenPagination' smart constructor.
 data TokenPagination = TokenPagination'
-    { _tpNextPageToken     :: !(Maybe Text)
+    { _tpNextPageToken :: !(Maybe Text)
     , _tpPreviousPageToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -465,7 +484,7 @@ data TokenPagination = TokenPagination'
 -- * 'tpPreviousPageToken'
 tokenPagination
     :: TokenPagination
-tokenPagination =
+tokenPagination = 
     TokenPagination'
     { _tpNextPageToken = Nothing
     , _tpPreviousPageToken = Nothing
@@ -501,7 +520,7 @@ instance ToJSON TokenPagination where
 -- /See:/ 'approvalURLInfo' smart constructor.
 data ApprovalURLInfo = ApprovalURLInfo'
     { _auiApprovalURL :: !(Maybe Text)
-    , _auiKind        :: !Text
+    , _auiKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApprovalURLInfo' with the minimum fields required to make a request.
@@ -513,7 +532,7 @@ data ApprovalURLInfo = ApprovalURLInfo'
 -- * 'auiKind'
 approvalURLInfo
     :: ApprovalURLInfo
-approvalURLInfo =
+approvalURLInfo = 
     ApprovalURLInfo'
     { _auiApprovalURL = Nothing
     , _auiKind = "androidenterprise#approvalUrlInfo"
@@ -547,6 +566,65 @@ instance ToJSON ApprovalURLInfo where
                  [("approvalUrl" .=) <$> _auiApprovalURL,
                   Just ("kind" .= _auiKind)])
 
+-- | The managed configurations settings for a product.
+--
+-- /See:/ 'managedConfigurationsSettingsListResponse' smart constructor.
+data ManagedConfigurationsSettingsListResponse = ManagedConfigurationsSettingsListResponse'
+    { _mcslrKind :: !Text
+    , _mcslrManagedConfigurationsSettings :: !(Maybe [ManagedConfigurationsSettings])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ManagedConfigurationsSettingsListResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mcslrKind'
+--
+-- * 'mcslrManagedConfigurationsSettings'
+managedConfigurationsSettingsListResponse
+    :: ManagedConfigurationsSettingsListResponse
+managedConfigurationsSettingsListResponse = 
+    ManagedConfigurationsSettingsListResponse'
+    { _mcslrKind = "androidenterprise#managedConfigurationsSettingsListResponse"
+    , _mcslrManagedConfigurationsSettings = Nothing
+    }
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"androidenterprise#managedConfigurationsSettingsListResponse\".
+mcslrKind :: Lens' ManagedConfigurationsSettingsListResponse Text
+mcslrKind
+  = lens _mcslrKind (\ s a -> s{_mcslrKind = a})
+
+-- | A managed configurations settings for an app that may be assigned to a
+-- group of users in an enterprise.
+mcslrManagedConfigurationsSettings :: Lens' ManagedConfigurationsSettingsListResponse [ManagedConfigurationsSettings]
+mcslrManagedConfigurationsSettings
+  = lens _mcslrManagedConfigurationsSettings
+      (\ s a -> s{_mcslrManagedConfigurationsSettings = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON
+         ManagedConfigurationsSettingsListResponse where
+        parseJSON
+          = withObject
+              "ManagedConfigurationsSettingsListResponse"
+              (\ o ->
+                 ManagedConfigurationsSettingsListResponse' <$>
+                   (o .:? "kind" .!=
+                      "androidenterprise#managedConfigurationsSettingsListResponse")
+                     <*>
+                     (o .:? "managedConfigurationsSettings" .!= mempty))
+
+instance ToJSON
+         ManagedConfigurationsSettingsListResponse where
+        toJSON ManagedConfigurationsSettingsListResponse'{..}
+          = object
+              (catMaybes
+                 [Just ("kind" .= _mcslrKind),
+                  ("managedConfigurationsSettings" .=) <$>
+                    _mcslrManagedConfigurationsSettings])
+
 -- | A managed property of a managed configuration. The property must match
 -- one of the properties in the app restrictions schema of the product.
 -- Exactly one of the value fields must be populated, and it must match the
@@ -555,12 +633,12 @@ instance ToJSON ApprovalURLInfo where
 -- /See:/ 'managedProperty' smart constructor.
 data ManagedProperty = ManagedProperty'
     { _mpValueStringArray :: !(Maybe [Text])
-    , _mpValueBool        :: !(Maybe Bool)
-    , _mpKey              :: !(Maybe Text)
-    , _mpValueBundle      :: !(Maybe ManagedPropertyBundle)
-    , _mpValueInteger     :: !(Maybe (Textual Int32))
+    , _mpValueBool :: !(Maybe Bool)
+    , _mpKey :: !(Maybe Text)
+    , _mpValueBundle :: !(Maybe ManagedPropertyBundle)
+    , _mpValueInteger :: !(Maybe (Textual Int32))
     , _mpValueBundleArray :: !(Maybe [ManagedPropertyBundle])
-    , _mpValueString      :: !(Maybe Text)
+    , _mpValueString :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedProperty' with the minimum fields required to make a request.
@@ -582,7 +660,7 @@ data ManagedProperty = ManagedProperty'
 -- * 'mpValueString'
 managedProperty
     :: ManagedProperty
-managedProperty =
+managedProperty = 
     ManagedProperty'
     { _mpValueStringArray = Nothing
     , _mpValueBool = Nothing
@@ -673,7 +751,7 @@ instance ToJSON ManagedProperty where
 -- /See:/ 'storeLayoutClustersListResponse' smart constructor.
 data StoreLayoutClustersListResponse = StoreLayoutClustersListResponse'
     { _slclrCluster :: !(Maybe [StoreCluster])
-    , _slclrKind    :: !Text
+    , _slclrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StoreLayoutClustersListResponse' with the minimum fields required to make a request.
@@ -685,7 +763,7 @@ data StoreLayoutClustersListResponse = StoreLayoutClustersListResponse'
 -- * 'slclrKind'
 storeLayoutClustersListResponse
     :: StoreLayoutClustersListResponse
-storeLayoutClustersListResponse =
+storeLayoutClustersListResponse = 
     StoreLayoutClustersListResponse'
     { _slclrCluster = Nothing
     , _slclrKind = "androidenterprise#storeLayoutClustersListResponse"
@@ -722,15 +800,15 @@ instance ToJSON StoreLayoutClustersListResponse where
                   Just ("kind" .= _slclrKind)])
 
 -- | A managed configuration resource contains the set of managed properties
--- that have been configured for an Android app. The app\'s developer would
--- have defined configurable properties in the managed configurations
--- schema.
+-- defined by the app developer in the app\'s managed configurations
+-- schema, as well as any configuration variables defined for the user.
 --
 -- /See:/ 'managedConfiguration' smart constructor.
 data ManagedConfiguration = ManagedConfiguration'
     { _mcManagedProperty :: !(Maybe [ManagedProperty])
-    , _mcKind            :: !Text
-    , _mcProductId       :: !(Maybe Text)
+    , _mcKind :: !Text
+    , _mcConfigurationVariables :: !(Maybe ConfigurationVariables)
+    , _mcProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfiguration' with the minimum fields required to make a request.
@@ -741,13 +819,16 @@ data ManagedConfiguration = ManagedConfiguration'
 --
 -- * 'mcKind'
 --
+-- * 'mcConfigurationVariables'
+--
 -- * 'mcProductId'
 managedConfiguration
     :: ManagedConfiguration
-managedConfiguration =
+managedConfiguration = 
     ManagedConfiguration'
     { _mcManagedProperty = Nothing
     , _mcKind = "androidenterprise#managedConfiguration"
+    , _mcConfigurationVariables = Nothing
     , _mcProductId = Nothing
     }
 
@@ -764,6 +845,13 @@ mcManagedProperty
 mcKind :: Lens' ManagedConfiguration Text
 mcKind = lens _mcKind (\ s a -> s{_mcKind = a})
 
+-- | Contains the ID of the managed configuration profile and the set of
+-- configuration variables (if any) defined for the user.
+mcConfigurationVariables :: Lens' ManagedConfiguration (Maybe ConfigurationVariables)
+mcConfigurationVariables
+  = lens _mcConfigurationVariables
+      (\ s a -> s{_mcConfigurationVariables = a})
+
 -- | The ID of the product that the managed configuration is for, e.g.
 -- \"app:com.google.android.gm\".
 mcProductId :: Lens' ManagedConfiguration (Maybe Text)
@@ -778,6 +866,7 @@ instance FromJSON ManagedConfiguration where
                    (o .:? "managedProperty" .!= mempty) <*>
                      (o .:? "kind" .!=
                         "androidenterprise#managedConfiguration")
+                     <*> (o .:? "configurationVariables")
                      <*> (o .:? "productId"))
 
 instance ToJSON ManagedConfiguration where
@@ -786,6 +875,8 @@ instance ToJSON ManagedConfiguration where
               (catMaybes
                  [("managedProperty" .=) <$> _mcManagedProperty,
                   Just ("kind" .= _mcKind),
+                  ("configurationVariables" .=) <$>
+                    _mcConfigurationVariables,
                   ("productId" .=) <$> _mcProductId])
 
 -- | Definition of a managed Google Play store cluster, a list of products
@@ -793,11 +884,11 @@ instance ToJSON ManagedConfiguration where
 --
 -- /See:/ 'storeCluster' smart constructor.
 data StoreCluster = StoreCluster'
-    { _scKind        :: !Text
-    , _scName        :: !(Maybe [LocalizedText])
+    { _scKind :: !Text
+    , _scName :: !(Maybe [LocalizedText])
     , _scOrderInPage :: !(Maybe Text)
-    , _scId          :: !(Maybe Text)
-    , _scProductId   :: !(Maybe [Text])
+    , _scId :: !(Maybe Text)
+    , _scProductId :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StoreCluster' with the minimum fields required to make a request.
@@ -815,7 +906,7 @@ data StoreCluster = StoreCluster'
 -- * 'scProductId'
 storeCluster
     :: StoreCluster
-storeCluster =
+storeCluster = 
     StoreCluster'
     { _scKind = "androidenterprise#storeCluster"
     , _scName = Nothing
@@ -887,8 +978,8 @@ instance ToJSON StoreCluster where
 --
 -- /See:/ 'administratorWebTokenSpec' smart constructor.
 data AdministratorWebTokenSpec = AdministratorWebTokenSpec'
-    { _awtsParent     :: !(Maybe Text)
-    , _awtsKind       :: !Text
+    { _awtsParent :: !(Maybe Text)
+    , _awtsKind :: !Text
     , _awtsPermission :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -903,7 +994,7 @@ data AdministratorWebTokenSpec = AdministratorWebTokenSpec'
 -- * 'awtsPermission'
 administratorWebTokenSpec
     :: AdministratorWebTokenSpec
-administratorWebTokenSpec =
+administratorWebTokenSpec = 
     AdministratorWebTokenSpec'
     { _awtsParent = Nothing
     , _awtsKind = "androidenterprise#administratorWebTokenSpec"
@@ -950,19 +1041,84 @@ instance ToJSON AdministratorWebTokenSpec where
                   Just ("kind" .= _awtsKind),
                   ("permission" .=) <$> _awtsPermission])
 
+-- | A product to be made visible to a user.
+--
+-- /See:/ 'productVisibility' smart constructor.
+data ProductVisibility = ProductVisibility'
+    { _pvTracks :: !(Maybe [Text])
+    , _pvProductId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ProductVisibility' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'pvTracks'
+--
+-- * 'pvProductId'
+productVisibility
+    :: ProductVisibility
+productVisibility = 
+    ProductVisibility'
+    { _pvTracks = Nothing
+    , _pvProductId = Nothing
+    }
+
+-- | Grants visibility to the specified track(s) of the product to the user.
+-- The track available to the user is based on the following order of
+-- preference: alpha, beta, production. For example, if an app has a prod
+-- version, a beta version and an alpha version and the enterprise has been
+-- granted visibility to both the alpha and beta tracks, if tracks is
+-- {\"beta\", \"production\"} the user will be able to install the app and
+-- they will get the beta version of the app. If there are no app versions
+-- in the specified track adding the \"alpha\" and \"beta\" values to the
+-- list of tracks will have no effect. Note that the enterprise requires
+-- access to alpha and\/or beta tracks before users can be granted
+-- visibility to apps in those tracks. The allowed sets are: {} (considered
+-- equivalent to {\"production\"}) {\"production\"} {\"beta\",
+-- \"production\"} {\"alpha\", \"beta\", \"production\"} The order of
+-- elements is not relevant. Any other set of tracks will be rejected with
+-- an error.
+pvTracks :: Lens' ProductVisibility [Text]
+pvTracks
+  = lens _pvTracks (\ s a -> s{_pvTracks = a}) .
+      _Default
+      . _Coerce
+
+-- | The product ID to make visible to the user. Required for each item in
+-- the productVisibility list.
+pvProductId :: Lens' ProductVisibility (Maybe Text)
+pvProductId
+  = lens _pvProductId (\ s a -> s{_pvProductId = a})
+
+instance FromJSON ProductVisibility where
+        parseJSON
+          = withObject "ProductVisibility"
+              (\ o ->
+                 ProductVisibility' <$>
+                   (o .:? "tracks" .!= mempty) <*> (o .:? "productId"))
+
+instance ToJSON ProductVisibility where
+        toJSON ProductVisibility'{..}
+          = object
+              (catMaybes
+                 [("tracks" .=) <$> _pvTracks,
+                  ("productId" .=) <$> _pvProductId])
+
 -- | A notification of one event relating to an enterprise.
 --
 -- /See:/ 'notification' smart constructor.
 data Notification = Notification'
-    { _nEnterpriseId                     :: !(Maybe Text)
-    , _nNewPermissionsEvent              :: !(Maybe NewPermissionsEvent)
-    , _nProductApprovalEvent             :: !(Maybe ProductApprovalEvent)
-    , _nProductAvailabilityChangeEvent   :: !(Maybe ProductAvailabilityChangeEvent)
-    , _nAppUpdateEvent                   :: !(Maybe AppUpdateEvent)
-    , _nInstallFailureEvent              :: !(Maybe InstallFailureEvent)
+    { _nEnterpriseId :: !(Maybe Text)
+    , _nNewPermissionsEvent :: !(Maybe NewPermissionsEvent)
+    , _nProductApprovalEvent :: !(Maybe ProductApprovalEvent)
+    , _nProductAvailabilityChangeEvent :: !(Maybe ProductAvailabilityChangeEvent)
+    , _nAppUpdateEvent :: !(Maybe AppUpdateEvent)
+    , _nInstallFailureEvent :: !(Maybe InstallFailureEvent)
+    , _nNotificationType :: !(Maybe Text)
     , _nAppRestrictionsSchemaChangeEvent :: !(Maybe AppRestrictionsSchemaChangeEvent)
-    , _nNewDeviceEvent                   :: !(Maybe NewDeviceEvent)
-    , _nTimestampMillis                  :: !(Maybe (Textual Int64))
+    , _nNewDeviceEvent :: !(Maybe NewDeviceEvent)
+    , _nTimestampMillis :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Notification' with the minimum fields required to make a request.
@@ -981,6 +1137,8 @@ data Notification = Notification'
 --
 -- * 'nInstallFailureEvent'
 --
+-- * 'nNotificationType'
+--
 -- * 'nAppRestrictionsSchemaChangeEvent'
 --
 -- * 'nNewDeviceEvent'
@@ -988,7 +1146,7 @@ data Notification = Notification'
 -- * 'nTimestampMillis'
 notification
     :: Notification
-notification =
+notification = 
     Notification'
     { _nEnterpriseId = Nothing
     , _nNewPermissionsEvent = Nothing
@@ -996,6 +1154,7 @@ notification =
     , _nProductAvailabilityChangeEvent = Nothing
     , _nAppUpdateEvent = Nothing
     , _nInstallFailureEvent = Nothing
+    , _nNotificationType = Nothing
     , _nAppRestrictionsSchemaChangeEvent = Nothing
     , _nNewDeviceEvent = Nothing
     , _nTimestampMillis = Nothing
@@ -1038,6 +1197,12 @@ nInstallFailureEvent
   = lens _nInstallFailureEvent
       (\ s a -> s{_nInstallFailureEvent = a})
 
+-- | Type of the notification.
+nNotificationType :: Lens' Notification (Maybe Text)
+nNotificationType
+  = lens _nNotificationType
+      (\ s a -> s{_nNotificationType = a})
+
 -- | Notifications about new app restrictions schema changes.
 nAppRestrictionsSchemaChangeEvent :: Lens' Notification (Maybe AppRestrictionsSchemaChangeEvent)
 nAppRestrictionsSchemaChangeEvent
@@ -1069,6 +1234,7 @@ instance FromJSON Notification where
                      <*> (o .:? "productAvailabilityChangeEvent")
                      <*> (o .:? "appUpdateEvent")
                      <*> (o .:? "installFailureEvent")
+                     <*> (o .:? "notificationType")
                      <*> (o .:? "appRestrictionsSchemaChangeEvent")
                      <*> (o .:? "newDeviceEvent")
                      <*> (o .:? "timestampMillis"))
@@ -1085,6 +1251,7 @@ instance ToJSON Notification where
                     _nProductAvailabilityChangeEvent,
                   ("appUpdateEvent" .=) <$> _nAppUpdateEvent,
                   ("installFailureEvent" .=) <$> _nInstallFailureEvent,
+                  ("notificationType" .=) <$> _nNotificationType,
                   ("appRestrictionsSchemaChangeEvent" .=) <$>
                     _nAppRestrictionsSchemaChangeEvent,
                   ("newDeviceEvent" .=) <$> _nNewDeviceEvent,
@@ -1094,8 +1261,8 @@ instance ToJSON Notification where
 -- /See:/ 'pageInfo' smart constructor.
 data PageInfo = PageInfo'
     { _piResultPerPage :: !(Maybe (Textual Int32))
-    , _piTotalResults  :: !(Maybe (Textual Int32))
-    , _piStartIndex    :: !(Maybe (Textual Int32))
+    , _piTotalResults :: !(Maybe (Textual Int32))
+    , _piStartIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PageInfo' with the minimum fields required to make a request.
@@ -1109,7 +1276,7 @@ data PageInfo = PageInfo'
 -- * 'piStartIndex'
 pageInfo
     :: PageInfo
-pageInfo =
+pageInfo = 
     PageInfo'
     { _piResultPerPage = Nothing
     , _piTotalResults = Nothing
@@ -1157,7 +1324,7 @@ instance ToJSON PageInfo where
 --
 -- /See:/ 'productPermission' smart constructor.
 data ProductPermission = ProductPermission'
-    { _ppState        :: !(Maybe Text)
+    { _ppState :: !(Maybe Text)
     , _ppPermissionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1170,7 +1337,7 @@ data ProductPermission = ProductPermission'
 -- * 'ppPermissionId'
 productPermission
     :: ProductPermission
-productPermission =
+productPermission = 
     ProductPermission'
     { _ppState = Nothing
     , _ppPermissionId = Nothing
@@ -1205,8 +1372,8 @@ instance ToJSON ProductPermission where
 -- /See:/ 'newPermissionsEvent' smart constructor.
 data NewPermissionsEvent = NewPermissionsEvent'
     { _npeRequestedPermissions :: !(Maybe [Text])
-    , _npeApprovedPermissions  :: !(Maybe [Text])
-    , _npeProductId            :: !(Maybe Text)
+    , _npeApprovedPermissions :: !(Maybe [Text])
+    , _npeProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NewPermissionsEvent' with the minimum fields required to make a request.
@@ -1220,7 +1387,7 @@ data NewPermissionsEvent = NewPermissionsEvent'
 -- * 'npeProductId'
 newPermissionsEvent
     :: NewPermissionsEvent
-newPermissionsEvent =
+newPermissionsEvent = 
     NewPermissionsEvent'
     { _npeRequestedPermissions = Nothing
     , _npeApprovedPermissions = Nothing
@@ -1277,7 +1444,7 @@ instance ToJSON NewPermissionsEvent where
 -- /See:/ 'productAvailabilityChangeEvent' smart constructor.
 data ProductAvailabilityChangeEvent = ProductAvailabilityChangeEvent'
     { _paceAvailabilityStatus :: !(Maybe Text)
-    , _paceProductId          :: !(Maybe Text)
+    , _paceProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductAvailabilityChangeEvent' with the minimum fields required to make a request.
@@ -1289,7 +1456,7 @@ data ProductAvailabilityChangeEvent = ProductAvailabilityChangeEvent'
 -- * 'paceProductId'
 productAvailabilityChangeEvent
     :: ProductAvailabilityChangeEvent
-productAvailabilityChangeEvent =
+productAvailabilityChangeEvent = 
     ProductAvailabilityChangeEvent'
     { _paceAvailabilityStatus = Nothing
     , _paceProductId = Nothing
@@ -1328,7 +1495,7 @@ instance ToJSON ProductAvailabilityChangeEvent where
 --
 -- /See:/ 'productApprovalEvent' smart constructor.
 data ProductApprovalEvent = ProductApprovalEvent'
-    { _paeApproved  :: !(Maybe Text)
+    { _paeApproved :: !(Maybe Text)
     , _paeProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1341,7 +1508,7 @@ data ProductApprovalEvent = ProductApprovalEvent'
 -- * 'paeProductId'
 productApprovalEvent
     :: ProductApprovalEvent
-productApprovalEvent =
+productApprovalEvent = 
     ProductApprovalEvent'
     { _paeApproved = Nothing
     , _paeProductId = Nothing
@@ -1373,16 +1540,15 @@ instance ToJSON ProductApprovalEvent where
                  [("approved" .=) <$> _paeApproved,
                   ("productId" .=) <$> _paeProductId])
 
--- | A device resource represents a mobile device managed by the EMM and
--- belonging to a specific enterprise user. This collection cannot be
--- modified via the API; it is automatically populated as devices are set
--- up to be managed.
+-- | A Devices resource represents a mobile device managed by the EMM and
+-- belonging to a specific enterprise user.
 --
 -- /See:/ 'device' smart constructor.
 data Device = Device'
-    { _dKind           :: !Text
+    { _dKind :: !Text
+    , _dPolicy :: !(Maybe Policy)
     , _dManagementType :: !(Maybe Text)
-    , _dAndroidId      :: !(Maybe Text)
+    , _dAndroidId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Device' with the minimum fields required to make a request.
@@ -1391,14 +1557,17 @@ data Device = Device'
 --
 -- * 'dKind'
 --
+-- * 'dPolicy'
+--
 -- * 'dManagementType'
 --
 -- * 'dAndroidId'
 device
     :: Device
-device =
+device = 
     Device'
     { _dKind = "androidenterprise#device"
+    , _dPolicy = Nothing
     , _dManagementType = Nothing
     , _dAndroidId = Nothing
     }
@@ -1408,24 +1577,27 @@ device =
 dKind :: Lens' Device Text
 dKind = lens _dKind (\ s a -> s{_dKind = a})
 
+-- | The policy enforced on the device.
+dPolicy :: Lens' Device (Maybe Policy)
+dPolicy = lens _dPolicy (\ s a -> s{_dPolicy = a})
+
 -- | Identifies the extent to which the device is controlled by a managed
 -- Google Play EMM in various deployment configurations. Possible values
 -- include: - \"managedDevice\", a device that has the EMM\'s device policy
--- controller (DPC) as the device owner, - \"managedProfile\", a device
+-- controller (DPC) as the device owner. - \"managedProfile\", a device
 -- that has a profile managed by the DPC (DPC is profile owner) in addition
--- to a separate, personal profile that is unavailable to the DPC, -
--- \"containerApp\", a device running the container App. The container App
--- is managed by the DPC, - \"unmanagedProfile\", a device that has been
--- allowed (by the domain\'s admin, using the Admin Console to enable the
--- privilege) to use managed Google Play, but the profile is itself not
--- owned by a DPC.
+-- to a separate, personal profile that is unavailable to the DPC. -
+-- \"containerApp\", no longer used (deprecated). - \"unmanagedProfile\", a
+-- device that has been allowed (by the domain\'s admin, using the Admin
+-- Console to enable the privilege) to use managed Google Play, but the
+-- profile is itself not owned by a DPC.
 dManagementType :: Lens' Device (Maybe Text)
 dManagementType
   = lens _dManagementType
       (\ s a -> s{_dManagementType = a})
 
 -- | The Google Play Services Android ID for the device encoded as a
--- lowercase hex string, e.g. \"123456789abcdef0\".
+-- lowercase hex string. For example, \"123456789abcdef0\".
 dAndroidId :: Lens' Device (Maybe Text)
 dAndroidId
   = lens _dAndroidId (\ s a -> s{_dAndroidId = a})
@@ -1436,14 +1608,15 @@ instance FromJSON Device where
               (\ o ->
                  Device' <$>
                    (o .:? "kind" .!= "androidenterprise#device") <*>
-                     (o .:? "managementType")
+                     (o .:? "policy")
+                     <*> (o .:? "managementType")
                      <*> (o .:? "androidId"))
 
 instance ToJSON Device where
         toJSON Device'{..}
           = object
               (catMaybes
-                 [Just ("kind" .= _dKind),
+                 [Just ("kind" .= _dKind), ("policy" .=) <$> _dPolicy,
                   ("managementType" .=) <$> _dManagementType,
                   ("androidId" .=) <$> _dAndroidId])
 
@@ -1451,10 +1624,10 @@ instance ToJSON Device where
 --
 -- /See:/ 'serviceAccountKey' smart constructor.
 data ServiceAccountKey = ServiceAccountKey'
-    { _sakKind       :: !Text
-    , _sakData       :: !(Maybe Text)
-    , _sakId         :: !(Maybe Text)
-    , _sakType       :: !(Maybe Text)
+    { _sakKind :: !Text
+    , _sakData :: !(Maybe Text)
+    , _sakId :: !(Maybe Text)
+    , _sakType :: !(Maybe Text)
     , _sakPublicData :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1473,7 +1646,7 @@ data ServiceAccountKey = ServiceAccountKey'
 -- * 'sakPublicData'
 serviceAccountKey
     :: ServiceAccountKey
-serviceAccountKey =
+serviceAccountKey = 
     ServiceAccountKey'
     { _sakKind = "androidenterprise#serviceAccountKey"
     , _sakData = Nothing
@@ -1535,7 +1708,7 @@ instance ToJSON ServiceAccountKey where
 --
 -- /See:/ 'installsListResponse' smart constructor.
 data InstallsListResponse = InstallsListResponse'
-    { _ilrKind    :: !Text
+    { _ilrKind :: !Text
     , _ilrInstall :: !(Maybe [Install])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1548,7 +1721,7 @@ data InstallsListResponse = InstallsListResponse'
 -- * 'ilrInstall'
 installsListResponse
     :: InstallsListResponse
-installsListResponse =
+installsListResponse = 
     InstallsListResponse'
     { _ilrKind = "androidenterprise#installsListResponse"
     , _ilrInstall = Nothing
@@ -1588,13 +1761,13 @@ instance ToJSON InstallsListResponse where
 --
 -- /See:/ 'appRestrictionsSchemaRestriction' smart constructor.
 data AppRestrictionsSchemaRestriction = AppRestrictionsSchemaRestriction'
-    { _arsrRestrictionType   :: !(Maybe Text)
-    , _arsrEntry             :: !(Maybe [Text])
-    , _arsrKey               :: !(Maybe Text)
-    , _arsrEntryValue        :: !(Maybe [Text])
-    , _arsrDefaultValue      :: !(Maybe AppRestrictionsSchemaRestrictionRestrictionValue)
-    , _arsrTitle             :: !(Maybe Text)
-    , _arsrDescription       :: !(Maybe Text)
+    { _arsrRestrictionType :: !(Maybe Text)
+    , _arsrEntry :: !(Maybe [Text])
+    , _arsrKey :: !(Maybe Text)
+    , _arsrEntryValue :: !(Maybe [Text])
+    , _arsrDefaultValue :: !(Maybe AppRestrictionsSchemaRestrictionRestrictionValue)
+    , _arsrTitle :: !(Maybe Text)
+    , _arsrDescription :: !(Maybe Text)
     , _arsrNestedRestriction :: !(Maybe [AppRestrictionsSchemaRestriction])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1619,7 +1792,7 @@ data AppRestrictionsSchemaRestriction = AppRestrictionsSchemaRestriction'
 -- * 'arsrNestedRestriction'
 appRestrictionsSchemaRestriction
     :: AppRestrictionsSchemaRestriction
-appRestrictionsSchemaRestriction =
+appRestrictionsSchemaRestriction = 
     AppRestrictionsSchemaRestriction'
     { _arsrRestrictionType = Nothing
     , _arsrEntry = Nothing
@@ -1718,6 +1891,68 @@ instance ToJSON AppRestrictionsSchemaRestriction
                   ("description" .=) <$> _arsrDescription,
                   ("nestedRestriction" .=) <$> _arsrNestedRestriction])
 
+-- | The policy for a product.
+--
+-- /See:/ 'productPolicy' smart constructor.
+data ProductPolicy = ProductPolicy'
+    { _ppTracks :: !(Maybe [Text])
+    , _ppProductId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ProductPolicy' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ppTracks'
+--
+-- * 'ppProductId'
+productPolicy
+    :: ProductPolicy
+productPolicy = 
+    ProductPolicy'
+    { _ppTracks = Nothing
+    , _ppProductId = Nothing
+    }
+
+-- | Grants visibility to the specified track(s) of the product to the
+-- device. The track available to the device is based on the following
+-- order of preference: alpha, beta, production. For example, if an app has
+-- a prod version, a beta version and an alpha version and the enterprise
+-- has been granted visibility to both the alpha and beta tracks, if tracks
+-- is {\"beta\", \"production\"} then the beta version of the app is made
+-- available to the device. If there are no app versions in the specified
+-- track adding the \"alpha\" and \"beta\" values to the list of tracks
+-- will have no effect. Note that the enterprise requires access to alpha
+-- and\/or beta tracks before users can be granted visibility to apps in
+-- those tracks. The allowed sets are: {} (considered equivalent to
+-- {\"production\"}) {\"production\"} {\"beta\", \"production\"}
+-- {\"alpha\", \"beta\", \"production\"} The order of elements is not
+-- relevant. Any other set of tracks will be rejected with an error.
+ppTracks :: Lens' ProductPolicy [Text]
+ppTracks
+  = lens _ppTracks (\ s a -> s{_ppTracks = a}) .
+      _Default
+      . _Coerce
+
+-- | The ID of the product. For example, \"app:com.google.android.gm\".
+ppProductId :: Lens' ProductPolicy (Maybe Text)
+ppProductId
+  = lens _ppProductId (\ s a -> s{_ppProductId = a})
+
+instance FromJSON ProductPolicy where
+        parseJSON
+          = withObject "ProductPolicy"
+              (\ o ->
+                 ProductPolicy' <$>
+                   (o .:? "tracks" .!= mempty) <*> (o .:? "productId"))
+
+instance ToJSON ProductPolicy where
+        toJSON ProductPolicy'{..}
+          = object
+              (catMaybes
+                 [("tracks" .=) <$> _ppTracks,
+                  ("productId" .=) <$> _ppProductId])
+
 -- | This represents an enterprise admin who can manage the enterprise in the
 -- managed Google Play store.
 --
@@ -1733,7 +1968,7 @@ newtype Administrator = Administrator'
 -- * 'aEmail'
 administrator
     :: Administrator
-administrator =
+administrator = 
     Administrator'
     { _aEmail = Nothing
     }
@@ -1768,7 +2003,7 @@ data UsersListResponse = UsersListResponse'
 -- * 'ulrUser'
 usersListResponse
     :: UsersListResponse
-usersListResponse =
+usersListResponse = 
     UsersListResponse'
     { _ulrKind = "androidenterprise#usersListResponse"
     , _ulrUser = Nothing
@@ -1806,7 +2041,7 @@ instance ToJSON UsersListResponse where
 --
 -- /See:/ 'authenticationToken' smart constructor.
 data AuthenticationToken = AuthenticationToken'
-    { _atKind  :: !Text
+    { _atKind :: !Text
     , _atToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1819,7 +2054,7 @@ data AuthenticationToken = AuthenticationToken'
 -- * 'atToken'
 authenticationToken
     :: AuthenticationToken
-authenticationToken =
+authenticationToken = 
     AuthenticationToken'
     { _atKind = "androidenterprise#authenticationToken"
     , _atToken = Nothing
@@ -1852,11 +2087,87 @@ instance ToJSON AuthenticationToken where
                  [Just ("kind" .= _atKind),
                   ("token" .=) <$> _atToken])
 
+-- | A managed configurations settings resource contains the set of managed
+-- properties that have been configured for an Android app to be applied to
+-- a set of users. The app\'s developer would have defined configurable
+-- properties in the managed configurations schema.
+--
+-- /See:/ 'managedConfigurationsSettings' smart constructor.
+data ManagedConfigurationsSettings = ManagedConfigurationsSettings'
+    { _mcsManagedProperty :: !(Maybe [ManagedProperty])
+    , _mcsKind :: !Text
+    , _mcsMcmId :: !(Maybe Text)
+    , _mcsName :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ManagedConfigurationsSettings' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mcsManagedProperty'
+--
+-- * 'mcsKind'
+--
+-- * 'mcsMcmId'
+--
+-- * 'mcsName'
+managedConfigurationsSettings
+    :: ManagedConfigurationsSettings
+managedConfigurationsSettings = 
+    ManagedConfigurationsSettings'
+    { _mcsManagedProperty = Nothing
+    , _mcsKind = "androidenterprise#managedConfigurationsSettings"
+    , _mcsMcmId = Nothing
+    , _mcsName = Nothing
+    }
+
+-- | The set of managed properties for this configuration.
+mcsManagedProperty :: Lens' ManagedConfigurationsSettings [ManagedProperty]
+mcsManagedProperty
+  = lens _mcsManagedProperty
+      (\ s a -> s{_mcsManagedProperty = a})
+      . _Default
+      . _Coerce
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"androidenterprise#managedConfigurationsSettings\".
+mcsKind :: Lens' ManagedConfigurationsSettings Text
+mcsKind = lens _mcsKind (\ s a -> s{_mcsKind = a})
+
+-- | The ID of the managed configurations settings.
+mcsMcmId :: Lens' ManagedConfigurationsSettings (Maybe Text)
+mcsMcmId = lens _mcsMcmId (\ s a -> s{_mcsMcmId = a})
+
+-- | The name of the managed configurations settings.
+mcsName :: Lens' ManagedConfigurationsSettings (Maybe Text)
+mcsName = lens _mcsName (\ s a -> s{_mcsName = a})
+
+instance FromJSON ManagedConfigurationsSettings where
+        parseJSON
+          = withObject "ManagedConfigurationsSettings"
+              (\ o ->
+                 ManagedConfigurationsSettings' <$>
+                   (o .:? "managedProperty" .!= mempty) <*>
+                     (o .:? "kind" .!=
+                        "androidenterprise#managedConfigurationsSettings")
+                     <*> (o .:? "mcmId")
+                     <*> (o .:? "name"))
+
+instance ToJSON ManagedConfigurationsSettings where
+        toJSON ManagedConfigurationsSettings'{..}
+          = object
+              (catMaybes
+                 [("managedProperty" .=) <$> _mcsManagedProperty,
+                  Just ("kind" .= _mcsKind),
+                  ("mcmId" .=) <$> _mcsMcmId,
+                  ("name" .=) <$> _mcsName])
+
 -- | This represents a single version of the app.
 --
 -- /See:/ 'appVersion' smart constructor.
 data AppVersion = AppVersion'
-    { _avVersionCode   :: !(Maybe (Textual Int32))
+    { _avTrack :: !(Maybe Text)
+    , _avVersionCode :: !(Maybe (Textual Int32))
     , _avVersionString :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1864,16 +2175,24 @@ data AppVersion = AppVersion'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'avTrack'
+--
 -- * 'avVersionCode'
 --
 -- * 'avVersionString'
 appVersion
     :: AppVersion
-appVersion =
+appVersion = 
     AppVersion'
-    { _avVersionCode = Nothing
+    { _avTrack = Nothing
+    , _avVersionCode = Nothing
     , _avVersionString = Nothing
     }
+
+-- | The track that this app was published in. For example if track is
+-- \"alpha\", this is an alpha version of the app.
+avTrack :: Lens' AppVersion (Maybe Text)
+avTrack = lens _avTrack (\ s a -> s{_avTrack = a})
 
 -- | Unique increasing identifier for the app version.
 avVersionCode :: Lens' AppVersion (Maybe Int32)
@@ -1895,13 +2214,15 @@ instance FromJSON AppVersion where
           = withObject "AppVersion"
               (\ o ->
                  AppVersion' <$>
-                   (o .:? "versionCode") <*> (o .:? "versionString"))
+                   (o .:? "track") <*> (o .:? "versionCode") <*>
+                     (o .:? "versionString"))
 
 instance ToJSON AppVersion where
         toJSON AppVersion'{..}
           = object
               (catMaybes
-                 [("versionCode" .=) <$> _avVersionCode,
+                 [("track" .=) <$> _avTrack,
+                  ("versionCode" .=) <$> _avVersionCode,
                   ("versionString" .=) <$> _avVersionString])
 
 -- | A bundle of managed properties.
@@ -1918,7 +2239,7 @@ newtype ManagedPropertyBundle = ManagedPropertyBundle'
 -- * 'mpbManagedProperty'
 managedPropertyBundle
     :: ManagedPropertyBundle
-managedPropertyBundle =
+managedPropertyBundle = 
     ManagedPropertyBundle'
     { _mpbManagedProperty = Nothing
     }
@@ -1949,7 +2270,7 @@ instance ToJSON ManagedPropertyBundle where
 -- /See:/ 'groupLicensesListResponse' smart constructor.
 data GroupLicensesListResponse = GroupLicensesListResponse'
     { _gllrGroupLicense :: !(Maybe [GroupLicense])
-    , _gllrKind         :: !Text
+    , _gllrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupLicensesListResponse' with the minimum fields required to make a request.
@@ -1961,7 +2282,7 @@ data GroupLicensesListResponse = GroupLicensesListResponse'
 -- * 'gllrKind'
 groupLicensesListResponse
     :: GroupLicensesListResponse
-groupLicensesListResponse =
+groupLicensesListResponse = 
     GroupLicensesListResponse'
     { _gllrGroupLicense = Nothing
     , _gllrKind = "androidenterprise#groupLicensesListResponse"
@@ -1996,18 +2317,73 @@ instance ToJSON GroupLicensesListResponse where
                  [("groupLicense" .=) <$> _gllrGroupLicense,
                   Just ("kind" .= _gllrKind)])
 
+-- | The Android Device Policy configuration of an enterprise.
+--
+-- /See:/ 'androidDevicePolicyConfig' smart constructor.
+data AndroidDevicePolicyConfig = AndroidDevicePolicyConfig'
+    { _adpcState :: !(Maybe Text)
+    , _adpcKind :: !Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AndroidDevicePolicyConfig' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'adpcState'
+--
+-- * 'adpcKind'
+androidDevicePolicyConfig
+    :: AndroidDevicePolicyConfig
+androidDevicePolicyConfig = 
+    AndroidDevicePolicyConfig'
+    { _adpcState = Nothing
+    , _adpcKind = "androidenterprise#androidDevicePolicyConfig"
+    }
+
+-- | The state of Android Device Policy. \"enabled\" indicates that Android
+-- Device Policy is enabled for the enterprise and the EMM is allowed to
+-- manage devices with Android Device Policy, while \"disabled\" means that
+-- it cannot.
+adpcState :: Lens' AndroidDevicePolicyConfig (Maybe Text)
+adpcState
+  = lens _adpcState (\ s a -> s{_adpcState = a})
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"androidenterprise#androidDevicePolicyConfig\".
+adpcKind :: Lens' AndroidDevicePolicyConfig Text
+adpcKind = lens _adpcKind (\ s a -> s{_adpcKind = a})
+
+instance FromJSON AndroidDevicePolicyConfig where
+        parseJSON
+          = withObject "AndroidDevicePolicyConfig"
+              (\ o ->
+                 AndroidDevicePolicyConfig' <$>
+                   (o .:? "state") <*>
+                     (o .:? "kind" .!=
+                        "androidenterprise#androidDevicePolicyConfig"))
+
+instance ToJSON AndroidDevicePolicyConfig where
+        toJSON AndroidDevicePolicyConfig'{..}
+          = object
+              (catMaybes
+                 [("state" .=) <$> _adpcState,
+                  Just ("kind" .= _adpcKind)])
+
 -- | A set of products.
 --
 -- /See:/ 'productSet' smart constructor.
 data ProductSet = ProductSet'
-    { _psKind               :: !Text
+    { _psProductVisibility :: !(Maybe [ProductVisibility])
+    , _psKind :: !Text
     , _psProductSetBehavior :: !(Maybe Text)
-    , _psProductId          :: !(Maybe [Text])
+    , _psProductId :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductSet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'psProductVisibility'
 --
 -- * 'psKind'
 --
@@ -2016,12 +2392,26 @@ data ProductSet = ProductSet'
 -- * 'psProductId'
 productSet
     :: ProductSet
-productSet =
+productSet = 
     ProductSet'
-    { _psKind = "androidenterprise#productSet"
+    { _psProductVisibility = Nothing
+    , _psKind = "androidenterprise#productSet"
     , _psProductSetBehavior = Nothing
     , _psProductId = Nothing
     }
+
+-- | Additional list of product IDs making up the product set. Unlike the
+-- productID array, in this list It\'s possible to specify which tracks
+-- (alpha, beta, production) of a product are visible to the user. See
+-- ProductVisibility and its fields for more information. Specifying the
+-- same product ID both here and in the productId array is not allowed and
+-- it will result in an error.
+psProductVisibility :: Lens' ProductSet [ProductVisibility]
+psProductVisibility
+  = lens _psProductVisibility
+      (\ s a -> s{_psProductVisibility = a})
+      . _Default
+      . _Coerce
 
 -- | Identifies what kind of resource this is. Value: the fixed string
 -- \"androidenterprise#productSet\".
@@ -2029,13 +2419,17 @@ psKind :: Lens' ProductSet Text
 psKind = lens _psKind (\ s a -> s{_psKind = a})
 
 -- | The interpretation of this product set. \"unknown\" should never be sent
--- and ignored if received. \"whitelist\" means that this product set
--- constitutes a whitelist. \"includeAll\" means that all products are
--- accessible, including products that are approved, not approved, and even
--- products where approval has been revoked. If the value is
--- \"includeAll\", the value of the productId field is therefore ignored.
--- If a value is not supplied, it is interpreted to be \"whitelist\" for
--- backwards compatibility.
+-- and is ignored if received. \"whitelist\" means that the user is
+-- entitled to access the product set. \"includeAll\" means that all
+-- products are accessible, including products that are approved, products
+-- with revoked approval, and products that have never been approved.
+-- \"allApproved\" means that the user is entitled to access all products
+-- that are approved for the enterprise. If the value is \"allApproved\" or
+-- \"includeAll\", the productId field is ignored. If no value is provided,
+-- it is interpreted as \"whitelist\" for backwards compatibility. Further
+-- \"allApproved\" or \"includeAll\" does not enable automatic visibility
+-- of \"alpha\" or \"beta\" tracks for Android app. Use ProductVisibility
+-- to enable \"alpha\" or \"beta\" tracks per user.
 psProductSetBehavior :: Lens' ProductSet (Maybe Text)
 psProductSetBehavior
   = lens _psProductSetBehavior
@@ -2053,30 +2447,32 @@ instance FromJSON ProductSet where
           = withObject "ProductSet"
               (\ o ->
                  ProductSet' <$>
-                   (o .:? "kind" .!= "androidenterprise#productSet") <*>
-                     (o .:? "productSetBehavior")
+                   (o .:? "productVisibility" .!= mempty) <*>
+                     (o .:? "kind" .!= "androidenterprise#productSet")
+                     <*> (o .:? "productSetBehavior")
                      <*> (o .:? "productId" .!= mempty))
 
 instance ToJSON ProductSet where
         toJSON ProductSet'{..}
           = object
               (catMaybes
-                 [Just ("kind" .= _psKind),
+                 [("productVisibility" .=) <$> _psProductVisibility,
+                  Just ("kind" .= _psKind),
                   ("productSetBehavior" .=) <$> _psProductSetBehavior,
                   ("productId" .=) <$> _psProductId])
 
--- | The existence of an install resource indicates that an app is installed
+-- | The existence of an Installs resource indicates that an app is installed
 -- on a particular device (or that an install is pending). The API can be
 -- used to create an install resource using the update method. This
 -- triggers the actual install of the app on the device. If the user does
--- not already have an entitlement for the app then an attempt is made to
--- create one. If this fails (e.g. because the app is not free and there is
--- no available license) then the creation of the install fails. The API
--- can also be used to update an installed app. If the update method is
--- used on an existing install then the app will be updated to the latest
--- available version. Note that it is not possible to force the
--- installation of a specific version of an app; the version code is
--- read-only. If a user installs an app themselves (as permitted by the
+-- not already have an entitlement for the app, then an attempt is made to
+-- create one. If this fails (for example, because the app is not free and
+-- there is no available license), then the creation of the install fails.
+-- The API can also be used to update an installed app. If
+-- the update method is used on an existing install, then the app will be
+-- updated to the latest available version. Note that it is not possible to
+-- force the installation of a specific version of an app: the version code
+-- is read-only. If a user installs an app themselves (as permitted by the
 -- enterprise), then again an install resource and possibly an entitlement
 -- resource are automatically created. The API can also be used to delete
 -- an install resource, which triggers the removal of the app from the
@@ -2087,10 +2483,10 @@ instance ToJSON ProductSet where
 --
 -- /See:/ 'install' smart constructor.
 data Install = Install'
-    { _iVersionCode  :: !(Maybe (Textual Int32))
-    , _iKind         :: !Text
+    { _iVersionCode :: !(Maybe (Textual Int32))
+    , _iKind :: !Text
     , _iInstallState :: !(Maybe Text)
-    , _iProductId    :: !(Maybe Text)
+    , _iProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Install' with the minimum fields required to make a request.
@@ -2106,7 +2502,7 @@ data Install = Install'
 -- * 'iProductId'
 install
     :: Install
-install =
+install = 
     Install'
     { _iVersionCode = Nothing
     , _iKind = "androidenterprise#install"
@@ -2135,7 +2531,7 @@ iInstallState
   = lens _iInstallState
       (\ s a -> s{_iInstallState = a})
 
--- | The ID of the product that the install is for, e.g.
+-- | The ID of the product that the install is for. For example,
 -- \"app:com.google.android.gm\".
 iProductId :: Lens' Install (Maybe Text)
 iProductId
@@ -2173,7 +2569,7 @@ newtype ServiceAccountKeysListResponse = ServiceAccountKeysListResponse'
 -- * 'saklrServiceAccountKey'
 serviceAccountKeysListResponse
     :: ServiceAccountKeysListResponse
-serviceAccountKeysListResponse =
+serviceAccountKeysListResponse = 
     ServiceAccountKeysListResponse'
     { _saklrServiceAccountKey = Nothing
     }
@@ -2215,12 +2611,12 @@ instance ToJSON ServiceAccountKeysListResponse where
 -- /See:/ 'user' smart constructor.
 data User = User'
     { _uAccountIdentifier :: !(Maybe Text)
-    , _uKind              :: !Text
-    , _uDisplayName       :: !(Maybe Text)
-    , _uId                :: !(Maybe Text)
-    , _uPrimaryEmail      :: !(Maybe Text)
-    , _uManagementType    :: !(Maybe Text)
-    , _uAccountType       :: !(Maybe Text)
+    , _uKind :: !Text
+    , _uDisplayName :: !(Maybe Text)
+    , _uId :: !(Maybe Text)
+    , _uPrimaryEmail :: !(Maybe Text)
+    , _uManagementType :: !(Maybe Text)
+    , _uAccountType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'User' with the minimum fields required to make a request.
@@ -2242,7 +2638,7 @@ data User = User'
 -- * 'uAccountType'
 user
     :: User
-user =
+user = 
     User'
     { _uAccountIdentifier = Nothing
     , _uKind = "androidenterprise#user"
@@ -2333,7 +2729,7 @@ instance ToJSON User where
 --
 -- /See:/ 'managedConfigurationsForDeviceListResponse' smart constructor.
 data ManagedConfigurationsForDeviceListResponse = ManagedConfigurationsForDeviceListResponse'
-    { _mcfdlrKind                          :: !Text
+    { _mcfdlrKind :: !Text
     , _mcfdlrManagedConfigurationForDevice :: !(Maybe [ManagedConfiguration])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2346,7 +2742,7 @@ data ManagedConfigurationsForDeviceListResponse = ManagedConfigurationsForDevice
 -- * 'mcfdlrManagedConfigurationForDevice'
 managedConfigurationsForDeviceListResponse
     :: ManagedConfigurationsForDeviceListResponse
-managedConfigurationsForDeviceListResponse =
+managedConfigurationsForDeviceListResponse = 
     ManagedConfigurationsForDeviceListResponse'
     { _mcfdlrKind = "androidenterprise#managedConfigurationsForDeviceListResponse"
     , _mcfdlrManagedConfigurationForDevice = Nothing
@@ -2402,7 +2798,7 @@ newtype ProductsGenerateApprovalURLResponse = ProductsGenerateApprovalURLRespons
 -- * 'pgaurURL'
 productsGenerateApprovalURLResponse
     :: ProductsGenerateApprovalURLResponse
-productsGenerateApprovalURLResponse =
+productsGenerateApprovalURLResponse = 
     ProductsGenerateApprovalURLResponse'
     { _pgaurURL = Nothing
     }
@@ -2440,7 +2836,7 @@ data StorePage = StorePage'
     { _spKind :: !Text
     , _spLink :: !(Maybe [Text])
     , _spName :: !(Maybe [LocalizedText])
-    , _spId   :: !(Maybe Text)
+    , _spId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorePage' with the minimum fields required to make a request.
@@ -2456,7 +2852,7 @@ data StorePage = StorePage'
 -- * 'spId'
 storePage
     :: StorePage
-storePage =
+storePage = 
     StorePage'
     { _spKind = "androidenterprise#storePage"
     , _spLink = Nothing
@@ -2525,7 +2921,7 @@ data EnterprisesSendTestPushNotificationResponse = EnterprisesSendTestPushNotifi
 -- * 'estpnrMessageId'
 enterprisesSendTestPushNotificationResponse
     :: EnterprisesSendTestPushNotificationResponse
-enterprisesSendTestPushNotificationResponse =
+enterprisesSendTestPushNotificationResponse = 
     EnterprisesSendTestPushNotificationResponse'
     { _estpnrTopicName = Nothing
     , _estpnrMessageId = Nothing
@@ -2568,7 +2964,7 @@ instance ToJSON
 -- /See:/ 'serviceAccount' smart constructor.
 data ServiceAccount = ServiceAccount'
     { _saKind :: !Text
-    , _saKey  :: !(Maybe ServiceAccountKey)
+    , _saKey :: !(Maybe ServiceAccountKey)
     , _saName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2583,7 +2979,7 @@ data ServiceAccount = ServiceAccount'
 -- * 'saName'
 serviceAccount
     :: ServiceAccount
-serviceAccount =
+serviceAccount = 
     ServiceAccount'
     { _saKind = "androidenterprise#serviceAccount"
     , _saKey = Nothing
@@ -2620,6 +3016,69 @@ instance ToJSON ServiceAccount where
                  [Just ("kind" .= _saKind), ("key" .=) <$> _saKey,
                   ("name" .=) <$> _saName])
 
+-- | A variable set is a key-value pair of EMM-provided placeholders and its
+-- corresponding value, which is attributed to a user. For example,
+-- /F//I//R//S//T//N//A//M//E//c//o//u//l//d//b//e//a//p//l//a//c//e//h//o//l//d//e//r/, /a//n//d//i//t//s//v//a//l//u//e//c//o//u//l//d//b//e//A//l//i//c//e/./P//l//a//c//e//h//o//l//d//e//r//s//s//h//o//u//l//d//s//t//a//r//t//w//i//t//h//a/′\'
+-- sign and should be alphanumeric only.
+--
+-- /See:/ 'variableSet' smart constructor.
+data VariableSet = VariableSet'
+    { _vsKind :: !Text
+    , _vsUserValue :: !(Maybe Text)
+    , _vsPlaceholder :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'VariableSet' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'vsKind'
+--
+-- * 'vsUserValue'
+--
+-- * 'vsPlaceholder'
+variableSet
+    :: VariableSet
+variableSet = 
+    VariableSet'
+    { _vsKind = "androidenterprise#variableSet"
+    , _vsUserValue = Nothing
+    , _vsPlaceholder = Nothing
+    }
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"androidenterprise#variableSet\".
+vsKind :: Lens' VariableSet Text
+vsKind = lens _vsKind (\ s a -> s{_vsKind = a})
+
+-- | The value of the placeholder, specific to the user.
+vsUserValue :: Lens' VariableSet (Maybe Text)
+vsUserValue
+  = lens _vsUserValue (\ s a -> s{_vsUserValue = a})
+
+-- | The placeholder string; defined by EMM.
+vsPlaceholder :: Lens' VariableSet (Maybe Text)
+vsPlaceholder
+  = lens _vsPlaceholder
+      (\ s a -> s{_vsPlaceholder = a})
+
+instance FromJSON VariableSet where
+        parseJSON
+          = withObject "VariableSet"
+              (\ o ->
+                 VariableSet' <$>
+                   (o .:? "kind" .!= "androidenterprise#variableSet")
+                     <*> (o .:? "userValue")
+                     <*> (o .:? "placeholder"))
+
+instance ToJSON VariableSet where
+        toJSON VariableSet'{..}
+          = object
+              (catMaybes
+                 [Just ("kind" .= _vsKind),
+                  ("userValue" .=) <$> _vsUserValue,
+                  ("placeholder" .=) <$> _vsPlaceholder])
+
 -- | An event generated when a new version of an app is uploaded to Google
 -- Play. Notifications are sent for new public versions only: alpha, beta,
 -- or canary versions do not generate this event. To fetch up-to-date
@@ -2637,7 +3096,7 @@ newtype AppUpdateEvent = AppUpdateEvent'
 -- * 'aueProductId'
 appUpdateEvent
     :: AppUpdateEvent
-appUpdateEvent =
+appUpdateEvent = 
     AppUpdateEvent'
     { _aueProductId = Nothing
     }
@@ -2662,7 +3121,7 @@ instance ToJSON AppUpdateEvent where
 --
 -- /See:/ 'enterprisesListResponse' smart constructor.
 data EnterprisesListResponse = EnterprisesListResponse'
-    { _elrKind       :: !Text
+    { _elrKind :: !Text
     , _elrEnterprise :: !(Maybe [Enterprise])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2675,7 +3134,7 @@ data EnterprisesListResponse = EnterprisesListResponse'
 -- * 'elrEnterprise'
 enterprisesListResponse
     :: EnterprisesListResponse
-enterprisesListResponse =
+enterprisesListResponse = 
     EnterprisesListResponse'
     { _elrKind = "androidenterprise#enterprisesListResponse"
     , _elrEnterprise = Nothing
@@ -2717,8 +3176,8 @@ instance ToJSON EnterprisesListResponse where
 -- /See:/ 'notificationSet' smart constructor.
 data NotificationSet = NotificationSet'
     { _nsNotificationSetId :: !(Maybe Text)
-    , _nsNotification      :: !(Maybe [Notification])
-    , _nsKind              :: !Text
+    , _nsNotification :: !(Maybe [Notification])
+    , _nsKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationSet' with the minimum fields required to make a request.
@@ -2732,7 +3191,7 @@ data NotificationSet = NotificationSet'
 -- * 'nsKind'
 notificationSet
     :: NotificationSet
-notificationSet =
+notificationSet = 
     NotificationSet'
     { _nsNotificationSetId = Nothing
     , _nsNotification = Nothing
@@ -2784,7 +3243,7 @@ instance ToJSON NotificationSet where
 --
 -- /See:/ 'appRestrictionsSchema' smart constructor.
 data AppRestrictionsSchema = AppRestrictionsSchema'
-    { _arsKind         :: !Text
+    { _arsKind :: !Text
     , _arsRestrictions :: !(Maybe [AppRestrictionsSchemaRestriction])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2797,7 +3256,7 @@ data AppRestrictionsSchema = AppRestrictionsSchema'
 -- * 'arsRestrictions'
 appRestrictionsSchema
     :: AppRestrictionsSchema
-appRestrictionsSchema =
+appRestrictionsSchema = 
     AppRestrictionsSchema'
     { _arsKind = "androidenterprise#appRestrictionsSchema"
     , _arsRestrictions = Nothing
@@ -2836,7 +3295,7 @@ instance ToJSON AppRestrictionsSchema where
 --
 -- /See:/ 'localizedText' smart constructor.
 data LocalizedText = LocalizedText'
-    { _ltText   :: !(Maybe Text)
+    { _ltText :: !(Maybe Text)
     , _ltLocale :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2849,7 +3308,7 @@ data LocalizedText = LocalizedText'
 -- * 'ltLocale'
 localizedText
     :: LocalizedText
-localizedText =
+localizedText = 
     LocalizedText'
     { _ltText = Nothing
     , _ltLocale = Nothing
@@ -2884,8 +3343,8 @@ instance ToJSON LocalizedText where
 --
 -- /See:/ 'userToken' smart constructor.
 data UserToken = UserToken'
-    { _utKind   :: !Text
-    , _utToken  :: !(Maybe Text)
+    { _utKind :: !Text
+    , _utToken :: !(Maybe Text)
     , _utUserId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2900,7 +3359,7 @@ data UserToken = UserToken'
 -- * 'utUserId'
 userToken
     :: UserToken
-userToken =
+userToken = 
     UserToken'
     { _utKind = "androidenterprise#userToken"
     , _utToken = Nothing
@@ -2941,7 +3400,7 @@ instance ToJSON UserToken where
 --
 -- /See:/ 'devicesListResponse' smart constructor.
 data DevicesListResponse = DevicesListResponse'
-    { _dlrKind   :: !Text
+    { _dlrKind :: !Text
     , _dlrDevice :: !(Maybe [Device])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2954,7 +3413,7 @@ data DevicesListResponse = DevicesListResponse'
 -- * 'dlrDevice'
 devicesListResponse
     :: DevicesListResponse
-devicesListResponse =
+devicesListResponse = 
     DevicesListResponse'
     { _dlrKind = "androidenterprise#devicesListResponse"
     , _dlrDevice = Nothing
@@ -2988,6 +3447,59 @@ instance ToJSON DevicesListResponse where
                  [Just ("kind" .= _dlrKind),
                   ("device" .=) <$> _dlrDevice])
 
+--
+-- /See:/ 'productSigningCertificate' smart constructor.
+data ProductSigningCertificate = ProductSigningCertificate'
+    { _pscCertificateHashSha256 :: !(Maybe Text)
+    , _pscCertificateHashSha1 :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ProductSigningCertificate' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'pscCertificateHashSha256'
+--
+-- * 'pscCertificateHashSha1'
+productSigningCertificate
+    :: ProductSigningCertificate
+productSigningCertificate = 
+    ProductSigningCertificate'
+    { _pscCertificateHashSha256 = Nothing
+    , _pscCertificateHashSha1 = Nothing
+    }
+
+-- | The base64 urlsafe encoded SHA2-256 hash of the certificate.
+pscCertificateHashSha256 :: Lens' ProductSigningCertificate (Maybe Text)
+pscCertificateHashSha256
+  = lens _pscCertificateHashSha256
+      (\ s a -> s{_pscCertificateHashSha256 = a})
+
+-- | The base64 urlsafe encoded SHA1 hash of the certificate. (This field is
+-- deprecated in favor of SHA2-256. It should not be used and may be
+-- removed at any time.)
+pscCertificateHashSha1 :: Lens' ProductSigningCertificate (Maybe Text)
+pscCertificateHashSha1
+  = lens _pscCertificateHashSha1
+      (\ s a -> s{_pscCertificateHashSha1 = a})
+
+instance FromJSON ProductSigningCertificate where
+        parseJSON
+          = withObject "ProductSigningCertificate"
+              (\ o ->
+                 ProductSigningCertificate' <$>
+                   (o .:? "certificateHashSha256") <*>
+                     (o .:? "certificateHashSha1"))
+
+instance ToJSON ProductSigningCertificate where
+        toJSON ProductSigningCertificate'{..}
+          = object
+              (catMaybes
+                 [("certificateHashSha256" .=) <$>
+                    _pscCertificateHashSha256,
+                  ("certificateHashSha1" .=) <$>
+                    _pscCertificateHashSha1])
+
 -- | An Enterprises resource represents the binding between an EMM and a
 -- specific organization. That binding can be instantiated in one of two
 -- different ways using this API as follows: - For Google managed domain
@@ -3004,11 +3516,11 @@ instance ToJSON DevicesListResponse where
 --
 -- /See:/ 'enterprise' smart constructor.
 data Enterprise = Enterprise'
-    { _eKind          :: !Text
+    { _eKind :: !Text
     , _eAdministrator :: !(Maybe [Administrator])
     , _ePrimaryDomain :: !(Maybe Text)
-    , _eName          :: !(Maybe Text)
-    , _eId            :: !(Maybe Text)
+    , _eName :: !(Maybe Text)
+    , _eId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Enterprise' with the minimum fields required to make a request.
@@ -3026,7 +3538,7 @@ data Enterprise = Enterprise'
 -- * 'eId'
 enterprise
     :: Enterprise
-enterprise =
+enterprise = 
     Enterprise'
     { _eKind = "androidenterprise#enterprise"
     , _eAdministrator = Nothing
@@ -3087,11 +3599,11 @@ instance ToJSON Enterprise where
 --
 -- /See:/ 'installFailureEvent' smart constructor.
 data InstallFailureEvent = InstallFailureEvent'
-    { _ifeFailureReason  :: !(Maybe Text)
+    { _ifeFailureReason :: !(Maybe Text)
     , _ifeFailureDetails :: !(Maybe Text)
-    , _ifeUserId         :: !(Maybe Text)
-    , _ifeDeviceId       :: !(Maybe Text)
-    , _ifeProductId      :: !(Maybe Text)
+    , _ifeUserId :: !(Maybe Text)
+    , _ifeDeviceId :: !(Maybe Text)
+    , _ifeProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstallFailureEvent' with the minimum fields required to make a request.
@@ -3109,7 +3621,7 @@ data InstallFailureEvent = InstallFailureEvent'
 -- * 'ifeProductId'
 installFailureEvent
     :: InstallFailureEvent
-installFailureEvent =
+installFailureEvent = 
     InstallFailureEvent'
     { _ifeFailureReason = Nothing
     , _ifeFailureDetails = Nothing
@@ -3172,7 +3684,7 @@ instance ToJSON InstallFailureEvent where
 -- /See:/ 'managedConfigurationsForUserListResponse' smart constructor.
 data ManagedConfigurationsForUserListResponse = ManagedConfigurationsForUserListResponse'
     { _mcfulrManagedConfigurationForUser :: !(Maybe [ManagedConfiguration])
-    , _mcfulrKind                        :: !Text
+    , _mcfulrKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsForUserListResponse' with the minimum fields required to make a request.
@@ -3184,7 +3696,7 @@ data ManagedConfigurationsForUserListResponse = ManagedConfigurationsForUserList
 -- * 'mcfulrKind'
 managedConfigurationsForUserListResponse
     :: ManagedConfigurationsForUserListResponse
-managedConfigurationsForUserListResponse =
+managedConfigurationsForUserListResponse = 
     ManagedConfigurationsForUserListResponse'
     { _mcfulrManagedConfigurationForUser = Nothing
     , _mcfulrKind = "androidenterprise#managedConfigurationsForUserListResponse"
@@ -3224,14 +3736,78 @@ instance ToJSON
                     _mcfulrManagedConfigurationForUser,
                   Just ("kind" .= _mcfulrKind)])
 
+-- | A configuration variables resource contains the managed configuration
+-- settings ID to be applied to a single user, as well as the variable set
+-- that is attributed to the user. The variable set will be used to replace
+-- placeholders in the managed configuration settings.
+--
+-- /See:/ 'configurationVariables' smart constructor.
+data ConfigurationVariables = ConfigurationVariables'
+    { _cvKind :: !Text
+    , _cvMcmId :: !(Maybe Text)
+    , _cvVariableSet :: !(Maybe [VariableSet])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ConfigurationVariables' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cvKind'
+--
+-- * 'cvMcmId'
+--
+-- * 'cvVariableSet'
+configurationVariables
+    :: ConfigurationVariables
+configurationVariables = 
+    ConfigurationVariables'
+    { _cvKind = "androidenterprise#configurationVariables"
+    , _cvMcmId = Nothing
+    , _cvVariableSet = Nothing
+    }
+
+-- | Identifies what kind of resource this is. Value: the fixed string
+-- \"androidenterprise#configurationVariables\".
+cvKind :: Lens' ConfigurationVariables Text
+cvKind = lens _cvKind (\ s a -> s{_cvKind = a})
+
+-- | The ID of the managed configurations settings.
+cvMcmId :: Lens' ConfigurationVariables (Maybe Text)
+cvMcmId = lens _cvMcmId (\ s a -> s{_cvMcmId = a})
+
+-- | The variable set that is attributed to the user.
+cvVariableSet :: Lens' ConfigurationVariables [VariableSet]
+cvVariableSet
+  = lens _cvVariableSet
+      (\ s a -> s{_cvVariableSet = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ConfigurationVariables where
+        parseJSON
+          = withObject "ConfigurationVariables"
+              (\ o ->
+                 ConfigurationVariables' <$>
+                   (o .:? "kind" .!=
+                      "androidenterprise#configurationVariables")
+                     <*> (o .:? "mcmId")
+                     <*> (o .:? "variableSet" .!= mempty))
+
+instance ToJSON ConfigurationVariables where
+        toJSON ConfigurationVariables'{..}
+          = object
+              (catMaybes
+                 [Just ("kind" .= _cvKind), ("mcmId" .=) <$> _cvMcmId,
+                  ("variableSet" .=) <$> _cvVariableSet])
+
 -- | General setting for the managed Google Play store layout, currently only
 -- specifying the page to display the first time the store is opened.
 --
 -- /See:/ 'storeLayout' smart constructor.
 data StoreLayout = StoreLayout'
     { _slStoreLayoutType :: !(Maybe Text)
-    , _slKind            :: !Text
-    , _slHomepageId      :: !(Maybe Text)
+    , _slKind :: !Text
+    , _slHomepageId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StoreLayout' with the minimum fields required to make a request.
@@ -3245,21 +3821,17 @@ data StoreLayout = StoreLayout'
 -- * 'slHomepageId'
 storeLayout
     :: StoreLayout
-storeLayout =
+storeLayout = 
     StoreLayout'
     { _slStoreLayoutType = Nothing
     , _slKind = "androidenterprise#storeLayout"
     , _slHomepageId = Nothing
     }
 
--- | The store layout type. By default, this value is set to \"basic\". If
--- set to \"custom\", \"homepageId\" must be specified. If set to
--- \"basic\", the layout will consist of all approved apps accessible by
--- the user, split in pages of 100 each; in this case, \"homepageId\" must
--- not be specified. The \"basic\" setting takes precedence over any
--- existing collections setup for this enterprise (if any). Should the
--- enterprise use collectionViewers for controlling access rights, these
--- will still be respected.
+-- | The store layout type. By default, this value is set to \"basic\" if the
+-- homepageId field is not set, and to \"custom\" otherwise. If set to
+-- \"basic\", the layout will consist of all approved apps that have been
+-- whitelisted for the user.
 slStoreLayoutType :: Lens' StoreLayout (Maybe Text)
 slStoreLayoutType
   = lens _slStoreLayoutType
@@ -3270,12 +3842,9 @@ slStoreLayoutType
 slKind :: Lens' StoreLayout Text
 slKind = lens _slKind (\ s a -> s{_slKind = a})
 
--- | The ID of the store page to be used as the homepage. The homepage will
--- be used as the first page shown in the managed Google Play store. If a
--- homepage has not been set, the Play store shown on devices will be
--- empty. Not specifying a homepage on a store layout effectively empties
--- the store. If there exists at least one page, this field must be set to
--- the ID of a valid page.
+-- | The ID of the store page to be used as the homepage. The homepage is the
+-- first page shown in the managed Google Play Store. Not specifying a
+-- homepage is equivalent to setting the store layout type to \"basic\".
 slHomepageId :: Lens' StoreLayout (Maybe Text)
 slHomepageId
   = lens _slHomepageId (\ s a -> s{_slHomepageId = a})
@@ -3313,7 +3882,7 @@ newtype AppRestrictionsSchemaChangeEvent = AppRestrictionsSchemaChangeEvent'
 -- * 'arsceProductId'
 appRestrictionsSchemaChangeEvent
     :: AppRestrictionsSchemaChangeEvent
-appRestrictionsSchemaChangeEvent =
+appRestrictionsSchemaChangeEvent = 
     AppRestrictionsSchemaChangeEvent'
     { _arsceProductId = Nothing
     }
@@ -3343,8 +3912,8 @@ instance ToJSON AppRestrictionsSchemaChangeEvent
 --
 -- /See:/ 'newDeviceEvent' smart constructor.
 data NewDeviceEvent = NewDeviceEvent'
-    { _ndeUserId         :: !(Maybe Text)
-    , _ndeDeviceId       :: !(Maybe Text)
+    { _ndeUserId :: !(Maybe Text)
+    , _ndeDeviceId :: !(Maybe Text)
     , _ndeManagementType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3359,7 +3928,7 @@ data NewDeviceEvent = NewDeviceEvent'
 -- * 'ndeManagementType'
 newDeviceEvent
     :: NewDeviceEvent
-newDeviceEvent =
+newDeviceEvent = 
     NewDeviceEvent'
     { _ndeUserId = Nothing
     , _ndeDeviceId = Nothing
@@ -3377,11 +3946,9 @@ ndeDeviceId
   = lens _ndeDeviceId (\ s a -> s{_ndeDeviceId = a})
 
 -- | Identifies the extent to which the device is controlled by an Android
--- for Work EMM in various deployment configurations. Possible values
--- include: - \"managedDevice\", a device that has the EMM\'s device policy
--- controller (DPC) as the device owner, - \"managedProfile\", a device
--- that has a work profile managed by the DPC (DPC is profile owner) in
--- addition to a separate, personal profile that is unavailable to the DPC,
+-- EMM in various deployment configurations. Possible values include: -
+-- \"managedDevice\", a device where the DPC is set as device owner, -
+-- \"managedProfile\", a device where the DPC is set as profile owner.
 ndeManagementType :: Lens' NewDeviceEvent (Maybe Text)
 ndeManagementType
   = lens _ndeManagementType
@@ -3403,11 +3970,73 @@ instance ToJSON NewDeviceEvent where
                   ("deviceId" .=) <$> _ndeDeviceId,
                   ("managementType" .=) <$> _ndeManagementType])
 
+-- | The device policy for a given managed device.
+--
+-- /See:/ 'policy' smart constructor.
+data Policy = Policy'
+    { _pProductAvailabilityPolicy :: !(Maybe Text)
+    , _pProductPolicy :: !(Maybe [ProductPolicy])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Policy' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'pProductAvailabilityPolicy'
+--
+-- * 'pProductPolicy'
+policy
+    :: Policy
+policy = 
+    Policy'
+    { _pProductAvailabilityPolicy = Nothing
+    , _pProductPolicy = Nothing
+    }
+
+-- | The availability granted to the device for the specified products.
+-- \"all\" gives the device access to all products, regardless of approval
+-- status. \"allApproved\" entitles the device to access all products that
+-- are approved for the enterprise. \"allApproved\" and \"all\" do not
+-- enable automatic visibility of \"alpha\" or \"beta\" tracks.
+-- \"whitelist\" grants the device access the products specified in
+-- productPolicy[]. Only products that are approved or products that were
+-- previously approved (products with revoked approval) by the enterprise
+-- can be whitelisted. If no value is provided, the availability set at the
+-- user level is applied by default.
+pProductAvailabilityPolicy :: Lens' Policy (Maybe Text)
+pProductAvailabilityPolicy
+  = lens _pProductAvailabilityPolicy
+      (\ s a -> s{_pProductAvailabilityPolicy = a})
+
+-- | The list of product policies.
+pProductPolicy :: Lens' Policy [ProductPolicy]
+pProductPolicy
+  = lens _pProductPolicy
+      (\ s a -> s{_pProductPolicy = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON Policy where
+        parseJSON
+          = withObject "Policy"
+              (\ o ->
+                 Policy' <$>
+                   (o .:? "productAvailabilityPolicy") <*>
+                     (o .:? "productPolicy" .!= mempty))
+
+instance ToJSON Policy where
+        toJSON Policy'{..}
+          = object
+              (catMaybes
+                 [("productAvailabilityPolicy" .=) <$>
+                    _pProductAvailabilityPolicy,
+                  ("productPolicy" .=) <$> _pProductPolicy])
+
 -- | A token authorizing an admin to access an iframe.
 --
 -- /See:/ 'administratorWebToken' smart constructor.
 data AdministratorWebToken = AdministratorWebToken'
-    { _awtKind  :: !Text
+    { _awtKind :: !Text
     , _awtToken :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3420,7 +4049,7 @@ data AdministratorWebToken = AdministratorWebToken'
 -- * 'awtToken'
 administratorWebToken
     :: AdministratorWebToken
-administratorWebToken =
+administratorWebToken = 
     AdministratorWebToken'
     { _awtKind = "androidenterprise#administratorWebToken"
     , _awtToken = Nothing
@@ -3458,8 +4087,8 @@ instance ToJSON AdministratorWebToken where
 -- /See:/ 'signupInfo' smart constructor.
 data SignupInfo = SignupInfo'
     { _siCompletionToken :: !(Maybe Text)
-    , _siKind            :: !Text
-    , _siURL             :: !(Maybe Text)
+    , _siKind :: !Text
+    , _siURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SignupInfo' with the minimum fields required to make a request.
@@ -3473,7 +4102,7 @@ data SignupInfo = SignupInfo'
 -- * 'siURL'
 signupInfo
     :: SignupInfo
-signupInfo =
+signupInfo = 
     SignupInfo'
     { _siCompletionToken = Nothing
     , _siKind = "androidenterprise#signupInfo"
@@ -3523,23 +4152,38 @@ instance ToJSON SignupInfo where
 --
 -- /See:/ 'product' smart constructor.
 data Product = Product'
-    { _pSmallIconURL         :: !(Maybe Text)
-    , _pAuthorName           :: !(Maybe Text)
-    , _pKind                 :: !Text
-    , _pWorkDetailsURL       :: !(Maybe Text)
+    { _pScreenshotURLs :: !(Maybe [Text])
+    , _pLastUpdatedTimestampMillis :: !(Maybe (Textual Int64))
+    , _pSmallIconURL :: !(Maybe Text)
+    , _pAuthorName :: !(Maybe Text)
+    , _pKind :: !Text
+    , _pWorkDetailsURL :: !(Maybe Text)
     , _pRequiresContainerApp :: !(Maybe Bool)
-    , _pAppVersion           :: !(Maybe [AppVersion])
-    , _pProductPricing       :: !(Maybe Text)
-    , _pDistributionChannel  :: !(Maybe Text)
-    , _pIconURL              :: !(Maybe Text)
-    , _pTitle                :: !(Maybe Text)
-    , _pProductId            :: !(Maybe Text)
-    , _pDetailsURL           :: !(Maybe Text)
+    , _pCategory :: !(Maybe Text)
+    , _pAppVersion :: !(Maybe [AppVersion])
+    , _pProductPricing :: !(Maybe Text)
+    , _pDistributionChannel :: !(Maybe Text)
+    , _pMinAndroidSdkVersion :: !(Maybe (Textual Int32))
+    , _pAvailableCountries :: !(Maybe [Text])
+    , _pAvailableTracks :: !(Maybe [Text])
+    , _pIconURL :: !(Maybe Text)
+    , _pPermissions :: !(Maybe [ProductPermission])
+    , _pTitle :: !(Maybe Text)
+    , _pSigningCertificate :: !(Maybe ProductSigningCertificate)
+    , _pContentRating :: !(Maybe Text)
+    , _pProductId :: !(Maybe Text)
+    , _pRecentChanges :: !(Maybe Text)
+    , _pDescription :: !(Maybe Text)
+    , _pDetailsURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Product' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'pScreenshotURLs'
+--
+-- * 'pLastUpdatedTimestampMillis'
 --
 -- * 'pSmallIconURL'
 --
@@ -3551,36 +4195,82 @@ data Product = Product'
 --
 -- * 'pRequiresContainerApp'
 --
+-- * 'pCategory'
+--
 -- * 'pAppVersion'
 --
 -- * 'pProductPricing'
 --
 -- * 'pDistributionChannel'
 --
+-- * 'pMinAndroidSdkVersion'
+--
+-- * 'pAvailableCountries'
+--
+-- * 'pAvailableTracks'
+--
 -- * 'pIconURL'
+--
+-- * 'pPermissions'
 --
 -- * 'pTitle'
 --
+-- * 'pSigningCertificate'
+--
+-- * 'pContentRating'
+--
 -- * 'pProductId'
+--
+-- * 'pRecentChanges'
+--
+-- * 'pDescription'
 --
 -- * 'pDetailsURL'
 product
     :: Product
-product =
+product = 
     Product'
-    { _pSmallIconURL = Nothing
+    { _pScreenshotURLs = Nothing
+    , _pLastUpdatedTimestampMillis = Nothing
+    , _pSmallIconURL = Nothing
     , _pAuthorName = Nothing
     , _pKind = "androidenterprise#product"
     , _pWorkDetailsURL = Nothing
     , _pRequiresContainerApp = Nothing
+    , _pCategory = Nothing
     , _pAppVersion = Nothing
     , _pProductPricing = Nothing
     , _pDistributionChannel = Nothing
+    , _pMinAndroidSdkVersion = Nothing
+    , _pAvailableCountries = Nothing
+    , _pAvailableTracks = Nothing
     , _pIconURL = Nothing
+    , _pPermissions = Nothing
     , _pTitle = Nothing
+    , _pSigningCertificate = Nothing
+    , _pContentRating = Nothing
     , _pProductId = Nothing
+    , _pRecentChanges = Nothing
+    , _pDescription = Nothing
     , _pDetailsURL = Nothing
     }
+
+-- | A list of screenshot links representing the app.
+pScreenshotURLs :: Lens' Product [Text]
+pScreenshotURLs
+  = lens _pScreenshotURLs
+      (\ s a -> s{_pScreenshotURLs = a})
+      . _Default
+      . _Coerce
+
+-- | The time (in milliseconds since epoch) when application was last
+-- published. (Timestamp is approximate within 7 days of actual publish
+-- time.)
+pLastUpdatedTimestampMillis :: Lens' Product (Maybe Int64)
+pLastUpdatedTimestampMillis
+  = lens _pLastUpdatedTimestampMillis
+      (\ s a -> s{_pLastUpdatedTimestampMillis = a})
+      . mapping _Coerce
 
 -- | A link to a smaller image that can be used as an icon for the product.
 -- This image is suitable for use at up to 128px x 128px.
@@ -3589,7 +4279,7 @@ pSmallIconURL
   = lens _pSmallIconURL
       (\ s a -> s{_pSmallIconURL = a})
 
--- | The name of the author of the product (e.g. the app developer).
+-- | The name of the author of the product (for example, the app developer).
 pAuthorName :: Lens' Product (Maybe Text)
 pAuthorName
   = lens _pAuthorName (\ s a -> s{_pAuthorName = a})
@@ -3606,15 +4296,18 @@ pWorkDetailsURL
   = lens _pWorkDetailsURL
       (\ s a -> s{_pWorkDetailsURL = a})
 
--- | Whether this app can only be installed on devices using the Android
--- container app.
+-- | Deprecated.
 pRequiresContainerApp :: Lens' Product (Maybe Bool)
 pRequiresContainerApp
   = lens _pRequiresContainerApp
       (\ s a -> s{_pRequiresContainerApp = a})
 
--- | App versions currently available for this product. The returned list
--- contains only public versions. Alpha and beta versions are not included.
+-- | The app category (e.g. RACING, SOCIAL, etc.)
+pCategory :: Lens' Product (Maybe Text)
+pCategory
+  = lens _pCategory (\ s a -> s{_pCategory = a})
+
+-- | App versions currently available for this product.
 pAppVersion :: Lens' Product [AppVersion]
 pAppVersion
   = lens _pAppVersion (\ s a -> s{_pAppVersion = a}) .
@@ -3642,20 +4335,73 @@ pDistributionChannel
   = lens _pDistributionChannel
       (\ s a -> s{_pDistributionChannel = a})
 
+-- | The minimum Android SDK necessary to run the app.
+pMinAndroidSdkVersion :: Lens' Product (Maybe Int32)
+pMinAndroidSdkVersion
+  = lens _pMinAndroidSdkVersion
+      (\ s a -> s{_pMinAndroidSdkVersion = a})
+      . mapping _Coerce
+
+-- | The countries which this app is available in.
+pAvailableCountries :: Lens' Product [Text]
+pAvailableCountries
+  = lens _pAvailableCountries
+      (\ s a -> s{_pAvailableCountries = a})
+      . _Default
+      . _Coerce
+
+-- | The tracks that are visible to the enterprise.
+pAvailableTracks :: Lens' Product [Text]
+pAvailableTracks
+  = lens _pAvailableTracks
+      (\ s a -> s{_pAvailableTracks = a})
+      . _Default
+      . _Coerce
+
 -- | A link to an image that can be used as an icon for the product. This
 -- image is suitable for use at up to 512px x 512px.
 pIconURL :: Lens' Product (Maybe Text)
 pIconURL = lens _pIconURL (\ s a -> s{_pIconURL = a})
 
+-- | The permissions required for this app.
+pPermissions :: Lens' Product [ProductPermission]
+pPermissions
+  = lens _pPermissions (\ s a -> s{_pPermissions = a})
+      . _Default
+      . _Coerce
+
 -- | The name of the product.
 pTitle :: Lens' Product (Maybe Text)
 pTitle = lens _pTitle (\ s a -> s{_pTitle = a})
+
+-- | The certificate used to sign this product.
+pSigningCertificate :: Lens' Product (Maybe ProductSigningCertificate)
+pSigningCertificate
+  = lens _pSigningCertificate
+      (\ s a -> s{_pSigningCertificate = a})
+
+-- | The content rating for this app.
+pContentRating :: Lens' Product (Maybe Text)
+pContentRating
+  = lens _pContentRating
+      (\ s a -> s{_pContentRating = a})
 
 -- | A string of the form app:. For example, app:com.google.android.gm
 -- represents the Gmail app.
 pProductId :: Lens' Product (Maybe Text)
 pProductId
   = lens _pProductId (\ s a -> s{_pProductId = a})
+
+-- | A description of the recent changes made to the app.
+pRecentChanges :: Lens' Product (Maybe Text)
+pRecentChanges
+  = lens _pRecentChanges
+      (\ s a -> s{_pRecentChanges = a})
+
+-- | A localized promotional description, if available.
+pDescription :: Lens' Product (Maybe Text)
+pDescription
+  = lens _pDescription (\ s a -> s{_pDescription = a})
 
 -- | A link to the (consumer) Google Play details page for the product.
 pDetailsURL :: Lens' Product (Maybe Text)
@@ -3667,41 +4413,66 @@ instance FromJSON Product where
           = withObject "Product"
               (\ o ->
                  Product' <$>
-                   (o .:? "smallIconUrl") <*> (o .:? "authorName") <*>
-                     (o .:? "kind" .!= "androidenterprise#product")
+                   (o .:? "screenshotUrls" .!= mempty) <*>
+                     (o .:? "lastUpdatedTimestampMillis")
+                     <*> (o .:? "smallIconUrl")
+                     <*> (o .:? "authorName")
+                     <*> (o .:? "kind" .!= "androidenterprise#product")
                      <*> (o .:? "workDetailsUrl")
                      <*> (o .:? "requiresContainerApp")
+                     <*> (o .:? "category")
                      <*> (o .:? "appVersion" .!= mempty)
                      <*> (o .:? "productPricing")
                      <*> (o .:? "distributionChannel")
+                     <*> (o .:? "minAndroidSdkVersion")
+                     <*> (o .:? "availableCountries" .!= mempty)
+                     <*> (o .:? "availableTracks" .!= mempty)
                      <*> (o .:? "iconUrl")
+                     <*> (o .:? "permissions" .!= mempty)
                      <*> (o .:? "title")
+                     <*> (o .:? "signingCertificate")
+                     <*> (o .:? "contentRating")
                      <*> (o .:? "productId")
+                     <*> (o .:? "recentChanges")
+                     <*> (o .:? "description")
                      <*> (o .:? "detailsUrl"))
 
 instance ToJSON Product where
         toJSON Product'{..}
           = object
               (catMaybes
-                 [("smallIconUrl" .=) <$> _pSmallIconURL,
+                 [("screenshotUrls" .=) <$> _pScreenshotURLs,
+                  ("lastUpdatedTimestampMillis" .=) <$>
+                    _pLastUpdatedTimestampMillis,
+                  ("smallIconUrl" .=) <$> _pSmallIconURL,
                   ("authorName" .=) <$> _pAuthorName,
                   Just ("kind" .= _pKind),
                   ("workDetailsUrl" .=) <$> _pWorkDetailsURL,
                   ("requiresContainerApp" .=) <$>
                     _pRequiresContainerApp,
+                  ("category" .=) <$> _pCategory,
                   ("appVersion" .=) <$> _pAppVersion,
                   ("productPricing" .=) <$> _pProductPricing,
                   ("distributionChannel" .=) <$> _pDistributionChannel,
+                  ("minAndroidSdkVersion" .=) <$>
+                    _pMinAndroidSdkVersion,
+                  ("availableCountries" .=) <$> _pAvailableCountries,
+                  ("availableTracks" .=) <$> _pAvailableTracks,
                   ("iconUrl" .=) <$> _pIconURL,
+                  ("permissions" .=) <$> _pPermissions,
                   ("title" .=) <$> _pTitle,
+                  ("signingCertificate" .=) <$> _pSigningCertificate,
+                  ("contentRating" .=) <$> _pContentRating,
                   ("productId" .=) <$> _pProductId,
+                  ("recentChanges" .=) <$> _pRecentChanges,
+                  ("description" .=) <$> _pDescription,
                   ("detailsUrl" .=) <$> _pDetailsURL])
 
 -- | The entitlement resources for the user.
 --
 -- /See:/ 'entitlementsListResponse' smart constructor.
 data EntitlementsListResponse = EntitlementsListResponse'
-    { _entKind        :: !Text
+    { _entKind :: !Text
     , _entEntitlement :: !(Maybe [Entitlement])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3714,7 +4485,7 @@ data EntitlementsListResponse = EntitlementsListResponse'
 -- * 'entEntitlement'
 entitlementsListResponse
     :: EntitlementsListResponse
-entitlementsListResponse =
+entitlementsListResponse = 
     EntitlementsListResponse'
     { _entKind = "androidenterprise#entitlementsListResponse"
     , _entEntitlement = Nothing
@@ -3756,46 +4527,47 @@ instance ToJSON EntitlementsListResponse where
 --
 -- /See:/ 'productPermissions' smart constructor.
 data ProductPermissions = ProductPermissions'
-    { _ppKind       :: !Text
-    , _ppPermission :: !(Maybe [ProductPermission])
-    , _ppProductId  :: !(Maybe Text)
+    { _ppsKind :: !Text
+    , _ppsPermission :: !(Maybe [ProductPermission])
+    , _ppsProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductPermissions' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'ppKind'
+-- * 'ppsKind'
 --
--- * 'ppPermission'
+-- * 'ppsPermission'
 --
--- * 'ppProductId'
+-- * 'ppsProductId'
 productPermissions
     :: ProductPermissions
-productPermissions =
+productPermissions = 
     ProductPermissions'
-    { _ppKind = "androidenterprise#productPermissions"
-    , _ppPermission = Nothing
-    , _ppProductId = Nothing
+    { _ppsKind = "androidenterprise#productPermissions"
+    , _ppsPermission = Nothing
+    , _ppsProductId = Nothing
     }
 
 -- | Identifies what kind of resource this is. Value: the fixed string
 -- \"androidenterprise#productPermissions\".
-ppKind :: Lens' ProductPermissions Text
-ppKind = lens _ppKind (\ s a -> s{_ppKind = a})
+ppsKind :: Lens' ProductPermissions Text
+ppsKind = lens _ppsKind (\ s a -> s{_ppsKind = a})
 
 -- | The permissions required by the app.
-ppPermission :: Lens' ProductPermissions [ProductPermission]
-ppPermission
-  = lens _ppPermission (\ s a -> s{_ppPermission = a})
+ppsPermission :: Lens' ProductPermissions [ProductPermission]
+ppsPermission
+  = lens _ppsPermission
+      (\ s a -> s{_ppsPermission = a})
       . _Default
       . _Coerce
 
 -- | The ID of the app that the permissions relate to, e.g.
 -- \"app:com.google.android.gm\".
-ppProductId :: Lens' ProductPermissions (Maybe Text)
-ppProductId
-  = lens _ppProductId (\ s a -> s{_ppProductId = a})
+ppsProductId :: Lens' ProductPermissions (Maybe Text)
+ppsProductId
+  = lens _ppsProductId (\ s a -> s{_ppsProductId = a})
 
 instance FromJSON ProductPermissions where
         parseJSON
@@ -3811,23 +4583,23 @@ instance ToJSON ProductPermissions where
         toJSON ProductPermissions'{..}
           = object
               (catMaybes
-                 [Just ("kind" .= _ppKind),
-                  ("permission" .=) <$> _ppPermission,
-                  ("productId" .=) <$> _ppProductId])
+                 [Just ("kind" .= _ppsKind),
+                  ("permission" .=) <$> _ppsPermission,
+                  ("productId" .=) <$> _ppsProductId])
 
--- | A permission represents some extra capability, to be granted to an
--- Android app, which requires explicit consent. An enterprise admin must
--- consent to these permissions on behalf of their users before an
+-- | A Permissions resource represents some extra capability, to be granted
+-- to an Android app, which requires explicit consent. An enterprise admin
+-- must consent to these permissions on behalf of their users before an
 -- entitlement for the app can be created. The permissions collection is
 -- read-only. The information provided for each permission (localized name
--- and description) is intended to be used in the EMM user interface when
+-- and description) is intended to be used in the MDM user interface when
 -- obtaining consent from the enterprise.
 --
 -- /See:/ 'permission' smart constructor.
 data Permission = Permission'
-    { _perKind         :: !Text
-    , _perName         :: !(Maybe Text)
-    , _perDescription  :: !(Maybe Text)
+    { _perKind :: !Text
+    , _perName :: !(Maybe Text)
+    , _perDescription :: !(Maybe Text)
     , _perPermissionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3844,7 +4616,7 @@ data Permission = Permission'
 -- * 'perPermissionId'
 permission
     :: Permission
-permission =
+permission = 
     Permission'
     { _perKind = "androidenterprise#permission"
     , _perName = Nothing
@@ -3861,8 +4633,8 @@ perKind = lens _perKind (\ s a -> s{_perKind = a})
 perName :: Lens' Permission (Maybe Text)
 perName = lens _perName (\ s a -> s{_perName = a})
 
--- | A longer description of the permissions giving more details of what it
--- affects.
+-- | A longer description of the Permissions resource, giving more details of
+-- what it affects.
 perDescription :: Lens' Permission (Maybe Text)
 perDescription
   = lens _perDescription
@@ -3894,8 +4666,9 @@ instance ToJSON Permission where
 
 --
 -- /See:/ 'productsApproveRequest' smart constructor.
-newtype ProductsApproveRequest = ProductsApproveRequest'
-    { _parApprovalURLInfo :: Maybe ApprovalURLInfo
+data ProductsApproveRequest = ProductsApproveRequest'
+    { _parApprovalURLInfo :: !(Maybe ApprovalURLInfo)
+    , _parApprovedPermissions :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsApproveRequest' with the minimum fields required to make a request.
@@ -3903,11 +4676,14 @@ newtype ProductsApproveRequest = ProductsApproveRequest'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'parApprovalURLInfo'
+--
+-- * 'parApprovedPermissions'
 productsApproveRequest
     :: ProductsApproveRequest
-productsApproveRequest =
+productsApproveRequest = 
     ProductsApproveRequest'
     { _parApprovalURLInfo = Nothing
+    , _parApprovedPermissions = Nothing
     }
 
 -- | The approval URL that was shown to the user. Only the permissions shown
@@ -3921,48 +4697,58 @@ parApprovalURLInfo
   = lens _parApprovalURLInfo
       (\ s a -> s{_parApprovalURLInfo = a})
 
+-- | Sets how new permission requests for the product are handled.
+-- \"allPermissions\" automatically approves all current and future
+-- permissions for the product. \"currentPermissionsOnly\" approves the
+-- current set of permissions for the product, but any future permissions
+-- added through updates will require manual reapproval. If not specified,
+-- only the current set of permissions will be approved.
+parApprovedPermissions :: Lens' ProductsApproveRequest (Maybe Text)
+parApprovedPermissions
+  = lens _parApprovedPermissions
+      (\ s a -> s{_parApprovedPermissions = a})
+
 instance FromJSON ProductsApproveRequest where
         parseJSON
           = withObject "ProductsApproveRequest"
               (\ o ->
                  ProductsApproveRequest' <$>
-                   (o .:? "approvalUrlInfo"))
+                   (o .:? "approvalUrlInfo") <*>
+                     (o .:? "approvedPermissions"))
 
 instance ToJSON ProductsApproveRequest where
         toJSON ProductsApproveRequest'{..}
           = object
               (catMaybes
-                 [("approvalUrlInfo" .=) <$> _parApprovalURLInfo])
+                 [("approvalUrlInfo" .=) <$> _parApprovalURLInfo,
+                  ("approvedPermissions" .=) <$>
+                    _parApprovedPermissions])
 
--- | The existence of an entitlement resource means that a user has the right
--- to use a particular app on any of their devices. This might be because
--- the app is free or because they have been allocated a license to the app
--- from a group license purchased by the enterprise. It should always be
--- true that a user has an app installed on one of their devices only if
--- they have an entitlement to it. So if an entitlement is deleted, the app
--- will be uninstalled from all devices. Similarly if the user installs an
--- app (and is permitted to do so), or the EMM triggers an install of the
--- app, an entitlement to that app is automatically created. If this is
--- impossible - e.g. the enterprise has not purchased sufficient licenses -
--- then installation fails. Note that entitlements are always user
--- specific, not device specific; a user may have an entitlement even
--- though they have not installed the app anywhere. Once they have an
--- entitlement they can install the app on multiple devices. The API can be
--- used to create an entitlement. If the app is a free app, a group license
--- for that app is created. If it\'s a paid app, creating the entitlement
--- consumes one license; it remains consumed until the entitlement is
--- removed. Optionally an installation of the app on all the user\'s
--- managed devices can be triggered at the time the entitlement is created.
--- An entitlement cannot be created for an app if the app requires
--- permissions that the enterprise has not yet accepted. Entitlements for
--- paid apps that are due to purchases by the user on a non-managed profile
--- will have \"userPurchase\" as entitlement reason; those entitlements
--- cannot be removed via the API.
+-- | The presence of an Entitlements resource indicates that a user has the
+-- right to use a particular app. Entitlements are user specific, not
+-- device specific. This allows a user with an entitlement to an app to
+-- install the app on all their devices. It\'s also possible for a user to
+-- hold an entitlement to an app without installing the app on any device.
+-- The API can be used to create an entitlement. As an option, you can also
+-- use the API to trigger the installation of an app on all a user\'s
+-- managed devices at the same time the entitlement is created. If the app
+-- is free, creating the entitlement also creates a group license for that
+-- app. For paid apps, creating the entitlement consumes one license, and
+-- that license remains consumed until the entitlement is removed. If the
+-- enterprise hasn\'t purchased enough licenses, then no entitlement is
+-- created and the installation fails. An entitlement is also not created
+-- for an app if the app requires permissions that the enterprise hasn\'t
+-- accepted. If an entitlement is deleted, the app may be uninstalled from
+-- a user\'s device. As a best practice, uninstall the app by calling
+-- Installs.delete() before deleting the entitlement. Entitlements for apps
+-- that a user pays for on an unmanaged profile have \"userPurchase\" as
+-- the entitlement reason. These entitlements cannot be removed via the
+-- API.
 --
 -- /See:/ 'entitlement' smart constructor.
 data Entitlement = Entitlement'
-    { _eeKind      :: !Text
-    , _eeReason    :: !(Maybe Text)
+    { _eeKind :: !Text
+    , _eeReason :: !(Maybe Text)
     , _eeProductId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3977,7 +4763,7 @@ data Entitlement = Entitlement'
 -- * 'eeProductId'
 entitlement
     :: Entitlement
-entitlement =
+entitlement = 
     Entitlement'
     { _eeKind = "androidenterprise#entitlement"
     , _eeReason = Nothing
@@ -3989,13 +4775,13 @@ entitlement =
 eeKind :: Lens' Entitlement Text
 eeKind = lens _eeKind (\ s a -> s{_eeKind = a})
 
--- | The reason for the entitlement, e.g. \"free\" for free apps. This is
--- temporary, it will be replaced by the acquisition kind field of group
--- licenses.
+-- | The reason for the entitlement. For example, \"free\" for free apps.
+-- This property is temporary: it will be replaced by the acquisition kind
+-- field of group licenses.
 eeReason :: Lens' Entitlement (Maybe Text)
 eeReason = lens _eeReason (\ s a -> s{_eeReason = a})
 
--- | The ID of the product that the entitlement is for, e.g.
+-- | The ID of the product that the entitlement is for. For example,
 -- \"app:com.google.android.gm\".
 eeProductId :: Lens' Entitlement (Maybe Text)
 eeProductId
@@ -4023,9 +4809,9 @@ instance ToJSON Entitlement where
 -- /See:/ 'productsListResponse' smart constructor.
 data ProductsListResponse = ProductsListResponse'
     { _plrTokenPagination :: !(Maybe TokenPagination)
-    , _plrPageInfo        :: !(Maybe PageInfo)
-    , _plrKind            :: !Text
-    , _plrProduct         :: !(Maybe [Product])
+    , _plrPageInfo :: !(Maybe PageInfo)
+    , _plrKind :: !Text
+    , _plrProduct :: !(Maybe [Product])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsListResponse' with the minimum fields required to make a request.
@@ -4041,7 +4827,7 @@ data ProductsListResponse = ProductsListResponse'
 -- * 'plrProduct'
 productsListResponse
     :: ProductsListResponse
-productsListResponse =
+productsListResponse = 
     ProductsListResponse'
     { _plrTokenPagination = Nothing
     , _plrPageInfo = Nothing

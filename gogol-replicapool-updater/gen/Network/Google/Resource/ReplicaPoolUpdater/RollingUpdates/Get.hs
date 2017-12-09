@@ -36,10 +36,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Get
     , rugRollingUpdate
     , rugProject
     , rugZone
+    , rugFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.get@ method which the
 -- 'RollingUpdatesGet' request conforms to.
@@ -52,15 +53,17 @@ type RollingUpdatesGetResource =
                Capture "zone" Text :>
                  "rollingUpdates" :>
                    Capture "rollingUpdate" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] RollingUpdate
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] RollingUpdate
 
 -- | Returns information about an update.
 --
 -- /See:/ 'rollingUpdatesGet' smart constructor.
 data RollingUpdatesGet = RollingUpdatesGet'
     { _rugRollingUpdate :: !Text
-    , _rugProject       :: !Text
-    , _rugZone          :: !Text
+    , _rugProject :: !Text
+    , _rugZone :: !Text
+    , _rugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RollingUpdatesGet = RollingUpdatesGet'
 -- * 'rugProject'
 --
 -- * 'rugZone'
+--
+-- * 'rugFields'
 rollingUpdatesGet
     :: Text -- ^ 'rugRollingUpdate'
     -> Text -- ^ 'rugProject'
     -> Text -- ^ 'rugZone'
     -> RollingUpdatesGet
-rollingUpdatesGet pRugRollingUpdate_ pRugProject_ pRugZone_ =
+rollingUpdatesGet pRugRollingUpdate_ pRugProject_ pRugZone_ = 
     RollingUpdatesGet'
     { _rugRollingUpdate = pRugRollingUpdate_
     , _rugProject = pRugProject_
     , _rugZone = pRugZone_
+    , _rugFields = Nothing
     }
 
 -- | The name of the update.
@@ -99,6 +105,11 @@ rugProject
 rugZone :: Lens' RollingUpdatesGet Text
 rugZone = lens _rugZone (\ s a -> s{_rugZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rugFields :: Lens' RollingUpdatesGet (Maybe Text)
+rugFields
+  = lens _rugFields (\ s a -> s{_rugFields = a})
+
 instance GoogleRequest RollingUpdatesGet where
         type Rs RollingUpdatesGet = RollingUpdate
         type Scopes RollingUpdatesGet =
@@ -108,6 +119,7 @@ instance GoogleRequest RollingUpdatesGet where
                "https://www.googleapis.com/auth/replicapool.readonly"]
         requestClient RollingUpdatesGet'{..}
           = go _rugProject _rugZone _rugRollingUpdate
+              _rugFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

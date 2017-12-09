@@ -43,10 +43,11 @@ module Network.Google.Resource.Analytics.Data.Mcf.Get
     , dmgStartIndex
     , dmgMaxResults
     , dmgStartDate
+    , dmgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.data.mcf.get@ method which the
 -- 'DataMcfGet' request conforms to.
@@ -65,22 +66,25 @@ type DataMcfGetResource =
                            QueryParam "dimensions" Text :>
                              QueryParam "start-index" (Textual Int32) :>
                                QueryParam "max-results" (Textual Int32) :>
-                                 QueryParam "alt" AltJSON :> Get '[JSON] McfData
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] McfData
 
 -- | Returns Analytics Multi-Channel Funnels data for a view (profile).
 --
 -- /See:/ 'dataMcfGet' smart constructor.
 data DataMcfGet = DataMcfGet'
-    { _dmgMetrics       :: !Text
+    { _dmgMetrics :: !Text
     , _dmgSamplingLevel :: !(Maybe DataMcfGetSamplingLevel)
-    , _dmgFilters       :: !(Maybe Text)
-    , _dmgIds           :: !Text
-    , _dmgEndDate       :: !Text
-    , _dmgSort          :: !(Maybe Text)
-    , _dmgDimensions    :: !(Maybe Text)
-    , _dmgStartIndex    :: !(Maybe (Textual Int32))
-    , _dmgMaxResults    :: !(Maybe (Textual Int32))
-    , _dmgStartDate     :: !Text
+    , _dmgFilters :: !(Maybe Text)
+    , _dmgIds :: !Text
+    , _dmgEndDate :: !Text
+    , _dmgSort :: !(Maybe Text)
+    , _dmgDimensions :: !(Maybe Text)
+    , _dmgStartIndex :: !(Maybe (Textual Int32))
+    , _dmgMaxResults :: !(Maybe (Textual Int32))
+    , _dmgStartDate :: !Text
+    , _dmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataMcfGet' with the minimum fields required to make a request.
@@ -106,13 +110,15 @@ data DataMcfGet = DataMcfGet'
 -- * 'dmgMaxResults'
 --
 -- * 'dmgStartDate'
+--
+-- * 'dmgFields'
 dataMcfGet
     :: Text -- ^ 'dmgMetrics'
     -> Text -- ^ 'dmgIds'
     -> Text -- ^ 'dmgEndDate'
     -> Text -- ^ 'dmgStartDate'
     -> DataMcfGet
-dataMcfGet pDmgMetrics_ pDmgIds_ pDmgEndDate_ pDmgStartDate_ =
+dataMcfGet pDmgMetrics_ pDmgIds_ pDmgEndDate_ pDmgStartDate_ = 
     DataMcfGet'
     { _dmgMetrics = pDmgMetrics_
     , _dmgSamplingLevel = Nothing
@@ -124,6 +130,7 @@ dataMcfGet pDmgMetrics_ pDmgIds_ pDmgEndDate_ pDmgStartDate_ =
     , _dmgStartIndex = Nothing
     , _dmgMaxResults = Nothing
     , _dmgStartDate = pDmgStartDate_
+    , _dmgFields = Nothing
     }
 
 -- | A comma-separated list of Multi-Channel Funnels metrics. E.g.,
@@ -191,6 +198,11 @@ dmgStartDate :: Lens' DataMcfGet Text
 dmgStartDate
   = lens _dmgStartDate (\ s a -> s{_dmgStartDate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dmgFields :: Lens' DataMcfGet (Maybe Text)
+dmgFields
+  = lens _dmgFields (\ s a -> s{_dmgFields = a})
+
 instance GoogleRequest DataMcfGet where
         type Rs DataMcfGet = McfData
         type Scopes DataMcfGet =
@@ -206,6 +218,7 @@ instance GoogleRequest DataMcfGet where
               _dmgDimensions
               _dmgStartIndex
               _dmgMaxResults
+              _dmgFields
               (Just AltJSON)
               analyticsService
           where go

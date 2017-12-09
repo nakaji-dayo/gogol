@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Tracks.List
     -- * Request Lenses
     , etlPackageName
     , etlEditId
+    , etlFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.tracks.list@ method which the
 -- 'EditsTracksList' request conforms to.
@@ -50,15 +51,17 @@ type EditsTracksListResource =
              "edits" :>
                Capture "editId" Text :>
                  "tracks" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] TracksListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] TracksListResponse
 
 -- | Lists all the track configurations for this edit.
 --
 -- /See:/ 'editsTracksList' smart constructor.
 data EditsTracksList = EditsTracksList'
     { _etlPackageName :: !Text
-    , _etlEditId      :: !Text
+    , _etlEditId :: !Text
+    , _etlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTracksList' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data EditsTracksList = EditsTracksList'
 -- * 'etlPackageName'
 --
 -- * 'etlEditId'
+--
+-- * 'etlFields'
 editsTracksList
     :: Text -- ^ 'etlPackageName'
     -> Text -- ^ 'etlEditId'
     -> EditsTracksList
-editsTracksList pEtlPackageName_ pEtlEditId_ =
+editsTracksList pEtlPackageName_ pEtlEditId_ = 
     EditsTracksList'
     { _etlPackageName = pEtlPackageName_
     , _etlEditId = pEtlEditId_
+    , _etlFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -90,12 +96,18 @@ etlEditId :: Lens' EditsTracksList Text
 etlEditId
   = lens _etlEditId (\ s a -> s{_etlEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etlFields :: Lens' EditsTracksList (Maybe Text)
+etlFields
+  = lens _etlFields (\ s a -> s{_etlFields = a})
+
 instance GoogleRequest EditsTracksList where
         type Rs EditsTracksList = TracksListResponse
         type Scopes EditsTracksList =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTracksList'{..}
-          = go _etlPackageName _etlEditId (Just AltJSON)
+          = go _etlPackageName _etlEditId _etlFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient

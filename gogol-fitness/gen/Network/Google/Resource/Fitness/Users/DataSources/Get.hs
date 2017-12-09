@@ -35,10 +35,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.Get
     -- * Request Lenses
     , udsgDataSourceId
     , udsgUserId
+    , udsgFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.get@ method which the
 -- 'UsersDataSourcesGet' request conforms to.
@@ -49,14 +50,16 @@ type UsersDataSourcesGetResource =
            Capture "userId" Text :>
              "dataSources" :>
                Capture "dataSourceId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] DataSource
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] DataSource
 
 -- | Returns the specified data source.
 --
 -- /See:/ 'usersDataSourcesGet' smart constructor.
 data UsersDataSourcesGet = UsersDataSourcesGet'
     { _udsgDataSourceId :: !Text
-    , _udsgUserId       :: !Text
+    , _udsgUserId :: !Text
+    , _udsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UsersDataSourcesGet = UsersDataSourcesGet'
 -- * 'udsgDataSourceId'
 --
 -- * 'udsgUserId'
+--
+-- * 'udsgFields'
 usersDataSourcesGet
     :: Text -- ^ 'udsgDataSourceId'
     -> Text -- ^ 'udsgUserId'
     -> UsersDataSourcesGet
-usersDataSourcesGet pUdsgDataSourceId_ pUdsgUserId_ =
+usersDataSourcesGet pUdsgDataSourceId_ pUdsgUserId_ = 
     UsersDataSourcesGet'
     { _udsgDataSourceId = pUdsgDataSourceId_
     , _udsgUserId = pUdsgUserId_
+    , _udsgFields = Nothing
     }
 
 -- | The data stream ID of the data source to retrieve.
@@ -87,6 +93,11 @@ udsgDataSourceId
 udsgUserId :: Lens' UsersDataSourcesGet Text
 udsgUserId
   = lens _udsgUserId (\ s a -> s{_udsgUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+udsgFields :: Lens' UsersDataSourcesGet (Maybe Text)
+udsgFields
+  = lens _udsgFields (\ s a -> s{_udsgFields = a})
 
 instance GoogleRequest UsersDataSourcesGet where
         type Rs UsersDataSourcesGet = DataSource
@@ -110,7 +121,8 @@ instance GoogleRequest UsersDataSourcesGet where
                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSourcesGet'{..}
-          = go _udsgUserId _udsgDataSourceId (Just AltJSON)
+          = go _udsgUserId _udsgDataSourceId _udsgFields
+              (Just AltJSON)
               fitnessService
           where go
                   = buildClient

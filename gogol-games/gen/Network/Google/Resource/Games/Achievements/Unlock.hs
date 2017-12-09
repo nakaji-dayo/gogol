@@ -35,10 +35,11 @@ module Network.Google.Resource.Games.Achievements.Unlock
     -- * Request Lenses
     , auAchievementId
     , auConsistencyToken
+    , auFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.unlock@ method which the
 -- 'AchievementsUnlock' request conforms to.
@@ -49,15 +50,17 @@ type AchievementsUnlockResource =
            Capture "achievementId" Text :>
              "unlock" :>
                QueryParam "consistencyToken" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Post '[JSON] AchievementUnlockResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Post '[JSON] AchievementUnlockResponse
 
 -- | Unlocks this achievement for the currently authenticated player.
 --
 -- /See:/ 'achievementsUnlock' smart constructor.
 data AchievementsUnlock = AchievementsUnlock'
-    { _auAchievementId    :: !Text
+    { _auAchievementId :: !Text
     , _auConsistencyToken :: !(Maybe (Textual Int64))
+    , _auFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsUnlock' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data AchievementsUnlock = AchievementsUnlock'
 -- * 'auAchievementId'
 --
 -- * 'auConsistencyToken'
+--
+-- * 'auFields'
 achievementsUnlock
     :: Text -- ^ 'auAchievementId'
     -> AchievementsUnlock
-achievementsUnlock pAuAchievementId_ =
+achievementsUnlock pAuAchievementId_ = 
     AchievementsUnlock'
     { _auAchievementId = pAuAchievementId_
     , _auConsistencyToken = Nothing
+    , _auFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -89,6 +95,10 @@ auConsistencyToken
       (\ s a -> s{_auConsistencyToken = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+auFields :: Lens' AchievementsUnlock (Maybe Text)
+auFields = lens _auFields (\ s a -> s{_auFields = a})
+
 instance GoogleRequest AchievementsUnlock where
         type Rs AchievementsUnlock =
              AchievementUnlockResponse
@@ -96,7 +106,7 @@ instance GoogleRequest AchievementsUnlock where
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient AchievementsUnlock'{..}
-          = go _auAchievementId _auConsistencyToken
+          = go _auAchievementId _auConsistencyToken _auFields
               (Just AltJSON)
               gamesService
           where go

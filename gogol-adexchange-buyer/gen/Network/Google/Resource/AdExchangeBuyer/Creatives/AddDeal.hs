@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Creatives.AddDeal
     , cadBuyerCreativeId
     , cadDealId
     , cadAccountId
+    , cadFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.creatives.addDeal@ method which the
 -- 'CreativesAddDeal' request conforms to.
@@ -51,15 +52,17 @@ type CreativesAddDealResource =
              Capture "buyerCreativeId" Text :>
                "addDeal" :>
                  Capture "dealId" (Textual Int64) :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Add a deal id association for the creative.
 --
 -- /See:/ 'creativesAddDeal' smart constructor.
 data CreativesAddDeal = CreativesAddDeal'
     { _cadBuyerCreativeId :: !Text
-    , _cadDealId          :: !(Textual Int64)
-    , _cadAccountId       :: !(Textual Int32)
+    , _cadDealId :: !(Textual Int64)
+    , _cadAccountId :: !(Textual Int32)
+    , _cadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesAddDeal' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data CreativesAddDeal = CreativesAddDeal'
 -- * 'cadDealId'
 --
 -- * 'cadAccountId'
+--
+-- * 'cadFields'
 creativesAddDeal
     :: Text -- ^ 'cadBuyerCreativeId'
     -> Int64 -- ^ 'cadDealId'
     -> Int32 -- ^ 'cadAccountId'
     -> CreativesAddDeal
-creativesAddDeal pCadBuyerCreativeId_ pCadDealId_ pCadAccountId_ =
+creativesAddDeal pCadBuyerCreativeId_ pCadDealId_ pCadAccountId_ = 
     CreativesAddDeal'
     { _cadBuyerCreativeId = pCadBuyerCreativeId_
     , _cadDealId = _Coerce # pCadDealId_
     , _cadAccountId = _Coerce # pCadAccountId_
+    , _cadFields = Nothing
     }
 
 -- | The buyer-specific id for this creative.
@@ -101,12 +107,18 @@ cadAccountId
   = lens _cadAccountId (\ s a -> s{_cadAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cadFields :: Lens' CreativesAddDeal (Maybe Text)
+cadFields
+  = lens _cadFields (\ s a -> s{_cadFields = a})
+
 instance GoogleRequest CreativesAddDeal where
         type Rs CreativesAddDeal = ()
         type Scopes CreativesAddDeal =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient CreativesAddDeal'{..}
           = go _cadAccountId _cadBuyerCreativeId _cadDealId
+              _cadFields
               (Just AltJSON)
               adExchangeBuyerService
           where go

@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.FloodlightActivities.Patch
     , fapProFileId
     , fapPayload
     , fapId
+    , fapFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightActivities.patch@ method which the
 -- 'FloodlightActivitiesPatch' request conforms to.
 type FloodlightActivitiesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightActivities" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] FloodlightActivity :>
-                     Patch '[JSON] FloodlightActivity
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] FloodlightActivity :>
+                       Patch '[JSON] FloodlightActivity
 
 -- | Updates an existing floodlight activity. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type FloodlightActivitiesPatchResource =
 -- /See:/ 'floodlightActivitiesPatch' smart constructor.
 data FloodlightActivitiesPatch = FloodlightActivitiesPatch'
     { _fapProFileId :: !(Textual Int64)
-    , _fapPayload   :: !FloodlightActivity
-    , _fapId        :: !(Textual Int64)
+    , _fapPayload :: !FloodlightActivity
+    , _fapId :: !(Textual Int64)
+    , _fapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivitiesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data FloodlightActivitiesPatch = FloodlightActivitiesPatch'
 -- * 'fapPayload'
 --
 -- * 'fapId'
+--
+-- * 'fapFields'
 floodlightActivitiesPatch
     :: Int64 -- ^ 'fapProFileId'
     -> FloodlightActivity -- ^ 'fapPayload'
     -> Int64 -- ^ 'fapId'
     -> FloodlightActivitiesPatch
-floodlightActivitiesPatch pFapProFileId_ pFapPayload_ pFapId_ =
+floodlightActivitiesPatch pFapProFileId_ pFapPayload_ pFapId_ = 
     FloodlightActivitiesPatch'
     { _fapProFileId = _Coerce # pFapProFileId_
     , _fapPayload = pFapPayload_
     , _fapId = _Coerce # pFapId_
+    , _fapFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,6 +108,11 @@ fapId :: Lens' FloodlightActivitiesPatch Int64
 fapId
   = lens _fapId (\ s a -> s{_fapId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fapFields :: Lens' FloodlightActivitiesPatch (Maybe Text)
+fapFields
+  = lens _fapFields (\ s a -> s{_fapFields = a})
+
 instance GoogleRequest FloodlightActivitiesPatch
          where
         type Rs FloodlightActivitiesPatch =
@@ -109,7 +120,8 @@ instance GoogleRequest FloodlightActivitiesPatch
         type Scopes FloodlightActivitiesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightActivitiesPatch'{..}
-          = go _fapProFileId (Just _fapId) (Just AltJSON)
+          = go _fapProFileId (Just _fapId) _fapFields
+              (Just AltJSON)
               _fapPayload
               dFAReportingService
           where go

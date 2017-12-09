@@ -40,10 +40,11 @@ module Network.Google.Resource.Books.Volumes.Get
     , vgSource
     , vgProjection
     , vgUserLibraryConsistentRead
+    , vgFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.get@ method which the
 -- 'VolumesGet' request conforms to.
@@ -58,19 +59,21 @@ type VolumesGetResource =
                    QueryParam "source" Text :>
                      QueryParam "projection" VolumesGetProjection :>
                        QueryParam "user_library_consistent_read" Bool :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Volume
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Volume
 
 -- | Gets volume information for a single volume.
 --
 -- /See:/ 'volumesGet' smart constructor.
 data VolumesGet = VolumesGet'
-    { _vgCountry                   :: !(Maybe Text)
-    , _vgIncludeNonComicsSeries    :: !(Maybe Bool)
-    , _vgPartner                   :: !(Maybe Text)
-    , _vgVolumeId                  :: !Text
-    , _vgSource                    :: !(Maybe Text)
-    , _vgProjection                :: !(Maybe VolumesGetProjection)
+    { _vgCountry :: !(Maybe Text)
+    , _vgIncludeNonComicsSeries :: !(Maybe Bool)
+    , _vgPartner :: !(Maybe Text)
+    , _vgVolumeId :: !Text
+    , _vgSource :: !(Maybe Text)
+    , _vgProjection :: !(Maybe VolumesGetProjection)
     , _vgUserLibraryConsistentRead :: !(Maybe Bool)
+    , _vgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesGet' with the minimum fields required to make a request.
@@ -90,10 +93,12 @@ data VolumesGet = VolumesGet'
 -- * 'vgProjection'
 --
 -- * 'vgUserLibraryConsistentRead'
+--
+-- * 'vgFields'
 volumesGet
     :: Text -- ^ 'vgVolumeId'
     -> VolumesGet
-volumesGet pVgVolumeId_ =
+volumesGet pVgVolumeId_ = 
     VolumesGet'
     { _vgCountry = Nothing
     , _vgIncludeNonComicsSeries = Nothing
@@ -102,6 +107,7 @@ volumesGet pVgVolumeId_ =
     , _vgSource = Nothing
     , _vgProjection = Nothing
     , _vgUserLibraryConsistentRead = Nothing
+    , _vgFields = Nothing
     }
 
 -- | ISO-3166-1 code to override the IP-based location.
@@ -139,6 +145,10 @@ vgUserLibraryConsistentRead
   = lens _vgUserLibraryConsistentRead
       (\ s a -> s{_vgUserLibraryConsistentRead = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vgFields :: Lens' VolumesGet (Maybe Text)
+vgFields = lens _vgFields (\ s a -> s{_vgFields = a})
+
 instance GoogleRequest VolumesGet where
         type Rs VolumesGet = Volume
         type Scopes VolumesGet =
@@ -149,6 +159,7 @@ instance GoogleRequest VolumesGet where
               _vgSource
               _vgProjection
               _vgUserLibraryConsistentRead
+              _vgFields
               (Just AltJSON)
               booksService
           where go

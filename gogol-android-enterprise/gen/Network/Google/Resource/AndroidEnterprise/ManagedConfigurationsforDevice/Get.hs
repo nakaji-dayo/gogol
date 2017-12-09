@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.
     , mcdgUserId
     , mcdgDeviceId
     , mcdgManagedConfigurationForDeviceId
+    , mcdgFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsfordevice.get@ method which the
 -- 'ManagedConfigurationsforDeviceGet' request conforms to.
@@ -55,17 +56,19 @@ type ManagedConfigurationsforDeviceGetResource =
                    Capture "deviceId" Text :>
                      "managedConfigurationsForDevice" :>
                        Capture "managedConfigurationForDeviceId" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ManagedConfiguration
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ManagedConfiguration
 
 -- | Retrieves details of a per-device managed configuration.
 --
 -- /See:/ 'managedConfigurationsforDeviceGet' smart constructor.
 data ManagedConfigurationsforDeviceGet = ManagedConfigurationsforDeviceGet'
-    { _mcdgEnterpriseId                    :: !Text
-    , _mcdgUserId                          :: !Text
-    , _mcdgDeviceId                        :: !Text
+    { _mcdgEnterpriseId :: !Text
+    , _mcdgUserId :: !Text
+    , _mcdgDeviceId :: !Text
     , _mcdgManagedConfigurationForDeviceId :: !Text
+    , _mcdgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforDeviceGet' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagedConfigurationsforDeviceGet = ManagedConfigurationsforDeviceGet'
 -- * 'mcdgDeviceId'
 --
 -- * 'mcdgManagedConfigurationForDeviceId'
+--
+-- * 'mcdgFields'
 managedConfigurationsforDeviceGet
     :: Text -- ^ 'mcdgEnterpriseId'
     -> Text -- ^ 'mcdgUserId'
     -> Text -- ^ 'mcdgDeviceId'
     -> Text -- ^ 'mcdgManagedConfigurationForDeviceId'
     -> ManagedConfigurationsforDeviceGet
-managedConfigurationsforDeviceGet pMcdgEnterpriseId_ pMcdgUserId_ pMcdgDeviceId_ pMcdgManagedConfigurationForDeviceId_ =
+managedConfigurationsforDeviceGet pMcdgEnterpriseId_ pMcdgUserId_ pMcdgDeviceId_ pMcdgManagedConfigurationForDeviceId_ = 
     ManagedConfigurationsforDeviceGet'
     { _mcdgEnterpriseId = pMcdgEnterpriseId_
     , _mcdgUserId = pMcdgUserId_
     , _mcdgDeviceId = pMcdgDeviceId_
     , _mcdgManagedConfigurationForDeviceId = pMcdgManagedConfigurationForDeviceId_
+    , _mcdgFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -117,6 +123,11 @@ mcdgManagedConfigurationForDeviceId
       (\ s a ->
          s{_mcdgManagedConfigurationForDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdgFields :: Lens' ManagedConfigurationsforDeviceGet (Maybe Text)
+mcdgFields
+  = lens _mcdgFields (\ s a -> s{_mcdgFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforDeviceGet where
         type Rs ManagedConfigurationsforDeviceGet =
@@ -126,6 +137,7 @@ instance GoogleRequest
         requestClient ManagedConfigurationsforDeviceGet'{..}
           = go _mcdgEnterpriseId _mcdgUserId _mcdgDeviceId
               _mcdgManagedConfigurationForDeviceId
+              _mcdgFields
               (Just AltJSON)
               androidEnterpriseService
           where go

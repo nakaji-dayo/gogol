@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.CustomDimensions.Get
     , mcdgWebPropertyId
     , mcdgAccountId
     , mcdgCustomDimensionId
+    , mcdgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDimensions.get@ method which the
 -- 'ManagementCustomDimensionsGet' request conforms to.
@@ -53,16 +54,18 @@ type ManagementCustomDimensionsGetResource =
                  Capture "webPropertyId" Text :>
                    "customDimensions" :>
                      Capture "customDimensionId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CustomDimension
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CustomDimension
 
 -- | Get a custom dimension to which the user has access.
 --
 -- /See:/ 'managementCustomDimensionsGet' smart constructor.
 data ManagementCustomDimensionsGet = ManagementCustomDimensionsGet'
-    { _mcdgWebPropertyId     :: !Text
-    , _mcdgAccountId         :: !Text
+    { _mcdgWebPropertyId :: !Text
+    , _mcdgAccountId :: !Text
     , _mcdgCustomDimensionId :: !Text
+    , _mcdgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDimensionsGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ManagementCustomDimensionsGet = ManagementCustomDimensionsGet'
 -- * 'mcdgAccountId'
 --
 -- * 'mcdgCustomDimensionId'
+--
+-- * 'mcdgFields'
 managementCustomDimensionsGet
     :: Text -- ^ 'mcdgWebPropertyId'
     -> Text -- ^ 'mcdgAccountId'
     -> Text -- ^ 'mcdgCustomDimensionId'
     -> ManagementCustomDimensionsGet
-managementCustomDimensionsGet pMcdgWebPropertyId_ pMcdgAccountId_ pMcdgCustomDimensionId_ =
+managementCustomDimensionsGet pMcdgWebPropertyId_ pMcdgAccountId_ pMcdgCustomDimensionId_ = 
     ManagementCustomDimensionsGet'
     { _mcdgWebPropertyId = pMcdgWebPropertyId_
     , _mcdgAccountId = pMcdgAccountId_
     , _mcdgCustomDimensionId = pMcdgCustomDimensionId_
+    , _mcdgFields = Nothing
     }
 
 -- | Web property ID for the custom dimension to retrieve.
@@ -104,6 +110,11 @@ mcdgCustomDimensionId
   = lens _mcdgCustomDimensionId
       (\ s a -> s{_mcdgCustomDimensionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdgFields :: Lens' ManagementCustomDimensionsGet (Maybe Text)
+mcdgFields
+  = lens _mcdgFields (\ s a -> s{_mcdgFields = a})
+
 instance GoogleRequest ManagementCustomDimensionsGet
          where
         type Rs ManagementCustomDimensionsGet =
@@ -114,6 +125,7 @@ instance GoogleRequest ManagementCustomDimensionsGet
         requestClient ManagementCustomDimensionsGet'{..}
           = go _mcdgAccountId _mcdgWebPropertyId
               _mcdgCustomDimensionId
+              _mcdgFields
               (Just AltJSON)
               analyticsService
           where go

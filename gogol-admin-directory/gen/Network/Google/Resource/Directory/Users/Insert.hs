@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Users.Insert
 
     -- * Request Lenses
     , uiPayload
+    , uiFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.insert@ method which the
 -- 'UsersInsert' request conforms to.
@@ -46,14 +47,16 @@ type UsersInsertResource =
        "directory" :>
          "v1" :>
            "users" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] User :> Post '[JSON] User
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] User :> Post '[JSON] User
 
 -- | create user.
 --
 -- /See:/ 'usersInsert' smart constructor.
-newtype UsersInsert = UsersInsert'
-    { _uiPayload :: User
+data UsersInsert = UsersInsert'
+    { _uiPayload :: !User
+    , _uiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersInsert' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype UsersInsert = UsersInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'uiPayload'
+--
+-- * 'uiFields'
 usersInsert
     :: User -- ^ 'uiPayload'
     -> UsersInsert
-usersInsert pUiPayload_ =
+usersInsert pUiPayload_ = 
     UsersInsert'
     { _uiPayload = pUiPayload_
+    , _uiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -74,12 +80,17 @@ uiPayload :: Lens' UsersInsert User
 uiPayload
   = lens _uiPayload (\ s a -> s{_uiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uiFields :: Lens' UsersInsert (Maybe Text)
+uiFields = lens _uiFields (\ s a -> s{_uiFields = a})
+
 instance GoogleRequest UsersInsert where
         type Rs UsersInsert = User
         type Scopes UsersInsert =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersInsert'{..}
-          = go (Just AltJSON) _uiPayload directoryService
+          = go _uiFields (Just AltJSON) _uiPayload
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersInsertResource)
                       mempty

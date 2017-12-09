@@ -36,10 +36,11 @@ module Network.Google.Resource.Tasks.TaskLists.Patch
     -- * Request Lenses
     , tlpPayload
     , tlpTaskList
+    , tlpFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasklists.patch@ method which the
 -- 'TaskListsPatch' request conforms to.
@@ -50,16 +51,18 @@ type TaskListsPatchResource =
            "@me" :>
              "lists" :>
                Capture "tasklist" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] TaskList :> Patch '[JSON] TaskList
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] TaskList :> Patch '[JSON] TaskList
 
 -- | Updates the authenticated user\'s specified task list. This method
 -- supports patch semantics.
 --
 -- /See:/ 'taskListsPatch' smart constructor.
 data TaskListsPatch = TaskListsPatch'
-    { _tlpPayload  :: !TaskList
+    { _tlpPayload :: !TaskList
     , _tlpTaskList :: !Text
+    , _tlpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskListsPatch' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data TaskListsPatch = TaskListsPatch'
 -- * 'tlpPayload'
 --
 -- * 'tlpTaskList'
+--
+-- * 'tlpFields'
 taskListsPatch
     :: TaskList -- ^ 'tlpPayload'
     -> Text -- ^ 'tlpTaskList'
     -> TaskListsPatch
-taskListsPatch pTlpPayload_ pTlpTaskList_ =
+taskListsPatch pTlpPayload_ pTlpTaskList_ = 
     TaskListsPatch'
     { _tlpPayload = pTlpPayload_
     , _tlpTaskList = pTlpTaskList_
+    , _tlpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,12 +95,18 @@ tlpTaskList :: Lens' TaskListsPatch Text
 tlpTaskList
   = lens _tlpTaskList (\ s a -> s{_tlpTaskList = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlpFields :: Lens' TaskListsPatch (Maybe Text)
+tlpFields
+  = lens _tlpFields (\ s a -> s{_tlpFields = a})
+
 instance GoogleRequest TaskListsPatch where
         type Rs TaskListsPatch = TaskList
         type Scopes TaskListsPatch =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TaskListsPatch'{..}
-          = go _tlpTaskList (Just AltJSON) _tlpPayload
+          = go _tlpTaskList _tlpFields (Just AltJSON)
+              _tlpPayload
               appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TaskListsPatchResource)

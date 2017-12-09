@@ -39,10 +39,11 @@ module Network.Google.Resource.Blogger.Pages.List
     , plView
     , plPageToken
     , plMaxResults
+    , plFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.list@ method which the
 -- 'PagesList' request conforms to.
@@ -57,18 +58,20 @@ type PagesListResource =
                    QueryParam "view" PagesListView :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] PageList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] PageList
 
 -- | Retrieves the pages for a blog, optionally including non-LIVE statuses.
 --
 -- /See:/ 'pagesList' smart constructor.
 data PagesList = PagesList'
-    { _plStatus      :: !(Maybe [PagesListStatus])
-    , _plBlogId      :: !Text
+    { _plStatus :: !(Maybe [PagesListStatus])
+    , _plBlogId :: !Text
     , _plFetchBodies :: !(Maybe Bool)
-    , _plView        :: !(Maybe PagesListView)
-    , _plPageToken   :: !(Maybe Text)
-    , _plMaxResults  :: !(Maybe (Textual Word32))
+    , _plView :: !(Maybe PagesListView)
+    , _plPageToken :: !(Maybe Text)
+    , _plMaxResults :: !(Maybe (Textual Word32))
+    , _plFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesList' with the minimum fields required to make a request.
@@ -86,10 +89,12 @@ data PagesList = PagesList'
 -- * 'plPageToken'
 --
 -- * 'plMaxResults'
+--
+-- * 'plFields'
 pagesList
     :: Text -- ^ 'plBlogId'
     -> PagesList
-pagesList pPlBlogId_ =
+pagesList pPlBlogId_ = 
     PagesList'
     { _plStatus = Nothing
     , _plBlogId = pPlBlogId_
@@ -97,6 +102,7 @@ pagesList pPlBlogId_ =
     , _plView = Nothing
     , _plPageToken = Nothing
     , _plMaxResults = Nothing
+    , _plFields = Nothing
     }
 
 plStatus :: Lens' PagesList [PagesListStatus]
@@ -131,6 +137,10 @@ plMaxResults
   = lens _plMaxResults (\ s a -> s{_plMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+plFields :: Lens' PagesList (Maybe Text)
+plFields = lens _plFields (\ s a -> s{_plFields = a})
+
 instance GoogleRequest PagesList where
         type Rs PagesList = PageList
         type Scopes PagesList =
@@ -141,6 +151,7 @@ instance GoogleRequest PagesList where
               _plView
               _plPageToken
               _plMaxResults
+              _plFields
               (Just AltJSON)
               bloggerService
           where go

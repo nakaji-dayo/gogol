@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Upda
     -- * Request Lenses
     , lcuPayload
     , lcuLeaderboardId
+    , lcuFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.leaderboardConfigurations.update@ method which the
 -- 'LeaderboardConfigurationsUpdate' request conforms to.
@@ -47,16 +48,18 @@ type LeaderboardConfigurationsUpdateResource =
        "v1configuration" :>
          "leaderboards" :>
            Capture "leaderboardId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] LeaderboardConfiguration :>
-                 Put '[JSON] LeaderboardConfiguration
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] LeaderboardConfiguration :>
+                   Put '[JSON] LeaderboardConfiguration
 
 -- | Update the metadata of the leaderboard configuration with the given ID.
 --
 -- /See:/ 'leaderboardConfigurationsUpdate' smart constructor.
 data LeaderboardConfigurationsUpdate = LeaderboardConfigurationsUpdate'
-    { _lcuPayload       :: !LeaderboardConfiguration
+    { _lcuPayload :: !LeaderboardConfiguration
     , _lcuLeaderboardId :: !Text
+    , _lcuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data LeaderboardConfigurationsUpdate = LeaderboardConfigurationsUpdate'
 -- * 'lcuPayload'
 --
 -- * 'lcuLeaderboardId'
+--
+-- * 'lcuFields'
 leaderboardConfigurationsUpdate
     :: LeaderboardConfiguration -- ^ 'lcuPayload'
     -> Text -- ^ 'lcuLeaderboardId'
     -> LeaderboardConfigurationsUpdate
-leaderboardConfigurationsUpdate pLcuPayload_ pLcuLeaderboardId_ =
+leaderboardConfigurationsUpdate pLcuPayload_ pLcuLeaderboardId_ = 
     LeaderboardConfigurationsUpdate'
     { _lcuPayload = pLcuPayload_
     , _lcuLeaderboardId = pLcuLeaderboardId_
+    , _lcuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,6 +93,11 @@ lcuLeaderboardId
   = lens _lcuLeaderboardId
       (\ s a -> s{_lcuLeaderboardId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcuFields :: Lens' LeaderboardConfigurationsUpdate (Maybe Text)
+lcuFields
+  = lens _lcuFields (\ s a -> s{_lcuFields = a})
+
 instance GoogleRequest
          LeaderboardConfigurationsUpdate where
         type Rs LeaderboardConfigurationsUpdate =
@@ -94,7 +105,8 @@ instance GoogleRequest
         type Scopes LeaderboardConfigurationsUpdate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient LeaderboardConfigurationsUpdate'{..}
-          = go _lcuLeaderboardId (Just AltJSON) _lcuPayload
+          = go _lcuLeaderboardId _lcuFields (Just AltJSON)
+              _lcuPayload
               gamesConfigurationService
           where go
                   = buildClient

@@ -37,10 +37,11 @@ module Network.Google.Resource.FusionTables.Table.Update
     , tabPayload
     , tabReplaceViewDefinition
     , tabTableId
+    , tabFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.update@ method which the
 -- 'TableUpdate' request conforms to.
@@ -50,17 +51,19 @@ type TableUpdateResource =
          "tables" :>
            Capture "tableId" Text :>
              QueryParam "replaceViewDefinition" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Table :> Put '[JSON] Table
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Table :> Put '[JSON] Table
 
 -- | Updates an existing table. Unless explicitly requested, only the name,
 -- description, and attribution will be updated.
 --
 -- /See:/ 'tableUpdate' smart constructor.
 data TableUpdate = TableUpdate'
-    { _tabPayload               :: !Table
+    { _tabPayload :: !Table
     , _tabReplaceViewDefinition :: !(Maybe Bool)
-    , _tabTableId               :: !Text
+    , _tabTableId :: !Text
+    , _tabFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableUpdate' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data TableUpdate = TableUpdate'
 -- * 'tabReplaceViewDefinition'
 --
 -- * 'tabTableId'
+--
+-- * 'tabFields'
 tableUpdate
     :: Table -- ^ 'tabPayload'
     -> Text -- ^ 'tabTableId'
     -> TableUpdate
-tableUpdate pTabPayload_ pTabTableId_ =
+tableUpdate pTabPayload_ pTabTableId_ = 
     TableUpdate'
     { _tabPayload = pTabPayload_
     , _tabReplaceViewDefinition = Nothing
     , _tabTableId = pTabTableId_
+    , _tabFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -101,12 +107,17 @@ tabTableId :: Lens' TableUpdate Text
 tabTableId
   = lens _tabTableId (\ s a -> s{_tabTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tabFields :: Lens' TableUpdate (Maybe Text)
+tabFields
+  = lens _tabFields (\ s a -> s{_tabFields = a})
+
 instance GoogleRequest TableUpdate where
         type Rs TableUpdate = Table
         type Scopes TableUpdate =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TableUpdate'{..}
-          = go _tabTableId _tabReplaceViewDefinition
+          = go _tabTableId _tabReplaceViewDefinition _tabFields
               (Just AltJSON)
               _tabPayload
               fusionTablesService

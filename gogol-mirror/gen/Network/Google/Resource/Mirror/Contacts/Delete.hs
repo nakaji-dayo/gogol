@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Contacts.Delete
 
     -- * Request Lenses
     , cdId
+    , cdFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.contacts.delete@ method which the
 -- 'ContactsDelete' request conforms to.
@@ -46,13 +47,15 @@ type ContactsDeleteResource =
        "v1" :>
          "contacts" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a contact.
 --
 -- /See:/ 'contactsDelete' smart constructor.
-newtype ContactsDelete = ContactsDelete'
-    { _cdId :: Text
+data ContactsDelete = ContactsDelete'
+    { _cdId :: !Text
+    , _cdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactsDelete' with the minimum fields required to make a request.
@@ -60,24 +63,31 @@ newtype ContactsDelete = ContactsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cdId'
+--
+-- * 'cdFields'
 contactsDelete
     :: Text -- ^ 'cdId'
     -> ContactsDelete
-contactsDelete pCdId_ =
+contactsDelete pCdId_ = 
     ContactsDelete'
     { _cdId = pCdId_
+    , _cdFields = Nothing
     }
 
 -- | The ID of the contact.
 cdId :: Lens' ContactsDelete Text
 cdId = lens _cdId (\ s a -> s{_cdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' ContactsDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 instance GoogleRequest ContactsDelete where
         type Rs ContactsDelete = ()
         type Scopes ContactsDelete =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient ContactsDelete'{..}
-          = go _cdId (Just AltJSON) mirrorService
+          = go _cdId _cdFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy ContactsDeleteResource)
                       mempty

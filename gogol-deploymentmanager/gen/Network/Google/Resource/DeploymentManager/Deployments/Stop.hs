@@ -36,11 +36,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.Stop
     -- * Request Lenses
     , dsProject
     , dsPayload
+    , dsFields
     , dsDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.stop@ method which the
 -- 'DeploymentsStop' request conforms to.
@@ -53,17 +54,19 @@ type DeploymentsStopResource =
                "deployments" :>
                  Capture "deployment" Text :>
                    "stop" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] DeploymentsStopRequest :>
-                         Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] DeploymentsStopRequest :>
+                           Post '[JSON] Operation
 
 -- | Stops an ongoing operation. This does not roll back any work that has
 -- already been completed, but prevents any new work from being started.
 --
 -- /See:/ 'deploymentsStop' smart constructor.
 data DeploymentsStop = DeploymentsStop'
-    { _dsProject    :: !Text
-    , _dsPayload    :: !DeploymentsStopRequest
+    { _dsProject :: !Text
+    , _dsPayload :: !DeploymentsStopRequest
+    , _dsFields :: !(Maybe Text)
     , _dsDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -75,16 +78,19 @@ data DeploymentsStop = DeploymentsStop'
 --
 -- * 'dsPayload'
 --
+-- * 'dsFields'
+--
 -- * 'dsDeployment'
 deploymentsStop
     :: Text -- ^ 'dsProject'
     -> DeploymentsStopRequest -- ^ 'dsPayload'
     -> Text -- ^ 'dsDeployment'
     -> DeploymentsStop
-deploymentsStop pDsProject_ pDsPayload_ pDsDeployment_ =
+deploymentsStop pDsProject_ pDsPayload_ pDsDeployment_ = 
     DeploymentsStop'
     { _dsProject = pDsProject_
     , _dsPayload = pDsPayload_
+    , _dsFields = Nothing
     , _dsDeployment = pDsDeployment_
     }
 
@@ -98,6 +104,10 @@ dsPayload :: Lens' DeploymentsStop DeploymentsStopRequest
 dsPayload
   = lens _dsPayload (\ s a -> s{_dsPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsFields :: Lens' DeploymentsStop (Maybe Text)
+dsFields = lens _dsFields (\ s a -> s{_dsFields = a})
+
 -- | The name of the deployment for this request.
 dsDeployment :: Lens' DeploymentsStop Text
 dsDeployment
@@ -109,7 +119,8 @@ instance GoogleRequest DeploymentsStop where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsStop'{..}
-          = go _dsProject _dsDeployment (Just AltJSON)
+          = go _dsProject _dsDeployment _dsFields
+              (Just AltJSON)
               _dsPayload
               deploymentManagerService
           where go

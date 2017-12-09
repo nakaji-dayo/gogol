@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.CompleteSignup
     -- * Request Lenses
     , ecsCompletionToken
     , ecsEnterpriseToken
+    , ecsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.completeSignup@ method which the
 -- 'EnterprisesCompleteSignup' request conforms to.
@@ -51,7 +52,8 @@ type EnterprisesCompleteSignupResource =
            "completeSignup" :>
              QueryParam "completionToken" Text :>
                QueryParam "enterpriseToken" Text :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] Enterprise
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] Enterprise
 
 -- | Completes the signup flow, by specifying the Completion token and
 -- Enterprise token. This request must not be called multiple times for a
@@ -61,6 +63,7 @@ type EnterprisesCompleteSignupResource =
 data EnterprisesCompleteSignup = EnterprisesCompleteSignup'
     { _ecsCompletionToken :: !(Maybe Text)
     , _ecsEnterpriseToken :: !(Maybe Text)
+    , _ecsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesCompleteSignup' with the minimum fields required to make a request.
@@ -70,12 +73,15 @@ data EnterprisesCompleteSignup = EnterprisesCompleteSignup'
 -- * 'ecsCompletionToken'
 --
 -- * 'ecsEnterpriseToken'
+--
+-- * 'ecsFields'
 enterprisesCompleteSignup
     :: EnterprisesCompleteSignup
-enterprisesCompleteSignup =
+enterprisesCompleteSignup = 
     EnterprisesCompleteSignup'
     { _ecsCompletionToken = Nothing
     , _ecsEnterpriseToken = Nothing
+    , _ecsFields = Nothing
     }
 
 -- | The Completion token initially returned by GenerateSignupUrl.
@@ -90,6 +96,11 @@ ecsEnterpriseToken
   = lens _ecsEnterpriseToken
       (\ s a -> s{_ecsEnterpriseToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ecsFields :: Lens' EnterprisesCompleteSignup (Maybe Text)
+ecsFields
+  = lens _ecsFields (\ s a -> s{_ecsFields = a})
+
 instance GoogleRequest EnterprisesCompleteSignup
          where
         type Rs EnterprisesCompleteSignup = Enterprise
@@ -97,6 +108,7 @@ instance GoogleRequest EnterprisesCompleteSignup
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesCompleteSignup'{..}
           = go _ecsCompletionToken _ecsEnterpriseToken
+              _ecsFields
               (Just AltJSON)
               androidEnterpriseService
           where go

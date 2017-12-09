@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTubeAnalytics.GroupItems.Insert
     -- * Request Lenses
     , giiPayload
     , giiOnBehalfOfContentOwner
+    , giiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groupItems.insert@ method which the
 -- 'GroupItemsInsert' request conforms to.
@@ -48,15 +49,17 @@ type GroupItemsInsertResource =
          "v1" :>
            "groupItems" :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] GroupItem :> Post '[JSON] GroupItem
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] GroupItem :> Post '[JSON] GroupItem
 
 -- | Creates a group item.
 --
 -- /See:/ 'groupItemsInsert' smart constructor.
 data GroupItemsInsert = GroupItemsInsert'
-    { _giiPayload                :: !GroupItem
+    { _giiPayload :: !GroupItem
     , _giiOnBehalfOfContentOwner :: !(Maybe Text)
+    , _giiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupItemsInsert' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data GroupItemsInsert = GroupItemsInsert'
 -- * 'giiPayload'
 --
 -- * 'giiOnBehalfOfContentOwner'
+--
+-- * 'giiFields'
 groupItemsInsert
     :: GroupItem -- ^ 'giiPayload'
     -> GroupItemsInsert
-groupItemsInsert pGiiPayload_ =
+groupItemsInsert pGiiPayload_ = 
     GroupItemsInsert'
     { _giiPayload = pGiiPayload_
     , _giiOnBehalfOfContentOwner = Nothing
+    , _giiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -95,13 +101,19 @@ giiOnBehalfOfContentOwner
   = lens _giiOnBehalfOfContentOwner
       (\ s a -> s{_giiOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+giiFields :: Lens' GroupItemsInsert (Maybe Text)
+giiFields
+  = lens _giiFields (\ s a -> s{_giiFields = a})
+
 instance GoogleRequest GroupItemsInsert where
         type Rs GroupItemsInsert = GroupItem
         type Scopes GroupItemsInsert =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient GroupItemsInsert'{..}
-          = go _giiOnBehalfOfContentOwner (Just AltJSON)
+          = go _giiOnBehalfOfContentOwner _giiFields
+              (Just AltJSON)
               _giiPayload
               youTubeAnalyticsService
           where go

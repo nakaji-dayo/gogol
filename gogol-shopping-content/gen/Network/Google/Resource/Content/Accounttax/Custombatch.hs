@@ -36,10 +36,11 @@ module Network.Google.Resource.Content.Accounttax.Custombatch
     -- * Request Lenses
     , acccPayload
     , acccDryRun
+    , acccFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounttax.custombatch@ method which the
 -- 'AccounttaxCustombatch' request conforms to.
@@ -49,9 +50,10 @@ type AccounttaxCustombatchResource =
          "accounttax" :>
            "batch" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AccounttaxCustomBatchRequest :>
-                   Post '[JSON] AccounttaxCustomBatchResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AccounttaxCustomBatchRequest :>
+                     Post '[JSON] AccounttaxCustomBatchResponse
 
 -- | Retrieves and updates tax settings of multiple accounts in a single
 -- request.
@@ -59,7 +61,8 @@ type AccounttaxCustombatchResource =
 -- /See:/ 'accounttaxCustombatch' smart constructor.
 data AccounttaxCustombatch = AccounttaxCustombatch'
     { _acccPayload :: !AccounttaxCustomBatchRequest
-    , _acccDryRun  :: !(Maybe Bool)
+    , _acccDryRun :: !(Maybe Bool)
+    , _acccFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccounttaxCustombatch' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data AccounttaxCustombatch = AccounttaxCustombatch'
 -- * 'acccPayload'
 --
 -- * 'acccDryRun'
+--
+-- * 'acccFields'
 accounttaxCustombatch
     :: AccounttaxCustomBatchRequest -- ^ 'acccPayload'
     -> AccounttaxCustombatch
-accounttaxCustombatch pAcccPayload_ =
+accounttaxCustombatch pAcccPayload_ = 
     AccounttaxCustombatch'
     { _acccPayload = pAcccPayload_
     , _acccDryRun = Nothing
+    , _acccFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,13 +94,19 @@ acccDryRun :: Lens' AccounttaxCustombatch (Maybe Bool)
 acccDryRun
   = lens _acccDryRun (\ s a -> s{_acccDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acccFields :: Lens' AccounttaxCustombatch (Maybe Text)
+acccFields
+  = lens _acccFields (\ s a -> s{_acccFields = a})
+
 instance GoogleRequest AccounttaxCustombatch where
         type Rs AccounttaxCustombatch =
              AccounttaxCustomBatchResponse
         type Scopes AccounttaxCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccounttaxCustombatch'{..}
-          = go _acccDryRun (Just AltJSON) _acccPayload
+          = go _acccDryRun _acccFields (Just AltJSON)
+              _acccPayload
               shoppingContentService
           where go
                   = buildClient

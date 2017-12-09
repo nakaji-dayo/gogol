@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.Insert
     -- * Request Lenses
     , eiToken
     , eiPayload
+    , eiFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.insert@ method which the
 -- 'EnterprisesInsert' request conforms to.
@@ -48,16 +49,18 @@ type EnterprisesInsertResource =
        "v1" :>
          "enterprises" :>
            QueryParam "token" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Enterprise :> Post '[JSON] Enterprise
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Enterprise :> Post '[JSON] Enterprise
 
 -- | Establishes the binding between the EMM and an enterprise. This is now
 -- deprecated; use enroll instead.
 --
 -- /See:/ 'enterprisesInsert' smart constructor.
 data EnterprisesInsert = EnterprisesInsert'
-    { _eiToken   :: !Text
+    { _eiToken :: !Text
     , _eiPayload :: !Enterprise
+    , _eiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data EnterprisesInsert = EnterprisesInsert'
 -- * 'eiToken'
 --
 -- * 'eiPayload'
+--
+-- * 'eiFields'
 enterprisesInsert
     :: Text -- ^ 'eiToken'
     -> Enterprise -- ^ 'eiPayload'
     -> EnterprisesInsert
-enterprisesInsert pEiToken_ pEiPayload_ =
+enterprisesInsert pEiToken_ pEiPayload_ = 
     EnterprisesInsert'
     { _eiToken = pEiToken_
     , _eiPayload = pEiPayload_
+    , _eiFields = Nothing
     }
 
 -- | The token provided by the enterprise to register the EMM.
@@ -86,12 +92,17 @@ eiPayload :: Lens' EnterprisesInsert Enterprise
 eiPayload
   = lens _eiPayload (\ s a -> s{_eiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eiFields :: Lens' EnterprisesInsert (Maybe Text)
+eiFields = lens _eiFields (\ s a -> s{_eiFields = a})
+
 instance GoogleRequest EnterprisesInsert where
         type Rs EnterprisesInsert = Enterprise
         type Scopes EnterprisesInsert =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesInsert'{..}
-          = go (Just _eiToken) (Just AltJSON) _eiPayload
+          = go (Just _eiToken) _eiFields (Just AltJSON)
+              _eiPayload
               androidEnterpriseService
           where go
                   = buildClient

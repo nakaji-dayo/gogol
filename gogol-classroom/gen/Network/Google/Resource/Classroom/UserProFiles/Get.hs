@@ -43,11 +43,12 @@ module Network.Google.Resource.Classroom.UserProFiles.Get
     , upfgUploadType
     , upfgUserId
     , upfgBearerToken
+    , upfgFields
     , upfgCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.userProfiles.get@ method which the
 -- 'UserProFilesGet' request conforms to.
@@ -55,14 +56,15 @@ type UserProFilesGetResource =
      "v1" :>
        "userProfiles" :>
          Capture "userId" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] UserProFile
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] UserProFile
 
 -- | Returns a user profile. This method returns the following error codes: *
 -- \`PERMISSION_DENIED\` if the requesting user is not permitted to access
@@ -71,14 +73,15 @@ type UserProFilesGetResource =
 --
 -- /See:/ 'userProFilesGet' smart constructor.
 data UserProFilesGet = UserProFilesGet'
-    { _upfgXgafv          :: !(Maybe Text)
+    { _upfgXgafv :: !(Maybe Xgafv)
     , _upfgUploadProtocol :: !(Maybe Text)
-    , _upfgPp             :: !Bool
-    , _upfgAccessToken    :: !(Maybe Text)
-    , _upfgUploadType     :: !(Maybe Text)
-    , _upfgUserId         :: !Text
-    , _upfgBearerToken    :: !(Maybe Text)
-    , _upfgCallback       :: !(Maybe Text)
+    , _upfgPp :: !Bool
+    , _upfgAccessToken :: !(Maybe Text)
+    , _upfgUploadType :: !(Maybe Text)
+    , _upfgUserId :: !Text
+    , _upfgBearerToken :: !(Maybe Text)
+    , _upfgFields :: !(Maybe Text)
+    , _upfgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFilesGet' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data UserProFilesGet = UserProFilesGet'
 --
 -- * 'upfgBearerToken'
 --
+-- * 'upfgFields'
+--
 -- * 'upfgCallback'
 userProFilesGet
     :: Text -- ^ 'upfgUserId'
     -> UserProFilesGet
-userProFilesGet pUpfgUserId_ =
+userProFilesGet pUpfgUserId_ = 
     UserProFilesGet'
     { _upfgXgafv = Nothing
     , _upfgUploadProtocol = Nothing
@@ -112,11 +117,12 @@ userProFilesGet pUpfgUserId_ =
     , _upfgUploadType = Nothing
     , _upfgUserId = pUpfgUserId_
     , _upfgBearerToken = Nothing
+    , _upfgFields = Nothing
     , _upfgCallback = Nothing
     }
 
 -- | V1 error format.
-upfgXgafv :: Lens' UserProFilesGet (Maybe Text)
+upfgXgafv :: Lens' UserProFilesGet (Maybe Xgafv)
 upfgXgafv
   = lens _upfgXgafv (\ s a -> s{_upfgXgafv = a})
 
@@ -155,6 +161,11 @@ upfgBearerToken
   = lens _upfgBearerToken
       (\ s a -> s{_upfgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+upfgFields :: Lens' UserProFilesGet (Maybe Text)
+upfgFields
+  = lens _upfgFields (\ s a -> s{_upfgFields = a})
+
 -- | JSONP
 upfgCallback :: Lens' UserProFilesGet (Maybe Text)
 upfgCallback
@@ -174,6 +185,7 @@ instance GoogleRequest UserProFilesGet where
               _upfgUploadType
               _upfgBearerToken
               _upfgCallback
+              _upfgFields
               (Just AltJSON)
               classroomService
           where go

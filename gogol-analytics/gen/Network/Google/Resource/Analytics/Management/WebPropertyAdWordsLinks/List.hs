@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyAdWordsLinks.List
     , mwpawllAccountId
     , mwpawllStartIndex
     , mwpawllMaxResults
+    , mwpawllFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webPropertyAdWordsLinks.list@ method which the
 -- 'ManagementWebPropertyAdWordsLinksList' request conforms to.
@@ -55,17 +56,19 @@ type ManagementWebPropertyAdWordsLinksListResource =
                    "entityAdWordsLinks" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] EntityAdWordsLinks
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] EntityAdWordsLinks
 
 -- | Lists webProperty-AdWords links for a given web property.
 --
 -- /See:/ 'managementWebPropertyAdWordsLinksList' smart constructor.
 data ManagementWebPropertyAdWordsLinksList = ManagementWebPropertyAdWordsLinksList'
     { _mwpawllWebPropertyId :: !Text
-    , _mwpawllAccountId     :: !Text
-    , _mwpawllStartIndex    :: !(Maybe (Textual Int32))
-    , _mwpawllMaxResults    :: !(Maybe (Textual Int32))
+    , _mwpawllAccountId :: !Text
+    , _mwpawllStartIndex :: !(Maybe (Textual Int32))
+    , _mwpawllMaxResults :: !(Maybe (Textual Int32))
+    , _mwpawllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyAdWordsLinksList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data ManagementWebPropertyAdWordsLinksList = ManagementWebPropertyAdWordsLinksLi
 -- * 'mwpawllStartIndex'
 --
 -- * 'mwpawllMaxResults'
+--
+-- * 'mwpawllFields'
 managementWebPropertyAdWordsLinksList
     :: Text -- ^ 'mwpawllWebPropertyId'
     -> Text -- ^ 'mwpawllAccountId'
     -> ManagementWebPropertyAdWordsLinksList
-managementWebPropertyAdWordsLinksList pMwpawllWebPropertyId_ pMwpawllAccountId_ =
+managementWebPropertyAdWordsLinksList pMwpawllWebPropertyId_ pMwpawllAccountId_ = 
     ManagementWebPropertyAdWordsLinksList'
     { _mwpawllWebPropertyId = pMwpawllWebPropertyId_
     , _mwpawllAccountId = pMwpawllAccountId_
     , _mwpawllStartIndex = Nothing
     , _mwpawllMaxResults = Nothing
+    , _mwpawllFields = Nothing
     }
 
 -- | Web property ID to retrieve the AdWords links for.
@@ -120,6 +126,12 @@ mwpawllMaxResults
       (\ s a -> s{_mwpawllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mwpawllFields :: Lens' ManagementWebPropertyAdWordsLinksList (Maybe Text)
+mwpawllFields
+  = lens _mwpawllFields
+      (\ s a -> s{_mwpawllFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyAdWordsLinksList where
         type Rs ManagementWebPropertyAdWordsLinksList =
@@ -132,6 +144,7 @@ instance GoogleRequest
           = go _mwpawllAccountId _mwpawllWebPropertyId
               _mwpawllStartIndex
               _mwpawllMaxResults
+              _mwpawllFields
               (Just AltJSON)
               analyticsService
           where go

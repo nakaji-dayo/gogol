@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.ImageConfigurations.Upload
     -- * Request Lenses
     , icuResourceId
     , icuImageType
+    , icuFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.imageConfigurations.upload@ method which the
 -- 'ImageConfigurationsUpload' request conforms to.
@@ -51,8 +52,9 @@ type ImageConfigurationsUploadResource =
                Capture "imageType"
                  ImageConfigurationsUploadImageType
                  :>
-                 QueryParam "alt" AltJSON :>
-                   Post '[JSON] ImageConfiguration
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Post '[JSON] ImageConfiguration
        :<|>
        "upload" :>
          "games" :>
@@ -63,16 +65,18 @@ type ImageConfigurationsUploadResource =
                    Capture "imageType"
                      ImageConfigurationsUploadImageType
                      :>
-                     QueryParam "alt" AltJSON :>
-                       QueryParam "uploadType" AltMedia :>
-                         AltMedia :> Post '[JSON] ImageConfiguration
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" AltMedia :>
+                           AltMedia :> Post '[JSON] ImageConfiguration
 
 -- | Uploads an image for a resource with the given ID and image type.
 --
 -- /See:/ 'imageConfigurationsUpload' smart constructor.
 data ImageConfigurationsUpload = ImageConfigurationsUpload'
     { _icuResourceId :: !Text
-    , _icuImageType  :: !ImageConfigurationsUploadImageType
+    , _icuImageType :: !ImageConfigurationsUploadImageType
+    , _icuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImageConfigurationsUpload' with the minimum fields required to make a request.
@@ -82,14 +86,17 @@ data ImageConfigurationsUpload = ImageConfigurationsUpload'
 -- * 'icuResourceId'
 --
 -- * 'icuImageType'
+--
+-- * 'icuFields'
 imageConfigurationsUpload
     :: Text -- ^ 'icuResourceId'
     -> ImageConfigurationsUploadImageType -- ^ 'icuImageType'
     -> ImageConfigurationsUpload
-imageConfigurationsUpload pIcuResourceId_ pIcuImageType_ =
+imageConfigurationsUpload pIcuResourceId_ pIcuImageType_ = 
     ImageConfigurationsUpload'
     { _icuResourceId = pIcuResourceId_
     , _icuImageType = pIcuImageType_
+    , _icuFields = Nothing
     }
 
 -- | The ID of the resource used by this method.
@@ -103,6 +110,11 @@ icuImageType :: Lens' ImageConfigurationsUpload ImageConfigurationsUploadImageTy
 icuImageType
   = lens _icuImageType (\ s a -> s{_icuImageType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+icuFields :: Lens' ImageConfigurationsUpload (Maybe Text)
+icuFields
+  = lens _icuFields (\ s a -> s{_icuFields = a})
+
 instance GoogleRequest ImageConfigurationsUpload
          where
         type Rs ImageConfigurationsUpload =
@@ -110,7 +122,8 @@ instance GoogleRequest ImageConfigurationsUpload
         type Scopes ImageConfigurationsUpload =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient ImageConfigurationsUpload'{..}
-          = go _icuResourceId _icuImageType (Just AltJSON)
+          = go _icuResourceId _icuImageType _icuFields
+              (Just AltJSON)
               gamesConfigurationService
           where go :<|> _
                   = buildClient
@@ -125,7 +138,8 @@ instance GoogleRequest
              Scopes ImageConfigurationsUpload
         requestClient
           (MediaUpload ImageConfigurationsUpload'{..} body)
-          = go _icuResourceId _icuImageType (Just AltJSON)
+          = go _icuResourceId _icuImageType _icuFields
+              (Just AltJSON)
               (Just AltMedia)
               body
               gamesConfigurationService

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.SubAccounts.Update
     -- * Request Lenses
     , sauProFileId
     , sauPayload
+    , sauFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.subaccounts.update@ method which the
 -- 'SubAccountsUpdate' request conforms to.
 type SubAccountsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "subaccounts" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] SubAccount :> Put '[JSON] SubAccount
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] SubAccount :> Put '[JSON] SubAccount
 
 -- | Updates an existing subaccount.
 --
 -- /See:/ 'subAccountsUpdate' smart constructor.
 data SubAccountsUpdate = SubAccountsUpdate'
     { _sauProFileId :: !(Textual Int64)
-    , _sauPayload   :: !SubAccount
+    , _sauPayload :: !SubAccount
+    , _sauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubAccountsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SubAccountsUpdate = SubAccountsUpdate'
 -- * 'sauProFileId'
 --
 -- * 'sauPayload'
+--
+-- * 'sauFields'
 subAccountsUpdate
     :: Int64 -- ^ 'sauProFileId'
     -> SubAccount -- ^ 'sauPayload'
     -> SubAccountsUpdate
-subAccountsUpdate pSauProFileId_ pSauPayload_ =
+subAccountsUpdate pSauProFileId_ pSauPayload_ = 
     SubAccountsUpdate'
     { _sauProFileId = _Coerce # pSauProFileId_
     , _sauPayload = pSauPayload_
+    , _sauFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ sauPayload :: Lens' SubAccountsUpdate SubAccount
 sauPayload
   = lens _sauPayload (\ s a -> s{_sauPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sauFields :: Lens' SubAccountsUpdate (Maybe Text)
+sauFields
+  = lens _sauFields (\ s a -> s{_sauFields = a})
+
 instance GoogleRequest SubAccountsUpdate where
         type Rs SubAccountsUpdate = SubAccount
         type Scopes SubAccountsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SubAccountsUpdate'{..}
-          = go _sauProFileId (Just AltJSON) _sauPayload
+          = go _sauProFileId _sauFields (Just AltJSON)
+              _sauPayload
               dFAReportingService
           where go
                   = buildClient

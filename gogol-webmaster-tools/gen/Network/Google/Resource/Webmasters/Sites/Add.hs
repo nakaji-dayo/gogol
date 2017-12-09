@@ -34,10 +34,11 @@ module Network.Google.Resource.Webmasters.Sites.Add
 
     -- * Request Lenses
     , saSiteURL
+    , saFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sites.add@ method which the
 -- 'SitesAdd' request conforms to.
@@ -46,13 +47,15 @@ type SitesAddResource =
        "v3" :>
          "sites" :>
            Capture "siteUrl" Text :>
-             QueryParam "alt" AltJSON :> Put '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Put '[JSON] ()
 
 -- | Adds a site to the set of the user\'s sites in Search Console.
 --
 -- /See:/ 'sitesAdd' smart constructor.
-newtype SitesAdd = SitesAdd'
-    { _saSiteURL :: Text
+data SitesAdd = SitesAdd'
+    { _saSiteURL :: !Text
+    , _saFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesAdd' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype SitesAdd = SitesAdd'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'saSiteURL'
+--
+-- * 'saFields'
 sitesAdd
     :: Text -- ^ 'saSiteURL'
     -> SitesAdd
-sitesAdd pSaSiteURL_ =
+sitesAdd pSaSiteURL_ = 
     SitesAdd'
     { _saSiteURL = pSaSiteURL_
+    , _saFields = Nothing
     }
 
 -- | The URL of the site to add.
@@ -73,12 +79,17 @@ saSiteURL :: Lens' SitesAdd Text
 saSiteURL
   = lens _saSiteURL (\ s a -> s{_saSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+saFields :: Lens' SitesAdd (Maybe Text)
+saFields = lens _saFields (\ s a -> s{_saFields = a})
+
 instance GoogleRequest SitesAdd where
         type Rs SitesAdd = ()
         type Scopes SitesAdd =
              '["https://www.googleapis.com/auth/webmasters"]
         requestClient SitesAdd'{..}
-          = go _saSiteURL (Just AltJSON) webmasterToolsService
+          = go _saSiteURL _saFields (Just AltJSON)
+              webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitesAddResource)
                       mempty

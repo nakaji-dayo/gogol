@@ -43,16 +43,17 @@ module Network.Google.Resource.DFAReporting.CreativeGroups.List
     , cglSortField
     , cglAdvertiserIds
     , cglMaxResults
+    , cglFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeGroups.list@ method which the
 -- 'CreativeGroupsList' request conforms to.
 type CreativeGroupsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeGroups" :>
@@ -64,23 +65,25 @@ type CreativeGroupsListResource =
                          QueryParam "sortField" CreativeGroupsListSortField :>
                            QueryParams "advertiserIds" (Textual Int64) :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] CreativeGroupsListResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] CreativeGroupsListResponse
 
 -- | Retrieves a list of creative groups, possibly filtered. This method
 -- supports paging.
 --
 -- /See:/ 'creativeGroupsList' smart constructor.
 data CreativeGroupsList = CreativeGroupsList'
-    { _cglSearchString  :: !(Maybe Text)
-    , _cglIds           :: !(Maybe [Textual Int64])
-    , _cglProFileId     :: !(Textual Int64)
-    , _cglSortOrder     :: !(Maybe CreativeGroupsListSortOrder)
-    , _cglGroupNumber   :: !(Maybe (Textual Int32))
-    , _cglPageToken     :: !(Maybe Text)
-    , _cglSortField     :: !(Maybe CreativeGroupsListSortField)
+    { _cglSearchString :: !(Maybe Text)
+    , _cglIds :: !(Maybe [Textual Int64])
+    , _cglProFileId :: !(Textual Int64)
+    , _cglSortOrder :: !CreativeGroupsListSortOrder
+    , _cglGroupNumber :: !(Maybe (Textual Int32))
+    , _cglPageToken :: !(Maybe Text)
+    , _cglSortField :: !CreativeGroupsListSortField
     , _cglAdvertiserIds :: !(Maybe [Textual Int64])
-    , _cglMaxResults    :: !(Maybe (Textual Int32))
+    , _cglMaxResults :: !(Textual Int32)
+    , _cglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeGroupsList' with the minimum fields required to make a request.
@@ -104,20 +107,23 @@ data CreativeGroupsList = CreativeGroupsList'
 -- * 'cglAdvertiserIds'
 --
 -- * 'cglMaxResults'
+--
+-- * 'cglFields'
 creativeGroupsList
     :: Int64 -- ^ 'cglProFileId'
     -> CreativeGroupsList
-creativeGroupsList pCglProFileId_ =
+creativeGroupsList pCglProFileId_ = 
     CreativeGroupsList'
     { _cglSearchString = Nothing
     , _cglIds = Nothing
     , _cglProFileId = _Coerce # pCglProFileId_
-    , _cglSortOrder = Nothing
+    , _cglSortOrder = CGLSOAscending
     , _cglGroupNumber = Nothing
     , _cglPageToken = Nothing
-    , _cglSortField = Nothing
+    , _cglSortField = CGLSFID
     , _cglAdvertiserIds = Nothing
-    , _cglMaxResults = Nothing
+    , _cglMaxResults = 1000
+    , _cglFields = Nothing
     }
 
 -- | Allows searching for creative groups by name or ID. Wildcards (*) are
@@ -145,8 +151,8 @@ cglProFileId
   = lens _cglProFileId (\ s a -> s{_cglProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-cglSortOrder :: Lens' CreativeGroupsList (Maybe CreativeGroupsListSortOrder)
+-- | Order of sorted results.
+cglSortOrder :: Lens' CreativeGroupsList CreativeGroupsListSortOrder
 cglSortOrder
   = lens _cglSortOrder (\ s a -> s{_cglSortOrder = a})
 
@@ -163,7 +169,7 @@ cglPageToken
   = lens _cglPageToken (\ s a -> s{_cglPageToken = a})
 
 -- | Field by which to sort the list.
-cglSortField :: Lens' CreativeGroupsList (Maybe CreativeGroupsListSortField)
+cglSortField :: Lens' CreativeGroupsList CreativeGroupsListSortField
 cglSortField
   = lens _cglSortField (\ s a -> s{_cglSortField = a})
 
@@ -176,11 +182,16 @@ cglAdvertiserIds
       . _Coerce
 
 -- | Maximum number of results to return.
-cglMaxResults :: Lens' CreativeGroupsList (Maybe Int32)
+cglMaxResults :: Lens' CreativeGroupsList Int32
 cglMaxResults
   = lens _cglMaxResults
       (\ s a -> s{_cglMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+cglFields :: Lens' CreativeGroupsList (Maybe Text)
+cglFields
+  = lens _cglFields (\ s a -> s{_cglFields = a})
 
 instance GoogleRequest CreativeGroupsList where
         type Rs CreativeGroupsList =
@@ -190,12 +201,13 @@ instance GoogleRequest CreativeGroupsList where
         requestClient CreativeGroupsList'{..}
           = go _cglProFileId _cglSearchString
               (_cglIds ^. _Default)
-              _cglSortOrder
+              (Just _cglSortOrder)
               _cglGroupNumber
               _cglPageToken
-              _cglSortField
+              (Just _cglSortField)
               (_cglAdvertiserIds ^. _Default)
-              _cglMaxResults
+              (Just _cglMaxResults)
+              _cglFields
               (Just AltJSON)
               dFAReportingService
           where go

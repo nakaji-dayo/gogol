@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.RemarketingAudience.List
     , mralType
     , mralStartIndex
     , mralMaxResults
+    , mralFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.remarketingAudience.list@ method which the
 -- 'ManagementRemarketingAudienceList' request conforms to.
@@ -57,18 +58,20 @@ type ManagementRemarketingAudienceListResource =
                      QueryParam "type" Text :>
                        QueryParam "start-index" (Textual Int32) :>
                          QueryParam "max-results" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] RemarketingAudiences
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] RemarketingAudiences
 
 -- | Lists remarketing audiences to which the user has access.
 --
 -- /See:/ 'managementRemarketingAudienceList' smart constructor.
 data ManagementRemarketingAudienceList = ManagementRemarketingAudienceList'
     { _mralWebPropertyId :: !Text
-    , _mralAccountId     :: !Text
-    , _mralType          :: !Text
-    , _mralStartIndex    :: !(Maybe (Textual Int32))
-    , _mralMaxResults    :: !(Maybe (Textual Int32))
+    , _mralAccountId :: !Text
+    , _mralType :: !Text
+    , _mralStartIndex :: !(Maybe (Textual Int32))
+    , _mralMaxResults :: !(Maybe (Textual Int32))
+    , _mralFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementRemarketingAudienceList' with the minimum fields required to make a request.
@@ -84,17 +87,20 @@ data ManagementRemarketingAudienceList = ManagementRemarketingAudienceList'
 -- * 'mralStartIndex'
 --
 -- * 'mralMaxResults'
+--
+-- * 'mralFields'
 managementRemarketingAudienceList
     :: Text -- ^ 'mralWebPropertyId'
     -> Text -- ^ 'mralAccountId'
     -> ManagementRemarketingAudienceList
-managementRemarketingAudienceList pMralWebPropertyId_ pMralAccountId_ =
+managementRemarketingAudienceList pMralWebPropertyId_ pMralAccountId_ = 
     ManagementRemarketingAudienceList'
     { _mralWebPropertyId = pMralWebPropertyId_
     , _mralAccountId = pMralAccountId_
     , _mralType = "all"
     , _mralStartIndex = Nothing
     , _mralMaxResults = Nothing
+    , _mralFields = Nothing
     }
 
 -- | The web property ID of the remarketing audiences to retrieve.
@@ -127,6 +133,11 @@ mralMaxResults
       (\ s a -> s{_mralMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mralFields :: Lens' ManagementRemarketingAudienceList (Maybe Text)
+mralFields
+  = lens _mralFields (\ s a -> s{_mralFields = a})
+
 instance GoogleRequest
          ManagementRemarketingAudienceList where
         type Rs ManagementRemarketingAudienceList =
@@ -139,6 +150,7 @@ instance GoogleRequest
               (Just _mralType)
               _mralStartIndex
               _mralMaxResults
+              _mralFields
               (Just AltJSON)
               analyticsService
           where go

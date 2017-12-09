@@ -36,10 +36,11 @@ module Network.Google.Resource.Books.MyConfig.UpdateUserSettings
 
     -- * Request Lenses
     , mcuusPayload
+    , mcuusFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.myconfig.updateUserSettings@ method which the
 -- 'MyConfigUpdateUserSettings' request conforms to.
@@ -48,17 +49,19 @@ type MyConfigUpdateUserSettingsResource =
        "v1" :>
          "myconfig" :>
            "updateUserSettings" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] UserSettings :>
-                 Post '[JSON] UserSettings
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] UserSettings :>
+                   Post '[JSON] UserSettings
 
 -- | Sets the settings for the user. If a sub-object is specified, it will
 -- overwrite the existing sub-object stored in the server. Unspecified
 -- sub-objects will retain the existing value.
 --
 -- /See:/ 'myConfigUpdateUserSettings' smart constructor.
-newtype MyConfigUpdateUserSettings = MyConfigUpdateUserSettings'
-    { _mcuusPayload :: UserSettings
+data MyConfigUpdateUserSettings = MyConfigUpdateUserSettings'
+    { _mcuusPayload :: !UserSettings
+    , _mcuusFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyConfigUpdateUserSettings' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ newtype MyConfigUpdateUserSettings = MyConfigUpdateUserSettings'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'mcuusPayload'
+--
+-- * 'mcuusFields'
 myConfigUpdateUserSettings
     :: UserSettings -- ^ 'mcuusPayload'
     -> MyConfigUpdateUserSettings
-myConfigUpdateUserSettings pMcuusPayload_ =
+myConfigUpdateUserSettings pMcuusPayload_ = 
     MyConfigUpdateUserSettings'
     { _mcuusPayload = pMcuusPayload_
+    , _mcuusFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -79,13 +85,19 @@ mcuusPayload :: Lens' MyConfigUpdateUserSettings UserSettings
 mcuusPayload
   = lens _mcuusPayload (\ s a -> s{_mcuusPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcuusFields :: Lens' MyConfigUpdateUserSettings (Maybe Text)
+mcuusFields
+  = lens _mcuusFields (\ s a -> s{_mcuusFields = a})
+
 instance GoogleRequest MyConfigUpdateUserSettings
          where
         type Rs MyConfigUpdateUserSettings = UserSettings
         type Scopes MyConfigUpdateUserSettings =
              '["https://www.googleapis.com/auth/books"]
         requestClient MyConfigUpdateUserSettings'{..}
-          = go (Just AltJSON) _mcuusPayload booksService
+          = go _mcuusFields (Just AltJSON) _mcuusPayload
+              booksService
           where go
                   = buildClient
                       (Proxy :: Proxy MyConfigUpdateUserSettingsResource)

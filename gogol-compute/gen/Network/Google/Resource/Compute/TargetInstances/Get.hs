@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.TargetInstances.Get
     , tigProject
     , tigTargetInstance
     , tigZone
+    , tigFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetInstances.get@ method which the
 -- 'TargetInstancesGet' request conforms to.
@@ -53,17 +54,19 @@ type TargetInstancesGetResource =
                Capture "zone" Text :>
                  "targetInstances" :>
                    Capture "targetInstance" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] TargetInstance
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] TargetInstance
 
 -- | Returns the specified TargetInstance resource. Get a list of available
 -- target instances by making a list() request.
 --
 -- /See:/ 'targetInstancesGet' smart constructor.
 data TargetInstancesGet = TargetInstancesGet'
-    { _tigProject        :: !Text
+    { _tigProject :: !Text
     , _tigTargetInstance :: !Text
-    , _tigZone           :: !Text
+    , _tigZone :: !Text
+    , _tigFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetInstancesGet' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data TargetInstancesGet = TargetInstancesGet'
 -- * 'tigTargetInstance'
 --
 -- * 'tigZone'
+--
+-- * 'tigFields'
 targetInstancesGet
     :: Text -- ^ 'tigProject'
     -> Text -- ^ 'tigTargetInstance'
     -> Text -- ^ 'tigZone'
     -> TargetInstancesGet
-targetInstancesGet pTigProject_ pTigTargetInstance_ pTigZone_ =
+targetInstancesGet pTigProject_ pTigTargetInstance_ pTigZone_ = 
     TargetInstancesGet'
     { _tigProject = pTigProject_
     , _tigTargetInstance = pTigTargetInstance_
     , _tigZone = pTigZone_
+    , _tigFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -102,6 +108,11 @@ tigTargetInstance
 tigZone :: Lens' TargetInstancesGet Text
 tigZone = lens _tigZone (\ s a -> s{_tigZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tigFields :: Lens' TargetInstancesGet (Maybe Text)
+tigFields
+  = lens _tigFields (\ s a -> s{_tigFields = a})
+
 instance GoogleRequest TargetInstancesGet where
         type Rs TargetInstancesGet = TargetInstance
         type Scopes TargetInstancesGet =
@@ -110,6 +121,7 @@ instance GoogleRequest TargetInstancesGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient TargetInstancesGet'{..}
           = go _tigProject _tigZone _tigTargetInstance
+              _tigFields
               (Just AltJSON)
               computeService
           where go

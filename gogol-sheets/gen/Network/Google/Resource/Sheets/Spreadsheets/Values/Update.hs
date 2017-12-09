@@ -46,12 +46,13 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.Update
     , svuRange
     , svuIncludeValuesInResponse
     , svuResponseDateTimeRenderOption
+    , svuFields
     , svuCallback
     , svuResponseValueRenderOption
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.update@ method which the
 -- 'SpreadsheetsValuesUpdate' request conforms to.
@@ -73,29 +74,31 @@ type SpreadsheetsValuesUpdateResource =
                                  QueryParam "callback" Text :>
                                    QueryParam "responseValueRenderOption" Text
                                      :>
-                                     QueryParam "alt" AltJSON :>
-                                       ReqBody '[JSON] ValueRange :>
-                                         Put '[JSON] UpdateValuesResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         ReqBody '[JSON] ValueRange :>
+                                           Put '[JSON] UpdateValuesResponse
 
 -- | Sets values in a range of a spreadsheet. The caller must specify the
 -- spreadsheet ID, range, and a valueInputOption.
 --
 -- /See:/ 'spreadsheetsValuesUpdate' smart constructor.
 data SpreadsheetsValuesUpdate = SpreadsheetsValuesUpdate'
-    { _svuXgafv                        :: !(Maybe Xgafv)
-    , _svuUploadProtocol               :: !(Maybe Text)
-    , _svuPp                           :: !Bool
-    , _svuAccessToken                  :: !(Maybe Text)
-    , _svuSpreadsheetId                :: !Text
-    , _svuUploadType                   :: !(Maybe Text)
-    , _svuValueInputOption             :: !(Maybe Text)
-    , _svuPayload                      :: !ValueRange
-    , _svuBearerToken                  :: !(Maybe Text)
-    , _svuRange                        :: !Text
-    , _svuIncludeValuesInResponse      :: !(Maybe Bool)
+    { _svuXgafv :: !(Maybe Xgafv)
+    , _svuUploadProtocol :: !(Maybe Text)
+    , _svuPp :: !Bool
+    , _svuAccessToken :: !(Maybe Text)
+    , _svuSpreadsheetId :: !Text
+    , _svuUploadType :: !(Maybe Text)
+    , _svuValueInputOption :: !(Maybe Text)
+    , _svuPayload :: !ValueRange
+    , _svuBearerToken :: !(Maybe Text)
+    , _svuRange :: !Text
+    , _svuIncludeValuesInResponse :: !(Maybe Bool)
     , _svuResponseDateTimeRenderOption :: !(Maybe Text)
-    , _svuCallback                     :: !(Maybe Text)
-    , _svuResponseValueRenderOption    :: !(Maybe Text)
+    , _svuFields :: !(Maybe Text)
+    , _svuCallback :: !(Maybe Text)
+    , _svuResponseValueRenderOption :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesUpdate' with the minimum fields required to make a request.
@@ -126,6 +129,8 @@ data SpreadsheetsValuesUpdate = SpreadsheetsValuesUpdate'
 --
 -- * 'svuResponseDateTimeRenderOption'
 --
+-- * 'svuFields'
+--
 -- * 'svuCallback'
 --
 -- * 'svuResponseValueRenderOption'
@@ -134,7 +139,7 @@ spreadsheetsValuesUpdate
     -> ValueRange -- ^ 'svuPayload'
     -> Text -- ^ 'svuRange'
     -> SpreadsheetsValuesUpdate
-spreadsheetsValuesUpdate pSvuSpreadsheetId_ pSvuPayload_ pSvuRange_ =
+spreadsheetsValuesUpdate pSvuSpreadsheetId_ pSvuPayload_ pSvuRange_ = 
     SpreadsheetsValuesUpdate'
     { _svuXgafv = Nothing
     , _svuUploadProtocol = Nothing
@@ -148,6 +153,7 @@ spreadsheetsValuesUpdate pSvuSpreadsheetId_ pSvuPayload_ pSvuRange_ =
     , _svuRange = pSvuRange_
     , _svuIncludeValuesInResponse = Nothing
     , _svuResponseDateTimeRenderOption = Nothing
+    , _svuFields = Nothing
     , _svuCallback = Nothing
     , _svuResponseValueRenderOption = Nothing
     }
@@ -224,6 +230,11 @@ svuResponseDateTimeRenderOption
   = lens _svuResponseDateTimeRenderOption
       (\ s a -> s{_svuResponseDateTimeRenderOption = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svuFields :: Lens' SpreadsheetsValuesUpdate (Maybe Text)
+svuFields
+  = lens _svuFields (\ s a -> s{_svuFields = a})
+
 -- | JSONP
 svuCallback :: Lens' SpreadsheetsValuesUpdate (Maybe Text)
 svuCallback
@@ -241,6 +252,7 @@ instance GoogleRequest SpreadsheetsValuesUpdate where
              UpdateValuesResponse
         type Scopes SpreadsheetsValuesUpdate =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsValuesUpdate'{..}
           = go _svuSpreadsheetId _svuRange _svuXgafv
@@ -254,6 +266,7 @@ instance GoogleRequest SpreadsheetsValuesUpdate where
               _svuResponseDateTimeRenderOption
               _svuCallback
               _svuResponseValueRenderOption
+              _svuFields
               (Just AltJSON)
               _svuPayload
               sheetsService

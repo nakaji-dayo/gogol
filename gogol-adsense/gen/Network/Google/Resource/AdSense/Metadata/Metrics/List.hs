@@ -32,10 +32,12 @@ module Network.Google.Resource.AdSense.Metadata.Metrics.List
     , metadataMetricsList
     , MetadataMetricsList
 
+    -- * Request Lenses
+    , mmlFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.metadata.metrics.list@ method which the
 -- 'MetadataMetricsList' request conforms to.
@@ -44,28 +46,40 @@ type MetadataMetricsListResource =
        "v1.4" :>
          "metadata" :>
            "metrics" :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Metadata
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Metadata
 
 -- | List the metadata for the metrics available to this AdSense account.
 --
 -- /See:/ 'metadataMetricsList' smart constructor.
-data MetadataMetricsList =
-    MetadataMetricsList'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype MetadataMetricsList = MetadataMetricsList'
+    { _mmlFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetadataMetricsList' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mmlFields'
 metadataMetricsList
     :: MetadataMetricsList
-metadataMetricsList = MetadataMetricsList'
+metadataMetricsList = 
+    MetadataMetricsList'
+    { _mmlFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+mmlFields :: Lens' MetadataMetricsList (Maybe Text)
+mmlFields
+  = lens _mmlFields (\ s a -> s{_mmlFields = a})
 
 instance GoogleRequest MetadataMetricsList where
         type Rs MetadataMetricsList = Metadata
         type Scopes MetadataMetricsList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
-        requestClient MetadataMetricsList'{}
-          = go (Just AltJSON) adSenseService
+        requestClient MetadataMetricsList'{..}
+          = go _mmlFields (Just AltJSON) adSenseService
           where go
                   = buildClient
                       (Proxy :: Proxy MetadataMetricsListResource)

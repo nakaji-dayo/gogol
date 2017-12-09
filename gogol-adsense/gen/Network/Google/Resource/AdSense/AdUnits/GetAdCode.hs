@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.AdUnits.GetAdCode
     -- * Request Lenses
     , augacAdUnitId
     , augacAdClientId
+    , augacFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.adunits.getAdCode@ method which the
 -- 'AdUnitsGetAdCode' request conforms to.
@@ -50,14 +51,16 @@ type AdUnitsGetAdCodeResource =
              "adunits" :>
                Capture "adUnitId" Text :>
                  "adcode" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] AdCode
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] AdCode
 
 -- | Get ad code for the specified ad unit.
 --
 -- /See:/ 'adUnitsGetAdCode' smart constructor.
 data AdUnitsGetAdCode = AdUnitsGetAdCode'
-    { _augacAdUnitId   :: !Text
+    { _augacAdUnitId :: !Text
     , _augacAdClientId :: !Text
+    , _augacFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdUnitsGetAdCode' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AdUnitsGetAdCode = AdUnitsGetAdCode'
 -- * 'augacAdUnitId'
 --
 -- * 'augacAdClientId'
+--
+-- * 'augacFields'
 adUnitsGetAdCode
     :: Text -- ^ 'augacAdUnitId'
     -> Text -- ^ 'augacAdClientId'
     -> AdUnitsGetAdCode
-adUnitsGetAdCode pAugacAdUnitId_ pAugacAdClientId_ =
+adUnitsGetAdCode pAugacAdUnitId_ pAugacAdClientId_ = 
     AdUnitsGetAdCode'
     { _augacAdUnitId = pAugacAdUnitId_
     , _augacAdClientId = pAugacAdClientId_
+    , _augacFields = Nothing
     }
 
 -- | Ad unit to get the code for.
@@ -89,13 +95,19 @@ augacAdClientId
   = lens _augacAdClientId
       (\ s a -> s{_augacAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+augacFields :: Lens' AdUnitsGetAdCode (Maybe Text)
+augacFields
+  = lens _augacFields (\ s a -> s{_augacFields = a})
+
 instance GoogleRequest AdUnitsGetAdCode where
         type Rs AdUnitsGetAdCode = AdCode
         type Scopes AdUnitsGetAdCode =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AdUnitsGetAdCode'{..}
-          = go _augacAdClientId _augacAdUnitId (Just AltJSON)
+          = go _augacAdClientId _augacAdUnitId _augacFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient

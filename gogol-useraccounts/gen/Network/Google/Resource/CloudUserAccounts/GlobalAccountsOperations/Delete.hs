@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.Delete
     -- * Request Lenses
     , gaodProject
     , gaodOperation
+    , gaodFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.globalAccountsOperations.delete@ method which the
 -- 'GlobalAccountsOperationsDelete' request conforms to.
@@ -50,14 +51,16 @@ type GlobalAccountsOperationsDeleteResource =
              "global" :>
                "operations" :>
                  Capture "operation" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified operation resource.
 --
 -- /See:/ 'globalAccountsOperationsDelete' smart constructor.
 data GlobalAccountsOperationsDelete = GlobalAccountsOperationsDelete'
-    { _gaodProject   :: !Text
+    { _gaodProject :: !Text
     , _gaodOperation :: !Text
+    , _gaodFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalAccountsOperationsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data GlobalAccountsOperationsDelete = GlobalAccountsOperationsDelete'
 -- * 'gaodProject'
 --
 -- * 'gaodOperation'
+--
+-- * 'gaodFields'
 globalAccountsOperationsDelete
     :: Text -- ^ 'gaodProject'
     -> Text -- ^ 'gaodOperation'
     -> GlobalAccountsOperationsDelete
-globalAccountsOperationsDelete pGaodProject_ pGaodOperation_ =
+globalAccountsOperationsDelete pGaodProject_ pGaodOperation_ = 
     GlobalAccountsOperationsDelete'
     { _gaodProject = pGaodProject_
     , _gaodOperation = pGaodOperation_
+    , _gaodFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -88,6 +94,11 @@ gaodOperation
   = lens _gaodOperation
       (\ s a -> s{_gaodOperation = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gaodFields :: Lens' GlobalAccountsOperationsDelete (Maybe Text)
+gaodFields
+  = lens _gaodFields (\ s a -> s{_gaodFields = a})
+
 instance GoogleRequest GlobalAccountsOperationsDelete
          where
         type Rs GlobalAccountsOperationsDelete = ()
@@ -95,7 +106,8 @@ instance GoogleRequest GlobalAccountsOperationsDelete
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient GlobalAccountsOperationsDelete'{..}
-          = go _gaodProject _gaodOperation (Just AltJSON)
+          = go _gaodProject _gaodOperation _gaodFields
+              (Just AltJSON)
               userAccountsService
           where go
                   = buildClient

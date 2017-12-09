@@ -37,10 +37,11 @@ module Network.Google.Resource.Gmail.Users.Threads.Modify
     , utmPayload
     , utmUserId
     , utmId
+    , utmFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.threads.modify@ method which the
 -- 'UsersThreadsModify' request conforms to.
@@ -52,9 +53,10 @@ type UsersThreadsModifyResource =
              "threads" :>
                Capture "id" Text :>
                  "modify" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ModifyThreadRequest :>
-                       Post '[JSON] Thread
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ModifyThreadRequest :>
+                         Post '[JSON] Thread
 
 -- | Modifies the labels applied to the thread. This applies to all messages
 -- in the thread.
@@ -62,8 +64,9 @@ type UsersThreadsModifyResource =
 -- /See:/ 'usersThreadsModify' smart constructor.
 data UsersThreadsModify = UsersThreadsModify'
     { _utmPayload :: !ModifyThreadRequest
-    , _utmUserId  :: !Text
-    , _utmId      :: !Text
+    , _utmUserId :: !Text
+    , _utmId :: !Text
+    , _utmFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersThreadsModify' with the minimum fields required to make a request.
@@ -75,15 +78,18 @@ data UsersThreadsModify = UsersThreadsModify'
 -- * 'utmUserId'
 --
 -- * 'utmId'
+--
+-- * 'utmFields'
 usersThreadsModify
     :: ModifyThreadRequest -- ^ 'utmPayload'
     -> Text -- ^ 'utmId'
     -> UsersThreadsModify
-usersThreadsModify pUtmPayload_ pUtmId_ =
+usersThreadsModify pUtmPayload_ pUtmId_ = 
     UsersThreadsModify'
     { _utmPayload = pUtmPayload_
     , _utmUserId = "me"
     , _utmId = pUtmId_
+    , _utmFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -101,13 +107,19 @@ utmUserId
 utmId :: Lens' UsersThreadsModify Text
 utmId = lens _utmId (\ s a -> s{_utmId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+utmFields :: Lens' UsersThreadsModify (Maybe Text)
+utmFields
+  = lens _utmFields (\ s a -> s{_utmFields = a})
+
 instance GoogleRequest UsersThreadsModify where
         type Rs UsersThreadsModify = Thread
         type Scopes UsersThreadsModify =
              '["https://mail.google.com/",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersThreadsModify'{..}
-          = go _utmUserId _utmId (Just AltJSON) _utmPayload
+          = go _utmUserId _utmId _utmFields (Just AltJSON)
+              _utmPayload
               gmailService
           where go
                   = buildClient

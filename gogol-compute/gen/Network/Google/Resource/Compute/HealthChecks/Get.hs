@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.HealthChecks.Get
     -- * Request Lenses
     , hcgHealthCheck
     , hcgProject
+    , hcgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.healthChecks.get@ method which the
 -- 'HealthChecksGet' request conforms to.
@@ -51,7 +52,8 @@ type HealthChecksGetResource =
              "global" :>
                "healthChecks" :>
                  Capture "healthCheck" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] HealthCheck
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] HealthCheck
 
 -- | Returns the specified HealthCheck resource. Get a list of available
 -- health checks by making a list() request.
@@ -59,7 +61,8 @@ type HealthChecksGetResource =
 -- /See:/ 'healthChecksGet' smart constructor.
 data HealthChecksGet = HealthChecksGet'
     { _hcgHealthCheck :: !Text
-    , _hcgProject     :: !Text
+    , _hcgProject :: !Text
+    , _hcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HealthChecksGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data HealthChecksGet = HealthChecksGet'
 -- * 'hcgHealthCheck'
 --
 -- * 'hcgProject'
+--
+-- * 'hcgFields'
 healthChecksGet
     :: Text -- ^ 'hcgHealthCheck'
     -> Text -- ^ 'hcgProject'
     -> HealthChecksGet
-healthChecksGet pHcgHealthCheck_ pHcgProject_ =
+healthChecksGet pHcgHealthCheck_ pHcgProject_ = 
     HealthChecksGet'
     { _hcgHealthCheck = pHcgHealthCheck_
     , _hcgProject = pHcgProject_
+    , _hcgFields = Nothing
     }
 
 -- | Name of the HealthCheck resource to return.
@@ -90,6 +96,11 @@ hcgProject :: Lens' HealthChecksGet Text
 hcgProject
   = lens _hcgProject (\ s a -> s{_hcgProject = a})
 
+-- | Selector specifying which fields to include in a partial response.
+hcgFields :: Lens' HealthChecksGet (Maybe Text)
+hcgFields
+  = lens _hcgFields (\ s a -> s{_hcgFields = a})
+
 instance GoogleRequest HealthChecksGet where
         type Rs HealthChecksGet = HealthCheck
         type Scopes HealthChecksGet =
@@ -97,7 +108,8 @@ instance GoogleRequest HealthChecksGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient HealthChecksGet'{..}
-          = go _hcgProject _hcgHealthCheck (Just AltJSON)
+          = go _hcgProject _hcgHealthCheck _hcgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

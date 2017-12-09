@@ -43,10 +43,11 @@ module Network.Google.Resource.Reports.Activities.List
     , alEventName
     , alUserKey
     , alMaxResults
+    , alFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Reports.Types
+import Network.Google.Prelude
+import Network.Google.Reports.Types
 
 -- | A resource alias for @reports.activities.list@ method which the
 -- 'ActivitiesList' request conforms to.
@@ -67,23 +68,25 @@ type ActivitiesListResource =
                                QueryParam "pageToken" Text :>
                                  QueryParam "eventName" Text :>
                                    QueryParam "maxResults" (Textual Int32) :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] Activities
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] Activities
 
 -- | Retrieves a list of activities for a specific customer and application.
 --
 -- /See:/ 'activitiesList' smart constructor.
 data ActivitiesList = ActivitiesList'
-    { _alStartTime       :: !(Maybe Text)
-    , _alFilters         :: !(Maybe Text)
-    , _alCustomerId      :: !(Maybe Text)
-    , _alActorIPAddress  :: !(Maybe Text)
-    , _alEndTime         :: !(Maybe Text)
+    { _alStartTime :: !(Maybe Text)
+    , _alFilters :: !(Maybe Text)
+    , _alCustomerId :: !(Maybe Text)
+    , _alActorIPAddress :: !(Maybe Text)
+    , _alEndTime :: !(Maybe Text)
     , _alApplicationName :: !Text
-    , _alPageToken       :: !(Maybe Text)
-    , _alEventName       :: !(Maybe Text)
-    , _alUserKey         :: !Text
-    , _alMaxResults      :: !(Maybe (Textual Int32))
+    , _alPageToken :: !(Maybe Text)
+    , _alEventName :: !(Maybe Text)
+    , _alUserKey :: !Text
+    , _alMaxResults :: !(Maybe (Textual Int32))
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesList' with the minimum fields required to make a request.
@@ -109,11 +112,13 @@ data ActivitiesList = ActivitiesList'
 -- * 'alUserKey'
 --
 -- * 'alMaxResults'
+--
+-- * 'alFields'
 activitiesList
     :: Text -- ^ 'alApplicationName'
     -> Text -- ^ 'alUserKey'
     -> ActivitiesList
-activitiesList pAlApplicationName_ pAlUserKey_ =
+activitiesList pAlApplicationName_ pAlUserKey_ = 
     ActivitiesList'
     { _alStartTime = Nothing
     , _alFilters = Nothing
@@ -125,9 +130,10 @@ activitiesList pAlApplicationName_ pAlUserKey_ =
     , _alEventName = Nothing
     , _alUserKey = pAlUserKey_
     , _alMaxResults = Nothing
+    , _alFields = Nothing
     }
 
--- | Return events which occured at or after this time.
+-- | Return events which occurred at or after this time.
 alStartTime :: Lens' ActivitiesList (Maybe Text)
 alStartTime
   = lens _alStartTime (\ s a -> s{_alStartTime = a})
@@ -150,7 +156,7 @@ alActorIPAddress
   = lens _alActorIPAddress
       (\ s a -> s{_alActorIPAddress = a})
 
--- | Return events which occured at or before this time.
+-- | Return events which occurred at or before this time.
 alEndTime :: Lens' ActivitiesList (Maybe Text)
 alEndTime
   = lens _alEndTime (\ s a -> s{_alEndTime = a})
@@ -184,6 +190,10 @@ alMaxResults
   = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ActivitiesList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ActivitiesList where
         type Rs ActivitiesList = Activities
         type Scopes ActivitiesList =
@@ -197,6 +207,7 @@ instance GoogleRequest ActivitiesList where
               _alPageToken
               _alEventName
               _alMaxResults
+              _alFields
               (Just AltJSON)
               reportsService
           where go

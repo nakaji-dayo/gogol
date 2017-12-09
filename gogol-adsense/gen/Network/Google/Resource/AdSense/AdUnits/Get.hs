@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.AdUnits.Get
     -- * Request Lenses
     , augAdUnitId
     , augAdClientId
+    , augFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.adunits.get@ method which the
 -- 'AdUnitsGet' request conforms to.
@@ -49,14 +50,16 @@ type AdUnitsGetResource =
            Capture "adClientId" Text :>
              "adunits" :>
                Capture "adUnitId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] AdUnit
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] AdUnit
 
 -- | Gets the specified ad unit in the specified ad client.
 --
 -- /See:/ 'adUnitsGet' smart constructor.
 data AdUnitsGet = AdUnitsGet'
-    { _augAdUnitId   :: !Text
+    { _augAdUnitId :: !Text
     , _augAdClientId :: !Text
+    , _augFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdUnitsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdUnitsGet = AdUnitsGet'
 -- * 'augAdUnitId'
 --
 -- * 'augAdClientId'
+--
+-- * 'augFields'
 adUnitsGet
     :: Text -- ^ 'augAdUnitId'
     -> Text -- ^ 'augAdClientId'
     -> AdUnitsGet
-adUnitsGet pAugAdUnitId_ pAugAdClientId_ =
+adUnitsGet pAugAdUnitId_ pAugAdClientId_ = 
     AdUnitsGet'
     { _augAdUnitId = pAugAdUnitId_
     , _augAdClientId = pAugAdClientId_
+    , _augFields = Nothing
     }
 
 -- | Ad unit to retrieve.
@@ -87,13 +93,19 @@ augAdClientId
   = lens _augAdClientId
       (\ s a -> s{_augAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+augFields :: Lens' AdUnitsGet (Maybe Text)
+augFields
+  = lens _augFields (\ s a -> s{_augFields = a})
+
 instance GoogleRequest AdUnitsGet where
         type Rs AdUnitsGet = AdUnit
         type Scopes AdUnitsGet =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AdUnitsGet'{..}
-          = go _augAdClientId _augAdUnitId (Just AltJSON)
+          = go _augAdClientId _augAdUnitId _augFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient (Proxy :: Proxy AdUnitsGetResource)

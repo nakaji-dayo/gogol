@@ -36,10 +36,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.Insert
     -- * Request Lenses
     , giProject
     , giPayload
+    , giFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.insert@ method which the
 -- 'GroupsInsert' request conforms to.
@@ -50,8 +51,9 @@ type GroupsInsertResource =
            Capture "project" Text :>
              "global" :>
                "groups" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Group :> Post '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Group :> Post '[JSON] Operation
 
 -- | Creates a Group resource in the specified project using the data
 -- included in the request.
@@ -60,6 +62,7 @@ type GroupsInsertResource =
 data GroupsInsert = GroupsInsert'
     { _giProject :: !Text
     , _giPayload :: !Group
+    , _giFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsInsert' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data GroupsInsert = GroupsInsert'
 -- * 'giProject'
 --
 -- * 'giPayload'
+--
+-- * 'giFields'
 groupsInsert
     :: Text -- ^ 'giProject'
     -> Group -- ^ 'giPayload'
     -> GroupsInsert
-groupsInsert pGiProject_ pGiPayload_ =
+groupsInsert pGiProject_ pGiPayload_ = 
     GroupsInsert'
     { _giProject = pGiProject_
     , _giPayload = pGiPayload_
+    , _giFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,13 +95,17 @@ giPayload :: Lens' GroupsInsert Group
 giPayload
   = lens _giPayload (\ s a -> s{_giPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+giFields :: Lens' GroupsInsert (Maybe Text)
+giFields = lens _giFields (\ s a -> s{_giFields = a})
+
 instance GoogleRequest GroupsInsert where
         type Rs GroupsInsert = Operation
         type Scopes GroupsInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient GroupsInsert'{..}
-          = go _giProject (Just AltJSON) _giPayload
+          = go _giProject _giFields (Just AltJSON) _giPayload
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy GroupsInsertResource)

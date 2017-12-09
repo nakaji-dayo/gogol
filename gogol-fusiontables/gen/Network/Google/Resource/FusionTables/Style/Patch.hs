@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Style.Patch
     , spPayload
     , spStyleId
     , spTableId
+    , spFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.patch@ method which the
 -- 'StylePatch' request conforms to.
@@ -50,9 +51,10 @@ type StylePatchResource =
            Capture "tableId" Text :>
              "styles" :>
                Capture "styleId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] StyleSetting :>
-                     Patch '[JSON] StyleSetting
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] StyleSetting :>
+                       Patch '[JSON] StyleSetting
 
 -- | Updates an existing style. This method supports patch semantics.
 --
@@ -61,6 +63,7 @@ data StylePatch = StylePatch'
     { _spPayload :: !StyleSetting
     , _spStyleId :: !(Textual Int32)
     , _spTableId :: !Text
+    , _spFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StylePatch' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data StylePatch = StylePatch'
 -- * 'spStyleId'
 --
 -- * 'spTableId'
+--
+-- * 'spFields'
 stylePatch
     :: StyleSetting -- ^ 'spPayload'
     -> Int32 -- ^ 'spStyleId'
     -> Text -- ^ 'spTableId'
     -> StylePatch
-stylePatch pSpPayload_ pSpStyleId_ pSpTableId_ =
+stylePatch pSpPayload_ pSpStyleId_ pSpTableId_ = 
     StylePatch'
     { _spPayload = pSpPayload_
     , _spStyleId = _Coerce # pSpStyleId_
     , _spTableId = pSpTableId_
+    , _spFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -100,12 +106,17 @@ spTableId :: Lens' StylePatch Text
 spTableId
   = lens _spTableId (\ s a -> s{_spTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+spFields :: Lens' StylePatch (Maybe Text)
+spFields = lens _spFields (\ s a -> s{_spFields = a})
+
 instance GoogleRequest StylePatch where
         type Rs StylePatch = StyleSetting
         type Scopes StylePatch =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient StylePatch'{..}
-          = go _spTableId _spStyleId (Just AltJSON) _spPayload
+          = go _spTableId _spStyleId _spFields (Just AltJSON)
+              _spPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy StylePatchResource)

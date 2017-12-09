@@ -17,15 +17,15 @@
 --
 module Network.Google.Sheets.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Sheets.Types.Sum
 
 -- | Information about which values in a pivot group should be used for
 -- sorting.
 --
 -- /See:/ 'pivotGroupSortValueBucket' smart constructor.
 data PivotGroupSortValueBucket = PivotGroupSortValueBucket'
-    { _pgsvbBuckets     :: !(Maybe [ExtendedValue])
+    { _pgsvbBuckets :: !(Maybe [ExtendedValue])
     , _pgsvbValuesIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -38,7 +38,7 @@ data PivotGroupSortValueBucket = PivotGroupSortValueBucket'
 -- * 'pgsvbValuesIndex'
 pivotGroupSortValueBucket
     :: PivotGroupSortValueBucket
-pivotGroupSortValueBucket =
+pivotGroupSortValueBucket = 
     PivotGroupSortValueBucket'
     { _pgsvbBuckets = Nothing
     , _pgsvbValuesIndex = Nothing
@@ -85,8 +85,8 @@ instance ToJSON PivotGroupSortValueBucket where
 --
 -- /See:/ 'valueRange' smart constructor.
 data ValueRange = ValueRange'
-    { _vrValues         :: !(Maybe [[JSONValue]])
-    , _vrRange          :: !(Maybe Text)
+    { _vrValues :: !(Maybe [[JSONValue]])
+    , _vrRange :: !(Maybe Text)
     , _vrMajorDimension :: !(Maybe ValueRangeMajorDimension)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -101,7 +101,7 @@ data ValueRange = ValueRange'
 -- * 'vrMajorDimension'
 valueRange
     :: ValueRange
-valueRange =
+valueRange = 
     ValueRange'
     { _vrValues = Nothing
     , _vrRange = Nothing
@@ -164,7 +164,7 @@ instance ToJSON ValueRange where
 -- /See:/ 'sortRangeRequest' smart constructor.
 data SortRangeRequest = SortRangeRequest'
     { _srrSortSpecs :: !(Maybe [SortSpec])
-    , _srrRange     :: !(Maybe GridRange)
+    , _srrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SortRangeRequest' with the minimum fields required to make a request.
@@ -176,7 +176,7 @@ data SortRangeRequest = SortRangeRequest'
 -- * 'srrRange'
 sortRangeRequest
     :: SortRangeRequest
-sortRangeRequest =
+sortRangeRequest = 
     SortRangeRequest'
     { _srrSortSpecs = Nothing
     , _srrRange = Nothing
@@ -222,7 +222,7 @@ newtype DeleteNamedRangeRequest = DeleteNamedRangeRequest'
 -- * 'dnrrNamedRangeId'
 deleteNamedRangeRequest
     :: DeleteNamedRangeRequest
-deleteNamedRangeRequest =
+deleteNamedRangeRequest = 
     DeleteNamedRangeRequest'
     { _dnrrNamedRangeId = Nothing
     }
@@ -250,7 +250,7 @@ instance ToJSON DeleteNamedRangeRequest where
 -- /See:/ 'updateNamedRangeRequest' smart constructor.
 data UpdateNamedRangeRequest = UpdateNamedRangeRequest'
     { _unrrNamedRange :: !(Maybe NamedRange)
-    , _unrrFields     :: !(Maybe FieldMask)
+    , _unrrFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateNamedRangeRequest' with the minimum fields required to make a request.
@@ -262,7 +262,7 @@ data UpdateNamedRangeRequest = UpdateNamedRangeRequest'
 -- * 'unrrFields'
 updateNamedRangeRequest
     :: UpdateNamedRangeRequest
-updateNamedRangeRequest =
+updateNamedRangeRequest = 
     UpdateNamedRangeRequest'
     { _unrrNamedRange = Nothing
     , _unrrFields = Nothing
@@ -309,7 +309,7 @@ newtype ChartData = ChartData'
 -- * 'cdSourceRange'
 chartData
     :: ChartData
-chartData =
+chartData = 
     ChartData'
     { _cdSourceRange = Nothing
     }
@@ -344,7 +344,7 @@ newtype BatchClearValuesRequest = BatchClearValuesRequest'
 -- * 'bcvrRanges'
 batchClearValuesRequest
     :: BatchClearValuesRequest
-batchClearValuesRequest =
+batchClearValuesRequest = 
     BatchClearValuesRequest'
     { _bcvrRanges = Nothing
     }
@@ -367,15 +367,56 @@ instance ToJSON BatchClearValuesRequest where
         toJSON BatchClearValuesRequest'{..}
           = object (catMaybes [("ranges" .=) <$> _bcvrRanges])
 
+-- | The response from creating developer metadata.
+--
+-- /See:/ 'createDeveloperMetadataResponse' smart constructor.
+newtype CreateDeveloperMetadataResponse = CreateDeveloperMetadataResponse'
+    { _cdmrDeveloperMetadata :: Maybe DeveloperMetadata
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CreateDeveloperMetadataResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cdmrDeveloperMetadata'
+createDeveloperMetadataResponse
+    :: CreateDeveloperMetadataResponse
+createDeveloperMetadataResponse = 
+    CreateDeveloperMetadataResponse'
+    { _cdmrDeveloperMetadata = Nothing
+    }
+
+-- | The developer metadata that was created.
+cdmrDeveloperMetadata :: Lens' CreateDeveloperMetadataResponse (Maybe DeveloperMetadata)
+cdmrDeveloperMetadata
+  = lens _cdmrDeveloperMetadata
+      (\ s a -> s{_cdmrDeveloperMetadata = a})
+
+instance FromJSON CreateDeveloperMetadataResponse
+         where
+        parseJSON
+          = withObject "CreateDeveloperMetadataResponse"
+              (\ o ->
+                 CreateDeveloperMetadataResponse' <$>
+                   (o .:? "developerMetadata"))
+
+instance ToJSON CreateDeveloperMetadataResponse where
+        toJSON CreateDeveloperMetadataResponse'{..}
+          = object
+              (catMaybes
+                 [("developerMetadata" .=) <$>
+                    _cdmrDeveloperMetadata])
+
 -- | Properties of a spreadsheet.
 --
 -- /See:/ 'spreadsheetProperties' smart constructor.
 data SpreadsheetProperties = SpreadsheetProperties'
     { _spDefaultFormat :: !(Maybe CellFormat)
-    , _spLocale        :: !(Maybe Text)
-    , _spAutoRecalc    :: !(Maybe SpreadsheetPropertiesAutoRecalc)
-    , _spTitle         :: !(Maybe Text)
-    , _spTimeZone      :: !(Maybe Text)
+    , _spLocale :: !(Maybe Text)
+    , _spIterativeCalculationSettings :: !(Maybe IterativeCalculationSettings)
+    , _spAutoRecalc :: !(Maybe SpreadsheetPropertiesAutoRecalc)
+    , _spTitle :: !(Maybe Text)
+    , _spTimeZone :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetProperties' with the minimum fields required to make a request.
@@ -386,6 +427,8 @@ data SpreadsheetProperties = SpreadsheetProperties'
 --
 -- * 'spLocale'
 --
+-- * 'spIterativeCalculationSettings'
+--
 -- * 'spAutoRecalc'
 --
 -- * 'spTitle'
@@ -393,10 +436,11 @@ data SpreadsheetProperties = SpreadsheetProperties'
 -- * 'spTimeZone'
 spreadsheetProperties
     :: SpreadsheetProperties
-spreadsheetProperties =
+spreadsheetProperties = 
     SpreadsheetProperties'
     { _spDefaultFormat = Nothing
     , _spLocale = Nothing
+    , _spIterativeCalculationSettings = Nothing
     , _spAutoRecalc = Nothing
     , _spTitle = Nothing
     , _spTimeZone = Nothing
@@ -417,6 +461,14 @@ spDefaultFormat
 -- not all locales\/languages are supported.
 spLocale :: Lens' SpreadsheetProperties (Maybe Text)
 spLocale = lens _spLocale (\ s a -> s{_spLocale = a})
+
+-- | Determines whether and how circular references are resolved with
+-- iterative calculation. Absence of this field means that circular
+-- references will result in calculation errors.
+spIterativeCalculationSettings :: Lens' SpreadsheetProperties (Maybe IterativeCalculationSettings)
+spIterativeCalculationSettings
+  = lens _spIterativeCalculationSettings
+      (\ s a -> s{_spIterativeCalculationSettings = a})
 
 -- | The amount of time to wait before volatile functions are recalculated.
 spAutoRecalc :: Lens' SpreadsheetProperties (Maybe SpreadsheetPropertiesAutoRecalc)
@@ -440,7 +492,8 @@ instance FromJSON SpreadsheetProperties where
               (\ o ->
                  SpreadsheetProperties' <$>
                    (o .:? "defaultFormat") <*> (o .:? "locale") <*>
-                     (o .:? "autoRecalc")
+                     (o .:? "iterativeCalculationSettings")
+                     <*> (o .:? "autoRecalc")
                      <*> (o .:? "title")
                      <*> (o .:? "timeZone"))
 
@@ -450,6 +503,8 @@ instance ToJSON SpreadsheetProperties where
               (catMaybes
                  [("defaultFormat" .=) <$> _spDefaultFormat,
                   ("locale" .=) <$> _spLocale,
+                  ("iterativeCalculationSettings" .=) <$>
+                    _spIterativeCalculationSettings,
                   ("autoRecalc" .=) <$> _spAutoRecalc,
                   ("title" .=) <$> _spTitle,
                   ("timeZone" .=) <$> _spTimeZone])
@@ -459,9 +514,9 @@ instance ToJSON SpreadsheetProperties where
 -- /See:/ 'bOrders' smart constructor.
 data BOrders = BOrders'
     { _boBottom :: !(Maybe BOrder)
-    , _boLeft   :: !(Maybe BOrder)
-    , _boRight  :: !(Maybe BOrder)
-    , _boTop    :: !(Maybe BOrder)
+    , _boLeft :: !(Maybe BOrder)
+    , _boRight :: !(Maybe BOrder)
+    , _boTop :: !(Maybe BOrder)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BOrders' with the minimum fields required to make a request.
@@ -477,7 +532,7 @@ data BOrders = BOrders'
 -- * 'boTop'
 bOrders
     :: BOrders
-bOrders =
+bOrders = 
     BOrders'
     { _boBottom = Nothing
     , _boLeft = Nothing
@@ -518,12 +573,55 @@ instance ToJSON BOrders where
                   ("left" .=) <$> _boLeft, ("right" .=) <$> _boRight,
                   ("top" .=) <$> _boTop])
 
+-- | The request for clearing more than one range selected by a DataFilter in
+-- a spreadsheet.
+--
+-- /See:/ 'batchClearValuesByDataFilterRequest' smart constructor.
+newtype BatchClearValuesByDataFilterRequest = BatchClearValuesByDataFilterRequest'
+    { _bcvbdfrDataFilters :: Maybe [DataFilter]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchClearValuesByDataFilterRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bcvbdfrDataFilters'
+batchClearValuesByDataFilterRequest
+    :: BatchClearValuesByDataFilterRequest
+batchClearValuesByDataFilterRequest = 
+    BatchClearValuesByDataFilterRequest'
+    { _bcvbdfrDataFilters = Nothing
+    }
+
+-- | The DataFilters used to determine which ranges to clear.
+bcvbdfrDataFilters :: Lens' BatchClearValuesByDataFilterRequest [DataFilter]
+bcvbdfrDataFilters
+  = lens _bcvbdfrDataFilters
+      (\ s a -> s{_bcvbdfrDataFilters = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON BatchClearValuesByDataFilterRequest
+         where
+        parseJSON
+          = withObject "BatchClearValuesByDataFilterRequest"
+              (\ o ->
+                 BatchClearValuesByDataFilterRequest' <$>
+                   (o .:? "dataFilters" .!= mempty))
+
+instance ToJSON BatchClearValuesByDataFilterRequest
+         where
+        toJSON BatchClearValuesByDataFilterRequest'{..}
+          = object
+              (catMaybes
+                 [("dataFilters" .=) <$> _bcvbdfrDataFilters])
+
 -- | A run of a text format. The format of this run continues until the start
 -- index of the next run. When updating, all fields must be set.
 --
 -- /See:/ 'textFormatRun' smart constructor.
 data TextFormatRun = TextFormatRun'
-    { _tfrFormat     :: !(Maybe TextFormat)
+    { _tfrFormat :: !(Maybe TextFormat)
     , _tfrStartIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -536,7 +634,7 @@ data TextFormatRun = TextFormatRun'
 -- * 'tfrStartIndex'
 textFormatRun
     :: TextFormatRun
-textFormatRun =
+textFormatRun = 
     TextFormatRun'
     { _tfrFormat = Nothing
     , _tfrStartIndex = Nothing
@@ -585,7 +683,7 @@ newtype AddSheetRequest = AddSheetRequest'
 -- * 'asrProperties'
 addSheetRequest
     :: AddSheetRequest
-addSheetRequest =
+addSheetRequest = 
     AddSheetRequest'
     { _asrProperties = Nothing
     }
@@ -613,7 +711,7 @@ instance ToJSON AddSheetRequest where
 --
 -- /See:/ 'sortSpec' smart constructor.
 data SortSpec = SortSpec'
-    { _ssSortOrder      :: !(Maybe SortSpecSortOrder)
+    { _ssSortOrder :: !(Maybe SortSpecSortOrder)
     , _ssDimensionIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -626,7 +724,7 @@ data SortSpec = SortSpec'
 -- * 'ssDimensionIndex'
 sortSpec
     :: SortSpec
-sortSpec =
+sortSpec = 
     SortSpec'
     { _ssSortOrder = Nothing
     , _ssDimensionIndex = Nothing
@@ -662,10 +760,10 @@ instance ToJSON SortSpec where
 --
 -- /See:/ 'copyPasteRequest' smart constructor.
 data CopyPasteRequest = CopyPasteRequest'
-    { _cprDestination      :: !(Maybe GridRange)
-    , _cprSource           :: !(Maybe GridRange)
+    { _cprDestination :: !(Maybe GridRange)
+    , _cprSource :: !(Maybe GridRange)
     , _cprPasteOrientation :: !(Maybe CopyPasteRequestPasteOrientation)
-    , _cprPasteType        :: !(Maybe CopyPasteRequestPasteType)
+    , _cprPasteType :: !(Maybe CopyPasteRequestPasteType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CopyPasteRequest' with the minimum fields required to make a request.
@@ -681,7 +779,7 @@ data CopyPasteRequest = CopyPasteRequest'
 -- * 'cprPasteType'
 copyPasteRequest
     :: CopyPasteRequest
-copyPasteRequest =
+copyPasteRequest = 
     CopyPasteRequest'
     { _cprDestination = Nothing
     , _cprSource = Nothing
@@ -750,11 +848,11 @@ instance ToJSON CopyPasteRequest where
 --
 -- /See:/ 'gridRange' smart constructor.
 data GridRange = GridRange'
-    { _grEndColumnIndex   :: !(Maybe (Textual Int32))
+    { _grEndColumnIndex :: !(Maybe (Textual Int32))
     , _grStartColumnIndex :: !(Maybe (Textual Int32))
-    , _grEndRowIndex      :: !(Maybe (Textual Int32))
-    , _grStartRowIndex    :: !(Maybe (Textual Int32))
-    , _grSheetId          :: !(Maybe (Textual Int32))
+    , _grEndRowIndex :: !(Maybe (Textual Int32))
+    , _grStartRowIndex :: !(Maybe (Textual Int32))
+    , _grSheetId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GridRange' with the minimum fields required to make a request.
@@ -772,7 +870,7 @@ data GridRange = GridRange'
 -- * 'grSheetId'
 gridRange
     :: GridRange
-gridRange =
+gridRange = 
     GridRange'
     { _grEndColumnIndex = Nothing
     , _grStartColumnIndex = Nothing
@@ -850,7 +948,7 @@ newtype AddFilterViewResponse = AddFilterViewResponse'
 -- * 'afvrFilter'
 addFilterViewResponse
     :: AddFilterViewResponse
-addFilterViewResponse =
+addFilterViewResponse = 
     AddFilterViewResponse'
     { _afvrFilter = Nothing
     }
@@ -876,7 +974,7 @@ instance ToJSON AddFilterViewResponse where
 -- /See:/ 'booleanCondition' smart constructor.
 data BooleanCondition = BooleanCondition'
     { _bcValues :: !(Maybe [ConditionValue])
-    , _bcType   :: !(Maybe BooleanConditionType)
+    , _bcType :: !(Maybe BooleanConditionType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BooleanCondition' with the minimum fields required to make a request.
@@ -888,7 +986,7 @@ data BooleanCondition = BooleanCondition'
 -- * 'bcType'
 booleanCondition
     :: BooleanCondition
-booleanCondition =
+booleanCondition = 
     BooleanCondition'
     { _bcValues = Nothing
     , _bcType = Nothing
@@ -936,12 +1034,12 @@ newtype AutoResizeDimensionsRequest = AutoResizeDimensionsRequest'
 -- * 'ardrDimensions'
 autoResizeDimensionsRequest
     :: AutoResizeDimensionsRequest
-autoResizeDimensionsRequest =
+autoResizeDimensionsRequest = 
     AutoResizeDimensionsRequest'
     { _ardrDimensions = Nothing
     }
 
--- | The dimensions to automatically resize. Only COLUMNS are supported.
+-- | The dimensions to automatically resize.
 ardrDimensions :: Lens' AutoResizeDimensionsRequest (Maybe DimensionRange)
 ardrDimensions
   = lens _ardrDimensions
@@ -959,12 +1057,183 @@ instance ToJSON AutoResizeDimensionsRequest where
           = object
               (catMaybes [("dimensions" .=) <$> _ardrDimensions])
 
+-- | A </chart/interactive/docs/gallery/bubblechart bubble chart>.
+--
+-- /See:/ 'bubbleChartSpec' smart constructor.
+data BubbleChartSpec = BubbleChartSpec'
+    { _bcsBubbleTextStyle :: !(Maybe TextFormat)
+    , _bcsBubbleBOrderColor :: !(Maybe Color)
+    , _bcsLegendPosition :: !(Maybe BubbleChartSpecLegendPosition)
+    , _bcsDomain :: !(Maybe ChartData)
+    , _bcsSeries :: !(Maybe ChartData)
+    , _bcsBubbleLabels :: !(Maybe ChartData)
+    , _bcsGroupIds :: !(Maybe ChartData)
+    , _bcsBubbleMinRadiusSize :: !(Maybe (Textual Int32))
+    , _bcsBubbleMaxRadiusSize :: !(Maybe (Textual Int32))
+    , _bcsBubbleOpacity :: !(Maybe (Textual Double))
+    , _bcsBubbleSizes :: !(Maybe ChartData)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BubbleChartSpec' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bcsBubbleTextStyle'
+--
+-- * 'bcsBubbleBOrderColor'
+--
+-- * 'bcsLegendPosition'
+--
+-- * 'bcsDomain'
+--
+-- * 'bcsSeries'
+--
+-- * 'bcsBubbleLabels'
+--
+-- * 'bcsGroupIds'
+--
+-- * 'bcsBubbleMinRadiusSize'
+--
+-- * 'bcsBubbleMaxRadiusSize'
+--
+-- * 'bcsBubbleOpacity'
+--
+-- * 'bcsBubbleSizes'
+bubbleChartSpec
+    :: BubbleChartSpec
+bubbleChartSpec = 
+    BubbleChartSpec'
+    { _bcsBubbleTextStyle = Nothing
+    , _bcsBubbleBOrderColor = Nothing
+    , _bcsLegendPosition = Nothing
+    , _bcsDomain = Nothing
+    , _bcsSeries = Nothing
+    , _bcsBubbleLabels = Nothing
+    , _bcsGroupIds = Nothing
+    , _bcsBubbleMinRadiusSize = Nothing
+    , _bcsBubbleMaxRadiusSize = Nothing
+    , _bcsBubbleOpacity = Nothing
+    , _bcsBubbleSizes = Nothing
+    }
+
+-- | The format of the text inside the bubbles. Underline and Strikethrough
+-- are not supported.
+bcsBubbleTextStyle :: Lens' BubbleChartSpec (Maybe TextFormat)
+bcsBubbleTextStyle
+  = lens _bcsBubbleTextStyle
+      (\ s a -> s{_bcsBubbleTextStyle = a})
+
+-- | The bubble border color.
+bcsBubbleBOrderColor :: Lens' BubbleChartSpec (Maybe Color)
+bcsBubbleBOrderColor
+  = lens _bcsBubbleBOrderColor
+      (\ s a -> s{_bcsBubbleBOrderColor = a})
+
+-- | Where the legend of the chart should be drawn.
+bcsLegendPosition :: Lens' BubbleChartSpec (Maybe BubbleChartSpecLegendPosition)
+bcsLegendPosition
+  = lens _bcsLegendPosition
+      (\ s a -> s{_bcsLegendPosition = a})
+
+-- | The data containing the bubble x-values. These values locate the bubbles
+-- in the chart horizontally.
+bcsDomain :: Lens' BubbleChartSpec (Maybe ChartData)
+bcsDomain
+  = lens _bcsDomain (\ s a -> s{_bcsDomain = a})
+
+-- | The data contianing the bubble y-values. These values locate the bubbles
+-- in the chart vertically.
+bcsSeries :: Lens' BubbleChartSpec (Maybe ChartData)
+bcsSeries
+  = lens _bcsSeries (\ s a -> s{_bcsSeries = a})
+
+-- | The data containing the bubble labels. These do not need to be unique.
+bcsBubbleLabels :: Lens' BubbleChartSpec (Maybe ChartData)
+bcsBubbleLabels
+  = lens _bcsBubbleLabels
+      (\ s a -> s{_bcsBubbleLabels = a})
+
+-- | The data containing the bubble group IDs. All bubbles with the same
+-- group ID will be drawn in the same color. If bubble_sizes is specified
+-- then this field must also be specified but may contain blank values.
+-- This field is optional.
+bcsGroupIds :: Lens' BubbleChartSpec (Maybe ChartData)
+bcsGroupIds
+  = lens _bcsGroupIds (\ s a -> s{_bcsGroupIds = a})
+
+-- | The minimum radius size of the bubbles, in pixels. If specific, the
+-- field must be a positive value.
+bcsBubbleMinRadiusSize :: Lens' BubbleChartSpec (Maybe Int32)
+bcsBubbleMinRadiusSize
+  = lens _bcsBubbleMinRadiusSize
+      (\ s a -> s{_bcsBubbleMinRadiusSize = a})
+      . mapping _Coerce
+
+-- | The max radius size of the bubbles, in pixels. If specified, the field
+-- must be a positive value.
+bcsBubbleMaxRadiusSize :: Lens' BubbleChartSpec (Maybe Int32)
+bcsBubbleMaxRadiusSize
+  = lens _bcsBubbleMaxRadiusSize
+      (\ s a -> s{_bcsBubbleMaxRadiusSize = a})
+      . mapping _Coerce
+
+-- | The opacity of the bubbles between 0 and 1.0. 0 is fully transparent and
+-- 1 is fully opaque.
+bcsBubbleOpacity :: Lens' BubbleChartSpec (Maybe Double)
+bcsBubbleOpacity
+  = lens _bcsBubbleOpacity
+      (\ s a -> s{_bcsBubbleOpacity = a})
+      . mapping _Coerce
+
+-- | The data contianing the bubble sizes. Bubble sizes are used to draw the
+-- bubbles at different sizes relative to each other. If specified,
+-- group_ids must also be specified. This field is optional.
+bcsBubbleSizes :: Lens' BubbleChartSpec (Maybe ChartData)
+bcsBubbleSizes
+  = lens _bcsBubbleSizes
+      (\ s a -> s{_bcsBubbleSizes = a})
+
+instance FromJSON BubbleChartSpec where
+        parseJSON
+          = withObject "BubbleChartSpec"
+              (\ o ->
+                 BubbleChartSpec' <$>
+                   (o .:? "bubbleTextStyle") <*>
+                     (o .:? "bubbleBorderColor")
+                     <*> (o .:? "legendPosition")
+                     <*> (o .:? "domain")
+                     <*> (o .:? "series")
+                     <*> (o .:? "bubbleLabels")
+                     <*> (o .:? "groupIds")
+                     <*> (o .:? "bubbleMinRadiusSize")
+                     <*> (o .:? "bubbleMaxRadiusSize")
+                     <*> (o .:? "bubbleOpacity")
+                     <*> (o .:? "bubbleSizes"))
+
+instance ToJSON BubbleChartSpec where
+        toJSON BubbleChartSpec'{..}
+          = object
+              (catMaybes
+                 [("bubbleTextStyle" .=) <$> _bcsBubbleTextStyle,
+                  ("bubbleBorderColor" .=) <$> _bcsBubbleBOrderColor,
+                  ("legendPosition" .=) <$> _bcsLegendPosition,
+                  ("domain" .=) <$> _bcsDomain,
+                  ("series" .=) <$> _bcsSeries,
+                  ("bubbleLabels" .=) <$> _bcsBubbleLabels,
+                  ("groupIds" .=) <$> _bcsGroupIds,
+                  ("bubbleMinRadiusSize" .=) <$>
+                    _bcsBubbleMinRadiusSize,
+                  ("bubbleMaxRadiusSize" .=) <$>
+                    _bcsBubbleMaxRadiusSize,
+                  ("bubbleOpacity" .=) <$> _bcsBubbleOpacity,
+                  ("bubbleSizes" .=) <$> _bcsBubbleSizes])
+
 -- | Deletes a range of cells, shifting other cells into the deleted area.
 --
 -- /See:/ 'deleteRangeRequest' smart constructor.
 data DeleteRangeRequest = DeleteRangeRequest'
     { _drrShiftDimension :: !(Maybe DeleteRangeRequestShiftDimension)
-    , _drrRange          :: !(Maybe GridRange)
+    , _drrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeleteRangeRequest' with the minimum fields required to make a request.
@@ -976,7 +1245,7 @@ data DeleteRangeRequest = DeleteRangeRequest'
 -- * 'drrRange'
 deleteRangeRequest
     :: DeleteRangeRequest
-deleteRangeRequest =
+deleteRangeRequest = 
     DeleteRangeRequest'
     { _drrShiftDimension = Nothing
     , _drrRange = Nothing
@@ -1013,15 +1282,16 @@ instance ToJSON DeleteRangeRequest where
 --
 -- /See:/ 'sheet' smart constructor.
 data Sheet = Sheet'
-    { _sData               :: !(Maybe [GridData])
-    , _sMerges             :: !(Maybe [GridRange])
-    , _sProtectedRanges    :: !(Maybe [ProtectedRange])
-    , _sBandedRanges       :: !(Maybe [BandedRange])
-    , _sCharts             :: !(Maybe [EmbeddedChart])
-    , _sBasicFilter        :: !(Maybe BasicFilter)
+    { _sData :: !(Maybe [GridData])
+    , _sMerges :: !(Maybe [GridRange])
+    , _sProtectedRanges :: !(Maybe [ProtectedRange])
+    , _sBandedRanges :: !(Maybe [BandedRange])
+    , _sCharts :: !(Maybe [EmbeddedChart])
+    , _sBasicFilter :: !(Maybe BasicFilter)
+    , _sDeveloperMetadata :: !(Maybe [DeveloperMetadata])
     , _sConditionalFormats :: !(Maybe [ConditionalFormatRule])
-    , _sFilterViews        :: !(Maybe [FilterView])
-    , _sProperties         :: !(Maybe SheetProperties)
+    , _sFilterViews :: !(Maybe [FilterView])
+    , _sProperties :: !(Maybe SheetProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Sheet' with the minimum fields required to make a request.
@@ -1040,6 +1310,8 @@ data Sheet = Sheet'
 --
 -- * 'sBasicFilter'
 --
+-- * 'sDeveloperMetadata'
+--
 -- * 'sConditionalFormats'
 --
 -- * 'sFilterViews'
@@ -1047,7 +1319,7 @@ data Sheet = Sheet'
 -- * 'sProperties'
 sheet
     :: Sheet
-sheet =
+sheet = 
     Sheet'
     { _sData = Nothing
     , _sMerges = Nothing
@@ -1055,6 +1327,7 @@ sheet =
     , _sBandedRanges = Nothing
     , _sCharts = Nothing
     , _sBasicFilter = Nothing
+    , _sDeveloperMetadata = Nothing
     , _sConditionalFormats = Nothing
     , _sFilterViews = Nothing
     , _sProperties = Nothing
@@ -1106,6 +1379,14 @@ sBasicFilter :: Lens' Sheet (Maybe BasicFilter)
 sBasicFilter
   = lens _sBasicFilter (\ s a -> s{_sBasicFilter = a})
 
+-- | The developer metadata associated with a sheet.
+sDeveloperMetadata :: Lens' Sheet [DeveloperMetadata]
+sDeveloperMetadata
+  = lens _sDeveloperMetadata
+      (\ s a -> s{_sDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
 -- | The conditional format rules in this sheet.
 sConditionalFormats :: Lens' Sheet [ConditionalFormatRule]
 sConditionalFormats
@@ -1137,6 +1418,7 @@ instance FromJSON Sheet where
                      <*> (o .:? "bandedRanges" .!= mempty)
                      <*> (o .:? "charts" .!= mempty)
                      <*> (o .:? "basicFilter")
+                     <*> (o .:? "developerMetadata" .!= mempty)
                      <*> (o .:? "conditionalFormats" .!= mempty)
                      <*> (o .:? "filterViews" .!= mempty)
                      <*> (o .:? "properties"))
@@ -1150,6 +1432,7 @@ instance ToJSON Sheet where
                   ("bandedRanges" .=) <$> _sBandedRanges,
                   ("charts" .=) <$> _sCharts,
                   ("basicFilter" .=) <$> _sBasicFilter,
+                  ("developerMetadata" .=) <$> _sDeveloperMetadata,
                   ("conditionalFormats" .=) <$> _sConditionalFormats,
                   ("filterViews" .=) <$> _sFilterViews,
                   ("properties" .=) <$> _sProperties])
@@ -1159,8 +1442,8 @@ instance ToJSON Sheet where
 -- /See:/ 'gridCoordinate' smart constructor.
 data GridCoordinate = GridCoordinate'
     { _gcColumnIndex :: !(Maybe (Textual Int32))
-    , _gcRowIndex    :: !(Maybe (Textual Int32))
-    , _gcSheetId     :: !(Maybe (Textual Int32))
+    , _gcRowIndex :: !(Maybe (Textual Int32))
+    , _gcSheetId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GridCoordinate' with the minimum fields required to make a request.
@@ -1174,7 +1457,7 @@ data GridCoordinate = GridCoordinate'
 -- * 'gcSheetId'
 gridCoordinate
     :: GridCoordinate
-gridCoordinate =
+gridCoordinate = 
     GridCoordinate'
     { _gcColumnIndex = Nothing
     , _gcRowIndex = Nothing
@@ -1220,7 +1503,7 @@ instance ToJSON GridCoordinate where
 --
 -- /See:/ 'clearValuesResponse' smart constructor.
 data ClearValuesResponse = ClearValuesResponse'
-    { _cvrClearedRange  :: !(Maybe Text)
+    { _cvrClearedRange :: !(Maybe Text)
     , _cvrSpreadsheetId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1233,7 +1516,7 @@ data ClearValuesResponse = ClearValuesResponse'
 -- * 'cvrSpreadsheetId'
 clearValuesResponse
     :: ClearValuesResponse
-clearValuesResponse =
+clearValuesResponse = 
     ClearValuesResponse'
     { _cvrClearedRange = Nothing
     , _cvrSpreadsheetId = Nothing
@@ -1282,7 +1565,7 @@ newtype ClearBasicFilterRequest = ClearBasicFilterRequest'
 -- * 'cbfrSheetId'
 clearBasicFilterRequest
     :: ClearBasicFilterRequest
-clearBasicFilterRequest =
+clearBasicFilterRequest = 
     ClearBasicFilterRequest'
     { _cbfrSheetId = Nothing
     }
@@ -1310,8 +1593,8 @@ instance ToJSON ClearBasicFilterRequest where
 -- /See:/ 'updateEmbeddedObjectPositionRequest' smart constructor.
 data UpdateEmbeddedObjectPositionRequest = UpdateEmbeddedObjectPositionRequest'
     { _ueoprNewPosition :: !(Maybe EmbeddedObjectPosition)
-    , _ueoprObjectId    :: !(Maybe (Textual Int32))
-    , _ueoprFields      :: !(Maybe FieldMask)
+    , _ueoprObjectId :: !(Maybe (Textual Int32))
+    , _ueoprFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateEmbeddedObjectPositionRequest' with the minimum fields required to make a request.
@@ -1325,7 +1608,7 @@ data UpdateEmbeddedObjectPositionRequest = UpdateEmbeddedObjectPositionRequest'
 -- * 'ueoprFields'
 updateEmbeddedObjectPositionRequest
     :: UpdateEmbeddedObjectPositionRequest
-updateEmbeddedObjectPositionRequest =
+updateEmbeddedObjectPositionRequest = 
     UpdateEmbeddedObjectPositionRequest'
     { _ueoprNewPosition = Nothing
     , _ueoprObjectId = Nothing
@@ -1379,7 +1662,7 @@ instance ToJSON UpdateEmbeddedObjectPositionRequest
 --
 -- /See:/ 'booleanRule' smart constructor.
 data BooleanRule = BooleanRule'
-    { _brFormat    :: !(Maybe CellFormat)
+    { _brFormat :: !(Maybe CellFormat)
     , _brCondition :: !(Maybe BooleanCondition)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1392,7 +1675,7 @@ data BooleanRule = BooleanRule'
 -- * 'brCondition'
 booleanRule
     :: BooleanRule
-booleanRule =
+booleanRule = 
     BooleanRule'
     { _brFormat = Nothing
     , _brCondition = Nothing
@@ -1424,12 +1707,67 @@ instance ToJSON BooleanRule where
                  [("format" .=) <$> _brFormat,
                   ("condition" .=) <$> _brCondition])
 
+-- | The response when retrieving more than one range of values in a
+-- spreadsheet selected by DataFilters.
+--
+-- /See:/ 'batchGetValuesByDataFilterResponse' smart constructor.
+data BatchGetValuesByDataFilterResponse = BatchGetValuesByDataFilterResponse'
+    { _bgvbdfrSpreadsheetId :: !(Maybe Text)
+    , _bgvbdfrValueRanges :: !(Maybe [MatchedValueRange])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchGetValuesByDataFilterResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bgvbdfrSpreadsheetId'
+--
+-- * 'bgvbdfrValueRanges'
+batchGetValuesByDataFilterResponse
+    :: BatchGetValuesByDataFilterResponse
+batchGetValuesByDataFilterResponse = 
+    BatchGetValuesByDataFilterResponse'
+    { _bgvbdfrSpreadsheetId = Nothing
+    , _bgvbdfrValueRanges = Nothing
+    }
+
+-- | The ID of the spreadsheet the data was retrieved from.
+bgvbdfrSpreadsheetId :: Lens' BatchGetValuesByDataFilterResponse (Maybe Text)
+bgvbdfrSpreadsheetId
+  = lens _bgvbdfrSpreadsheetId
+      (\ s a -> s{_bgvbdfrSpreadsheetId = a})
+
+-- | The requested values with the list of data filters that matched them.
+bgvbdfrValueRanges :: Lens' BatchGetValuesByDataFilterResponse [MatchedValueRange]
+bgvbdfrValueRanges
+  = lens _bgvbdfrValueRanges
+      (\ s a -> s{_bgvbdfrValueRanges = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON BatchGetValuesByDataFilterResponse
+         where
+        parseJSON
+          = withObject "BatchGetValuesByDataFilterResponse"
+              (\ o ->
+                 BatchGetValuesByDataFilterResponse' <$>
+                   (o .:? "spreadsheetId") <*>
+                     (o .:? "valueRanges" .!= mempty))
+
+instance ToJSON BatchGetValuesByDataFilterResponse
+         where
+        toJSON BatchGetValuesByDataFilterResponse'{..}
+          = object
+              (catMaybes
+                 [("spreadsheetId" .=) <$> _bgvbdfrSpreadsheetId,
+                  ("valueRanges" .=) <$> _bgvbdfrValueRanges])
+
 -- | A combination of a source range and how to extend that source.
 --
 -- /See:/ 'sourceAndDestination' smart constructor.
 data SourceAndDestination = SourceAndDestination'
-    { _sadDimension  :: !(Maybe SourceAndDestinationDimension)
-    , _sadSource     :: !(Maybe GridRange)
+    { _sadDimension :: !(Maybe SourceAndDestinationDimension)
+    , _sadSource :: !(Maybe GridRange)
     , _sadFillLength :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1444,7 +1782,7 @@ data SourceAndDestination = SourceAndDestination'
 -- * 'sadFillLength'
 sourceAndDestination
     :: SourceAndDestination
-sourceAndDestination =
+sourceAndDestination = 
     SourceAndDestination'
     { _sadDimension = Nothing
     , _sadSource = Nothing
@@ -1491,11 +1829,11 @@ instance ToJSON SourceAndDestination where
 --
 -- /See:/ 'pasteDataRequest' smart constructor.
 data PasteDataRequest = PasteDataRequest'
-    { _pdrData       :: !(Maybe Text)
+    { _pdrData :: !(Maybe Text)
     , _pdrCoordinate :: !(Maybe GridCoordinate)
-    , _pdrHTML       :: !(Maybe Bool)
-    , _pdrType       :: !(Maybe PasteDataRequestType)
-    , _pdrDelimiter  :: !(Maybe Text)
+    , _pdrHTML :: !(Maybe Bool)
+    , _pdrType :: !(Maybe PasteDataRequestType)
+    , _pdrDelimiter :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PasteDataRequest' with the minimum fields required to make a request.
@@ -1513,7 +1851,7 @@ data PasteDataRequest = PasteDataRequest'
 -- * 'pdrDelimiter'
 pasteDataRequest
     :: PasteDataRequest
-pasteDataRequest =
+pasteDataRequest = 
     PasteDataRequest'
     { _pdrData = Nothing
     , _pdrCoordinate = Nothing
@@ -1569,9 +1907,9 @@ instance ToJSON PasteDataRequest where
 --
 -- /See:/ 'appendCellsRequest' smart constructor.
 data AppendCellsRequest = AppendCellsRequest'
-    { _acrRows    :: !(Maybe [RowData])
+    { _acrRows :: !(Maybe [RowData])
     , _acrSheetId :: !(Maybe (Textual Int32))
-    , _acrFields  :: !(Maybe FieldMask)
+    , _acrFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppendCellsRequest' with the minimum fields required to make a request.
@@ -1585,7 +1923,7 @@ data AppendCellsRequest = AppendCellsRequest'
 -- * 'acrFields'
 appendCellsRequest
     :: AppendCellsRequest
-appendCellsRequest =
+appendCellsRequest = 
     AppendCellsRequest'
     { _acrRows = Nothing
     , _acrSheetId = Nothing
@@ -1632,10 +1970,10 @@ instance ToJSON AppendCellsRequest where
 --
 -- /See:/ 'findReplaceResponse' smart constructor.
 data FindReplaceResponse = FindReplaceResponse'
-    { _frrValuesChanged      :: !(Maybe (Textual Int32))
-    , _frrFormulasChanged    :: !(Maybe (Textual Int32))
-    , _frrRowsChanged        :: !(Maybe (Textual Int32))
-    , _frrSheetsChanged      :: !(Maybe (Textual Int32))
+    { _frrValuesChanged :: !(Maybe (Textual Int32))
+    , _frrFormulasChanged :: !(Maybe (Textual Int32))
+    , _frrRowsChanged :: !(Maybe (Textual Int32))
+    , _frrSheetsChanged :: !(Maybe (Textual Int32))
     , _frrOccurrencesChanged :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1654,7 +1992,7 @@ data FindReplaceResponse = FindReplaceResponse'
 -- * 'frrOccurrencesChanged'
 findReplaceResponse
     :: FindReplaceResponse
-findReplaceResponse =
+findReplaceResponse = 
     FindReplaceResponse'
     { _frrValuesChanged = Nothing
     , _frrFormulasChanged = Nothing
@@ -1726,10 +2064,10 @@ instance ToJSON FindReplaceResponse where
 --
 -- /See:/ 'pieChartSpec' smart constructor.
 data PieChartSpec = PieChartSpec'
-    { _pcsPieHole          :: !(Maybe (Textual Double))
-    , _pcsLegendPosition   :: !(Maybe PieChartSpecLegendPosition)
-    , _pcsDomain           :: !(Maybe ChartData)
-    , _pcsSeries           :: !(Maybe ChartData)
+    { _pcsPieHole :: !(Maybe (Textual Double))
+    , _pcsLegendPosition :: !(Maybe PieChartSpecLegendPosition)
+    , _pcsDomain :: !(Maybe ChartData)
+    , _pcsSeries :: !(Maybe ChartData)
     , _pcsThreeDimensional :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1748,7 +2086,7 @@ data PieChartSpec = PieChartSpec'
 -- * 'pcsThreeDimensional'
 pieChartSpec
     :: PieChartSpec
-pieChartSpec =
+pieChartSpec = 
     PieChartSpec'
     { _pcsPieHole = Nothing
     , _pcsLegendPosition = Nothing
@@ -1807,11 +2145,123 @@ instance ToJSON PieChartSpec where
 
 -- | The response when updating a range of values in a spreadsheet.
 --
+-- /See:/ 'batchUpdateValuesByDataFilterResponse' smart constructor.
+data BatchUpdateValuesByDataFilterResponse = BatchUpdateValuesByDataFilterResponse'
+    { _buvbdfrTotalUpdatedColumns :: !(Maybe (Textual Int32))
+    , _buvbdfrResponses :: !(Maybe [UpdateValuesByDataFilterResponse])
+    , _buvbdfrSpreadsheetId :: !(Maybe Text)
+    , _buvbdfrTotalUpdatedSheets :: !(Maybe (Textual Int32))
+    , _buvbdfrTotalUpdatedCells :: !(Maybe (Textual Int32))
+    , _buvbdfrTotalUpdatedRows :: !(Maybe (Textual Int32))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchUpdateValuesByDataFilterResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'buvbdfrTotalUpdatedColumns'
+--
+-- * 'buvbdfrResponses'
+--
+-- * 'buvbdfrSpreadsheetId'
+--
+-- * 'buvbdfrTotalUpdatedSheets'
+--
+-- * 'buvbdfrTotalUpdatedCells'
+--
+-- * 'buvbdfrTotalUpdatedRows'
+batchUpdateValuesByDataFilterResponse
+    :: BatchUpdateValuesByDataFilterResponse
+batchUpdateValuesByDataFilterResponse = 
+    BatchUpdateValuesByDataFilterResponse'
+    { _buvbdfrTotalUpdatedColumns = Nothing
+    , _buvbdfrResponses = Nothing
+    , _buvbdfrSpreadsheetId = Nothing
+    , _buvbdfrTotalUpdatedSheets = Nothing
+    , _buvbdfrTotalUpdatedCells = Nothing
+    , _buvbdfrTotalUpdatedRows = Nothing
+    }
+
+-- | The total number of columns where at least one cell in the column was
+-- updated.
+buvbdfrTotalUpdatedColumns :: Lens' BatchUpdateValuesByDataFilterResponse (Maybe Int32)
+buvbdfrTotalUpdatedColumns
+  = lens _buvbdfrTotalUpdatedColumns
+      (\ s a -> s{_buvbdfrTotalUpdatedColumns = a})
+      . mapping _Coerce
+
+-- | The response for each range updated.
+buvbdfrResponses :: Lens' BatchUpdateValuesByDataFilterResponse [UpdateValuesByDataFilterResponse]
+buvbdfrResponses
+  = lens _buvbdfrResponses
+      (\ s a -> s{_buvbdfrResponses = a})
+      . _Default
+      . _Coerce
+
+-- | The spreadsheet the updates were applied to.
+buvbdfrSpreadsheetId :: Lens' BatchUpdateValuesByDataFilterResponse (Maybe Text)
+buvbdfrSpreadsheetId
+  = lens _buvbdfrSpreadsheetId
+      (\ s a -> s{_buvbdfrSpreadsheetId = a})
+
+-- | The total number of sheets where at least one cell in the sheet was
+-- updated.
+buvbdfrTotalUpdatedSheets :: Lens' BatchUpdateValuesByDataFilterResponse (Maybe Int32)
+buvbdfrTotalUpdatedSheets
+  = lens _buvbdfrTotalUpdatedSheets
+      (\ s a -> s{_buvbdfrTotalUpdatedSheets = a})
+      . mapping _Coerce
+
+-- | The total number of cells updated.
+buvbdfrTotalUpdatedCells :: Lens' BatchUpdateValuesByDataFilterResponse (Maybe Int32)
+buvbdfrTotalUpdatedCells
+  = lens _buvbdfrTotalUpdatedCells
+      (\ s a -> s{_buvbdfrTotalUpdatedCells = a})
+      . mapping _Coerce
+
+-- | The total number of rows where at least one cell in the row was updated.
+buvbdfrTotalUpdatedRows :: Lens' BatchUpdateValuesByDataFilterResponse (Maybe Int32)
+buvbdfrTotalUpdatedRows
+  = lens _buvbdfrTotalUpdatedRows
+      (\ s a -> s{_buvbdfrTotalUpdatedRows = a})
+      . mapping _Coerce
+
+instance FromJSON
+         BatchUpdateValuesByDataFilterResponse where
+        parseJSON
+          = withObject "BatchUpdateValuesByDataFilterResponse"
+              (\ o ->
+                 BatchUpdateValuesByDataFilterResponse' <$>
+                   (o .:? "totalUpdatedColumns") <*>
+                     (o .:? "responses" .!= mempty)
+                     <*> (o .:? "spreadsheetId")
+                     <*> (o .:? "totalUpdatedSheets")
+                     <*> (o .:? "totalUpdatedCells")
+                     <*> (o .:? "totalUpdatedRows"))
+
+instance ToJSON BatchUpdateValuesByDataFilterResponse
+         where
+        toJSON BatchUpdateValuesByDataFilterResponse'{..}
+          = object
+              (catMaybes
+                 [("totalUpdatedColumns" .=) <$>
+                    _buvbdfrTotalUpdatedColumns,
+                  ("responses" .=) <$> _buvbdfrResponses,
+                  ("spreadsheetId" .=) <$> _buvbdfrSpreadsheetId,
+                  ("totalUpdatedSheets" .=) <$>
+                    _buvbdfrTotalUpdatedSheets,
+                  ("totalUpdatedCells" .=) <$>
+                    _buvbdfrTotalUpdatedCells,
+                  ("totalUpdatedRows" .=) <$>
+                    _buvbdfrTotalUpdatedRows])
+
+-- | The response when updating a range of values in a spreadsheet.
+--
 -- /See:/ 'appendValuesResponse' smart constructor.
 data AppendValuesResponse = AppendValuesResponse'
     { _avrSpreadsheetId :: !(Maybe Text)
-    , _avrUpdates       :: !(Maybe UpdateValuesResponse)
-    , _avrTableRange    :: !(Maybe Text)
+    , _avrUpdates :: !(Maybe UpdateValuesResponse)
+    , _avrTableRange :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppendValuesResponse' with the minimum fields required to make a request.
@@ -1825,7 +2275,7 @@ data AppendValuesResponse = AppendValuesResponse'
 -- * 'avrTableRange'
 appendValuesResponse
     :: AppendValuesResponse
-appendValuesResponse =
+appendValuesResponse = 
     AppendValuesResponse'
     { _avrSpreadsheetId = Nothing
     , _avrUpdates = Nothing
@@ -1872,8 +2322,8 @@ instance ToJSON AppendValuesResponse where
 data DataValidationRule = DataValidationRule'
     { _dvrShowCustomUi :: !(Maybe Bool)
     , _dvrInputMessage :: !(Maybe Text)
-    , _dvrStrict       :: !(Maybe Bool)
-    , _dvrCondition    :: !(Maybe BooleanCondition)
+    , _dvrStrict :: !(Maybe Bool)
+    , _dvrCondition :: !(Maybe BooleanCondition)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataValidationRule' with the minimum fields required to make a request.
@@ -1889,7 +2339,7 @@ data DataValidationRule = DataValidationRule'
 -- * 'dvrCondition'
 dataValidationRule
     :: DataValidationRule
-dataValidationRule =
+dataValidationRule = 
     DataValidationRule'
     { _dvrShowCustomUi = Nothing
     , _dvrInputMessage = Nothing
@@ -1942,12 +2392,12 @@ instance ToJSON DataValidationRule where
 --
 -- /See:/ 'filterView' smart constructor.
 data FilterView = FilterView'
-    { _fvSortSpecs    :: !(Maybe [SortSpec])
+    { _fvSortSpecs :: !(Maybe [SortSpec])
     , _fvNamedRangeId :: !(Maybe Text)
-    , _fvRange        :: !(Maybe GridRange)
+    , _fvRange :: !(Maybe GridRange)
     , _fvFilterViewId :: !(Maybe (Textual Int32))
-    , _fvTitle        :: !(Maybe Text)
-    , _fvCriteria     :: !(Maybe FilterViewCriteria)
+    , _fvTitle :: !(Maybe Text)
+    , _fvCriteria :: !(Maybe FilterViewCriteria)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilterView' with the minimum fields required to make a request.
@@ -1967,7 +2417,7 @@ data FilterView = FilterView'
 -- * 'fvCriteria'
 filterView
     :: FilterView
-filterView =
+filterView = 
     FilterView'
     { _fvSortSpecs = Nothing
     , _fvNamedRangeId = Nothing
@@ -2085,10 +2535,10 @@ instance ToJSON FilterView where
 --
 -- /See:/ 'color' smart constructor.
 data Color = Color'
-    { _cRed   :: !(Maybe (Textual Double))
+    { _cRed :: !(Maybe (Textual Double))
     , _cAlpha :: !(Maybe (Textual Double))
     , _cGreen :: !(Maybe (Textual Double))
-    , _cBlue  :: !(Maybe (Textual Double))
+    , _cBlue :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Color' with the minimum fields required to make a request.
@@ -2104,7 +2554,7 @@ data Color = Color'
 -- * 'cBlue'
 color
     :: Color
-color =
+color = 
     Color'
     { _cRed = Nothing
     , _cAlpha = Nothing
@@ -2173,7 +2623,7 @@ newtype DeleteFilterViewRequest = DeleteFilterViewRequest'
 -- * 'dfvrFilterId'
 deleteFilterViewRequest
     :: DeleteFilterViewRequest
-deleteFilterViewRequest =
+deleteFilterViewRequest = 
     DeleteFilterViewRequest'
     { _dfvrFilterId = Nothing
     }
@@ -2212,7 +2662,7 @@ data UpdateFilterViewRequest = UpdateFilterViewRequest'
 -- * 'ufvrFields'
 updateFilterViewRequest
     :: UpdateFilterViewRequest
-updateFilterViewRequest =
+updateFilterViewRequest = 
     UpdateFilterViewRequest'
     { _ufvrFilter = Nothing
     , _ufvrFields = Nothing
@@ -2250,27 +2700,27 @@ instance ToJSON UpdateFilterViewRequest where
 --
 -- /See:/ 'basicChartSeries' smart constructor.
 data BasicChartSeries = BasicChartSeries'
-    { _bcsTargetAxis :: !(Maybe BasicChartSeriesTargetAxis)
-    , _bcsSeries     :: !(Maybe ChartData)
-    , _bcsType       :: !(Maybe BasicChartSeriesType)
+    { _bTargetAxis :: !(Maybe BasicChartSeriesTargetAxis)
+    , _bSeries :: !(Maybe ChartData)
+    , _bType :: !(Maybe BasicChartSeriesType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BasicChartSeries' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'bcsTargetAxis'
+-- * 'bTargetAxis'
 --
--- * 'bcsSeries'
+-- * 'bSeries'
 --
--- * 'bcsType'
+-- * 'bType'
 basicChartSeries
     :: BasicChartSeries
-basicChartSeries =
+basicChartSeries = 
     BasicChartSeries'
-    { _bcsTargetAxis = Nothing
-    , _bcsSeries = Nothing
-    , _bcsType = Nothing
+    { _bTargetAxis = Nothing
+    , _bSeries = Nothing
+    , _bType = Nothing
     }
 
 -- | The minor axis that will specify the range of values for this series.
@@ -2279,21 +2729,19 @@ basicChartSeries =
 -- because the scale of trading volume is different than the scale of
 -- prices. It is an error to specify an axis that isn\'t a valid minor axis
 -- for the chart\'s type.
-bcsTargetAxis :: Lens' BasicChartSeries (Maybe BasicChartSeriesTargetAxis)
-bcsTargetAxis
-  = lens _bcsTargetAxis
-      (\ s a -> s{_bcsTargetAxis = a})
+bTargetAxis :: Lens' BasicChartSeries (Maybe BasicChartSeriesTargetAxis)
+bTargetAxis
+  = lens _bTargetAxis (\ s a -> s{_bTargetAxis = a})
 
 -- | The data being visualized in this chart series.
-bcsSeries :: Lens' BasicChartSeries (Maybe ChartData)
-bcsSeries
-  = lens _bcsSeries (\ s a -> s{_bcsSeries = a})
+bSeries :: Lens' BasicChartSeries (Maybe ChartData)
+bSeries = lens _bSeries (\ s a -> s{_bSeries = a})
 
 -- | The type of this series. Valid only if the chartType is COMBO. Different
 -- types will change the way the series is visualized. Only LINE, AREA, and
 -- COLUMN are supported.
-bcsType :: Lens' BasicChartSeries (Maybe BasicChartSeriesType)
-bcsType = lens _bcsType (\ s a -> s{_bcsType = a})
+bType :: Lens' BasicChartSeries (Maybe BasicChartSeriesType)
+bType = lens _bType (\ s a -> s{_bType = a})
 
 instance FromJSON BasicChartSeries where
         parseJSON
@@ -2307,9 +2755,8 @@ instance ToJSON BasicChartSeries where
         toJSON BasicChartSeries'{..}
           = object
               (catMaybes
-                 [("targetAxis" .=) <$> _bcsTargetAxis,
-                  ("series" .=) <$> _bcsSeries,
-                  ("type" .=) <$> _bcsType])
+                 [("targetAxis" .=) <$> _bTargetAxis,
+                  ("series" .=) <$> _bSeries, ("type" .=) <$> _bType])
 
 -- | Adds a new protected range.
 --
@@ -2325,7 +2772,7 @@ newtype AddProtectedRangeRequest = AddProtectedRangeRequest'
 -- * 'aprrProtectedRange'
 addProtectedRangeRequest
     :: AddProtectedRangeRequest
-addProtectedRangeRequest =
+addProtectedRangeRequest = 
     AddProtectedRangeRequest'
     { _aprrProtectedRange = Nothing
     }
@@ -2363,8 +2810,8 @@ instance ToJSON AddProtectedRangeRequest where
 --
 -- /See:/ 'repeatCellRequest' smart constructor.
 data RepeatCellRequest = RepeatCellRequest'
-    { _rcrCell   :: !(Maybe CellData)
-    , _rcrRange  :: !(Maybe GridRange)
+    { _rcrCell :: !(Maybe CellData)
+    , _rcrRange :: !(Maybe GridRange)
     , _rcrFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2379,7 +2826,7 @@ data RepeatCellRequest = RepeatCellRequest'
 -- * 'rcrFields'
 repeatCellRequest
     :: RepeatCellRequest
-repeatCellRequest =
+repeatCellRequest = 
     RepeatCellRequest'
     { _rcrCell = Nothing
     , _rcrRange = Nothing
@@ -2421,7 +2868,7 @@ instance ToJSON RepeatCellRequest where
 --
 -- /See:/ 'conditionValue' smart constructor.
 data ConditionValue = ConditionValue'
-    { _cvRelativeDate     :: !(Maybe ConditionValueRelativeDate)
+    { _cvRelativeDate :: !(Maybe ConditionValueRelativeDate)
     , _cvUserEnteredValue :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2434,7 +2881,7 @@ data ConditionValue = ConditionValue'
 -- * 'cvUserEnteredValue'
 conditionValue
     :: ConditionValue
-conditionValue =
+conditionValue = 
     ConditionValue'
     { _cvRelativeDate = Nothing
     , _cvUserEnteredValue = Nothing
@@ -2486,7 +2933,7 @@ newtype DeleteDimensionRequest = DeleteDimensionRequest'
 -- * 'ddrRange'
 deleteDimensionRequest
     :: DeleteDimensionRequest
-deleteDimensionRequest =
+deleteDimensionRequest = 
     DeleteDimensionRequest'
     { _ddrRange = Nothing
     }
@@ -2508,7 +2955,7 @@ instance ToJSON DeleteDimensionRequest where
 --
 -- /See:/ 'clearValuesRequest' smart constructor.
 data ClearValuesRequest =
-    ClearValuesRequest'
+    ClearValuesRequest' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ClearValuesRequest' with the minimum fields required to make a request.
@@ -2529,15 +2976,15 @@ instance ToJSON ClearValuesRequest where
 --
 -- /See:/ 'findReplaceRequest' smart constructor.
 data FindReplaceRequest = FindReplaceRequest'
-    { _frrMatchCase       :: !(Maybe Bool)
-    , _frrAllSheets       :: !(Maybe Bool)
+    { _frrMatchCase :: !(Maybe Bool)
+    , _frrAllSheets :: !(Maybe Bool)
     , _frrIncludeFormulas :: !(Maybe Bool)
     , _frrMatchEntireCell :: !(Maybe Bool)
-    , _frrRange           :: !(Maybe GridRange)
-    , _frrSheetId         :: !(Maybe (Textual Int32))
-    , _frrFind            :: !(Maybe Text)
-    , _frrSearchByRegex   :: !(Maybe Bool)
-    , _frrReplacement     :: !(Maybe Text)
+    , _frrRange :: !(Maybe GridRange)
+    , _frrSheetId :: !(Maybe (Textual Int32))
+    , _frrFind :: !(Maybe Text)
+    , _frrSearchByRegex :: !(Maybe Bool)
+    , _frrReplacement :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FindReplaceRequest' with the minimum fields required to make a request.
@@ -2563,7 +3010,7 @@ data FindReplaceRequest = FindReplaceRequest'
 -- * 'frrReplacement'
 findReplaceRequest
     :: FindReplaceRequest
-findReplaceRequest =
+findReplaceRequest = 
     FindReplaceRequest'
     { _frrMatchCase = Nothing
     , _frrAllSheets = Nothing
@@ -2665,7 +3112,7 @@ instance ToJSON FindReplaceRequest where
 -- /See:/ 'moveDimensionRequest' smart constructor.
 data MoveDimensionRequest = MoveDimensionRequest'
     { _mdrDestinationIndex :: !(Maybe (Textual Int32))
-    , _mdrSource           :: !(Maybe DimensionRange)
+    , _mdrSource :: !(Maybe DimensionRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MoveDimensionRequest' with the minimum fields required to make a request.
@@ -2677,7 +3124,7 @@ data MoveDimensionRequest = MoveDimensionRequest'
 -- * 'mdrSource'
 moveDimensionRequest
     :: MoveDimensionRequest
-moveDimensionRequest =
+moveDimensionRequest = 
     MoveDimensionRequest'
     { _mdrDestinationIndex = Nothing
     , _mdrSource = Nothing
@@ -2718,6 +3165,96 @@ instance ToJSON MoveDimensionRequest where
                  [("destinationIndex" .=) <$> _mdrDestinationIndex,
                   ("source" .=) <$> _mdrSource])
 
+-- | The request for retrieving a range of values in a spreadsheet selected
+-- by a set of DataFilters.
+--
+-- /See:/ 'batchGetValuesByDataFilterRequest' smart constructor.
+data BatchGetValuesByDataFilterRequest = BatchGetValuesByDataFilterRequest'
+    { _bgvbdfrValueRenderOption :: !(Maybe BatchGetValuesByDataFilterRequestValueRenderOption)
+    , _bgvbdfrDataFilters :: !(Maybe [DataFilter])
+    , _bgvbdfrDateTimeRenderOption :: !(Maybe BatchGetValuesByDataFilterRequestDateTimeRenderOption)
+    , _bgvbdfrMajorDimension :: !(Maybe BatchGetValuesByDataFilterRequestMajorDimension)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchGetValuesByDataFilterRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bgvbdfrValueRenderOption'
+--
+-- * 'bgvbdfrDataFilters'
+--
+-- * 'bgvbdfrDateTimeRenderOption'
+--
+-- * 'bgvbdfrMajorDimension'
+batchGetValuesByDataFilterRequest
+    :: BatchGetValuesByDataFilterRequest
+batchGetValuesByDataFilterRequest = 
+    BatchGetValuesByDataFilterRequest'
+    { _bgvbdfrValueRenderOption = Nothing
+    , _bgvbdfrDataFilters = Nothing
+    , _bgvbdfrDateTimeRenderOption = Nothing
+    , _bgvbdfrMajorDimension = Nothing
+    }
+
+-- | How values should be represented in the output. The default render
+-- option is ValueRenderOption.FORMATTED_VALUE.
+bgvbdfrValueRenderOption :: Lens' BatchGetValuesByDataFilterRequest (Maybe BatchGetValuesByDataFilterRequestValueRenderOption)
+bgvbdfrValueRenderOption
+  = lens _bgvbdfrValueRenderOption
+      (\ s a -> s{_bgvbdfrValueRenderOption = a})
+
+-- | The data filters used to match the ranges of values to retrieve. Ranges
+-- that match any of the specified data filters will be included in the
+-- response.
+bgvbdfrDataFilters :: Lens' BatchGetValuesByDataFilterRequest [DataFilter]
+bgvbdfrDataFilters
+  = lens _bgvbdfrDataFilters
+      (\ s a -> s{_bgvbdfrDataFilters = a})
+      . _Default
+      . _Coerce
+
+-- | How dates, times, and durations should be represented in the output.
+-- This is ignored if value_render_option is FORMATTED_VALUE. The default
+-- dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+bgvbdfrDateTimeRenderOption :: Lens' BatchGetValuesByDataFilterRequest (Maybe BatchGetValuesByDataFilterRequestDateTimeRenderOption)
+bgvbdfrDateTimeRenderOption
+  = lens _bgvbdfrDateTimeRenderOption
+      (\ s a -> s{_bgvbdfrDateTimeRenderOption = a})
+
+-- | The major dimension that results should use. For example, if the
+-- spreadsheet data is: \`A1=1,B1=2,A2=3,B2=4\`, then a request that
+-- selects that range and sets \`majorDimension=ROWS\` will return
+-- \`[[1,2],[3,4]]\`, whereas a request that sets
+-- \`majorDimension=COLUMNS\` will return \`[[1,3],[2,4]]\`.
+bgvbdfrMajorDimension :: Lens' BatchGetValuesByDataFilterRequest (Maybe BatchGetValuesByDataFilterRequestMajorDimension)
+bgvbdfrMajorDimension
+  = lens _bgvbdfrMajorDimension
+      (\ s a -> s{_bgvbdfrMajorDimension = a})
+
+instance FromJSON BatchGetValuesByDataFilterRequest
+         where
+        parseJSON
+          = withObject "BatchGetValuesByDataFilterRequest"
+              (\ o ->
+                 BatchGetValuesByDataFilterRequest' <$>
+                   (o .:? "valueRenderOption") <*>
+                     (o .:? "dataFilters" .!= mempty)
+                     <*> (o .:? "dateTimeRenderOption")
+                     <*> (o .:? "majorDimension"))
+
+instance ToJSON BatchGetValuesByDataFilterRequest
+         where
+        toJSON BatchGetValuesByDataFilterRequest'{..}
+          = object
+              (catMaybes
+                 [("valueRenderOption" .=) <$>
+                    _bgvbdfrValueRenderOption,
+                  ("dataFilters" .=) <$> _bgvbdfrDataFilters,
+                  ("dateTimeRenderOption" .=) <$>
+                    _bgvbdfrDateTimeRenderOption,
+                  ("majorDimension" .=) <$> _bgvbdfrMajorDimension])
+
 -- | A rule that applies a gradient color scale format, based on the
 -- interpolation points listed. The format of a cell will vary based on its
 -- contents as compared to the values of the interpolation points.
@@ -2740,7 +3277,7 @@ data GradientRule = GradientRule'
 -- * 'grMinpoint'
 gradientRule
     :: GradientRule
-gradientRule =
+gradientRule = 
     GradientRule'
     { _grMidpoint = Nothing
     , _grMaxpoint = Nothing
@@ -2783,8 +3320,8 @@ instance ToJSON GradientRule where
 -- /See:/ 'cutPasteRequest' smart constructor.
 data CutPasteRequest = CutPasteRequest'
     { _cDestination :: !(Maybe GridCoordinate)
-    , _cSource      :: !(Maybe GridRange)
-    , _cPasteType   :: !(Maybe CutPasteRequestPasteType)
+    , _cSource :: !(Maybe GridRange)
+    , _cPasteType :: !(Maybe CutPasteRequestPasteType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CutPasteRequest' with the minimum fields required to make a request.
@@ -2798,7 +3335,7 @@ data CutPasteRequest = CutPasteRequest'
 -- * 'cPasteType'
 cutPasteRequest
     :: CutPasteRequest
-cutPasteRequest =
+cutPasteRequest = 
     CutPasteRequest'
     { _cDestination = Nothing
     , _cSource = Nothing
@@ -2850,7 +3387,7 @@ newtype UpdateEmbeddedObjectPositionResponse = UpdateEmbeddedObjectPositionRespo
 -- * 'ueoprPosition'
 updateEmbeddedObjectPositionResponse
     :: UpdateEmbeddedObjectPositionResponse
-updateEmbeddedObjectPositionResponse =
+updateEmbeddedObjectPositionResponse = 
     UpdateEmbeddedObjectPositionResponse'
     { _ueoprPosition = Nothing
     }
@@ -2879,18 +3416,21 @@ instance ToJSON UpdateEmbeddedObjectPositionResponse
 --
 -- /See:/ 'response' smart constructor.
 data Response = Response'
-    { _rAddFilterView                :: !(Maybe AddFilterViewResponse)
-    , _rDuplicateFilterView          :: !(Maybe DuplicateFilterViewResponse)
+    { _rAddFilterView :: !(Maybe AddFilterViewResponse)
+    , _rCreateDeveloperMetadata :: !(Maybe CreateDeveloperMetadataResponse)
+    , _rDuplicateFilterView :: !(Maybe DuplicateFilterViewResponse)
     , _rUpdateEmbeddedObjectPosition :: !(Maybe UpdateEmbeddedObjectPositionResponse)
-    , _rAddSheet                     :: !(Maybe AddSheetResponse)
-    , _rFindReplace                  :: !(Maybe FindReplaceResponse)
-    , _rAddProtectedRange            :: !(Maybe AddProtectedRangeResponse)
-    , _rDeleteConditionalFormatRule  :: !(Maybe DeleteConditionalFormatRuleResponse)
-    , _rUpdateConditionalFormatRule  :: !(Maybe UpdateConditionalFormatRuleResponse)
-    , _rAddNamedRange                :: !(Maybe AddNamedRangeResponse)
-    , _rAddChart                     :: !(Maybe AddChartResponse)
-    , _rAddBanding                   :: !(Maybe AddBandingResponse)
-    , _rDuplicateSheet               :: !(Maybe DuplicateSheetResponse)
+    , _rAddSheet :: !(Maybe AddSheetResponse)
+    , _rFindReplace :: !(Maybe FindReplaceResponse)
+    , _rAddProtectedRange :: !(Maybe AddProtectedRangeResponse)
+    , _rDeleteConditionalFormatRule :: !(Maybe DeleteConditionalFormatRuleResponse)
+    , _rUpdateConditionalFormatRule :: !(Maybe UpdateConditionalFormatRuleResponse)
+    , _rDeleteDeveloperMetadata :: !(Maybe DeleteDeveloperMetadataResponse)
+    , _rUpdateDeveloperMetadata :: !(Maybe UpdateDeveloperMetadataResponse)
+    , _rAddNamedRange :: !(Maybe AddNamedRangeResponse)
+    , _rAddChart :: !(Maybe AddChartResponse)
+    , _rAddBanding :: !(Maybe AddBandingResponse)
+    , _rDuplicateSheet :: !(Maybe DuplicateSheetResponse)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Response' with the minimum fields required to make a request.
@@ -2898,6 +3438,8 @@ data Response = Response'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rAddFilterView'
+--
+-- * 'rCreateDeveloperMetadata'
 --
 -- * 'rDuplicateFilterView'
 --
@@ -2913,6 +3455,10 @@ data Response = Response'
 --
 -- * 'rUpdateConditionalFormatRule'
 --
+-- * 'rDeleteDeveloperMetadata'
+--
+-- * 'rUpdateDeveloperMetadata'
+--
 -- * 'rAddNamedRange'
 --
 -- * 'rAddChart'
@@ -2922,9 +3468,10 @@ data Response = Response'
 -- * 'rDuplicateSheet'
 response
     :: Response
-response =
+response = 
     Response'
     { _rAddFilterView = Nothing
+    , _rCreateDeveloperMetadata = Nothing
     , _rDuplicateFilterView = Nothing
     , _rUpdateEmbeddedObjectPosition = Nothing
     , _rAddSheet = Nothing
@@ -2932,6 +3479,8 @@ response =
     , _rAddProtectedRange = Nothing
     , _rDeleteConditionalFormatRule = Nothing
     , _rUpdateConditionalFormatRule = Nothing
+    , _rDeleteDeveloperMetadata = Nothing
+    , _rUpdateDeveloperMetadata = Nothing
     , _rAddNamedRange = Nothing
     , _rAddChart = Nothing
     , _rAddBanding = Nothing
@@ -2943,6 +3492,12 @@ rAddFilterView :: Lens' Response (Maybe AddFilterViewResponse)
 rAddFilterView
   = lens _rAddFilterView
       (\ s a -> s{_rAddFilterView = a})
+
+-- | A reply from creating a developer metadata entry.
+rCreateDeveloperMetadata :: Lens' Response (Maybe CreateDeveloperMetadataResponse)
+rCreateDeveloperMetadata
+  = lens _rCreateDeveloperMetadata
+      (\ s a -> s{_rCreateDeveloperMetadata = a})
 
 -- | A reply from duplicating a filter view.
 rDuplicateFilterView :: Lens' Response (Maybe DuplicateFilterViewResponse)
@@ -2984,6 +3539,18 @@ rUpdateConditionalFormatRule
   = lens _rUpdateConditionalFormatRule
       (\ s a -> s{_rUpdateConditionalFormatRule = a})
 
+-- | A reply from deleting a developer metadata entry.
+rDeleteDeveloperMetadata :: Lens' Response (Maybe DeleteDeveloperMetadataResponse)
+rDeleteDeveloperMetadata
+  = lens _rDeleteDeveloperMetadata
+      (\ s a -> s{_rDeleteDeveloperMetadata = a})
+
+-- | A reply from updating a developer metadata entry.
+rUpdateDeveloperMetadata :: Lens' Response (Maybe UpdateDeveloperMetadataResponse)
+rUpdateDeveloperMetadata
+  = lens _rUpdateDeveloperMetadata
+      (\ s a -> s{_rUpdateDeveloperMetadata = a})
+
 -- | A reply from adding a named range.
 rAddNamedRange :: Lens' Response (Maybe AddNamedRangeResponse)
 rAddNamedRange
@@ -3012,13 +3579,16 @@ instance FromJSON Response where
               (\ o ->
                  Response' <$>
                    (o .:? "addFilterView") <*>
-                     (o .:? "duplicateFilterView")
+                     (o .:? "createDeveloperMetadata")
+                     <*> (o .:? "duplicateFilterView")
                      <*> (o .:? "updateEmbeddedObjectPosition")
                      <*> (o .:? "addSheet")
                      <*> (o .:? "findReplace")
                      <*> (o .:? "addProtectedRange")
                      <*> (o .:? "deleteConditionalFormatRule")
                      <*> (o .:? "updateConditionalFormatRule")
+                     <*> (o .:? "deleteDeveloperMetadata")
+                     <*> (o .:? "updateDeveloperMetadata")
                      <*> (o .:? "addNamedRange")
                      <*> (o .:? "addChart")
                      <*> (o .:? "addBanding")
@@ -3029,6 +3599,8 @@ instance ToJSON Response where
           = object
               (catMaybes
                  [("addFilterView" .=) <$> _rAddFilterView,
+                  ("createDeveloperMetadata" .=) <$>
+                    _rCreateDeveloperMetadata,
                   ("duplicateFilterView" .=) <$> _rDuplicateFilterView,
                   ("updateEmbeddedObjectPosition" .=) <$>
                     _rUpdateEmbeddedObjectPosition,
@@ -3039,6 +3611,10 @@ instance ToJSON Response where
                     _rDeleteConditionalFormatRule,
                   ("updateConditionalFormatRule" .=) <$>
                     _rUpdateConditionalFormatRule,
+                  ("deleteDeveloperMetadata" .=) <$>
+                    _rDeleteDeveloperMetadata,
+                  ("updateDeveloperMetadata" .=) <$>
+                    _rUpdateDeveloperMetadata,
                   ("addNamedRange" .=) <$> _rAddNamedRange,
                   ("addChart" .=) <$> _rAddChart,
                   ("addBanding" .=) <$> _rAddBanding,
@@ -3049,7 +3625,7 @@ instance ToJSON Response where
 -- /See:/ 'filterCriteria' smart constructor.
 data FilterCriteria = FilterCriteria'
     { _fcHiddenValues :: !(Maybe [Text])
-    , _fcCondition    :: !(Maybe BooleanCondition)
+    , _fcCondition :: !(Maybe BooleanCondition)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilterCriteria' with the minimum fields required to make a request.
@@ -3061,7 +3637,7 @@ data FilterCriteria = FilterCriteria'
 -- * 'fcCondition'
 filterCriteria
     :: FilterCriteria
-filterCriteria =
+filterCriteria = 
     FilterCriteria'
     { _fcHiddenValues = Nothing
     , _fcCondition = Nothing
@@ -3101,7 +3677,7 @@ instance ToJSON FilterCriteria where
 --
 -- /See:/ 'errorValue' smart constructor.
 data ErrorValue = ErrorValue'
-    { _evType    :: !(Maybe ErrorValueType)
+    { _evType :: !(Maybe ErrorValueType)
     , _evMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3114,7 +3690,7 @@ data ErrorValue = ErrorValue'
 -- * 'evMessage'
 errorValue
     :: ErrorValue
-errorValue =
+errorValue = 
     ErrorValue'
     { _evType = Nothing
     , _evMessage = Nothing
@@ -3148,10 +3724,10 @@ instance ToJSON ErrorValue where
 --
 -- /See:/ 'updateConditionalFormatRuleRequest' smart constructor.
 data UpdateConditionalFormatRuleRequest = UpdateConditionalFormatRuleRequest'
-    { _ucfrrRule     :: !(Maybe ConditionalFormatRule)
+    { _ucfrrRule :: !(Maybe ConditionalFormatRule)
     , _ucfrrNewIndex :: !(Maybe (Textual Int32))
-    , _ucfrrSheetId  :: !(Maybe (Textual Int32))
-    , _ucfrrIndex    :: !(Maybe (Textual Int32))
+    , _ucfrrSheetId :: !(Maybe (Textual Int32))
+    , _ucfrrIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateConditionalFormatRuleRequest' with the minimum fields required to make a request.
@@ -3167,7 +3743,7 @@ data UpdateConditionalFormatRuleRequest = UpdateConditionalFormatRuleRequest'
 -- * 'ucfrrIndex'
 updateConditionalFormatRuleRequest
     :: UpdateConditionalFormatRuleRequest
-updateConditionalFormatRuleRequest =
+updateConditionalFormatRuleRequest = 
     UpdateConditionalFormatRuleRequest'
     { _ucfrrRule = Nothing
     , _ucfrrNewIndex = Nothing
@@ -3226,7 +3802,7 @@ instance ToJSON UpdateConditionalFormatRuleRequest
 -- /See:/ 'deleteConditionalFormatRuleRequest' smart constructor.
 data DeleteConditionalFormatRuleRequest = DeleteConditionalFormatRuleRequest'
     { _dcfrrSheetId :: !(Maybe (Textual Int32))
-    , _dcfrrIndex   :: !(Maybe (Textual Int32))
+    , _dcfrrIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeleteConditionalFormatRuleRequest' with the minimum fields required to make a request.
@@ -3238,7 +3814,7 @@ data DeleteConditionalFormatRuleRequest = DeleteConditionalFormatRuleRequest'
 -- * 'dcfrrIndex'
 deleteConditionalFormatRuleRequest
     :: DeleteConditionalFormatRuleRequest
-deleteConditionalFormatRuleRequest =
+deleteConditionalFormatRuleRequest = 
     DeleteConditionalFormatRuleRequest'
     { _dcfrrSheetId = Nothing
     , _dcfrrIndex = Nothing
@@ -3272,14 +3848,125 @@ instance ToJSON DeleteConditionalFormatRuleRequest
                  [("sheetId" .=) <$> _dcfrrSheetId,
                   ("index" .=) <$> _dcfrrIndex])
 
+-- | A request to update properties of developer metadata. Updates the
+-- properties of the developer metadata selected by the filters to the
+-- values provided in the DeveloperMetadata resource. Callers must specify
+-- the properties they wish to update in the fields parameter, as well as
+-- specify at least one DataFilter matching the metadata they wish to
+-- update.
+--
+-- /See:/ 'updateDeveloperMetadataRequest' smart constructor.
+data UpdateDeveloperMetadataRequest = UpdateDeveloperMetadataRequest'
+    { _udmrDataFilters :: !(Maybe [DataFilter])
+    , _udmrDeveloperMetadata :: !(Maybe DeveloperMetadata)
+    , _udmrFields :: !(Maybe FieldMask)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UpdateDeveloperMetadataRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'udmrDataFilters'
+--
+-- * 'udmrDeveloperMetadata'
+--
+-- * 'udmrFields'
+updateDeveloperMetadataRequest
+    :: UpdateDeveloperMetadataRequest
+updateDeveloperMetadataRequest = 
+    UpdateDeveloperMetadataRequest'
+    { _udmrDataFilters = Nothing
+    , _udmrDeveloperMetadata = Nothing
+    , _udmrFields = Nothing
+    }
+
+-- | The filters matching the developer metadata entries to update.
+udmrDataFilters :: Lens' UpdateDeveloperMetadataRequest [DataFilter]
+udmrDataFilters
+  = lens _udmrDataFilters
+      (\ s a -> s{_udmrDataFilters = a})
+      . _Default
+      . _Coerce
+
+-- | The value that all metadata matched by the data filters will be updated
+-- to.
+udmrDeveloperMetadata :: Lens' UpdateDeveloperMetadataRequest (Maybe DeveloperMetadata)
+udmrDeveloperMetadata
+  = lens _udmrDeveloperMetadata
+      (\ s a -> s{_udmrDeveloperMetadata = a})
+
+-- | The fields that should be updated. At least one field must be specified.
+-- The root \`developerMetadata\` is implied and should not be specified. A
+-- single \`\"*\"\` can be used as short-hand for listing every field.
+udmrFields :: Lens' UpdateDeveloperMetadataRequest (Maybe FieldMask)
+udmrFields
+  = lens _udmrFields (\ s a -> s{_udmrFields = a})
+
+instance FromJSON UpdateDeveloperMetadataRequest
+         where
+        parseJSON
+          = withObject "UpdateDeveloperMetadataRequest"
+              (\ o ->
+                 UpdateDeveloperMetadataRequest' <$>
+                   (o .:? "dataFilters" .!= mempty) <*>
+                     (o .:? "developerMetadata")
+                     <*> (o .:? "fields"))
+
+instance ToJSON UpdateDeveloperMetadataRequest where
+        toJSON UpdateDeveloperMetadataRequest'{..}
+          = object
+              (catMaybes
+                 [("dataFilters" .=) <$> _udmrDataFilters,
+                  ("developerMetadata" .=) <$> _udmrDeveloperMetadata,
+                  ("fields" .=) <$> _udmrFields])
+
+-- | A request to delete developer metadata.
+--
+-- /See:/ 'deleteDeveloperMetadataRequest' smart constructor.
+newtype DeleteDeveloperMetadataRequest = DeleteDeveloperMetadataRequest'
+    { _ddmrDataFilter :: Maybe DataFilter
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DeleteDeveloperMetadataRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ddmrDataFilter'
+deleteDeveloperMetadataRequest
+    :: DeleteDeveloperMetadataRequest
+deleteDeveloperMetadataRequest = 
+    DeleteDeveloperMetadataRequest'
+    { _ddmrDataFilter = Nothing
+    }
+
+-- | The data filter describing the criteria used to select which developer
+-- metadata entry to delete.
+ddmrDataFilter :: Lens' DeleteDeveloperMetadataRequest (Maybe DataFilter)
+ddmrDataFilter
+  = lens _ddmrDataFilter
+      (\ s a -> s{_ddmrDataFilter = a})
+
+instance FromJSON DeleteDeveloperMetadataRequest
+         where
+        parseJSON
+          = withObject "DeleteDeveloperMetadataRequest"
+              (\ o ->
+                 DeleteDeveloperMetadataRequest' <$>
+                   (o .:? "dataFilter"))
+
+instance ToJSON DeleteDeveloperMetadataRequest where
+        toJSON DeleteDeveloperMetadataRequest'{..}
+          = object
+              (catMaybes [("dataFilter" .=) <$> _ddmrDataFilter])
+
 -- | The location an object is overlaid on top of a grid.
 --
 -- /See:/ 'overlayPosition' smart constructor.
 data OverlayPosition = OverlayPosition'
-    { _opHeightPixels  :: !(Maybe (Textual Int32))
+    { _opHeightPixels :: !(Maybe (Textual Int32))
     , _opOffSetYPixels :: !(Maybe (Textual Int32))
-    , _opAnchorCell    :: !(Maybe GridCoordinate)
-    , _opWidthPixels   :: !(Maybe (Textual Int32))
+    , _opAnchorCell :: !(Maybe GridCoordinate)
+    , _opWidthPixels :: !(Maybe (Textual Int32))
     , _opOffSetXPixels :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3298,7 +3985,7 @@ data OverlayPosition = OverlayPosition'
 -- * 'opOffSetXPixels'
 overlayPosition
     :: OverlayPosition
-overlayPosition =
+overlayPosition = 
     OverlayPosition'
     { _opHeightPixels = Nothing
     , _opOffSetYPixels = Nothing
@@ -3376,7 +4063,7 @@ newtype DeleteEmbeddedObjectRequest = DeleteEmbeddedObjectRequest'
 -- * 'deorObjectId'
 deleteEmbeddedObjectRequest
     :: DeleteEmbeddedObjectRequest
-deleteEmbeddedObjectRequest =
+deleteEmbeddedObjectRequest = 
     DeleteEmbeddedObjectRequest'
     { _deorObjectId = Nothing
     }
@@ -3398,18 +4085,93 @@ instance ToJSON DeleteEmbeddedObjectRequest where
           = object
               (catMaybes [("objectId" .=) <$> _deorObjectId])
 
+-- | A location where metadata may be associated in a spreadsheet.
+--
+-- /See:/ 'developerMetadataLocation' smart constructor.
+data DeveloperMetadataLocation = DeveloperMetadataLocation'
+    { _dmlSpreadsheet :: !(Maybe Bool)
+    , _dmlDimensionRange :: !(Maybe DimensionRange)
+    , _dmlSheetId :: !(Maybe (Textual Int32))
+    , _dmlLocationType :: !(Maybe DeveloperMetadataLocationLocationType)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DeveloperMetadataLocation' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'dmlSpreadsheet'
+--
+-- * 'dmlDimensionRange'
+--
+-- * 'dmlSheetId'
+--
+-- * 'dmlLocationType'
+developerMetadataLocation
+    :: DeveloperMetadataLocation
+developerMetadataLocation = 
+    DeveloperMetadataLocation'
+    { _dmlSpreadsheet = Nothing
+    , _dmlDimensionRange = Nothing
+    , _dmlSheetId = Nothing
+    , _dmlLocationType = Nothing
+    }
+
+-- | True when metadata is associated with an entire spreadsheet.
+dmlSpreadsheet :: Lens' DeveloperMetadataLocation (Maybe Bool)
+dmlSpreadsheet
+  = lens _dmlSpreadsheet
+      (\ s a -> s{_dmlSpreadsheet = a})
+
+-- | Represents the row or column when metadata is associated with a
+-- dimension. The specified DimensionRange must represent a single row or
+-- column; it cannot be unbounded or span multiple rows or columns.
+dmlDimensionRange :: Lens' DeveloperMetadataLocation (Maybe DimensionRange)
+dmlDimensionRange
+  = lens _dmlDimensionRange
+      (\ s a -> s{_dmlDimensionRange = a})
+
+-- | The ID of the sheet when metadata is associated with an entire sheet.
+dmlSheetId :: Lens' DeveloperMetadataLocation (Maybe Int32)
+dmlSheetId
+  = lens _dmlSheetId (\ s a -> s{_dmlSheetId = a}) .
+      mapping _Coerce
+
+-- | The type of location this object represents. This field is read-only.
+dmlLocationType :: Lens' DeveloperMetadataLocation (Maybe DeveloperMetadataLocationLocationType)
+dmlLocationType
+  = lens _dmlLocationType
+      (\ s a -> s{_dmlLocationType = a})
+
+instance FromJSON DeveloperMetadataLocation where
+        parseJSON
+          = withObject "DeveloperMetadataLocation"
+              (\ o ->
+                 DeveloperMetadataLocation' <$>
+                   (o .:? "spreadsheet") <*> (o .:? "dimensionRange")
+                     <*> (o .:? "sheetId")
+                     <*> (o .:? "locationType"))
+
+instance ToJSON DeveloperMetadataLocation where
+        toJSON DeveloperMetadataLocation'{..}
+          = object
+              (catMaybes
+                 [("spreadsheet" .=) <$> _dmlSpreadsheet,
+                  ("dimensionRange" .=) <$> _dmlDimensionRange,
+                  ("sheetId" .=) <$> _dmlSheetId,
+                  ("locationType" .=) <$> _dmlLocationType])
+
 -- | Properties of a sheet.
 --
 -- /See:/ 'sheetProperties' smart constructor.
 data SheetProperties = SheetProperties'
-    { _sTabColor       :: !(Maybe Color)
+    { _sTabColor :: !(Maybe Color)
     , _sGridProperties :: !(Maybe GridProperties)
-    , _sSheetType      :: !(Maybe SheetPropertiesSheetType)
-    , _sHidden         :: !(Maybe Bool)
-    , _sSheetId        :: !(Maybe (Textual Int32))
-    , _sTitle          :: !(Maybe Text)
-    , _sRightToLeft    :: !(Maybe Bool)
-    , _sIndex          :: !(Maybe (Textual Int32))
+    , _sSheetType :: !(Maybe SheetPropertiesSheetType)
+    , _sHidden :: !(Maybe Bool)
+    , _sSheetId :: !(Maybe (Textual Int32))
+    , _sTitle :: !(Maybe Text)
+    , _sRightToLeft :: !(Maybe Bool)
+    , _sIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SheetProperties' with the minimum fields required to make a request.
@@ -3433,7 +4195,7 @@ data SheetProperties = SheetProperties'
 -- * 'sIndex'
 sheetProperties
     :: SheetProperties
-sheetProperties =
+sheetProperties = 
     SheetProperties'
     { _sTabColor = Nothing
     , _sGridProperties = Nothing
@@ -3541,7 +4303,7 @@ newtype FilterViewCriteria = FilterViewCriteria'
 filterViewCriteria
     :: HashMap Text FilterCriteria -- ^ 'fvcAddtional'
     -> FilterViewCriteria
-filterViewCriteria pFvcAddtional_ =
+filterViewCriteria pFvcAddtional_ = 
     FilterViewCriteria'
     { _fvcAddtional = _Coerce # pFvcAddtional_
     }
@@ -3564,11 +4326,11 @@ instance ToJSON FilterViewCriteria where
 -- /See:/ 'batchUpdateValuesResponse' smart constructor.
 data BatchUpdateValuesResponse = BatchUpdateValuesResponse'
     { _buvrTotalUpdatedColumns :: !(Maybe (Textual Int32))
-    , _buvrResponses           :: !(Maybe [UpdateValuesResponse])
-    , _buvrSpreadsheetId       :: !(Maybe Text)
-    , _buvrTotalUpdatedSheets  :: !(Maybe (Textual Int32))
-    , _buvrTotalUpdatedCells   :: !(Maybe (Textual Int32))
-    , _buvrTotalUpdatedRows    :: !(Maybe (Textual Int32))
+    , _buvrResponses :: !(Maybe [UpdateValuesResponse])
+    , _buvrSpreadsheetId :: !(Maybe Text)
+    , _buvrTotalUpdatedSheets :: !(Maybe (Textual Int32))
+    , _buvrTotalUpdatedCells :: !(Maybe (Textual Int32))
+    , _buvrTotalUpdatedRows :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BatchUpdateValuesResponse' with the minimum fields required to make a request.
@@ -3588,7 +4350,7 @@ data BatchUpdateValuesResponse = BatchUpdateValuesResponse'
 -- * 'buvrTotalUpdatedRows'
 batchUpdateValuesResponse
     :: BatchUpdateValuesResponse
-batchUpdateValuesResponse =
+batchUpdateValuesResponse = 
     BatchUpdateValuesResponse'
     { _buvrTotalUpdatedColumns = Nothing
     , _buvrResponses = Nothing
@@ -3672,7 +4434,7 @@ instance ToJSON BatchUpdateValuesResponse where
 --
 -- /See:/ 'updateSheetPropertiesRequest' smart constructor.
 data UpdateSheetPropertiesRequest = UpdateSheetPropertiesRequest'
-    { _usprFields     :: !(Maybe FieldMask)
+    { _usprFields :: !(Maybe FieldMask)
     , _usprProperties :: !(Maybe SheetProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3685,7 +4447,7 @@ data UpdateSheetPropertiesRequest = UpdateSheetPropertiesRequest'
 -- * 'usprProperties'
 updateSheetPropertiesRequest
     :: UpdateSheetPropertiesRequest
-updateSheetPropertiesRequest =
+updateSheetPropertiesRequest = 
     UpdateSheetPropertiesRequest'
     { _usprFields = Nothing
     , _usprProperties = Nothing
@@ -3722,11 +4484,12 @@ instance ToJSON UpdateSheetPropertiesRequest where
 --
 -- /See:/ 'spreadsheet' smart constructor.
 data Spreadsheet = Spreadsheet'
-    { _sprSheets         :: !(Maybe [Sheet])
-    , _sprNamedRanges    :: !(Maybe [NamedRange])
-    , _sprSpreadsheetId  :: !(Maybe Text)
+    { _sprSheets :: !(Maybe [Sheet])
+    , _sprNamedRanges :: !(Maybe [NamedRange])
+    , _sprSpreadsheetId :: !(Maybe Text)
     , _sprSpreadsheetURL :: !(Maybe Text)
-    , _sprProperties     :: !(Maybe SpreadsheetProperties)
+    , _sprDeveloperMetadata :: !(Maybe [DeveloperMetadata])
+    , _sprProperties :: !(Maybe SpreadsheetProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Spreadsheet' with the minimum fields required to make a request.
@@ -3741,15 +4504,18 @@ data Spreadsheet = Spreadsheet'
 --
 -- * 'sprSpreadsheetURL'
 --
+-- * 'sprDeveloperMetadata'
+--
 -- * 'sprProperties'
 spreadsheet
     :: Spreadsheet
-spreadsheet =
+spreadsheet = 
     Spreadsheet'
     { _sprSheets = Nothing
     , _sprNamedRanges = Nothing
     , _sprSpreadsheetId = Nothing
     , _sprSpreadsheetURL = Nothing
+    , _sprDeveloperMetadata = Nothing
     , _sprProperties = Nothing
     }
 
@@ -3780,6 +4546,14 @@ sprSpreadsheetURL
   = lens _sprSpreadsheetURL
       (\ s a -> s{_sprSpreadsheetURL = a})
 
+-- | The developer metadata associated with a spreadsheet.
+sprDeveloperMetadata :: Lens' Spreadsheet [DeveloperMetadata]
+sprDeveloperMetadata
+  = lens _sprDeveloperMetadata
+      (\ s a -> s{_sprDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
 -- | Overall properties of a spreadsheet.
 sprProperties :: Lens' Spreadsheet (Maybe SpreadsheetProperties)
 sprProperties
@@ -3795,6 +4569,7 @@ instance FromJSON Spreadsheet where
                      (o .:? "namedRanges" .!= mempty)
                      <*> (o .:? "spreadsheetId")
                      <*> (o .:? "spreadsheetUrl")
+                     <*> (o .:? "developerMetadata" .!= mempty)
                      <*> (o .:? "properties"))
 
 instance ToJSON Spreadsheet where
@@ -3805,13 +4580,64 @@ instance ToJSON Spreadsheet where
                   ("namedRanges" .=) <$> _sprNamedRanges,
                   ("spreadsheetId" .=) <$> _sprSpreadsheetId,
                   ("spreadsheetUrl" .=) <$> _sprSpreadsheetURL,
+                  ("developerMetadata" .=) <$> _sprDeveloperMetadata,
                   ("properties" .=) <$> _sprProperties])
+
+-- | A </chart/interactive/docs/gallery/candlestickchart candlestick chart>.
+--
+-- /See:/ 'candlestickChartSpec' smart constructor.
+data CandlestickChartSpec = CandlestickChartSpec'
+    { _ccsData :: !(Maybe [CandlestickData])
+    , _ccsDomain :: !(Maybe CandlestickDomain)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CandlestickChartSpec' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ccsData'
+--
+-- * 'ccsDomain'
+candlestickChartSpec
+    :: CandlestickChartSpec
+candlestickChartSpec = 
+    CandlestickChartSpec'
+    { _ccsData = Nothing
+    , _ccsDomain = Nothing
+    }
+
+-- | The Candlestick chart data. Only one CandlestickData is supported.
+ccsData :: Lens' CandlestickChartSpec [CandlestickData]
+ccsData
+  = lens _ccsData (\ s a -> s{_ccsData = a}) . _Default
+      . _Coerce
+
+-- | The domain data (horizontal axis) for the candlestick chart. String data
+-- will be treated as discrete labels, other data will be treated as
+-- continuous values.
+ccsDomain :: Lens' CandlestickChartSpec (Maybe CandlestickDomain)
+ccsDomain
+  = lens _ccsDomain (\ s a -> s{_ccsDomain = a})
+
+instance FromJSON CandlestickChartSpec where
+        parseJSON
+          = withObject "CandlestickChartSpec"
+              (\ o ->
+                 CandlestickChartSpec' <$>
+                   (o .:? "data" .!= mempty) <*> (o .:? "domain"))
+
+instance ToJSON CandlestickChartSpec where
+        toJSON CandlestickChartSpec'{..}
+          = object
+              (catMaybes
+                 [("data" .=) <$> _ccsData,
+                  ("domain" .=) <$> _ccsDomain])
 
 -- | Inserts rows or columns in a sheet at a particular index.
 --
 -- /See:/ 'insertDimensionRequest' smart constructor.
 data InsertDimensionRequest = InsertDimensionRequest'
-    { _idrRange             :: !(Maybe DimensionRange)
+    { _idrRange :: !(Maybe DimensionRange)
     , _idrInheritFromBefore :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3824,7 +4650,7 @@ data InsertDimensionRequest = InsertDimensionRequest'
 -- * 'idrInheritFromBefore'
 insertDimensionRequest
     :: InsertDimensionRequest
-insertDimensionRequest =
+insertDimensionRequest = 
     InsertDimensionRequest'
     { _idrRange = Nothing
     , _idrInheritFromBefore = Nothing
@@ -3864,6 +4690,48 @@ instance ToJSON InsertDimensionRequest where
                  [("range" .=) <$> _idrRange,
                   ("inheritFromBefore" .=) <$> _idrInheritFromBefore])
 
+-- | A reply to a developer metadata search request.
+--
+-- /See:/ 'searchDeveloperMetadataResponse' smart constructor.
+newtype SearchDeveloperMetadataResponse = SearchDeveloperMetadataResponse'
+    { _sdmrMatchedDeveloperMetadata :: Maybe [MatchedDeveloperMetadata]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SearchDeveloperMetadataResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sdmrMatchedDeveloperMetadata'
+searchDeveloperMetadataResponse
+    :: SearchDeveloperMetadataResponse
+searchDeveloperMetadataResponse = 
+    SearchDeveloperMetadataResponse'
+    { _sdmrMatchedDeveloperMetadata = Nothing
+    }
+
+-- | The metadata matching the criteria of the search request.
+sdmrMatchedDeveloperMetadata :: Lens' SearchDeveloperMetadataResponse [MatchedDeveloperMetadata]
+sdmrMatchedDeveloperMetadata
+  = lens _sdmrMatchedDeveloperMetadata
+      (\ s a -> s{_sdmrMatchedDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON SearchDeveloperMetadataResponse
+         where
+        parseJSON
+          = withObject "SearchDeveloperMetadataResponse"
+              (\ o ->
+                 SearchDeveloperMetadataResponse' <$>
+                   (o .:? "matchedDeveloperMetadata" .!= mempty))
+
+instance ToJSON SearchDeveloperMetadataResponse where
+        toJSON SearchDeveloperMetadataResponse'{..}
+          = object
+              (catMaybes
+                 [("matchedDeveloperMetadata" .=) <$>
+                    _sdmrMatchedDeveloperMetadata])
+
 -- | A single interpolation point on a gradient conditional format. These pin
 -- the gradient color scale according to the color, type and value chosen.
 --
@@ -3871,7 +4739,7 @@ instance ToJSON InsertDimensionRequest where
 data InterpolationPoint = InterpolationPoint'
     { _ipColor :: !(Maybe Color)
     , _ipValue :: !(Maybe Text)
-    , _ipType  :: !(Maybe InterpolationPointType)
+    , _ipType :: !(Maybe InterpolationPointType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InterpolationPoint' with the minimum fields required to make a request.
@@ -3885,7 +4753,7 @@ data InterpolationPoint = InterpolationPoint'
 -- * 'ipType'
 interpolationPoint
     :: InterpolationPoint
-interpolationPoint =
+interpolationPoint = 
     InterpolationPoint'
     { _ipColor = Nothing
     , _ipValue = Nothing
@@ -3924,16 +4792,16 @@ instance ToJSON InterpolationPoint where
 --
 -- /See:/ 'cellData' smart constructor.
 data CellData = CellData'
-    { _cdTextFormatRuns    :: !(Maybe [TextFormatRun])
-    , _cdNote              :: !(Maybe Text)
-    , _cdUserEnteredValue  :: !(Maybe ExtendedValue)
+    { _cdTextFormatRuns :: !(Maybe [TextFormatRun])
+    , _cdNote :: !(Maybe Text)
+    , _cdUserEnteredValue :: !(Maybe ExtendedValue)
     , _cdUserEnteredFormat :: !(Maybe CellFormat)
-    , _cdEffectiveFormat   :: !(Maybe CellFormat)
-    , _cdPivotTable        :: !(Maybe PivotTable)
-    , _cdFormattedValue    :: !(Maybe Text)
-    , _cdDataValidation    :: !(Maybe DataValidationRule)
-    , _cdHyperlink         :: !(Maybe Text)
-    , _cdEffectiveValue    :: !(Maybe ExtendedValue)
+    , _cdEffectiveFormat :: !(Maybe CellFormat)
+    , _cdPivotTable :: !(Maybe PivotTable)
+    , _cdFormattedValue :: !(Maybe Text)
+    , _cdDataValidation :: !(Maybe DataValidationRule)
+    , _cdHyperlink :: !(Maybe Text)
+    , _cdEffectiveValue :: !(Maybe ExtendedValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CellData' with the minimum fields required to make a request.
@@ -3961,7 +4829,7 @@ data CellData = CellData'
 -- * 'cdEffectiveValue'
 cellData
     :: CellData
-cellData =
+cellData = 
     CellData'
     { _cdTextFormatRuns = Nothing
     , _cdNote = Nothing
@@ -4043,7 +4911,8 @@ cdDataValidation
       (\ s a -> s{_cdDataValidation = a})
 
 -- | A hyperlink this cell points to, if any. This field is read-only. (To
--- set it, use a \`=HYPERLINK\` formula.)
+-- set it, use a \`=HYPERLINK\` formula in the
+-- userEnteredValue.formulaValue field.)
 cdHyperlink :: Lens' CellData (Maybe Text)
 cdHyperlink
   = lens _cdHyperlink (\ s a -> s{_cdHyperlink = a})
@@ -4101,7 +4970,7 @@ newtype ChartSourceRange = ChartSourceRange'
 -- * 'csrSources'
 chartSourceRange
     :: ChartSourceRange
-chartSourceRange =
+chartSourceRange = 
     ChartSourceRange'
     { _csrSources = Nothing
     }
@@ -4145,7 +5014,7 @@ newtype AddNamedRangeResponse = AddNamedRangeResponse'
 -- * 'anrrNamedRange'
 addNamedRangeResponse
     :: AddNamedRangeResponse
-addNamedRangeResponse =
+addNamedRangeResponse = 
     AddNamedRangeResponse'
     { _anrrNamedRange = Nothing
     }
@@ -4181,7 +5050,7 @@ newtype AddChartResponse = AddChartResponse'
 -- * 'acrChart'
 addChartResponse
     :: AddChartResponse
-addChartResponse =
+addChartResponse = 
     AddChartResponse'
     { _acrChart = Nothing
     }
@@ -4205,7 +5074,7 @@ instance ToJSON AddChartResponse where
 --
 -- /See:/ 'updateChartSpecRequest' smart constructor.
 data UpdateChartSpecRequest = UpdateChartSpecRequest'
-    { _ucsrSpec    :: !(Maybe ChartSpec)
+    { _ucsrSpec :: !(Maybe ChartSpec)
     , _ucsrChartId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4218,7 +5087,7 @@ data UpdateChartSpecRequest = UpdateChartSpecRequest'
 -- * 'ucsrChartId'
 updateChartSpecRequest
     :: UpdateChartSpecRequest
-updateChartSpecRequest =
+updateChartSpecRequest = 
     UpdateChartSpecRequest'
     { _ucsrSpec = Nothing
     , _ucsrChartId = Nothing
@@ -4262,7 +5131,7 @@ newtype SetBasicFilterRequest = SetBasicFilterRequest'
 -- * 'sbfrFilter'
 setBasicFilterRequest
     :: SetBasicFilterRequest
-setBasicFilterRequest =
+setBasicFilterRequest = 
     SetBasicFilterRequest'
     { _sbfrFilter = Nothing
     }
@@ -4281,15 +5150,176 @@ instance ToJSON SetBasicFilterRequest where
         toJSON SetBasicFilterRequest'{..}
           = object (catMaybes [("filter" .=) <$> _sbfrFilter])
 
+-- | Settings to control how circular dependencies are resolved with
+-- iterative calculation.
+--
+-- /See:/ 'iterativeCalculationSettings' smart constructor.
+data IterativeCalculationSettings = IterativeCalculationSettings'
+    { _icsMaxIterations :: !(Maybe (Textual Int32))
+    , _icsConvergenceThreshold :: !(Maybe (Textual Double))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'IterativeCalculationSettings' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'icsMaxIterations'
+--
+-- * 'icsConvergenceThreshold'
+iterativeCalculationSettings
+    :: IterativeCalculationSettings
+iterativeCalculationSettings = 
+    IterativeCalculationSettings'
+    { _icsMaxIterations = Nothing
+    , _icsConvergenceThreshold = Nothing
+    }
+
+-- | When iterative calculation is enabled, the maximum number of calculation
+-- rounds to perform.
+icsMaxIterations :: Lens' IterativeCalculationSettings (Maybe Int32)
+icsMaxIterations
+  = lens _icsMaxIterations
+      (\ s a -> s{_icsMaxIterations = a})
+      . mapping _Coerce
+
+-- | When iterative calculation is enabled and successive results differ by
+-- less than this threshold value, the calculation rounds stop.
+icsConvergenceThreshold :: Lens' IterativeCalculationSettings (Maybe Double)
+icsConvergenceThreshold
+  = lens _icsConvergenceThreshold
+      (\ s a -> s{_icsConvergenceThreshold = a})
+      . mapping _Coerce
+
+instance FromJSON IterativeCalculationSettings where
+        parseJSON
+          = withObject "IterativeCalculationSettings"
+              (\ o ->
+                 IterativeCalculationSettings' <$>
+                   (o .:? "maxIterations") <*>
+                     (o .:? "convergenceThreshold"))
+
+instance ToJSON IterativeCalculationSettings where
+        toJSON IterativeCalculationSettings'{..}
+          = object
+              (catMaybes
+                 [("maxIterations" .=) <$> _icsMaxIterations,
+                  ("convergenceThreshold" .=) <$>
+                    _icsConvergenceThreshold])
+
+-- | The response when updating a range of values by a data filter in a
+-- spreadsheet.
+--
+-- /See:/ 'updateValuesByDataFilterResponse' smart constructor.
+data UpdateValuesByDataFilterResponse = UpdateValuesByDataFilterResponse'
+    { _uvbdfrUpdatedCells :: !(Maybe (Textual Int32))
+    , _uvbdfrUpdatedRows :: !(Maybe (Textual Int32))
+    , _uvbdfrUpdatedRange :: !(Maybe Text)
+    , _uvbdfrUpdatedData :: !(Maybe ValueRange)
+    , _uvbdfrUpdatedColumns :: !(Maybe (Textual Int32))
+    , _uvbdfrDataFilter :: !(Maybe DataFilter)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UpdateValuesByDataFilterResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uvbdfrUpdatedCells'
+--
+-- * 'uvbdfrUpdatedRows'
+--
+-- * 'uvbdfrUpdatedRange'
+--
+-- * 'uvbdfrUpdatedData'
+--
+-- * 'uvbdfrUpdatedColumns'
+--
+-- * 'uvbdfrDataFilter'
+updateValuesByDataFilterResponse
+    :: UpdateValuesByDataFilterResponse
+updateValuesByDataFilterResponse = 
+    UpdateValuesByDataFilterResponse'
+    { _uvbdfrUpdatedCells = Nothing
+    , _uvbdfrUpdatedRows = Nothing
+    , _uvbdfrUpdatedRange = Nothing
+    , _uvbdfrUpdatedData = Nothing
+    , _uvbdfrUpdatedColumns = Nothing
+    , _uvbdfrDataFilter = Nothing
+    }
+
+-- | The number of cells updated.
+uvbdfrUpdatedCells :: Lens' UpdateValuesByDataFilterResponse (Maybe Int32)
+uvbdfrUpdatedCells
+  = lens _uvbdfrUpdatedCells
+      (\ s a -> s{_uvbdfrUpdatedCells = a})
+      . mapping _Coerce
+
+-- | The number of rows where at least one cell in the row was updated.
+uvbdfrUpdatedRows :: Lens' UpdateValuesByDataFilterResponse (Maybe Int32)
+uvbdfrUpdatedRows
+  = lens _uvbdfrUpdatedRows
+      (\ s a -> s{_uvbdfrUpdatedRows = a})
+      . mapping _Coerce
+
+-- | The range (in A1 notation) that updates were applied to.
+uvbdfrUpdatedRange :: Lens' UpdateValuesByDataFilterResponse (Maybe Text)
+uvbdfrUpdatedRange
+  = lens _uvbdfrUpdatedRange
+      (\ s a -> s{_uvbdfrUpdatedRange = a})
+
+-- | The values of the cells in the range matched by the dataFilter after all
+-- updates were applied. This is only included if the request\'s
+-- \`includeValuesInResponse\` field was \`true\`.
+uvbdfrUpdatedData :: Lens' UpdateValuesByDataFilterResponse (Maybe ValueRange)
+uvbdfrUpdatedData
+  = lens _uvbdfrUpdatedData
+      (\ s a -> s{_uvbdfrUpdatedData = a})
+
+-- | The number of columns where at least one cell in the column was updated.
+uvbdfrUpdatedColumns :: Lens' UpdateValuesByDataFilterResponse (Maybe Int32)
+uvbdfrUpdatedColumns
+  = lens _uvbdfrUpdatedColumns
+      (\ s a -> s{_uvbdfrUpdatedColumns = a})
+      . mapping _Coerce
+
+-- | The data filter that selected the range that was updated.
+uvbdfrDataFilter :: Lens' UpdateValuesByDataFilterResponse (Maybe DataFilter)
+uvbdfrDataFilter
+  = lens _uvbdfrDataFilter
+      (\ s a -> s{_uvbdfrDataFilter = a})
+
+instance FromJSON UpdateValuesByDataFilterResponse
+         where
+        parseJSON
+          = withObject "UpdateValuesByDataFilterResponse"
+              (\ o ->
+                 UpdateValuesByDataFilterResponse' <$>
+                   (o .:? "updatedCells") <*> (o .:? "updatedRows") <*>
+                     (o .:? "updatedRange")
+                     <*> (o .:? "updatedData")
+                     <*> (o .:? "updatedColumns")
+                     <*> (o .:? "dataFilter"))
+
+instance ToJSON UpdateValuesByDataFilterResponse
+         where
+        toJSON UpdateValuesByDataFilterResponse'{..}
+          = object
+              (catMaybes
+                 [("updatedCells" .=) <$> _uvbdfrUpdatedCells,
+                  ("updatedRows" .=) <$> _uvbdfrUpdatedRows,
+                  ("updatedRange" .=) <$> _uvbdfrUpdatedRange,
+                  ("updatedData" .=) <$> _uvbdfrUpdatedData,
+                  ("updatedColumns" .=) <$> _uvbdfrUpdatedColumns,
+                  ("dataFilter" .=) <$> _uvbdfrDataFilter])
+
 -- | Properties of a grid.
 --
 -- /See:/ 'gridProperties' smart constructor.
 data GridProperties = GridProperties'
     { _gpFrozenColumnCount :: !(Maybe (Textual Int32))
-    , _gpColumnCount       :: !(Maybe (Textual Int32))
-    , _gpHideGridlines     :: !(Maybe Bool)
-    , _gpFrozenRowCount    :: !(Maybe (Textual Int32))
-    , _gpRowCount          :: !(Maybe (Textual Int32))
+    , _gpColumnCount :: !(Maybe (Textual Int32))
+    , _gpHideGridlines :: !(Maybe Bool)
+    , _gpFrozenRowCount :: !(Maybe (Textual Int32))
+    , _gpRowCount :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GridProperties' with the minimum fields required to make a request.
@@ -4307,7 +5337,7 @@ data GridProperties = GridProperties'
 -- * 'gpRowCount'
 gridProperties
     :: GridProperties
-gridProperties =
+gridProperties = 
     GridProperties'
     { _gpFrozenColumnCount = Nothing
     , _gpColumnCount = Nothing
@@ -4369,6 +5399,112 @@ instance ToJSON GridProperties where
                   ("frozenRowCount" .=) <$> _gpFrozenRowCount,
                   ("rowCount" .=) <$> _gpRowCount])
 
+-- | A </chart/interactive/docs/gallery/histogram histogram chart>. A
+-- histogram chart groups data items into bins, displaying each bin as a
+-- column of stacked items. Histograms are used to display the distribution
+-- of a dataset. Each column of items represents a range into which those
+-- items fall. The number of bins can be chosen automatically or specified
+-- explicitly.
+--
+-- /See:/ 'histogramChartSpec' smart constructor.
+data HistogramChartSpec = HistogramChartSpec'
+    { _hcsLegendPosition :: !(Maybe HistogramChartSpecLegendPosition)
+    , _hcsSeries :: !(Maybe [HistogramSeries])
+    , _hcsShowItemDividers :: !(Maybe Bool)
+    , _hcsOutlierPercentile :: !(Maybe (Textual Double))
+    , _hcsBucketSize :: !(Maybe (Textual Double))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'HistogramChartSpec' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'hcsLegendPosition'
+--
+-- * 'hcsSeries'
+--
+-- * 'hcsShowItemDividers'
+--
+-- * 'hcsOutlierPercentile'
+--
+-- * 'hcsBucketSize'
+histogramChartSpec
+    :: HistogramChartSpec
+histogramChartSpec = 
+    HistogramChartSpec'
+    { _hcsLegendPosition = Nothing
+    , _hcsSeries = Nothing
+    , _hcsShowItemDividers = Nothing
+    , _hcsOutlierPercentile = Nothing
+    , _hcsBucketSize = Nothing
+    }
+
+-- | The position of the chart legend.
+hcsLegendPosition :: Lens' HistogramChartSpec (Maybe HistogramChartSpecLegendPosition)
+hcsLegendPosition
+  = lens _hcsLegendPosition
+      (\ s a -> s{_hcsLegendPosition = a})
+
+-- | The series for a histogram may be either a single series of values to be
+-- bucketed or multiple series, each of the same length, containing the
+-- name of the series followed by the values to be bucketed for that
+-- series.
+hcsSeries :: Lens' HistogramChartSpec [HistogramSeries]
+hcsSeries
+  = lens _hcsSeries (\ s a -> s{_hcsSeries = a}) .
+      _Default
+      . _Coerce
+
+-- | Whether horizontal divider lines should be displayed between items in
+-- each column.
+hcsShowItemDividers :: Lens' HistogramChartSpec (Maybe Bool)
+hcsShowItemDividers
+  = lens _hcsShowItemDividers
+      (\ s a -> s{_hcsShowItemDividers = a})
+
+-- | The outlier percentile is used to ensure that outliers do not adversely
+-- affect the calculation of bucket sizes. For example, setting an outlier
+-- percentile of 0.05 indicates that the top and bottom 5% of values when
+-- calculating buckets. The values are still included in the chart, they
+-- will be added to the first or last buckets instead of their own buckets.
+-- Must be between 0.0 and 0.5.
+hcsOutlierPercentile :: Lens' HistogramChartSpec (Maybe Double)
+hcsOutlierPercentile
+  = lens _hcsOutlierPercentile
+      (\ s a -> s{_hcsOutlierPercentile = a})
+      . mapping _Coerce
+
+-- | By default the bucket size (the range of values stacked in a single
+-- column) is chosen automatically, but it may be overridden here. E.g., A
+-- bucket size of 1.5 results in buckets from 0 - 1.5, 1.5 - 3.0, etc.
+-- Cannot be negative. This field is optional.
+hcsBucketSize :: Lens' HistogramChartSpec (Maybe Double)
+hcsBucketSize
+  = lens _hcsBucketSize
+      (\ s a -> s{_hcsBucketSize = a})
+      . mapping _Coerce
+
+instance FromJSON HistogramChartSpec where
+        parseJSON
+          = withObject "HistogramChartSpec"
+              (\ o ->
+                 HistogramChartSpec' <$>
+                   (o .:? "legendPosition") <*>
+                     (o .:? "series" .!= mempty)
+                     <*> (o .:? "showItemDividers")
+                     <*> (o .:? "outlierPercentile")
+                     <*> (o .:? "bucketSize"))
+
+instance ToJSON HistogramChartSpec where
+        toJSON HistogramChartSpec'{..}
+          = object
+              (catMaybes
+                 [("legendPosition" .=) <$> _hcsLegendPosition,
+                  ("series" .=) <$> _hcsSeries,
+                  ("showItemDividers" .=) <$> _hcsShowItemDividers,
+                  ("outlierPercentile" .=) <$> _hcsOutlierPercentile,
+                  ("bucketSize" .=) <$> _hcsBucketSize])
+
 -- | The criteria for showing\/hiding values per column. The map\'s key is
 -- the column index, and the value is the criteria for that column.
 --
@@ -4385,7 +5521,7 @@ newtype BasicFilterCriteria = BasicFilterCriteria'
 basicFilterCriteria
     :: HashMap Text FilterCriteria -- ^ 'bfcAddtional'
     -> BasicFilterCriteria
-basicFilterCriteria pBfcAddtional_ =
+basicFilterCriteria pBfcAddtional_ = 
     BasicFilterCriteria'
     { _bfcAddtional = _Coerce # pBfcAddtional_
     }
@@ -4417,7 +5553,7 @@ newtype AddBandingRequest = AddBandingRequest'
 -- * 'abrBandedRange'
 addBandingRequest
     :: AddBandingRequest
-addBandingRequest =
+addBandingRequest = 
     AddBandingRequest'
     { _abrBandedRange = Nothing
     }
@@ -4444,8 +5580,8 @@ instance ToJSON AddBandingRequest where
 --
 -- /See:/ 'updateDimensionPropertiesRequest' smart constructor.
 data UpdateDimensionPropertiesRequest = UpdateDimensionPropertiesRequest'
-    { _udprRange      :: !(Maybe DimensionRange)
-    , _udprFields     :: !(Maybe FieldMask)
+    { _udprRange :: !(Maybe DimensionRange)
+    , _udprFields :: !(Maybe FieldMask)
     , _udprProperties :: !(Maybe DimensionProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4460,7 +5596,7 @@ data UpdateDimensionPropertiesRequest = UpdateDimensionPropertiesRequest'
 -- * 'udprProperties'
 updateDimensionPropertiesRequest
     :: UpdateDimensionPropertiesRequest
-updateDimensionPropertiesRequest =
+updateDimensionPropertiesRequest = 
     UpdateDimensionPropertiesRequest'
     { _udprRange = Nothing
     , _udprFields = Nothing
@@ -4523,7 +5659,7 @@ newtype PivotTableCriteria = PivotTableCriteria'
 pivotTableCriteria
     :: HashMap Text PivotFilterCriteria -- ^ 'ptcAddtional'
     -> PivotTableCriteria
-pivotTableCriteria pPtcAddtional_ =
+pivotTableCriteria pPtcAddtional_ = 
     PivotTableCriteria'
     { _ptcAddtional = _Coerce # pPtcAddtional_
     }
@@ -4546,8 +5682,8 @@ instance ToJSON PivotTableCriteria where
 -- /See:/ 'autoFillRequest' smart constructor.
 data AutoFillRequest = AutoFillRequest'
     { _afrSourceAndDestination :: !(Maybe SourceAndDestination)
-    , _afrUseAlternateSeries   :: !(Maybe Bool)
-    , _afrRange                :: !(Maybe GridRange)
+    , _afrUseAlternateSeries :: !(Maybe Bool)
+    , _afrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoFillRequest' with the minimum fields required to make a request.
@@ -4561,7 +5697,7 @@ data AutoFillRequest = AutoFillRequest'
 -- * 'afrRange'
 autoFillRequest
     :: AutoFillRequest
-autoFillRequest =
+autoFillRequest = 
     AutoFillRequest'
     { _afrSourceAndDestination = Nothing
     , _afrUseAlternateSeries = Nothing
@@ -4606,14 +5742,153 @@ instance ToJSON AutoFillRequest where
                   ("useAlternateSeries" .=) <$> _afrUseAlternateSeries,
                   ("range" .=) <$> _afrRange])
 
+-- | Selects DeveloperMetadata that matches all of the specified fields. For
+-- example, if only a metadata ID is specified this considers the
+-- DeveloperMetadata with that particular unique ID. If a metadata key is
+-- specified, this considers all developer metadata with that key. If a
+-- key, visibility, and location type are all specified, this considers all
+-- developer metadata with that key and visibility that are associated with
+-- a location of that type. In general, this selects all DeveloperMetadata
+-- that matches the intersection of all the specified fields; any field or
+-- combination of fields may be specified.
+--
+-- /See:/ 'developerMetadataLookup' smart constructor.
+data DeveloperMetadataLookup = DeveloperMetadataLookup'
+    { _dLocationMatchingStrategy :: !(Maybe DeveloperMetadataLookupLocationMatchingStrategy)
+    , _dMetadataId :: !(Maybe (Textual Int32))
+    , _dVisibility :: !(Maybe DeveloperMetadataLookupVisibility)
+    , _dMetadataKey :: !(Maybe Text)
+    , _dLocationType :: !(Maybe DeveloperMetadataLookupLocationType)
+    , _dMetadataLocation :: !(Maybe DeveloperMetadataLocation)
+    , _dMetadataValue :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DeveloperMetadataLookup' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'dLocationMatchingStrategy'
+--
+-- * 'dMetadataId'
+--
+-- * 'dVisibility'
+--
+-- * 'dMetadataKey'
+--
+-- * 'dLocationType'
+--
+-- * 'dMetadataLocation'
+--
+-- * 'dMetadataValue'
+developerMetadataLookup
+    :: DeveloperMetadataLookup
+developerMetadataLookup = 
+    DeveloperMetadataLookup'
+    { _dLocationMatchingStrategy = Nothing
+    , _dMetadataId = Nothing
+    , _dVisibility = Nothing
+    , _dMetadataKey = Nothing
+    , _dLocationType = Nothing
+    , _dMetadataLocation = Nothing
+    , _dMetadataValue = Nothing
+    }
+
+-- | Determines how this lookup matches the location. If this field is
+-- specified as EXACT, only developer metadata associated on the exact
+-- location specified is matched. If this field is specified to
+-- INTERSECTING, developer metadata associated on intersecting locations is
+-- also matched. If left unspecified, this field assumes a default value of
+-- INTERSECTING. If this field is specified, a metadataLocation must also
+-- be specified.
+dLocationMatchingStrategy :: Lens' DeveloperMetadataLookup (Maybe DeveloperMetadataLookupLocationMatchingStrategy)
+dLocationMatchingStrategy
+  = lens _dLocationMatchingStrategy
+      (\ s a -> s{_dLocationMatchingStrategy = a})
+
+-- | Limits the selected developer metadata to that which has a matching
+-- DeveloperMetadata.metadata_id.
+dMetadataId :: Lens' DeveloperMetadataLookup (Maybe Int32)
+dMetadataId
+  = lens _dMetadataId (\ s a -> s{_dMetadataId = a}) .
+      mapping _Coerce
+
+-- | Limits the selected developer metadata to that which has a matching
+-- DeveloperMetadata.visibility. If left unspecified, all developer
+-- metadata visibile to the requesting project is considered.
+dVisibility :: Lens' DeveloperMetadataLookup (Maybe DeveloperMetadataLookupVisibility)
+dVisibility
+  = lens _dVisibility (\ s a -> s{_dVisibility = a})
+
+-- | Limits the selected developer metadata to that which has a matching
+-- DeveloperMetadata.metadata_key.
+dMetadataKey :: Lens' DeveloperMetadataLookup (Maybe Text)
+dMetadataKey
+  = lens _dMetadataKey (\ s a -> s{_dMetadataKey = a})
+
+-- | Limits the selected developer metadata to those entries which are
+-- associated with locations of the specified type. For example, when this
+-- field is specified as ROW this lookup only considers developer metadata
+-- associated on rows. If the field is left unspecified, all location types
+-- are considered. This field cannot be specified as SPREADSHEET when the
+-- locationMatchingStrategy is specified as INTERSECTING or when the
+-- metadataLocation is specified as a non-spreadsheet location: spreadsheet
+-- metadata cannot intersect any other developer metadata location. This
+-- field also must be left unspecified when the locationMatchingStrategy is
+-- specified as EXACT.
+dLocationType :: Lens' DeveloperMetadataLookup (Maybe DeveloperMetadataLookupLocationType)
+dLocationType
+  = lens _dLocationType
+      (\ s a -> s{_dLocationType = a})
+
+-- | Limits the selected developer metadata to those entries associated with
+-- the specified location. This field either matches exact locations or all
+-- intersecting locations according the specified locationMatchingStrategy.
+dMetadataLocation :: Lens' DeveloperMetadataLookup (Maybe DeveloperMetadataLocation)
+dMetadataLocation
+  = lens _dMetadataLocation
+      (\ s a -> s{_dMetadataLocation = a})
+
+-- | Limits the selected developer metadata to that which has a matching
+-- DeveloperMetadata.metadata_value.
+dMetadataValue :: Lens' DeveloperMetadataLookup (Maybe Text)
+dMetadataValue
+  = lens _dMetadataValue
+      (\ s a -> s{_dMetadataValue = a})
+
+instance FromJSON DeveloperMetadataLookup where
+        parseJSON
+          = withObject "DeveloperMetadataLookup"
+              (\ o ->
+                 DeveloperMetadataLookup' <$>
+                   (o .:? "locationMatchingStrategy") <*>
+                     (o .:? "metadataId")
+                     <*> (o .:? "visibility")
+                     <*> (o .:? "metadataKey")
+                     <*> (o .:? "locationType")
+                     <*> (o .:? "metadataLocation")
+                     <*> (o .:? "metadataValue"))
+
+instance ToJSON DeveloperMetadataLookup where
+        toJSON DeveloperMetadataLookup'{..}
+          = object
+              (catMaybes
+                 [("locationMatchingStrategy" .=) <$>
+                    _dLocationMatchingStrategy,
+                  ("metadataId" .=) <$> _dMetadataId,
+                  ("visibility" .=) <$> _dVisibility,
+                  ("metadataKey" .=) <$> _dMetadataKey,
+                  ("locationType" .=) <$> _dLocationType,
+                  ("metadataLocation" .=) <$> _dMetadataLocation,
+                  ("metadataValue" .=) <$> _dMetadataValue])
+
 -- | Duplicates the contents of a sheet.
 --
 -- /See:/ 'duplicateSheetRequest' smart constructor.
 data DuplicateSheetRequest = DuplicateSheetRequest'
-    { _dsrNewSheetName     :: !(Maybe Text)
+    { _dsrNewSheetName :: !(Maybe Text)
     , _dsrInsertSheetIndex :: !(Maybe (Textual Int32))
-    , _dsrSourceSheetId    :: !(Maybe (Textual Int32))
-    , _dsrNewSheetId       :: !(Maybe (Textual Int32))
+    , _dsrSourceSheetId :: !(Maybe (Textual Int32))
+    , _dsrNewSheetId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DuplicateSheetRequest' with the minimum fields required to make a request.
@@ -4629,7 +5904,7 @@ data DuplicateSheetRequest = DuplicateSheetRequest'
 -- * 'dsrNewSheetId'
 duplicateSheetRequest
     :: DuplicateSheetRequest
-duplicateSheetRequest =
+duplicateSheetRequest = 
     DuplicateSheetRequest'
     { _dsrNewSheetName = Nothing
     , _dsrInsertSheetIndex = Nothing
@@ -4685,6 +5960,60 @@ instance ToJSON DuplicateSheetRequest where
                   ("sourceSheetId" .=) <$> _dsrSourceSheetId,
                   ("newSheetId" .=) <$> _dsrNewSheetId])
 
+-- | The rotation applied to text in a cell.
+--
+-- /See:/ 'textRotation' smart constructor.
+data TextRotation = TextRotation'
+    { _trAngle :: !(Maybe (Textual Int32))
+    , _trVertical :: !(Maybe Bool)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TextRotation' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'trAngle'
+--
+-- * 'trVertical'
+textRotation
+    :: TextRotation
+textRotation = 
+    TextRotation'
+    { _trAngle = Nothing
+    , _trVertical = Nothing
+    }
+
+-- | The angle between the standard orientation and the desired orientation.
+-- Measured in degrees. Valid values are between -90 and 90. Positive
+-- angles are angled upwards, negative are angled downwards. Note: For LTR
+-- text direction positive angles are in the counterclockwise direction,
+-- whereas for RTL they are in the clockwise direction
+trAngle :: Lens' TextRotation (Maybe Int32)
+trAngle
+  = lens _trAngle (\ s a -> s{_trAngle = a}) .
+      mapping _Coerce
+
+-- | If true, text reads top to bottom, but the orientation of individual
+-- characters is unchanged. For example: | V | | e | | r | | t | | i | | c
+-- | | a | | l |
+trVertical :: Lens' TextRotation (Maybe Bool)
+trVertical
+  = lens _trVertical (\ s a -> s{_trVertical = a})
+
+instance FromJSON TextRotation where
+        parseJSON
+          = withObject "TextRotation"
+              (\ o ->
+                 TextRotation' <$>
+                   (o .:? "angle") <*> (o .:? "vertical"))
+
+instance ToJSON TextRotation where
+        toJSON TextRotation'{..}
+          = object
+              (catMaybes
+                 [("angle" .=) <$> _trAngle,
+                  ("vertical" .=) <$> _trVertical])
+
 -- | The result of a filter view being duplicated.
 --
 -- /See:/ 'duplicateFilterViewResponse' smart constructor.
@@ -4699,7 +6028,7 @@ newtype DuplicateFilterViewResponse = DuplicateFilterViewResponse'
 -- * 'dfvrFilter'
 duplicateFilterViewResponse
     :: DuplicateFilterViewResponse
-duplicateFilterViewResponse =
+duplicateFilterViewResponse = 
     DuplicateFilterViewResponse'
     { _dfvrFilter = Nothing
     }
@@ -4723,11 +6052,11 @@ instance ToJSON DuplicateFilterViewResponse where
 --
 -- /See:/ 'batchUpdateValuesRequest' smart constructor.
 data BatchUpdateValuesRequest = BatchUpdateValuesRequest'
-    { _buvrData                         :: !(Maybe [ValueRange])
-    , _buvrValueInputOption             :: !(Maybe BatchUpdateValuesRequestValueInputOption)
-    , _buvrIncludeValuesInResponse      :: !(Maybe Bool)
+    { _buvrData :: !(Maybe [ValueRange])
+    , _buvrValueInputOption :: !(Maybe BatchUpdateValuesRequestValueInputOption)
+    , _buvrIncludeValuesInResponse :: !(Maybe Bool)
     , _buvrResponseDateTimeRenderOption :: !(Maybe BatchUpdateValuesRequestResponseDateTimeRenderOption)
-    , _buvrResponseValueRenderOption    :: !(Maybe BatchUpdateValuesRequestResponseValueRenderOption)
+    , _buvrResponseValueRenderOption :: !(Maybe BatchUpdateValuesRequestResponseValueRenderOption)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BatchUpdateValuesRequest' with the minimum fields required to make a request.
@@ -4745,7 +6074,7 @@ data BatchUpdateValuesRequest = BatchUpdateValuesRequest'
 -- * 'buvrResponseValueRenderOption'
 batchUpdateValuesRequest
     :: BatchUpdateValuesRequest
-batchUpdateValuesRequest =
+batchUpdateValuesRequest = 
     BatchUpdateValuesRequest'
     { _buvrData = Nothing
     , _buvrValueInputOption = Nothing
@@ -4782,7 +6111,7 @@ buvrIncludeValuesInResponse
 -- | Determines how dates, times, and durations in the response should be
 -- rendered. This is ignored if response_value_render_option is
 -- FORMATTED_VALUE. The default dateTime render option is
--- [DateTimeRenderOption.SERIAL_NUMBER].
+-- DateTimeRenderOption.SERIAL_NUMBER.
 buvrResponseDateTimeRenderOption :: Lens' BatchUpdateValuesRequest (Maybe BatchUpdateValuesRequestResponseDateTimeRenderOption)
 buvrResponseDateTimeRenderOption
   = lens _buvrResponseDateTimeRenderOption
@@ -4819,6 +6148,73 @@ instance ToJSON BatchUpdateValuesRequest where
                   ("responseValueRenderOption" .=) <$>
                     _buvrResponseValueRenderOption])
 
+-- | A range of values whose location is specified by a DataFilter.
+--
+-- /See:/ 'dataFilterValueRange' smart constructor.
+data DataFilterValueRange = DataFilterValueRange'
+    { _dfvrValues :: !(Maybe [[JSONValue]])
+    , _dfvrDataFilter :: !(Maybe DataFilter)
+    , _dfvrMajorDimension :: !(Maybe DataFilterValueRangeMajorDimension)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DataFilterValueRange' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'dfvrValues'
+--
+-- * 'dfvrDataFilter'
+--
+-- * 'dfvrMajorDimension'
+dataFilterValueRange
+    :: DataFilterValueRange
+dataFilterValueRange = 
+    DataFilterValueRange'
+    { _dfvrValues = Nothing
+    , _dfvrDataFilter = Nothing
+    , _dfvrMajorDimension = Nothing
+    }
+
+-- | The data to be written. If the provided values exceed any of the ranges
+-- matched by the data filter then the request will fail. If the provided
+-- values are less than the matched ranges only the specified values will
+-- be written, existing values in the matched ranges will remain
+-- unaffected.
+dfvrValues :: Lens' DataFilterValueRange [[JSONValue]]
+dfvrValues
+  = lens _dfvrValues (\ s a -> s{_dfvrValues = a}) .
+      _Default
+      . _Coerce
+
+-- | The data filter describing the location of the values in the
+-- spreadsheet.
+dfvrDataFilter :: Lens' DataFilterValueRange (Maybe DataFilter)
+dfvrDataFilter
+  = lens _dfvrDataFilter
+      (\ s a -> s{_dfvrDataFilter = a})
+
+-- | The major dimension of the values.
+dfvrMajorDimension :: Lens' DataFilterValueRange (Maybe DataFilterValueRangeMajorDimension)
+dfvrMajorDimension
+  = lens _dfvrMajorDimension
+      (\ s a -> s{_dfvrMajorDimension = a})
+
+instance FromJSON DataFilterValueRange where
+        parseJSON
+          = withObject "DataFilterValueRange"
+              (\ o ->
+                 DataFilterValueRange' <$>
+                   (o .:? "values" .!= mempty) <*> (o .:? "dataFilter")
+                     <*> (o .:? "majorDimension"))
+
+instance ToJSON DataFilterValueRange where
+        toJSON DataFilterValueRange'{..}
+          = object
+              (catMaybes
+                 [("values" .=) <$> _dfvrValues,
+                  ("dataFilter" .=) <$> _dfvrDataFilter,
+                  ("majorDimension" .=) <$> _dfvrMajorDimension])
+
 -- | Adds a chart to a sheet in the spreadsheet.
 --
 -- /See:/ 'addChartRequest' smart constructor.
@@ -4833,7 +6229,7 @@ newtype AddChartRequest = AddChartRequest'
 -- * 'aChart'
 addChartRequest
     :: AddChartRequest
-addChartRequest =
+addChartRequest = 
     AddChartRequest'
     { _aChart = Nothing
     }
@@ -4859,8 +6255,8 @@ instance ToJSON AddChartRequest where
 -- /See:/ 'namedRange' smart constructor.
 data NamedRange = NamedRange'
     { _nrNamedRangeId :: !(Maybe Text)
-    , _nrName         :: !(Maybe Text)
-    , _nrRange        :: !(Maybe GridRange)
+    , _nrName :: !(Maybe Text)
+    , _nrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NamedRange' with the minimum fields required to make a request.
@@ -4874,7 +6270,7 @@ data NamedRange = NamedRange'
 -- * 'nrRange'
 namedRange
     :: NamedRange
-namedRange =
+namedRange = 
     NamedRange'
     { _nrNamedRangeId = Nothing
     , _nrName = Nothing
@@ -4915,7 +6311,7 @@ instance ToJSON NamedRange where
 -- /See:/ 'mergeCellsRequest' smart constructor.
 data MergeCellsRequest = MergeCellsRequest'
     { _mcrMergeType :: !(Maybe MergeCellsRequestMergeType)
-    , _mcrRange     :: !(Maybe GridRange)
+    , _mcrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MergeCellsRequest' with the minimum fields required to make a request.
@@ -4927,7 +6323,7 @@ data MergeCellsRequest = MergeCellsRequest'
 -- * 'mcrRange'
 mergeCellsRequest
     :: MergeCellsRequest
-mergeCellsRequest =
+mergeCellsRequest = 
     MergeCellsRequest'
     { _mcrMergeType = Nothing
     , _mcrRange = Nothing
@@ -4956,6 +6352,44 @@ instance ToJSON MergeCellsRequest where
                  [("mergeType" .=) <$> _mcrMergeType,
                   ("range" .=) <$> _mcrRange])
 
+-- | Position settings for text.
+--
+-- /See:/ 'textPosition' smart constructor.
+newtype TextPosition = TextPosition'
+    { _tpHorizontalAlignment :: Maybe TextPositionHorizontalAlignment
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TextPosition' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tpHorizontalAlignment'
+textPosition
+    :: TextPosition
+textPosition = 
+    TextPosition'
+    { _tpHorizontalAlignment = Nothing
+    }
+
+-- | Horizontal alignment setting for the piece of text.
+tpHorizontalAlignment :: Lens' TextPosition (Maybe TextPositionHorizontalAlignment)
+tpHorizontalAlignment
+  = lens _tpHorizontalAlignment
+      (\ s a -> s{_tpHorizontalAlignment = a})
+
+instance FromJSON TextPosition where
+        parseJSON
+          = withObject "TextPosition"
+              (\ o ->
+                 TextPosition' <$> (o .:? "horizontalAlignment"))
+
+instance ToJSON TextPosition where
+        toJSON TextPosition'{..}
+          = object
+              (catMaybes
+                 [("horizontalAlignment" .=) <$>
+                    _tpHorizontalAlignment])
+
 -- | A border along a cell.
 --
 -- /See:/ 'bOrder' smart constructor.
@@ -4976,7 +6410,7 @@ data BOrder = BOrder'
 -- * 'boWidth'
 bOrder
     :: BOrder
-bOrder =
+bOrder = 
     BOrder'
     { _boStyle = Nothing
     , _boColor = Nothing
@@ -5014,14 +6448,89 @@ instance ToJSON BOrder where
                   ("color" .=) <$> _boColor,
                   ("width" .=) <$> _boWidth])
 
+-- | A request to retrieve all developer metadata matching the set of
+-- specified criteria.
+--
+-- /See:/ 'searchDeveloperMetadataRequest' smart constructor.
+newtype SearchDeveloperMetadataRequest = SearchDeveloperMetadataRequest'
+    { _sdmrDataFilters :: Maybe [DataFilter]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SearchDeveloperMetadataRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sdmrDataFilters'
+searchDeveloperMetadataRequest
+    :: SearchDeveloperMetadataRequest
+searchDeveloperMetadataRequest = 
+    SearchDeveloperMetadataRequest'
+    { _sdmrDataFilters = Nothing
+    }
+
+-- | The data filters describing the criteria used to determine which
+-- DeveloperMetadata entries to return. DeveloperMetadata matching any of
+-- the specified filters will be included in the response.
+sdmrDataFilters :: Lens' SearchDeveloperMetadataRequest [DataFilter]
+sdmrDataFilters
+  = lens _sdmrDataFilters
+      (\ s a -> s{_sdmrDataFilters = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON SearchDeveloperMetadataRequest
+         where
+        parseJSON
+          = withObject "SearchDeveloperMetadataRequest"
+              (\ o ->
+                 SearchDeveloperMetadataRequest' <$>
+                   (o .:? "dataFilters" .!= mempty))
+
+instance ToJSON SearchDeveloperMetadataRequest where
+        toJSON SearchDeveloperMetadataRequest'{..}
+          = object
+              (catMaybes [("dataFilters" .=) <$> _sdmrDataFilters])
+
+-- | The series of a CandlestickData.
+--
+-- /See:/ 'candlestickSeries' smart constructor.
+newtype CandlestickSeries = CandlestickSeries'
+    { _csData :: Maybe ChartData
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CandlestickSeries' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'csData'
+candlestickSeries
+    :: CandlestickSeries
+candlestickSeries = 
+    CandlestickSeries'
+    { _csData = Nothing
+    }
+
+-- | The data of the CandlestickSeries.
+csData :: Lens' CandlestickSeries (Maybe ChartData)
+csData = lens _csData (\ s a -> s{_csData = a})
+
+instance FromJSON CandlestickSeries where
+        parseJSON
+          = withObject "CandlestickSeries"
+              (\ o -> CandlestickSeries' <$> (o .:? "data"))
+
+instance ToJSON CandlestickSeries where
+        toJSON CandlestickSeries'{..}
+          = object (catMaybes [("data" .=) <$> _csData])
+
 -- | The kinds of value that a cell in a spreadsheet can have.
 --
 -- /See:/ 'extendedValue' smart constructor.
 data ExtendedValue = ExtendedValue'
-    { _evBoolValue    :: !(Maybe Bool)
-    , _evNumberValue  :: !(Maybe (Textual Double))
-    , _evErrorValue   :: !(Maybe ErrorValue)
-    , _evStringValue  :: !(Maybe Text)
+    { _evBoolValue :: !(Maybe Bool)
+    , _evNumberValue :: !(Maybe (Textual Double))
+    , _evErrorValue :: !(Maybe ErrorValue)
+    , _evStringValue :: !(Maybe Text)
     , _evFormulaValue :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5040,7 +6549,7 @@ data ExtendedValue = ExtendedValue'
 -- * 'evFormulaValue'
 extendedValue
     :: ExtendedValue
-extendedValue =
+extendedValue = 
     ExtendedValue'
     { _evBoolValue = Nothing
     , _evNumberValue = Nothing
@@ -5115,7 +6624,7 @@ newtype AddNamedRangeRequest = AddNamedRangeRequest'
 -- * 'aNamedRange'
 addNamedRangeRequest
     :: AddNamedRangeRequest
-addNamedRangeRequest =
+addNamedRangeRequest = 
     AddNamedRangeRequest'
     { _aNamedRange = Nothing
     }
@@ -5152,7 +6661,7 @@ newtype PivotFilterCriteria = PivotFilterCriteria'
 -- * 'pfcVisibleValues'
 pivotFilterCriteria
     :: PivotFilterCriteria
-pivotFilterCriteria =
+pivotFilterCriteria = 
     PivotFilterCriteria'
     { _pfcVisibleValues = Nothing
     }
@@ -5184,9 +6693,9 @@ instance ToJSON PivotFilterCriteria where
 --
 -- /See:/ 'dimensionRange' smart constructor.
 data DimensionRange = DimensionRange'
-    { _drDimension  :: !(Maybe DimensionRangeDimension)
-    , _drEndIndex   :: !(Maybe (Textual Int32))
-    , _drSheetId    :: !(Maybe (Textual Int32))
+    { _drDimension :: !(Maybe DimensionRangeDimension)
+    , _drEndIndex :: !(Maybe (Textual Int32))
+    , _drSheetId :: !(Maybe (Textual Int32))
     , _drStartIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5203,7 +6712,7 @@ data DimensionRange = DimensionRange'
 -- * 'drStartIndex'
 dimensionRange
     :: DimensionRange
-dimensionRange =
+dimensionRange = 
     DimensionRange'
     { _drDimension = Nothing
     , _drEndIndex = Nothing
@@ -5256,7 +6765,7 @@ instance ToJSON DimensionRange where
 --
 -- /See:/ 'updateSpreadsheetPropertiesRequest' smart constructor.
 data UpdateSpreadsheetPropertiesRequest = UpdateSpreadsheetPropertiesRequest'
-    { _uFields     :: !(Maybe FieldMask)
+    { _uFields :: !(Maybe FieldMask)
     , _uProperties :: !(Maybe SpreadsheetProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5269,7 +6778,7 @@ data UpdateSpreadsheetPropertiesRequest = UpdateSpreadsheetPropertiesRequest'
 -- * 'uProperties'
 updateSpreadsheetPropertiesRequest
     :: UpdateSpreadsheetPropertiesRequest
-updateSpreadsheetPropertiesRequest =
+updateSpreadsheetPropertiesRequest = 
     UpdateSpreadsheetPropertiesRequest'
     { _uFields = Nothing
     , _uProperties = Nothing
@@ -5302,6 +6811,52 @@ instance ToJSON UpdateSpreadsheetPropertiesRequest
                  [("fields" .=) <$> _uFields,
                   ("properties" .=) <$> _uProperties])
 
+-- | The domain of a CandlestickChart.
+--
+-- /See:/ 'candlestickDomain' smart constructor.
+data CandlestickDomain = CandlestickDomain'
+    { _cdReversed :: !(Maybe Bool)
+    , _cdData :: !(Maybe ChartData)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CandlestickDomain' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cdReversed'
+--
+-- * 'cdData'
+candlestickDomain
+    :: CandlestickDomain
+candlestickDomain = 
+    CandlestickDomain'
+    { _cdReversed = Nothing
+    , _cdData = Nothing
+    }
+
+-- | True to reverse the order of the domain values (horizontal axis).
+cdReversed :: Lens' CandlestickDomain (Maybe Bool)
+cdReversed
+  = lens _cdReversed (\ s a -> s{_cdReversed = a})
+
+-- | The data of the CandlestickDomain.
+cdData :: Lens' CandlestickDomain (Maybe ChartData)
+cdData = lens _cdData (\ s a -> s{_cdData = a})
+
+instance FromJSON CandlestickDomain where
+        parseJSON
+          = withObject "CandlestickDomain"
+              (\ o ->
+                 CandlestickDomain' <$>
+                   (o .:? "reversed") <*> (o .:? "data"))
+
+instance ToJSON CandlestickDomain where
+        toJSON CandlestickDomain'{..}
+          = object
+              (catMaybes
+                 [("reversed" .=) <$> _cdReversed,
+                  ("data" .=) <$> _cdData])
+
 -- | The result of adding a new protected range.
 --
 -- /See:/ 'addProtectedRangeResponse' smart constructor.
@@ -5316,7 +6871,7 @@ newtype AddProtectedRangeResponse = AddProtectedRangeResponse'
 -- * 'aProtectedRange'
 addProtectedRangeResponse
     :: AddProtectedRangeResponse
-addProtectedRangeResponse =
+addProtectedRangeResponse = 
     AddProtectedRangeResponse'
     { _aProtectedRange = Nothing
     }
@@ -5344,9 +6899,9 @@ instance ToJSON AddProtectedRangeResponse where
 --
 -- /See:/ 'appendDimensionRequest' smart constructor.
 data AppendDimensionRequest = AppendDimensionRequest'
-    { _adrLength    :: !(Maybe (Textual Int32))
+    { _adrLength :: !(Maybe (Textual Int32))
     , _adrDimension :: !(Maybe AppendDimensionRequestDimension)
-    , _adrSheetId   :: !(Maybe (Textual Int32))
+    , _adrSheetId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppendDimensionRequest' with the minimum fields required to make a request.
@@ -5360,7 +6915,7 @@ data AppendDimensionRequest = AppendDimensionRequest'
 -- * 'adrSheetId'
 appendDimensionRequest
     :: AppendDimensionRequest
-appendDimensionRequest =
+appendDimensionRequest = 
     AppendDimensionRequest'
     { _adrLength = Nothing
     , _adrDimension = Nothing
@@ -5405,9 +6960,9 @@ instance ToJSON AppendDimensionRequest where
 -- /See:/ 'pivotValue' smart constructor.
 data PivotValue = PivotValue'
     { _pvSourceColumnOffSet :: !(Maybe (Textual Int32))
-    , _pvFormula            :: !(Maybe Text)
-    , _pvName               :: !(Maybe Text)
-    , _pvSummarizeFunction  :: !(Maybe PivotValueSummarizeFunction)
+    , _pvFormula :: !(Maybe Text)
+    , _pvName :: !(Maybe Text)
+    , _pvSummarizeFunction :: !(Maybe PivotValueSummarizeFunction)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PivotValue' with the minimum fields required to make a request.
@@ -5423,7 +6978,7 @@ data PivotValue = PivotValue'
 -- * 'pvSummarizeFunction'
 pivotValue
     :: PivotValue
-pivotValue =
+pivotValue = 
     PivotValue'
     { _pvSourceColumnOffSet = Nothing
     , _pvFormula = Nothing
@@ -5447,8 +7002,7 @@ pvFormula :: Lens' PivotValue (Maybe Text)
 pvFormula
   = lens _pvFormula (\ s a -> s{_pvFormula = a})
 
--- | A name to use for the value. This is only used if formula was set.
--- Otherwise, the column name is used.
+-- | A name to use for the value.
 pvName :: Lens' PivotValue (Maybe Text)
 pvName = lens _pvName (\ s a -> s{_pvName = a})
 
@@ -5492,7 +7046,7 @@ newtype UnmergeCellsRequest = UnmergeCellsRequest'
 -- * 'ucrRange'
 unmergeCellsRequest
     :: UnmergeCellsRequest
-unmergeCellsRequest =
+unmergeCellsRequest = 
     UnmergeCellsRequest'
     { _ucrRange = Nothing
     }
@@ -5526,7 +7080,7 @@ newtype DeleteSheetRequest = DeleteSheetRequest'
 -- * 'dsrSheetId'
 deleteSheetRequest
     :: DeleteSheetRequest
-deleteSheetRequest =
+deleteSheetRequest = 
     DeleteSheetRequest'
     { _dsrSheetId = Nothing
     }
@@ -5546,13 +7100,90 @@ instance ToJSON DeleteSheetRequest where
         toJSON DeleteSheetRequest'{..}
           = object (catMaybes [("sheetId" .=) <$> _dsrSheetId])
 
+-- | The Candlestick chart data, each containing the low, open, close, and
+-- high values for a series.
+--
+-- /See:/ 'candlestickData' smart constructor.
+data CandlestickData = CandlestickData'
+    { _cdLowSeries :: !(Maybe CandlestickSeries)
+    , _cdHighSeries :: !(Maybe CandlestickSeries)
+    , _cdOpenSeries :: !(Maybe CandlestickSeries)
+    , _cdCloseSeries :: !(Maybe CandlestickSeries)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CandlestickData' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cdLowSeries'
+--
+-- * 'cdHighSeries'
+--
+-- * 'cdOpenSeries'
+--
+-- * 'cdCloseSeries'
+candlestickData
+    :: CandlestickData
+candlestickData = 
+    CandlestickData'
+    { _cdLowSeries = Nothing
+    , _cdHighSeries = Nothing
+    , _cdOpenSeries = Nothing
+    , _cdCloseSeries = Nothing
+    }
+
+-- | The range data (vertical axis) for the low\/minimum value for each
+-- candle. This is the bottom of the candle\'s center line.
+cdLowSeries :: Lens' CandlestickData (Maybe CandlestickSeries)
+cdLowSeries
+  = lens _cdLowSeries (\ s a -> s{_cdLowSeries = a})
+
+-- | The range data (vertical axis) for the high\/maximum value for each
+-- candle. This is the top of the candle\'s center line.
+cdHighSeries :: Lens' CandlestickData (Maybe CandlestickSeries)
+cdHighSeries
+  = lens _cdHighSeries (\ s a -> s{_cdHighSeries = a})
+
+-- | The range data (vertical axis) for the open\/initial value for each
+-- candle. This is the bottom of the candle body. If less than the close
+-- value the candle will be filled. Otherwise the candle will be hollow.
+cdOpenSeries :: Lens' CandlestickData (Maybe CandlestickSeries)
+cdOpenSeries
+  = lens _cdOpenSeries (\ s a -> s{_cdOpenSeries = a})
+
+-- | The range data (vertical axis) for the close\/final value for each
+-- candle. This is the top of the candle body. If greater than the open
+-- value the candle will be filled. Otherwise the candle will be hollow.
+cdCloseSeries :: Lens' CandlestickData (Maybe CandlestickSeries)
+cdCloseSeries
+  = lens _cdCloseSeries
+      (\ s a -> s{_cdCloseSeries = a})
+
+instance FromJSON CandlestickData where
+        parseJSON
+          = withObject "CandlestickData"
+              (\ o ->
+                 CandlestickData' <$>
+                   (o .:? "lowSeries") <*> (o .:? "highSeries") <*>
+                     (o .:? "openSeries")
+                     <*> (o .:? "closeSeries"))
+
+instance ToJSON CandlestickData where
+        toJSON CandlestickData'{..}
+          = object
+              (catMaybes
+                 [("lowSeries" .=) <$> _cdLowSeries,
+                  ("highSeries" .=) <$> _cdHighSeries,
+                  ("openSeries" .=) <$> _cdOpenSeries,
+                  ("closeSeries" .=) <$> _cdCloseSeries])
+
 -- | A banded (alternating colors) range in a sheet.
 --
 -- /See:/ 'bandedRange' smart constructor.
 data BandedRange = BandedRange'
-    { _brBandedRangeId    :: !(Maybe (Textual Int32))
-    , _brRowProperties    :: !(Maybe BandingProperties)
-    , _brRange            :: !(Maybe GridRange)
+    { _brBandedRangeId :: !(Maybe (Textual Int32))
+    , _brRowProperties :: !(Maybe BandingProperties)
+    , _brRange :: !(Maybe GridRange)
     , _brColumnProperties :: !(Maybe BandingProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5569,7 +7200,7 @@ data BandedRange = BandedRange'
 -- * 'brColumnProperties'
 bandedRange
     :: BandedRange
-bandedRange =
+bandedRange = 
     BandedRange'
     { _brBandedRangeId = Nothing
     , _brRowProperties = Nothing
@@ -5631,13 +7262,13 @@ instance ToJSON BandedRange where
 --
 -- /See:/ 'updateBOrdersRequest' smart constructor.
 data UpdateBOrdersRequest = UpdateBOrdersRequest'
-    { _uborBottom          :: !(Maybe BOrder)
+    { _uborBottom :: !(Maybe BOrder)
     , _uborInnerHorizontal :: !(Maybe BOrder)
-    , _uborLeft            :: !(Maybe BOrder)
-    , _uborInnerVertical   :: !(Maybe BOrder)
-    , _uborRange           :: !(Maybe GridRange)
-    , _uborRight           :: !(Maybe BOrder)
-    , _uborTop             :: !(Maybe BOrder)
+    , _uborLeft :: !(Maybe BOrder)
+    , _uborInnerVertical :: !(Maybe BOrder)
+    , _uborRange :: !(Maybe GridRange)
+    , _uborRight :: !(Maybe BOrder)
+    , _uborTop :: !(Maybe BOrder)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateBOrdersRequest' with the minimum fields required to make a request.
@@ -5659,7 +7290,7 @@ data UpdateBOrdersRequest = UpdateBOrdersRequest'
 -- * 'uborTop'
 updateBOrdersRequest
     :: UpdateBOrdersRequest
-updateBOrdersRequest =
+updateBOrdersRequest = 
     UpdateBOrdersRequest'
     { _uborBottom = Nothing
     , _uborInnerHorizontal = Nothing
@@ -5729,13 +7360,118 @@ instance ToJSON UpdateBOrdersRequest where
                   ("right" .=) <$> _uborRight,
                   ("top" .=) <$> _uborTop])
 
+-- | The request for updating more than one range of values in a spreadsheet.
+--
+-- /See:/ 'batchUpdateValuesByDataFilterRequest' smart constructor.
+data BatchUpdateValuesByDataFilterRequest = BatchUpdateValuesByDataFilterRequest'
+    { _buvbdfrData :: !(Maybe [DataFilterValueRange])
+    , _buvbdfrValueInputOption :: !(Maybe BatchUpdateValuesByDataFilterRequestValueInputOption)
+    , _buvbdfrIncludeValuesInResponse :: !(Maybe Bool)
+    , _buvbdfrResponseDateTimeRenderOption :: !(Maybe BatchUpdateValuesByDataFilterRequestResponseDateTimeRenderOption)
+    , _buvbdfrResponseValueRenderOption :: !(Maybe BatchUpdateValuesByDataFilterRequestResponseValueRenderOption)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchUpdateValuesByDataFilterRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'buvbdfrData'
+--
+-- * 'buvbdfrValueInputOption'
+--
+-- * 'buvbdfrIncludeValuesInResponse'
+--
+-- * 'buvbdfrResponseDateTimeRenderOption'
+--
+-- * 'buvbdfrResponseValueRenderOption'
+batchUpdateValuesByDataFilterRequest
+    :: BatchUpdateValuesByDataFilterRequest
+batchUpdateValuesByDataFilterRequest = 
+    BatchUpdateValuesByDataFilterRequest'
+    { _buvbdfrData = Nothing
+    , _buvbdfrValueInputOption = Nothing
+    , _buvbdfrIncludeValuesInResponse = Nothing
+    , _buvbdfrResponseDateTimeRenderOption = Nothing
+    , _buvbdfrResponseValueRenderOption = Nothing
+    }
+
+-- | The new values to apply to the spreadsheet. If more than one range is
+-- matched by the specified DataFilter the specified values will be applied
+-- to all of those ranges.
+buvbdfrData :: Lens' BatchUpdateValuesByDataFilterRequest [DataFilterValueRange]
+buvbdfrData
+  = lens _buvbdfrData (\ s a -> s{_buvbdfrData = a}) .
+      _Default
+      . _Coerce
+
+-- | How the input data should be interpreted.
+buvbdfrValueInputOption :: Lens' BatchUpdateValuesByDataFilterRequest (Maybe BatchUpdateValuesByDataFilterRequestValueInputOption)
+buvbdfrValueInputOption
+  = lens _buvbdfrValueInputOption
+      (\ s a -> s{_buvbdfrValueInputOption = a})
+
+-- | Determines if the update response should include the values of the cells
+-- that were updated. By default, responses do not include the updated
+-- values. The \`updatedData\` field within each of the
+-- BatchUpdateValuesResponse.responses will contain the updated values. If
+-- the range to write was larger than than the range actually written, the
+-- response will include all values in the requested range (excluding
+-- trailing empty rows and columns).
+buvbdfrIncludeValuesInResponse :: Lens' BatchUpdateValuesByDataFilterRequest (Maybe Bool)
+buvbdfrIncludeValuesInResponse
+  = lens _buvbdfrIncludeValuesInResponse
+      (\ s a -> s{_buvbdfrIncludeValuesInResponse = a})
+
+-- | Determines how dates, times, and durations in the response should be
+-- rendered. This is ignored if response_value_render_option is
+-- FORMATTED_VALUE. The default dateTime render option is
+-- DateTimeRenderOption.SERIAL_NUMBER.
+buvbdfrResponseDateTimeRenderOption :: Lens' BatchUpdateValuesByDataFilterRequest (Maybe BatchUpdateValuesByDataFilterRequestResponseDateTimeRenderOption)
+buvbdfrResponseDateTimeRenderOption
+  = lens _buvbdfrResponseDateTimeRenderOption
+      (\ s a ->
+         s{_buvbdfrResponseDateTimeRenderOption = a})
+
+-- | Determines how values in the response should be rendered. The default
+-- render option is ValueRenderOption.FORMATTED_VALUE.
+buvbdfrResponseValueRenderOption :: Lens' BatchUpdateValuesByDataFilterRequest (Maybe BatchUpdateValuesByDataFilterRequestResponseValueRenderOption)
+buvbdfrResponseValueRenderOption
+  = lens _buvbdfrResponseValueRenderOption
+      (\ s a -> s{_buvbdfrResponseValueRenderOption = a})
+
+instance FromJSON
+         BatchUpdateValuesByDataFilterRequest where
+        parseJSON
+          = withObject "BatchUpdateValuesByDataFilterRequest"
+              (\ o ->
+                 BatchUpdateValuesByDataFilterRequest' <$>
+                   (o .:? "data" .!= mempty) <*>
+                     (o .:? "valueInputOption")
+                     <*> (o .:? "includeValuesInResponse")
+                     <*> (o .:? "responseDateTimeRenderOption")
+                     <*> (o .:? "responseValueRenderOption"))
+
+instance ToJSON BatchUpdateValuesByDataFilterRequest
+         where
+        toJSON BatchUpdateValuesByDataFilterRequest'{..}
+          = object
+              (catMaybes
+                 [("data" .=) <$> _buvbdfrData,
+                  ("valueInputOption" .=) <$> _buvbdfrValueInputOption,
+                  ("includeValuesInResponse" .=) <$>
+                    _buvbdfrIncludeValuesInResponse,
+                  ("responseDateTimeRenderOption" .=) <$>
+                    _buvbdfrResponseDateTimeRenderOption,
+                  ("responseValueRenderOption" .=) <$>
+                    _buvbdfrResponseValueRenderOption])
+
 -- | A chart embedded in a sheet.
 --
 -- /See:/ 'embeddedChart' smart constructor.
 data EmbeddedChart = EmbeddedChart'
-    { _ecSpec     :: !(Maybe ChartSpec)
+    { _ecSpec :: !(Maybe ChartSpec)
     , _ecPosition :: !(Maybe EmbeddedObjectPosition)
-    , _ecChartId  :: !(Maybe (Textual Int32))
+    , _ecChartId :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EmbeddedChart' with the minimum fields required to make a request.
@@ -5749,7 +7485,7 @@ data EmbeddedChart = EmbeddedChart'
 -- * 'ecChartId'
 embeddedChart
     :: EmbeddedChart
-embeddedChart =
+embeddedChart = 
     EmbeddedChart'
     { _ecSpec = Nothing
     , _ecPosition = Nothing
@@ -5801,7 +7537,7 @@ newtype RowData = RowData'
 -- * 'rdValues'
 rowData
     :: RowData
-rowData =
+rowData = 
     RowData'
     { _rdValues = Nothing
     }
@@ -5826,8 +7562,8 @@ instance ToJSON RowData where
 --
 -- /See:/ 'editors' smart constructor.
 data Editors = Editors'
-    { _eGroups             :: !(Maybe [Text])
-    , _eUsers              :: !(Maybe [Text])
+    { _eGroups :: !(Maybe [Text])
+    , _eUsers :: !(Maybe [Text])
     , _eDomainUsersCanEdit :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5842,7 +7578,7 @@ data Editors = Editors'
 -- * 'eDomainUsersCanEdit'
 editors
     :: Editors
-editors =
+editors = 
     Editors'
     { _eGroups = Nothing
     , _eUsers = Nothing
@@ -5890,12 +7626,12 @@ instance ToJSON Editors where
 --
 -- /See:/ 'pivotTable' smart constructor.
 data PivotTable = PivotTable'
-    { _ptValues      :: !(Maybe [PivotValue])
+    { _ptValues :: !(Maybe [PivotValue])
     , _ptValueLayout :: !(Maybe PivotTableValueLayout)
-    , _ptRows        :: !(Maybe [PivotGroup])
-    , _ptSource      :: !(Maybe GridRange)
-    , _ptColumns     :: !(Maybe [PivotGroup])
-    , _ptCriteria    :: !(Maybe PivotTableCriteria)
+    , _ptRows :: !(Maybe [PivotGroup])
+    , _ptSource :: !(Maybe GridRange)
+    , _ptColumns :: !(Maybe [PivotGroup])
+    , _ptCriteria :: !(Maybe PivotTableCriteria)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PivotTable' with the minimum fields required to make a request.
@@ -5915,7 +7651,7 @@ data PivotTable = PivotTable'
 -- * 'ptCriteria'
 pivotTable
     :: PivotTable
-pivotTable =
+pivotTable = 
     PivotTable'
     { _ptValues = Nothing
     , _ptValueLayout = Nothing
@@ -5992,8 +7728,8 @@ instance ToJSON PivotTable where
 -- /See:/ 'embeddedObjectPosition' smart constructor.
 data EmbeddedObjectPosition = EmbeddedObjectPosition'
     { _eopOverlayPosition :: !(Maybe OverlayPosition)
-    , _eopSheetId         :: !(Maybe (Textual Int32))
-    , _eopNewSheet        :: !(Maybe Bool)
+    , _eopSheetId :: !(Maybe (Textual Int32))
+    , _eopNewSheet :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EmbeddedObjectPosition' with the minimum fields required to make a request.
@@ -6007,7 +7743,7 @@ data EmbeddedObjectPosition = EmbeddedObjectPosition'
 -- * 'eopNewSheet'
 embeddedObjectPosition
     :: EmbeddedObjectPosition
-embeddedObjectPosition =
+embeddedObjectPosition = 
     EmbeddedObjectPosition'
     { _eopOverlayPosition = Nothing
     , _eopSheetId = Nothing
@@ -6054,8 +7790,8 @@ instance ToJSON EmbeddedObjectPosition where
 -- /See:/ 'basicFilter' smart constructor.
 data BasicFilter = BasicFilter'
     { _bfSortSpecs :: !(Maybe [SortSpec])
-    , _bfRange     :: !(Maybe GridRange)
-    , _bfCriteria  :: !(Maybe BasicFilterCriteria)
+    , _bfRange :: !(Maybe GridRange)
+    , _bfCriteria :: !(Maybe BasicFilterCriteria)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BasicFilter' with the minimum fields required to make a request.
@@ -6069,7 +7805,7 @@ data BasicFilter = BasicFilter'
 -- * 'bfCriteria'
 basicFilter
     :: BasicFilter
-basicFilter =
+basicFilter = 
     BasicFilter'
     { _bfSortSpecs = Nothing
     , _bfRange = Nothing
@@ -6116,8 +7852,8 @@ instance ToJSON BasicFilter where
 -- /See:/ 'textToColumnsRequest' smart constructor.
 data TextToColumnsRequest = TextToColumnsRequest'
     { _ttcrDelimiterType :: !(Maybe TextToColumnsRequestDelimiterType)
-    , _ttcrSource        :: !(Maybe GridRange)
-    , _ttcrDelimiter     :: !(Maybe Text)
+    , _ttcrSource :: !(Maybe GridRange)
+    , _ttcrDelimiter :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TextToColumnsRequest' with the minimum fields required to make a request.
@@ -6131,7 +7867,7 @@ data TextToColumnsRequest = TextToColumnsRequest'
 -- * 'ttcrDelimiter'
 textToColumnsRequest
     :: TextToColumnsRequest
-textToColumnsRequest =
+textToColumnsRequest = 
     TextToColumnsRequest'
     { _ttcrDelimiterType = Nothing
     , _ttcrSource = Nothing
@@ -6171,13 +7907,69 @@ instance ToJSON TextToColumnsRequest where
                   ("source" .=) <$> _ttcrSource,
                   ("delimiter" .=) <$> _ttcrDelimiter])
 
+-- | The request for retrieving a Spreadsheet.
+--
+-- /See:/ 'getSpreadsheetByDataFilterRequest' smart constructor.
+data GetSpreadsheetByDataFilterRequest = GetSpreadsheetByDataFilterRequest'
+    { _gsbdfrDataFilters :: !(Maybe [DataFilter])
+    , _gsbdfrIncludeGridData :: !(Maybe Bool)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'GetSpreadsheetByDataFilterRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'gsbdfrDataFilters'
+--
+-- * 'gsbdfrIncludeGridData'
+getSpreadsheetByDataFilterRequest
+    :: GetSpreadsheetByDataFilterRequest
+getSpreadsheetByDataFilterRequest = 
+    GetSpreadsheetByDataFilterRequest'
+    { _gsbdfrDataFilters = Nothing
+    , _gsbdfrIncludeGridData = Nothing
+    }
+
+-- | The DataFilters used to select which ranges to retrieve from the
+-- spreadsheet.
+gsbdfrDataFilters :: Lens' GetSpreadsheetByDataFilterRequest [DataFilter]
+gsbdfrDataFilters
+  = lens _gsbdfrDataFilters
+      (\ s a -> s{_gsbdfrDataFilters = a})
+      . _Default
+      . _Coerce
+
+-- | True if grid data should be returned. This parameter is ignored if a
+-- field mask was set in the request.
+gsbdfrIncludeGridData :: Lens' GetSpreadsheetByDataFilterRequest (Maybe Bool)
+gsbdfrIncludeGridData
+  = lens _gsbdfrIncludeGridData
+      (\ s a -> s{_gsbdfrIncludeGridData = a})
+
+instance FromJSON GetSpreadsheetByDataFilterRequest
+         where
+        parseJSON
+          = withObject "GetSpreadsheetByDataFilterRequest"
+              (\ o ->
+                 GetSpreadsheetByDataFilterRequest' <$>
+                   (o .:? "dataFilters" .!= mempty) <*>
+                     (o .:? "includeGridData"))
+
+instance ToJSON GetSpreadsheetByDataFilterRequest
+         where
+        toJSON GetSpreadsheetByDataFilterRequest'{..}
+          = object
+              (catMaybes
+                 [("dataFilters" .=) <$> _gsbdfrDataFilters,
+                  ("includeGridData" .=) <$> _gsbdfrIncludeGridData])
+
 -- | The request for updating any aspect of a spreadsheet.
 --
 -- /See:/ 'batchUpdateSpreadsheetRequest' smart constructor.
 data BatchUpdateSpreadsheetRequest = BatchUpdateSpreadsheetRequest'
-    { _busrResponseIncludeGridData      :: !(Maybe Bool)
-    , _busrResponseRanges               :: !(Maybe [Text])
-    , _busrRequests                     :: !(Maybe [Request'])
+    { _busrResponseIncludeGridData :: !(Maybe Bool)
+    , _busrResponseRanges :: !(Maybe [Text])
+    , _busrRequests :: !(Maybe [Request'])
     , _busrIncludeSpreadsheetInResponse :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6194,7 +7986,7 @@ data BatchUpdateSpreadsheetRequest = BatchUpdateSpreadsheetRequest'
 -- * 'busrIncludeSpreadsheetInResponse'
 batchUpdateSpreadsheetRequest
     :: BatchUpdateSpreadsheetRequest
-batchUpdateSpreadsheetRequest =
+batchUpdateSpreadsheetRequest = 
     BatchUpdateSpreadsheetRequest'
     { _busrResponseIncludeGridData = Nothing
     , _busrResponseRanges = Nothing
@@ -6219,7 +8011,9 @@ busrResponseRanges
       . _Default
       . _Coerce
 
--- | A list of updates to apply to the spreadsheet.
+-- | A list of updates to apply to the spreadsheet. Requests will be applied
+-- in the order they are specified. If any request is not valid, no
+-- requests will be applied.
 busrRequests :: Lens' BatchUpdateSpreadsheetRequest [Request']
 busrRequests
   = lens _busrRequests (\ s a -> s{_busrRequests = a})
@@ -6258,11 +8052,11 @@ instance ToJSON BatchUpdateSpreadsheetRequest where
 --
 -- /See:/ 'updateValuesResponse' smart constructor.
 data UpdateValuesResponse = UpdateValuesResponse'
-    { _uvrUpdatedCells   :: !(Maybe (Textual Int32))
-    , _uvrSpreadsheetId  :: !(Maybe Text)
-    , _uvrUpdatedRows    :: !(Maybe (Textual Int32))
-    , _uvrUpdatedRange   :: !(Maybe Text)
-    , _uvrUpdatedData    :: !(Maybe ValueRange)
+    { _uvrUpdatedCells :: !(Maybe (Textual Int32))
+    , _uvrSpreadsheetId :: !(Maybe Text)
+    , _uvrUpdatedRows :: !(Maybe (Textual Int32))
+    , _uvrUpdatedRange :: !(Maybe Text)
+    , _uvrUpdatedData :: !(Maybe ValueRange)
     , _uvrUpdatedColumns :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6283,7 +8077,7 @@ data UpdateValuesResponse = UpdateValuesResponse'
 -- * 'uvrUpdatedColumns'
 updateValuesResponse
     :: UpdateValuesResponse
-updateValuesResponse =
+updateValuesResponse = 
     UpdateValuesResponse'
     { _uvrUpdatedCells = Nothing
     , _uvrSpreadsheetId = Nothing
@@ -6370,7 +8164,7 @@ newtype CopySheetToAnotherSpreadsheetRequest = CopySheetToAnotherSpreadsheetRequ
 -- * 'cstasrDestinationSpreadsheetId'
 copySheetToAnotherSpreadsheetRequest
     :: CopySheetToAnotherSpreadsheetRequest
-copySheetToAnotherSpreadsheetRequest =
+copySheetToAnotherSpreadsheetRequest = 
     CopySheetToAnotherSpreadsheetRequest'
     { _cstasrDestinationSpreadsheetId = Nothing
     }
@@ -6411,7 +8205,7 @@ newtype AddFilterViewRequest = AddFilterViewRequest'
 -- * 'aFilter'
 addFilterViewRequest
     :: AddFilterViewRequest
-addFilterViewRequest =
+addFilterViewRequest = 
     AddFilterViewRequest'
     { _aFilter = Nothing
     }
@@ -6435,7 +8229,7 @@ instance ToJSON AddFilterViewRequest where
 --
 -- /See:/ 'pivotGroupValueMetadata' smart constructor.
 data PivotGroupValueMetadata = PivotGroupValueMetadata'
-    { _pgvmValue     :: !(Maybe ExtendedValue)
+    { _pgvmValue :: !(Maybe ExtendedValue)
     , _pgvmCollapsed :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6448,7 +8242,7 @@ data PivotGroupValueMetadata = PivotGroupValueMetadata'
 -- * 'pgvmCollapsed'
 pivotGroupValueMetadata
     :: PivotGroupValueMetadata
-pivotGroupValueMetadata =
+pivotGroupValueMetadata = 
     PivotGroupValueMetadata'
     { _pgvmValue = Nothing
     , _pgvmCollapsed = Nothing
@@ -6480,13 +8274,71 @@ instance ToJSON PivotGroupValueMetadata where
                  [("value" .=) <$> _pgvmValue,
                   ("collapsed" .=) <$> _pgvmCollapsed])
 
+-- | The response when clearing a range of values selected with DataFilters
+-- in a spreadsheet.
+--
+-- /See:/ 'batchClearValuesByDataFilterResponse' smart constructor.
+data BatchClearValuesByDataFilterResponse = BatchClearValuesByDataFilterResponse'
+    { _bcvbdfrClearedRanges :: !(Maybe [Text])
+    , _bcvbdfrSpreadsheetId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'BatchClearValuesByDataFilterResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bcvbdfrClearedRanges'
+--
+-- * 'bcvbdfrSpreadsheetId'
+batchClearValuesByDataFilterResponse
+    :: BatchClearValuesByDataFilterResponse
+batchClearValuesByDataFilterResponse = 
+    BatchClearValuesByDataFilterResponse'
+    { _bcvbdfrClearedRanges = Nothing
+    , _bcvbdfrSpreadsheetId = Nothing
+    }
+
+-- | The ranges that were cleared, in A1 notation. (If the requests were for
+-- an unbounded range or a ranger larger than the bounds of the sheet, this
+-- will be the actual ranges that were cleared, bounded to the sheet\'s
+-- limits.)
+bcvbdfrClearedRanges :: Lens' BatchClearValuesByDataFilterResponse [Text]
+bcvbdfrClearedRanges
+  = lens _bcvbdfrClearedRanges
+      (\ s a -> s{_bcvbdfrClearedRanges = a})
+      . _Default
+      . _Coerce
+
+-- | The spreadsheet the updates were applied to.
+bcvbdfrSpreadsheetId :: Lens' BatchClearValuesByDataFilterResponse (Maybe Text)
+bcvbdfrSpreadsheetId
+  = lens _bcvbdfrSpreadsheetId
+      (\ s a -> s{_bcvbdfrSpreadsheetId = a})
+
+instance FromJSON
+         BatchClearValuesByDataFilterResponse where
+        parseJSON
+          = withObject "BatchClearValuesByDataFilterResponse"
+              (\ o ->
+                 BatchClearValuesByDataFilterResponse' <$>
+                   (o .:? "clearedRanges" .!= mempty) <*>
+                     (o .:? "spreadsheetId"))
+
+instance ToJSON BatchClearValuesByDataFilterResponse
+         where
+        toJSON BatchClearValuesByDataFilterResponse'{..}
+          = object
+              (catMaybes
+                 [("clearedRanges" .=) <$> _bcvbdfrClearedRanges,
+                  ("spreadsheetId" .=) <$> _bcvbdfrSpreadsheetId])
+
 -- | Updates all cells in a range with new data.
 --
 -- /See:/ 'updateCellsRequest' smart constructor.
 data UpdateCellsRequest = UpdateCellsRequest'
-    { _updStart  :: !(Maybe GridCoordinate)
-    , _updRows   :: !(Maybe [RowData])
-    , _updRange  :: !(Maybe GridRange)
+    { _updStart :: !(Maybe GridCoordinate)
+    , _updRows :: !(Maybe [RowData])
+    , _updRange :: !(Maybe GridRange)
     , _updFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6503,7 +8355,7 @@ data UpdateCellsRequest = UpdateCellsRequest'
 -- * 'updFields'
 updateCellsRequest
     :: UpdateCellsRequest
-updateCellsRequest =
+updateCellsRequest = 
     UpdateCellsRequest'
     { _updStart = Nothing
     , _updRows = Nothing
@@ -6557,16 +8409,17 @@ instance ToJSON UpdateCellsRequest where
 --
 -- /See:/ 'cellFormat' smart constructor.
 data CellFormat = CellFormat'
-    { _cfBOrders              :: !(Maybe BOrders)
-    , _cfVerticalAlignment    :: !(Maybe CellFormatVerticalAlignment)
-    , _cfBackgRoundColor      :: !(Maybe Color)
+    { _cfBOrders :: !(Maybe BOrders)
+    , _cfVerticalAlignment :: !(Maybe CellFormatVerticalAlignment)
+    , _cfBackgRoundColor :: !(Maybe Color)
+    , _cfTextRotation :: !(Maybe TextRotation)
     , _cfHyperlinkDisplayType :: !(Maybe CellFormatHyperlinkDisplayType)
-    , _cfWrapStrategy         :: !(Maybe CellFormatWrapStrategy)
-    , _cfNumberFormat         :: !(Maybe NumberFormat)
-    , _cfTextDirection        :: !(Maybe CellFormatTextDirection)
-    , _cfTextFormat           :: !(Maybe TextFormat)
-    , _cfHorizontalAlignment  :: !(Maybe CellFormatHorizontalAlignment)
-    , _cfPadding              :: !(Maybe Padding)
+    , _cfWrapStrategy :: !(Maybe CellFormatWrapStrategy)
+    , _cfNumberFormat :: !(Maybe NumberFormat)
+    , _cfTextDirection :: !(Maybe CellFormatTextDirection)
+    , _cfTextFormat :: !(Maybe TextFormat)
+    , _cfHorizontalAlignment :: !(Maybe CellFormatHorizontalAlignment)
+    , _cfPadding :: !(Maybe Padding)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CellFormat' with the minimum fields required to make a request.
@@ -6578,6 +8431,8 @@ data CellFormat = CellFormat'
 -- * 'cfVerticalAlignment'
 --
 -- * 'cfBackgRoundColor'
+--
+-- * 'cfTextRotation'
 --
 -- * 'cfHyperlinkDisplayType'
 --
@@ -6594,11 +8449,12 @@ data CellFormat = CellFormat'
 -- * 'cfPadding'
 cellFormat
     :: CellFormat
-cellFormat =
+cellFormat = 
     CellFormat'
     { _cfBOrders = Nothing
     , _cfVerticalAlignment = Nothing
     , _cfBackgRoundColor = Nothing
+    , _cfTextRotation = Nothing
     , _cfHyperlinkDisplayType = Nothing
     , _cfWrapStrategy = Nothing
     , _cfNumberFormat = Nothing
@@ -6624,6 +8480,12 @@ cfBackgRoundColor :: Lens' CellFormat (Maybe Color)
 cfBackgRoundColor
   = lens _cfBackgRoundColor
       (\ s a -> s{_cfBackgRoundColor = a})
+
+-- | The rotation applied to text in a cell
+cfTextRotation :: Lens' CellFormat (Maybe TextRotation)
+cfTextRotation
+  = lens _cfTextRotation
+      (\ s a -> s{_cfTextRotation = a})
 
 -- | How a hyperlink, if it exists, should be displayed in the cell.
 cfHyperlinkDisplayType :: Lens' CellFormat (Maybe CellFormatHyperlinkDisplayType)
@@ -6672,6 +8534,7 @@ instance FromJSON CellFormat where
                  CellFormat' <$>
                    (o .:? "borders") <*> (o .:? "verticalAlignment") <*>
                      (o .:? "backgroundColor")
+                     <*> (o .:? "textRotation")
                      <*> (o .:? "hyperlinkDisplayType")
                      <*> (o .:? "wrapStrategy")
                      <*> (o .:? "numberFormat")
@@ -6687,6 +8550,7 @@ instance ToJSON CellFormat where
                  [("borders" .=) <$> _cfBOrders,
                   ("verticalAlignment" .=) <$> _cfVerticalAlignment,
                   ("backgroundColor" .=) <$> _cfBackgRoundColor,
+                  ("textRotation" .=) <$> _cfTextRotation,
                   ("hyperlinkDisplayType" .=) <$>
                     _cfHyperlinkDisplayType,
                   ("wrapStrategy" .=) <$> _cfWrapStrategy,
@@ -6711,7 +8575,7 @@ newtype DeleteProtectedRangeRequest = DeleteProtectedRangeRequest'
 -- * 'dprrProtectedRangeId'
 deleteProtectedRangeRequest
     :: DeleteProtectedRangeRequest
-deleteProtectedRangeRequest =
+deleteProtectedRangeRequest = 
     DeleteProtectedRangeRequest'
     { _dprrProtectedRangeId = Nothing
     }
@@ -6741,7 +8605,7 @@ instance ToJSON DeleteProtectedRangeRequest where
 -- /See:/ 'updateProtectedRangeRequest' smart constructor.
 data UpdateProtectedRangeRequest = UpdateProtectedRangeRequest'
     { _uprrProtectedRange :: !(Maybe ProtectedRange)
-    , _uprrFields         :: !(Maybe FieldMask)
+    , _uprrFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateProtectedRangeRequest' with the minimum fields required to make a request.
@@ -6753,7 +8617,7 @@ data UpdateProtectedRangeRequest = UpdateProtectedRangeRequest'
 -- * 'uprrFields'
 updateProtectedRangeRequest
     :: UpdateProtectedRangeRequest
-updateProtectedRangeRequest =
+updateProtectedRangeRequest = 
     UpdateProtectedRangeRequest'
     { _uprrProtectedRange = Nothing
     , _uprrFields = Nothing
@@ -6800,7 +8664,7 @@ newtype AddSheetResponse = AddSheetResponse'
 -- * 'aProperties'
 addSheetResponse
     :: AddSheetResponse
-addSheetResponse =
+addSheetResponse = 
     AddSheetResponse'
     { _aProperties = Nothing
     }
@@ -6824,14 +8688,14 @@ instance ToJSON AddSheetResponse where
 --
 -- /See:/ 'protectedRange' smart constructor.
 data ProtectedRange = ProtectedRange'
-    { _prProtectedRangeId      :: !(Maybe (Textual Int32))
-    , _prWarningOnly           :: !(Maybe Bool)
-    , _prNamedRangeId          :: !(Maybe Text)
-    , _prRange                 :: !(Maybe GridRange)
-    , _prEditors               :: !(Maybe Editors)
-    , _prUnprotectedRanges     :: !(Maybe [GridRange])
+    { _prProtectedRangeId :: !(Maybe (Textual Int32))
+    , _prWarningOnly :: !(Maybe Bool)
+    , _prNamedRangeId :: !(Maybe Text)
+    , _prRange :: !(Maybe GridRange)
+    , _prEditors :: !(Maybe Editors)
+    , _prUnprotectedRanges :: !(Maybe [GridRange])
     , _prRequestingUserCanEdit :: !(Maybe Bool)
-    , _prDescription           :: !(Maybe Text)
+    , _prDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProtectedRange' with the minimum fields required to make a request.
@@ -6855,7 +8719,7 @@ data ProtectedRange = ProtectedRange'
 -- * 'prDescription'
 protectedRange
     :: ProtectedRange
-protectedRange =
+protectedRange = 
     ProtectedRange'
     { _prProtectedRangeId = Nothing
     , _prWarningOnly = Nothing
@@ -6960,14 +8824,17 @@ instance ToJSON ProtectedRange where
 --
 -- /See:/ 'basicChartAxis' smart constructor.
 data BasicChartAxis = BasicChartAxis'
-    { _bcaFormat   :: !(Maybe TextFormat)
-    , _bcaTitle    :: !(Maybe Text)
+    { _bcaTitleTextPosition :: !(Maybe TextPosition)
+    , _bcaFormat :: !(Maybe TextFormat)
+    , _bcaTitle :: !(Maybe Text)
     , _bcaPosition :: !(Maybe BasicChartAxisPosition)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BasicChartAxis' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bcaTitleTextPosition'
 --
 -- * 'bcaFormat'
 --
@@ -6976,12 +8843,19 @@ data BasicChartAxis = BasicChartAxis'
 -- * 'bcaPosition'
 basicChartAxis
     :: BasicChartAxis
-basicChartAxis =
+basicChartAxis = 
     BasicChartAxis'
-    { _bcaFormat = Nothing
+    { _bcaTitleTextPosition = Nothing
+    , _bcaFormat = Nothing
     , _bcaTitle = Nothing
     , _bcaPosition = Nothing
     }
+
+-- | The axis title text position.
+bcaTitleTextPosition :: Lens' BasicChartAxis (Maybe TextPosition)
+bcaTitleTextPosition
+  = lens _bcaTitleTextPosition
+      (\ s a -> s{_bcaTitleTextPosition = a})
 
 -- | The format of the title. Only valid if the axis is not associated with
 -- the domain.
@@ -7004,14 +8878,16 @@ instance FromJSON BasicChartAxis where
           = withObject "BasicChartAxis"
               (\ o ->
                  BasicChartAxis' <$>
-                   (o .:? "format") <*> (o .:? "title") <*>
-                     (o .:? "position"))
+                   (o .:? "titleTextPosition") <*> (o .:? "format") <*>
+                     (o .:? "title")
+                     <*> (o .:? "position"))
 
 instance ToJSON BasicChartAxis where
         toJSON BasicChartAxis'{..}
           = object
               (catMaybes
-                 [("format" .=) <$> _bcaFormat,
+                 [("titleTextPosition" .=) <$> _bcaTitleTextPosition,
+                  ("format" .=) <$> _bcaFormat,
                   ("title" .=) <$> _bcaTitle,
                   ("position" .=) <$> _bcaPosition])
 
@@ -7019,11 +8895,11 @@ instance ToJSON BasicChartAxis where
 --
 -- /See:/ 'gridData' smart constructor.
 data GridData = GridData'
-    { _gdRowMetadata    :: !(Maybe [DimensionProperties])
-    , _gdStartRow       :: !(Maybe (Textual Int32))
-    , _gdRowData        :: !(Maybe [RowData])
+    { _gdRowMetadata :: !(Maybe [DimensionProperties])
+    , _gdStartRow :: !(Maybe (Textual Int32))
+    , _gdRowData :: !(Maybe [RowData])
     , _gdColumnMetadata :: !(Maybe [DimensionProperties])
-    , _gdStartColumn    :: !(Maybe (Textual Int32))
+    , _gdStartColumn :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GridData' with the minimum fields required to make a request.
@@ -7041,7 +8917,7 @@ data GridData = GridData'
 -- * 'gdStartColumn'
 gridData
     :: GridData
-gridData =
+gridData = 
     GridData'
     { _gdRowMetadata = Nothing
     , _gdStartRow = Nothing
@@ -7116,7 +8992,7 @@ instance ToJSON GridData where
 -- /See:/ 'numberFormat' smart constructor.
 data NumberFormat = NumberFormat'
     { _nfPattern :: !(Maybe Text)
-    , _nfType    :: !(Maybe NumberFormatType)
+    , _nfType :: !(Maybe NumberFormatType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NumberFormat' with the minimum fields required to make a request.
@@ -7128,7 +9004,7 @@ data NumberFormat = NumberFormat'
 -- * 'nfType'
 numberFormat
     :: NumberFormat
-numberFormat =
+numberFormat = 
     NumberFormat'
     { _nfPattern = Nothing
     , _nfType = Nothing
@@ -7136,8 +9012,8 @@ numberFormat =
 
 -- | Pattern string used for formatting. If not set, a default pattern based
 -- on the user\'s locale will be used if necessary for the given type. See
--- the [Date and Number Formats guide](\/sheets\/guides\/formats) for more
--- information about the supported patterns.
+-- the [Date and Number Formats guide](\/sheets\/api\/guides\/formats) for
+-- more information about the supported patterns.
 nfPattern :: Lens' NumberFormat (Maybe Text)
 nfPattern
   = lens _nfPattern (\ s a -> s{_nfPattern = a})
@@ -7164,8 +9040,8 @@ instance ToJSON NumberFormat where
 --
 -- /See:/ 'batchUpdateSpreadsheetResponse' smart constructor.
 data BatchUpdateSpreadsheetResponse = BatchUpdateSpreadsheetResponse'
-    { _busrSpreadsheetId      :: !(Maybe Text)
-    , _busrReplies            :: !(Maybe [Response])
+    { _busrSpreadsheetId :: !(Maybe Text)
+    , _busrReplies :: !(Maybe [Response])
     , _busrUpdatedSpreadsheet :: !(Maybe Spreadsheet)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7180,7 +9056,7 @@ data BatchUpdateSpreadsheetResponse = BatchUpdateSpreadsheetResponse'
 -- * 'busrUpdatedSpreadsheet'
 batchUpdateSpreadsheetResponse
     :: BatchUpdateSpreadsheetResponse
-batchUpdateSpreadsheetResponse =
+batchUpdateSpreadsheetResponse = 
     BatchUpdateSpreadsheetResponse'
     { _busrSpreadsheetId = Nothing
     , _busrReplies = Nothing
@@ -7228,12 +9104,74 @@ instance ToJSON BatchUpdateSpreadsheetResponse where
                   ("updatedSpreadsheet" .=) <$>
                     _busrUpdatedSpreadsheet])
 
+-- | Filter that describes what data should be selected or returned from a
+-- request.
+--
+-- /See:/ 'dataFilter' smart constructor.
+data DataFilter = DataFilter'
+    { _dfGridRange :: !(Maybe GridRange)
+    , _dfA1Range :: !(Maybe Text)
+    , _dfDeveloperMetadataLookup :: !(Maybe DeveloperMetadataLookup)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DataFilter' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'dfGridRange'
+--
+-- * 'dfA1Range'
+--
+-- * 'dfDeveloperMetadataLookup'
+dataFilter
+    :: DataFilter
+dataFilter = 
+    DataFilter'
+    { _dfGridRange = Nothing
+    , _dfA1Range = Nothing
+    , _dfDeveloperMetadataLookup = Nothing
+    }
+
+-- | Selects data that matches the range described by the GridRange.
+dfGridRange :: Lens' DataFilter (Maybe GridRange)
+dfGridRange
+  = lens _dfGridRange (\ s a -> s{_dfGridRange = a})
+
+-- | Selects data that matches the specified A1 range.
+dfA1Range :: Lens' DataFilter (Maybe Text)
+dfA1Range
+  = lens _dfA1Range (\ s a -> s{_dfA1Range = a})
+
+-- | Selects data associated with the developer metadata matching the
+-- criteria described by this DeveloperMetadataLookup.
+dfDeveloperMetadataLookup :: Lens' DataFilter (Maybe DeveloperMetadataLookup)
+dfDeveloperMetadataLookup
+  = lens _dfDeveloperMetadataLookup
+      (\ s a -> s{_dfDeveloperMetadataLookup = a})
+
+instance FromJSON DataFilter where
+        parseJSON
+          = withObject "DataFilter"
+              (\ o ->
+                 DataFilter' <$>
+                   (o .:? "gridRange") <*> (o .:? "a1Range") <*>
+                     (o .:? "developerMetadataLookup"))
+
+instance ToJSON DataFilter where
+        toJSON DataFilter'{..}
+          = object
+              (catMaybes
+                 [("gridRange" .=) <$> _dfGridRange,
+                  ("a1Range" .=) <$> _dfA1Range,
+                  ("developerMetadataLookup" .=) <$>
+                    _dfDeveloperMetadataLookup])
+
 -- | Sets a data validation rule to every cell in the range. To clear
 -- validation in a range, call this with no rule specified.
 --
 -- /See:/ 'setDataValidationRequest' smart constructor.
 data SetDataValidationRequest = SetDataValidationRequest'
-    { _sdvrRule  :: !(Maybe DataValidationRule)
+    { _sdvrRule :: !(Maybe DataValidationRule)
     , _sdvrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7246,7 +9184,7 @@ data SetDataValidationRequest = SetDataValidationRequest'
 -- * 'sdvrRange'
 setDataValidationRequest
     :: SetDataValidationRequest
-setDataValidationRequest =
+setDataValidationRequest = 
     SetDataValidationRequest'
     { _sdvrRule = Nothing
     , _sdvrRange = Nothing
@@ -7291,9 +9229,9 @@ instance ToJSON SetDataValidationRequest where
 -- /See:/ 'bandingProperties' smart constructor.
 data BandingProperties = BandingProperties'
     { _bpSecondBandColor :: !(Maybe Color)
-    , _bpHeaderColor     :: !(Maybe Color)
-    , _bpFooterColor     :: !(Maybe Color)
-    , _bpFirstBandColor  :: !(Maybe Color)
+    , _bpHeaderColor :: !(Maybe Color)
+    , _bpFooterColor :: !(Maybe Color)
+    , _bpFirstBandColor :: !(Maybe Color)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BandingProperties' with the minimum fields required to make a request.
@@ -7309,7 +9247,7 @@ data BandingProperties = BandingProperties'
 -- * 'bpFirstBandColor'
 bandingProperties
     :: BandingProperties
-bandingProperties =
+bandingProperties = 
     BandingProperties'
     { _bpSecondBandColor = Nothing
     , _bpHeaderColor = Nothing
@@ -7380,7 +9318,7 @@ newtype DuplicateFilterViewRequest = DuplicateFilterViewRequest'
 -- * 'dFilterId'
 duplicateFilterViewRequest
     :: DuplicateFilterViewRequest
-duplicateFilterViewRequest =
+duplicateFilterViewRequest = 
     DuplicateFilterViewRequest'
     { _dFilterId = Nothing
     }
@@ -7405,11 +9343,11 @@ instance ToJSON DuplicateFilterViewRequest where
 --
 -- /See:/ 'pivotGroup' smart constructor.
 data PivotGroup = PivotGroup'
-    { _pgValueMetadata      :: !(Maybe [PivotGroupValueMetadata])
+    { _pgValueMetadata :: !(Maybe [PivotGroupValueMetadata])
     , _pgSourceColumnOffSet :: !(Maybe (Textual Int32))
-    , _pgSortOrder          :: !(Maybe PivotGroupSortOrder)
-    , _pgShowTotals         :: !(Maybe Bool)
-    , _pgValueBucket        :: !(Maybe PivotGroupSortValueBucket)
+    , _pgSortOrder :: !(Maybe PivotGroupSortOrder)
+    , _pgShowTotals :: !(Maybe Bool)
+    , _pgValueBucket :: !(Maybe PivotGroupSortValueBucket)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PivotGroup' with the minimum fields required to make a request.
@@ -7427,7 +9365,7 @@ data PivotGroup = PivotGroup'
 -- * 'pgValueBucket'
 pivotGroup
     :: PivotGroup
-pivotGroup =
+pivotGroup = 
     PivotGroup'
     { _pgValueMetadata = Nothing
     , _pgSourceColumnOffSet = Nothing
@@ -7506,7 +9444,7 @@ newtype AddBandingResponse = AddBandingResponse'
 -- * 'aBandedRange'
 addBandingResponse
     :: AddBandingResponse
-addBandingResponse =
+addBandingResponse = 
     AddBandingResponse'
     { _aBandedRange = Nothing
     }
@@ -7527,13 +9465,198 @@ instance ToJSON AddBandingResponse where
           = object
               (catMaybes [("bandedRange" .=) <$> _aBandedRange])
 
+-- | An </chart/interactive/docs/gallery/orgchart org chart>. Org charts
+-- require a unique set of labels in labels and may optionally include
+-- parent_labels and tooltips. parent_labels contain, for each node, the
+-- label identifying the parent node. tooltips contain, for each node, an
+-- optional tooltip. For example, to describe an OrgChart with Alice as the
+-- CEO, Bob as the President (reporting to Alice) and Cathy as VP of Sales
+-- (also reporting to Alice), have labels contain \"Alice\", \"Bob\",
+-- \"Cathy\", parent_labels contain \"\", \"Alice\", \"Alice\" and tooltips
+-- contain \"CEO\", \"President\", \"VP Sales\".
+--
+-- /See:/ 'orgChartSpec' smart constructor.
+data OrgChartSpec = OrgChartSpec'
+    { _ocsNodeColor :: !(Maybe Color)
+    , _ocsNodeSize :: !(Maybe OrgChartSpecNodeSize)
+    , _ocsTooltips :: !(Maybe ChartData)
+    , _ocsSelectedNodeColor :: !(Maybe Color)
+    , _ocsLabels :: !(Maybe ChartData)
+    , _ocsParentLabels :: !(Maybe ChartData)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'OrgChartSpec' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ocsNodeColor'
+--
+-- * 'ocsNodeSize'
+--
+-- * 'ocsTooltips'
+--
+-- * 'ocsSelectedNodeColor'
+--
+-- * 'ocsLabels'
+--
+-- * 'ocsParentLabels'
+orgChartSpec
+    :: OrgChartSpec
+orgChartSpec = 
+    OrgChartSpec'
+    { _ocsNodeColor = Nothing
+    , _ocsNodeSize = Nothing
+    , _ocsTooltips = Nothing
+    , _ocsSelectedNodeColor = Nothing
+    , _ocsLabels = Nothing
+    , _ocsParentLabels = Nothing
+    }
+
+-- | The color of the org chart nodes.
+ocsNodeColor :: Lens' OrgChartSpec (Maybe Color)
+ocsNodeColor
+  = lens _ocsNodeColor (\ s a -> s{_ocsNodeColor = a})
+
+-- | The size of the org chart nodes.
+ocsNodeSize :: Lens' OrgChartSpec (Maybe OrgChartSpecNodeSize)
+ocsNodeSize
+  = lens _ocsNodeSize (\ s a -> s{_ocsNodeSize = a})
+
+-- | The data containing the tooltip for the corresponding node. A blank
+-- value results in no tooltip being displayed for the node. This field is
+-- optional.
+ocsTooltips :: Lens' OrgChartSpec (Maybe ChartData)
+ocsTooltips
+  = lens _ocsTooltips (\ s a -> s{_ocsTooltips = a})
+
+-- | The color of the selected org chart nodes.
+ocsSelectedNodeColor :: Lens' OrgChartSpec (Maybe Color)
+ocsSelectedNodeColor
+  = lens _ocsSelectedNodeColor
+      (\ s a -> s{_ocsSelectedNodeColor = a})
+
+-- | The data containing the labels for all the nodes in the chart. Labels
+-- must be unique.
+ocsLabels :: Lens' OrgChartSpec (Maybe ChartData)
+ocsLabels
+  = lens _ocsLabels (\ s a -> s{_ocsLabels = a})
+
+-- | The data containing the label of the parent for the corresponding node.
+-- A blank value indicates that the node has no parent and is a top-level
+-- node. This field is optional.
+ocsParentLabels :: Lens' OrgChartSpec (Maybe ChartData)
+ocsParentLabels
+  = lens _ocsParentLabels
+      (\ s a -> s{_ocsParentLabels = a})
+
+instance FromJSON OrgChartSpec where
+        parseJSON
+          = withObject "OrgChartSpec"
+              (\ o ->
+                 OrgChartSpec' <$>
+                   (o .:? "nodeColor") <*> (o .:? "nodeSize") <*>
+                     (o .:? "tooltips")
+                     <*> (o .:? "selectedNodeColor")
+                     <*> (o .:? "labels")
+                     <*> (o .:? "parentLabels"))
+
+instance ToJSON OrgChartSpec where
+        toJSON OrgChartSpec'{..}
+          = object
+              (catMaybes
+                 [("nodeColor" .=) <$> _ocsNodeColor,
+                  ("nodeSize" .=) <$> _ocsNodeSize,
+                  ("tooltips" .=) <$> _ocsTooltips,
+                  ("selectedNodeColor" .=) <$> _ocsSelectedNodeColor,
+                  ("labels" .=) <$> _ocsLabels,
+                  ("parentLabels" .=) <$> _ocsParentLabels])
+
+-- | Randomizes the order of the rows in a range.
+--
+-- /See:/ 'randomizeRangeRequest' smart constructor.
+newtype RandomizeRangeRequest = RandomizeRangeRequest'
+    { _rrrRange :: Maybe GridRange
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'RandomizeRangeRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rrrRange'
+randomizeRangeRequest
+    :: RandomizeRangeRequest
+randomizeRangeRequest = 
+    RandomizeRangeRequest'
+    { _rrrRange = Nothing
+    }
+
+-- | The range to randomize.
+rrrRange :: Lens' RandomizeRangeRequest (Maybe GridRange)
+rrrRange = lens _rrrRange (\ s a -> s{_rrrRange = a})
+
+instance FromJSON RandomizeRangeRequest where
+        parseJSON
+          = withObject "RandomizeRangeRequest"
+              (\ o -> RandomizeRangeRequest' <$> (o .:? "range"))
+
+instance ToJSON RandomizeRangeRequest where
+        toJSON RandomizeRangeRequest'{..}
+          = object (catMaybes [("range" .=) <$> _rrrRange])
+
+-- | A histogram series containing the series color and data.
+--
+-- /See:/ 'histogramSeries' smart constructor.
+data HistogramSeries = HistogramSeries'
+    { _hsBarColor :: !(Maybe Color)
+    , _hsData :: !(Maybe ChartData)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'HistogramSeries' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'hsBarColor'
+--
+-- * 'hsData'
+histogramSeries
+    :: HistogramSeries
+histogramSeries = 
+    HistogramSeries'
+    { _hsBarColor = Nothing
+    , _hsData = Nothing
+    }
+
+-- | The color of the column representing this series in each bucket. This
+-- field is optional.
+hsBarColor :: Lens' HistogramSeries (Maybe Color)
+hsBarColor
+  = lens _hsBarColor (\ s a -> s{_hsBarColor = a})
+
+-- | The data for this histogram series.
+hsData :: Lens' HistogramSeries (Maybe ChartData)
+hsData = lens _hsData (\ s a -> s{_hsData = a})
+
+instance FromJSON HistogramSeries where
+        parseJSON
+          = withObject "HistogramSeries"
+              (\ o ->
+                 HistogramSeries' <$>
+                   (o .:? "barColor") <*> (o .:? "data"))
+
+instance ToJSON HistogramSeries where
+        toJSON HistogramSeries'{..}
+          = object
+              (catMaybes
+                 [("barColor" .=) <$> _hsBarColor,
+                  ("data" .=) <$> _hsData])
+
 -- | A rule describing a conditional format.
 --
 -- /See:/ 'conditionalFormatRule' smart constructor.
 data ConditionalFormatRule = ConditionalFormatRule'
-    { _cfrBooleanRule  :: !(Maybe BooleanRule)
+    { _cfrBooleanRule :: !(Maybe BooleanRule)
     , _cfrGradientRule :: !(Maybe GradientRule)
-    , _cfrRanges       :: !(Maybe [GridRange])
+    , _cfrRanges :: !(Maybe [GridRange])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConditionalFormatRule' with the minimum fields required to make a request.
@@ -7547,7 +9670,7 @@ data ConditionalFormatRule = ConditionalFormatRule'
 -- * 'cfrRanges'
 conditionalFormatRule
     :: ConditionalFormatRule
-conditionalFormatRule =
+conditionalFormatRule = 
     ConditionalFormatRule'
     { _cfrBooleanRule = Nothing
     , _cfrGradientRule = Nothing
@@ -7595,89 +9718,150 @@ instance ToJSON ConditionalFormatRule where
 --
 -- /See:/ 'basicChartSpec' smart constructor.
 data BasicChartSpec = BasicChartSpec'
-    { _bHeaderCount    :: !(Maybe (Textual Int32))
-    , _bLegendPosition :: !(Maybe BasicChartSpecLegendPosition)
-    , _bSeries         :: !(Maybe [BasicChartSeries])
-    , _bChartType      :: !(Maybe BasicChartSpecChartType)
-    , _bDomains        :: !(Maybe [BasicChartDomain])
-    , _bAxis           :: !(Maybe [BasicChartAxis])
+    { _basHeaderCount :: !(Maybe (Textual Int32))
+    , _basLineSmoothing :: !(Maybe Bool)
+    , _basInterpolateNulls :: !(Maybe Bool)
+    , _basStackedType :: !(Maybe BasicChartSpecStackedType)
+    , _basLegendPosition :: !(Maybe BasicChartSpecLegendPosition)
+    , _basSeries :: !(Maybe [BasicChartSeries])
+    , _basCompareMode :: !(Maybe BasicChartSpecCompareMode)
+    , _basChartType :: !(Maybe BasicChartSpecChartType)
+    , _basThreeDimensional :: !(Maybe Bool)
+    , _basDomains :: !(Maybe [BasicChartDomain])
+    , _basAxis :: !(Maybe [BasicChartAxis])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BasicChartSpec' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'bHeaderCount'
+-- * 'basHeaderCount'
 --
--- * 'bLegendPosition'
+-- * 'basLineSmoothing'
 --
--- * 'bSeries'
+-- * 'basInterpolateNulls'
 --
--- * 'bChartType'
+-- * 'basStackedType'
 --
--- * 'bDomains'
+-- * 'basLegendPosition'
 --
--- * 'bAxis'
+-- * 'basSeries'
+--
+-- * 'basCompareMode'
+--
+-- * 'basChartType'
+--
+-- * 'basThreeDimensional'
+--
+-- * 'basDomains'
+--
+-- * 'basAxis'
 basicChartSpec
     :: BasicChartSpec
-basicChartSpec =
+basicChartSpec = 
     BasicChartSpec'
-    { _bHeaderCount = Nothing
-    , _bLegendPosition = Nothing
-    , _bSeries = Nothing
-    , _bChartType = Nothing
-    , _bDomains = Nothing
-    , _bAxis = Nothing
+    { _basHeaderCount = Nothing
+    , _basLineSmoothing = Nothing
+    , _basInterpolateNulls = Nothing
+    , _basStackedType = Nothing
+    , _basLegendPosition = Nothing
+    , _basSeries = Nothing
+    , _basCompareMode = Nothing
+    , _basChartType = Nothing
+    , _basThreeDimensional = Nothing
+    , _basDomains = Nothing
+    , _basAxis = Nothing
     }
 
 -- | The number of rows or columns in the data that are \"headers\". If not
 -- set, Google Sheets will guess how many rows are headers based on the
 -- data. (Note that BasicChartAxis.title may override the axis title
 -- inferred from the header values.)
-bHeaderCount :: Lens' BasicChartSpec (Maybe Int32)
-bHeaderCount
-  = lens _bHeaderCount (\ s a -> s{_bHeaderCount = a})
+basHeaderCount :: Lens' BasicChartSpec (Maybe Int32)
+basHeaderCount
+  = lens _basHeaderCount
+      (\ s a -> s{_basHeaderCount = a})
       . mapping _Coerce
 
+-- | Gets whether all lines should be rendered smooth or straight by default.
+-- Applies to Line charts.
+basLineSmoothing :: Lens' BasicChartSpec (Maybe Bool)
+basLineSmoothing
+  = lens _basLineSmoothing
+      (\ s a -> s{_basLineSmoothing = a})
+
+-- | If some values in a series are missing, gaps may appear in the chart
+-- (e.g, segments of lines in a line chart will be missing). To eliminate
+-- these gaps set this to true. Applies to Line, Area, and Combo charts.
+basInterpolateNulls :: Lens' BasicChartSpec (Maybe Bool)
+basInterpolateNulls
+  = lens _basInterpolateNulls
+      (\ s a -> s{_basInterpolateNulls = a})
+
+-- | The stacked type for charts that support vertical stacking. Applies to
+-- Area, Bar, Column, and Stepped Area charts.
+basStackedType :: Lens' BasicChartSpec (Maybe BasicChartSpecStackedType)
+basStackedType
+  = lens _basStackedType
+      (\ s a -> s{_basStackedType = a})
+
 -- | The position of the chart legend.
-bLegendPosition :: Lens' BasicChartSpec (Maybe BasicChartSpecLegendPosition)
-bLegendPosition
-  = lens _bLegendPosition
-      (\ s a -> s{_bLegendPosition = a})
+basLegendPosition :: Lens' BasicChartSpec (Maybe BasicChartSpecLegendPosition)
+basLegendPosition
+  = lens _basLegendPosition
+      (\ s a -> s{_basLegendPosition = a})
 
 -- | The data this chart is visualizing.
-bSeries :: Lens' BasicChartSpec [BasicChartSeries]
-bSeries
-  = lens _bSeries (\ s a -> s{_bSeries = a}) . _Default
+basSeries :: Lens' BasicChartSpec [BasicChartSeries]
+basSeries
+  = lens _basSeries (\ s a -> s{_basSeries = a}) .
+      _Default
       . _Coerce
 
--- | The type of the chart.
-bChartType :: Lens' BasicChartSpec (Maybe BasicChartSpecChartType)
-bChartType
-  = lens _bChartType (\ s a -> s{_bChartType = a})
+-- | The behavior of tooltips and data highlighting when hovering on data and
+-- chart area.
+basCompareMode :: Lens' BasicChartSpec (Maybe BasicChartSpecCompareMode)
+basCompareMode
+  = lens _basCompareMode
+      (\ s a -> s{_basCompareMode = a})
 
--- | The domain of data this is charting. Only a single domain is currently
--- supported.
-bDomains :: Lens' BasicChartSpec [BasicChartDomain]
-bDomains
-  = lens _bDomains (\ s a -> s{_bDomains = a}) .
+-- | The type of the chart.
+basChartType :: Lens' BasicChartSpec (Maybe BasicChartSpecChartType)
+basChartType
+  = lens _basChartType (\ s a -> s{_basChartType = a})
+
+-- | True to make the chart 3D. Applies to Bar and Column charts.
+basThreeDimensional :: Lens' BasicChartSpec (Maybe Bool)
+basThreeDimensional
+  = lens _basThreeDimensional
+      (\ s a -> s{_basThreeDimensional = a})
+
+-- | The domain of data this is charting. Only a single domain is supported.
+basDomains :: Lens' BasicChartSpec [BasicChartDomain]
+basDomains
+  = lens _basDomains (\ s a -> s{_basDomains = a}) .
       _Default
       . _Coerce
 
 -- | The axis on the chart.
-bAxis :: Lens' BasicChartSpec [BasicChartAxis]
-bAxis
-  = lens _bAxis (\ s a -> s{_bAxis = a}) . _Default .
-      _Coerce
+basAxis :: Lens' BasicChartSpec [BasicChartAxis]
+basAxis
+  = lens _basAxis (\ s a -> s{_basAxis = a}) . _Default
+      . _Coerce
 
 instance FromJSON BasicChartSpec where
         parseJSON
           = withObject "BasicChartSpec"
               (\ o ->
                  BasicChartSpec' <$>
-                   (o .:? "headerCount") <*> (o .:? "legendPosition")
+                   (o .:? "headerCount") <*> (o .:? "lineSmoothing") <*>
+                     (o .:? "interpolateNulls")
+                     <*> (o .:? "stackedType")
+                     <*> (o .:? "legendPosition")
                      <*> (o .:? "series" .!= mempty)
+                     <*> (o .:? "compareMode")
                      <*> (o .:? "chartType")
+                     <*> (o .:? "threeDimensional")
                      <*> (o .:? "domains" .!= mempty)
                      <*> (o .:? "axis" .!= mempty))
 
@@ -7685,19 +9869,24 @@ instance ToJSON BasicChartSpec where
         toJSON BasicChartSpec'{..}
           = object
               (catMaybes
-                 [("headerCount" .=) <$> _bHeaderCount,
-                  ("legendPosition" .=) <$> _bLegendPosition,
-                  ("series" .=) <$> _bSeries,
-                  ("chartType" .=) <$> _bChartType,
-                  ("domains" .=) <$> _bDomains,
-                  ("axis" .=) <$> _bAxis])
+                 [("headerCount" .=) <$> _basHeaderCount,
+                  ("lineSmoothing" .=) <$> _basLineSmoothing,
+                  ("interpolateNulls" .=) <$> _basInterpolateNulls,
+                  ("stackedType" .=) <$> _basStackedType,
+                  ("legendPosition" .=) <$> _basLegendPosition,
+                  ("series" .=) <$> _basSeries,
+                  ("compareMode" .=) <$> _basCompareMode,
+                  ("chartType" .=) <$> _basChartType,
+                  ("threeDimensional" .=) <$> _basThreeDimensional,
+                  ("domains" .=) <$> _basDomains,
+                  ("axis" .=) <$> _basAxis])
 
 -- | Adds a new conditional format rule at the given index. All subsequent
 -- rules\' indexes are incremented.
 --
 -- /See:/ 'addConditionalFormatRuleRequest' smart constructor.
 data AddConditionalFormatRuleRequest = AddConditionalFormatRuleRequest'
-    { _acfrrRule  :: !(Maybe ConditionalFormatRule)
+    { _acfrrRule :: !(Maybe ConditionalFormatRule)
     , _acfrrIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7710,7 +9899,7 @@ data AddConditionalFormatRuleRequest = AddConditionalFormatRuleRequest'
 -- * 'acfrrIndex'
 addConditionalFormatRuleRequest
     :: AddConditionalFormatRuleRequest
-addConditionalFormatRuleRequest =
+addConditionalFormatRuleRequest = 
     AddConditionalFormatRuleRequest'
     { _acfrrRule = Nothing
     , _acfrrIndex = Nothing
@@ -7742,6 +9931,101 @@ instance ToJSON AddConditionalFormatRuleRequest where
                  [("rule" .=) <$> _acfrrRule,
                   ("index" .=) <$> _acfrrIndex])
 
+-- | Developer metadata associated with a location or object in a
+-- spreadsheet. Developer metadata may be used to associate arbitrary data
+-- with various parts of a spreadsheet and will remain associated at those
+-- locations as they move around and the spreadsheet is edited. For
+-- example, if developer metadata is associated with row 5 and another row
+-- is then subsequently inserted above row 5, that original metadata will
+-- still be associated with the row it was first associated with (what is
+-- now row 6). If the associated object is deleted its metadata will be
+-- deleted too.
+--
+-- /See:/ 'developerMetadata' smart constructor.
+data DeveloperMetadata = DeveloperMetadata'
+    { _dmLocation :: !(Maybe DeveloperMetadataLocation)
+    , _dmMetadataId :: !(Maybe (Textual Int32))
+    , _dmVisibility :: !(Maybe DeveloperMetadataVisibility)
+    , _dmMetadataKey :: !(Maybe Text)
+    , _dmMetadataValue :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DeveloperMetadata' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'dmLocation'
+--
+-- * 'dmMetadataId'
+--
+-- * 'dmVisibility'
+--
+-- * 'dmMetadataKey'
+--
+-- * 'dmMetadataValue'
+developerMetadata
+    :: DeveloperMetadata
+developerMetadata = 
+    DeveloperMetadata'
+    { _dmLocation = Nothing
+    , _dmMetadataId = Nothing
+    , _dmVisibility = Nothing
+    , _dmMetadataKey = Nothing
+    , _dmMetadataValue = Nothing
+    }
+
+-- | The location where the metadata is associated.
+dmLocation :: Lens' DeveloperMetadata (Maybe DeveloperMetadataLocation)
+dmLocation
+  = lens _dmLocation (\ s a -> s{_dmLocation = a})
+
+-- | The spreadsheet-scoped unique ID that identifies the metadata. IDs may
+-- be specified when metadata is created, otherwise one will be randomly
+-- generated and assigned. Must be positive.
+dmMetadataId :: Lens' DeveloperMetadata (Maybe Int32)
+dmMetadataId
+  = lens _dmMetadataId (\ s a -> s{_dmMetadataId = a})
+      . mapping _Coerce
+
+-- | The metadata visibility. Developer metadata must always have a
+-- visibility specified.
+dmVisibility :: Lens' DeveloperMetadata (Maybe DeveloperMetadataVisibility)
+dmVisibility
+  = lens _dmVisibility (\ s a -> s{_dmVisibility = a})
+
+-- | The metadata key. There may be multiple metadata in a spreadsheet with
+-- the same key. Developer metadata must always have a key specified.
+dmMetadataKey :: Lens' DeveloperMetadata (Maybe Text)
+dmMetadataKey
+  = lens _dmMetadataKey
+      (\ s a -> s{_dmMetadataKey = a})
+
+-- | Data associated with the metadata\'s key.
+dmMetadataValue :: Lens' DeveloperMetadata (Maybe Text)
+dmMetadataValue
+  = lens _dmMetadataValue
+      (\ s a -> s{_dmMetadataValue = a})
+
+instance FromJSON DeveloperMetadata where
+        parseJSON
+          = withObject "DeveloperMetadata"
+              (\ o ->
+                 DeveloperMetadata' <$>
+                   (o .:? "location") <*> (o .:? "metadataId") <*>
+                     (o .:? "visibility")
+                     <*> (o .:? "metadataKey")
+                     <*> (o .:? "metadataValue"))
+
+instance ToJSON DeveloperMetadata where
+        toJSON DeveloperMetadata'{..}
+          = object
+              (catMaybes
+                 [("location" .=) <$> _dmLocation,
+                  ("metadataId" .=) <$> _dmMetadataId,
+                  ("visibility" .=) <$> _dmVisibility,
+                  ("metadataKey" .=) <$> _dmMetadataKey,
+                  ("metadataValue" .=) <$> _dmMetadataValue])
+
 -- | The result of duplicating a sheet.
 --
 -- /See:/ 'duplicateSheetResponse' smart constructor.
@@ -7756,7 +10040,7 @@ newtype DuplicateSheetResponse = DuplicateSheetResponse'
 -- * 'dsrProperties'
 duplicateSheetResponse
     :: DuplicateSheetResponse
-duplicateSheetResponse =
+duplicateSheetResponse = 
     DuplicateSheetResponse'
     { _dsrProperties = Nothing
     }
@@ -7783,13 +10067,13 @@ instance ToJSON DuplicateSheetResponse where
 --
 -- /See:/ 'textFormat' smart constructor.
 data TextFormat = TextFormat'
-    { _tfFontFamily      :: !(Maybe Text)
+    { _tfFontFamily :: !(Maybe Text)
     , _tfForegRoundColor :: !(Maybe Color)
-    , _tfFontSize        :: !(Maybe (Textual Int32))
-    , _tfUnderline       :: !(Maybe Bool)
-    , _tfItalic          :: !(Maybe Bool)
-    , _tfBold            :: !(Maybe Bool)
-    , _tfStrikethrough   :: !(Maybe Bool)
+    , _tfFontSize :: !(Maybe (Textual Int32))
+    , _tfUnderline :: !(Maybe Bool)
+    , _tfItalic :: !(Maybe Bool)
+    , _tfBold :: !(Maybe Bool)
+    , _tfStrikethrough :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TextFormat' with the minimum fields required to make a request.
@@ -7811,7 +10095,7 @@ data TextFormat = TextFormat'
 -- * 'tfStrikethrough'
 textFormat
     :: TextFormat
-textFormat =
+textFormat = 
     TextFormat'
     { _tfFontFamily = Nothing
     , _tfForegRoundColor = Nothing
@@ -7881,7 +10165,46 @@ instance ToJSON TextFormat where
                   ("italic" .=) <$> _tfItalic, ("bold" .=) <$> _tfBold,
                   ("strikethrough" .=) <$> _tfStrikethrough])
 
--- | The response when updating a range of values in a spreadsheet.
+-- | A request to create developer metadata.
+--
+-- /See:/ 'createDeveloperMetadataRequest' smart constructor.
+newtype CreateDeveloperMetadataRequest = CreateDeveloperMetadataRequest'
+    { _cDeveloperMetadata :: Maybe DeveloperMetadata
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CreateDeveloperMetadataRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cDeveloperMetadata'
+createDeveloperMetadataRequest
+    :: CreateDeveloperMetadataRequest
+createDeveloperMetadataRequest = 
+    CreateDeveloperMetadataRequest'
+    { _cDeveloperMetadata = Nothing
+    }
+
+-- | The developer metadata to create.
+cDeveloperMetadata :: Lens' CreateDeveloperMetadataRequest (Maybe DeveloperMetadata)
+cDeveloperMetadata
+  = lens _cDeveloperMetadata
+      (\ s a -> s{_cDeveloperMetadata = a})
+
+instance FromJSON CreateDeveloperMetadataRequest
+         where
+        parseJSON
+          = withObject "CreateDeveloperMetadataRequest"
+              (\ o ->
+                 CreateDeveloperMetadataRequest' <$>
+                   (o .:? "developerMetadata"))
+
+instance ToJSON CreateDeveloperMetadataRequest where
+        toJSON CreateDeveloperMetadataRequest'{..}
+          = object
+              (catMaybes
+                 [("developerMetadata" .=) <$> _cDeveloperMetadata])
+
+-- | The response when clearing a range of values in a spreadsheet.
 --
 -- /See:/ 'batchClearValuesResponse' smart constructor.
 data BatchClearValuesResponse = BatchClearValuesResponse'
@@ -7898,7 +10221,7 @@ data BatchClearValuesResponse = BatchClearValuesResponse'
 -- * 'bcvrSpreadsheetId'
 batchClearValuesResponse
     :: BatchClearValuesResponse
-batchClearValuesResponse =
+batchClearValuesResponse = 
     BatchClearValuesResponse'
     { _bcvrClearedRanges = Nothing
     , _bcvrSpreadsheetId = Nothing
@@ -7936,25 +10259,86 @@ instance ToJSON BatchClearValuesResponse where
                  [("clearedRanges" .=) <$> _bcvrClearedRanges,
                   ("spreadsheetId" .=) <$> _bcvrSpreadsheetId])
 
+-- | A value range that was matched by one or more data filers.
+--
+-- /See:/ 'matchedValueRange' smart constructor.
+data MatchedValueRange = MatchedValueRange'
+    { _mvrValueRange :: !(Maybe ValueRange)
+    , _mvrDataFilters :: !(Maybe [DataFilter])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'MatchedValueRange' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mvrValueRange'
+--
+-- * 'mvrDataFilters'
+matchedValueRange
+    :: MatchedValueRange
+matchedValueRange = 
+    MatchedValueRange'
+    { _mvrValueRange = Nothing
+    , _mvrDataFilters = Nothing
+    }
+
+-- | The values matched by the DataFilter.
+mvrValueRange :: Lens' MatchedValueRange (Maybe ValueRange)
+mvrValueRange
+  = lens _mvrValueRange
+      (\ s a -> s{_mvrValueRange = a})
+
+-- | The DataFilters from the request that matched the range of values.
+mvrDataFilters :: Lens' MatchedValueRange [DataFilter]
+mvrDataFilters
+  = lens _mvrDataFilters
+      (\ s a -> s{_mvrDataFilters = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON MatchedValueRange where
+        parseJSON
+          = withObject "MatchedValueRange"
+              (\ o ->
+                 MatchedValueRange' <$>
+                   (o .:? "valueRange") <*>
+                     (o .:? "dataFilters" .!= mempty))
+
+instance ToJSON MatchedValueRange where
+        toJSON MatchedValueRange'{..}
+          = object
+              (catMaybes
+                 [("valueRange" .=) <$> _mvrValueRange,
+                  ("dataFilters" .=) <$> _mvrDataFilters])
+
 -- | The domain of a chart. For example, if charting stock prices over time,
 -- this would be the date.
 --
 -- /See:/ 'basicChartDomain' smart constructor.
-newtype BasicChartDomain = BasicChartDomain'
-    { _bcdDomain :: Maybe ChartData
+data BasicChartDomain = BasicChartDomain'
+    { _bcdReversed :: !(Maybe Bool)
+    , _bcdDomain :: !(Maybe ChartData)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BasicChartDomain' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'bcdReversed'
+--
 -- * 'bcdDomain'
 basicChartDomain
     :: BasicChartDomain
-basicChartDomain =
+basicChartDomain = 
     BasicChartDomain'
-    { _bcdDomain = Nothing
+    { _bcdReversed = Nothing
+    , _bcdDomain = Nothing
     }
+
+-- | True to reverse the order of the domain values (horizontal axis).
+bcdReversed :: Lens' BasicChartDomain (Maybe Bool)
+bcdReversed
+  = lens _bcdReversed (\ s a -> s{_bcdReversed = a})
 
 -- | The data of the domain. For example, if charting stock prices over time,
 -- this is the data representing the dates.
@@ -7965,18 +10349,76 @@ bcdDomain
 instance FromJSON BasicChartDomain where
         parseJSON
           = withObject "BasicChartDomain"
-              (\ o -> BasicChartDomain' <$> (o .:? "domain"))
+              (\ o ->
+                 BasicChartDomain' <$>
+                   (o .:? "reversed") <*> (o .:? "domain"))
 
 instance ToJSON BasicChartDomain where
         toJSON BasicChartDomain'{..}
-          = object (catMaybes [("domain" .=) <$> _bcdDomain])
+          = object
+              (catMaybes
+                 [("reversed" .=) <$> _bcdReversed,
+                  ("domain" .=) <$> _bcdDomain])
+
+-- | A developer metadata entry and the data filters specified in the
+-- original request that matched it.
+--
+-- /See:/ 'matchedDeveloperMetadata' smart constructor.
+data MatchedDeveloperMetadata = MatchedDeveloperMetadata'
+    { _mdmDataFilters :: !(Maybe [DataFilter])
+    , _mdmDeveloperMetadata :: !(Maybe DeveloperMetadata)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'MatchedDeveloperMetadata' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'mdmDataFilters'
+--
+-- * 'mdmDeveloperMetadata'
+matchedDeveloperMetadata
+    :: MatchedDeveloperMetadata
+matchedDeveloperMetadata = 
+    MatchedDeveloperMetadata'
+    { _mdmDataFilters = Nothing
+    , _mdmDeveloperMetadata = Nothing
+    }
+
+-- | All filters matching the returned developer metadata.
+mdmDataFilters :: Lens' MatchedDeveloperMetadata [DataFilter]
+mdmDataFilters
+  = lens _mdmDataFilters
+      (\ s a -> s{_mdmDataFilters = a})
+      . _Default
+      . _Coerce
+
+-- | The developer metadata matching the specified filters.
+mdmDeveloperMetadata :: Lens' MatchedDeveloperMetadata (Maybe DeveloperMetadata)
+mdmDeveloperMetadata
+  = lens _mdmDeveloperMetadata
+      (\ s a -> s{_mdmDeveloperMetadata = a})
+
+instance FromJSON MatchedDeveloperMetadata where
+        parseJSON
+          = withObject "MatchedDeveloperMetadata"
+              (\ o ->
+                 MatchedDeveloperMetadata' <$>
+                   (o .:? "dataFilters" .!= mempty) <*>
+                     (o .:? "developerMetadata"))
+
+instance ToJSON MatchedDeveloperMetadata where
+        toJSON MatchedDeveloperMetadata'{..}
+          = object
+              (catMaybes
+                 [("dataFilters" .=) <$> _mdmDataFilters,
+                  ("developerMetadata" .=) <$> _mdmDeveloperMetadata])
 
 -- | Inserts cells into a range, shifting the existing cells over or down.
 --
 -- /See:/ 'insertRangeRequest' smart constructor.
 data InsertRangeRequest = InsertRangeRequest'
     { _irrShiftDimension :: !(Maybe InsertRangeRequestShiftDimension)
-    , _irrRange          :: !(Maybe GridRange)
+    , _irrRange :: !(Maybe GridRange)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InsertRangeRequest' with the minimum fields required to make a request.
@@ -7988,7 +10430,7 @@ data InsertRangeRequest = InsertRangeRequest'
 -- * 'irrRange'
 insertRangeRequest
     :: InsertRangeRequest
-insertRangeRequest =
+insertRangeRequest = 
     InsertRangeRequest'
     { _irrShiftDimension = Nothing
     , _irrRange = Nothing
@@ -8026,9 +10468,9 @@ instance ToJSON InsertRangeRequest where
 -- /See:/ 'padding' smart constructor.
 data Padding = Padding'
     { _pBottom :: !(Maybe (Textual Int32))
-    , _pLeft   :: !(Maybe (Textual Int32))
-    , _pRight  :: !(Maybe (Textual Int32))
-    , _pTop    :: !(Maybe (Textual Int32))
+    , _pLeft :: !(Maybe (Textual Int32))
+    , _pRight :: !(Maybe (Textual Int32))
+    , _pTop :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Padding' with the minimum fields required to make a request.
@@ -8044,7 +10486,7 @@ data Padding = Padding'
 -- * 'pTop'
 padding
     :: Padding
-padding =
+padding = 
     Padding'
     { _pBottom = Nothing
     , _pLeft = Nothing
@@ -8096,9 +10538,22 @@ instance ToJSON Padding where
 --
 -- /See:/ 'chartSpec' smart constructor.
 data ChartSpec = ChartSpec'
-    { _csTitle                   :: !(Maybe Text)
-    , _csPieChart                :: !(Maybe PieChartSpec)
-    , _csBasicChart              :: !(Maybe BasicChartSpec)
+    { _csTitleTextPosition :: !(Maybe TextPosition)
+    , _csFontName :: !(Maybe Text)
+    , _csSubtitleTextPosition :: !(Maybe TextPosition)
+    , _csBackgRoundColor :: !(Maybe Color)
+    , _csCandlestickChart :: !(Maybe CandlestickChartSpec)
+    , _csTitleTextFormat :: !(Maybe TextFormat)
+    , _csSubtitle :: !(Maybe Text)
+    , _csAltText :: !(Maybe Text)
+    , _csHistogramChart :: !(Maybe HistogramChartSpec)
+    , _csBubbleChart :: !(Maybe BubbleChartSpec)
+    , _csMaximized :: !(Maybe Bool)
+    , _csSubtitleTextFormat :: !(Maybe TextFormat)
+    , _csTitle :: !(Maybe Text)
+    , _csPieChart :: !(Maybe PieChartSpec)
+    , _csOrgChart :: !(Maybe OrgChartSpec)
+    , _csBasicChart :: !(Maybe BasicChartSpec)
     , _csHiddenDimensionStrategy :: !(Maybe ChartSpecHiddenDimensionStrategy)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8106,22 +10561,134 @@ data ChartSpec = ChartSpec'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'csTitleTextPosition'
+--
+-- * 'csFontName'
+--
+-- * 'csSubtitleTextPosition'
+--
+-- * 'csBackgRoundColor'
+--
+-- * 'csCandlestickChart'
+--
+-- * 'csTitleTextFormat'
+--
+-- * 'csSubtitle'
+--
+-- * 'csAltText'
+--
+-- * 'csHistogramChart'
+--
+-- * 'csBubbleChart'
+--
+-- * 'csMaximized'
+--
+-- * 'csSubtitleTextFormat'
+--
 -- * 'csTitle'
 --
 -- * 'csPieChart'
+--
+-- * 'csOrgChart'
 --
 -- * 'csBasicChart'
 --
 -- * 'csHiddenDimensionStrategy'
 chartSpec
     :: ChartSpec
-chartSpec =
+chartSpec = 
     ChartSpec'
-    { _csTitle = Nothing
+    { _csTitleTextPosition = Nothing
+    , _csFontName = Nothing
+    , _csSubtitleTextPosition = Nothing
+    , _csBackgRoundColor = Nothing
+    , _csCandlestickChart = Nothing
+    , _csTitleTextFormat = Nothing
+    , _csSubtitle = Nothing
+    , _csAltText = Nothing
+    , _csHistogramChart = Nothing
+    , _csBubbleChart = Nothing
+    , _csMaximized = Nothing
+    , _csSubtitleTextFormat = Nothing
+    , _csTitle = Nothing
     , _csPieChart = Nothing
+    , _csOrgChart = Nothing
     , _csBasicChart = Nothing
     , _csHiddenDimensionStrategy = Nothing
     }
+
+-- | The title text position. This field is optional.
+csTitleTextPosition :: Lens' ChartSpec (Maybe TextPosition)
+csTitleTextPosition
+  = lens _csTitleTextPosition
+      (\ s a -> s{_csTitleTextPosition = a})
+
+-- | The name of the font to use by default for all chart text (e.g. title,
+-- axis labels, legend). If a font is specified for a specific part of the
+-- chart it will override this font name.
+csFontName :: Lens' ChartSpec (Maybe Text)
+csFontName
+  = lens _csFontName (\ s a -> s{_csFontName = a})
+
+-- | The subtitle text position. This field is optional.
+csSubtitleTextPosition :: Lens' ChartSpec (Maybe TextPosition)
+csSubtitleTextPosition
+  = lens _csSubtitleTextPosition
+      (\ s a -> s{_csSubtitleTextPosition = a})
+
+-- | The background color of the entire chart. Not applicable to Org charts.
+csBackgRoundColor :: Lens' ChartSpec (Maybe Color)
+csBackgRoundColor
+  = lens _csBackgRoundColor
+      (\ s a -> s{_csBackgRoundColor = a})
+
+-- | A candlestick chart specification.
+csCandlestickChart :: Lens' ChartSpec (Maybe CandlestickChartSpec)
+csCandlestickChart
+  = lens _csCandlestickChart
+      (\ s a -> s{_csCandlestickChart = a})
+
+-- | The title text format. Strikethrough and underline are not supported.
+csTitleTextFormat :: Lens' ChartSpec (Maybe TextFormat)
+csTitleTextFormat
+  = lens _csTitleTextFormat
+      (\ s a -> s{_csTitleTextFormat = a})
+
+-- | The subtitle of the chart.
+csSubtitle :: Lens' ChartSpec (Maybe Text)
+csSubtitle
+  = lens _csSubtitle (\ s a -> s{_csSubtitle = a})
+
+-- | The alternative text that describes the chart. This is often used for
+-- accessibility.
+csAltText :: Lens' ChartSpec (Maybe Text)
+csAltText
+  = lens _csAltText (\ s a -> s{_csAltText = a})
+
+-- | A histogram chart specification.
+csHistogramChart :: Lens' ChartSpec (Maybe HistogramChartSpec)
+csHistogramChart
+  = lens _csHistogramChart
+      (\ s a -> s{_csHistogramChart = a})
+
+-- | A bubble chart specification.
+csBubbleChart :: Lens' ChartSpec (Maybe BubbleChartSpec)
+csBubbleChart
+  = lens _csBubbleChart
+      (\ s a -> s{_csBubbleChart = a})
+
+-- | True to make a chart fill the entire space in which it\'s rendered with
+-- minimum padding. False to use the default padding. (Not applicable to
+-- Geo and Org charts.)
+csMaximized :: Lens' ChartSpec (Maybe Bool)
+csMaximized
+  = lens _csMaximized (\ s a -> s{_csMaximized = a})
+
+-- | The subtitle text format. Strikethrough and underline are not supported.
+csSubtitleTextFormat :: Lens' ChartSpec (Maybe TextFormat)
+csSubtitleTextFormat
+  = lens _csSubtitleTextFormat
+      (\ s a -> s{_csSubtitleTextFormat = a})
 
 -- | The title of the chart.
 csTitle :: Lens' ChartSpec (Maybe Text)
@@ -8131,6 +10698,11 @@ csTitle = lens _csTitle (\ s a -> s{_csTitle = a})
 csPieChart :: Lens' ChartSpec (Maybe PieChartSpec)
 csPieChart
   = lens _csPieChart (\ s a -> s{_csPieChart = a})
+
+-- | An org chart specification.
+csOrgChart :: Lens' ChartSpec (Maybe OrgChartSpec)
+csOrgChart
+  = lens _csOrgChart (\ s a -> s{_csOrgChart = a})
 
 -- | A basic chart specification, can be one of many kinds of charts. See
 -- BasicChartType for the list of all charts this supports.
@@ -8149,16 +10721,43 @@ instance FromJSON ChartSpec where
           = withObject "ChartSpec"
               (\ o ->
                  ChartSpec' <$>
-                   (o .:? "title") <*> (o .:? "pieChart") <*>
-                     (o .:? "basicChart")
+                   (o .:? "titleTextPosition") <*> (o .:? "fontName")
+                     <*> (o .:? "subtitleTextPosition")
+                     <*> (o .:? "backgroundColor")
+                     <*> (o .:? "candlestickChart")
+                     <*> (o .:? "titleTextFormat")
+                     <*> (o .:? "subtitle")
+                     <*> (o .:? "altText")
+                     <*> (o .:? "histogramChart")
+                     <*> (o .:? "bubbleChart")
+                     <*> (o .:? "maximized")
+                     <*> (o .:? "subtitleTextFormat")
+                     <*> (o .:? "title")
+                     <*> (o .:? "pieChart")
+                     <*> (o .:? "orgChart")
+                     <*> (o .:? "basicChart")
                      <*> (o .:? "hiddenDimensionStrategy"))
 
 instance ToJSON ChartSpec where
         toJSON ChartSpec'{..}
           = object
               (catMaybes
-                 [("title" .=) <$> _csTitle,
+                 [("titleTextPosition" .=) <$> _csTitleTextPosition,
+                  ("fontName" .=) <$> _csFontName,
+                  ("subtitleTextPosition" .=) <$>
+                    _csSubtitleTextPosition,
+                  ("backgroundColor" .=) <$> _csBackgRoundColor,
+                  ("candlestickChart" .=) <$> _csCandlestickChart,
+                  ("titleTextFormat" .=) <$> _csTitleTextFormat,
+                  ("subtitle" .=) <$> _csSubtitle,
+                  ("altText" .=) <$> _csAltText,
+                  ("histogramChart" .=) <$> _csHistogramChart,
+                  ("bubbleChart" .=) <$> _csBubbleChart,
+                  ("maximized" .=) <$> _csMaximized,
+                  ("subtitleTextFormat" .=) <$> _csSubtitleTextFormat,
+                  ("title" .=) <$> _csTitle,
                   ("pieChart" .=) <$> _csPieChart,
+                  ("orgChart" .=) <$> _csOrgChart,
                   ("basicChart" .=) <$> _csBasicChart,
                   ("hiddenDimensionStrategy" .=) <$>
                     _csHiddenDimensionStrategy])
@@ -8168,8 +10767,9 @@ instance ToJSON ChartSpec where
 -- /See:/ 'dimensionProperties' smart constructor.
 data DimensionProperties = DimensionProperties'
     { _dpHiddenByFilter :: !(Maybe Bool)
-    , _dpPixelSize      :: !(Maybe (Textual Int32))
-    , _dpHiddenByUser   :: !(Maybe Bool)
+    , _dpPixelSize :: !(Maybe (Textual Int32))
+    , _dpHiddenByUser :: !(Maybe Bool)
+    , _dpDeveloperMetadata :: !(Maybe [DeveloperMetadata])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DimensionProperties' with the minimum fields required to make a request.
@@ -8181,13 +10781,16 @@ data DimensionProperties = DimensionProperties'
 -- * 'dpPixelSize'
 --
 -- * 'dpHiddenByUser'
+--
+-- * 'dpDeveloperMetadata'
 dimensionProperties
     :: DimensionProperties
-dimensionProperties =
+dimensionProperties = 
     DimensionProperties'
     { _dpHiddenByFilter = Nothing
     , _dpPixelSize = Nothing
     , _dpHiddenByUser = Nothing
+    , _dpDeveloperMetadata = Nothing
     }
 
 -- | True if this dimension is being filtered. This field is read-only.
@@ -8208,13 +10811,22 @@ dpHiddenByUser
   = lens _dpHiddenByUser
       (\ s a -> s{_dpHiddenByUser = a})
 
+-- | The developer metadata associated with a single row or column.
+dpDeveloperMetadata :: Lens' DimensionProperties [DeveloperMetadata]
+dpDeveloperMetadata
+  = lens _dpDeveloperMetadata
+      (\ s a -> s{_dpDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
 instance FromJSON DimensionProperties where
         parseJSON
           = withObject "DimensionProperties"
               (\ o ->
                  DimensionProperties' <$>
                    (o .:? "hiddenByFilter") <*> (o .:? "pixelSize") <*>
-                     (o .:? "hiddenByUser"))
+                     (o .:? "hiddenByUser")
+                     <*> (o .:? "developerMetadata" .!= mempty))
 
 instance ToJSON DimensionProperties where
         toJSON DimensionProperties'{..}
@@ -8222,14 +10834,15 @@ instance ToJSON DimensionProperties where
               (catMaybes
                  [("hiddenByFilter" .=) <$> _dpHiddenByFilter,
                   ("pixelSize" .=) <$> _dpPixelSize,
-                  ("hiddenByUser" .=) <$> _dpHiddenByUser])
+                  ("hiddenByUser" .=) <$> _dpHiddenByUser,
+                  ("developerMetadata" .=) <$> _dpDeveloperMetadata])
 
 -- | Updates properties of the supplied banded range.
 --
 -- /See:/ 'updateBandingRequest' smart constructor.
 data UpdateBandingRequest = UpdateBandingRequest'
     { _ubrBandedRange :: !(Maybe BandedRange)
-    , _ubrFields      :: !(Maybe FieldMask)
+    , _ubrFields :: !(Maybe FieldMask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateBandingRequest' with the minimum fields required to make a request.
@@ -8241,7 +10854,7 @@ data UpdateBandingRequest = UpdateBandingRequest'
 -- * 'ubrFields'
 updateBandingRequest
     :: UpdateBandingRequest
-updateBandingRequest =
+updateBandingRequest = 
     UpdateBandingRequest'
     { _ubrBandedRange = Nothing
     , _ubrFields = Nothing
@@ -8280,7 +10893,7 @@ instance ToJSON UpdateBandingRequest where
 -- /See:/ 'batchGetValuesResponse' smart constructor.
 data BatchGetValuesResponse = BatchGetValuesResponse'
     { _bgvrSpreadsheetId :: !(Maybe Text)
-    , _bgvrValueRanges   :: !(Maybe [ValueRange])
+    , _bgvrValueRanges :: !(Maybe [ValueRange])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BatchGetValuesResponse' with the minimum fields required to make a request.
@@ -8292,7 +10905,7 @@ data BatchGetValuesResponse = BatchGetValuesResponse'
 -- * 'bgvrValueRanges'
 batchGetValuesResponse
     :: BatchGetValuesResponse
-batchGetValuesResponse =
+batchGetValuesResponse = 
     BatchGetValuesResponse'
     { _bgvrSpreadsheetId = Nothing
     , _bgvrValueRanges = Nothing
@@ -8342,7 +10955,7 @@ newtype DeleteBandingRequest = DeleteBandingRequest'
 -- * 'dbrBandedRangeId'
 deleteBandingRequest
     :: DeleteBandingRequest
-deleteBandingRequest =
+deleteBandingRequest = 
     DeleteBandingRequest'
     { _dbrBandedRangeId = Nothing
     }
@@ -8366,59 +10979,146 @@ instance ToJSON DeleteBandingRequest where
               (catMaybes
                  [("bandedRangeId" .=) <$> _dbrBandedRangeId])
 
+-- | The response from deleting developer metadata.
+--
+-- /See:/ 'deleteDeveloperMetadataResponse' smart constructor.
+newtype DeleteDeveloperMetadataResponse = DeleteDeveloperMetadataResponse'
+    { _ddmrDeletedDeveloperMetadata :: Maybe [DeveloperMetadata]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DeleteDeveloperMetadataResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ddmrDeletedDeveloperMetadata'
+deleteDeveloperMetadataResponse
+    :: DeleteDeveloperMetadataResponse
+deleteDeveloperMetadataResponse = 
+    DeleteDeveloperMetadataResponse'
+    { _ddmrDeletedDeveloperMetadata = Nothing
+    }
+
+-- | The metadata that was deleted.
+ddmrDeletedDeveloperMetadata :: Lens' DeleteDeveloperMetadataResponse [DeveloperMetadata]
+ddmrDeletedDeveloperMetadata
+  = lens _ddmrDeletedDeveloperMetadata
+      (\ s a -> s{_ddmrDeletedDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON DeleteDeveloperMetadataResponse
+         where
+        parseJSON
+          = withObject "DeleteDeveloperMetadataResponse"
+              (\ o ->
+                 DeleteDeveloperMetadataResponse' <$>
+                   (o .:? "deletedDeveloperMetadata" .!= mempty))
+
+instance ToJSON DeleteDeveloperMetadataResponse where
+        toJSON DeleteDeveloperMetadataResponse'{..}
+          = object
+              (catMaybes
+                 [("deletedDeveloperMetadata" .=) <$>
+                    _ddmrDeletedDeveloperMetadata])
+
+-- | The response from updating developer metadata.
+--
+-- /See:/ 'updateDeveloperMetadataResponse' smart constructor.
+newtype UpdateDeveloperMetadataResponse = UpdateDeveloperMetadataResponse'
+    { _uDeveloperMetadata :: Maybe [DeveloperMetadata]
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UpdateDeveloperMetadataResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uDeveloperMetadata'
+updateDeveloperMetadataResponse
+    :: UpdateDeveloperMetadataResponse
+updateDeveloperMetadataResponse = 
+    UpdateDeveloperMetadataResponse'
+    { _uDeveloperMetadata = Nothing
+    }
+
+-- | The updated developer metadata.
+uDeveloperMetadata :: Lens' UpdateDeveloperMetadataResponse [DeveloperMetadata]
+uDeveloperMetadata
+  = lens _uDeveloperMetadata
+      (\ s a -> s{_uDeveloperMetadata = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON UpdateDeveloperMetadataResponse
+         where
+        parseJSON
+          = withObject "UpdateDeveloperMetadataResponse"
+              (\ o ->
+                 UpdateDeveloperMetadataResponse' <$>
+                   (o .:? "developerMetadata" .!= mempty))
+
+instance ToJSON UpdateDeveloperMetadataResponse where
+        toJSON UpdateDeveloperMetadataResponse'{..}
+          = object
+              (catMaybes
+                 [("developerMetadata" .=) <$> _uDeveloperMetadata])
+
 -- | A single kind of update to apply to a spreadsheet.
 --
 -- /See:/ 'request'' smart constructor.
 data Request' = Request''
-    { _reqAddFilterView                :: !(Maybe AddFilterViewRequest)
-    , _reqDeleteProtectedRange         :: !(Maybe DeleteProtectedRangeRequest)
-    , _reqUpdateProtectedRange         :: !(Maybe UpdateProtectedRangeRequest)
-    , _reqUpdateCells                  :: !(Maybe UpdateCellsRequest)
-    , _reqDuplicateFilterView          :: !(Maybe DuplicateFilterViewRequest)
-    , _reqAddConditionalFormatRule     :: !(Maybe AddConditionalFormatRuleRequest)
-    , _reqSortRange                    :: !(Maybe SortRangeRequest)
-    , _reqUpdateNamedRange             :: !(Maybe UpdateNamedRangeRequest)
-    , _reqDeleteNamedRange             :: !(Maybe DeleteNamedRangeRequest)
-    , _reqInsertRange                  :: !(Maybe InsertRangeRequest)
-    , _reqDeleteBanding                :: !(Maybe DeleteBandingRequest)
-    , _reqUpdateBanding                :: !(Maybe UpdateBandingRequest)
-    , _reqClearBasicFilter             :: !(Maybe ClearBasicFilterRequest)
-    , _reqAppendCells                  :: !(Maybe AppendCellsRequest)
-    , _reqPasteData                    :: !(Maybe PasteDataRequest)
+    { _reqAddFilterView :: !(Maybe AddFilterViewRequest)
+    , _reqDeleteProtectedRange :: !(Maybe DeleteProtectedRangeRequest)
+    , _reqUpdateProtectedRange :: !(Maybe UpdateProtectedRangeRequest)
+    , _reqUpdateCells :: !(Maybe UpdateCellsRequest)
+    , _reqCreateDeveloperMetadata :: !(Maybe CreateDeveloperMetadataRequest)
+    , _reqDuplicateFilterView :: !(Maybe DuplicateFilterViewRequest)
+    , _reqAddConditionalFormatRule :: !(Maybe AddConditionalFormatRuleRequest)
+    , _reqRandomizeRange :: !(Maybe RandomizeRangeRequest)
+    , _reqSortRange :: !(Maybe SortRangeRequest)
+    , _reqUpdateNamedRange :: !(Maybe UpdateNamedRangeRequest)
+    , _reqDeleteNamedRange :: !(Maybe DeleteNamedRangeRequest)
+    , _reqInsertRange :: !(Maybe InsertRangeRequest)
+    , _reqDeleteBanding :: !(Maybe DeleteBandingRequest)
+    , _reqUpdateBanding :: !(Maybe UpdateBandingRequest)
+    , _reqClearBasicFilter :: !(Maybe ClearBasicFilterRequest)
+    , _reqAppendCells :: !(Maybe AppendCellsRequest)
+    , _reqPasteData :: !(Maybe PasteDataRequest)
     , _reqUpdateEmbeddedObjectPosition :: !(Maybe UpdateEmbeddedObjectPositionRequest)
-    , _reqDeleteRange                  :: !(Maybe DeleteRangeRequest)
-    , _reqCopyPaste                    :: !(Maybe CopyPasteRequest)
-    , _reqAutoResizeDimensions         :: !(Maybe AutoResizeDimensionsRequest)
-    , _reqAddSheet                     :: !(Maybe AddSheetRequest)
-    , _reqFindReplace                  :: !(Maybe FindReplaceRequest)
-    , _reqDeleteDimension              :: !(Maybe DeleteDimensionRequest)
-    , _reqCutPaste                     :: !(Maybe CutPasteRequest)
-    , _reqMoveDimension                :: !(Maybe MoveDimensionRequest)
-    , _reqRepeatCell                   :: !(Maybe RepeatCellRequest)
-    , _reqAddProtectedRange            :: !(Maybe AddProtectedRangeRequest)
-    , _reqUpdateFilterView             :: !(Maybe UpdateFilterViewRequest)
-    , _reqDeleteFilterView             :: !(Maybe DeleteFilterViewRequest)
-    , _reqInsertDimension              :: !(Maybe InsertDimensionRequest)
-    , _reqUpdateSheetProperties        :: !(Maybe UpdateSheetPropertiesRequest)
-    , _reqDeleteConditionalFormatRule  :: !(Maybe DeleteConditionalFormatRuleRequest)
-    , _reqUpdateConditionalFormatRule  :: !(Maybe UpdateConditionalFormatRuleRequest)
-    , _reqDeleteEmbeddedObject         :: !(Maybe DeleteEmbeddedObjectRequest)
-    , _reqMergeCells                   :: !(Maybe MergeCellsRequest)
-    , _reqAddNamedRange                :: !(Maybe AddNamedRangeRequest)
-    , _reqAddChart                     :: !(Maybe AddChartRequest)
-    , _reqAddBanding                   :: !(Maybe AddBandingRequest)
-    , _reqDuplicateSheet               :: !(Maybe DuplicateSheetRequest)
-    , _reqAutoFill                     :: !(Maybe AutoFillRequest)
-    , _reqUpdateDimensionProperties    :: !(Maybe UpdateDimensionPropertiesRequest)
-    , _reqUpdateChartSpec              :: !(Maybe UpdateChartSpecRequest)
-    , _reqSetBasicFilter               :: !(Maybe SetBasicFilterRequest)
-    , _reqTextToColumns                :: !(Maybe TextToColumnsRequest)
-    , _reqUpdateSpreadsheetProperties  :: !(Maybe UpdateSpreadsheetPropertiesRequest)
-    , _reqDeleteSheet                  :: !(Maybe DeleteSheetRequest)
-    , _reqUnmergeCells                 :: !(Maybe UnmergeCellsRequest)
-    , _reqUpdateBOrders                :: !(Maybe UpdateBOrdersRequest)
-    , _reqAppendDimension              :: !(Maybe AppendDimensionRequest)
-    , _reqSetDataValidation            :: !(Maybe SetDataValidationRequest)
+    , _reqDeleteRange :: !(Maybe DeleteRangeRequest)
+    , _reqCopyPaste :: !(Maybe CopyPasteRequest)
+    , _reqAutoResizeDimensions :: !(Maybe AutoResizeDimensionsRequest)
+    , _reqAddSheet :: !(Maybe AddSheetRequest)
+    , _reqFindReplace :: !(Maybe FindReplaceRequest)
+    , _reqDeleteDimension :: !(Maybe DeleteDimensionRequest)
+    , _reqCutPaste :: !(Maybe CutPasteRequest)
+    , _reqMoveDimension :: !(Maybe MoveDimensionRequest)
+    , _reqRepeatCell :: !(Maybe RepeatCellRequest)
+    , _reqAddProtectedRange :: !(Maybe AddProtectedRangeRequest)
+    , _reqUpdateFilterView :: !(Maybe UpdateFilterViewRequest)
+    , _reqDeleteFilterView :: !(Maybe DeleteFilterViewRequest)
+    , _reqInsertDimension :: !(Maybe InsertDimensionRequest)
+    , _reqUpdateSheetProperties :: !(Maybe UpdateSheetPropertiesRequest)
+    , _reqDeleteConditionalFormatRule :: !(Maybe DeleteConditionalFormatRuleRequest)
+    , _reqUpdateConditionalFormatRule :: !(Maybe UpdateConditionalFormatRuleRequest)
+    , _reqDeleteEmbeddedObject :: !(Maybe DeleteEmbeddedObjectRequest)
+    , _reqDeleteDeveloperMetadata :: !(Maybe DeleteDeveloperMetadataRequest)
+    , _reqUpdateDeveloperMetadata :: !(Maybe UpdateDeveloperMetadataRequest)
+    , _reqMergeCells :: !(Maybe MergeCellsRequest)
+    , _reqAddNamedRange :: !(Maybe AddNamedRangeRequest)
+    , _reqAddChart :: !(Maybe AddChartRequest)
+    , _reqAddBanding :: !(Maybe AddBandingRequest)
+    , _reqDuplicateSheet :: !(Maybe DuplicateSheetRequest)
+    , _reqAutoFill :: !(Maybe AutoFillRequest)
+    , _reqUpdateDimensionProperties :: !(Maybe UpdateDimensionPropertiesRequest)
+    , _reqUpdateChartSpec :: !(Maybe UpdateChartSpecRequest)
+    , _reqSetBasicFilter :: !(Maybe SetBasicFilterRequest)
+    , _reqTextToColumns :: !(Maybe TextToColumnsRequest)
+    , _reqUpdateSpreadsheetProperties :: !(Maybe UpdateSpreadsheetPropertiesRequest)
+    , _reqDeleteSheet :: !(Maybe DeleteSheetRequest)
+    , _reqUnmergeCells :: !(Maybe UnmergeCellsRequest)
+    , _reqUpdateBOrders :: !(Maybe UpdateBOrdersRequest)
+    , _reqAppendDimension :: !(Maybe AppendDimensionRequest)
+    , _reqSetDataValidation :: !(Maybe SetDataValidationRequest)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Request' with the minimum fields required to make a request.
@@ -8433,9 +11133,13 @@ data Request' = Request''
 --
 -- * 'reqUpdateCells'
 --
+-- * 'reqCreateDeveloperMetadata'
+--
 -- * 'reqDuplicateFilterView'
 --
 -- * 'reqAddConditionalFormatRule'
+--
+-- * 'reqRandomizeRange'
 --
 -- * 'reqSortRange'
 --
@@ -8491,6 +11195,10 @@ data Request' = Request''
 --
 -- * 'reqDeleteEmbeddedObject'
 --
+-- * 'reqDeleteDeveloperMetadata'
+--
+-- * 'reqUpdateDeveloperMetadata'
+--
 -- * 'reqMergeCells'
 --
 -- * 'reqAddNamedRange'
@@ -8524,14 +11232,16 @@ data Request' = Request''
 -- * 'reqSetDataValidation'
 request'
     :: Request'
-request' =
+request' = 
     Request''
     { _reqAddFilterView = Nothing
     , _reqDeleteProtectedRange = Nothing
     , _reqUpdateProtectedRange = Nothing
     , _reqUpdateCells = Nothing
+    , _reqCreateDeveloperMetadata = Nothing
     , _reqDuplicateFilterView = Nothing
     , _reqAddConditionalFormatRule = Nothing
+    , _reqRandomizeRange = Nothing
     , _reqSortRange = Nothing
     , _reqUpdateNamedRange = Nothing
     , _reqDeleteNamedRange = Nothing
@@ -8559,6 +11269,8 @@ request' =
     , _reqDeleteConditionalFormatRule = Nothing
     , _reqUpdateConditionalFormatRule = Nothing
     , _reqDeleteEmbeddedObject = Nothing
+    , _reqDeleteDeveloperMetadata = Nothing
+    , _reqUpdateDeveloperMetadata = Nothing
     , _reqMergeCells = Nothing
     , _reqAddNamedRange = Nothing
     , _reqAddChart = Nothing
@@ -8601,6 +11313,12 @@ reqUpdateCells
   = lens _reqUpdateCells
       (\ s a -> s{_reqUpdateCells = a})
 
+-- | Creates new developer metadata
+reqCreateDeveloperMetadata :: Lens' Request' (Maybe CreateDeveloperMetadataRequest)
+reqCreateDeveloperMetadata
+  = lens _reqCreateDeveloperMetadata
+      (\ s a -> s{_reqCreateDeveloperMetadata = a})
+
 -- | Duplicates a filter view.
 reqDuplicateFilterView :: Lens' Request' (Maybe DuplicateFilterViewRequest)
 reqDuplicateFilterView
@@ -8612,6 +11330,12 @@ reqAddConditionalFormatRule :: Lens' Request' (Maybe AddConditionalFormatRuleReq
 reqAddConditionalFormatRule
   = lens _reqAddConditionalFormatRule
       (\ s a -> s{_reqAddConditionalFormatRule = a})
+
+-- | Randomizes the order of the rows in a range.
+reqRandomizeRange :: Lens' Request' (Maybe RandomizeRangeRequest)
+reqRandomizeRange
+  = lens _reqRandomizeRange
+      (\ s a -> s{_reqRandomizeRange = a})
 
 -- | Sorts data in a range.
 reqSortRange :: Lens' Request' (Maybe SortRangeRequest)
@@ -8771,6 +11495,18 @@ reqDeleteEmbeddedObject
   = lens _reqDeleteEmbeddedObject
       (\ s a -> s{_reqDeleteEmbeddedObject = a})
 
+-- | Deletes developer metadata
+reqDeleteDeveloperMetadata :: Lens' Request' (Maybe DeleteDeveloperMetadataRequest)
+reqDeleteDeveloperMetadata
+  = lens _reqDeleteDeveloperMetadata
+      (\ s a -> s{_reqDeleteDeveloperMetadata = a})
+
+-- | Updates an existing developer metadata entry
+reqUpdateDeveloperMetadata :: Lens' Request' (Maybe UpdateDeveloperMetadataRequest)
+reqUpdateDeveloperMetadata
+  = lens _reqUpdateDeveloperMetadata
+      (\ s a -> s{_reqUpdateDeveloperMetadata = a})
+
 -- | Merges cells together.
 reqMergeCells :: Lens' Request' (Maybe MergeCellsRequest)
 reqMergeCells
@@ -8874,8 +11610,10 @@ instance FromJSON Request' where
                      (o .:? "deleteProtectedRange")
                      <*> (o .:? "updateProtectedRange")
                      <*> (o .:? "updateCells")
+                     <*> (o .:? "createDeveloperMetadata")
                      <*> (o .:? "duplicateFilterView")
                      <*> (o .:? "addConditionalFormatRule")
+                     <*> (o .:? "randomizeRange")
                      <*> (o .:? "sortRange")
                      <*> (o .:? "updateNamedRange")
                      <*> (o .:? "deleteNamedRange")
@@ -8903,6 +11641,8 @@ instance FromJSON Request' where
                      <*> (o .:? "deleteConditionalFormatRule")
                      <*> (o .:? "updateConditionalFormatRule")
                      <*> (o .:? "deleteEmbeddedObject")
+                     <*> (o .:? "deleteDeveloperMetadata")
+                     <*> (o .:? "updateDeveloperMetadata")
                      <*> (o .:? "mergeCells")
                      <*> (o .:? "addNamedRange")
                      <*> (o .:? "addChart")
@@ -8930,10 +11670,13 @@ instance ToJSON Request' where
                   ("updateProtectedRange" .=) <$>
                     _reqUpdateProtectedRange,
                   ("updateCells" .=) <$> _reqUpdateCells,
+                  ("createDeveloperMetadata" .=) <$>
+                    _reqCreateDeveloperMetadata,
                   ("duplicateFilterView" .=) <$>
                     _reqDuplicateFilterView,
                   ("addConditionalFormatRule" .=) <$>
                     _reqAddConditionalFormatRule,
+                  ("randomizeRange" .=) <$> _reqRandomizeRange,
                   ("sortRange" .=) <$> _reqSortRange,
                   ("updateNamedRange" .=) <$> _reqUpdateNamedRange,
                   ("deleteNamedRange" .=) <$> _reqDeleteNamedRange,
@@ -8967,6 +11710,10 @@ instance ToJSON Request' where
                     _reqUpdateConditionalFormatRule,
                   ("deleteEmbeddedObject" .=) <$>
                     _reqDeleteEmbeddedObject,
+                  ("deleteDeveloperMetadata" .=) <$>
+                    _reqDeleteDeveloperMetadata,
+                  ("updateDeveloperMetadata" .=) <$>
+                    _reqUpdateDeveloperMetadata,
                   ("mergeCells" .=) <$> _reqMergeCells,
                   ("addNamedRange" .=) <$> _reqAddNamedRange,
                   ("addChart" .=) <$> _reqAddChart,
@@ -9000,7 +11747,7 @@ newtype DeleteConditionalFormatRuleResponse = DeleteConditionalFormatRuleRespons
 -- * 'dcfrrRule'
 deleteConditionalFormatRuleResponse
     :: DeleteConditionalFormatRuleResponse
-deleteConditionalFormatRuleResponse =
+deleteConditionalFormatRuleResponse = 
     DeleteConditionalFormatRuleResponse'
     { _dcfrrRule = Nothing
     }
@@ -9027,10 +11774,10 @@ instance ToJSON DeleteConditionalFormatRuleResponse
 --
 -- /See:/ 'updateConditionalFormatRuleResponse' smart constructor.
 data UpdateConditionalFormatRuleResponse = UpdateConditionalFormatRuleResponse'
-    { _uNewRule  :: !(Maybe ConditionalFormatRule)
+    { _uNewRule :: !(Maybe ConditionalFormatRule)
     , _uNewIndex :: !(Maybe (Textual Int32))
     , _uOldIndex :: !(Maybe (Textual Int32))
-    , _uOldRule  :: !(Maybe ConditionalFormatRule)
+    , _uOldRule :: !(Maybe ConditionalFormatRule)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UpdateConditionalFormatRuleResponse' with the minimum fields required to make a request.
@@ -9046,7 +11793,7 @@ data UpdateConditionalFormatRuleResponse = UpdateConditionalFormatRuleResponse'
 -- * 'uOldRule'
 updateConditionalFormatRuleResponse
     :: UpdateConditionalFormatRuleResponse
-updateConditionalFormatRuleResponse =
+updateConditionalFormatRuleResponse = 
     UpdateConditionalFormatRuleResponse'
     { _uNewRule = Nothing
     , _uNewIndex = Nothing

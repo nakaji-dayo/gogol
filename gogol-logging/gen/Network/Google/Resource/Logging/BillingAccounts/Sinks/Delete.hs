@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.BillingAccounts.Sinks.Delete
     , basdUploadType
     , basdBearerToken
     , basdSinkName
+    , basdFields
     , basdCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.billingAccounts.sinks.delete@ method which the
 -- 'BillingAccountsSinksDelete' request conforms to.
@@ -59,21 +60,23 @@ type BillingAccountsSinksDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a sink. If the sink has a unique writer_identity, then that
 -- service account is also deleted.
 --
 -- /See:/ 'billingAccountsSinksDelete' smart constructor.
 data BillingAccountsSinksDelete = BillingAccountsSinksDelete'
-    { _basdXgafv          :: !(Maybe Xgafv)
+    { _basdXgafv :: !(Maybe Xgafv)
     , _basdUploadProtocol :: !(Maybe Text)
-    , _basdPp             :: !Bool
-    , _basdAccessToken    :: !(Maybe Text)
-    , _basdUploadType     :: !(Maybe Text)
-    , _basdBearerToken    :: !(Maybe Text)
-    , _basdSinkName       :: !Text
-    , _basdCallback       :: !(Maybe Text)
+    , _basdPp :: !Bool
+    , _basdAccessToken :: !(Maybe Text)
+    , _basdUploadType :: !(Maybe Text)
+    , _basdBearerToken :: !(Maybe Text)
+    , _basdSinkName :: !Text
+    , _basdFields :: !(Maybe Text)
+    , _basdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsSinksDelete' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data BillingAccountsSinksDelete = BillingAccountsSinksDelete'
 --
 -- * 'basdSinkName'
 --
+-- * 'basdFields'
+--
 -- * 'basdCallback'
 billingAccountsSinksDelete
     :: Text -- ^ 'basdSinkName'
     -> BillingAccountsSinksDelete
-billingAccountsSinksDelete pBasdSinkName_ =
+billingAccountsSinksDelete pBasdSinkName_ = 
     BillingAccountsSinksDelete'
     { _basdXgafv = Nothing
     , _basdUploadProtocol = Nothing
@@ -107,6 +112,7 @@ billingAccountsSinksDelete pBasdSinkName_ =
     , _basdUploadType = Nothing
     , _basdBearerToken = Nothing
     , _basdSinkName = pBasdSinkName_
+    , _basdFields = Nothing
     , _basdCallback = Nothing
     }
 
@@ -146,13 +152,18 @@ basdBearerToken
 -- | Required. The full resource name of the sink to delete, including the
 -- parent resource and the sink identifier:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" It is an error if
--- the sink does not exist. Example:
--- \"projects\/my-project-id\/sinks\/my-sink-id\". It is an error if the
--- sink does not exist.
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"projects\/my-project-id\/sinks\/my-sink-id\".
 basdSinkName :: Lens' BillingAccountsSinksDelete Text
 basdSinkName
   = lens _basdSinkName (\ s a -> s{_basdSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+basdFields :: Lens' BillingAccountsSinksDelete (Maybe Text)
+basdFields
+  = lens _basdFields (\ s a -> s{_basdFields = a})
 
 -- | JSONP
 basdCallback :: Lens' BillingAccountsSinksDelete (Maybe Text)
@@ -172,6 +183,7 @@ instance GoogleRequest BillingAccountsSinksDelete
               _basdUploadType
               _basdBearerToken
               _basdCallback
+              _basdFields
               (Just AltJSON)
               loggingService
           where go

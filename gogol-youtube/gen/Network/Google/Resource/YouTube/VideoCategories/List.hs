@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.VideoCategories.List
     , vclRegionCode
     , vclHl
     , vclId
+    , vclFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videoCategories.list@ method which the
 -- 'VideoCategoriesList' request conforms to.
@@ -52,17 +53,19 @@ type VideoCategoriesListResource =
              QueryParam "regionCode" Text :>
                QueryParam "hl" Text :>
                  QueryParam "id" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] VideoCategoryListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] VideoCategoryListResponse
 
 -- | Returns a list of categories that can be associated with YouTube videos.
 --
 -- /See:/ 'videoCategoriesList' smart constructor.
 data VideoCategoriesList = VideoCategoriesList'
-    { _vclPart       :: !Text
+    { _vclPart :: !Text
     , _vclRegionCode :: !(Maybe Text)
-    , _vclHl         :: !Text
-    , _vclId         :: !(Maybe Text)
+    , _vclHl :: !Text
+    , _vclId :: !(Maybe Text)
+    , _vclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideoCategoriesList' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data VideoCategoriesList = VideoCategoriesList'
 -- * 'vclHl'
 --
 -- * 'vclId'
+--
+-- * 'vclFields'
 videoCategoriesList
     :: Text -- ^ 'vclPart'
     -> VideoCategoriesList
-videoCategoriesList pVclPart_ =
+videoCategoriesList pVclPart_ = 
     VideoCategoriesList'
     { _vclPart = pVclPart_
     , _vclRegionCode = Nothing
     , _vclHl = "en_US"
     , _vclId = Nothing
+    , _vclFields = Nothing
     }
 
 -- | The part parameter specifies the videoCategory resource properties that
@@ -110,6 +116,11 @@ vclHl = lens _vclHl (\ s a -> s{_vclHl = a})
 vclId :: Lens' VideoCategoriesList (Maybe Text)
 vclId = lens _vclId (\ s a -> s{_vclId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vclFields :: Lens' VideoCategoriesList (Maybe Text)
+vclFields
+  = lens _vclFields (\ s a -> s{_vclFields = a})
+
 instance GoogleRequest VideoCategoriesList where
         type Rs VideoCategoriesList =
              VideoCategoryListResponse
@@ -121,6 +132,7 @@ instance GoogleRequest VideoCategoriesList where
         requestClient VideoCategoriesList'{..}
           = go (Just _vclPart) _vclRegionCode (Just _vclHl)
               _vclId
+              _vclFields
               (Just AltJSON)
               youTubeService
           where go

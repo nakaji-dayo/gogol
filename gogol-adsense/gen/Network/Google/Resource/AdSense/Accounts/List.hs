@@ -33,12 +33,13 @@ module Network.Google.Resource.AdSense.Accounts.List
     , AccountsList
 
     -- * Request Lenses
-    , alPageToken
-    , alMaxResults
+    , aPageToken
+    , aMaxResults
+    , aFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.list@ method which the
 -- 'AccountsList' request conforms to.
@@ -48,44 +49,53 @@ type AccountsListResource =
          "accounts" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Int32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Accounts
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Accounts
 
 -- | List all accounts available to this AdSense account.
 --
 -- /See:/ 'accountsList' smart constructor.
 data AccountsList = AccountsList'
-    { _alPageToken  :: !(Maybe Text)
-    , _alMaxResults :: !(Maybe (Textual Int32))
+    { _aPageToken :: !(Maybe Text)
+    , _aMaxResults :: !(Maybe (Textual Int32))
+    , _aFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsList' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'alPageToken'
+-- * 'aPageToken'
 --
--- * 'alMaxResults'
+-- * 'aMaxResults'
+--
+-- * 'aFields'
 accountsList
     :: AccountsList
-accountsList =
+accountsList = 
     AccountsList'
-    { _alPageToken = Nothing
-    , _alMaxResults = Nothing
+    { _aPageToken = Nothing
+    , _aMaxResults = Nothing
+    , _aFields = Nothing
     }
 
 -- | A continuation token, used to page through accounts. To retrieve the
 -- next page, set this parameter to the value of \"nextPageToken\" from the
 -- previous response.
-alPageToken :: Lens' AccountsList (Maybe Text)
-alPageToken
-  = lens _alPageToken (\ s a -> s{_alPageToken = a})
+aPageToken :: Lens' AccountsList (Maybe Text)
+aPageToken
+  = lens _aPageToken (\ s a -> s{_aPageToken = a})
 
 -- | The maximum number of accounts to include in the response, used for
 -- paging.
-alMaxResults :: Lens' AccountsList (Maybe Int32)
-alMaxResults
-  = lens _alMaxResults (\ s a -> s{_alMaxResults = a})
-      . mapping _Coerce
+aMaxResults :: Lens' AccountsList (Maybe Int32)
+aMaxResults
+  = lens _aMaxResults (\ s a -> s{_aMaxResults = a}) .
+      mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+aFields :: Lens' AccountsList (Maybe Text)
+aFields = lens _aFields (\ s a -> s{_aFields = a})
 
 instance GoogleRequest AccountsList where
         type Rs AccountsList = Accounts
@@ -93,7 +103,7 @@ instance GoogleRequest AccountsList where
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsList'{..}
-          = go _alPageToken _alMaxResults (Just AltJSON)
+          = go _aPageToken _aMaxResults _aFields (Just AltJSON)
               adSenseService
           where go
                   = buildClient (Proxy :: Proxy AccountsListResource)

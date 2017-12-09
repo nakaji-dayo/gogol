@@ -42,10 +42,11 @@ module Network.Google.Resource.CloudMonitoring.MetricDescriptors.List
     , mdlPayload
     , mdlQuery
     , mdlPageToken
+    , mdlFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.metricDescriptors.list@ method which the
 -- 'MetricDescriptorsList' request conforms to.
@@ -58,9 +59,10 @@ type MetricDescriptorsListResource =
                QueryParam "count" (Textual Int32) :>
                  QueryParam "query" Text :>
                    QueryParam "pageToken" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] ListMetricDescriptorsRequest :>
-                         Get '[JSON] ListMetricDescriptorsResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] ListMetricDescriptorsRequest :>
+                           Get '[JSON] ListMetricDescriptorsResponse
 
 -- | List metric descriptors that match the query. If the query is not set,
 -- then all of the metric descriptors will be returned. Large responses
@@ -70,11 +72,12 @@ type MetricDescriptorsListResource =
 --
 -- /See:/ 'metricDescriptorsList' smart constructor.
 data MetricDescriptorsList = MetricDescriptorsList'
-    { _mdlProject   :: !Text
-    , _mdlCount     :: !(Textual Int32)
-    , _mdlPayload   :: !ListMetricDescriptorsRequest
-    , _mdlQuery     :: !(Maybe Text)
+    { _mdlProject :: !Text
+    , _mdlCount :: !(Textual Int32)
+    , _mdlPayload :: !ListMetricDescriptorsRequest
+    , _mdlQuery :: !(Maybe Text)
     , _mdlPageToken :: !(Maybe Text)
+    , _mdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptorsList' with the minimum fields required to make a request.
@@ -90,17 +93,20 @@ data MetricDescriptorsList = MetricDescriptorsList'
 -- * 'mdlQuery'
 --
 -- * 'mdlPageToken'
+--
+-- * 'mdlFields'
 metricDescriptorsList
     :: Text -- ^ 'mdlProject'
     -> ListMetricDescriptorsRequest -- ^ 'mdlPayload'
     -> MetricDescriptorsList
-metricDescriptorsList pMdlProject_ pMdlPayload_ =
+metricDescriptorsList pMdlProject_ pMdlPayload_ = 
     MetricDescriptorsList'
     { _mdlProject = pMdlProject_
     , _mdlCount = 100
     , _mdlPayload = pMdlPayload_
     , _mdlQuery = Nothing
     , _mdlPageToken = Nothing
+    , _mdlFields = Nothing
     }
 
 -- | The project id. The value can be the numeric project ID or string-based
@@ -136,6 +142,11 @@ mdlPageToken :: Lens' MetricDescriptorsList (Maybe Text)
 mdlPageToken
   = lens _mdlPageToken (\ s a -> s{_mdlPageToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdlFields :: Lens' MetricDescriptorsList (Maybe Text)
+mdlFields
+  = lens _mdlFields (\ s a -> s{_mdlFields = a})
+
 instance GoogleRequest MetricDescriptorsList where
         type Rs MetricDescriptorsList =
              ListMetricDescriptorsResponse
@@ -145,6 +156,7 @@ instance GoogleRequest MetricDescriptorsList where
         requestClient MetricDescriptorsList'{..}
           = go _mdlProject (Just _mdlCount) _mdlQuery
               _mdlPageToken
+              _mdlFields
               (Just AltJSON)
               _mdlPayload
               cloudMonitoringService

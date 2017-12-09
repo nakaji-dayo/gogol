@@ -45,11 +45,12 @@ module Network.Google.Resource.Classroom.Courses.CourseWork.Get
     , ccwgUploadType
     , ccwgBearerToken
     , ccwgId
+    , ccwgFields
     , ccwgCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.courseWork.get@ method which the
 -- 'CoursesCourseWorkGet' request conforms to.
@@ -59,14 +60,16 @@ type CoursesCourseWorkGetResource =
          Capture "courseId" Text :>
            "courseWork" :>
              Capture "id" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] CourseWork
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] CourseWork
 
 -- | Returns course work. This method returns the following error codes: *
 -- \`PERMISSION_DENIED\` if the requesting user is not permitted to access
@@ -76,15 +79,16 @@ type CoursesCourseWorkGetResource =
 --
 -- /See:/ 'coursesCourseWorkGet' smart constructor.
 data CoursesCourseWorkGet = CoursesCourseWorkGet'
-    { _ccwgXgafv          :: !(Maybe Text)
+    { _ccwgXgafv :: !(Maybe Xgafv)
     , _ccwgUploadProtocol :: !(Maybe Text)
-    , _ccwgPp             :: !Bool
-    , _ccwgCourseId       :: !Text
-    , _ccwgAccessToken    :: !(Maybe Text)
-    , _ccwgUploadType     :: !(Maybe Text)
-    , _ccwgBearerToken    :: !(Maybe Text)
-    , _ccwgId             :: !Text
-    , _ccwgCallback       :: !(Maybe Text)
+    , _ccwgPp :: !Bool
+    , _ccwgCourseId :: !Text
+    , _ccwgAccessToken :: !(Maybe Text)
+    , _ccwgUploadType :: !(Maybe Text)
+    , _ccwgBearerToken :: !(Maybe Text)
+    , _ccwgId :: !Text
+    , _ccwgFields :: !(Maybe Text)
+    , _ccwgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesCourseWorkGet' with the minimum fields required to make a request.
@@ -107,12 +111,14 @@ data CoursesCourseWorkGet = CoursesCourseWorkGet'
 --
 -- * 'ccwgId'
 --
+-- * 'ccwgFields'
+--
 -- * 'ccwgCallback'
 coursesCourseWorkGet
     :: Text -- ^ 'ccwgCourseId'
     -> Text -- ^ 'ccwgId'
     -> CoursesCourseWorkGet
-coursesCourseWorkGet pCcwgCourseId_ pCcwgId_ =
+coursesCourseWorkGet pCcwgCourseId_ pCcwgId_ = 
     CoursesCourseWorkGet'
     { _ccwgXgafv = Nothing
     , _ccwgUploadProtocol = Nothing
@@ -122,11 +128,12 @@ coursesCourseWorkGet pCcwgCourseId_ pCcwgId_ =
     , _ccwgUploadType = Nothing
     , _ccwgBearerToken = Nothing
     , _ccwgId = pCcwgId_
+    , _ccwgFields = Nothing
     , _ccwgCallback = Nothing
     }
 
 -- | V1 error format.
-ccwgXgafv :: Lens' CoursesCourseWorkGet (Maybe Text)
+ccwgXgafv :: Lens' CoursesCourseWorkGet (Maybe Xgafv)
 ccwgXgafv
   = lens _ccwgXgafv (\ s a -> s{_ccwgXgafv = a})
 
@@ -168,6 +175,11 @@ ccwgBearerToken
 ccwgId :: Lens' CoursesCourseWorkGet Text
 ccwgId = lens _ccwgId (\ s a -> s{_ccwgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccwgFields :: Lens' CoursesCourseWorkGet (Maybe Text)
+ccwgFields
+  = lens _ccwgFields (\ s a -> s{_ccwgFields = a})
+
 -- | JSONP
 ccwgCallback :: Lens' CoursesCourseWorkGet (Maybe Text)
 ccwgCallback
@@ -176,8 +188,7 @@ ccwgCallback
 instance GoogleRequest CoursesCourseWorkGet where
         type Rs CoursesCourseWorkGet = CourseWork
         type Scopes CoursesCourseWorkGet =
-             '["https://www.googleapis.com/auth/classroom.course-work.readonly",
-               "https://www.googleapis.com/auth/classroom.coursework.me",
+             '["https://www.googleapis.com/auth/classroom.coursework.me",
                "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
                "https://www.googleapis.com/auth/classroom.coursework.students",
                "https://www.googleapis.com/auth/classroom.coursework.students.readonly"]
@@ -189,6 +200,7 @@ instance GoogleRequest CoursesCourseWorkGet where
               _ccwgUploadType
               _ccwgBearerToken
               _ccwgCallback
+              _ccwgFields
               (Just AltJSON)
               classroomService
           where go

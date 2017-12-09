@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Listings.Update
     , eluPayload
     , eluLanguage
     , eluEditId
+    , eluFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.listings.update@ method which the
 -- 'EditsListingsUpdate' request conforms to.
@@ -53,17 +54,19 @@ type EditsListingsUpdateResource =
                Capture "editId" Text :>
                  "listings" :>
                    Capture "language" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Listing :> Put '[JSON] Listing
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Listing :> Put '[JSON] Listing
 
 -- | Creates or updates a localized store listing.
 --
 -- /See:/ 'editsListingsUpdate' smart constructor.
 data EditsListingsUpdate = EditsListingsUpdate'
     { _eluPackageName :: !Text
-    , _eluPayload     :: !Listing
-    , _eluLanguage    :: !Text
-    , _eluEditId      :: !Text
+    , _eluPayload :: !Listing
+    , _eluLanguage :: !Text
+    , _eluEditId :: !Text
+    , _eluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsListingsUpdate' with the minimum fields required to make a request.
@@ -77,18 +80,21 @@ data EditsListingsUpdate = EditsListingsUpdate'
 -- * 'eluLanguage'
 --
 -- * 'eluEditId'
+--
+-- * 'eluFields'
 editsListingsUpdate
     :: Text -- ^ 'eluPackageName'
     -> Listing -- ^ 'eluPayload'
     -> Text -- ^ 'eluLanguage'
     -> Text -- ^ 'eluEditId'
     -> EditsListingsUpdate
-editsListingsUpdate pEluPackageName_ pEluPayload_ pEluLanguage_ pEluEditId_ =
+editsListingsUpdate pEluPackageName_ pEluPayload_ pEluLanguage_ pEluEditId_ = 
     EditsListingsUpdate'
     { _eluPackageName = pEluPackageName_
     , _eluPayload = pEluPayload_
     , _eluLanguage = pEluLanguage_
     , _eluEditId = pEluEditId_
+    , _eluFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -114,12 +120,18 @@ eluEditId :: Lens' EditsListingsUpdate Text
 eluEditId
   = lens _eluEditId (\ s a -> s{_eluEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eluFields :: Lens' EditsListingsUpdate (Maybe Text)
+eluFields
+  = lens _eluFields (\ s a -> s{_eluFields = a})
+
 instance GoogleRequest EditsListingsUpdate where
         type Rs EditsListingsUpdate = Listing
         type Scopes EditsListingsUpdate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsListingsUpdate'{..}
           = go _eluPackageName _eluEditId _eluLanguage
+              _eluFields
               (Just AltJSON)
               _eluPayload
               androidPublisherService

@@ -34,10 +34,11 @@ module Network.Google.Resource.AdSense.Alerts.List
 
     -- * Request Lenses
     , alLocale
+    , alFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.alerts.list@ method which the
 -- 'AlertsList' request conforms to.
@@ -46,13 +47,15 @@ type AlertsListResource =
        "v1.4" :>
          "alerts" :>
            QueryParam "locale" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Alerts
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Alerts
 
 -- | List the alerts for this AdSense account.
 --
 -- /See:/ 'alertsList' smart constructor.
-newtype AlertsList = AlertsList'
-    { _alLocale :: Maybe Text
+data AlertsList = AlertsList'
+    { _alLocale :: !(Maybe Text)
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AlertsList' with the minimum fields required to make a request.
@@ -60,11 +63,14 @@ newtype AlertsList = AlertsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'alLocale'
+--
+-- * 'alFields'
 alertsList
     :: AlertsList
-alertsList =
+alertsList = 
     AlertsList'
     { _alLocale = Nothing
+    , _alFields = Nothing
     }
 
 -- | The locale to use for translating alert messages. The account locale
@@ -73,13 +79,18 @@ alertsList =
 alLocale :: Lens' AlertsList (Maybe Text)
 alLocale = lens _alLocale (\ s a -> s{_alLocale = a})
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' AlertsList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest AlertsList where
         type Rs AlertsList = Alerts
         type Scopes AlertsList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AlertsList'{..}
-          = go _alLocale (Just AltJSON) adSenseService
+          = go _alLocale _alFields (Just AltJSON)
+              adSenseService
           where go
                   = buildClient (Proxy :: Proxy AlertsListResource)
                       mempty

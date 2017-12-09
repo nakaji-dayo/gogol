@@ -41,10 +41,11 @@ module Network.Google.Resource.ResourceViews.ZoneViews.ListResources
     , zvlrServiceName
     , zvlrPageToken
     , zvlrMaxResults
+    , zvlrFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types
 
 -- | A resource alias for @resourceviews.zoneViews.listResources@ method which the
 -- 'ZoneViewsListResources' request conforms to.
@@ -65,21 +66,23 @@ type ZoneViewsListResourcesResource =
                            QueryParam "serviceName" Text :>
                              QueryParam "pageToken" Text :>
                                QueryParam "maxResults" (Textual Int32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ZoneViewsListResourcesResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ZoneViewsListResourcesResponse
 
 -- | List the resources of the resource view.
 --
 -- /See:/ 'zoneViewsListResources' smart constructor.
 data ZoneViewsListResources = ZoneViewsListResources'
     { _zvlrResourceView :: !Text
-    , _zvlrListState    :: !ZoneViewsListResourcesListState
-    , _zvlrProject      :: !Text
-    , _zvlrFormat       :: !(Maybe ZoneViewsListResourcesFormat)
-    , _zvlrZone         :: !Text
-    , _zvlrServiceName  :: !(Maybe Text)
-    , _zvlrPageToken    :: !(Maybe Text)
-    , _zvlrMaxResults   :: !(Textual Int32)
+    , _zvlrListState :: !ZoneViewsListResourcesListState
+    , _zvlrProject :: !Text
+    , _zvlrFormat :: !(Maybe ZoneViewsListResourcesFormat)
+    , _zvlrZone :: !Text
+    , _zvlrServiceName :: !(Maybe Text)
+    , _zvlrPageToken :: !(Maybe Text)
+    , _zvlrMaxResults :: !(Textual Int32)
+    , _zvlrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneViewsListResources' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ZoneViewsListResources = ZoneViewsListResources'
 -- * 'zvlrPageToken'
 --
 -- * 'zvlrMaxResults'
+--
+-- * 'zvlrFields'
 zoneViewsListResources
     :: Text -- ^ 'zvlrResourceView'
     -> Text -- ^ 'zvlrProject'
     -> Text -- ^ 'zvlrZone'
     -> ZoneViewsListResources
-zoneViewsListResources pZvlrResourceView_ pZvlrProject_ pZvlrZone_ =
+zoneViewsListResources pZvlrResourceView_ pZvlrProject_ pZvlrZone_ = 
     ZoneViewsListResources'
     { _zvlrResourceView = pZvlrResourceView_
     , _zvlrListState = All
@@ -116,6 +121,7 @@ zoneViewsListResources pZvlrResourceView_ pZvlrProject_ pZvlrZone_ =
     , _zvlrServiceName = Nothing
     , _zvlrPageToken = Nothing
     , _zvlrMaxResults = 5000
+    , _zvlrFields = Nothing
     }
 
 -- | The name of the resource view.
@@ -169,6 +175,11 @@ zvlrMaxResults
       (\ s a -> s{_zvlrMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+zvlrFields :: Lens' ZoneViewsListResources (Maybe Text)
+zvlrFields
+  = lens _zvlrFields (\ s a -> s{_zvlrFields = a})
+
 instance GoogleRequest ZoneViewsListResources where
         type Rs ZoneViewsListResources =
              ZoneViewsListResourcesResponse
@@ -186,6 +197,7 @@ instance GoogleRequest ZoneViewsListResources where
               _zvlrServiceName
               _zvlrPageToken
               (Just _zvlrMaxResults)
+              _zvlrFields
               (Just AltJSON)
               resourceViewsService
           where go

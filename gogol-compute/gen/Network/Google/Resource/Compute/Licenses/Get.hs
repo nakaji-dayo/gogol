@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Returns the specified License resource. Get a list of available licenses
--- by making a list() request.
+-- Returns the specified License resource.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.licenses.get@.
 module Network.Google.Resource.Compute.Licenses.Get
@@ -36,10 +35,11 @@ module Network.Google.Resource.Compute.Licenses.Get
     -- * Request Lenses
     , lgProject
     , lgLicense
+    , lgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.licenses.get@ method which the
 -- 'LicensesGet' request conforms to.
@@ -51,15 +51,16 @@ type LicensesGetResource =
              "global" :>
                "licenses" :>
                  Capture "license" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] License
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] License
 
--- | Returns the specified License resource. Get a list of available licenses
--- by making a list() request.
+-- | Returns the specified License resource.
 --
 -- /See:/ 'licensesGet' smart constructor.
 data LicensesGet = LicensesGet'
     { _lgProject :: !Text
     , _lgLicense :: !Text
+    , _lgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicensesGet' with the minimum fields required to make a request.
@@ -69,14 +70,17 @@ data LicensesGet = LicensesGet'
 -- * 'lgProject'
 --
 -- * 'lgLicense'
+--
+-- * 'lgFields'
 licensesGet
     :: Text -- ^ 'lgProject'
     -> Text -- ^ 'lgLicense'
     -> LicensesGet
-licensesGet pLgProject_ pLgLicense_ =
+licensesGet pLgProject_ pLgLicense_ = 
     LicensesGet'
     { _lgProject = pLgProject_
     , _lgLicense = pLgLicense_
+    , _lgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,6 +93,10 @@ lgLicense :: Lens' LicensesGet Text
 lgLicense
   = lens _lgLicense (\ s a -> s{_lgLicense = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lgFields :: Lens' LicensesGet (Maybe Text)
+lgFields = lens _lgFields (\ s a -> s{_lgFields = a})
+
 instance GoogleRequest LicensesGet where
         type Rs LicensesGet = License
         type Scopes LicensesGet =
@@ -96,7 +104,7 @@ instance GoogleRequest LicensesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient LicensesGet'{..}
-          = go _lgProject _lgLicense (Just AltJSON)
+          = go _lgProject _lgLicense _lgFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy LicensesGetResource)

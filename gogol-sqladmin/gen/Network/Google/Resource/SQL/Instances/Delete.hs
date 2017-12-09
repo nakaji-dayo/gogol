@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Instances.Delete
 
     -- * Request Lenses
     , idProject
+    , idFields
     , idInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.delete@ method which the
 -- 'InstancesDelete' request conforms to.
@@ -49,13 +50,15 @@ type InstancesDeleteResource =
            Capture "project" Text :>
              "instances" :>
                Capture "instance" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes a Cloud SQL instance.
 --
 -- /See:/ 'instancesDelete' smart constructor.
 data InstancesDelete = InstancesDelete'
-    { _idProject  :: !Text
+    { _idProject :: !Text
+    , _idFields :: !(Maybe Text)
     , _idInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -65,14 +68,17 @@ data InstancesDelete = InstancesDelete'
 --
 -- * 'idProject'
 --
+-- * 'idFields'
+--
 -- * 'idInstance'
 instancesDelete
     :: Text -- ^ 'idProject'
     -> Text -- ^ 'idInstance'
     -> InstancesDelete
-instancesDelete pIdProject_ pIdInstance_ =
+instancesDelete pIdProject_ pIdInstance_ = 
     InstancesDelete'
     { _idProject = pIdProject_
+    , _idFields = Nothing
     , _idInstance = pIdInstance_
     }
 
@@ -80,6 +86,10 @@ instancesDelete pIdProject_ pIdInstance_ =
 idProject :: Lens' InstancesDelete Text
 idProject
   = lens _idProject (\ s a -> s{_idProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+idFields :: Lens' InstancesDelete (Maybe Text)
+idFields = lens _idFields (\ s a -> s{_idFields = a})
 
 -- | Cloud SQL instance ID. This does not include the project ID.
 idInstance :: Lens' InstancesDelete Text
@@ -92,7 +102,7 @@ instance GoogleRequest InstancesDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesDelete'{..}
-          = go _idProject _idInstance (Just AltJSON)
+          = go _idProject _idInstance _idFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

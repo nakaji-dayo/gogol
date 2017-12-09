@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.ManagedZones.Patch
     , mzpPayload
     , mzpManagedZone
     , mzpClientOperationId
+    , mzpFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.patch@ method which the
 -- 'ManagedZonesPatch' request conforms to.
@@ -52,18 +53,20 @@ type ManagedZonesPatchResource =
              "managedZones" :>
                Capture "managedZone" Text :>
                  QueryParam "clientOperationId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ManagedZone :>
-                       Patch '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ManagedZone :>
+                         Patch '[JSON] Operation
 
 -- | Update an existing ManagedZone. This method supports patch semantics.
 --
 -- /See:/ 'managedZonesPatch' smart constructor.
 data ManagedZonesPatch = ManagedZonesPatch'
-    { _mzpProject           :: !Text
-    , _mzpPayload           :: !ManagedZone
-    , _mzpManagedZone       :: !Text
+    { _mzpProject :: !Text
+    , _mzpPayload :: !ManagedZone
+    , _mzpManagedZone :: !Text
     , _mzpClientOperationId :: !(Maybe Text)
+    , _mzpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesPatch' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data ManagedZonesPatch = ManagedZonesPatch'
 -- * 'mzpManagedZone'
 --
 -- * 'mzpClientOperationId'
+--
+-- * 'mzpFields'
 managedZonesPatch
     :: Text -- ^ 'mzpProject'
     -> ManagedZone -- ^ 'mzpPayload'
     -> Text -- ^ 'mzpManagedZone'
     -> ManagedZonesPatch
-managedZonesPatch pMzpProject_ pMzpPayload_ pMzpManagedZone_ =
+managedZonesPatch pMzpProject_ pMzpPayload_ pMzpManagedZone_ = 
     ManagedZonesPatch'
     { _mzpProject = pMzpProject_
     , _mzpPayload = pMzpPayload_
     , _mzpManagedZone = pMzpManagedZone_
     , _mzpClientOperationId = Nothing
+    , _mzpFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -115,6 +121,11 @@ mzpClientOperationId
   = lens _mzpClientOperationId
       (\ s a -> s{_mzpClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mzpFields :: Lens' ManagedZonesPatch (Maybe Text)
+mzpFields
+  = lens _mzpFields (\ s a -> s{_mzpFields = a})
+
 instance GoogleRequest ManagedZonesPatch where
         type Rs ManagedZonesPatch = Operation
         type Scopes ManagedZonesPatch =
@@ -123,6 +134,7 @@ instance GoogleRequest ManagedZonesPatch where
         requestClient ManagedZonesPatch'{..}
           = go _mzpProject _mzpManagedZone
               _mzpClientOperationId
+              _mzpFields
               (Just AltJSON)
               _mzpPayload
               dNSService

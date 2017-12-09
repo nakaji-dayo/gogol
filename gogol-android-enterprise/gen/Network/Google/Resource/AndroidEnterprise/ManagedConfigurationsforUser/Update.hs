@@ -20,8 +20,12 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Adds or updates a per-user managed configuration for an app for the
--- specified user.
+-- Adds or updates the managed configuration settings for an app for the
+-- specified user. If you support the Managed configurations iframe, you
+-- can apply managed configurations to a user by specifying an mcmId and
+-- its associated configuration variables (if any) in the request.
+-- Alternatively, all EMMs can apply managed configurations by passing a
+-- list of managed properties.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.managedconfigurationsforuser.update@.
 module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Update
@@ -38,10 +42,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforUser.Up
     , mcuuPayload
     , mcuuUserId
     , mcuuManagedConfigurationForUserId
+    , mcuuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsforuser.update@ method which the
 -- 'ManagedConfigurationsforUserUpdate' request conforms to.
@@ -54,19 +59,25 @@ type ManagedConfigurationsforUserUpdateResource =
                Capture "userId" Text :>
                  "managedConfigurationsForUser" :>
                    Capture "managedConfigurationForUserId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] ManagedConfiguration :>
-                         Put '[JSON] ManagedConfiguration
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] ManagedConfiguration :>
+                           Put '[JSON] ManagedConfiguration
 
--- | Adds or updates a per-user managed configuration for an app for the
--- specified user.
+-- | Adds or updates the managed configuration settings for an app for the
+-- specified user. If you support the Managed configurations iframe, you
+-- can apply managed configurations to a user by specifying an mcmId and
+-- its associated configuration variables (if any) in the request.
+-- Alternatively, all EMMs can apply managed configurations by passing a
+-- list of managed properties.
 --
 -- /See:/ 'managedConfigurationsforUserUpdate' smart constructor.
 data ManagedConfigurationsforUserUpdate = ManagedConfigurationsforUserUpdate'
-    { _mcuuEnterpriseId                  :: !Text
-    , _mcuuPayload                       :: !ManagedConfiguration
-    , _mcuuUserId                        :: !Text
+    { _mcuuEnterpriseId :: !Text
+    , _mcuuPayload :: !ManagedConfiguration
+    , _mcuuUserId :: !Text
     , _mcuuManagedConfigurationForUserId :: !Text
+    , _mcuuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforUserUpdate' with the minimum fields required to make a request.
@@ -80,18 +91,21 @@ data ManagedConfigurationsforUserUpdate = ManagedConfigurationsforUserUpdate'
 -- * 'mcuuUserId'
 --
 -- * 'mcuuManagedConfigurationForUserId'
+--
+-- * 'mcuuFields'
 managedConfigurationsforUserUpdate
     :: Text -- ^ 'mcuuEnterpriseId'
     -> ManagedConfiguration -- ^ 'mcuuPayload'
     -> Text -- ^ 'mcuuUserId'
     -> Text -- ^ 'mcuuManagedConfigurationForUserId'
     -> ManagedConfigurationsforUserUpdate
-managedConfigurationsforUserUpdate pMcuuEnterpriseId_ pMcuuPayload_ pMcuuUserId_ pMcuuManagedConfigurationForUserId_ =
+managedConfigurationsforUserUpdate pMcuuEnterpriseId_ pMcuuPayload_ pMcuuUserId_ pMcuuManagedConfigurationForUserId_ = 
     ManagedConfigurationsforUserUpdate'
     { _mcuuEnterpriseId = pMcuuEnterpriseId_
     , _mcuuPayload = pMcuuPayload_
     , _mcuuUserId = pMcuuUserId_
     , _mcuuManagedConfigurationForUserId = pMcuuManagedConfigurationForUserId_
+    , _mcuuFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -117,6 +131,11 @@ mcuuManagedConfigurationForUserId
   = lens _mcuuManagedConfigurationForUserId
       (\ s a -> s{_mcuuManagedConfigurationForUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcuuFields :: Lens' ManagedConfigurationsforUserUpdate (Maybe Text)
+mcuuFields
+  = lens _mcuuFields (\ s a -> s{_mcuuFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforUserUpdate where
         type Rs ManagedConfigurationsforUserUpdate =
@@ -126,6 +145,7 @@ instance GoogleRequest
         requestClient ManagedConfigurationsforUserUpdate'{..}
           = go _mcuuEnterpriseId _mcuuUserId
               _mcuuManagedConfigurationForUserId
+              _mcuuFields
               (Just AltJSON)
               _mcuuPayload
               androidEnterpriseService

@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Asps.Get
     -- * Request Lenses
     , agCodeId
     , agUserKey
+    , agFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.asps.get@ method which the
 -- 'AspsGet' request conforms to.
@@ -50,14 +51,16 @@ type AspsGetResource =
              Capture "userKey" Text :>
                "asps" :>
                  Capture "codeId" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Asp
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Asp
 
 -- | Get information about an ASP issued by a user.
 --
 -- /See:/ 'aspsGet' smart constructor.
 data AspsGet = AspsGet'
-    { _agCodeId  :: !(Textual Int32)
+    { _agCodeId :: !(Textual Int32)
     , _agUserKey :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AspsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AspsGet = AspsGet'
 -- * 'agCodeId'
 --
 -- * 'agUserKey'
+--
+-- * 'agFields'
 aspsGet
     :: Int32 -- ^ 'agCodeId'
     -> Text -- ^ 'agUserKey'
     -> AspsGet
-aspsGet pAgCodeId_ pAgUserKey_ =
+aspsGet pAgCodeId_ pAgUserKey_ = 
     AspsGet'
     { _agCodeId = _Coerce # pAgCodeId_
     , _agUserKey = pAgUserKey_
+    , _agFields = Nothing
     }
 
 -- | The unique ID of the ASP.
@@ -89,12 +95,16 @@ agUserKey :: Lens' AspsGet Text
 agUserKey
   = lens _agUserKey (\ s a -> s{_agUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AspsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AspsGet where
         type Rs AspsGet = Asp
         type Scopes AspsGet =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient AspsGet'{..}
-          = go _agUserKey _agCodeId (Just AltJSON)
+          = go _agUserKey _agCodeId _agFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy AspsGetResource) mempty

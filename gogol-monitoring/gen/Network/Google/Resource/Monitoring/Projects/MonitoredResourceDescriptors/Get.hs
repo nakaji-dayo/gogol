@@ -41,11 +41,12 @@ module Network.Google.Resource.Monitoring.Projects.MonitoredResourceDescriptors.
     , pmrdgUploadType
     , pmrdgBearerToken
     , pmrdgName
+    , pmrdgFields
     , pmrdgCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.monitoredResourceDescriptors.get@ method which the
 -- 'ProjectsMonitoredResourceDescriptorsGet' request conforms to.
@@ -60,22 +61,24 @@ type ProjectsMonitoredResourceDescriptorsGetResource
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] MonitoredResourceDescriptor
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] MonitoredResourceDescriptor
 
 -- | Gets a single monitored resource descriptor. This method does not
 -- require a Stackdriver account.
 --
 -- /See:/ 'projectsMonitoredResourceDescriptorsGet' smart constructor.
 data ProjectsMonitoredResourceDescriptorsGet = ProjectsMonitoredResourceDescriptorsGet'
-    { _pmrdgXgafv          :: !(Maybe Xgafv)
+    { _pmrdgXgafv :: !(Maybe Xgafv)
     , _pmrdgUploadProtocol :: !(Maybe Text)
-    , _pmrdgPp             :: !Bool
-    , _pmrdgAccessToken    :: !(Maybe Text)
-    , _pmrdgUploadType     :: !(Maybe Text)
-    , _pmrdgBearerToken    :: !(Maybe Text)
-    , _pmrdgName           :: !Text
-    , _pmrdgCallback       :: !(Maybe Text)
+    , _pmrdgPp :: !Bool
+    , _pmrdgAccessToken :: !(Maybe Text)
+    , _pmrdgUploadType :: !(Maybe Text)
+    , _pmrdgBearerToken :: !(Maybe Text)
+    , _pmrdgName :: !Text
+    , _pmrdgFields :: !(Maybe Text)
+    , _pmrdgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMonitoredResourceDescriptorsGet' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data ProjectsMonitoredResourceDescriptorsGet = ProjectsMonitoredResourceDescript
 --
 -- * 'pmrdgName'
 --
+-- * 'pmrdgFields'
+--
 -- * 'pmrdgCallback'
 projectsMonitoredResourceDescriptorsGet
     :: Text -- ^ 'pmrdgName'
     -> ProjectsMonitoredResourceDescriptorsGet
-projectsMonitoredResourceDescriptorsGet pPmrdgName_ =
+projectsMonitoredResourceDescriptorsGet pPmrdgName_ = 
     ProjectsMonitoredResourceDescriptorsGet'
     { _pmrdgXgafv = Nothing
     , _pmrdgUploadProtocol = Nothing
@@ -109,6 +114,7 @@ projectsMonitoredResourceDescriptorsGet pPmrdgName_ =
     , _pmrdgUploadType = Nothing
     , _pmrdgBearerToken = Nothing
     , _pmrdgName = pPmrdgName_
+    , _pmrdgFields = Nothing
     , _pmrdgCallback = Nothing
     }
 
@@ -152,6 +158,11 @@ pmrdgName :: Lens' ProjectsMonitoredResourceDescriptorsGet Text
 pmrdgName
   = lens _pmrdgName (\ s a -> s{_pmrdgName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmrdgFields :: Lens' ProjectsMonitoredResourceDescriptorsGet (Maybe Text)
+pmrdgFields
+  = lens _pmrdgFields (\ s a -> s{_pmrdgFields = a})
+
 -- | JSONP
 pmrdgCallback :: Lens' ProjectsMonitoredResourceDescriptorsGet (Maybe Text)
 pmrdgCallback
@@ -175,6 +186,7 @@ instance GoogleRequest
               _pmrdgUploadType
               _pmrdgBearerToken
               _pmrdgCallback
+              _pmrdgFields
               (Just AltJSON)
               monitoringService
           where go

@@ -34,10 +34,11 @@ module Network.Google.Resource.URLShortener.URL.Insert
 
     -- * Request Lenses
     , uiPayload
+    , uiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.URLShortener.Types
+import Network.Google.Prelude
+import Network.Google.URLShortener.Types
 
 -- | A resource alias for @urlshortener.url.insert@ method which the
 -- 'URLInsert' request conforms to.
@@ -45,14 +46,16 @@ type URLInsertResource =
      "urlshortener" :>
        "v1" :>
          "url" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] URL :> Post '[JSON] URL
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] URL :> Post '[JSON] URL
 
 -- | Creates a new short URL.
 --
 -- /See:/ 'urlInsert' smart constructor.
-newtype URLInsert = URLInsert'
-    { _uiPayload :: URL
+data URLInsert = URLInsert'
+    { _uiPayload :: !URL
+    , _uiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLInsert' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype URLInsert = URLInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'uiPayload'
+--
+-- * 'uiFields'
 urlInsert
     :: URL -- ^ 'uiPayload'
     -> URLInsert
-urlInsert pUiPayload_ =
+urlInsert pUiPayload_ = 
     URLInsert'
     { _uiPayload = pUiPayload_
+    , _uiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,17 @@ uiPayload :: Lens' URLInsert URL
 uiPayload
   = lens _uiPayload (\ s a -> s{_uiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uiFields :: Lens' URLInsert (Maybe Text)
+uiFields = lens _uiFields (\ s a -> s{_uiFields = a})
+
 instance GoogleRequest URLInsert where
         type Rs URLInsert = URL
         type Scopes URLInsert =
              '["https://www.googleapis.com/auth/urlshortener"]
         requestClient URLInsert'{..}
-          = go (Just AltJSON) _uiPayload uRLShortenerService
+          = go _uiFields (Just AltJSON) _uiPayload
+              uRLShortenerService
           where go
                   = buildClient (Proxy :: Proxy URLInsertResource)
                       mempty

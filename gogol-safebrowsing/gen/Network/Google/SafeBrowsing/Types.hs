@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -19,10 +19,28 @@ module Network.Google.SafeBrowsing.Types
     -- * Service Configuration
       safeBrowsingService
 
+    -- * ListUpdateRequestThreatType
+    , ListUpdateRequestThreatType (..)
+
+    -- * ListUpdateResponsePlatformType
+    , ListUpdateResponsePlatformType (..)
+
     -- * ThreatEntryMetadata
     , ThreatEntryMetadata
     , threatEntryMetadata
     , temEntries
+
+    -- * UserInfo
+    , UserInfo
+    , userInfo
+    , uiRegionCode
+    , uiUserId
+
+    -- * ThreatMatchThreatEntryType
+    , ThreatMatchThreatEntryType (..)
+
+    -- * ThreatMatchPlatformType
+    , ThreatMatchPlatformType (..)
 
     -- * Checksum
     , Checksum
@@ -34,6 +52,19 @@ module Network.Google.SafeBrowsing.Types
     , findThreatMatchesResponse
     , ftmrMatches
 
+    -- * ThreatListDescriptorThreatEntryType
+    , ThreatListDescriptorThreatEntryType (..)
+
+    -- * Empty
+    , Empty
+    , empty
+
+    -- * ListUpdateRequestPlatformType
+    , ListUpdateRequestPlatformType (..)
+
+    -- * ThreatListDescriptorPlatformType
+    , ThreatListDescriptorPlatformType (..)
+
     -- * ThreatInfo
     , ThreatInfo
     , threatInfo
@@ -41,6 +72,22 @@ module Network.Google.SafeBrowsing.Types
     , tiThreatTypes
     , tiPlatformTypes
     , tiThreatEntryTypes
+
+    -- * ListUpdateResponseResponseType
+    , ListUpdateResponseResponseType (..)
+
+    -- * ThreatSourceType
+    , ThreatSourceType (..)
+
+    -- * ThreatHit
+    , ThreatHit
+    , threatHit
+    , thUserInfo
+    , thThreatType
+    , thResources
+    , thEntry
+    , thClientInfo
+    , thPlatformType
 
     -- * FetchThreatListUpdatesRequest
     , FetchThreatListUpdatesRequest
@@ -52,8 +99,15 @@ module Network.Google.SafeBrowsing.Types
     , FindFullHashesRequest
     , findFullHashesRequest
     , ffhrThreatInfo
+    , ffhrAPIClient
     , ffhrClientStates
     , ffhrClient
+
+    -- * ThreatMatchThreatType
+    , ThreatMatchThreatType (..)
+
+    -- * ThreatEntrySetCompressionType
+    , ThreatEntrySetCompressionType (..)
 
     -- * Constraints
     , Constraints
@@ -76,6 +130,12 @@ module Network.Google.SafeBrowsing.Types
     , listThreatListsResponse
     , ltlrThreatLists
 
+    -- * ThreatListDescriptorThreatType
+    , ThreatListDescriptorThreatType (..)
+
+    -- * ThreatHitPlatformType
+    , ThreatHitPlatformType (..)
+
     -- * ThreatListDescriptor
     , ThreatListDescriptor
     , threatListDescriptor
@@ -95,6 +155,9 @@ module Network.Google.SafeBrowsing.Types
     , ftmrThreatInfo
     , ftmrClient
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * ListUpdateRequest
     , ListUpdateRequest
     , listUpdateRequest
@@ -103,6 +166,9 @@ module Network.Google.SafeBrowsing.Types
     , lurConstraints
     , lurThreatType
     , lurPlatformType
+
+    -- * ListUpdateResponseThreatEntryType
+    , ListUpdateResponseThreatEntryType (..)
 
     -- * ThreatEntry
     , ThreatEntry
@@ -120,6 +186,12 @@ module Network.Google.SafeBrowsing.Types
     , tmPlatformType
     , tmCacheDuration
     , tmThreat
+
+    -- * ThreatHitThreatType
+    , ThreatHitThreatType (..)
+
+    -- * ListUpdateRequestThreatEntryType
+    , ListUpdateRequestThreatEntryType (..)
 
     -- * RawHashes
     , RawHashes
@@ -153,6 +225,17 @@ module Network.Google.SafeBrowsing.Types
     , rawIndices
     , riIndices
 
+    -- * ThreatSource
+    , ThreatSource
+    , threatSource
+    , tsRemoteIP
+    , tsURL
+    , tsReferrer
+    , tsType
+
+    -- * ListUpdateResponseThreatType
+    , ListUpdateResponseThreatType (..)
+
     -- * FindFullHashesResponse
     , FindFullHashesResponse
     , findFullHashesResponse
@@ -173,11 +256,11 @@ module Network.Google.SafeBrowsing.Types
     , ftlurMinimumWaitDuration
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SafeBrowsing.Types.Product
-import           Network.Google.SafeBrowsing.Types.Sum
+import Network.Google.Prelude
+import Network.Google.SafeBrowsing.Types.Product
+import Network.Google.SafeBrowsing.Types.Sum
 
--- | Default request referring to version 'v4' of the Safe Browsing APIs. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'v4' of the Google Safe Browsing API. This contains the host and root path used as a starting point for constructing service requests.
 safeBrowsingService :: ServiceConfig
 safeBrowsingService
   = defaultService (ServiceId "safebrowsing:v4")

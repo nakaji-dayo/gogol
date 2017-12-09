@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Aliases.Delete
     -- * Request Lenses
     , uadAlias
     , uadUserKey
+    , uadFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.aliases.delete@ method which the
 -- 'UsersAliasesDelete' request conforms to.
@@ -50,14 +51,16 @@ type UsersAliasesDeleteResource =
              Capture "userKey" Text :>
                "aliases" :>
                  Capture "alias" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Remove a alias for the user
 --
 -- /See:/ 'usersAliasesDelete' smart constructor.
 data UsersAliasesDelete = UsersAliasesDelete'
-    { _uadAlias   :: !Text
+    { _uadAlias :: !Text
     , _uadUserKey :: !Text
+    , _uadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersAliasesDelete' with the minimum fields required to make a request.
@@ -67,24 +70,32 @@ data UsersAliasesDelete = UsersAliasesDelete'
 -- * 'uadAlias'
 --
 -- * 'uadUserKey'
+--
+-- * 'uadFields'
 usersAliasesDelete
     :: Text -- ^ 'uadAlias'
     -> Text -- ^ 'uadUserKey'
     -> UsersAliasesDelete
-usersAliasesDelete pUadAlias_ pUadUserKey_ =
+usersAliasesDelete pUadAlias_ pUadUserKey_ = 
     UsersAliasesDelete'
     { _uadAlias = pUadAlias_
     , _uadUserKey = pUadUserKey_
+    , _uadFields = Nothing
     }
 
 -- | The alias to be removed
 uadAlias :: Lens' UsersAliasesDelete Text
 uadAlias = lens _uadAlias (\ s a -> s{_uadAlias = a})
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 uadUserKey :: Lens' UsersAliasesDelete Text
 uadUserKey
   = lens _uadUserKey (\ s a -> s{_uadUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+uadFields :: Lens' UsersAliasesDelete (Maybe Text)
+uadFields
+  = lens _uadFields (\ s a -> s{_uadFields = a})
 
 instance GoogleRequest UsersAliasesDelete where
         type Rs UsersAliasesDelete = ()
@@ -92,7 +103,7 @@ instance GoogleRequest UsersAliasesDelete where
              '["https://www.googleapis.com/auth/admin.directory.user",
                "https://www.googleapis.com/auth/admin.directory.user.alias"]
         requestClient UsersAliasesDelete'{..}
-          = go _uadUserKey _uadAlias (Just AltJSON)
+          = go _uadUserKey _uadAlias _uadFields (Just AltJSON)
               directoryService
           where go
                   = buildClient

@@ -35,10 +35,11 @@ module Network.Google.Resource.Prediction.TrainedModels.Get
     -- * Request Lenses
     , tmgProject
     , tmgId
+    , tmgFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.get@ method which the
 -- 'TrainedModelsGet' request conforms to.
@@ -49,14 +50,16 @@ type TrainedModelsGetResource =
            Capture "project" Text :>
              "trainedmodels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Insert2
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Insert2
 
 -- | Check training status of your model.
 --
 -- /See:/ 'trainedModelsGet' smart constructor.
 data TrainedModelsGet = TrainedModelsGet'
     { _tmgProject :: !Text
-    , _tmgId      :: !Text
+    , _tmgId :: !Text
+    , _tmgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TrainedModelsGet = TrainedModelsGet'
 -- * 'tmgProject'
 --
 -- * 'tmgId'
+--
+-- * 'tmgFields'
 trainedModelsGet
     :: Text -- ^ 'tmgProject'
     -> Text -- ^ 'tmgId'
     -> TrainedModelsGet
-trainedModelsGet pTmgProject_ pTmgId_ =
+trainedModelsGet pTmgProject_ pTmgId_ = 
     TrainedModelsGet'
     { _tmgProject = pTmgProject_
     , _tmgId = pTmgId_
+    , _tmgFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -85,13 +91,18 @@ tmgProject
 tmgId :: Lens' TrainedModelsGet Text
 tmgId = lens _tmgId (\ s a -> s{_tmgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tmgFields :: Lens' TrainedModelsGet (Maybe Text)
+tmgFields
+  = lens _tmgFields (\ s a -> s{_tmgFields = a})
+
 instance GoogleRequest TrainedModelsGet where
         type Rs TrainedModelsGet = Insert2
         type Scopes TrainedModelsGet =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsGet'{..}
-          = go _tmgProject _tmgId (Just AltJSON)
+          = go _tmgProject _tmgId _tmgFields (Just AltJSON)
               predictionService
           where go
                   = buildClient

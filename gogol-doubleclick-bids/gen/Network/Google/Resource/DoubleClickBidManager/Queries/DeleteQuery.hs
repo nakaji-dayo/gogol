@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Queries.DeleteQuery
 
     -- * Request Lenses
     , qdqQueryId
+    , qdqFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.queries.deletequery@ method which the
 -- 'QueriesDeleteQuery' request conforms to.
@@ -46,13 +47,15 @@ type QueriesDeleteQueryResource =
        "v1" :>
          "query" :>
            Capture "queryId" (Textual Int64) :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a stored query as well as the associated stored reports.
 --
 -- /See:/ 'queriesDeleteQuery' smart constructor.
-newtype QueriesDeleteQuery = QueriesDeleteQuery'
-    { _qdqQueryId :: Textual Int64
+data QueriesDeleteQuery = QueriesDeleteQuery'
+    { _qdqQueryId :: !(Textual Int64)
+    , _qdqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueriesDeleteQuery' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype QueriesDeleteQuery = QueriesDeleteQuery'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'qdqQueryId'
+--
+-- * 'qdqFields'
 queriesDeleteQuery
     :: Int64 -- ^ 'qdqQueryId'
     -> QueriesDeleteQuery
-queriesDeleteQuery pQdqQueryId_ =
+queriesDeleteQuery pQdqQueryId_ = 
     QueriesDeleteQuery'
     { _qdqQueryId = _Coerce # pQdqQueryId_
+    , _qdqFields = Nothing
     }
 
 -- | Query ID to delete.
@@ -74,11 +80,17 @@ qdqQueryId
   = lens _qdqQueryId (\ s a -> s{_qdqQueryId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+qdqFields :: Lens' QueriesDeleteQuery (Maybe Text)
+qdqFields
+  = lens _qdqFields (\ s a -> s{_qdqFields = a})
+
 instance GoogleRequest QueriesDeleteQuery where
         type Rs QueriesDeleteQuery = ()
-        type Scopes QueriesDeleteQuery = '[]
+        type Scopes QueriesDeleteQuery =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient QueriesDeleteQuery'{..}
-          = go _qdqQueryId (Just AltJSON)
+          = go _qdqQueryId _qdqFields (Just AltJSON)
               doubleClickBidsService
           where go
                   = buildClient

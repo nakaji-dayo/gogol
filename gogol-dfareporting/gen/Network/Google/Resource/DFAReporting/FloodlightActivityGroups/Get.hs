@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.FloodlightActivityGroups.Get
     -- * Request Lenses
     , faggProFileId
     , faggId
+    , faggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightActivityGroups.get@ method which the
 -- 'FloodlightActivityGroupsGet' request conforms to.
 type FloodlightActivityGroupsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightActivityGroups" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] FloodlightActivityGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] FloodlightActivityGroup
 
 -- | Gets one floodlight activity group by ID.
 --
 -- /See:/ 'floodlightActivityGroupsGet' smart constructor.
 data FloodlightActivityGroupsGet = FloodlightActivityGroupsGet'
     { _faggProFileId :: !(Textual Int64)
-    , _faggId        :: !(Textual Int64)
+    , _faggId :: !(Textual Int64)
+    , _faggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivityGroupsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data FloodlightActivityGroupsGet = FloodlightActivityGroupsGet'
 -- * 'faggProFileId'
 --
 -- * 'faggId'
+--
+-- * 'faggFields'
 floodlightActivityGroupsGet
     :: Int64 -- ^ 'faggProFileId'
     -> Int64 -- ^ 'faggId'
     -> FloodlightActivityGroupsGet
-floodlightActivityGroupsGet pFaggProFileId_ pFaggId_ =
+floodlightActivityGroupsGet pFaggProFileId_ pFaggId_ = 
     FloodlightActivityGroupsGet'
     { _faggProFileId = _Coerce # pFaggProFileId_
     , _faggId = _Coerce # pFaggId_
+    , _faggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,6 +95,11 @@ faggId :: Lens' FloodlightActivityGroupsGet Int64
 faggId
   = lens _faggId (\ s a -> s{_faggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+faggFields :: Lens' FloodlightActivityGroupsGet (Maybe Text)
+faggFields
+  = lens _faggFields (\ s a -> s{_faggFields = a})
+
 instance GoogleRequest FloodlightActivityGroupsGet
          where
         type Rs FloodlightActivityGroupsGet =
@@ -96,7 +107,8 @@ instance GoogleRequest FloodlightActivityGroupsGet
         type Scopes FloodlightActivityGroupsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightActivityGroupsGet'{..}
-          = go _faggProFileId _faggId (Just AltJSON)
+          = go _faggProFileId _faggId _faggFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

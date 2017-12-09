@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.DirectorySiteContacts.Get
     -- * Request Lenses
     , dscgProFileId
     , dscgId
+    , dscgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.directorySiteContacts.get@ method which the
 -- 'DirectorySiteContactsGet' request conforms to.
 type DirectorySiteContactsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "directorySiteContacts" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] DirectorySiteContact
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] DirectorySiteContact
 
 -- | Gets one directory site contact by ID.
 --
 -- /See:/ 'directorySiteContactsGet' smart constructor.
 data DirectorySiteContactsGet = DirectorySiteContactsGet'
     { _dscgProFileId :: !(Textual Int64)
-    , _dscgId        :: !(Textual Int64)
+    , _dscgId :: !(Textual Int64)
+    , _dscgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySiteContactsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data DirectorySiteContactsGet = DirectorySiteContactsGet'
 -- * 'dscgProFileId'
 --
 -- * 'dscgId'
+--
+-- * 'dscgFields'
 directorySiteContactsGet
     :: Int64 -- ^ 'dscgProFileId'
     -> Int64 -- ^ 'dscgId'
     -> DirectorySiteContactsGet
-directorySiteContactsGet pDscgProFileId_ pDscgId_ =
+directorySiteContactsGet pDscgProFileId_ pDscgId_ = 
     DirectorySiteContactsGet'
     { _dscgProFileId = _Coerce # pDscgProFileId_
     , _dscgId = _Coerce # pDscgId_
+    , _dscgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,13 +95,19 @@ dscgId :: Lens' DirectorySiteContactsGet Int64
 dscgId
   = lens _dscgId (\ s a -> s{_dscgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+dscgFields :: Lens' DirectorySiteContactsGet (Maybe Text)
+dscgFields
+  = lens _dscgFields (\ s a -> s{_dscgFields = a})
+
 instance GoogleRequest DirectorySiteContactsGet where
         type Rs DirectorySiteContactsGet =
              DirectorySiteContact
         type Scopes DirectorySiteContactsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient DirectorySiteContactsGet'{..}
-          = go _dscgProFileId _dscgId (Just AltJSON)
+          = go _dscgProFileId _dscgId _dscgFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.GlobalAddresses.Delete
     , GlobalAddressesDelete
 
     -- * Request Lenses
+    , gadRequestId
     , gadProject
     , gadAddress
+    , gadFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalAddresses.delete@ method which the
 -- 'GlobalAddressesDelete' request conforms to.
@@ -50,32 +52,56 @@ type GlobalAddressesDeleteResource =
              "global" :>
                "addresses" :>
                  Capture "address" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified address resource.
 --
 -- /See:/ 'globalAddressesDelete' smart constructor.
 data GlobalAddressesDelete = GlobalAddressesDelete'
-    { _gadProject :: !Text
+    { _gadRequestId :: !(Maybe Text)
+    , _gadProject :: !Text
     , _gadAddress :: !Text
+    , _gadFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalAddressesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'gadRequestId'
+--
 -- * 'gadProject'
 --
 -- * 'gadAddress'
+--
+-- * 'gadFields'
 globalAddressesDelete
     :: Text -- ^ 'gadProject'
     -> Text -- ^ 'gadAddress'
     -> GlobalAddressesDelete
-globalAddressesDelete pGadProject_ pGadAddress_ =
+globalAddressesDelete pGadProject_ pGadAddress_ = 
     GlobalAddressesDelete'
-    { _gadProject = pGadProject_
+    { _gadRequestId = Nothing
+    , _gadProject = pGadProject_
     , _gadAddress = pGadAddress_
+    , _gadFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+gadRequestId :: Lens' GlobalAddressesDelete (Maybe Text)
+gadRequestId
+  = lens _gadRequestId (\ s a -> s{_gadRequestId = a})
 
 -- | Project ID for this request.
 gadProject :: Lens' GlobalAddressesDelete Text
@@ -87,13 +113,19 @@ gadAddress :: Lens' GlobalAddressesDelete Text
 gadAddress
   = lens _gadAddress (\ s a -> s{_gadAddress = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gadFields :: Lens' GlobalAddressesDelete (Maybe Text)
+gadFields
+  = lens _gadFields (\ s a -> s{_gadFields = a})
+
 instance GoogleRequest GlobalAddressesDelete where
         type Rs GlobalAddressesDelete = Operation
         type Scopes GlobalAddressesDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient GlobalAddressesDelete'{..}
-          = go _gadProject _gadAddress (Just AltJSON)
+          = go _gadProject _gadAddress _gadRequestId _gadFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

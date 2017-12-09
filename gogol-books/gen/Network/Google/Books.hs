@@ -647,6 +647,11 @@ module Network.Google.Books
     , dddwisidieiText
     , dddwisidieiSource
 
+    -- ** UserSettingsNotificationRewardExpirations
+    , UserSettingsNotificationRewardExpirations
+    , userSettingsNotificationRewardExpirations
+    , usnreOptedState
+
     -- ** DictlayerData
     , DictlayerData
     , dictlayerData
@@ -676,6 +681,7 @@ module Network.Google.Books
     -- ** UserSettingsNotification
     , UserSettingsNotification
     , userSettingsNotification
+    , usnRewardExpirations
     , usnMoreFromAuthors
     , usnMoreFromSeries
 
@@ -1098,56 +1104,56 @@ module Network.Google.Books
     , layItems
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Books.Bookshelves.Get
-import           Network.Google.Resource.Books.Bookshelves.List
-import           Network.Google.Resource.Books.Bookshelves.Volumes.List
-import           Network.Google.Resource.Books.CloudLoading.AddBook
-import           Network.Google.Resource.Books.CloudLoading.DeleteBook
-import           Network.Google.Resource.Books.CloudLoading.UpdateBook
-import           Network.Google.Resource.Books.Dictionary.ListOfflineMetadata
-import           Network.Google.Resource.Books.Layers.AnnotationData.Get
-import           Network.Google.Resource.Books.Layers.AnnotationData.List
-import           Network.Google.Resource.Books.Layers.Get
-import           Network.Google.Resource.Books.Layers.List
-import           Network.Google.Resource.Books.Layers.VolumeAnnotations.Get
-import           Network.Google.Resource.Books.Layers.VolumeAnnotations.List
-import           Network.Google.Resource.Books.MyConfig.GetUserSettings
-import           Network.Google.Resource.Books.MyConfig.ReleaseDownloadAccess
-import           Network.Google.Resource.Books.MyConfig.RequestAccess
-import           Network.Google.Resource.Books.MyConfig.SyncVolumeLicenses
-import           Network.Google.Resource.Books.MyConfig.UpdateUserSettings
-import           Network.Google.Resource.Books.MyLibrary.Annotations.Delete
-import           Network.Google.Resource.Books.MyLibrary.Annotations.Insert
-import           Network.Google.Resource.Books.MyLibrary.Annotations.List
-import           Network.Google.Resource.Books.MyLibrary.Annotations.Summary
-import           Network.Google.Resource.Books.MyLibrary.Annotations.Update
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.AddVolume
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.ClearVolumes
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.Get
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.List
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.MoveVolume
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.RemoveVolume
-import           Network.Google.Resource.Books.MyLibrary.Bookshelves.Volumes.List
-import           Network.Google.Resource.Books.MyLibrary.ReadingPositions.Get
-import           Network.Google.Resource.Books.MyLibrary.ReadingPositions.SetPosition
-import           Network.Google.Resource.Books.Notification.Get
-import           Network.Google.Resource.Books.Onboarding.ListCategories
-import           Network.Google.Resource.Books.Onboarding.ListCategoryVolumes
-import           Network.Google.Resource.Books.Personalizedstream.Get
-import           Network.Google.Resource.Books.PromoOffer.Accept
-import           Network.Google.Resource.Books.PromoOffer.Dismiss
-import           Network.Google.Resource.Books.PromoOffer.Get
-import           Network.Google.Resource.Books.Series.Get
-import           Network.Google.Resource.Books.Series.Membership.Get
-import           Network.Google.Resource.Books.Volumes.Associated.List
-import           Network.Google.Resource.Books.Volumes.Get
-import           Network.Google.Resource.Books.Volumes.List
-import           Network.Google.Resource.Books.Volumes.Mybooks.List
-import           Network.Google.Resource.Books.Volumes.Recommended.List
-import           Network.Google.Resource.Books.Volumes.Recommended.Rate
-import           Network.Google.Resource.Books.Volumes.UserUploaded.List
+import Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Resource.Books.Bookshelves.Get
+import Network.Google.Resource.Books.Bookshelves.List
+import Network.Google.Resource.Books.Bookshelves.Volumes.List
+import Network.Google.Resource.Books.CloudLoading.AddBook
+import Network.Google.Resource.Books.CloudLoading.DeleteBook
+import Network.Google.Resource.Books.CloudLoading.UpdateBook
+import Network.Google.Resource.Books.Dictionary.ListOfflineMetadata
+import Network.Google.Resource.Books.Layers.AnnotationData.Get
+import Network.Google.Resource.Books.Layers.AnnotationData.List
+import Network.Google.Resource.Books.Layers.Get
+import Network.Google.Resource.Books.Layers.List
+import Network.Google.Resource.Books.Layers.VolumeAnnotations.Get
+import Network.Google.Resource.Books.Layers.VolumeAnnotations.List
+import Network.Google.Resource.Books.MyConfig.GetUserSettings
+import Network.Google.Resource.Books.MyConfig.ReleaseDownloadAccess
+import Network.Google.Resource.Books.MyConfig.RequestAccess
+import Network.Google.Resource.Books.MyConfig.SyncVolumeLicenses
+import Network.Google.Resource.Books.MyConfig.UpdateUserSettings
+import Network.Google.Resource.Books.MyLibrary.Annotations.Delete
+import Network.Google.Resource.Books.MyLibrary.Annotations.Insert
+import Network.Google.Resource.Books.MyLibrary.Annotations.List
+import Network.Google.Resource.Books.MyLibrary.Annotations.Summary
+import Network.Google.Resource.Books.MyLibrary.Annotations.Update
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.AddVolume
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.ClearVolumes
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.Get
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.List
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.MoveVolume
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.RemoveVolume
+import Network.Google.Resource.Books.MyLibrary.Bookshelves.Volumes.List
+import Network.Google.Resource.Books.MyLibrary.ReadingPositions.Get
+import Network.Google.Resource.Books.MyLibrary.ReadingPositions.SetPosition
+import Network.Google.Resource.Books.Notification.Get
+import Network.Google.Resource.Books.Onboarding.ListCategories
+import Network.Google.Resource.Books.Onboarding.ListCategoryVolumes
+import Network.Google.Resource.Books.Personalizedstream.Get
+import Network.Google.Resource.Books.PromoOffer.Accept
+import Network.Google.Resource.Books.PromoOffer.Dismiss
+import Network.Google.Resource.Books.PromoOffer.Get
+import Network.Google.Resource.Books.Series.Get
+import Network.Google.Resource.Books.Series.Membership.Get
+import Network.Google.Resource.Books.Volumes.Associated.List
+import Network.Google.Resource.Books.Volumes.Get
+import Network.Google.Resource.Books.Volumes.List
+import Network.Google.Resource.Books.Volumes.Mybooks.List
+import Network.Google.Resource.Books.Volumes.Recommended.List
+import Network.Google.Resource.Books.Volumes.Recommended.Rate
+import Network.Google.Resource.Books.Volumes.UserUploaded.List
 
 {- $resources
 TODO

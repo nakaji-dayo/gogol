@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceNotes.Insert
     -- * Request Lenses
     , mniPayload
     , mniProposalId
+    , mniFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacenotes.insert@ method which the
 -- 'MarketplaceNotesInsert' request conforms to.
@@ -49,16 +50,18 @@ type MarketplaceNotesInsertResource =
            Capture "proposalId" Text :>
              "notes" :>
                "insert" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AddOrderNotesRequest :>
-                     Post '[JSON] AddOrderNotesResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AddOrderNotesRequest :>
+                       Post '[JSON] AddOrderNotesResponse
 
 -- | Add notes to the proposal
 --
 -- /See:/ 'marketplaceNotesInsert' smart constructor.
 data MarketplaceNotesInsert = MarketplaceNotesInsert'
-    { _mniPayload    :: !AddOrderNotesRequest
+    { _mniPayload :: !AddOrderNotesRequest
     , _mniProposalId :: !Text
+    , _mniFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceNotesInsert' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MarketplaceNotesInsert = MarketplaceNotesInsert'
 -- * 'mniPayload'
 --
 -- * 'mniProposalId'
+--
+-- * 'mniFields'
 marketplaceNotesInsert
     :: AddOrderNotesRequest -- ^ 'mniPayload'
     -> Text -- ^ 'mniProposalId'
     -> MarketplaceNotesInsert
-marketplaceNotesInsert pMniPayload_ pMniProposalId_ =
+marketplaceNotesInsert pMniPayload_ pMniProposalId_ = 
     MarketplaceNotesInsert'
     { _mniPayload = pMniPayload_
     , _mniProposalId = pMniProposalId_
+    , _mniFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,13 +95,19 @@ mniProposalId
   = lens _mniProposalId
       (\ s a -> s{_mniProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mniFields :: Lens' MarketplaceNotesInsert (Maybe Text)
+mniFields
+  = lens _mniFields (\ s a -> s{_mniFields = a})
+
 instance GoogleRequest MarketplaceNotesInsert where
         type Rs MarketplaceNotesInsert =
              AddOrderNotesResponse
         type Scopes MarketplaceNotesInsert =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceNotesInsert'{..}
-          = go _mniProposalId (Just AltJSON) _mniPayload
+          = go _mniProposalId _mniFields (Just AltJSON)
+              _mniPayload
               adExchangeBuyerService
           where go
                   = buildClient

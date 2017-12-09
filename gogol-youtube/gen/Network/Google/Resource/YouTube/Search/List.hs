@@ -67,10 +67,11 @@ module Network.Google.Resource.YouTube.Search.List
     , slPublishedBefore
     , slVideoType
     , slVideoDimension
+    , slFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.search.list@ method which the
 -- 'SearchList' request conforms to.
@@ -151,12 +152,16 @@ type SearchListResource =
                                                                          SearchListVideoDimension
                                                                          :>
                                                                          QueryParam
-                                                                           "alt"
-                                                                           AltJSON
+                                                                           "fields"
+                                                                           Text
                                                                            :>
-                                                                           Get
-                                                                             '[JSON]
-                                                                             SearchListResponse
+                                                                           QueryParam
+                                                                             "alt"
+                                                                             AltJSON
+                                                                             :>
+                                                                             Get
+                                                                               '[JSON]
+                                                                               SearchListResponse
 
 -- | Returns a collection of search results that match the query parameters
 -- specified in the API request. By default, a search result set identifies
@@ -165,37 +170,38 @@ type SearchListResource =
 --
 -- /See:/ 'searchList' smart constructor.
 data SearchList = SearchList'
-    { _slPublishedAfter         :: !(Maybe DateTime')
-    , _slVideoDefinition        :: !(Maybe SearchListVideoDefinition)
-    , _slPart                   :: !Text
-    , _slVideoDuration          :: !(Maybe SearchListVideoDuration)
-    , _slVideoCaption           :: !(Maybe SearchListVideoCaption)
-    , _slVideoLicense           :: !(Maybe SearchListVideoLicense)
-    , _slRegionCode             :: !(Maybe Text)
-    , _slForDeveloper           :: !(Maybe Bool)
-    , _slLocation               :: !(Maybe Text)
-    , _slLocationRadius         :: !(Maybe Text)
-    , _slForContentOwner        :: !(Maybe Bool)
-    , _slChannelId              :: !(Maybe Text)
-    , _slQ                      :: !(Maybe Text)
-    , _slForMine                :: !(Maybe Bool)
-    , _slVideoEmbeddable        :: !(Maybe SearchListVideoEmbeddable)
-    , _slEventType              :: !(Maybe SearchListEventType)
+    { _slPublishedAfter :: !(Maybe DateTime')
+    , _slVideoDefinition :: !(Maybe SearchListVideoDefinition)
+    , _slPart :: !Text
+    , _slVideoDuration :: !(Maybe SearchListVideoDuration)
+    , _slVideoCaption :: !(Maybe SearchListVideoCaption)
+    , _slVideoLicense :: !(Maybe SearchListVideoLicense)
+    , _slRegionCode :: !(Maybe Text)
+    , _slForDeveloper :: !(Maybe Bool)
+    , _slLocation :: !(Maybe Text)
+    , _slLocationRadius :: !(Maybe Text)
+    , _slForContentOwner :: !(Maybe Bool)
+    , _slChannelId :: !(Maybe Text)
+    , _slQ :: !(Maybe Text)
+    , _slForMine :: !(Maybe Bool)
+    , _slVideoEmbeddable :: !(Maybe SearchListVideoEmbeddable)
+    , _slEventType :: !(Maybe SearchListEventType)
     , _slOnBehalfOfContentOwner :: !(Maybe Text)
-    , _slVideoCategoryId        :: !(Maybe Text)
-    , _slTopicId                :: !(Maybe Text)
-    , _slSafeSearch             :: !(Maybe SearchListSafeSearch)
-    , _slVideoSyndicated        :: !(Maybe SearchListVideoSyndicated)
-    , _slRelatedToVideoId       :: !(Maybe Text)
-    , _slPageToken              :: !(Maybe Text)
-    , _slType                   :: !Text
-    , _slChannelType            :: !(Maybe SearchListChannelType)
-    , _slRelevanceLanguage      :: !(Maybe Text)
-    , _slOrder                  :: !SearchListOrder
-    , _slMaxResults             :: !(Textual Word32)
-    , _slPublishedBefore        :: !(Maybe DateTime')
-    , _slVideoType              :: !(Maybe SearchListVideoType)
-    , _slVideoDimension         :: !(Maybe SearchListVideoDimension)
+    , _slVideoCategoryId :: !(Maybe Text)
+    , _slTopicId :: !(Maybe Text)
+    , _slSafeSearch :: !(Maybe SearchListSafeSearch)
+    , _slVideoSyndicated :: !(Maybe SearchListVideoSyndicated)
+    , _slRelatedToVideoId :: !(Maybe Text)
+    , _slPageToken :: !(Maybe Text)
+    , _slType :: !Text
+    , _slChannelType :: !(Maybe SearchListChannelType)
+    , _slRelevanceLanguage :: !(Maybe Text)
+    , _slOrder :: !SearchListOrder
+    , _slMaxResults :: !(Textual Word32)
+    , _slPublishedBefore :: !(Maybe DateTime')
+    , _slVideoType :: !(Maybe SearchListVideoType)
+    , _slVideoDimension :: !(Maybe SearchListVideoDimension)
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SearchList' with the minimum fields required to make a request.
@@ -263,10 +269,12 @@ data SearchList = SearchList'
 -- * 'slVideoType'
 --
 -- * 'slVideoDimension'
+--
+-- * 'slFields'
 searchList
     :: Text -- ^ 'slPart'
     -> SearchList
-searchList pSlPart_ =
+searchList pSlPart_ = 
     SearchList'
     { _slPublishedAfter = Nothing
     , _slVideoDefinition = Nothing
@@ -299,6 +307,7 @@ searchList pSlPart_ =
     , _slPublishedBefore = Nothing
     , _slVideoType = Nothing
     , _slVideoDimension = Nothing
+    , _slFields = Nothing
     }
 
 -- | The publishedAfter parameter indicates that the API response should only
@@ -571,6 +580,10 @@ slVideoDimension
   = lens _slVideoDimension
       (\ s a -> s{_slVideoDimension = a})
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SearchList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SearchList where
         type Rs SearchList = SearchListResponse
         type Scopes SearchList =
@@ -609,6 +622,7 @@ instance GoogleRequest SearchList where
               _slPublishedBefore
               _slVideoType
               _slVideoDimension
+              _slFields
               (Just AltJSON)
               youTubeService
           where go

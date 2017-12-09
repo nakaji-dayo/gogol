@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieve Organization Unit
+-- Retrieve organizational unit
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.orgunits.get@.
 module Network.Google.Resource.Directory.OrgUnits.Get
@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.OrgUnits.Get
     -- * Request Lenses
     , ougOrgUnitPath
     , ougCustomerId
+    , ougFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.orgunits.get@ method which the
 -- 'OrgUnitsGet' request conforms to.
@@ -50,14 +51,16 @@ type OrgUnitsGetResource =
              Capture "customerId" Text :>
                "orgunits" :>
                  Captures "orgUnitPath" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] OrgUnit
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] OrgUnit
 
--- | Retrieve Organization Unit
+-- | Retrieve organizational unit
 --
 -- /See:/ 'orgUnitsGet' smart constructor.
 data OrgUnitsGet = OrgUnitsGet'
     { _ougOrgUnitPath :: ![Text]
-    , _ougCustomerId  :: !Text
+    , _ougCustomerId :: !Text
+    , _ougFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnitsGet' with the minimum fields required to make a request.
@@ -67,28 +70,36 @@ data OrgUnitsGet = OrgUnitsGet'
 -- * 'ougOrgUnitPath'
 --
 -- * 'ougCustomerId'
+--
+-- * 'ougFields'
 orgUnitsGet
     :: [Text] -- ^ 'ougOrgUnitPath'
     -> Text -- ^ 'ougCustomerId'
     -> OrgUnitsGet
-orgUnitsGet pOugOrgUnitPath_ pOugCustomerId_ =
+orgUnitsGet pOugOrgUnitPath_ pOugCustomerId_ = 
     OrgUnitsGet'
     { _ougOrgUnitPath = _Coerce # pOugOrgUnitPath_
     , _ougCustomerId = pOugCustomerId_
+    , _ougFields = Nothing
     }
 
--- | Full path of the organization unit or its Id
+-- | Full path of the organizational unit or its ID
 ougOrgUnitPath :: Lens' OrgUnitsGet [Text]
 ougOrgUnitPath
   = lens _ougOrgUnitPath
       (\ s a -> s{_ougOrgUnitPath = a})
       . _Coerce
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 ougCustomerId :: Lens' OrgUnitsGet Text
 ougCustomerId
   = lens _ougCustomerId
       (\ s a -> s{_ougCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ougFields :: Lens' OrgUnitsGet (Maybe Text)
+ougFields
+  = lens _ougFields (\ s a -> s{_ougFields = a})
 
 instance GoogleRequest OrgUnitsGet where
         type Rs OrgUnitsGet = OrgUnit
@@ -96,7 +107,8 @@ instance GoogleRequest OrgUnitsGet where
              '["https://www.googleapis.com/auth/admin.directory.orgunit",
                "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"]
         requestClient OrgUnitsGet'{..}
-          = go _ougCustomerId _ougOrgUnitPath (Just AltJSON)
+          = go _ougCustomerId _ougOrgUnitPath _ougFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy OrgUnitsGetResource)

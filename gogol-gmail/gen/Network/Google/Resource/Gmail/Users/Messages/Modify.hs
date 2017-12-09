@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Modify
     , ummPayload
     , ummUserId
     , ummId
+    , ummFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.modify@ method which the
 -- 'UsersMessagesModify' request conforms to.
@@ -51,17 +52,19 @@ type UsersMessagesModifyResource =
              "messages" :>
                Capture "id" Text :>
                  "modify" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ModifyMessageRequest :>
-                       Post '[JSON] Message
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ModifyMessageRequest :>
+                         Post '[JSON] Message
 
 -- | Modifies the labels on the specified message.
 --
 -- /See:/ 'usersMessagesModify' smart constructor.
 data UsersMessagesModify = UsersMessagesModify'
     { _ummPayload :: !ModifyMessageRequest
-    , _ummUserId  :: !Text
-    , _ummId      :: !Text
+    , _ummUserId :: !Text
+    , _ummId :: !Text
+    , _ummFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesModify' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data UsersMessagesModify = UsersMessagesModify'
 -- * 'ummUserId'
 --
 -- * 'ummId'
+--
+-- * 'ummFields'
 usersMessagesModify
     :: ModifyMessageRequest -- ^ 'ummPayload'
     -> Text -- ^ 'ummId'
     -> UsersMessagesModify
-usersMessagesModify pUmmPayload_ pUmmId_ =
+usersMessagesModify pUmmPayload_ pUmmId_ = 
     UsersMessagesModify'
     { _ummPayload = pUmmPayload_
     , _ummUserId = "me"
     , _ummId = pUmmId_
+    , _ummFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -99,13 +105,19 @@ ummUserId
 ummId :: Lens' UsersMessagesModify Text
 ummId = lens _ummId (\ s a -> s{_ummId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ummFields :: Lens' UsersMessagesModify (Maybe Text)
+ummFields
+  = lens _ummFields (\ s a -> s{_ummFields = a})
+
 instance GoogleRequest UsersMessagesModify where
         type Rs UsersMessagesModify = Message
         type Scopes UsersMessagesModify =
              '["https://mail.google.com/",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersMessagesModify'{..}
-          = go _ummUserId _ummId (Just AltJSON) _ummPayload
+          = go _ummUserId _ummId _ummFields (Just AltJSON)
+              _ummPayload
               gmailService
           where go
                   = buildClient

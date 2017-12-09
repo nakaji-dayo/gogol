@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Pages.Get
     , pgBlogId
     , pgPageId
     , pgView
+    , pgFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.pages.get@ method which the
 -- 'PagesGet' request conforms to.
@@ -51,7 +52,8 @@ type PagesGetResource =
              "pages" :>
                Capture "pageId" Text :>
                  QueryParam "view" PagesGetView :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Page
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Page
 
 -- | Gets one blog page by ID.
 --
@@ -59,7 +61,8 @@ type PagesGetResource =
 data PagesGet = PagesGet'
     { _pgBlogId :: !Text
     , _pgPageId :: !Text
-    , _pgView   :: !(Maybe PagesGetView)
+    , _pgView :: !(Maybe PagesGetView)
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PagesGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data PagesGet = PagesGet'
 -- * 'pgPageId'
 --
 -- * 'pgView'
+--
+-- * 'pgFields'
 pagesGet
     :: Text -- ^ 'pgBlogId'
     -> Text -- ^ 'pgPageId'
     -> PagesGet
-pagesGet pPgBlogId_ pPgPageId_ =
+pagesGet pPgBlogId_ pPgPageId_ = 
     PagesGet'
     { _pgBlogId = pPgBlogId_
     , _pgPageId = pPgPageId_
     , _pgView = Nothing
+    , _pgFields = Nothing
     }
 
 -- | ID of the blog containing the page.
@@ -93,13 +99,18 @@ pgPageId = lens _pgPageId (\ s a -> s{_pgPageId = a})
 pgView :: Lens' PagesGet (Maybe PagesGetView)
 pgView = lens _pgView (\ s a -> s{_pgView = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' PagesGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest PagesGet where
         type Rs PagesGet = Page
         type Scopes PagesGet =
              '["https://www.googleapis.com/auth/blogger",
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient PagesGet'{..}
-          = go _pgBlogId _pgPageId _pgView (Just AltJSON)
+          = go _pgBlogId _pgPageId _pgView _pgFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PagesGetResource)

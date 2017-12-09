@@ -16,7 +16,7 @@
 --
 module Network.Google.Gmail.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | How the message size in bytes should be in relation to the size field.
 data FilterCriteriaSizeComparison
@@ -188,6 +188,41 @@ instance FromJSON AutoForwardingDisPosition where
     parseJSON = parseJSONText "AutoForwardingDisPosition"
 
 instance ToJSON AutoForwardingDisPosition where
+    toJSON = toJSONText
+
+-- | History types to be returned by the function
+data UsersHistoryListHistoryTypes
+    = LabelAdded
+      -- ^ @labelAdded@
+    | LabelRemoved
+      -- ^ @labelRemoved@
+    | MessageAdded
+      -- ^ @messageAdded@
+    | MessageDeleted
+      -- ^ @messageDeleted@
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable UsersHistoryListHistoryTypes
+
+instance FromHttpApiData UsersHistoryListHistoryTypes where
+    parseQueryParam = \case
+        "labelAdded" -> Right LabelAdded
+        "labelRemoved" -> Right LabelRemoved
+        "messageAdded" -> Right MessageAdded
+        "messageDeleted" -> Right MessageDeleted
+        x -> Left ("Unable to parse UsersHistoryListHistoryTypes from: " <> x)
+
+instance ToHttpApiData UsersHistoryListHistoryTypes where
+    toQueryParam = \case
+        LabelAdded -> "labelAdded"
+        LabelRemoved -> "labelRemoved"
+        MessageAdded -> "messageAdded"
+        MessageDeleted -> "messageDeleted"
+
+instance FromJSON UsersHistoryListHistoryTypes where
+    parseJSON = parseJSONText "UsersHistoryListHistoryTypes"
+
+instance ToJSON UsersHistoryListHistoryTypes where
     toJSON = toJSONText
 
 -- | Indicates whether this address has been verified for use as a send-as

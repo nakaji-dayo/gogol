@@ -36,10 +36,11 @@ module Network.Google.Resource.AdSenseHost.URLChannels.List
     , uclAdClientId
     , uclPageToken
     , uclMaxResults
+    , uclFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.urlchannels.list@ method which the
 -- 'URLChannelsList' request conforms to.
@@ -51,15 +52,17 @@ type URLChannelsListResource =
              "urlchannels" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] URLChannels
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] URLChannels
 
 -- | List all host URL channels in the host AdSense account.
 --
 -- /See:/ 'urlChannelsList' smart constructor.
 data URLChannelsList = URLChannelsList'
     { _uclAdClientId :: !Text
-    , _uclPageToken  :: !(Maybe Text)
+    , _uclPageToken :: !(Maybe Text)
     , _uclMaxResults :: !(Maybe (Textual Word32))
+    , _uclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLChannelsList' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data URLChannelsList = URLChannelsList'
 -- * 'uclPageToken'
 --
 -- * 'uclMaxResults'
+--
+-- * 'uclFields'
 urlChannelsList
     :: Text -- ^ 'uclAdClientId'
     -> URLChannelsList
-urlChannelsList pUclAdClientId_ =
+urlChannelsList pUclAdClientId_ = 
     URLChannelsList'
     { _uclAdClientId = pUclAdClientId_
     , _uclPageToken = Nothing
     , _uclMaxResults = Nothing
+    , _uclFields = Nothing
     }
 
 -- | Ad client for which to list URL channels.
@@ -102,12 +108,18 @@ uclMaxResults
       (\ s a -> s{_uclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+uclFields :: Lens' URLChannelsList (Maybe Text)
+uclFields
+  = lens _uclFields (\ s a -> s{_uclFields = a})
+
 instance GoogleRequest URLChannelsList where
         type Rs URLChannelsList = URLChannels
         type Scopes URLChannelsList =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient URLChannelsList'{..}
           = go _uclAdClientId _uclPageToken _uclMaxResults
+              _uclFields
               (Just AltJSON)
               adSenseHostService
           where go

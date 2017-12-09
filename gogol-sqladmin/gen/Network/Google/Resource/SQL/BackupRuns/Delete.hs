@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.BackupRuns.Delete
     -- * Request Lenses
     , brdProject
     , brdId
+    , brdFields
     , brdInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.backupRuns.delete@ method which the
 -- 'BackupRunsDelete' request conforms to.
@@ -52,14 +53,16 @@ type BackupRunsDeleteResource =
                Capture "instance" Text :>
                  "backupRuns" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the backup taken by a backup run.
 --
 -- /See:/ 'backupRunsDelete' smart constructor.
 data BackupRunsDelete = BackupRunsDelete'
-    { _brdProject  :: !Text
-    , _brdId       :: !(Textual Int64)
+    { _brdProject :: !Text
+    , _brdId :: !(Textual Int64)
+    , _brdFields :: !(Maybe Text)
     , _brdInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -71,16 +74,19 @@ data BackupRunsDelete = BackupRunsDelete'
 --
 -- * 'brdId'
 --
+-- * 'brdFields'
+--
 -- * 'brdInstance'
 backupRunsDelete
     :: Text -- ^ 'brdProject'
     -> Int64 -- ^ 'brdId'
     -> Text -- ^ 'brdInstance'
     -> BackupRunsDelete
-backupRunsDelete pBrdProject_ pBrdId_ pBrdInstance_ =
+backupRunsDelete pBrdProject_ pBrdId_ pBrdInstance_ = 
     BackupRunsDelete'
     { _brdProject = pBrdProject_
     , _brdId = _Coerce # pBrdId_
+    , _brdFields = Nothing
     , _brdInstance = pBrdInstance_
     }
 
@@ -95,6 +101,11 @@ brdId :: Lens' BackupRunsDelete Int64
 brdId
   = lens _brdId (\ s a -> s{_brdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+brdFields :: Lens' BackupRunsDelete (Maybe Text)
+brdFields
+  = lens _brdFields (\ s a -> s{_brdFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 brdInstance :: Lens' BackupRunsDelete Text
 brdInstance
@@ -106,7 +117,8 @@ instance GoogleRequest BackupRunsDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient BackupRunsDelete'{..}
-          = go _brdProject _brdInstance _brdId (Just AltJSON)
+          = go _brdProject _brdInstance _brdId _brdFields
+              (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

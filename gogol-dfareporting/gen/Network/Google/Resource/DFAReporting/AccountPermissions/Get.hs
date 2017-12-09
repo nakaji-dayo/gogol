@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AccountPermissions.Get
     -- * Request Lenses
     , apgProFileId
     , apgId
+    , apgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountPermissions.get@ method which the
 -- 'AccountPermissionsGet' request conforms to.
 type AccountPermissionsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountPermissions" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccountPermission
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccountPermission
 
 -- | Gets one account permission by ID.
 --
 -- /See:/ 'accountPermissionsGet' smart constructor.
 data AccountPermissionsGet = AccountPermissionsGet'
     { _apgProFileId :: !(Textual Int64)
-    , _apgId        :: !(Textual Int64)
+    , _apgId :: !(Textual Int64)
+    , _apgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountPermissionsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AccountPermissionsGet = AccountPermissionsGet'
 -- * 'apgProFileId'
 --
 -- * 'apgId'
+--
+-- * 'apgFields'
 accountPermissionsGet
     :: Int64 -- ^ 'apgProFileId'
     -> Int64 -- ^ 'apgId'
     -> AccountPermissionsGet
-accountPermissionsGet pApgProFileId_ pApgId_ =
+accountPermissionsGet pApgProFileId_ pApgId_ = 
     AccountPermissionsGet'
     { _apgProFileId = _Coerce # pApgProFileId_
     , _apgId = _Coerce # pApgId_
+    , _apgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,17 @@ apgId :: Lens' AccountPermissionsGet Int64
 apgId
   = lens _apgId (\ s a -> s{_apgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+apgFields :: Lens' AccountPermissionsGet (Maybe Text)
+apgFields
+  = lens _apgFields (\ s a -> s{_apgFields = a})
+
 instance GoogleRequest AccountPermissionsGet where
         type Rs AccountPermissionsGet = AccountPermission
         type Scopes AccountPermissionsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountPermissionsGet'{..}
-          = go _apgProFileId _apgId (Just AltJSON)
+          = go _apgProFileId _apgId _apgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

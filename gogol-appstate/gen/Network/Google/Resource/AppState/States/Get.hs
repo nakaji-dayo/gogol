@@ -35,10 +35,11 @@ module Network.Google.Resource.AppState.States.Get
 
     -- * Request Lenses
     , sgStateKey
+    , sgFields
     ) where
 
-import           Network.Google.AppState.Types
-import           Network.Google.Prelude
+import Network.Google.AppState.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appstate.states.get@ method which the
 -- 'StatesGet' request conforms to.
@@ -47,14 +48,16 @@ type StatesGetResource =
        "v1" :>
          "states" :>
            Capture "stateKey" (Textual Int32) :>
-             QueryParam "alt" AltJSON :> Get '[JSON] GetResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] GetResponse
 
 -- | Retrieves the data corresponding to the passed key. If the key does not
 -- exist on the server, an HTTP 404 will be returned.
 --
 -- /See:/ 'statesGet' smart constructor.
-newtype StatesGet = StatesGet'
-    { _sgStateKey :: Textual Int32
+data StatesGet = StatesGet'
+    { _sgStateKey :: !(Textual Int32)
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StatesGet' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype StatesGet = StatesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sgStateKey'
+--
+-- * 'sgFields'
 statesGet
     :: Int32 -- ^ 'sgStateKey'
     -> StatesGet
-statesGet pSgStateKey_ =
+statesGet pSgStateKey_ = 
     StatesGet'
     { _sgStateKey = _Coerce # pSgStateKey_
+    , _sgFields = Nothing
     }
 
 -- | The key for the data to be retrieved.
@@ -76,12 +82,17 @@ sgStateKey
   = lens _sgStateKey (\ s a -> s{_sgStateKey = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' StatesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest StatesGet where
         type Rs StatesGet = GetResponse
         type Scopes StatesGet =
              '["https://www.googleapis.com/auth/appstate"]
         requestClient StatesGet'{..}
-          = go _sgStateKey (Just AltJSON) appStateService
+          = go _sgStateKey _sgFields (Just AltJSON)
+              appStateService
           where go
                   = buildClient (Proxy :: Proxy StatesGetResource)
                       mempty

@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.Insert
     , meiProFileId
     , meiPayload
     , meiAccountId
+    , meiFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.insert@ method which the
 -- 'ManagementExperimentsInsert' request conforms to.
@@ -55,17 +56,20 @@ type ManagementExperimentsInsertResource =
                    "profiles" :>
                      Capture "profileId" Text :>
                        "experiments" :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Experiment :> Post '[JSON] Experiment
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Experiment :>
+                               Post '[JSON] Experiment
 
 -- | Create a new experiment.
 --
 -- /See:/ 'managementExperimentsInsert' smart constructor.
 data ManagementExperimentsInsert = ManagementExperimentsInsert'
     { _meiWebPropertyId :: !Text
-    , _meiProFileId     :: !Text
-    , _meiPayload       :: !Experiment
-    , _meiAccountId     :: !Text
+    , _meiProFileId :: !Text
+    , _meiPayload :: !Experiment
+    , _meiAccountId :: !Text
+    , _meiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsInsert' with the minimum fields required to make a request.
@@ -79,18 +83,21 @@ data ManagementExperimentsInsert = ManagementExperimentsInsert'
 -- * 'meiPayload'
 --
 -- * 'meiAccountId'
+--
+-- * 'meiFields'
 managementExperimentsInsert
     :: Text -- ^ 'meiWebPropertyId'
     -> Text -- ^ 'meiProFileId'
     -> Experiment -- ^ 'meiPayload'
     -> Text -- ^ 'meiAccountId'
     -> ManagementExperimentsInsert
-managementExperimentsInsert pMeiWebPropertyId_ pMeiProFileId_ pMeiPayload_ pMeiAccountId_ =
+managementExperimentsInsert pMeiWebPropertyId_ pMeiProFileId_ pMeiPayload_ pMeiAccountId_ = 
     ManagementExperimentsInsert'
     { _meiWebPropertyId = pMeiWebPropertyId_
     , _meiProFileId = pMeiProFileId_
     , _meiPayload = pMeiPayload_
     , _meiAccountId = pMeiAccountId_
+    , _meiFields = Nothing
     }
 
 -- | Web property ID to create the experiment for.
@@ -114,6 +121,11 @@ meiAccountId :: Lens' ManagementExperimentsInsert Text
 meiAccountId
   = lens _meiAccountId (\ s a -> s{_meiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+meiFields :: Lens' ManagementExperimentsInsert (Maybe Text)
+meiFields
+  = lens _meiFields (\ s a -> s{_meiFields = a})
+
 instance GoogleRequest ManagementExperimentsInsert
          where
         type Rs ManagementExperimentsInsert = Experiment
@@ -122,6 +134,7 @@ instance GoogleRequest ManagementExperimentsInsert
                "https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementExperimentsInsert'{..}
           = go _meiAccountId _meiWebPropertyId _meiProFileId
+              _meiFields
               (Just AltJSON)
               _meiPayload
               analyticsService

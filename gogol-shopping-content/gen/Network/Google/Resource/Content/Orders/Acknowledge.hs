@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Marks an order as acknowledged. This method can only be called for
--- non-multi-client accounts.
+-- Marks an order as acknowledged.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.acknowledge@.
 module Network.Google.Resource.Content.Orders.Acknowledge
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.Acknowledge
     , oaMerchantId
     , oaPayload
     , oaOrderId
+    , oaFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.acknowledge@ method which the
 -- 'OrdersAcknowledge' request conforms to.
@@ -51,18 +51,19 @@ type OrdersAcknowledgeResource =
            "orders" :>
              Capture "orderId" Text :>
                "acknowledge" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrdersAcknowledgeRequest :>
-                     Post '[JSON] OrdersAcknowledgeResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrdersAcknowledgeRequest :>
+                       Post '[JSON] OrdersAcknowledgeResponse
 
--- | Marks an order as acknowledged. This method can only be called for
--- non-multi-client accounts.
+-- | Marks an order as acknowledged.
 --
 -- /See:/ 'ordersAcknowledge' smart constructor.
 data OrdersAcknowledge = OrdersAcknowledge'
     { _oaMerchantId :: !(Textual Word64)
-    , _oaPayload    :: !OrdersAcknowledgeRequest
-    , _oaOrderId    :: !Text
+    , _oaPayload :: !OrdersAcknowledgeRequest
+    , _oaOrderId :: !Text
+    , _oaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersAcknowledge' with the minimum fields required to make a request.
@@ -74,19 +75,23 @@ data OrdersAcknowledge = OrdersAcknowledge'
 -- * 'oaPayload'
 --
 -- * 'oaOrderId'
+--
+-- * 'oaFields'
 ordersAcknowledge
     :: Word64 -- ^ 'oaMerchantId'
     -> OrdersAcknowledgeRequest -- ^ 'oaPayload'
     -> Text -- ^ 'oaOrderId'
     -> OrdersAcknowledge
-ordersAcknowledge pOaMerchantId_ pOaPayload_ pOaOrderId_ =
+ordersAcknowledge pOaMerchantId_ pOaPayload_ pOaOrderId_ = 
     OrdersAcknowledge'
     { _oaMerchantId = _Coerce # pOaMerchantId_
     , _oaPayload = pOaPayload_
     , _oaOrderId = pOaOrderId_
+    , _oaFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 oaMerchantId :: Lens' OrdersAcknowledge Word64
 oaMerchantId
   = lens _oaMerchantId (\ s a -> s{_oaMerchantId = a})
@@ -102,12 +107,17 @@ oaOrderId :: Lens' OrdersAcknowledge Text
 oaOrderId
   = lens _oaOrderId (\ s a -> s{_oaOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+oaFields :: Lens' OrdersAcknowledge (Maybe Text)
+oaFields = lens _oaFields (\ s a -> s{_oaFields = a})
+
 instance GoogleRequest OrdersAcknowledge where
         type Rs OrdersAcknowledge = OrdersAcknowledgeResponse
         type Scopes OrdersAcknowledge =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersAcknowledge'{..}
-          = go _oaMerchantId _oaOrderId (Just AltJSON)
+          = go _oaMerchantId _oaOrderId _oaFields
+              (Just AltJSON)
               _oaPayload
               shoppingContentService
           where go

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.PlacementStrategies.Insert
     -- * Request Lenses
     , psiProFileId
     , psiPayload
+    , psiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementStrategies.insert@ method which the
 -- 'PlacementStrategiesInsert' request conforms to.
 type PlacementStrategiesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementStrategies" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlacementStrategy :>
-                   Post '[JSON] PlacementStrategy
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlacementStrategy :>
+                     Post '[JSON] PlacementStrategy
 
 -- | Inserts a new placement strategy.
 --
 -- /See:/ 'placementStrategiesInsert' smart constructor.
 data PlacementStrategiesInsert = PlacementStrategiesInsert'
     { _psiProFileId :: !(Textual Int64)
-    , _psiPayload   :: !PlacementStrategy
+    , _psiPayload :: !PlacementStrategy
+    , _psiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategiesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PlacementStrategiesInsert = PlacementStrategiesInsert'
 -- * 'psiProFileId'
 --
 -- * 'psiPayload'
+--
+-- * 'psiFields'
 placementStrategiesInsert
     :: Int64 -- ^ 'psiProFileId'
     -> PlacementStrategy -- ^ 'psiPayload'
     -> PlacementStrategiesInsert
-placementStrategiesInsert pPsiProFileId_ pPsiPayload_ =
+placementStrategiesInsert pPsiProFileId_ pPsiPayload_ = 
     PlacementStrategiesInsert'
     { _psiProFileId = _Coerce # pPsiProFileId_
     , _psiPayload = pPsiPayload_
+    , _psiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,13 +94,19 @@ psiPayload :: Lens' PlacementStrategiesInsert PlacementStrategy
 psiPayload
   = lens _psiPayload (\ s a -> s{_psiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psiFields :: Lens' PlacementStrategiesInsert (Maybe Text)
+psiFields
+  = lens _psiFields (\ s a -> s{_psiFields = a})
+
 instance GoogleRequest PlacementStrategiesInsert
          where
         type Rs PlacementStrategiesInsert = PlacementStrategy
         type Scopes PlacementStrategiesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementStrategiesInsert'{..}
-          = go _psiProFileId (Just AltJSON) _psiPayload
+          = go _psiProFileId _psiFields (Just AltJSON)
+              _psiPayload
               dFAReportingService
           where go
                   = buildClient

@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.BackupRuns.Insert
     -- * Request Lenses
     , briProject
     , briPayload
+    , briFields
     , briInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.backupRuns.insert@ method which the
 -- 'BackupRunsInsert' request conforms to.
@@ -52,16 +53,18 @@ type BackupRunsInsertResource =
              "instances" :>
                Capture "instance" Text :>
                  "backupRuns" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] BackupRun :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] BackupRun :> Post '[JSON] Operation
 
 -- | Creates a new backup run on demand. This method is applicable only to
 -- Second Generation instances.
 --
 -- /See:/ 'backupRunsInsert' smart constructor.
 data BackupRunsInsert = BackupRunsInsert'
-    { _briProject  :: !Text
-    , _briPayload  :: !BackupRun
+    { _briProject :: !Text
+    , _briPayload :: !BackupRun
+    , _briFields :: !(Maybe Text)
     , _briInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,16 +76,19 @@ data BackupRunsInsert = BackupRunsInsert'
 --
 -- * 'briPayload'
 --
+-- * 'briFields'
+--
 -- * 'briInstance'
 backupRunsInsert
     :: Text -- ^ 'briProject'
     -> BackupRun -- ^ 'briPayload'
     -> Text -- ^ 'briInstance'
     -> BackupRunsInsert
-backupRunsInsert pBriProject_ pBriPayload_ pBriInstance_ =
+backupRunsInsert pBriProject_ pBriPayload_ pBriInstance_ = 
     BackupRunsInsert'
     { _briProject = pBriProject_
     , _briPayload = pBriPayload_
+    , _briFields = Nothing
     , _briInstance = pBriInstance_
     }
 
@@ -96,6 +102,11 @@ briPayload :: Lens' BackupRunsInsert BackupRun
 briPayload
   = lens _briPayload (\ s a -> s{_briPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+briFields :: Lens' BackupRunsInsert (Maybe Text)
+briFields
+  = lens _briFields (\ s a -> s{_briFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 briInstance :: Lens' BackupRunsInsert Text
 briInstance
@@ -107,7 +118,8 @@ instance GoogleRequest BackupRunsInsert where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient BackupRunsInsert'{..}
-          = go _briProject _briInstance (Just AltJSON)
+          = go _briProject _briInstance _briFields
+              (Just AltJSON)
               _briPayload
               sQLAdminService
           where go

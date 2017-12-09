@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.FloodlightConfigurations.List
     -- * Request Lenses
     , fclIds
     , fclProFileId
+    , fclFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightConfigurations.list@ method which the
 -- 'FloodlightConfigurationsList' request conforms to.
 type FloodlightConfigurationsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightConfigurations" :>
                QueryParams "ids" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] FloodlightConfigurationsListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] FloodlightConfigurationsListResponse
 
 -- | Retrieves a list of floodlight configurations, possibly filtered.
 --
 -- /See:/ 'floodlightConfigurationsList' smart constructor.
 data FloodlightConfigurationsList = FloodlightConfigurationsList'
-    { _fclIds       :: !(Maybe [Textual Int64])
+    { _fclIds :: !(Maybe [Textual Int64])
     , _fclProFileId :: !(Textual Int64)
+    , _fclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightConfigurationsList' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data FloodlightConfigurationsList = FloodlightConfigurationsList'
 -- * 'fclIds'
 --
 -- * 'fclProFileId'
+--
+-- * 'fclFields'
 floodlightConfigurationsList
     :: Int64 -- ^ 'fclProFileId'
     -> FloodlightConfigurationsList
-floodlightConfigurationsList pFclProFileId_ =
+floodlightConfigurationsList pFclProFileId_ = 
     FloodlightConfigurationsList'
     { _fclIds = Nothing
     , _fclProFileId = _Coerce # pFclProFileId_
+    , _fclFields = Nothing
     }
 
 -- | Set of IDs of floodlight configurations to retrieve. Required field;
@@ -89,6 +95,11 @@ fclProFileId
   = lens _fclProFileId (\ s a -> s{_fclProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fclFields :: Lens' FloodlightConfigurationsList (Maybe Text)
+fclFields
+  = lens _fclFields (\ s a -> s{_fclFields = a})
+
 instance GoogleRequest FloodlightConfigurationsList
          where
         type Rs FloodlightConfigurationsList =
@@ -96,7 +107,7 @@ instance GoogleRequest FloodlightConfigurationsList
         type Scopes FloodlightConfigurationsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightConfigurationsList'{..}
-          = go _fclProFileId (_fclIds ^. _Default)
+          = go _fclProFileId (_fclIds ^. _Default) _fclFields
               (Just AltJSON)
               dFAReportingService
           where go

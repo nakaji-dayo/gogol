@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Get
     -- * Request Lenses
     , egPackageName
     , egEditId
+    , egFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.get@ method which the
 -- 'EditsGet' request conforms to.
@@ -50,7 +51,8 @@ type EditsGetResource =
            Capture "packageName" Text :>
              "edits" :>
                Capture "editId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] AppEdit
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] AppEdit
 
 -- | Returns information about the edit specified. Calls will fail if the
 -- edit is no long active (e.g. has been deleted, superseded or expired).
@@ -58,7 +60,8 @@ type EditsGetResource =
 -- /See:/ 'editsGet' smart constructor.
 data EditsGet = EditsGet'
     { _egPackageName :: !Text
-    , _egEditId      :: !Text
+    , _egEditId :: !Text
+    , _egFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsGet' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data EditsGet = EditsGet'
 -- * 'egPackageName'
 --
 -- * 'egEditId'
+--
+-- * 'egFields'
 editsGet
     :: Text -- ^ 'egPackageName'
     -> Text -- ^ 'egEditId'
     -> EditsGet
-editsGet pEgPackageName_ pEgEditId_ =
+editsGet pEgPackageName_ pEgEditId_ = 
     EditsGet'
     { _egPackageName = pEgPackageName_
     , _egEditId = pEgEditId_
+    , _egFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -89,12 +95,17 @@ egPackageName
 egEditId :: Lens' EditsGet Text
 egEditId = lens _egEditId (\ s a -> s{_egEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+egFields :: Lens' EditsGet (Maybe Text)
+egFields = lens _egFields (\ s a -> s{_egFields = a})
+
 instance GoogleRequest EditsGet where
         type Rs EditsGet = AppEdit
         type Scopes EditsGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsGet'{..}
-          = go _egPackageName _egEditId (Just AltJSON)
+          = go _egPackageName _egEditId _egFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient (Proxy :: Proxy EditsGetResource)

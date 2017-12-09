@@ -39,10 +39,11 @@ module Network.Google.Resource.Compute.GlobalOperations.List
     , golFilter
     , golPageToken
     , golMaxResults
+    , golFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalOperations.list@ method which the
 -- 'GlobalOperationsList' request conforms to.
@@ -57,18 +58,20 @@ type GlobalOperationsListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] OperationList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] OperationList
 
 -- | Retrieves a list of Operation resources contained within the specified
 -- project.
 --
 -- /See:/ 'globalOperationsList' smart constructor.
 data GlobalOperationsList = GlobalOperationsList'
-    { _golOrderBy    :: !(Maybe Text)
-    , _golProject    :: !Text
-    , _golFilter     :: !(Maybe Text)
-    , _golPageToken  :: !(Maybe Text)
+    { _golOrderBy :: !(Maybe Text)
+    , _golProject :: !Text
+    , _golFilter :: !(Maybe Text)
+    , _golPageToken :: !(Maybe Text)
     , _golMaxResults :: !(Textual Word32)
+    , _golFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalOperationsList' with the minimum fields required to make a request.
@@ -84,16 +87,19 @@ data GlobalOperationsList = GlobalOperationsList'
 -- * 'golPageToken'
 --
 -- * 'golMaxResults'
+--
+-- * 'golFields'
 globalOperationsList
     :: Text -- ^ 'golProject'
     -> GlobalOperationsList
-globalOperationsList pGolProject_ =
+globalOperationsList pGolProject_ = 
     GlobalOperationsList'
     { _golOrderBy = Nothing
     , _golProject = pGolProject_
     , _golFilter = Nothing
     , _golPageToken = Nothing
     , _golMaxResults = 500
+    , _golFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -113,26 +119,25 @@ golProject :: Lens' GlobalOperationsList Text
 golProject
   = lens _golProject (\ s a -> s{_golProject = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 golFilter :: Lens' GlobalOperationsList (Maybe Text)
 golFilter
   = lens _golFilter (\ s a -> s{_golFilter = a})
@@ -146,12 +151,18 @@ golPageToken
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 golMaxResults :: Lens' GlobalOperationsList Word32
 golMaxResults
   = lens _golMaxResults
       (\ s a -> s{_golMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+golFields :: Lens' GlobalOperationsList (Maybe Text)
+golFields
+  = lens _golFields (\ s a -> s{_golFields = a})
 
 instance GoogleRequest GlobalOperationsList where
         type Rs GlobalOperationsList = OperationList
@@ -162,6 +173,7 @@ instance GoogleRequest GlobalOperationsList where
         requestClient GlobalOperationsList'{..}
           = go _golProject _golOrderBy _golFilter _golPageToken
               (Just _golMaxResults)
+              _golFields
               (Just AltJSON)
               computeService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Notifications.Get
     -- * Request Lenses
     , ngCustomer
     , ngNotificationId
+    , ngFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.notifications.get@ method which the
 -- 'NotificationsGet' request conforms to.
@@ -50,14 +51,16 @@ type NotificationsGetResource =
              Capture "customer" Text :>
                "notifications" :>
                  Capture "notificationId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Notification
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Notification
 
 -- | Retrieves a notification.
 --
 -- /See:/ 'notificationsGet' smart constructor.
 data NotificationsGet = NotificationsGet'
-    { _ngCustomer       :: !Text
+    { _ngCustomer :: !Text
     , _ngNotificationId :: !Text
+    , _ngFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationsGet' with the minimum fields required to make a request.
@@ -67,18 +70,21 @@ data NotificationsGet = NotificationsGet'
 -- * 'ngCustomer'
 --
 -- * 'ngNotificationId'
+--
+-- * 'ngFields'
 notificationsGet
     :: Text -- ^ 'ngCustomer'
     -> Text -- ^ 'ngNotificationId'
     -> NotificationsGet
-notificationsGet pNgCustomer_ pNgNotificationId_ =
+notificationsGet pNgCustomer_ pNgNotificationId_ = 
     NotificationsGet'
     { _ngCustomer = pNgCustomer_
     , _ngNotificationId = pNgNotificationId_
+    , _ngFields = Nothing
     }
 
--- | The unique ID for the customer\'s Google account. The customerId is also
--- returned as part of the Users resource.
+-- | The unique ID for the customer\'s G Suite account. The customerId is
+-- also returned as part of the Users resource.
 ngCustomer :: Lens' NotificationsGet Text
 ngCustomer
   = lens _ngCustomer (\ s a -> s{_ngCustomer = a})
@@ -89,12 +95,17 @@ ngNotificationId
   = lens _ngNotificationId
       (\ s a -> s{_ngNotificationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ngFields :: Lens' NotificationsGet (Maybe Text)
+ngFields = lens _ngFields (\ s a -> s{_ngFields = a})
+
 instance GoogleRequest NotificationsGet where
         type Rs NotificationsGet = Notification
         type Scopes NotificationsGet =
              '["https://www.googleapis.com/auth/admin.directory.notifications"]
         requestClient NotificationsGet'{..}
-          = go _ngCustomer _ngNotificationId (Just AltJSON)
+          = go _ngCustomer _ngNotificationId _ngFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

@@ -41,11 +41,12 @@ module Network.Google.Resource.Container.Projects.Zones.Operations.List
     , pzolZone
     , pzolBearerToken
     , pzolProjectId
+    , pzolFields
     , pzolCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.operations.list@ method which the
 -- 'ProjectsZonesOperationsList' request conforms to.
@@ -56,29 +57,31 @@ type ProjectsZonesOperationsListResource =
            "zones" :>
              Capture "zone" Text :>
                "operations" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListOperationsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListOperationsResponse
 
 -- | Lists all operations in a project in a specific zone or all zones.
 --
 -- /See:/ 'projectsZonesOperationsList' smart constructor.
 data ProjectsZonesOperationsList = ProjectsZonesOperationsList'
-    { _pzolXgafv          :: !(Maybe Text)
+    { _pzolXgafv :: !(Maybe Xgafv)
     , _pzolUploadProtocol :: !(Maybe Text)
-    , _pzolPp             :: !Bool
-    , _pzolAccessToken    :: !(Maybe Text)
-    , _pzolUploadType     :: !(Maybe Text)
-    , _pzolZone           :: !Text
-    , _pzolBearerToken    :: !(Maybe Text)
-    , _pzolProjectId      :: !Text
-    , _pzolCallback       :: !(Maybe Text)
+    , _pzolPp :: !Bool
+    , _pzolAccessToken :: !(Maybe Text)
+    , _pzolUploadType :: !(Maybe Text)
+    , _pzolZone :: !Text
+    , _pzolBearerToken :: !(Maybe Text)
+    , _pzolProjectId :: !Text
+    , _pzolFields :: !(Maybe Text)
+    , _pzolCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesOperationsList' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsZonesOperationsList = ProjectsZonesOperationsList'
 --
 -- * 'pzolProjectId'
 --
+-- * 'pzolFields'
+--
 -- * 'pzolCallback'
 projectsZonesOperationsList
     :: Text -- ^ 'pzolZone'
     -> Text -- ^ 'pzolProjectId'
     -> ProjectsZonesOperationsList
-projectsZonesOperationsList pPzolZone_ pPzolProjectId_ =
+projectsZonesOperationsList pPzolZone_ pPzolProjectId_ = 
     ProjectsZonesOperationsList'
     { _pzolXgafv = Nothing
     , _pzolUploadProtocol = Nothing
@@ -116,11 +121,12 @@ projectsZonesOperationsList pPzolZone_ pPzolProjectId_ =
     , _pzolZone = pPzolZone_
     , _pzolBearerToken = Nothing
     , _pzolProjectId = pPzolProjectId_
+    , _pzolFields = Nothing
     , _pzolCallback = Nothing
     }
 
 -- | V1 error format.
-pzolXgafv :: Lens' ProjectsZonesOperationsList (Maybe Text)
+pzolXgafv :: Lens' ProjectsZonesOperationsList (Maybe Xgafv)
 pzolXgafv
   = lens _pzolXgafv (\ s a -> s{_pzolXgafv = a})
 
@@ -165,6 +171,11 @@ pzolProjectId
   = lens _pzolProjectId
       (\ s a -> s{_pzolProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzolFields :: Lens' ProjectsZonesOperationsList (Maybe Text)
+pzolFields
+  = lens _pzolFields (\ s a -> s{_pzolFields = a})
+
 -- | JSONP
 pzolCallback :: Lens' ProjectsZonesOperationsList (Maybe Text)
 pzolCallback
@@ -184,6 +195,7 @@ instance GoogleRequest ProjectsZonesOperationsList
               _pzolUploadType
               _pzolBearerToken
               _pzolCallback
+              _pzolFields
               (Just AltJSON)
               containerService
           where go

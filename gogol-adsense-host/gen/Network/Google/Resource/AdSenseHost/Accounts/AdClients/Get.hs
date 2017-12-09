@@ -36,10 +36,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdClients.Get
     -- * Request Lenses
     , aacgAdClientId
     , aacgAccountId
+    , aacgFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adclients.get@ method which the
 -- 'AccountsAdClientsGet' request conforms to.
@@ -50,7 +51,8 @@ type AccountsAdClientsGetResource =
            Capture "accountId" Text :>
              "adclients" :>
                Capture "adClientId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] AdClient
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] AdClient
 
 -- | Get information about one of the ad clients in the specified
 -- publisher\'s AdSense account.
@@ -58,7 +60,8 @@ type AccountsAdClientsGetResource =
 -- /See:/ 'accountsAdClientsGet' smart constructor.
 data AccountsAdClientsGet = AccountsAdClientsGet'
     { _aacgAdClientId :: !Text
-    , _aacgAccountId  :: !Text
+    , _aacgAccountId :: !Text
+    , _aacgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdClientsGet' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data AccountsAdClientsGet = AccountsAdClientsGet'
 -- * 'aacgAdClientId'
 --
 -- * 'aacgAccountId'
+--
+-- * 'aacgFields'
 accountsAdClientsGet
     :: Text -- ^ 'aacgAdClientId'
     -> Text -- ^ 'aacgAccountId'
     -> AccountsAdClientsGet
-accountsAdClientsGet pAacgAdClientId_ pAacgAccountId_ =
+accountsAdClientsGet pAacgAdClientId_ pAacgAccountId_ = 
     AccountsAdClientsGet'
     { _aacgAdClientId = pAacgAdClientId_
     , _aacgAccountId = pAacgAccountId_
+    , _aacgFields = Nothing
     }
 
 -- | Ad client to get.
@@ -90,12 +96,18 @@ aacgAccountId
   = lens _aacgAccountId
       (\ s a -> s{_aacgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aacgFields :: Lens' AccountsAdClientsGet (Maybe Text)
+aacgFields
+  = lens _aacgFields (\ s a -> s{_aacgFields = a})
+
 instance GoogleRequest AccountsAdClientsGet where
         type Rs AccountsAdClientsGet = AdClient
         type Scopes AccountsAdClientsGet =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient AccountsAdClientsGet'{..}
-          = go _aacgAccountId _aacgAdClientId (Just AltJSON)
+          = go _aacgAccountId _aacgAdClientId _aacgFields
+              (Just AltJSON)
               adSenseHostService
           where go
                   = buildClient

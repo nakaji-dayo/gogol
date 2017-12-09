@@ -36,10 +36,11 @@ module Network.Google.Resource.Calendar.CalendarList.Update
     , cluCalendarId
     , cluPayload
     , cluColorRgbFormat
+    , cluFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendarList.update@ method which the
 -- 'CalendarListUpdate' request conforms to.
@@ -51,17 +52,19 @@ type CalendarListUpdateResource =
              "calendarList" :>
                Capture "calendarId" Text :>
                  QueryParam "colorRgbFormat" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] CalendarListEntry :>
-                       Put '[JSON] CalendarListEntry
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] CalendarListEntry :>
+                         Put '[JSON] CalendarListEntry
 
 -- | Updates an entry on the user\'s calendar list.
 --
 -- /See:/ 'calendarListUpdate' smart constructor.
 data CalendarListUpdate = CalendarListUpdate'
-    { _cluCalendarId     :: !Text
-    , _cluPayload        :: !CalendarListEntry
+    { _cluCalendarId :: !Text
+    , _cluPayload :: !CalendarListEntry
     , _cluColorRgbFormat :: !(Maybe Bool)
+    , _cluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarListUpdate' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data CalendarListUpdate = CalendarListUpdate'
 -- * 'cluPayload'
 --
 -- * 'cluColorRgbFormat'
+--
+-- * 'cluFields'
 calendarListUpdate
     :: Text -- ^ 'cluCalendarId'
     -> CalendarListEntry -- ^ 'cluPayload'
     -> CalendarListUpdate
-calendarListUpdate pCluCalendarId_ pCluPayload_ =
+calendarListUpdate pCluCalendarId_ pCluPayload_ = 
     CalendarListUpdate'
     { _cluCalendarId = pCluCalendarId_
     , _cluPayload = pCluPayload_
     , _cluColorRgbFormat = Nothing
+    , _cluFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -106,12 +112,18 @@ cluColorRgbFormat
   = lens _cluColorRgbFormat
       (\ s a -> s{_cluColorRgbFormat = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cluFields :: Lens' CalendarListUpdate (Maybe Text)
+cluFields
+  = lens _cluFields (\ s a -> s{_cluFields = a})
+
 instance GoogleRequest CalendarListUpdate where
         type Rs CalendarListUpdate = CalendarListEntry
         type Scopes CalendarListUpdate =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarListUpdate'{..}
-          = go _cluCalendarId _cluColorRgbFormat (Just AltJSON)
+          = go _cluCalendarId _cluColorRgbFormat _cluFields
+              (Just AltJSON)
               _cluPayload
               appsCalendarService
           where go

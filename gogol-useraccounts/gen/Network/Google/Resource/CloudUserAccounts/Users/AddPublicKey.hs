@@ -37,10 +37,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.AddPublicKey
     , uapkProject
     , uapkPayload
     , uapkUser
+    , uapkFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.addPublicKey@ method which the
 -- 'UsersAddPublicKey' request conforms to.
@@ -53,8 +54,9 @@ type UsersAddPublicKeyResource =
                "users" :>
                  Capture "user" Text :>
                    "addPublicKey" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] PublicKey :> Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] PublicKey :> Post '[JSON] Operation
 
 -- | Adds a public key to the specified User resource with the data included
 -- in the request.
@@ -63,7 +65,8 @@ type UsersAddPublicKeyResource =
 data UsersAddPublicKey = UsersAddPublicKey'
     { _uapkProject :: !Text
     , _uapkPayload :: !PublicKey
-    , _uapkUser    :: !Text
+    , _uapkUser :: !Text
+    , _uapkFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersAddPublicKey' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data UsersAddPublicKey = UsersAddPublicKey'
 -- * 'uapkPayload'
 --
 -- * 'uapkUser'
+--
+-- * 'uapkFields'
 usersAddPublicKey
     :: Text -- ^ 'uapkProject'
     -> PublicKey -- ^ 'uapkPayload'
     -> Text -- ^ 'uapkUser'
     -> UsersAddPublicKey
-usersAddPublicKey pUapkProject_ pUapkPayload_ pUapkUser_ =
+usersAddPublicKey pUapkProject_ pUapkPayload_ pUapkUser_ = 
     UsersAddPublicKey'
     { _uapkProject = pUapkProject_
     , _uapkPayload = pUapkPayload_
     , _uapkUser = pUapkUser_
+    , _uapkFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,13 +107,19 @@ uapkPayload
 uapkUser :: Lens' UsersAddPublicKey Text
 uapkUser = lens _uapkUser (\ s a -> s{_uapkUser = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uapkFields :: Lens' UsersAddPublicKey (Maybe Text)
+uapkFields
+  = lens _uapkFields (\ s a -> s{_uapkFields = a})
+
 instance GoogleRequest UsersAddPublicKey where
         type Rs UsersAddPublicKey = Operation
         type Scopes UsersAddPublicKey =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient UsersAddPublicKey'{..}
-          = go _uapkProject _uapkUser (Just AltJSON)
+          = go _uapkProject _uapkUser _uapkFields
+              (Just AltJSON)
               _uapkPayload
               userAccountsService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.MarkAsFixed
     , ucesmafCategory
     , ucesmafSiteURL
     , ucesmafURL
+    , ucesmafFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.urlcrawlerrorssamples.markAsFixed@ method which the
 -- 'URLCrawlErrorsSamplesMarkAsFixed' request conforms to.
@@ -57,7 +58,9 @@ type URLCrawlErrorsSamplesMarkAsFixedResource =
                    :>
                    QueryParam "platform"
                      URLCrawlErrorsSamplesMarkAsFixedPlatform
-                     :> QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Marks the provided site\'s sample URL as fixed, and removes it from the
 -- samples list.
@@ -66,8 +69,9 @@ type URLCrawlErrorsSamplesMarkAsFixedResource =
 data URLCrawlErrorsSamplesMarkAsFixed = URLCrawlErrorsSamplesMarkAsFixed'
     { _ucesmafPlatform :: !URLCrawlErrorsSamplesMarkAsFixedPlatform
     , _ucesmafCategory :: !URLCrawlErrorsSamplesMarkAsFixedCategory
-    , _ucesmafSiteURL  :: !Text
-    , _ucesmafURL      :: !Text
+    , _ucesmafSiteURL :: !Text
+    , _ucesmafURL :: !Text
+    , _ucesmafFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLCrawlErrorsSamplesMarkAsFixed' with the minimum fields required to make a request.
@@ -81,18 +85,21 @@ data URLCrawlErrorsSamplesMarkAsFixed = URLCrawlErrorsSamplesMarkAsFixed'
 -- * 'ucesmafSiteURL'
 --
 -- * 'ucesmafURL'
+--
+-- * 'ucesmafFields'
 urlCrawlErrorsSamplesMarkAsFixed
     :: URLCrawlErrorsSamplesMarkAsFixedPlatform -- ^ 'ucesmafPlatform'
     -> URLCrawlErrorsSamplesMarkAsFixedCategory -- ^ 'ucesmafCategory'
     -> Text -- ^ 'ucesmafSiteURL'
     -> Text -- ^ 'ucesmafURL'
     -> URLCrawlErrorsSamplesMarkAsFixed
-urlCrawlErrorsSamplesMarkAsFixed pUcesmafPlatform_ pUcesmafCategory_ pUcesmafSiteURL_ pUcesmafURL_ =
+urlCrawlErrorsSamplesMarkAsFixed pUcesmafPlatform_ pUcesmafCategory_ pUcesmafSiteURL_ pUcesmafURL_ = 
     URLCrawlErrorsSamplesMarkAsFixed'
     { _ucesmafPlatform = pUcesmafPlatform_
     , _ucesmafCategory = pUcesmafCategory_
     , _ucesmafSiteURL = pUcesmafSiteURL_
     , _ucesmafURL = pUcesmafURL_
+    , _ucesmafFields = Nothing
     }
 
 -- | The user agent type (platform) that made the request. For example: web
@@ -122,6 +129,12 @@ ucesmafURL :: Lens' URLCrawlErrorsSamplesMarkAsFixed Text
 ucesmafURL
   = lens _ucesmafURL (\ s a -> s{_ucesmafURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ucesmafFields :: Lens' URLCrawlErrorsSamplesMarkAsFixed (Maybe Text)
+ucesmafFields
+  = lens _ucesmafFields
+      (\ s a -> s{_ucesmafFields = a})
+
 instance GoogleRequest
          URLCrawlErrorsSamplesMarkAsFixed where
         type Rs URLCrawlErrorsSamplesMarkAsFixed = ()
@@ -131,6 +144,7 @@ instance GoogleRequest
           = go _ucesmafSiteURL _ucesmafURL
               (Just _ucesmafCategory)
               (Just _ucesmafPlatform)
+              _ucesmafFields
               (Just AltJSON)
               webmasterToolsService
           where go

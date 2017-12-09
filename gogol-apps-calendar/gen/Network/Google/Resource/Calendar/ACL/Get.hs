@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.ACL.Get
     -- * Request Lenses
     , agCalendarId
     , agRuleId
+    , agFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.get@ method which the
 -- 'ACLGet' request conforms to.
@@ -49,14 +50,16 @@ type ACLGetResource =
            Capture "calendarId" Text :>
              "acl" :>
                Capture "ruleId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] ACLRule
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] ACLRule
 
 -- | Returns an access control rule.
 --
 -- /See:/ 'aclGet' smart constructor.
 data ACLGet = ACLGet'
     { _agCalendarId :: !Text
-    , _agRuleId     :: !Text
+    , _agRuleId :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ACLGet = ACLGet'
 -- * 'agCalendarId'
 --
 -- * 'agRuleId'
+--
+-- * 'agFields'
 aclGet
     :: Text -- ^ 'agCalendarId'
     -> Text -- ^ 'agRuleId'
     -> ACLGet
-aclGet pAgCalendarId_ pAgRuleId_ =
+aclGet pAgCalendarId_ pAgRuleId_ = 
     ACLGet'
     { _agCalendarId = pAgCalendarId_
     , _agRuleId = pAgRuleId_
+    , _agFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -87,13 +93,17 @@ agCalendarId
 agRuleId :: Lens' ACLGet Text
 agRuleId = lens _agRuleId (\ s a -> s{_agRuleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' ACLGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest ACLGet where
         type Rs ACLGet = ACLRule
         type Scopes ACLGet =
              '["https://www.googleapis.com/auth/calendar",
                "https://www.googleapis.com/auth/calendar.readonly"]
         requestClient ACLGet'{..}
-          = go _agCalendarId _agRuleId (Just AltJSON)
+          = go _agCalendarId _agRuleId _agFields (Just AltJSON)
               appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy ACLGetResource) mempty

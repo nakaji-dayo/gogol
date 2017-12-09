@@ -39,10 +39,11 @@ module Network.Google.Resource.Books.PromoOffer.Get
     , pogModel
     , pogProduct
     , pogAndroidId
+    , pogFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.promooffer.get@ method which the
 -- 'PromoOfferGet' request conforms to.
@@ -57,18 +58,20 @@ type PromoOfferGetResource =
                    QueryParam "model" Text :>
                      QueryParam "product" Text :>
                        QueryParam "androidId" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] Offers
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Offers
 
 -- | Returns a list of promo offers available to the user
 --
 -- /See:/ 'promoOfferGet' smart constructor.
 data PromoOfferGet = PromoOfferGet'
     { _pogManufacturer :: !(Maybe Text)
-    , _pogSerial       :: !(Maybe Text)
-    , _pogDevice       :: !(Maybe Text)
-    , _pogModel        :: !(Maybe Text)
-    , _pogProduct      :: !(Maybe Text)
-    , _pogAndroidId    :: !(Maybe Text)
+    , _pogSerial :: !(Maybe Text)
+    , _pogDevice :: !(Maybe Text)
+    , _pogModel :: !(Maybe Text)
+    , _pogProduct :: !(Maybe Text)
+    , _pogAndroidId :: !(Maybe Text)
+    , _pogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PromoOfferGet' with the minimum fields required to make a request.
@@ -86,9 +89,11 @@ data PromoOfferGet = PromoOfferGet'
 -- * 'pogProduct'
 --
 -- * 'pogAndroidId'
+--
+-- * 'pogFields'
 promoOfferGet
     :: PromoOfferGet
-promoOfferGet =
+promoOfferGet = 
     PromoOfferGet'
     { _pogManufacturer = Nothing
     , _pogSerial = Nothing
@@ -96,6 +101,7 @@ promoOfferGet =
     , _pogModel = Nothing
     , _pogProduct = Nothing
     , _pogAndroidId = Nothing
+    , _pogFields = Nothing
     }
 
 -- | device manufacturer
@@ -128,6 +134,11 @@ pogAndroidId :: Lens' PromoOfferGet (Maybe Text)
 pogAndroidId
   = lens _pogAndroidId (\ s a -> s{_pogAndroidId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pogFields :: Lens' PromoOfferGet (Maybe Text)
+pogFields
+  = lens _pogFields (\ s a -> s{_pogFields = a})
+
 instance GoogleRequest PromoOfferGet where
         type Rs PromoOfferGet = Offers
         type Scopes PromoOfferGet =
@@ -136,6 +147,7 @@ instance GoogleRequest PromoOfferGet where
           = go _pogManufacturer _pogSerial _pogDevice _pogModel
               _pogProduct
               _pogAndroidId
+              _pogFields
               (Just AltJSON)
               booksService
           where go

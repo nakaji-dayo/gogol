@@ -39,10 +39,11 @@ module Network.Google.Resource.CloudUserAccounts.GlobalAccountsOperations.List
     , gaolFilter
     , gaolPageToken
     , gaolMaxResults
+    , gaolFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.globalAccountsOperations.list@ method which the
 -- 'GlobalAccountsOperationsList' request conforms to.
@@ -57,18 +58,20 @@ type GlobalAccountsOperationsListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] OperationList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] OperationList
 
 -- | Retrieves the list of operation resources contained within the specified
 -- project.
 --
 -- /See:/ 'globalAccountsOperationsList' smart constructor.
 data GlobalAccountsOperationsList = GlobalAccountsOperationsList'
-    { _gaolOrderBy    :: !(Maybe Text)
-    , _gaolProject    :: !Text
-    , _gaolFilter     :: !(Maybe Text)
-    , _gaolPageToken  :: !(Maybe Text)
+    { _gaolOrderBy :: !(Maybe Text)
+    , _gaolProject :: !Text
+    , _gaolFilter :: !(Maybe Text)
+    , _gaolPageToken :: !(Maybe Text)
     , _gaolMaxResults :: !(Textual Word32)
+    , _gaolFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalAccountsOperationsList' with the minimum fields required to make a request.
@@ -84,16 +87,19 @@ data GlobalAccountsOperationsList = GlobalAccountsOperationsList'
 -- * 'gaolPageToken'
 --
 -- * 'gaolMaxResults'
+--
+-- * 'gaolFields'
 globalAccountsOperationsList
     :: Text -- ^ 'gaolProject'
     -> GlobalAccountsOperationsList
-globalAccountsOperationsList pGaolProject_ =
+globalAccountsOperationsList pGaolProject_ = 
     GlobalAccountsOperationsList'
     { _gaolOrderBy = Nothing
     , _gaolProject = pGaolProject_
     , _gaolFilter = Nothing
     , _gaolPageToken = Nothing
     , _gaolMaxResults = 500
+    , _gaolFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -156,6 +162,11 @@ gaolMaxResults
       (\ s a -> s{_gaolMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+gaolFields :: Lens' GlobalAccountsOperationsList (Maybe Text)
+gaolFields
+  = lens _gaolFields (\ s a -> s{_gaolFields = a})
+
 instance GoogleRequest GlobalAccountsOperationsList
          where
         type Rs GlobalAccountsOperationsList = OperationList
@@ -168,6 +179,7 @@ instance GoogleRequest GlobalAccountsOperationsList
           = go _gaolProject _gaolOrderBy _gaolFilter
               _gaolPageToken
               (Just _gaolMaxResults)
+              _gaolFields
               (Just AltJSON)
               userAccountsService
           where go

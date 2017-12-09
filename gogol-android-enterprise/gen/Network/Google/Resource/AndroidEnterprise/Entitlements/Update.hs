@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.Entitlements.Update
     , euPayload
     , euInstall
     , euUserId
+    , euFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.entitlements.update@ method which the
 -- 'EntitlementsUpdate' request conforms to.
@@ -55,19 +56,21 @@ type EntitlementsUpdateResource =
                  "entitlements" :>
                    Capture "entitlementId" Text :>
                      QueryParam "install" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Entitlement :>
-                           Put '[JSON] Entitlement
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Entitlement :>
+                             Put '[JSON] Entitlement
 
 -- | Adds or updates an entitlement to an app for a user.
 --
 -- /See:/ 'entitlementsUpdate' smart constructor.
 data EntitlementsUpdate = EntitlementsUpdate'
     { _euEntitlementId :: !Text
-    , _euEnterpriseId  :: !Text
-    , _euPayload       :: !Entitlement
-    , _euInstall       :: !(Maybe Bool)
-    , _euUserId        :: !Text
+    , _euEnterpriseId :: !Text
+    , _euPayload :: !Entitlement
+    , _euInstall :: !(Maybe Bool)
+    , _euUserId :: !Text
+    , _euFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitlementsUpdate' with the minimum fields required to make a request.
@@ -83,19 +86,22 @@ data EntitlementsUpdate = EntitlementsUpdate'
 -- * 'euInstall'
 --
 -- * 'euUserId'
+--
+-- * 'euFields'
 entitlementsUpdate
     :: Text -- ^ 'euEntitlementId'
     -> Text -- ^ 'euEnterpriseId'
     -> Entitlement -- ^ 'euPayload'
     -> Text -- ^ 'euUserId'
     -> EntitlementsUpdate
-entitlementsUpdate pEuEntitlementId_ pEuEnterpriseId_ pEuPayload_ pEuUserId_ =
+entitlementsUpdate pEuEntitlementId_ pEuEnterpriseId_ pEuPayload_ pEuUserId_ = 
     EntitlementsUpdate'
     { _euEntitlementId = pEuEntitlementId_
     , _euEnterpriseId = pEuEnterpriseId_
     , _euPayload = pEuPayload_
     , _euInstall = Nothing
     , _euUserId = pEuUserId_
+    , _euFields = Nothing
     }
 
 -- | The ID of the entitlement (a product ID), e.g.
@@ -128,6 +134,10 @@ euInstall
 euUserId :: Lens' EntitlementsUpdate Text
 euUserId = lens _euUserId (\ s a -> s{_euUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+euFields :: Lens' EntitlementsUpdate (Maybe Text)
+euFields = lens _euFields (\ s a -> s{_euFields = a})
+
 instance GoogleRequest EntitlementsUpdate where
         type Rs EntitlementsUpdate = Entitlement
         type Scopes EntitlementsUpdate =
@@ -135,6 +145,7 @@ instance GoogleRequest EntitlementsUpdate where
         requestClient EntitlementsUpdate'{..}
           = go _euEnterpriseId _euUserId _euEntitlementId
               _euInstall
+              _euFields
               (Just AltJSON)
               _euPayload
               androidEnterpriseService

@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickSearch.Reports.Get
 
     -- * Request Lenses
     , rgReportId
+    , rgFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.reports.get@ method which the
 -- 'ReportsGet' request conforms to.
@@ -46,13 +47,15 @@ type ReportsGetResource =
        "v2" :>
          "reports" :>
            Capture "reportId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Report
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Report
 
 -- | Polls for the status of a report request.
 --
 -- /See:/ 'reportsGet' smart constructor.
-newtype ReportsGet = ReportsGet'
-    { _rgReportId :: Text
+data ReportsGet = ReportsGet'
+    { _rgReportId :: !Text
+    , _rgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype ReportsGet = ReportsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rgReportId'
+--
+-- * 'rgFields'
 reportsGet
     :: Text -- ^ 'rgReportId'
     -> ReportsGet
-reportsGet pRgReportId_ =
+reportsGet pRgReportId_ = 
     ReportsGet'
     { _rgReportId = pRgReportId_
+    , _rgFields = Nothing
     }
 
 -- | ID of the report request being polled.
@@ -73,12 +79,16 @@ rgReportId :: Lens' ReportsGet Text
 rgReportId
   = lens _rgReportId (\ s a -> s{_rgReportId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ReportsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 instance GoogleRequest ReportsGet where
         type Rs ReportsGet = Report
         type Scopes ReportsGet =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient ReportsGet'{..}
-          = go _rgReportId (Just AltJSON)
+          = go _rgReportId _rgFields (Just AltJSON)
               doubleClickSearchService
           where go
                   = buildClient (Proxy :: Proxy ReportsGetResource)

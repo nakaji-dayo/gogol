@@ -35,10 +35,11 @@ module Network.Google.Resource.Games.Revisions.Check
     -- * Request Lenses
     , revClientRevision
     , revConsistencyToken
+    , revFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.revisions.check@ method which the
 -- 'RevisionsCheck' request conforms to.
@@ -49,15 +50,17 @@ type RevisionsCheckResource =
            "check" :>
              QueryParam "clientRevision" Text :>
                QueryParam "consistencyToken" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] RevisionCheckResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] RevisionCheckResponse
 
 -- | Checks whether the games client is out of date.
 --
 -- /See:/ 'revisionsCheck' smart constructor.
 data RevisionsCheck = RevisionsCheck'
-    { _revClientRevision   :: !Text
+    { _revClientRevision :: !Text
     , _revConsistencyToken :: !(Maybe (Textual Int64))
+    , _revFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RevisionsCheck' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data RevisionsCheck = RevisionsCheck'
 -- * 'revClientRevision'
 --
 -- * 'revConsistencyToken'
+--
+-- * 'revFields'
 revisionsCheck
     :: Text -- ^ 'revClientRevision'
     -> RevisionsCheck
-revisionsCheck pRevClientRevision_ =
+revisionsCheck pRevClientRevision_ = 
     RevisionsCheck'
     { _revClientRevision = pRevClientRevision_
     , _revConsistencyToken = Nothing
+    , _revFields = Nothing
     }
 
 -- | The revision of the client SDK used by your application. Format:
@@ -92,6 +98,11 @@ revConsistencyToken
       (\ s a -> s{_revConsistencyToken = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+revFields :: Lens' RevisionsCheck (Maybe Text)
+revFields
+  = lens _revFields (\ s a -> s{_revFields = a})
+
 instance GoogleRequest RevisionsCheck where
         type Rs RevisionsCheck = RevisionCheckResponse
         type Scopes RevisionsCheck =
@@ -99,6 +110,7 @@ instance GoogleRequest RevisionsCheck where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient RevisionsCheck'{..}
           = go (Just _revClientRevision) _revConsistencyToken
+              _revFields
               (Just AltJSON)
               gamesService
           where go

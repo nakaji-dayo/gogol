@@ -31,6 +31,45 @@ module Network.Google.IAM
 
     -- * Resources
 
+    -- ** iam.organizations.roles.create
+    , module Network.Google.Resource.IAM.Organizations.Roles.Create
+
+    -- ** iam.organizations.roles.delete
+    , module Network.Google.Resource.IAM.Organizations.Roles.Delete
+
+    -- ** iam.organizations.roles.get
+    , module Network.Google.Resource.IAM.Organizations.Roles.Get
+
+    -- ** iam.organizations.roles.list
+    , module Network.Google.Resource.IAM.Organizations.Roles.List
+
+    -- ** iam.organizations.roles.patch
+    , module Network.Google.Resource.IAM.Organizations.Roles.Patch
+
+    -- ** iam.organizations.roles.undelete
+    , module Network.Google.Resource.IAM.Organizations.Roles.Undelete
+
+    -- ** iam.permissions.queryTestablePermissions
+    , module Network.Google.Resource.IAM.Permissions.QueryTestablePermissions
+
+    -- ** iam.projects.roles.create
+    , module Network.Google.Resource.IAM.Projects.Roles.Create
+
+    -- ** iam.projects.roles.delete
+    , module Network.Google.Resource.IAM.Projects.Roles.Delete
+
+    -- ** iam.projects.roles.get
+    , module Network.Google.Resource.IAM.Projects.Roles.Get
+
+    -- ** iam.projects.roles.list
+    , module Network.Google.Resource.IAM.Projects.Roles.List
+
+    -- ** iam.projects.roles.patch
+    , module Network.Google.Resource.IAM.Projects.Roles.Patch
+
+    -- ** iam.projects.roles.undelete
+    , module Network.Google.Resource.IAM.Projects.Roles.Undelete
+
     -- ** iam.projects.serviceAccounts.create
     , module Network.Google.Resource.IAM.Projects.ServiceAccounts.Create
 
@@ -64,20 +103,57 @@ module Network.Google.IAM
     -- ** iam.projects.serviceAccounts.signBlob
     , module Network.Google.Resource.IAM.Projects.ServiceAccounts.SignBlob
 
+    -- ** iam.projects.serviceAccounts.signJwt
+    , module Network.Google.Resource.IAM.Projects.ServiceAccounts.SignJwt
+
     -- ** iam.projects.serviceAccounts.testIamPermissions
     , module Network.Google.Resource.IAM.Projects.ServiceAccounts.TestIAMPermissions
 
     -- ** iam.projects.serviceAccounts.update
     , module Network.Google.Resource.IAM.Projects.ServiceAccounts.Update
 
+    -- ** iam.roles.get
+    , module Network.Google.Resource.IAM.Roles.Get
+
+    -- ** iam.roles.list
+    , module Network.Google.Resource.IAM.Roles.List
+
     -- ** iam.roles.queryGrantableRoles
     , module Network.Google.Resource.IAM.Roles.QueryGrantableRoles
 
     -- * Types
 
+    -- ** CreateServiceAccountKeyRequestPrivateKeyType
+    , CreateServiceAccountKeyRequestPrivateKeyType (..)
+
+    -- ** UndeleteRoleRequest
+    , UndeleteRoleRequest
+    , undeleteRoleRequest
+    , urrEtag
+
+    -- ** Expr
+    , Expr
+    , expr
+    , eLocation
+    , eExpression
+    , eTitle
+    , eDescription
+
+    -- ** PermissionStage
+    , PermissionStage (..)
+
+    -- ** QueryGrantableRolesRequestView
+    , QueryGrantableRolesRequestView (..)
+
     -- ** Empty
     , Empty
     , empty
+
+    -- ** QueryTestablePermissionsResponse
+    , QueryTestablePermissionsResponse
+    , queryTestablePermissionsResponse
+    , qtprNextPageToken
+    , qtprPermissions
 
     -- ** AuditData
     , AuditData
@@ -106,12 +182,19 @@ module Network.Google.IAM
     , setIAMPolicyRequest
     , siprPolicy
 
+    -- ** SignJwtResponse
+    , SignJwtResponse
+    , signJwtResponse
+    , sjrKeyId
+    , sjrSignedJwt
+
     -- ** BindingDelta
     , BindingDelta
     , bindingDelta
     , bdAction
     , bdRole
     , bdMember
+    , bdCondition
 
     -- ** SignBlobRequest
     , SignBlobRequest
@@ -126,7 +209,11 @@ module Network.Google.IAM
     -- ** Role
     , Role
     , role'
+    , rStage
+    , rEtag
+    , rIncludedPermissions
     , rName
+    , rDeleted
     , rTitle
     , rDescription
 
@@ -141,10 +228,24 @@ module Network.Google.IAM
     , saProjectId
     , saOAuth2ClientId
 
+    -- ** QueryTestablePermissionsRequest
+    , QueryTestablePermissionsRequest
+    , queryTestablePermissionsRequest
+    , qtprFullResourceName
+    , qtprPageToken
+    , qtprPageSize
+
+    -- ** BindingDeltaAction
+    , BindingDeltaAction (..)
+
     -- ** QueryGrantableRolesResponse
     , QueryGrantableRolesResponse
     , queryGrantableRolesResponse
     , qgrrRoles
+    , qgrrNextPageToken
+
+    -- ** Xgafv
+    , Xgafv (..)
 
     -- ** TestIAMPermissionsRequest
     , TestIAMPermissionsRequest
@@ -163,6 +264,9 @@ module Network.Google.IAM
     , pVersion
     , pBindings
 
+    -- ** RoleStage
+    , RoleStage (..)
+
     -- ** PolicyDelta
     , PolicyDelta
     , policyDelta
@@ -172,6 +276,27 @@ module Network.Google.IAM
     , QueryGrantableRolesRequest
     , queryGrantableRolesRequest
     , qgrrFullResourceName
+    , qgrrView
+    , qgrrPageToken
+    , qgrrPageSize
+
+    -- ** SignJwtRequest
+    , SignJwtRequest
+    , signJwtRequest
+    , sjrPayload
+
+    -- ** ServiceAccountKeyKeyAlgorithm
+    , ServiceAccountKeyKeyAlgorithm (..)
+
+    -- ** Permission
+    , Permission
+    , permission
+    , pStage
+    , pOnlyInPredefinedRoles
+    , pCustomRolesSupportLevel
+    , pName
+    , pTitle
+    , pDescription
 
     -- ** SignBlobResponse
     , SignBlobResponse
@@ -185,11 +310,32 @@ module Network.Google.IAM
     , lsarNextPageToken
     , lsarAccounts
 
+    -- ** ListRolesResponse
+    , ListRolesResponse
+    , listRolesResponse
+    , lrrRoles
+    , lrrNextPageToken
+
+    -- ** CreateServiceAccountKeyRequestKeyAlgorithm
+    , CreateServiceAccountKeyRequestKeyAlgorithm (..)
+
+    -- ** PermissionCustomRolesSupportLevel
+    , PermissionCustomRolesSupportLevel (..)
+
     -- ** CreateServiceAccountRequest
     , CreateServiceAccountRequest
     , createServiceAccountRequest
     , csarServiceAccount
     , csarAccountId
+
+    -- ** CreateRoleRequest
+    , CreateRoleRequest
+    , createRoleRequest
+    , crrRoleId
+    , crrRole
+
+    -- ** ServiceAccountKeyPrivateKeyType
+    , ServiceAccountKeyPrivateKeyType (..)
 
     -- ** Binding
     , Binding
@@ -198,22 +344,38 @@ module Network.Google.IAM
     , bRole
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Create
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Delete
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Get
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.GetIAMPolicy
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Create
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Delete
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Get
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.List
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.List
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.SetIAMPolicy
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.SignBlob
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.TestIAMPermissions
-import           Network.Google.Resource.IAM.Projects.ServiceAccounts.Update
-import           Network.Google.Resource.IAM.Roles.QueryGrantableRoles
+import Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Resource.IAM.Organizations.Roles.Create
+import Network.Google.Resource.IAM.Organizations.Roles.Delete
+import Network.Google.Resource.IAM.Organizations.Roles.Get
+import Network.Google.Resource.IAM.Organizations.Roles.List
+import Network.Google.Resource.IAM.Organizations.Roles.Patch
+import Network.Google.Resource.IAM.Organizations.Roles.Undelete
+import Network.Google.Resource.IAM.Permissions.QueryTestablePermissions
+import Network.Google.Resource.IAM.Projects.Roles.Create
+import Network.Google.Resource.IAM.Projects.Roles.Delete
+import Network.Google.Resource.IAM.Projects.Roles.Get
+import Network.Google.Resource.IAM.Projects.Roles.List
+import Network.Google.Resource.IAM.Projects.Roles.Patch
+import Network.Google.Resource.IAM.Projects.Roles.Undelete
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Create
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Delete
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Get
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.GetIAMPolicy
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Create
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Delete
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Get
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.List
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.List
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.SetIAMPolicy
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.SignBlob
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.SignJwt
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.TestIAMPermissions
+import Network.Google.Resource.IAM.Projects.ServiceAccounts.Update
+import Network.Google.Resource.IAM.Roles.Get
+import Network.Google.Resource.IAM.Roles.List
+import Network.Google.Resource.IAM.Roles.QueryGrantableRoles
 
 {- $resources
 TODO
@@ -221,12 +383,27 @@ TODO
 
 -- | Represents the entirety of the methods and resources available for the Google Identity and Access Management (IAM) API service.
 type IAMAPI =
-     RolesQueryGrantableRolesResource :<|>
-       ProjectsServiceAccountsKeysListResource
+     RolesListResource :<|> RolesGetResource :<|>
+       RolesQueryGrantableRolesResource
+       :<|> PermissionsQueryTestablePermissionsResource
+       :<|> OrganizationsRolesListResource
+       :<|> OrganizationsRolesUndeleteResource
+       :<|> OrganizationsRolesPatchResource
+       :<|> OrganizationsRolesGetResource
+       :<|> OrganizationsRolesCreateResource
+       :<|> OrganizationsRolesDeleteResource
+       :<|> ProjectsRolesListResource
+       :<|> ProjectsRolesUndeleteResource
+       :<|> ProjectsRolesPatchResource
+       :<|> ProjectsRolesGetResource
+       :<|> ProjectsRolesCreateResource
+       :<|> ProjectsRolesDeleteResource
+       :<|> ProjectsServiceAccountsKeysListResource
        :<|> ProjectsServiceAccountsKeysGetResource
        :<|> ProjectsServiceAccountsKeysCreateResource
        :<|> ProjectsServiceAccountsKeysDeleteResource
        :<|> ProjectsServiceAccountsListResource
+       :<|> ProjectsServiceAccountsSignJwtResource
        :<|> ProjectsServiceAccountsGetIAMPolicyResource
        :<|> ProjectsServiceAccountsGetResource
        :<|> ProjectsServiceAccountsCreateResource

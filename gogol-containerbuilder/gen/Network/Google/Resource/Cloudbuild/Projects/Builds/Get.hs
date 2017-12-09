@@ -43,11 +43,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Builds.Get
     , pbgBearerToken
     , pbgId
     , pbgProjectId
+    , pbgFields
     , pbgCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.builds.get@ method which the
 -- 'ProjectsBuildsGet' request conforms to.
@@ -64,7 +65,8 @@ type ProjectsBuildsGetResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Build
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Build
 
 -- | Returns information about a previously requested build. The Build that
 -- is returned includes its status (e.g., success or failure, or
@@ -72,15 +74,16 @@ type ProjectsBuildsGetResource =
 --
 -- /See:/ 'projectsBuildsGet' smart constructor.
 data ProjectsBuildsGet = ProjectsBuildsGet'
-    { _pbgXgafv          :: !(Maybe Xgafv)
+    { _pbgXgafv :: !(Maybe Xgafv)
     , _pbgUploadProtocol :: !(Maybe Text)
-    , _pbgPp             :: !Bool
-    , _pbgAccessToken    :: !(Maybe Text)
-    , _pbgUploadType     :: !(Maybe Text)
-    , _pbgBearerToken    :: !(Maybe Text)
-    , _pbgId             :: !Text
-    , _pbgProjectId      :: !Text
-    , _pbgCallback       :: !(Maybe Text)
+    , _pbgPp :: !Bool
+    , _pbgAccessToken :: !(Maybe Text)
+    , _pbgUploadType :: !(Maybe Text)
+    , _pbgBearerToken :: !(Maybe Text)
+    , _pbgId :: !Text
+    , _pbgProjectId :: !Text
+    , _pbgFields :: !(Maybe Text)
+    , _pbgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsBuildsGet' with the minimum fields required to make a request.
@@ -103,12 +106,14 @@ data ProjectsBuildsGet = ProjectsBuildsGet'
 --
 -- * 'pbgProjectId'
 --
+-- * 'pbgFields'
+--
 -- * 'pbgCallback'
 projectsBuildsGet
     :: Text -- ^ 'pbgId'
     -> Text -- ^ 'pbgProjectId'
     -> ProjectsBuildsGet
-projectsBuildsGet pPbgId_ pPbgProjectId_ =
+projectsBuildsGet pPbgId_ pPbgProjectId_ = 
     ProjectsBuildsGet'
     { _pbgXgafv = Nothing
     , _pbgUploadProtocol = Nothing
@@ -118,6 +123,7 @@ projectsBuildsGet pPbgId_ pPbgProjectId_ =
     , _pbgBearerToken = Nothing
     , _pbgId = pPbgId_
     , _pbgProjectId = pPbgProjectId_
+    , _pbgFields = Nothing
     , _pbgCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ pbgProjectId :: Lens' ProjectsBuildsGet Text
 pbgProjectId
   = lens _pbgProjectId (\ s a -> s{_pbgProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pbgFields :: Lens' ProjectsBuildsGet (Maybe Text)
+pbgFields
+  = lens _pbgFields (\ s a -> s{_pbgFields = a})
+
 -- | JSONP
 pbgCallback :: Lens' ProjectsBuildsGet (Maybe Text)
 pbgCallback
@@ -179,6 +190,7 @@ instance GoogleRequest ProjectsBuildsGet where
               _pbgUploadType
               _pbgBearerToken
               _pbgCallback
+              _pbgFields
               (Just AltJSON)
               containerBuilderService
           where go

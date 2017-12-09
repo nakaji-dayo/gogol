@@ -39,22 +39,24 @@ module Network.Google.Resource.DFAReporting.DynamicTargetingKeys.Insert
     -- * Request Lenses
     , dtkiProFileId
     , dtkiPayload
+    , dtkiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.dynamicTargetingKeys.insert@ method which the
 -- 'DynamicTargetingKeysInsert' request conforms to.
 type DynamicTargetingKeysInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "dynamicTargetingKeys" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DynamicTargetingKey :>
-                   Post '[JSON] DynamicTargetingKey
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DynamicTargetingKey :>
+                     Post '[JSON] DynamicTargetingKey
 
 -- | Inserts a new dynamic targeting key. Keys must be created at the
 -- advertiser level before being assigned to the advertiser\'s ads,
@@ -65,7 +67,8 @@ type DynamicTargetingKeysInsertResource =
 -- /See:/ 'dynamicTargetingKeysInsert' smart constructor.
 data DynamicTargetingKeysInsert = DynamicTargetingKeysInsert'
     { _dtkiProFileId :: !(Textual Int64)
-    , _dtkiPayload   :: !DynamicTargetingKey
+    , _dtkiPayload :: !DynamicTargetingKey
+    , _dtkiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DynamicTargetingKeysInsert' with the minimum fields required to make a request.
@@ -75,14 +78,17 @@ data DynamicTargetingKeysInsert = DynamicTargetingKeysInsert'
 -- * 'dtkiProFileId'
 --
 -- * 'dtkiPayload'
+--
+-- * 'dtkiFields'
 dynamicTargetingKeysInsert
     :: Int64 -- ^ 'dtkiProFileId'
     -> DynamicTargetingKey -- ^ 'dtkiPayload'
     -> DynamicTargetingKeysInsert
-dynamicTargetingKeysInsert pDtkiProFileId_ pDtkiPayload_ =
+dynamicTargetingKeysInsert pDtkiProFileId_ pDtkiPayload_ = 
     DynamicTargetingKeysInsert'
     { _dtkiProFileId = _Coerce # pDtkiProFileId_
     , _dtkiPayload = pDtkiPayload_
+    , _dtkiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -97,6 +103,11 @@ dtkiPayload :: Lens' DynamicTargetingKeysInsert DynamicTargetingKey
 dtkiPayload
   = lens _dtkiPayload (\ s a -> s{_dtkiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dtkiFields :: Lens' DynamicTargetingKeysInsert (Maybe Text)
+dtkiFields
+  = lens _dtkiFields (\ s a -> s{_dtkiFields = a})
+
 instance GoogleRequest DynamicTargetingKeysInsert
          where
         type Rs DynamicTargetingKeysInsert =
@@ -104,7 +115,8 @@ instance GoogleRequest DynamicTargetingKeysInsert
         type Scopes DynamicTargetingKeysInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient DynamicTargetingKeysInsert'{..}
-          = go _dtkiProFileId (Just AltJSON) _dtkiPayload
+          = go _dtkiProFileId _dtkiFields (Just AltJSON)
+              _dtkiPayload
               dFAReportingService
           where go
                   = buildClient

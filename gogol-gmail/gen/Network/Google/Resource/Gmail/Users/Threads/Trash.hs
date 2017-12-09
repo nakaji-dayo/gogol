@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Threads.Trash
     -- * Request Lenses
     , uttUserId
     , uttId
+    , uttFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.threads.trash@ method which the
 -- 'UsersThreadsTrash' request conforms to.
@@ -50,14 +51,16 @@ type UsersThreadsTrashResource =
              "threads" :>
                Capture "id" Text :>
                  "trash" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Thread
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Thread
 
 -- | Moves the specified thread to the trash.
 --
 -- /See:/ 'usersThreadsTrash' smart constructor.
 data UsersThreadsTrash = UsersThreadsTrash'
     { _uttUserId :: !Text
-    , _uttId     :: !Text
+    , _uttId :: !Text
+    , _uttFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersThreadsTrash' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersThreadsTrash = UsersThreadsTrash'
 -- * 'uttUserId'
 --
 -- * 'uttId'
+--
+-- * 'uttFields'
 usersThreadsTrash
     :: Text -- ^ 'uttId'
     -> UsersThreadsTrash
-usersThreadsTrash pUttId_ =
+usersThreadsTrash pUttId_ = 
     UsersThreadsTrash'
     { _uttUserId = "me"
     , _uttId = pUttId_
+    , _uttFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -86,13 +92,19 @@ uttUserId
 uttId :: Lens' UsersThreadsTrash Text
 uttId = lens _uttId (\ s a -> s{_uttId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uttFields :: Lens' UsersThreadsTrash (Maybe Text)
+uttFields
+  = lens _uttFields (\ s a -> s{_uttFields = a})
+
 instance GoogleRequest UsersThreadsTrash where
         type Rs UsersThreadsTrash = Thread
         type Scopes UsersThreadsTrash =
              '["https://mail.google.com/",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersThreadsTrash'{..}
-          = go _uttUserId _uttId (Just AltJSON) gmailService
+          = go _uttUserId _uttId _uttFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersThreadsTrashResource)

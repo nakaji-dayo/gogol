@@ -37,10 +37,11 @@ module Network.Google.Resource.Directory.Members.Patch
     , mpMemberKey
     , mpGroupKey
     , mpPayload
+    , mpFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.members.patch@ method which the
 -- 'MembersPatch' request conforms to.
@@ -52,8 +53,9 @@ type MembersPatchResource =
              Capture "groupKey" Text :>
                "members" :>
                  Capture "memberKey" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Member :> Patch '[JSON] Member
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Member :> Patch '[JSON] Member
 
 -- | Update membership of a user in the specified group. This method supports
 -- patch semantics.
@@ -61,8 +63,9 @@ type MembersPatchResource =
 -- /See:/ 'membersPatch' smart constructor.
 data MembersPatch = MembersPatch'
     { _mpMemberKey :: !Text
-    , _mpGroupKey  :: !Text
-    , _mpPayload   :: !Member
+    , _mpGroupKey :: !Text
+    , _mpPayload :: !Member
+    , _mpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MembersPatch' with the minimum fields required to make a request.
@@ -74,25 +77,28 @@ data MembersPatch = MembersPatch'
 -- * 'mpGroupKey'
 --
 -- * 'mpPayload'
+--
+-- * 'mpFields'
 membersPatch
     :: Text -- ^ 'mpMemberKey'
     -> Text -- ^ 'mpGroupKey'
     -> Member -- ^ 'mpPayload'
     -> MembersPatch
-membersPatch pMpMemberKey_ pMpGroupKey_ pMpPayload_ =
+membersPatch pMpMemberKey_ pMpGroupKey_ pMpPayload_ = 
     MembersPatch'
     { _mpMemberKey = pMpMemberKey_
     , _mpGroupKey = pMpGroupKey_
     , _mpPayload = pMpPayload_
+    , _mpFields = Nothing
     }
 
--- | Email or immutable Id of the user. If Id, it should match with id of
+-- | Email or immutable ID of the user. If ID, it should match with id of
 -- member object
 mpMemberKey :: Lens' MembersPatch Text
 mpMemberKey
   = lens _mpMemberKey (\ s a -> s{_mpMemberKey = a})
 
--- | Email or immutable Id of the group. If Id, it should match with id of
+-- | Email or immutable ID of the group. If ID, it should match with id of
 -- group object
 mpGroupKey :: Lens' MembersPatch Text
 mpGroupKey
@@ -103,13 +109,18 @@ mpPayload :: Lens' MembersPatch Member
 mpPayload
   = lens _mpPayload (\ s a -> s{_mpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpFields :: Lens' MembersPatch (Maybe Text)
+mpFields = lens _mpFields (\ s a -> s{_mpFields = a})
+
 instance GoogleRequest MembersPatch where
         type Rs MembersPatch = Member
         type Scopes MembersPatch =
              '["https://www.googleapis.com/auth/admin.directory.group",
                "https://www.googleapis.com/auth/admin.directory.group.member"]
         requestClient MembersPatch'{..}
-          = go _mpGroupKey _mpMemberKey (Just AltJSON)
+          = go _mpGroupKey _mpMemberKey _mpFields
+              (Just AltJSON)
               _mpPayload
               directoryService
           where go

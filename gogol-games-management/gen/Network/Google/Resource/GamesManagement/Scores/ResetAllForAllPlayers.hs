@@ -33,10 +33,12 @@ module Network.Google.Resource.GamesManagement.Scores.ResetAllForAllPlayers
     , scoresResetAllForAllPlayers
     , ScoresResetAllForAllPlayers
 
+    -- * Request Lenses
+    , srafapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.scores.resetAllForAllPlayers@ method which the
 -- 'ScoresResetAllForAllPlayers' request conforms to.
@@ -45,21 +47,33 @@ type ScoresResetAllForAllPlayersResource =
        "v1management" :>
          "scores" :>
            "resetAllForAllPlayers" :>
-             QueryParam "alt" AltJSON :> Post '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets scores for all draft leaderboards for all players. This method is
 -- only available to user accounts for your developer console.
 --
 -- /See:/ 'scoresResetAllForAllPlayers' smart constructor.
-data ScoresResetAllForAllPlayers =
-    ScoresResetAllForAllPlayers'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype ScoresResetAllForAllPlayers = ScoresResetAllForAllPlayers'
+    { _srafapFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresResetAllForAllPlayers' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'srafapFields'
 scoresResetAllForAllPlayers
     :: ScoresResetAllForAllPlayers
-scoresResetAllForAllPlayers = ScoresResetAllForAllPlayers'
+scoresResetAllForAllPlayers = 
+    ScoresResetAllForAllPlayers'
+    { _srafapFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+srafapFields :: Lens' ScoresResetAllForAllPlayers (Maybe Text)
+srafapFields
+  = lens _srafapFields (\ s a -> s{_srafapFields = a})
 
 instance GoogleRequest ScoresResetAllForAllPlayers
          where
@@ -67,8 +81,9 @@ instance GoogleRequest ScoresResetAllForAllPlayers
         type Scopes ScoresResetAllForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
-        requestClient ScoresResetAllForAllPlayers'{}
-          = go (Just AltJSON) gamesManagementService
+        requestClient ScoresResetAllForAllPlayers'{..}
+          = go _srafapFields (Just AltJSON)
+              gamesManagementService
           where go
                   = buildClient
                       (Proxy :: Proxy ScoresResetAllForAllPlayersResource)

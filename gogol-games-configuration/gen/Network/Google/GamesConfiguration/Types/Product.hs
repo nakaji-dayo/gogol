@@ -17,17 +17,17 @@
 --
 module Network.Google.GamesConfiguration.Types.Product where
 
-import           Network.Google.GamesConfiguration.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types.Sum
+import Network.Google.Prelude
 
 -- | This is a JSON template for an image configuration resource.
 --
 -- /See:/ 'imageConfiguration' smart constructor.
 data ImageConfiguration = ImageConfiguration'
     { _icResourceId :: !(Maybe Text)
-    , _icKind       :: !Text
-    , _icURL        :: !(Maybe Text)
-    , _icImageType  :: !(Maybe Text)
+    , _icKind :: !Text
+    , _icURL :: !(Maybe Text)
+    , _icImageType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImageConfiguration' with the minimum fields required to make a request.
@@ -43,7 +43,7 @@ data ImageConfiguration = ImageConfiguration'
 -- * 'icImageType'
 imageConfiguration
     :: ImageConfiguration
-imageConfiguration =
+imageConfiguration = 
     ImageConfiguration'
     { _icResourceId = Nothing
     , _icKind = "gamesConfiguration#imageConfiguration"
@@ -94,8 +94,8 @@ instance ToJSON ImageConfiguration where
 -- /See:/ 'leaderboardConfigurationListResponse' smart constructor.
 data LeaderboardConfigurationListResponse = LeaderboardConfigurationListResponse'
     { _lclrNextPageToken :: !(Maybe Text)
-    , _lclrKind          :: !Text
-    , _lclrItems         :: !(Maybe [LeaderboardConfiguration])
+    , _lclrKind :: !Text
+    , _lclrItems :: !(Maybe [LeaderboardConfiguration])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationListResponse' with the minimum fields required to make a request.
@@ -109,7 +109,7 @@ data LeaderboardConfigurationListResponse = LeaderboardConfigurationListResponse
 -- * 'lclrItems'
 leaderboardConfigurationListResponse
     :: LeaderboardConfigurationListResponse
-leaderboardConfigurationListResponse =
+leaderboardConfigurationListResponse = 
     LeaderboardConfigurationListResponse'
     { _lclrNextPageToken = Nothing
     , _lclrKind = "gamesConfiguration#leaderboardConfigurationListResponse"
@@ -158,12 +158,12 @@ instance ToJSON LeaderboardConfigurationListResponse
 --
 -- /See:/ 'gamesNumberAffixConfiguration' smart constructor.
 data GamesNumberAffixConfiguration = GamesNumberAffixConfiguration'
-    { _gnacFew   :: !(Maybe LocalizedStringBundle)
+    { _gnacFew :: !(Maybe LocalizedStringBundle)
     , _gnacOther :: !(Maybe LocalizedStringBundle)
-    , _gnacTwo   :: !(Maybe LocalizedStringBundle)
-    , _gnacOne   :: !(Maybe LocalizedStringBundle)
-    , _gnacZero  :: !(Maybe LocalizedStringBundle)
-    , _gnacMany  :: !(Maybe LocalizedStringBundle)
+    , _gnacTwo :: !(Maybe LocalizedStringBundle)
+    , _gnacOne :: !(Maybe LocalizedStringBundle)
+    , _gnacZero :: !(Maybe LocalizedStringBundle)
+    , _gnacMany :: !(Maybe LocalizedStringBundle)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GamesNumberAffixConfiguration' with the minimum fields required to make a request.
@@ -183,7 +183,7 @@ data GamesNumberAffixConfiguration = GamesNumberAffixConfiguration'
 -- * 'gnacMany'
 gamesNumberAffixConfiguration
     :: GamesNumberAffixConfiguration
-gamesNumberAffixConfiguration =
+gamesNumberAffixConfiguration = 
     GamesNumberAffixConfiguration'
     { _gnacFew = Nothing
     , _gnacOther = Nothing
@@ -250,8 +250,8 @@ instance ToJSON GamesNumberAffixConfiguration where
 -- /See:/ 'achievementConfigurationListResponse' smart constructor.
 data AchievementConfigurationListResponse = AchievementConfigurationListResponse'
     { _aclrNextPageToken :: !(Maybe Text)
-    , _aclrKind          :: !Text
-    , _aclrItems         :: !(Maybe [AchievementConfiguration])
+    , _aclrKind :: !Text
+    , _aclrItems :: !(Maybe [AchievementConfiguration])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationListResponse' with the minimum fields required to make a request.
@@ -265,7 +265,7 @@ data AchievementConfigurationListResponse = AchievementConfigurationListResponse
 -- * 'aclrItems'
 achievementConfigurationListResponse
     :: AchievementConfigurationListResponse
-achievementConfigurationListResponse =
+achievementConfigurationListResponse = 
     AchievementConfigurationListResponse'
     { _aclrNextPageToken = Nothing
     , _aclrKind = "gamesConfiguration#achievementConfigurationListResponse"
@@ -314,13 +314,13 @@ instance ToJSON AchievementConfigurationListResponse
 --
 -- /See:/ 'leaderboardConfiguration' smart constructor.
 data LeaderboardConfiguration = LeaderboardConfiguration'
-    { _lcScoreMax   :: !(Maybe (Textual Int64))
-    , _lcKind       :: !Text
-    , _lcPublished  :: !(Maybe LeaderboardConfigurationDetail)
-    , _lcToken      :: !(Maybe Text)
-    , _lcScoreMin   :: !(Maybe (Textual Int64))
-    , _lcDraft      :: !(Maybe LeaderboardConfigurationDetail)
-    , _lcId         :: !(Maybe Text)
+    { _lcScoreMax :: !(Maybe (Textual Int64))
+    , _lcKind :: !Text
+    , _lcPublished :: !(Maybe LeaderboardConfigurationDetail)
+    , _lcToken :: !(Maybe Text)
+    , _lcScoreMin :: !(Maybe (Textual Int64))
+    , _lcDraft :: !(Maybe LeaderboardConfigurationDetail)
+    , _lcId :: !(Maybe Text)
     , _lcScoreOrder :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -345,7 +345,7 @@ data LeaderboardConfiguration = LeaderboardConfiguration'
 -- * 'lcScoreOrder'
 leaderboardConfiguration
     :: LeaderboardConfiguration
-leaderboardConfiguration =
+leaderboardConfiguration = 
     LeaderboardConfiguration'
     { _lcScoreMax = Nothing
     , _lcKind = "gamesConfiguration#leaderboardConfiguration"
@@ -430,13 +430,13 @@ instance ToJSON LeaderboardConfiguration where
 -- /See:/ 'achievementConfiguration' smart constructor.
 data AchievementConfiguration = AchievementConfiguration'
     { _acAchievementType :: !(Maybe Text)
-    , _acStepsToUnlock   :: !(Maybe (Textual Int32))
-    , _acKind            :: !Text
-    , _acPublished       :: !(Maybe AchievementConfigurationDetail)
-    , _acToken           :: !(Maybe Text)
-    , _acInitialState    :: !(Maybe Text)
-    , _acDraft           :: !(Maybe AchievementConfigurationDetail)
-    , _acId              :: !(Maybe Text)
+    , _acStepsToUnlock :: !(Maybe (Textual Int32))
+    , _acKind :: !Text
+    , _acPublished :: !(Maybe AchievementConfigurationDetail)
+    , _acToken :: !(Maybe Text)
+    , _acInitialState :: !(Maybe Text)
+    , _acDraft :: !(Maybe AchievementConfigurationDetail)
+    , _acId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfiguration' with the minimum fields required to make a request.
@@ -460,7 +460,7 @@ data AchievementConfiguration = AchievementConfiguration'
 -- * 'acId'
 achievementConfiguration
     :: AchievementConfiguration
-achievementConfiguration =
+achievementConfiguration = 
     AchievementConfiguration'
     { _acAchievementType = Nothing
     , _acStepsToUnlock = Nothing
@@ -548,9 +548,9 @@ instance ToJSON AchievementConfiguration where
 --
 -- /See:/ 'localizedString' smart constructor.
 data LocalizedString = LocalizedString'
-    { _lsKind   :: !Text
+    { _lsKind :: !Text
     , _lsLocale :: !(Maybe Text)
-    , _lsValue  :: !(Maybe Text)
+    , _lsValue :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LocalizedString' with the minimum fields required to make a request.
@@ -564,7 +564,7 @@ data LocalizedString = LocalizedString'
 -- * 'lsValue'
 localizedString
     :: LocalizedString
-localizedString =
+localizedString = 
     LocalizedString'
     { _lsKind = "gamesConfiguration#localizedString"
     , _lsLocale = Nothing
@@ -606,8 +606,8 @@ instance ToJSON LocalizedString where
 --
 -- /See:/ 'gamesNumberFormatConfiguration' smart constructor.
 data GamesNumberFormatConfiguration = GamesNumberFormatConfiguration'
-    { _gnfcSuffix           :: !(Maybe GamesNumberAffixConfiguration)
-    , _gnfcCurrencyCode     :: !(Maybe Text)
+    { _gnfcSuffix :: !(Maybe GamesNumberAffixConfiguration)
+    , _gnfcCurrencyCode :: !(Maybe Text)
     , _gnfcNumberFormatType :: !(Maybe Text)
     , _gnfcNumDecimalPlaces :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
@@ -625,7 +625,7 @@ data GamesNumberFormatConfiguration = GamesNumberFormatConfiguration'
 -- * 'gnfcNumDecimalPlaces'
 gamesNumberFormatConfiguration
     :: GamesNumberFormatConfiguration
-gamesNumberFormatConfiguration =
+gamesNumberFormatConfiguration = 
     GamesNumberFormatConfiguration'
     { _gnfcSuffix = Nothing
     , _gnfcCurrencyCode = Nothing
@@ -687,11 +687,11 @@ instance ToJSON GamesNumberFormatConfiguration where
 --
 -- /See:/ 'leaderboardConfigurationDetail' smart constructor.
 data LeaderboardConfigurationDetail = LeaderboardConfigurationDetail'
-    { _lcdKind        :: !Text
+    { _lcdKind :: !Text
     , _lcdScoreFormat :: !(Maybe GamesNumberFormatConfiguration)
-    , _lcdSortRank    :: !(Maybe (Textual Int32))
-    , _lcdName        :: !(Maybe LocalizedStringBundle)
-    , _lcdIconURL     :: !(Maybe Text)
+    , _lcdSortRank :: !(Maybe (Textual Int32))
+    , _lcdName :: !(Maybe LocalizedStringBundle)
+    , _lcdIconURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationDetail' with the minimum fields required to make a request.
@@ -709,7 +709,7 @@ data LeaderboardConfigurationDetail = LeaderboardConfigurationDetail'
 -- * 'lcdIconURL'
 leaderboardConfigurationDetail
     :: LeaderboardConfigurationDetail
-leaderboardConfigurationDetail =
+leaderboardConfigurationDetail = 
     LeaderboardConfigurationDetail'
     { _lcdKind = "gamesConfiguration#leaderboardConfigurationDetail"
     , _lcdScoreFormat = Nothing
@@ -771,11 +771,11 @@ instance ToJSON LeaderboardConfigurationDetail where
 --
 -- /See:/ 'achievementConfigurationDetail' smart constructor.
 data AchievementConfigurationDetail = AchievementConfigurationDetail'
-    { _acdKind        :: !Text
-    , _acdSortRank    :: !(Maybe (Textual Int32))
-    , _acdName        :: !(Maybe LocalizedStringBundle)
-    , _acdPointValue  :: !(Maybe (Textual Int32))
-    , _acdIconURL     :: !(Maybe Text)
+    { _acdKind :: !Text
+    , _acdSortRank :: !(Maybe (Textual Int32))
+    , _acdName :: !(Maybe LocalizedStringBundle)
+    , _acdPointValue :: !(Maybe (Textual Int32))
+    , _acdIconURL :: !(Maybe Text)
     , _acdDescription :: !(Maybe LocalizedStringBundle)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -796,7 +796,7 @@ data AchievementConfigurationDetail = AchievementConfigurationDetail'
 -- * 'acdDescription'
 achievementConfigurationDetail
     :: AchievementConfigurationDetail
-achievementConfigurationDetail =
+achievementConfigurationDetail = 
     AchievementConfigurationDetail'
     { _acdKind = "gamesConfiguration#achievementConfigurationDetail"
     , _acdSortRank = Nothing
@@ -868,7 +868,7 @@ instance ToJSON AchievementConfigurationDetail where
 --
 -- /See:/ 'localizedStringBundle' smart constructor.
 data LocalizedStringBundle = LocalizedStringBundle'
-    { _lsbKind         :: !Text
+    { _lsbKind :: !Text
     , _lsbTranslations :: !(Maybe [LocalizedString])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -881,7 +881,7 @@ data LocalizedStringBundle = LocalizedStringBundle'
 -- * 'lsbTranslations'
 localizedStringBundle
     :: LocalizedStringBundle
-localizedStringBundle =
+localizedStringBundle = 
     LocalizedStringBundle'
     { _lsbKind = "gamesConfiguration#localizedStringBundle"
     , _lsbTranslations = Nothing

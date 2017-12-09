@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Validate
     -- * Request Lenses
     , evPackageName
     , evEditId
+    , evFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.validate@ method which the
 -- 'EditsValidate' request conforms to.
@@ -50,7 +51,8 @@ type EditsValidateResource =
            Capture "packageName" Text :>
              "edits" :>
                CaptureMode "editId" "validate" Text :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] AppEdit
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] AppEdit
 
 -- | Checks that the edit can be successfully committed. The edit\'s changes
 -- are not applied to the live app.
@@ -58,7 +60,8 @@ type EditsValidateResource =
 -- /See:/ 'editsValidate' smart constructor.
 data EditsValidate = EditsValidate'
     { _evPackageName :: !Text
-    , _evEditId      :: !Text
+    , _evEditId :: !Text
+    , _evFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsValidate' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data EditsValidate = EditsValidate'
 -- * 'evPackageName'
 --
 -- * 'evEditId'
+--
+-- * 'evFields'
 editsValidate
     :: Text -- ^ 'evPackageName'
     -> Text -- ^ 'evEditId'
     -> EditsValidate
-editsValidate pEvPackageName_ pEvEditId_ =
+editsValidate pEvPackageName_ pEvEditId_ = 
     EditsValidate'
     { _evPackageName = pEvPackageName_
     , _evEditId = pEvEditId_
+    , _evFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -89,12 +95,17 @@ evPackageName
 evEditId :: Lens' EditsValidate Text
 evEditId = lens _evEditId (\ s a -> s{_evEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+evFields :: Lens' EditsValidate (Maybe Text)
+evFields = lens _evFields (\ s a -> s{_evFields = a})
+
 instance GoogleRequest EditsValidate where
         type Rs EditsValidate = AppEdit
         type Scopes EditsValidate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsValidate'{..}
-          = go _evPackageName _evEditId (Just AltJSON)
+          = go _evPackageName _evEditId _evFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient (Proxy :: Proxy EditsValidateResource)

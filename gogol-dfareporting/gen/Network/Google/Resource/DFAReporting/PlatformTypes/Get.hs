@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.PlatformTypes.Get
     -- * Request Lenses
     , ptgProFileId
     , ptgId
+    , ptgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.platformTypes.get@ method which the
 -- 'PlatformTypesGet' request conforms to.
 type PlatformTypesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "platformTypes" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] PlatformType
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] PlatformType
 
 -- | Gets one platform type by ID.
 --
 -- /See:/ 'platformTypesGet' smart constructor.
 data PlatformTypesGet = PlatformTypesGet'
     { _ptgProFileId :: !(Textual Int64)
-    , _ptgId        :: !(Textual Int64)
+    , _ptgId :: !(Textual Int64)
+    , _ptgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlatformTypesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PlatformTypesGet = PlatformTypesGet'
 -- * 'ptgProFileId'
 --
 -- * 'ptgId'
+--
+-- * 'ptgFields'
 platformTypesGet
     :: Int64 -- ^ 'ptgProFileId'
     -> Int64 -- ^ 'ptgId'
     -> PlatformTypesGet
-platformTypesGet pPtgProFileId_ pPtgId_ =
+platformTypesGet pPtgProFileId_ pPtgId_ = 
     PlatformTypesGet'
     { _ptgProFileId = _Coerce # pPtgProFileId_
     , _ptgId = _Coerce # pPtgId_
+    , _ptgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ ptgId :: Lens' PlatformTypesGet Int64
 ptgId
   = lens _ptgId (\ s a -> s{_ptgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ptgFields :: Lens' PlatformTypesGet (Maybe Text)
+ptgFields
+  = lens _ptgFields (\ s a -> s{_ptgFields = a})
+
 instance GoogleRequest PlatformTypesGet where
         type Rs PlatformTypesGet = PlatformType
         type Scopes PlatformTypesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlatformTypesGet'{..}
-          = go _ptgProFileId _ptgId (Just AltJSON)
+          = go _ptgProFileId _ptgId _ptgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

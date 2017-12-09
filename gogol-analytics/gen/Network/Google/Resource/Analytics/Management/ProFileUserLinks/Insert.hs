@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFileUserLinks.Insert
     , mpfuliProFileId
     , mpfuliPayload
     , mpfuliAccountId
+    , mpfuliFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileUserLinks.insert@ method which the
 -- 'ManagementProFileUserLinksInsert' request conforms to.
@@ -55,18 +56,20 @@ type ManagementProFileUserLinksInsertResource =
                    "profiles" :>
                      Capture "profileId" Text :>
                        "entityUserLinks" :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] EntityUserLink :>
-                             Post '[JSON] EntityUserLink
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] EntityUserLink :>
+                               Post '[JSON] EntityUserLink
 
 -- | Adds a new user to the given view (profile).
 --
 -- /See:/ 'managementProFileUserLinksInsert' smart constructor.
 data ManagementProFileUserLinksInsert = ManagementProFileUserLinksInsert'
     { _mpfuliWebPropertyId :: !Text
-    , _mpfuliProFileId     :: !Text
-    , _mpfuliPayload       :: !EntityUserLink
-    , _mpfuliAccountId     :: !Text
+    , _mpfuliProFileId :: !Text
+    , _mpfuliPayload :: !EntityUserLink
+    , _mpfuliAccountId :: !Text
+    , _mpfuliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileUserLinksInsert' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data ManagementProFileUserLinksInsert = ManagementProFileUserLinksInsert'
 -- * 'mpfuliPayload'
 --
 -- * 'mpfuliAccountId'
+--
+-- * 'mpfuliFields'
 managementProFileUserLinksInsert
     :: Text -- ^ 'mpfuliWebPropertyId'
     -> Text -- ^ 'mpfuliProFileId'
     -> EntityUserLink -- ^ 'mpfuliPayload'
     -> Text -- ^ 'mpfuliAccountId'
     -> ManagementProFileUserLinksInsert
-managementProFileUserLinksInsert pMpfuliWebPropertyId_ pMpfuliProFileId_ pMpfuliPayload_ pMpfuliAccountId_ =
+managementProFileUserLinksInsert pMpfuliWebPropertyId_ pMpfuliProFileId_ pMpfuliPayload_ pMpfuliAccountId_ = 
     ManagementProFileUserLinksInsert'
     { _mpfuliWebPropertyId = pMpfuliWebPropertyId_
     , _mpfuliProFileId = pMpfuliProFileId_
     , _mpfuliPayload = pMpfuliPayload_
     , _mpfuliAccountId = pMpfuliAccountId_
+    , _mpfuliFields = Nothing
     }
 
 -- | Web Property ID to create the user link for.
@@ -118,6 +124,11 @@ mpfuliAccountId
   = lens _mpfuliAccountId
       (\ s a -> s{_mpfuliAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfuliFields :: Lens' ManagementProFileUserLinksInsert (Maybe Text)
+mpfuliFields
+  = lens _mpfuliFields (\ s a -> s{_mpfuliFields = a})
+
 instance GoogleRequest
          ManagementProFileUserLinksInsert where
         type Rs ManagementProFileUserLinksInsert =
@@ -127,6 +138,7 @@ instance GoogleRequest
         requestClient ManagementProFileUserLinksInsert'{..}
           = go _mpfuliAccountId _mpfuliWebPropertyId
               _mpfuliProFileId
+              _mpfuliFields
               (Just AltJSON)
               _mpfuliPayload
               analyticsService

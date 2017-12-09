@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Instances.TruncateLog
     -- * Request Lenses
     , itlProject
     , itlPayload
+    , itlFields
     , itlInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.truncateLog@ method which the
 -- 'InstancesTruncateLog' request conforms to.
@@ -51,16 +52,18 @@ type InstancesTruncateLogResource =
              "instances" :>
                Capture "instance" Text :>
                  "truncateLog" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstancesTruncateLogRequest :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InstancesTruncateLogRequest :>
+                         Post '[JSON] Operation
 
 -- | Truncate MySQL general and slow query log tables
 --
 -- /See:/ 'instancesTruncateLog' smart constructor.
 data InstancesTruncateLog = InstancesTruncateLog'
-    { _itlProject  :: !Text
-    , _itlPayload  :: !InstancesTruncateLogRequest
+    { _itlProject :: !Text
+    , _itlPayload :: !InstancesTruncateLogRequest
+    , _itlFields :: !(Maybe Text)
     , _itlInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data InstancesTruncateLog = InstancesTruncateLog'
 --
 -- * 'itlPayload'
 --
+-- * 'itlFields'
+--
 -- * 'itlInstance'
 instancesTruncateLog
     :: Text -- ^ 'itlProject'
     -> InstancesTruncateLogRequest -- ^ 'itlPayload'
     -> Text -- ^ 'itlInstance'
     -> InstancesTruncateLog
-instancesTruncateLog pItlProject_ pItlPayload_ pItlInstance_ =
+instancesTruncateLog pItlProject_ pItlPayload_ pItlInstance_ = 
     InstancesTruncateLog'
     { _itlProject = pItlProject_
     , _itlPayload = pItlPayload_
+    , _itlFields = Nothing
     , _itlInstance = pItlInstance_
     }
 
@@ -95,6 +101,11 @@ itlPayload :: Lens' InstancesTruncateLog InstancesTruncateLogRequest
 itlPayload
   = lens _itlPayload (\ s a -> s{_itlPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+itlFields :: Lens' InstancesTruncateLog (Maybe Text)
+itlFields
+  = lens _itlFields (\ s a -> s{_itlFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 itlInstance :: Lens' InstancesTruncateLog Text
 itlInstance
@@ -106,7 +117,8 @@ instance GoogleRequest InstancesTruncateLog where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesTruncateLog'{..}
-          = go _itlProject _itlInstance (Just AltJSON)
+          = go _itlProject _itlInstance _itlFields
+              (Just AltJSON)
               _itlPayload
               sQLAdminService
           where go

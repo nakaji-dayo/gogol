@@ -45,11 +45,12 @@ module Network.Google.Resource.Classroom.Courses.Teachers.Get
     , ctgUploadType
     , ctgUserId
     , ctgBearerToken
+    , ctgFields
     , ctgCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.teachers.get@ method which the
 -- 'CoursesTeachersGet' request conforms to.
@@ -59,14 +60,15 @@ type CoursesTeachersGetResource =
          Capture "courseId" Text :>
            "teachers" :>
              Capture "userId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Teacher
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Teacher
 
 -- | Returns a teacher of a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
@@ -76,15 +78,16 @@ type CoursesTeachersGetResource =
 --
 -- /See:/ 'coursesTeachersGet' smart constructor.
 data CoursesTeachersGet = CoursesTeachersGet'
-    { _ctgXgafv          :: !(Maybe Text)
+    { _ctgXgafv :: !(Maybe Xgafv)
     , _ctgUploadProtocol :: !(Maybe Text)
-    , _ctgPp             :: !Bool
-    , _ctgCourseId       :: !Text
-    , _ctgAccessToken    :: !(Maybe Text)
-    , _ctgUploadType     :: !(Maybe Text)
-    , _ctgUserId         :: !Text
-    , _ctgBearerToken    :: !(Maybe Text)
-    , _ctgCallback       :: !(Maybe Text)
+    , _ctgPp :: !Bool
+    , _ctgCourseId :: !Text
+    , _ctgAccessToken :: !(Maybe Text)
+    , _ctgUploadType :: !(Maybe Text)
+    , _ctgUserId :: !Text
+    , _ctgBearerToken :: !(Maybe Text)
+    , _ctgFields :: !(Maybe Text)
+    , _ctgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesTeachersGet' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data CoursesTeachersGet = CoursesTeachersGet'
 --
 -- * 'ctgBearerToken'
 --
+-- * 'ctgFields'
+--
 -- * 'ctgCallback'
 coursesTeachersGet
     :: Text -- ^ 'ctgCourseId'
     -> Text -- ^ 'ctgUserId'
     -> CoursesTeachersGet
-coursesTeachersGet pCtgCourseId_ pCtgUserId_ =
+coursesTeachersGet pCtgCourseId_ pCtgUserId_ = 
     CoursesTeachersGet'
     { _ctgXgafv = Nothing
     , _ctgUploadProtocol = Nothing
@@ -122,11 +127,12 @@ coursesTeachersGet pCtgCourseId_ pCtgUserId_ =
     , _ctgUploadType = Nothing
     , _ctgUserId = pCtgUserId_
     , _ctgBearerToken = Nothing
+    , _ctgFields = Nothing
     , _ctgCallback = Nothing
     }
 
 -- | V1 error format.
-ctgXgafv :: Lens' CoursesTeachersGet (Maybe Text)
+ctgXgafv :: Lens' CoursesTeachersGet (Maybe Xgafv)
 ctgXgafv = lens _ctgXgafv (\ s a -> s{_ctgXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -170,6 +176,11 @@ ctgBearerToken
   = lens _ctgBearerToken
       (\ s a -> s{_ctgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ctgFields :: Lens' CoursesTeachersGet (Maybe Text)
+ctgFields
+  = lens _ctgFields (\ s a -> s{_ctgFields = a})
+
 -- | JSONP
 ctgCallback :: Lens' CoursesTeachersGet (Maybe Text)
 ctgCallback
@@ -190,6 +201,7 @@ instance GoogleRequest CoursesTeachersGet where
               _ctgUploadType
               _ctgBearerToken
               _ctgCallback
+              _ctgFields
               (Just AltJSON)
               classroomService
           where go

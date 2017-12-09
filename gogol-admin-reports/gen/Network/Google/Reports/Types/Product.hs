@@ -17,18 +17,18 @@
 --
 module Network.Google.Reports.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.Reports.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Reports.Types.Sum
 
 --
 -- /See:/ 'usageReportParametersItem' smart constructor.
 data UsageReportParametersItem = UsageReportParametersItem'
     { _urpiDatetimeValue :: !(Maybe DateTime')
-    , _urpiBoolValue     :: !(Maybe Bool)
-    , _urpiIntValue      :: !(Maybe (Textual Int64))
-    , _urpiStringValue   :: !(Maybe Text)
-    , _urpiName          :: !(Maybe Text)
-    , _urpiMsgValue      :: !(Maybe [UsageReportParametersItemMsgValueItem])
+    , _urpiBoolValue :: !(Maybe Bool)
+    , _urpiIntValue :: !(Maybe (Textual Int64))
+    , _urpiStringValue :: !(Maybe Text)
+    , _urpiName :: !(Maybe Text)
+    , _urpiMsgValue :: !(Maybe [UsageReportParametersItemMsgValueItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageReportParametersItem' with the minimum fields required to make a request.
@@ -48,7 +48,7 @@ data UsageReportParametersItem = UsageReportParametersItem'
 -- * 'urpiMsgValue'
 usageReportParametersItem
     :: UsageReportParametersItem
-usageReportParametersItem =
+usageReportParametersItem = 
     UsageReportParametersItem'
     { _urpiDatetimeValue = Nothing
     , _urpiBoolValue = Nothing
@@ -120,9 +120,9 @@ instance ToJSON UsageReportParametersItem where
 --
 -- /See:/ 'activityId' smart constructor.
 data ActivityId = ActivityId'
-    { _aiTime            :: !(Maybe DateTime')
+    { _aiTime :: !(Maybe DateTime')
     , _aiUniqueQualifier :: !(Maybe (Textual Int64))
-    , _aiCustomerId      :: !(Maybe Text)
+    , _aiCustomerId :: !(Maybe Text)
     , _aiApplicationName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -139,7 +139,7 @@ data ActivityId = ActivityId'
 -- * 'aiApplicationName'
 activityId
     :: ActivityId
-activityId =
+activityId = 
     ActivityId'
     { _aiTime = Nothing
     , _aiUniqueQualifier = Nothing
@@ -193,11 +193,11 @@ instance ToJSON ActivityId where
 --
 -- /See:/ 'usageReports' smart constructor.
 data UsageReports = UsageReports'
-    { _urEtag          :: !(Maybe Text)
+    { _urEtag :: !(Maybe Text)
     , _urNextPageToken :: !(Maybe Text)
-    , _urUsageReports  :: !(Maybe [UsageReport])
-    , _urKind          :: !Text
-    , _urWarnings      :: !(Maybe [UsageReportsWarningsItem])
+    , _urUsageReports :: !(Maybe [UsageReport])
+    , _urKind :: !Text
+    , _urWarnings :: !(Maybe [UsageReportsWarningsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageReports' with the minimum fields required to make a request.
@@ -215,7 +215,7 @@ data UsageReports = UsageReports'
 -- * 'urWarnings'
 usageReports
     :: UsageReports
-usageReports =
+usageReports = 
     UsageReports'
     { _urEtag = Nothing
     , _urNextPageToken = Nothing
@@ -287,7 +287,7 @@ newtype UsageReportParametersItemMsgValueItem = UsageReportParametersItemMsgValu
 usageReportParametersItemMsgValueItem
     :: HashMap Text JSONValue -- ^ 'urpimviAddtional'
     -> UsageReportParametersItemMsgValueItem
-usageReportParametersItemMsgValueItem pUrpimviAddtional_ =
+usageReportParametersItemMsgValueItem pUrpimviAddtional_ = 
     UsageReportParametersItemMsgValueItem'
     { _urpimviAddtional = _Coerce # pUrpimviAddtional_
     }
@@ -314,10 +314,10 @@ instance ToJSON UsageReportParametersItemMsgValueItem
 --
 -- /See:/ 'activities' smart constructor.
 data Activities = Activities'
-    { _aEtag          :: !(Maybe Text)
+    { _aEtag :: !(Maybe Text)
     , _aNextPageToken :: !(Maybe Text)
-    , _aKind          :: !Text
-    , _aItems         :: !(Maybe [Activity])
+    , _aKind :: !Text
+    , _aItems :: !(Maybe [Activity])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Activities' with the minimum fields required to make a request.
@@ -333,7 +333,7 @@ data Activities = Activities'
 -- * 'aItems'
 activities
     :: Activities
-activities =
+activities = 
     Activities'
     { _aEtag = Nothing
     , _aNextPageToken = Nothing
@@ -383,15 +383,15 @@ instance ToJSON Activities where
 -- /See:/ 'channel' smart constructor.
 data Channel = Channel'
     { _cResourceURI :: !(Maybe Text)
-    , _cResourceId  :: !(Maybe Text)
-    , _cKind        :: !Text
-    , _cExpiration  :: !(Maybe (Textual Int64))
-    , _cToken       :: !(Maybe Text)
-    , _cAddress     :: !(Maybe Text)
-    , _cPayload     :: !(Maybe Bool)
-    , _cParams      :: !(Maybe ChannelParams)
-    , _cId          :: !(Maybe Text)
-    , _cType        :: !(Maybe Text)
+    , _cResourceId :: !(Maybe Text)
+    , _cKind :: !Text
+    , _cExpiration :: !(Maybe (Textual Int64))
+    , _cToken :: !(Maybe Text)
+    , _cAddress :: !(Maybe Text)
+    , _cPayload :: !(Maybe Bool)
+    , _cParams :: !(Maybe ChannelParams)
+    , _cId :: !(Maybe Text)
+    , _cType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Channel' with the minimum fields required to make a request.
@@ -419,7 +419,7 @@ data Channel = Channel'
 -- * 'cType'
 channel
     :: Channel
-channel =
+channel = 
     Channel'
     { _cResourceURI = Nothing
     , _cResourceId = Nothing
@@ -514,11 +514,11 @@ instance ToJSON Channel where
 --
 -- /See:/ 'usageReport' smart constructor.
 data UsageReport = UsageReport'
-    { _uEtag       :: !(Maybe Text)
-    , _uKind       :: !Text
-    , _uDate       :: !(Maybe Text)
+    { _uEtag :: !(Maybe Text)
+    , _uKind :: !Text
+    , _uDate :: !(Maybe Text)
     , _uParameters :: !(Maybe [UsageReportParametersItem])
-    , _uEntity     :: !(Maybe UsageReportEntity)
+    , _uEntity :: !(Maybe UsageReportEntity)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageReport' with the minimum fields required to make a request.
@@ -536,7 +536,7 @@ data UsageReport = UsageReport'
 -- * 'uEntity'
 usageReport
     :: UsageReport
-usageReport =
+usageReport = 
     UsageReport'
     { _uEtag = Nothing
     , _uKind = "admin#reports#usageReport"
@@ -592,7 +592,7 @@ instance ToJSON UsageReport where
 -- /See:/ 'usageReportsWarningsItemDataItem' smart constructor.
 data UsageReportsWarningsItemDataItem = UsageReportsWarningsItemDataItem'
     { _urwidiValue :: !(Maybe Text)
-    , _urwidiKey   :: !(Maybe Text)
+    , _urwidiKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageReportsWarningsItemDataItem' with the minimum fields required to make a request.
@@ -604,7 +604,7 @@ data UsageReportsWarningsItemDataItem = UsageReportsWarningsItemDataItem'
 -- * 'urwidiKey'
 usageReportsWarningsItemDataItem
     :: UsageReportsWarningsItemDataItem
-usageReportsWarningsItemDataItem =
+usageReportsWarningsItemDataItem = 
     UsageReportsWarningsItemDataItem'
     { _urwidiValue = Nothing
     , _urwidiKey = Nothing
@@ -641,8 +641,8 @@ instance ToJSON UsageReportsWarningsItemDataItem
 --
 -- /See:/ 'usageReportsWarningsItem' smart constructor.
 data UsageReportsWarningsItem = UsageReportsWarningsItem'
-    { _urwiData    :: !(Maybe [UsageReportsWarningsItemDataItem])
-    , _urwiCode    :: !(Maybe Text)
+    { _urwiData :: !(Maybe [UsageReportsWarningsItemDataItem])
+    , _urwiCode :: !(Maybe Text)
     , _urwiMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -657,7 +657,7 @@ data UsageReportsWarningsItem = UsageReportsWarningsItem'
 -- * 'urwiMessage'
 usageReportsWarningsItem
     :: UsageReportsWarningsItem
-usageReportsWarningsItem =
+usageReportsWarningsItem = 
     UsageReportsWarningsItem'
     { _urwiData = Nothing
     , _urwiCode = Nothing
@@ -699,9 +699,9 @@ instance ToJSON UsageReportsWarningsItem where
 --
 -- /See:/ 'activityEventsItem' smart constructor.
 data ActivityEventsItem = ActivityEventsItem'
-    { _aeiName       :: !(Maybe Text)
+    { _aeiName :: !(Maybe Text)
     , _aeiParameters :: !(Maybe [ActivityEventsItemParametersItem])
-    , _aeiType       :: !(Maybe Text)
+    , _aeiType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivityEventsItem' with the minimum fields required to make a request.
@@ -715,7 +715,7 @@ data ActivityEventsItem = ActivityEventsItem'
 -- * 'aeiType'
 activityEventsItem
     :: ActivityEventsItem
-activityEventsItem =
+activityEventsItem = 
     ActivityEventsItem'
     { _aeiName = Nothing
     , _aeiParameters = Nothing
@@ -769,7 +769,7 @@ newtype ChannelParams = ChannelParams'
 channelParams
     :: HashMap Text Text -- ^ 'cpAddtional'
     -> ChannelParams
-channelParams pCpAddtional_ =
+channelParams pCpAddtional_ = 
     ChannelParams'
     { _cpAddtional = _Coerce # pCpAddtional_
     }
@@ -792,13 +792,13 @@ instance ToJSON ChannelParams where
 --
 -- /See:/ 'activity' smart constructor.
 data Activity = Activity'
-    { _actEtag        :: !(Maybe Text)
-    , _actIPAddress   :: !(Maybe Text)
-    , _actKind        :: !Text
-    , _actActor       :: !(Maybe ActivityActor)
+    { _actEtag :: !(Maybe Text)
+    , _actIPAddress :: !(Maybe Text)
+    , _actKind :: !Text
+    , _actActor :: !(Maybe ActivityActor)
     , _actOwnerDomain :: !(Maybe Text)
-    , _actEvents      :: !(Maybe [ActivityEventsItem])
-    , _actId          :: !(Maybe ActivityId)
+    , _actEvents :: !(Maybe [ActivityEventsItem])
+    , _actId :: !(Maybe ActivityId)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Activity' with the minimum fields required to make a request.
@@ -820,7 +820,7 @@ data Activity = Activity'
 -- * 'actId'
 activity
     :: Activity
-activity =
+activity = 
     Activity'
     { _actEtag = Nothing
     , _actIPAddress = Nothing
@@ -892,10 +892,11 @@ instance ToJSON Activity where
 --
 -- /See:/ 'usageReportEntity' smart constructor.
 data UsageReportEntity = UsageReportEntity'
-    { _ureProFileId  :: !(Maybe Text)
+    { _ureProFileId :: !(Maybe Text)
     , _ureCustomerId :: !(Maybe Text)
-    , _ureUserEmail  :: !(Maybe Text)
-    , _ureType       :: !(Maybe Text)
+    , _ureUserEmail :: !(Maybe Text)
+    , _ureType :: !(Maybe Text)
+    , _ureEntityId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsageReportEntity' with the minimum fields required to make a request.
@@ -909,14 +910,17 @@ data UsageReportEntity = UsageReportEntity'
 -- * 'ureUserEmail'
 --
 -- * 'ureType'
+--
+-- * 'ureEntityId'
 usageReportEntity
     :: UsageReportEntity
-usageReportEntity =
+usageReportEntity = 
     UsageReportEntity'
     { _ureProFileId = Nothing
     , _ureCustomerId = Nothing
     , _ureUserEmail = Nothing
     , _ureType = Nothing
+    , _ureEntityId = Nothing
     }
 
 -- | Obfuscated user id for the record.
@@ -930,14 +934,20 @@ ureCustomerId
   = lens _ureCustomerId
       (\ s a -> s{_ureCustomerId = a})
 
--- | user\'s email.
+-- | user\'s email. Only relevant if entity.type = \"USER\"
 ureUserEmail :: Lens' UsageReportEntity (Maybe Text)
 ureUserEmail
   = lens _ureUserEmail (\ s a -> s{_ureUserEmail = a})
 
--- | The type of item, can be a customer or user.
+-- | The type of item, can be customer, user, or entity (aka. object).
 ureType :: Lens' UsageReportEntity (Maybe Text)
 ureType = lens _ureType (\ s a -> s{_ureType = a})
+
+-- | Object key. Only relevant if entity.type = \"OBJECT\" Note:
+-- external-facing name of report is \"Entities\" rather than \"Objects\".
+ureEntityId :: Lens' UsageReportEntity (Maybe Text)
+ureEntityId
+  = lens _ureEntityId (\ s a -> s{_ureEntityId = a})
 
 instance FromJSON UsageReportEntity where
         parseJSON
@@ -946,7 +956,8 @@ instance FromJSON UsageReportEntity where
                  UsageReportEntity' <$>
                    (o .:? "profileId") <*> (o .:? "customerId") <*>
                      (o .:? "userEmail")
-                     <*> (o .:? "type"))
+                     <*> (o .:? "type")
+                     <*> (o .:? "entityId"))
 
 instance ToJSON UsageReportEntity where
         toJSON UsageReportEntity'{..}
@@ -955,17 +966,18 @@ instance ToJSON UsageReportEntity where
                  [("profileId" .=) <$> _ureProFileId,
                   ("customerId" .=) <$> _ureCustomerId,
                   ("userEmail" .=) <$> _ureUserEmail,
-                  ("type" .=) <$> _ureType])
+                  ("type" .=) <$> _ureType,
+                  ("entityId" .=) <$> _ureEntityId])
 
 --
 -- /See:/ 'activityEventsItemParametersItem' smart constructor.
 data ActivityEventsItemParametersItem = ActivityEventsItemParametersItem'
-    { _aeipiBoolValue     :: !(Maybe Bool)
-    , _aeipiIntValue      :: !(Maybe (Textual Int64))
-    , _aeipiValue         :: !(Maybe Text)
+    { _aeipiBoolValue :: !(Maybe Bool)
+    , _aeipiIntValue :: !(Maybe (Textual Int64))
+    , _aeipiValue :: !(Maybe Text)
     , _aeipiMultiIntValue :: !(Maybe [Textual Int64])
-    , _aeipiName          :: !(Maybe Text)
-    , _aeipiMultiValue    :: !(Maybe [Text])
+    , _aeipiName :: !(Maybe Text)
+    , _aeipiMultiValue :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivityEventsItemParametersItem' with the minimum fields required to make a request.
@@ -985,7 +997,7 @@ data ActivityEventsItemParametersItem = ActivityEventsItemParametersItem'
 -- * 'aeipiMultiValue'
 activityEventsItemParametersItem
     :: ActivityEventsItemParametersItem
-activityEventsItemParametersItem =
+activityEventsItemParametersItem = 
     ActivityEventsItemParametersItem'
     { _aeipiBoolValue = Nothing
     , _aeipiIntValue = Nothing
@@ -1062,10 +1074,10 @@ instance ToJSON ActivityEventsItemParametersItem
 --
 -- /See:/ 'activityActor' smart constructor.
 data ActivityActor = ActivityActor'
-    { _aaEmail      :: !(Maybe Text)
+    { _aaEmail :: !(Maybe Text)
     , _aaCallerType :: !(Maybe Text)
-    , _aaProFileId  :: !(Maybe Text)
-    , _aaKey        :: !(Maybe Text)
+    , _aaProFileId :: !(Maybe Text)
+    , _aaKey :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivityActor' with the minimum fields required to make a request.
@@ -1081,7 +1093,7 @@ data ActivityActor = ActivityActor'
 -- * 'aaKey'
 activityActor
     :: ActivityActor
-activityActor =
+activityActor = 
     ActivityActor'
     { _aaEmail = Nothing
     , _aaCallerType = Nothing

@@ -34,10 +34,11 @@ module Network.Google.Resource.PlusDomains.Circles.Get
 
     -- * Request Lenses
     , cgCircleId
+    , cgFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.circles.get@ method which the
 -- 'CirclesGet' request conforms to.
@@ -46,13 +47,15 @@ type CirclesGetResource =
        "v1" :>
          "circles" :>
            Capture "circleId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Circle
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Circle
 
 -- | Get a circle.
 --
 -- /See:/ 'circlesGet' smart constructor.
-newtype CirclesGet = CirclesGet'
-    { _cgCircleId :: Text
+data CirclesGet = CirclesGet'
+    { _cgCircleId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CirclesGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CirclesGet = CirclesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cgCircleId'
+--
+-- * 'cgFields'
 circlesGet
     :: Text -- ^ 'cgCircleId'
     -> CirclesGet
-circlesGet pCgCircleId_ =
+circlesGet pCgCircleId_ = 
     CirclesGet'
     { _cgCircleId = pCgCircleId_
+    , _cgFields = Nothing
     }
 
 -- | The ID of the circle to get.
@@ -73,13 +79,18 @@ cgCircleId :: Lens' CirclesGet Text
 cgCircleId
   = lens _cgCircleId (\ s a -> s{_cgCircleId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CirclesGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CirclesGet where
         type Rs CirclesGet = Circle
         type Scopes CirclesGet =
              '["https://www.googleapis.com/auth/plus.circles.read",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient CirclesGet'{..}
-          = go _cgCircleId (Just AltJSON) plusDomainsService
+          = go _cgCircleId _cgFields (Just AltJSON)
+              plusDomainsService
           where go
                   = buildClient (Proxy :: Proxy CirclesGetResource)
                       mempty

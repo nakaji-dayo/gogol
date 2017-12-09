@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceDeals.Update
     -- * Request Lenses
     , mduPayload
     , mduProposalId
+    , mduFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacedeals.update@ method which the
 -- 'MarketplaceDealsUpdate' request conforms to.
@@ -49,16 +50,18 @@ type MarketplaceDealsUpdateResource =
            Capture "proposalId" Text :>
              "deals" :>
                "update" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] EditAllOrderDealsRequest :>
-                     Post '[JSON] EditAllOrderDealsResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] EditAllOrderDealsRequest :>
+                       Post '[JSON] EditAllOrderDealsResponse
 
 -- | Replaces all the deals in the proposal with the passed in deals
 --
 -- /See:/ 'marketplaceDealsUpdate' smart constructor.
 data MarketplaceDealsUpdate = MarketplaceDealsUpdate'
-    { _mduPayload    :: !EditAllOrderDealsRequest
+    { _mduPayload :: !EditAllOrderDealsRequest
     , _mduProposalId :: !Text
+    , _mduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceDealsUpdate' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MarketplaceDealsUpdate = MarketplaceDealsUpdate'
 -- * 'mduPayload'
 --
 -- * 'mduProposalId'
+--
+-- * 'mduFields'
 marketplaceDealsUpdate
     :: EditAllOrderDealsRequest -- ^ 'mduPayload'
     -> Text -- ^ 'mduProposalId'
     -> MarketplaceDealsUpdate
-marketplaceDealsUpdate pMduPayload_ pMduProposalId_ =
+marketplaceDealsUpdate pMduPayload_ pMduProposalId_ = 
     MarketplaceDealsUpdate'
     { _mduPayload = pMduPayload_
     , _mduProposalId = pMduProposalId_
+    , _mduFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,13 +95,19 @@ mduProposalId
   = lens _mduProposalId
       (\ s a -> s{_mduProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mduFields :: Lens' MarketplaceDealsUpdate (Maybe Text)
+mduFields
+  = lens _mduFields (\ s a -> s{_mduFields = a})
+
 instance GoogleRequest MarketplaceDealsUpdate where
         type Rs MarketplaceDealsUpdate =
              EditAllOrderDealsResponse
         type Scopes MarketplaceDealsUpdate =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceDealsUpdate'{..}
-          = go _mduProposalId (Just AltJSON) _mduPayload
+          = go _mduProposalId _mduFields (Just AltJSON)
+              _mduPayload
               adExchangeBuyerService
           where go
                   = buildClient

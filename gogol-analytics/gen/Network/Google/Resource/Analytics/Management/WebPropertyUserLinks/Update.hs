@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyUserLinks.Update
     , mwpuluPayload
     , mwpuluAccountId
     , mwpuluLinkId
+    , mwpuluFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webpropertyUserLinks.update@ method which the
 -- 'ManagementWebPropertyUserLinksUpdate' request conforms to.
@@ -54,18 +55,20 @@ type ManagementWebPropertyUserLinksUpdateResource =
                  Capture "webPropertyId" Text :>
                    "entityUserLinks" :>
                      Capture "linkId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] EntityUserLink :>
-                           Put '[JSON] EntityUserLink
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] EntityUserLink :>
+                             Put '[JSON] EntityUserLink
 
 -- | Updates permissions for an existing user on the given web property.
 --
 -- /See:/ 'managementWebPropertyUserLinksUpdate' smart constructor.
 data ManagementWebPropertyUserLinksUpdate = ManagementWebPropertyUserLinksUpdate'
     { _mwpuluWebPropertyId :: !Text
-    , _mwpuluPayload       :: !EntityUserLink
-    , _mwpuluAccountId     :: !Text
-    , _mwpuluLinkId        :: !Text
+    , _mwpuluPayload :: !EntityUserLink
+    , _mwpuluAccountId :: !Text
+    , _mwpuluLinkId :: !Text
+    , _mwpuluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyUserLinksUpdate' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementWebPropertyUserLinksUpdate = ManagementWebPropertyUserLinksUpdate
 -- * 'mwpuluAccountId'
 --
 -- * 'mwpuluLinkId'
+--
+-- * 'mwpuluFields'
 managementWebPropertyUserLinksUpdate
     :: Text -- ^ 'mwpuluWebPropertyId'
     -> EntityUserLink -- ^ 'mwpuluPayload'
     -> Text -- ^ 'mwpuluAccountId'
     -> Text -- ^ 'mwpuluLinkId'
     -> ManagementWebPropertyUserLinksUpdate
-managementWebPropertyUserLinksUpdate pMwpuluWebPropertyId_ pMwpuluPayload_ pMwpuluAccountId_ pMwpuluLinkId_ =
+managementWebPropertyUserLinksUpdate pMwpuluWebPropertyId_ pMwpuluPayload_ pMwpuluAccountId_ pMwpuluLinkId_ = 
     ManagementWebPropertyUserLinksUpdate'
     { _mwpuluWebPropertyId = pMwpuluWebPropertyId_
     , _mwpuluPayload = pMwpuluPayload_
     , _mwpuluAccountId = pMwpuluAccountId_
     , _mwpuluLinkId = pMwpuluLinkId_
+    , _mwpuluFields = Nothing
     }
 
 -- | Web property ID to update the account-user link for.
@@ -116,6 +122,11 @@ mwpuluLinkId :: Lens' ManagementWebPropertyUserLinksUpdate Text
 mwpuluLinkId
   = lens _mwpuluLinkId (\ s a -> s{_mwpuluLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwpuluFields :: Lens' ManagementWebPropertyUserLinksUpdate (Maybe Text)
+mwpuluFields
+  = lens _mwpuluFields (\ s a -> s{_mwpuluFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyUserLinksUpdate where
         type Rs ManagementWebPropertyUserLinksUpdate =
@@ -126,6 +137,7 @@ instance GoogleRequest
           ManagementWebPropertyUserLinksUpdate'{..}
           = go _mwpuluAccountId _mwpuluWebPropertyId
               _mwpuluLinkId
+              _mwpuluFields
               (Just AltJSON)
               _mwpuluPayload
               analyticsService

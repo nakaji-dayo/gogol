@@ -35,10 +35,11 @@ module Network.Google.Resource.TaskQueue.Tasks.List
     -- * Request Lenses
     , tTaskQueue
     , tProject
+    , tFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.list@ method which the
 -- 'TasksList' request conforms to.
@@ -50,14 +51,16 @@ type TasksListResource =
              "taskqueues" :>
                Capture "taskqueue" Text :>
                  "tasks" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Tasks2
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Tasks2
 
 -- | List Tasks in a TaskQueue
 --
 -- /See:/ 'tasksList' smart constructor.
 data TasksList = TasksList'
     { _tTaskQueue :: !Text
-    , _tProject   :: !Text
+    , _tProject :: !Text
+    , _tFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksList' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TasksList = TasksList'
 -- * 'tTaskQueue'
 --
 -- * 'tProject'
+--
+-- * 'tFields'
 tasksList
     :: Text -- ^ 'tTaskQueue'
     -> Text -- ^ 'tProject'
     -> TasksList
-tasksList pTTaskQueue_ pTProject_ =
+tasksList pTTaskQueue_ pTProject_ = 
     TasksList'
     { _tTaskQueue = pTTaskQueue_
     , _tProject = pTProject_
+    , _tFields = Nothing
     }
 
 -- | The id of the taskqueue to list tasks from.
@@ -86,13 +92,17 @@ tTaskQueue
 tProject :: Lens' TasksList Text
 tProject = lens _tProject (\ s a -> s{_tProject = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tFields :: Lens' TasksList (Maybe Text)
+tFields = lens _tFields (\ s a -> s{_tFields = a})
+
 instance GoogleRequest TasksList where
         type Rs TasksList = Tasks2
         type Scopes TasksList =
              '["https://www.googleapis.com/auth/taskqueue",
                "https://www.googleapis.com/auth/taskqueue.consumer"]
         requestClient TasksList'{..}
-          = go _tProject _tTaskQueue (Just AltJSON)
+          = go _tProject _tTaskQueue _tFields (Just AltJSON)
               taskQueueService
           where go
                   = buildClient (Proxy :: Proxy TasksListResource)

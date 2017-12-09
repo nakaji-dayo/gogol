@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.Instances.Export
     -- * Request Lenses
     , ieProject
     , iePayload
+    , ieFields
     , ieInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.export@ method which the
 -- 'InstancesExport' request conforms to.
@@ -52,17 +53,19 @@ type InstancesExportResource =
              "instances" :>
                Capture "instance" Text :>
                  "export" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstancesExportRequest :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InstancesExportRequest :>
+                         Post '[JSON] Operation
 
 -- | Exports data from a Cloud SQL instance to a Google Cloud Storage bucket
 -- as a MySQL dump file.
 --
 -- /See:/ 'instancesExport' smart constructor.
 data InstancesExport = InstancesExport'
-    { _ieProject  :: !Text
-    , _iePayload  :: !InstancesExportRequest
+    { _ieProject :: !Text
+    , _iePayload :: !InstancesExportRequest
+    , _ieFields :: !(Maybe Text)
     , _ieInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -74,16 +77,19 @@ data InstancesExport = InstancesExport'
 --
 -- * 'iePayload'
 --
+-- * 'ieFields'
+--
 -- * 'ieInstance'
 instancesExport
     :: Text -- ^ 'ieProject'
     -> InstancesExportRequest -- ^ 'iePayload'
     -> Text -- ^ 'ieInstance'
     -> InstancesExport
-instancesExport pIeProject_ pIePayload_ pIeInstance_ =
+instancesExport pIeProject_ pIePayload_ pIeInstance_ = 
     InstancesExport'
     { _ieProject = pIeProject_
     , _iePayload = pIePayload_
+    , _ieFields = Nothing
     , _ieInstance = pIeInstance_
     }
 
@@ -97,6 +103,10 @@ iePayload :: Lens' InstancesExport InstancesExportRequest
 iePayload
   = lens _iePayload (\ s a -> s{_iePayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ieFields :: Lens' InstancesExport (Maybe Text)
+ieFields = lens _ieFields (\ s a -> s{_ieFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 ieInstance :: Lens' InstancesExport Text
 ieInstance
@@ -107,7 +117,8 @@ instance GoogleRequest InstancesExport where
         type Scopes InstancesExport =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient InstancesExport'{..}
-          = go _ieProject _ieInstance (Just AltJSON) _iePayload
+          = go _ieProject _ieInstance _ieFields (Just AltJSON)
+              _iePayload
               sQLAdminService
           where go
                   = buildClient

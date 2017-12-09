@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.Delete
     , mpfdWebPropertyId
     , mpfdProFileId
     , mpfdAccountId
+    , mpfdFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.delete@ method which the
 -- 'ManagementProFilesDelete' request conforms to.
@@ -53,15 +54,17 @@ type ManagementProFilesDeleteResource =
                  Capture "webPropertyId" Text :>
                    "profiles" :>
                      Capture "profileId" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a view (profile).
 --
 -- /See:/ 'managementProFilesDelete' smart constructor.
 data ManagementProFilesDelete = ManagementProFilesDelete'
     { _mpfdWebPropertyId :: !Text
-    , _mpfdProFileId     :: !Text
-    , _mpfdAccountId     :: !Text
+    , _mpfdProFileId :: !Text
+    , _mpfdAccountId :: !Text
+    , _mpfdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesDelete' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data ManagementProFilesDelete = ManagementProFilesDelete'
 -- * 'mpfdProFileId'
 --
 -- * 'mpfdAccountId'
+--
+-- * 'mpfdFields'
 managementProFilesDelete
     :: Text -- ^ 'mpfdWebPropertyId'
     -> Text -- ^ 'mpfdProFileId'
     -> Text -- ^ 'mpfdAccountId'
     -> ManagementProFilesDelete
-managementProFilesDelete pMpfdWebPropertyId_ pMpfdProFileId_ pMpfdAccountId_ =
+managementProFilesDelete pMpfdWebPropertyId_ pMpfdProFileId_ pMpfdAccountId_ = 
     ManagementProFilesDelete'
     { _mpfdWebPropertyId = pMpfdWebPropertyId_
     , _mpfdProFileId = pMpfdProFileId_
     , _mpfdAccountId = pMpfdAccountId_
+    , _mpfdFields = Nothing
     }
 
 -- | Web property ID to delete the view (profile) for.
@@ -103,12 +109,18 @@ mpfdAccountId
   = lens _mpfdAccountId
       (\ s a -> s{_mpfdAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mpfdFields :: Lens' ManagementProFilesDelete (Maybe Text)
+mpfdFields
+  = lens _mpfdFields (\ s a -> s{_mpfdFields = a})
+
 instance GoogleRequest ManagementProFilesDelete where
         type Rs ManagementProFilesDelete = ()
         type Scopes ManagementProFilesDelete =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementProFilesDelete'{..}
           = go _mpfdAccountId _mpfdWebPropertyId _mpfdProFileId
+              _mpfdFields
               (Just AltJSON)
               analyticsService
           where go

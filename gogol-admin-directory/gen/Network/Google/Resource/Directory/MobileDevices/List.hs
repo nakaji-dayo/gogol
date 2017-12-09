@@ -40,10 +40,11 @@ module Network.Google.Resource.Directory.MobileDevices.List
     , mdlProjection
     , mdlPageToken
     , mdlMaxResults
+    , mdlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.mobiledevices.list@ method which the
 -- 'MobileDevicesList' request conforms to.
@@ -62,20 +63,22 @@ type MobileDevicesListResource =
                            :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] MobileDevices
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] MobileDevices
 
 -- | Retrieve all Mobile Devices of a customer (paginated)
 --
 -- /See:/ 'mobileDevicesList' smart constructor.
 data MobileDevicesList = MobileDevicesList'
-    { _mdlOrderBy    :: !(Maybe MobileDevicesListOrderBy)
+    { _mdlOrderBy :: !(Maybe MobileDevicesListOrderBy)
     , _mdlCustomerId :: !Text
-    , _mdlSortOrder  :: !(Maybe MobileDevicesListSortOrder)
-    , _mdlQuery      :: !(Maybe Text)
+    , _mdlSortOrder :: !(Maybe MobileDevicesListSortOrder)
+    , _mdlQuery :: !(Maybe Text)
     , _mdlProjection :: !(Maybe MobileDevicesListProjection)
-    , _mdlPageToken  :: !(Maybe Text)
+    , _mdlPageToken :: !(Maybe Text)
     , _mdlMaxResults :: !(Maybe (Textual Int32))
+    , _mdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDevicesList' with the minimum fields required to make a request.
@@ -95,10 +98,12 @@ data MobileDevicesList = MobileDevicesList'
 -- * 'mdlPageToken'
 --
 -- * 'mdlMaxResults'
+--
+-- * 'mdlFields'
 mobileDevicesList
     :: Text -- ^ 'mdlCustomerId'
     -> MobileDevicesList
-mobileDevicesList pMdlCustomerId_ =
+mobileDevicesList pMdlCustomerId_ = 
     MobileDevicesList'
     { _mdlOrderBy = Nothing
     , _mdlCustomerId = pMdlCustomerId_
@@ -107,6 +112,7 @@ mobileDevicesList pMdlCustomerId_ =
     , _mdlProjection = Nothing
     , _mdlPageToken = Nothing
     , _mdlMaxResults = Nothing
+    , _mdlFields = Nothing
     }
 
 -- | Column to use for sorting results
@@ -114,7 +120,7 @@ mdlOrderBy :: Lens' MobileDevicesList (Maybe MobileDevicesListOrderBy)
 mdlOrderBy
   = lens _mdlOrderBy (\ s a -> s{_mdlOrderBy = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 mdlCustomerId :: Lens' MobileDevicesList Text
 mdlCustomerId
   = lens _mdlCustomerId
@@ -149,6 +155,11 @@ mdlMaxResults
       (\ s a -> s{_mdlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mdlFields :: Lens' MobileDevicesList (Maybe Text)
+mdlFields
+  = lens _mdlFields (\ s a -> s{_mdlFields = a})
+
 instance GoogleRequest MobileDevicesList where
         type Rs MobileDevicesList = MobileDevices
         type Scopes MobileDevicesList =
@@ -161,6 +172,7 @@ instance GoogleRequest MobileDevicesList where
               _mdlProjection
               _mdlPageToken
               _mdlMaxResults
+              _mdlFields
               (Just AltJSON)
               directoryService
           where go

@@ -52,10 +52,11 @@ module Network.Google.Resource.Calendar.Events.Watch
     , ewMaxResults
     , ewAlwaysIncludeEmail
     , ewTimeMax
+    , ewFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.watch@ method which the
 -- 'EventsWatch' request conforms to.
@@ -90,33 +91,35 @@ type EventsWatchResource =
                                                  :>
                                                  QueryParam "timeMax" DateTime'
                                                    :>
-                                                   QueryParam "alt" AltJSON :>
-                                                     ReqBody '[JSON] Channel :>
-                                                       Post '[JSON] Channel
+                                                   QueryParam "fields" Text :>
+                                                     QueryParam "alt" AltJSON :>
+                                                       ReqBody '[JSON] Channel
+                                                         :> Post '[JSON] Channel
 
 -- | Watch for changes to Events resources.
 --
 -- /See:/ 'eventsWatch' smart constructor.
 data EventsWatch = EventsWatch'
-    { _ewSyncToken               :: !(Maybe Text)
-    , _ewCalendarId              :: !Text
-    , _ewTimeMin                 :: !(Maybe DateTime')
-    , _ewOrderBy                 :: !(Maybe EventsWatchOrderBy)
-    , _ewSingleEvents            :: !(Maybe Bool)
+    { _ewSyncToken :: !(Maybe Text)
+    , _ewCalendarId :: !Text
+    , _ewTimeMin :: !(Maybe DateTime')
+    , _ewOrderBy :: !(Maybe EventsWatchOrderBy)
+    , _ewSingleEvents :: !(Maybe Bool)
     , _ewPrivateExtendedProperty :: !(Maybe [Text])
-    , _ewShowDeleted             :: !(Maybe Bool)
-    , _ewPayload                 :: !Channel
-    , _ewQ                       :: !(Maybe Text)
-    , _ewSharedExtendedProperty  :: !(Maybe [Text])
-    , _ewMaxAttendees            :: !(Maybe (Textual Int32))
-    , _ewICalUId                 :: !(Maybe Text)
-    , _ewUpdatedMin              :: !(Maybe DateTime')
-    , _ewPageToken               :: !(Maybe Text)
-    , _ewTimeZone                :: !(Maybe Text)
-    , _ewShowHiddenInvitations   :: !(Maybe Bool)
-    , _ewMaxResults              :: !(Textual Int32)
-    , _ewAlwaysIncludeEmail      :: !(Maybe Bool)
-    , _ewTimeMax                 :: !(Maybe DateTime')
+    , _ewShowDeleted :: !(Maybe Bool)
+    , _ewPayload :: !Channel
+    , _ewQ :: !(Maybe Text)
+    , _ewSharedExtendedProperty :: !(Maybe [Text])
+    , _ewMaxAttendees :: !(Maybe (Textual Int32))
+    , _ewICalUId :: !(Maybe Text)
+    , _ewUpdatedMin :: !(Maybe DateTime')
+    , _ewPageToken :: !(Maybe Text)
+    , _ewTimeZone :: !(Maybe Text)
+    , _ewShowHiddenInvitations :: !(Maybe Bool)
+    , _ewMaxResults :: !(Textual Int32)
+    , _ewAlwaysIncludeEmail :: !(Maybe Bool)
+    , _ewTimeMax :: !(Maybe DateTime')
+    , _ewFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsWatch' with the minimum fields required to make a request.
@@ -160,11 +163,13 @@ data EventsWatch = EventsWatch'
 -- * 'ewAlwaysIncludeEmail'
 --
 -- * 'ewTimeMax'
+--
+-- * 'ewFields'
 eventsWatch
     :: Text -- ^ 'ewCalendarId'
     -> Channel -- ^ 'ewPayload'
     -> EventsWatch
-eventsWatch pEwCalendarId_ pEwPayload_ =
+eventsWatch pEwCalendarId_ pEwPayload_ = 
     EventsWatch'
     { _ewSyncToken = Nothing
     , _ewCalendarId = pEwCalendarId_
@@ -185,6 +190,7 @@ eventsWatch pEwCalendarId_ pEwPayload_ =
     , _ewMaxResults = 250
     , _ewAlwaysIncludeEmail = Nothing
     , _ewTimeMax = Nothing
+    , _ewFields = Nothing
     }
 
 -- | Token obtained from the nextSyncToken field returned on the last page of
@@ -215,6 +221,7 @@ ewCalendarId
 -- The default is not to filter by end time. Must be an RFC3339 timestamp
 -- with mandatory time zone offset, e.g., 2011-06-03T10:00:00-07:00,
 -- 2011-06-03T10:00:00Z. Milliseconds may be provided but will be ignored.
+-- If timeMax is set, timeMin must be smaller than timeMax.
 ewTimeMin :: Lens' EventsWatch (Maybe UTCTime)
 ewTimeMin
   = lens _ewTimeMin (\ s a -> s{_ewTimeMin = a}) .
@@ -317,9 +324,12 @@ ewShowHiddenInvitations
   = lens _ewShowHiddenInvitations
       (\ s a -> s{_ewShowHiddenInvitations = a})
 
--- | Maximum number of events returned on one result page. By default the
--- value is 250 events. The page size can never be larger than 2500 events.
--- Optional.
+-- | Maximum number of events returned on one result page. The number of
+-- events in the resulting page may be less than this value, or none at
+-- all, even if there are more events matching the query. Incomplete pages
+-- can be detected by a non-empty nextPageToken field in the response. By
+-- default the value is 250 events. The page size can never be larger than
+-- 2500 events. Optional.
 ewMaxResults :: Lens' EventsWatch Int32
 ewMaxResults
   = lens _ewMaxResults (\ s a -> s{_ewMaxResults = a})
@@ -340,11 +350,16 @@ ewAlwaysIncludeEmail
 -- Optional. The default is not to filter by start time. Must be an RFC3339
 -- timestamp with mandatory time zone offset, e.g.,
 -- 2011-06-03T10:00:00-07:00, 2011-06-03T10:00:00Z. Milliseconds may be
--- provided but will be ignored.
+-- provided but will be ignored. If timeMin is set, timeMax must be greater
+-- than timeMin.
 ewTimeMax :: Lens' EventsWatch (Maybe UTCTime)
 ewTimeMax
   = lens _ewTimeMax (\ s a -> s{_ewTimeMax = a}) .
       mapping _DateTime
+
+-- | Selector specifying which fields to include in a partial response.
+ewFields :: Lens' EventsWatch (Maybe Text)
+ewFields = lens _ewFields (\ s a -> s{_ewFields = a})
 
 instance GoogleRequest EventsWatch where
         type Rs EventsWatch = Channel
@@ -367,6 +382,7 @@ instance GoogleRequest EventsWatch where
               (Just _ewMaxResults)
               _ewAlwaysIncludeEmail
               _ewTimeMax
+              _ewFields
               (Just AltJSON)
               _ewPayload
               appsCalendarService

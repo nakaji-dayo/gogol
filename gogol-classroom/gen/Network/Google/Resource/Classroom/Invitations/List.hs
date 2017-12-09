@@ -47,18 +47,19 @@ module Network.Google.Resource.Classroom.Invitations.List
     , ilBearerToken
     , ilPageToken
     , ilPageSize
+    , ilFields
     , ilCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.invitations.list@ method which the
 -- 'InvitationsList' request conforms to.
 type InvitationsListResource =
      "v1" :>
        "invitations" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "courseId" Text :>
@@ -69,8 +70,9 @@ type InvitationsListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListInvitationsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListInvitationsResponse
 
 -- | Returns a list of invitations that the requesting user is permitted to
 -- view, restricted to those that match the list request. *Note:* At least
@@ -80,17 +82,18 @@ type InvitationsListResource =
 --
 -- /See:/ 'invitationsList' smart constructor.
 data InvitationsList = InvitationsList'
-    { _ilXgafv          :: !(Maybe Text)
+    { _ilXgafv :: !(Maybe Xgafv)
     , _ilUploadProtocol :: !(Maybe Text)
-    , _ilPp             :: !Bool
-    , _ilCourseId       :: !(Maybe Text)
-    , _ilAccessToken    :: !(Maybe Text)
-    , _ilUploadType     :: !(Maybe Text)
-    , _ilUserId         :: !(Maybe Text)
-    , _ilBearerToken    :: !(Maybe Text)
-    , _ilPageToken      :: !(Maybe Text)
-    , _ilPageSize       :: !(Maybe (Textual Int32))
-    , _ilCallback       :: !(Maybe Text)
+    , _ilPp :: !Bool
+    , _ilCourseId :: !(Maybe Text)
+    , _ilAccessToken :: !(Maybe Text)
+    , _ilUploadType :: !(Maybe Text)
+    , _ilUserId :: !(Maybe Text)
+    , _ilBearerToken :: !(Maybe Text)
+    , _ilPageToken :: !(Maybe Text)
+    , _ilPageSize :: !(Maybe (Textual Int32))
+    , _ilFields :: !(Maybe Text)
+    , _ilCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InvitationsList' with the minimum fields required to make a request.
@@ -117,10 +120,12 @@ data InvitationsList = InvitationsList'
 --
 -- * 'ilPageSize'
 --
+-- * 'ilFields'
+--
 -- * 'ilCallback'
 invitationsList
     :: InvitationsList
-invitationsList =
+invitationsList = 
     InvitationsList'
     { _ilXgafv = Nothing
     , _ilUploadProtocol = Nothing
@@ -132,11 +137,12 @@ invitationsList =
     , _ilBearerToken = Nothing
     , _ilPageToken = Nothing
     , _ilPageSize = Nothing
+    , _ilFields = Nothing
     , _ilCallback = Nothing
     }
 
 -- | V1 error format.
-ilXgafv :: Lens' InvitationsList (Maybe Text)
+ilXgafv :: Lens' InvitationsList (Maybe Xgafv)
 ilXgafv = lens _ilXgafv (\ s a -> s{_ilXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -193,6 +199,10 @@ ilPageSize
   = lens _ilPageSize (\ s a -> s{_ilPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ilFields :: Lens' InvitationsList (Maybe Text)
+ilFields = lens _ilFields (\ s a -> s{_ilFields = a})
+
 -- | JSONP
 ilCallback :: Lens' InvitationsList (Maybe Text)
 ilCallback
@@ -213,6 +223,7 @@ instance GoogleRequest InvitationsList where
               _ilPageToken
               _ilPageSize
               _ilCallback
+              _ilFields
               (Just AltJSON)
               classroomService
           where go

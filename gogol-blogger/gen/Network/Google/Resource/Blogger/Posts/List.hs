@@ -44,10 +44,11 @@ module Network.Google.Resource.Blogger.Posts.List
     , pllLabels
     , pllPageToken
     , pllMaxResults
+    , pllFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.list@ method which the
 -- 'PostsList' request conforms to.
@@ -67,24 +68,26 @@ type PostsListResource =
                              QueryParam "labels" Text :>
                                QueryParam "pageToken" Text :>
                                  QueryParam "maxResults" (Textual Word32) :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] PostList
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] PostList
 
 -- | Retrieves a list of posts, possibly filtered.
 --
 -- /See:/ 'postsList' smart constructor.
 data PostsList = PostsList'
-    { _pllStatus      :: !(Maybe [PostsListStatus])
-    , _pllOrderBy     :: !PostsListOrderBy
+    { _pllStatus :: !(Maybe [PostsListStatus])
+    , _pllOrderBy :: !PostsListOrderBy
     , _pllFetchImages :: !(Maybe Bool)
-    , _pllEndDate     :: !(Maybe DateTime')
-    , _pllBlogId      :: !Text
-    , _pllStartDate   :: !(Maybe DateTime')
+    , _pllEndDate :: !(Maybe DateTime')
+    , _pllBlogId :: !Text
+    , _pllStartDate :: !(Maybe DateTime')
     , _pllFetchBodies :: !Bool
-    , _pllView        :: !(Maybe PostsListView)
-    , _pllLabels      :: !(Maybe Text)
-    , _pllPageToken   :: !(Maybe Text)
-    , _pllMaxResults  :: !(Maybe (Textual Word32))
+    , _pllView :: !(Maybe PostsListView)
+    , _pllLabels :: !(Maybe Text)
+    , _pllPageToken :: !(Maybe Text)
+    , _pllMaxResults :: !(Maybe (Textual Word32))
+    , _pllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsList' with the minimum fields required to make a request.
@@ -112,10 +115,12 @@ data PostsList = PostsList'
 -- * 'pllPageToken'
 --
 -- * 'pllMaxResults'
+--
+-- * 'pllFields'
 postsList
     :: Text -- ^ 'pllBlogId'
     -> PostsList
-postsList pPllBlogId_ =
+postsList pPllBlogId_ = 
     PostsList'
     { _pllStatus = Nothing
     , _pllOrderBy = Published
@@ -128,6 +133,7 @@ postsList pPllBlogId_ =
     , _pllLabels = Nothing
     , _pllPageToken = Nothing
     , _pllMaxResults = Nothing
+    , _pllFields = Nothing
     }
 
 -- | Statuses to include in the results.
@@ -195,6 +201,11 @@ pllMaxResults
       (\ s a -> s{_pllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pllFields :: Lens' PostsList (Maybe Text)
+pllFields
+  = lens _pllFields (\ s a -> s{_pllFields = a})
+
 instance GoogleRequest PostsList where
         type Rs PostsList = PostList
         type Scopes PostsList =
@@ -211,6 +222,7 @@ instance GoogleRequest PostsList where
               _pllLabels
               _pllPageToken
               _pllMaxResults
+              _pllFields
               (Just AltJSON)
               bloggerService
           where go

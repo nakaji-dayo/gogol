@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.Leaderboards.Get
     , lgConsistencyToken
     , lgLeaderboardId
     , lgLanguage
+    , lgFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.leaderboards.get@ method which the
 -- 'LeaderboardsGet' request conforms to.
@@ -50,15 +51,17 @@ type LeaderboardsGetResource =
            Capture "leaderboardId" Text :>
              QueryParam "consistencyToken" (Textual Int64) :>
                QueryParam "language" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Leaderboard
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Leaderboard
 
 -- | Retrieves the metadata of the leaderboard with the given ID.
 --
 -- /See:/ 'leaderboardsGet' smart constructor.
 data LeaderboardsGet = LeaderboardsGet'
     { _lgConsistencyToken :: !(Maybe (Textual Int64))
-    , _lgLeaderboardId    :: !Text
-    , _lgLanguage         :: !(Maybe Text)
+    , _lgLeaderboardId :: !Text
+    , _lgLanguage :: !(Maybe Text)
+    , _lgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardsGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data LeaderboardsGet = LeaderboardsGet'
 -- * 'lgLeaderboardId'
 --
 -- * 'lgLanguage'
+--
+-- * 'lgFields'
 leaderboardsGet
     :: Text -- ^ 'lgLeaderboardId'
     -> LeaderboardsGet
-leaderboardsGet pLgLeaderboardId_ =
+leaderboardsGet pLgLeaderboardId_ = 
     LeaderboardsGet'
     { _lgConsistencyToken = Nothing
     , _lgLeaderboardId = pLgLeaderboardId_
     , _lgLanguage = Nothing
+    , _lgFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -98,6 +104,10 @@ lgLanguage :: Lens' LeaderboardsGet (Maybe Text)
 lgLanguage
   = lens _lgLanguage (\ s a -> s{_lgLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lgFields :: Lens' LeaderboardsGet (Maybe Text)
+lgFields = lens _lgFields (\ s a -> s{_lgFields = a})
+
 instance GoogleRequest LeaderboardsGet where
         type Rs LeaderboardsGet = Leaderboard
         type Scopes LeaderboardsGet =
@@ -105,6 +115,7 @@ instance GoogleRequest LeaderboardsGet where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient LeaderboardsGet'{..}
           = go _lgLeaderboardId _lgConsistencyToken _lgLanguage
+              _lgFields
               (Just AltJSON)
               gamesService
           where go

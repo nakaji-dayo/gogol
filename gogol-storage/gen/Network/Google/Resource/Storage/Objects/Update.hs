@@ -39,14 +39,16 @@ module Network.Google.Resource.Storage.Objects.Update
     , ouPredefinedACL
     , ouBucket
     , ouPayload
+    , ouUserProject
     , ouIfMetagenerationNotMatch
     , ouObject
     , ouProjection
     , ouGeneration
+    , ouFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.objects.update@ method which the
 -- 'ObjectsUpdate' request conforms to.
@@ -62,45 +64,32 @@ type ObjectsUpdateResource =
                      QueryParam "ifGenerationMatch" (Textual Int64) :>
                        QueryParam "predefinedAcl" ObjectsUpdatePredefinedACL
                          :>
-                         QueryParam "ifMetagenerationNotMatch" (Textual Int64)
-                           :>
-                           QueryParam "projection" ObjectsUpdateProjection :>
-                             QueryParam "generation" (Textual Int64) :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] Object :> Put '[JSON] Object
-       :<|>
-       "storage" :>
-         "v1" :>
-           "b" :>
-             Capture "bucket" Text :>
-               "o" :>
-                 Capture "object" Text :>
-                   QueryParam "ifMetagenerationMatch" (Textual Int64) :>
-                     QueryParam "ifGenerationNotMatch" (Textual Int64) :>
-                       QueryParam "ifGenerationMatch" (Textual Int64) :>
-                         QueryParam "predefinedAcl" ObjectsUpdatePredefinedACL
-                           :>
+                         QueryParam "userProject" Text :>
                            QueryParam "ifMetagenerationNotMatch" (Textual Int64)
                              :>
                              QueryParam "projection" ObjectsUpdateProjection :>
                                QueryParam "generation" (Textual Int64) :>
-                                 QueryParam "alt" AltMedia :>
-                                   Put '[OctetStream] Stream
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] Object :>
+                                       Put '[JSON] Object
 
 -- | Updates an object\'s metadata.
 --
 -- /See:/ 'objectsUpdate' smart constructor.
 data ObjectsUpdate = ObjectsUpdate'
-    { _ouIfMetagenerationMatch    :: !(Maybe (Textual Int64))
-    , _ouIfGenerationNotMatch     :: !(Maybe (Textual Int64))
-    , _ouIfGenerationMatch        :: !(Maybe (Textual Int64))
-    , _ouPredefinedACL            :: !(Maybe ObjectsUpdatePredefinedACL)
-    , _ouBucket                   :: !Text
-    , _ouPayload                  :: !Object
+    { _ouIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _ouIfGenerationNotMatch :: !(Maybe (Textual Int64))
+    , _ouIfGenerationMatch :: !(Maybe (Textual Int64))
+    , _ouPredefinedACL :: !(Maybe ObjectsUpdatePredefinedACL)
+    , _ouBucket :: !Text
+    , _ouPayload :: !Object
+    , _ouUserProject :: !(Maybe Text)
     , _ouIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
-    , _ouObject                   :: !Text
-    , _ouProjection               :: !(Maybe ObjectsUpdateProjection)
-    , _ouGeneration               :: !(Maybe (Textual Int64))
+    , _ouObject :: !Text
+    , _ouProjection :: !(Maybe ObjectsUpdateProjection)
+    , _ouGeneration :: !(Maybe (Textual Int64))
+    , _ouFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ObjectsUpdate' with the minimum fields required to make a request.
@@ -119,6 +108,8 @@ data ObjectsUpdate = ObjectsUpdate'
 --
 -- * 'ouPayload'
 --
+-- * 'ouUserProject'
+--
 -- * 'ouIfMetagenerationNotMatch'
 --
 -- * 'ouObject'
@@ -126,12 +117,14 @@ data ObjectsUpdate = ObjectsUpdate'
 -- * 'ouProjection'
 --
 -- * 'ouGeneration'
+--
+-- * 'ouFields'
 objectsUpdate
     :: Text -- ^ 'ouBucket'
     -> Object -- ^ 'ouPayload'
     -> Text -- ^ 'ouObject'
     -> ObjectsUpdate
-objectsUpdate pOuBucket_ pOuPayload_ pOuObject_ =
+objectsUpdate pOuBucket_ pOuPayload_ pOuObject_ = 
     ObjectsUpdate'
     { _ouIfMetagenerationMatch = Nothing
     , _ouIfGenerationNotMatch = Nothing
@@ -139,10 +132,12 @@ objectsUpdate pOuBucket_ pOuPayload_ pOuObject_ =
     , _ouPredefinedACL = Nothing
     , _ouBucket = pOuBucket_
     , _ouPayload = pOuPayload_
+    , _ouUserProject = Nothing
     , _ouIfMetagenerationNotMatch = Nothing
     , _ouObject = pOuObject_
     , _ouProjection = Nothing
     , _ouGeneration = Nothing
+    , _ouFields = Nothing
     }
 
 -- | Makes the operation conditional on whether the object\'s current
@@ -154,7 +149,9 @@ ouIfMetagenerationMatch
       . mapping _Coerce
 
 -- | Makes the operation conditional on whether the object\'s current
--- generation does not match the given value.
+-- generation does not match the given value. If no live object exists, the
+-- precondition fails. Setting to 0 makes the operation succeed only if
+-- there is a live version of the object.
 ouIfGenerationNotMatch :: Lens' ObjectsUpdate (Maybe Int64)
 ouIfGenerationNotMatch
   = lens _ouIfGenerationNotMatch
@@ -162,7 +159,8 @@ ouIfGenerationNotMatch
       . mapping _Coerce
 
 -- | Makes the operation conditional on whether the object\'s current
--- generation matches the given value.
+-- generation matches the given value. Setting to 0 makes the operation
+-- succeed only if there are no live versions of the object.
 ouIfGenerationMatch :: Lens' ObjectsUpdate (Maybe Int64)
 ouIfGenerationMatch
   = lens _ouIfGenerationMatch
@@ -183,6 +181,13 @@ ouBucket = lens _ouBucket (\ s a -> s{_ouBucket = a})
 ouPayload :: Lens' ObjectsUpdate Object
 ouPayload
   = lens _ouPayload (\ s a -> s{_ouPayload = a})
+
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+ouUserProject :: Lens' ObjectsUpdate (Maybe Text)
+ouUserProject
+  = lens _ouUserProject
+      (\ s a -> s{_ouUserProject = a})
 
 -- | Makes the operation conditional on whether the object\'s current
 -- metageneration does not match the given value.
@@ -209,6 +214,10 @@ ouGeneration
   = lens _ouGeneration (\ s a -> s{_ouGeneration = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ouFields :: Lens' ObjectsUpdate (Maybe Text)
+ouFields = lens _ouFields (\ s a -> s{_ouFields = a})
+
 instance GoogleRequest ObjectsUpdate where
         type Rs ObjectsUpdate = Object
         type Scopes ObjectsUpdate =
@@ -219,31 +228,14 @@ instance GoogleRequest ObjectsUpdate where
               _ouIfGenerationNotMatch
               _ouIfGenerationMatch
               _ouPredefinedACL
+              _ouUserProject
               _ouIfMetagenerationNotMatch
               _ouProjection
               _ouGeneration
+              _ouFields
               (Just AltJSON)
               _ouPayload
               storageService
-          where go :<|> _
-                  = buildClient (Proxy :: Proxy ObjectsUpdateResource)
-                      mempty
-
-instance GoogleRequest (MediaDownload ObjectsUpdate)
-         where
-        type Rs (MediaDownload ObjectsUpdate) = Stream
-        type Scopes (MediaDownload ObjectsUpdate) =
-             Scopes ObjectsUpdate
-        requestClient (MediaDownload ObjectsUpdate'{..})
-          = go _ouBucket _ouObject _ouIfMetagenerationMatch
-              _ouIfGenerationNotMatch
-              _ouIfGenerationMatch
-              _ouPredefinedACL
-              _ouIfMetagenerationNotMatch
-              _ouProjection
-              _ouGeneration
-              (Just AltMedia)
-              storageService
-          where _ :<|> go
+          where go
                   = buildClient (Proxy :: Proxy ObjectsUpdateResource)
                       mempty

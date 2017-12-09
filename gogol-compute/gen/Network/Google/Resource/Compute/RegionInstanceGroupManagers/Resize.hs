@@ -27,7 +27,10 @@
 -- is marked DONE when the resize actions are scheduled even if the group
 -- has not yet added or deleted any instances. You must separately verify
 -- the status of the creating or deleting actions with the
--- listmanagedinstances method.
+-- listmanagedinstances method. If the group is part of a backend service
+-- that has enabled connection draining, it can take up to 60 seconds after
+-- the connection draining duration has elapsed before the VM instance is
+-- removed or deleted.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.regionInstanceGroupManagers.resize@.
 module Network.Google.Resource.Compute.RegionInstanceGroupManagers.Resize
@@ -40,14 +43,16 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.Resize
     , RegionInstanceGroupManagersResize
 
     -- * Request Lenses
+    , rigmrRequestId
     , rigmrProject
     , rigmrSize
     , rigmrInstanceGroupManager
     , rigmrRegion
+    , rigmrFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.resize@ method which the
 -- 'RegionInstanceGroupManagersResize' request conforms to.
@@ -62,7 +67,9 @@ type RegionInstanceGroupManagersResizeResource =
                    Capture "instanceGroupManager" Text :>
                      "resize" :>
                        QueryParam "size" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                         QueryParam "requestId" Text :>
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Changes the intended size for the managed instance group. If you
 -- increase the size, the group schedules actions to create new instances
@@ -71,19 +78,26 @@ type RegionInstanceGroupManagersResizeResource =
 -- is marked DONE when the resize actions are scheduled even if the group
 -- has not yet added or deleted any instances. You must separately verify
 -- the status of the creating or deleting actions with the
--- listmanagedinstances method.
+-- listmanagedinstances method. If the group is part of a backend service
+-- that has enabled connection draining, it can take up to 60 seconds after
+-- the connection draining duration has elapsed before the VM instance is
+-- removed or deleted.
 --
 -- /See:/ 'regionInstanceGroupManagersResize' smart constructor.
 data RegionInstanceGroupManagersResize = RegionInstanceGroupManagersResize'
-    { _rigmrProject              :: !Text
-    , _rigmrSize                 :: !(Textual Int32)
+    { _rigmrRequestId :: !(Maybe Text)
+    , _rigmrProject :: !Text
+    , _rigmrSize :: !(Textual Int32)
     , _rigmrInstanceGroupManager :: !Text
-    , _rigmrRegion               :: !Text
+    , _rigmrRegion :: !Text
+    , _rigmrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersResize' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rigmrRequestId'
 --
 -- * 'rigmrProject'
 --
@@ -92,19 +106,38 @@ data RegionInstanceGroupManagersResize = RegionInstanceGroupManagersResize'
 -- * 'rigmrInstanceGroupManager'
 --
 -- * 'rigmrRegion'
+--
+-- * 'rigmrFields'
 regionInstanceGroupManagersResize
     :: Text -- ^ 'rigmrProject'
     -> Int32 -- ^ 'rigmrSize'
     -> Text -- ^ 'rigmrInstanceGroupManager'
     -> Text -- ^ 'rigmrRegion'
     -> RegionInstanceGroupManagersResize
-regionInstanceGroupManagersResize pRigmrProject_ pRigmrSize_ pRigmrInstanceGroupManager_ pRigmrRegion_ =
+regionInstanceGroupManagersResize pRigmrProject_ pRigmrSize_ pRigmrInstanceGroupManager_ pRigmrRegion_ = 
     RegionInstanceGroupManagersResize'
-    { _rigmrProject = pRigmrProject_
+    { _rigmrRequestId = Nothing
+    , _rigmrProject = pRigmrProject_
     , _rigmrSize = _Coerce # pRigmrSize_
     , _rigmrInstanceGroupManager = pRigmrInstanceGroupManager_
     , _rigmrRegion = pRigmrRegion_
+    , _rigmrFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rigmrRequestId :: Lens' RegionInstanceGroupManagersResize (Maybe Text)
+rigmrRequestId
+  = lens _rigmrRequestId
+      (\ s a -> s{_rigmrRequestId = a})
 
 -- | Project ID for this request.
 rigmrProject :: Lens' RegionInstanceGroupManagersResize Text
@@ -128,6 +161,11 @@ rigmrRegion :: Lens' RegionInstanceGroupManagersResize Text
 rigmrRegion
   = lens _rigmrRegion (\ s a -> s{_rigmrRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmrFields :: Lens' RegionInstanceGroupManagersResize (Maybe Text)
+rigmrFields
+  = lens _rigmrFields (\ s a -> s{_rigmrFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersResize where
         type Rs RegionInstanceGroupManagersResize = Operation
@@ -138,6 +176,8 @@ instance GoogleRequest
           = go _rigmrProject _rigmrRegion
               _rigmrInstanceGroupManager
               (Just _rigmrSize)
+              _rigmrRequestId
+              _rigmrFields
               (Just AltJSON)
               computeService
           where go

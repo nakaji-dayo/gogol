@@ -34,10 +34,11 @@ module Network.Google.Resource.Analytics.Provisioning.CreateAccountTicket
 
     -- * Request Lenses
     , pcatPayload
+    , pcatFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.provisioning.createAccountTicket@ method which the
 -- 'ProvisioningCreateAccountTicket' request conforms to.
@@ -46,15 +47,17 @@ type ProvisioningCreateAccountTicketResource =
        "v3" :>
          "provisioning" :>
            "createAccountTicket" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] AccountTicket :>
-                 Post '[JSON] AccountTicket
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] AccountTicket :>
+                   Post '[JSON] AccountTicket
 
 -- | Creates an account ticket.
 --
 -- /See:/ 'provisioningCreateAccountTicket' smart constructor.
-newtype ProvisioningCreateAccountTicket = ProvisioningCreateAccountTicket'
-    { _pcatPayload :: AccountTicket
+data ProvisioningCreateAccountTicket = ProvisioningCreateAccountTicket'
+    { _pcatPayload :: !AccountTicket
+    , _pcatFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProvisioningCreateAccountTicket' with the minimum fields required to make a request.
@@ -62,18 +65,26 @@ newtype ProvisioningCreateAccountTicket = ProvisioningCreateAccountTicket'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pcatPayload'
+--
+-- * 'pcatFields'
 provisioningCreateAccountTicket
     :: AccountTicket -- ^ 'pcatPayload'
     -> ProvisioningCreateAccountTicket
-provisioningCreateAccountTicket pPcatPayload_ =
+provisioningCreateAccountTicket pPcatPayload_ = 
     ProvisioningCreateAccountTicket'
     { _pcatPayload = pPcatPayload_
+    , _pcatFields = Nothing
     }
 
 -- | Multipart request metadata.
 pcatPayload :: Lens' ProvisioningCreateAccountTicket AccountTicket
 pcatPayload
   = lens _pcatPayload (\ s a -> s{_pcatPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pcatFields :: Lens' ProvisioningCreateAccountTicket (Maybe Text)
+pcatFields
+  = lens _pcatFields (\ s a -> s{_pcatFields = a})
 
 instance GoogleRequest
          ProvisioningCreateAccountTicket where
@@ -82,7 +93,8 @@ instance GoogleRequest
         type Scopes ProvisioningCreateAccountTicket =
              '["https://www.googleapis.com/auth/analytics.provision"]
         requestClient ProvisioningCreateAccountTicket'{..}
-          = go (Just AltJSON) _pcatPayload analyticsService
+          = go _pcatFields (Just AltJSON) _pcatPayload
+              analyticsService
           where go
                   = buildClient
                       (Proxy ::

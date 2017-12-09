@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.ChannelSections.Update
     , csuPart
     , csuPayload
     , csuOnBehalfOfContentOwner
+    , csuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channelSections.update@ method which the
 -- 'ChannelSectionsUpdate' request conforms to.
@@ -49,17 +50,19 @@ type ChannelSectionsUpdateResource =
          "channelSections" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ChannelSection :>
-                   Put '[JSON] ChannelSection
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ChannelSection :>
+                     Put '[JSON] ChannelSection
 
 -- | Update a channelSection.
 --
 -- /See:/ 'channelSectionsUpdate' smart constructor.
 data ChannelSectionsUpdate = ChannelSectionsUpdate'
-    { _csuPart                   :: !Text
-    , _csuPayload                :: !ChannelSection
+    { _csuPart :: !Text
+    , _csuPayload :: !ChannelSection
     , _csuOnBehalfOfContentOwner :: !(Maybe Text)
+    , _csuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelSectionsUpdate' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data ChannelSectionsUpdate = ChannelSectionsUpdate'
 -- * 'csuPayload'
 --
 -- * 'csuOnBehalfOfContentOwner'
+--
+-- * 'csuFields'
 channelSectionsUpdate
     :: Text -- ^ 'csuPart'
     -> ChannelSection -- ^ 'csuPayload'
     -> ChannelSectionsUpdate
-channelSectionsUpdate pCsuPart_ pCsuPayload_ =
+channelSectionsUpdate pCsuPart_ pCsuPayload_ = 
     ChannelSectionsUpdate'
     { _csuPart = pCsuPart_
     , _csuPayload = pCsuPayload_
     , _csuOnBehalfOfContentOwner = Nothing
+    , _csuFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -109,6 +115,11 @@ csuOnBehalfOfContentOwner
   = lens _csuOnBehalfOfContentOwner
       (\ s a -> s{_csuOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csuFields :: Lens' ChannelSectionsUpdate (Maybe Text)
+csuFields
+  = lens _csuFields (\ s a -> s{_csuFields = a})
+
 instance GoogleRequest ChannelSectionsUpdate where
         type Rs ChannelSectionsUpdate = ChannelSection
         type Scopes ChannelSectionsUpdate =
@@ -117,6 +128,7 @@ instance GoogleRequest ChannelSectionsUpdate where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient ChannelSectionsUpdate'{..}
           = go (Just _csuPart) _csuOnBehalfOfContentOwner
+              _csuFields
               (Just AltJSON)
               _csuPayload
               youTubeService

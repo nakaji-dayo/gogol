@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.List
 
     -- * Request Lenses
     , salEnterpriseId
+    , salFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.serviceaccountkeys.list@ method which the
 -- 'ServiceAccountkeysList' request conforms to.
@@ -51,8 +52,9 @@ type ServiceAccountkeysListResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "serviceAccountKeys" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] ServiceAccountKeysListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] ServiceAccountKeysListResponse
 
 -- | Lists all active credentials for the service account associated with
 -- this enterprise. Only the ID and key type are returned. The calling
@@ -61,8 +63,9 @@ type ServiceAccountkeysListResource =
 -- service account by calling Enterprises.SetAccount.
 --
 -- /See:/ 'serviceAccountkeysList' smart constructor.
-newtype ServiceAccountkeysList = ServiceAccountkeysList'
-    { _salEnterpriseId :: Text
+data ServiceAccountkeysList = ServiceAccountkeysList'
+    { _salEnterpriseId :: !Text
+    , _salFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServiceAccountkeysList' with the minimum fields required to make a request.
@@ -70,12 +73,15 @@ newtype ServiceAccountkeysList = ServiceAccountkeysList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'salEnterpriseId'
+--
+-- * 'salFields'
 serviceAccountkeysList
     :: Text -- ^ 'salEnterpriseId'
     -> ServiceAccountkeysList
-serviceAccountkeysList pSalEnterpriseId_ =
+serviceAccountkeysList pSalEnterpriseId_ = 
     ServiceAccountkeysList'
     { _salEnterpriseId = pSalEnterpriseId_
+    , _salFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -84,13 +90,18 @@ salEnterpriseId
   = lens _salEnterpriseId
       (\ s a -> s{_salEnterpriseId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+salFields :: Lens' ServiceAccountkeysList (Maybe Text)
+salFields
+  = lens _salFields (\ s a -> s{_salFields = a})
+
 instance GoogleRequest ServiceAccountkeysList where
         type Rs ServiceAccountkeysList =
              ServiceAccountKeysListResponse
         type Scopes ServiceAccountkeysList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ServiceAccountkeysList'{..}
-          = go _salEnterpriseId (Just AltJSON)
+          = go _salEnterpriseId _salFields (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

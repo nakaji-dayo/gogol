@@ -40,10 +40,11 @@ module Network.Google.Resource.Blogger.Comments.ListByBlog
     , clbbFetchBodies
     , clbbPageToken
     , clbbMaxResults
+    , clbbFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.listByBlog@ method which the
 -- 'CommentsListByBlog' request conforms to.
@@ -59,19 +60,21 @@ type CommentsListByBlogResource =
                      QueryParam "fetchBodies" Bool :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] CommentList
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] CommentList
 
 -- | Retrieves the comments for a blog, across all posts, possibly filtered.
 --
 -- /See:/ 'commentsListByBlog' smart constructor.
 data CommentsListByBlog = CommentsListByBlog'
-    { _clbbStatus      :: !(Maybe [CommentsListByBlogStatus])
-    , _clbbEndDate     :: !(Maybe DateTime')
-    , _clbbBlogId      :: !Text
-    , _clbbStartDate   :: !(Maybe DateTime')
+    { _clbbStatus :: !(Maybe [CommentsListByBlogStatus])
+    , _clbbEndDate :: !(Maybe DateTime')
+    , _clbbBlogId :: !Text
+    , _clbbStartDate :: !(Maybe DateTime')
     , _clbbFetchBodies :: !(Maybe Bool)
-    , _clbbPageToken   :: !(Maybe Text)
-    , _clbbMaxResults  :: !(Maybe (Textual Word32))
+    , _clbbPageToken :: !(Maybe Text)
+    , _clbbMaxResults :: !(Maybe (Textual Word32))
+    , _clbbFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsListByBlog' with the minimum fields required to make a request.
@@ -91,10 +94,12 @@ data CommentsListByBlog = CommentsListByBlog'
 -- * 'clbbPageToken'
 --
 -- * 'clbbMaxResults'
+--
+-- * 'clbbFields'
 commentsListByBlog
     :: Text -- ^ 'clbbBlogId'
     -> CommentsListByBlog
-commentsListByBlog pClbbBlogId_ =
+commentsListByBlog pClbbBlogId_ = 
     CommentsListByBlog'
     { _clbbStatus = Nothing
     , _clbbEndDate = Nothing
@@ -103,6 +108,7 @@ commentsListByBlog pClbbBlogId_ =
     , _clbbFetchBodies = Nothing
     , _clbbPageToken = Nothing
     , _clbbMaxResults = Nothing
+    , _clbbFields = Nothing
     }
 
 clbbStatus :: Lens' CommentsListByBlog [CommentsListByBlogStatus]
@@ -148,6 +154,11 @@ clbbMaxResults
       (\ s a -> s{_clbbMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clbbFields :: Lens' CommentsListByBlog (Maybe Text)
+clbbFields
+  = lens _clbbFields (\ s a -> s{_clbbFields = a})
+
 instance GoogleRequest CommentsListByBlog where
         type Rs CommentsListByBlog = CommentList
         type Scopes CommentsListByBlog =
@@ -160,6 +171,7 @@ instance GoogleRequest CommentsListByBlog where
               _clbbFetchBodies
               _clbbPageToken
               _clbbMaxResults
+              _clbbFields
               (Just AltJSON)
               bloggerService
           where go

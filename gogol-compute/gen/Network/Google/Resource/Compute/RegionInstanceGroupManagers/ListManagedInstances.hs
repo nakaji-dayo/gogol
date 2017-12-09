@@ -42,10 +42,11 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.ListManagedIn
     , rigmlmiRegion
     , rigmlmiPageToken
     , rigmlmiMaxResults
+    , rigmlmiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.listManagedInstances@ method which the
 -- 'RegionInstanceGroupManagersListManagedInstances' request conforms to.
@@ -64,9 +65,10 @@ type RegionInstanceGroupManagersListManagedInstancesResource
                          QueryParam "filter" Text :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Word32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Post '[JSON]
-                                   RegionInstanceGroupManagersListInstancesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Post '[JSON]
+                                     RegionInstanceGroupManagersListInstancesResponse
 
 -- | Lists the instances in the managed instance group and instances that are
 -- scheduled to be created. The list includes any current actions that the
@@ -74,13 +76,14 @@ type RegionInstanceGroupManagersListManagedInstancesResource
 --
 -- /See:/ 'regionInstanceGroupManagersListManagedInstances' smart constructor.
 data RegionInstanceGroupManagersListManagedInstances = RegionInstanceGroupManagersListManagedInstances'
-    { _rigmlmiProject              :: !Text
+    { _rigmlmiProject :: !Text
     , _rigmlmiInstanceGroupManager :: !Text
-    , _rigmlmiOrderBy              :: !(Maybe Text)
-    , _rigmlmiFilter               :: !(Maybe Text)
-    , _rigmlmiRegion               :: !Text
-    , _rigmlmiPageToken            :: !(Maybe Text)
-    , _rigmlmiMaxResults           :: !(Textual Word32)
+    , _rigmlmiOrderBy :: !(Maybe Text)
+    , _rigmlmiFilter :: !(Maybe Text)
+    , _rigmlmiRegion :: !Text
+    , _rigmlmiPageToken :: !(Maybe Text)
+    , _rigmlmiMaxResults :: !(Textual Word32)
+    , _rigmlmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersListManagedInstances' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data RegionInstanceGroupManagersListManagedInstances = RegionInstanceGroupManage
 -- * 'rigmlmiPageToken'
 --
 -- * 'rigmlmiMaxResults'
+--
+-- * 'rigmlmiFields'
 regionInstanceGroupManagersListManagedInstances
     :: Text -- ^ 'rigmlmiProject'
     -> Text -- ^ 'rigmlmiInstanceGroupManager'
     -> Text -- ^ 'rigmlmiRegion'
     -> RegionInstanceGroupManagersListManagedInstances
-regionInstanceGroupManagersListManagedInstances pRigmlmiProject_ pRigmlmiInstanceGroupManager_ pRigmlmiRegion_ =
+regionInstanceGroupManagersListManagedInstances pRigmlmiProject_ pRigmlmiInstanceGroupManager_ pRigmlmiRegion_ = 
     RegionInstanceGroupManagersListManagedInstances'
     { _rigmlmiProject = pRigmlmiProject_
     , _rigmlmiInstanceGroupManager = pRigmlmiInstanceGroupManager_
@@ -114,6 +119,7 @@ regionInstanceGroupManagersListManagedInstances pRigmlmiProject_ pRigmlmiInstanc
     , _rigmlmiRegion = pRigmlmiRegion_
     , _rigmlmiPageToken = Nothing
     , _rigmlmiMaxResults = 500
+    , _rigmlmiFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -155,6 +161,12 @@ rigmlmiMaxResults
       (\ s a -> s{_rigmlmiMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rigmlmiFields :: Lens' RegionInstanceGroupManagersListManagedInstances (Maybe Text)
+rigmlmiFields
+  = lens _rigmlmiFields
+      (\ s a -> s{_rigmlmiFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersListManagedInstances where
         type Rs
@@ -174,6 +186,7 @@ instance GoogleRequest
               _rigmlmiFilter
               _rigmlmiPageToken
               (Just _rigmlmiMaxResults)
+              _rigmlmiFields
               (Just AltJSON)
               computeService
           where go

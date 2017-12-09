@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.Entries.List
     , elUploadType
     , elPayload
     , elBearerToken
+    , elFields
     , elCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.entries.list@ method which the
 -- 'EntriesList' request conforms to.
@@ -59,23 +60,25 @@ type EntriesListResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ListLogEntriesRequest :>
-                           Post '[JSON] ListLogEntriesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ListLogEntriesRequest :>
+                             Post '[JSON] ListLogEntriesResponse
 
 -- | Lists log entries. Use this method to retrieve log entries from
 -- Stackdriver Logging. For ways to export log entries, see Exporting Logs.
 --
 -- /See:/ 'entriesList' smart constructor.
 data EntriesList = EntriesList'
-    { _elXgafv          :: !(Maybe Xgafv)
+    { _elXgafv :: !(Maybe Xgafv)
     , _elUploadProtocol :: !(Maybe Text)
-    , _elPp             :: !Bool
-    , _elAccessToken    :: !(Maybe Text)
-    , _elUploadType     :: !(Maybe Text)
-    , _elPayload        :: !ListLogEntriesRequest
-    , _elBearerToken    :: !(Maybe Text)
-    , _elCallback       :: !(Maybe Text)
+    , _elPp :: !Bool
+    , _elAccessToken :: !(Maybe Text)
+    , _elUploadType :: !(Maybe Text)
+    , _elPayload :: !ListLogEntriesRequest
+    , _elBearerToken :: !(Maybe Text)
+    , _elFields :: !(Maybe Text)
+    , _elCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntriesList' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data EntriesList = EntriesList'
 --
 -- * 'elBearerToken'
 --
+-- * 'elFields'
+--
 -- * 'elCallback'
 entriesList
     :: ListLogEntriesRequest -- ^ 'elPayload'
     -> EntriesList
-entriesList pElPayload_ =
+entriesList pElPayload_ = 
     EntriesList'
     { _elXgafv = Nothing
     , _elUploadProtocol = Nothing
@@ -109,6 +114,7 @@ entriesList pElPayload_ =
     , _elUploadType = Nothing
     , _elPayload = pElPayload_
     , _elBearerToken = Nothing
+    , _elFields = Nothing
     , _elCallback = Nothing
     }
 
@@ -148,6 +154,10 @@ elBearerToken
   = lens _elBearerToken
       (\ s a -> s{_elBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+elFields :: Lens' EntriesList (Maybe Text)
+elFields = lens _elFields (\ s a -> s{_elFields = a})
+
 -- | JSONP
 elCallback :: Lens' EntriesList (Maybe Text)
 elCallback
@@ -166,6 +176,7 @@ instance GoogleRequest EntriesList where
               _elUploadType
               _elBearerToken
               _elCallback
+              _elFields
               (Just AltJSON)
               _elPayload
               loggingService

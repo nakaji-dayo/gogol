@@ -44,16 +44,17 @@ module Network.Google.Resource.DFAReporting.EventTags.List
     , etlSortOrder
     , etlAdId
     , etlSortField
+    , etlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.eventTags.list@ method which the
 -- 'EventTagsList' request conforms to.
 type EventTagsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "eventTags" :>
@@ -70,24 +71,26 @@ type EventTagsListResource =
                                QueryParam "adId" (Textual Int64) :>
                                  QueryParam "sortField" EventTagsListSortField
                                    :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] EventTagsListResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] EventTagsListResponse
 
 -- | Retrieves a list of event tags, possibly filtered.
 --
 -- /See:/ 'eventTagsList' smart constructor.
 data EventTagsList = EventTagsList'
     { _etlDefinitionsOnly :: !(Maybe Bool)
-    , _etlEventTagTypes   :: !(Maybe [EventTagsListEventTagTypes])
-    , _etlEnabled         :: !(Maybe Bool)
-    , _etlAdvertiserId    :: !(Maybe (Textual Int64))
-    , _etlSearchString    :: !(Maybe Text)
-    , _etlCampaignId      :: !(Maybe (Textual Int64))
-    , _etlIds             :: !(Maybe [Textual Int64])
-    , _etlProFileId       :: !(Textual Int64)
-    , _etlSortOrder       :: !(Maybe EventTagsListSortOrder)
-    , _etlAdId            :: !(Maybe (Textual Int64))
-    , _etlSortField       :: !(Maybe EventTagsListSortField)
+    , _etlEventTagTypes :: !(Maybe [EventTagsListEventTagTypes])
+    , _etlEnabled :: !(Maybe Bool)
+    , _etlAdvertiserId :: !(Maybe (Textual Int64))
+    , _etlSearchString :: !(Maybe Text)
+    , _etlCampaignId :: !(Maybe (Textual Int64))
+    , _etlIds :: !(Maybe [Textual Int64])
+    , _etlProFileId :: !(Textual Int64)
+    , _etlSortOrder :: !EventTagsListSortOrder
+    , _etlAdId :: !(Maybe (Textual Int64))
+    , _etlSortField :: !EventTagsListSortField
+    , _etlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTagsList' with the minimum fields required to make a request.
@@ -115,10 +118,12 @@ data EventTagsList = EventTagsList'
 -- * 'etlAdId'
 --
 -- * 'etlSortField'
+--
+-- * 'etlFields'
 eventTagsList
     :: Int64 -- ^ 'etlProFileId'
     -> EventTagsList
-eventTagsList pEtlProFileId_ =
+eventTagsList pEtlProFileId_ = 
     EventTagsList'
     { _etlDefinitionsOnly = Nothing
     , _etlEventTagTypes = Nothing
@@ -128,9 +133,10 @@ eventTagsList pEtlProFileId_ =
     , _etlCampaignId = Nothing
     , _etlIds = Nothing
     , _etlProFileId = _Coerce # pEtlProFileId_
-    , _etlSortOrder = Nothing
+    , _etlSortOrder = ETLSOAscending
     , _etlAdId = Nothing
-    , _etlSortField = Nothing
+    , _etlSortField = ETLSFID
+    , _etlFields = Nothing
     }
 
 -- | Examine only the specified campaign or advertiser\'s event tags for
@@ -204,8 +210,8 @@ etlProFileId
   = lens _etlProFileId (\ s a -> s{_etlProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-etlSortOrder :: Lens' EventTagsList (Maybe EventTagsListSortOrder)
+-- | Order of sorted results.
+etlSortOrder :: Lens' EventTagsList EventTagsListSortOrder
 etlSortOrder
   = lens _etlSortOrder (\ s a -> s{_etlSortOrder = a})
 
@@ -216,9 +222,14 @@ etlAdId
       mapping _Coerce
 
 -- | Field by which to sort the list.
-etlSortField :: Lens' EventTagsList (Maybe EventTagsListSortField)
+etlSortField :: Lens' EventTagsList EventTagsListSortField
 etlSortField
   = lens _etlSortField (\ s a -> s{_etlSortField = a})
+
+-- | Selector specifying which fields to include in a partial response.
+etlFields :: Lens' EventTagsList (Maybe Text)
+etlFields
+  = lens _etlFields (\ s a -> s{_etlFields = a})
 
 instance GoogleRequest EventTagsList where
         type Rs EventTagsList = EventTagsListResponse
@@ -232,9 +243,10 @@ instance GoogleRequest EventTagsList where
               _etlSearchString
               _etlCampaignId
               (_etlIds ^. _Default)
-              _etlSortOrder
+              (Just _etlSortOrder)
               _etlAdId
-              _etlSortField
+              (Just _etlSortField)
+              _etlFields
               (Just AltJSON)
               dFAReportingService
           where go

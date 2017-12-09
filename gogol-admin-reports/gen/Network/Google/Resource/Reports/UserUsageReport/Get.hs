@@ -41,10 +41,11 @@ module Network.Google.Resource.Reports.UserUsageReport.Get
     , uurgPageToken
     , uurgUserKey
     , uurgMaxResults
+    , uurgFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Reports.Types
+import Network.Google.Prelude
+import Network.Google.Reports.Types
 
 -- | A resource alias for @reports.userUsageReport.get@ method which the
 -- 'UserUsageReportGet' request conforms to.
@@ -62,21 +63,23 @@ type UserUsageReportGetResource =
                          QueryParam "parameters" Text :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Word32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] UsageReports
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] UsageReports
 
 -- | Retrieves a report which is a collection of properties \/ statistics for
 -- a set of users.
 --
 -- /See:/ 'userUsageReportGet' smart constructor.
 data UserUsageReportGet = UserUsageReportGet'
-    { _uurgFilters    :: !(Maybe Text)
+    { _uurgFilters :: !(Maybe Text)
     , _uurgCustomerId :: !(Maybe Text)
-    , _uurgDate       :: !Text
+    , _uurgDate :: !Text
     , _uurgParameters :: !(Maybe Text)
-    , _uurgPageToken  :: !(Maybe Text)
-    , _uurgUserKey    :: !Text
+    , _uurgPageToken :: !(Maybe Text)
+    , _uurgUserKey :: !Text
     , _uurgMaxResults :: !(Maybe (Textual Word32))
+    , _uurgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserUsageReportGet' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data UserUsageReportGet = UserUsageReportGet'
 -- * 'uurgUserKey'
 --
 -- * 'uurgMaxResults'
+--
+-- * 'uurgFields'
 userUsageReportGet
     :: Text -- ^ 'uurgDate'
     -> Text -- ^ 'uurgUserKey'
     -> UserUsageReportGet
-userUsageReportGet pUurgDate_ pUurgUserKey_ =
+userUsageReportGet pUurgDate_ pUurgUserKey_ = 
     UserUsageReportGet'
     { _uurgFilters = Nothing
     , _uurgCustomerId = Nothing
@@ -109,6 +114,7 @@ userUsageReportGet pUurgDate_ pUurgUserKey_ =
     , _uurgPageToken = Nothing
     , _uurgUserKey = pUurgUserKey_
     , _uurgMaxResults = Nothing
+    , _uurgFields = Nothing
     }
 
 -- | Represents the set of filters including parameter operator value.
@@ -153,6 +159,11 @@ uurgMaxResults
       (\ s a -> s{_uurgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+uurgFields :: Lens' UserUsageReportGet (Maybe Text)
+uurgFields
+  = lens _uurgFields (\ s a -> s{_uurgFields = a})
+
 instance GoogleRequest UserUsageReportGet where
         type Rs UserUsageReportGet = UsageReports
         type Scopes UserUsageReportGet =
@@ -163,6 +174,7 @@ instance GoogleRequest UserUsageReportGet where
               _uurgParameters
               _uurgPageToken
               _uurgMaxResults
+              _uurgFields
               (Just AltJSON)
               reportsService
           where go

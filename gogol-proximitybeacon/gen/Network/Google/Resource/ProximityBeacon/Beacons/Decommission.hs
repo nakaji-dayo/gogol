@@ -39,26 +39,27 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Decommission
     , BeaconsDecommission
 
     -- * Request Lenses
-    , beaXgafv
-    , beaUploadProtocol
-    , beaPp
-    , beaAccessToken
-    , beaBeaconName
-    , beaUploadType
-    , beaBearerToken
-    , beaProjectId
-    , beaCallback
+    , bddXgafv
+    , bddUploadProtocol
+    , bddPp
+    , bddAccessToken
+    , bddBeaconName
+    , bddUploadType
+    , bddBearerToken
+    , bddProjectId
+    , bddFields
+    , bddCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.decommission@ method which the
 -- 'BeaconsDecommission' request conforms to.
 type BeaconsDecommissionResource =
      "v1beta1" :>
        CaptureMode "beaconName" "decommission" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -66,7 +67,8 @@ type BeaconsDecommissionResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Empty
 
 -- | Decommissions the specified beacon in the service. This beacon will no
 -- longer be returned from \`beaconinfo.getforobserved\`. This operation is
@@ -78,73 +80,77 @@ type BeaconsDecommissionResource =
 --
 -- /See:/ 'beaconsDecommission' smart constructor.
 data BeaconsDecommission = BeaconsDecommission'
-    { _beaXgafv          :: !(Maybe Text)
-    , _beaUploadProtocol :: !(Maybe Text)
-    , _beaPp             :: !Bool
-    , _beaAccessToken    :: !(Maybe Text)
-    , _beaBeaconName     :: !Text
-    , _beaUploadType     :: !(Maybe Text)
-    , _beaBearerToken    :: !(Maybe Text)
-    , _beaProjectId      :: !(Maybe Text)
-    , _beaCallback       :: !(Maybe Text)
+    { _bddXgafv :: !(Maybe Xgafv)
+    , _bddUploadProtocol :: !(Maybe Text)
+    , _bddPp :: !Bool
+    , _bddAccessToken :: !(Maybe Text)
+    , _bddBeaconName :: !Text
+    , _bddUploadType :: !(Maybe Text)
+    , _bddBearerToken :: !(Maybe Text)
+    , _bddProjectId :: !(Maybe Text)
+    , _bddFields :: !(Maybe Text)
+    , _bddCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsDecommission' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'beaXgafv'
+-- * 'bddXgafv'
 --
--- * 'beaUploadProtocol'
+-- * 'bddUploadProtocol'
 --
--- * 'beaPp'
+-- * 'bddPp'
 --
--- * 'beaAccessToken'
+-- * 'bddAccessToken'
 --
--- * 'beaBeaconName'
+-- * 'bddBeaconName'
 --
--- * 'beaUploadType'
+-- * 'bddUploadType'
 --
--- * 'beaBearerToken'
+-- * 'bddBearerToken'
 --
--- * 'beaProjectId'
+-- * 'bddProjectId'
 --
--- * 'beaCallback'
+-- * 'bddFields'
+--
+-- * 'bddCallback'
 beaconsDecommission
-    :: Text -- ^ 'beaBeaconName'
+    :: Text -- ^ 'bddBeaconName'
     -> BeaconsDecommission
-beaconsDecommission pBeaBeaconName_ =
+beaconsDecommission pBddBeaconName_ = 
     BeaconsDecommission'
-    { _beaXgafv = Nothing
-    , _beaUploadProtocol = Nothing
-    , _beaPp = True
-    , _beaAccessToken = Nothing
-    , _beaBeaconName = pBeaBeaconName_
-    , _beaUploadType = Nothing
-    , _beaBearerToken = Nothing
-    , _beaProjectId = Nothing
-    , _beaCallback = Nothing
+    { _bddXgafv = Nothing
+    , _bddUploadProtocol = Nothing
+    , _bddPp = True
+    , _bddAccessToken = Nothing
+    , _bddBeaconName = pBddBeaconName_
+    , _bddUploadType = Nothing
+    , _bddBearerToken = Nothing
+    , _bddProjectId = Nothing
+    , _bddFields = Nothing
+    , _bddCallback = Nothing
     }
 
 -- | V1 error format.
-beaXgafv :: Lens' BeaconsDecommission (Maybe Text)
-beaXgafv = lens _beaXgafv (\ s a -> s{_beaXgafv = a})
+bddXgafv :: Lens' BeaconsDecommission (Maybe Xgafv)
+bddXgafv = lens _bddXgafv (\ s a -> s{_bddXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
-beaUploadProtocol :: Lens' BeaconsDecommission (Maybe Text)
-beaUploadProtocol
-  = lens _beaUploadProtocol
-      (\ s a -> s{_beaUploadProtocol = a})
+bddUploadProtocol :: Lens' BeaconsDecommission (Maybe Text)
+bddUploadProtocol
+  = lens _bddUploadProtocol
+      (\ s a -> s{_bddUploadProtocol = a})
 
 -- | Pretty-print response.
-beaPp :: Lens' BeaconsDecommission Bool
-beaPp = lens _beaPp (\ s a -> s{_beaPp = a})
+bddPp :: Lens' BeaconsDecommission Bool
+bddPp = lens _bddPp (\ s a -> s{_bddPp = a})
 
 -- | OAuth access token.
-beaAccessToken :: Lens' BeaconsDecommission (Maybe Text)
-beaAccessToken
-  = lens _beaAccessToken
-      (\ s a -> s{_beaAccessToken = a})
+bddAccessToken :: Lens' BeaconsDecommission (Maybe Text)
+bddAccessToken
+  = lens _bddAccessToken
+      (\ s a -> s{_bddAccessToken = a})
 
 -- | Beacon that should be decommissioned. A beacon name has the format
 -- \"beacons\/N!beaconId\" where the beaconId is the base16 ID broadcast by
@@ -152,47 +158,53 @@ beaAccessToken
 -- \`3\` for Eddystone-UID, \`4\` for Eddystone-EID, \`1\` for iBeacon, or
 -- \`5\` for AltBeacon. For Eddystone-EID beacons, you may use either the
 -- current EID of the beacon\'s \"stable\" UID. Required.
-beaBeaconName :: Lens' BeaconsDecommission Text
-beaBeaconName
-  = lens _beaBeaconName
-      (\ s a -> s{_beaBeaconName = a})
+bddBeaconName :: Lens' BeaconsDecommission Text
+bddBeaconName
+  = lens _bddBeaconName
+      (\ s a -> s{_bddBeaconName = a})
 
 -- | Legacy upload protocol for media (e.g. \"media\", \"multipart\").
-beaUploadType :: Lens' BeaconsDecommission (Maybe Text)
-beaUploadType
-  = lens _beaUploadType
-      (\ s a -> s{_beaUploadType = a})
+bddUploadType :: Lens' BeaconsDecommission (Maybe Text)
+bddUploadType
+  = lens _bddUploadType
+      (\ s a -> s{_bddUploadType = a})
 
 -- | OAuth bearer token.
-beaBearerToken :: Lens' BeaconsDecommission (Maybe Text)
-beaBearerToken
-  = lens _beaBearerToken
-      (\ s a -> s{_beaBearerToken = a})
+bddBearerToken :: Lens' BeaconsDecommission (Maybe Text)
+bddBearerToken
+  = lens _bddBearerToken
+      (\ s a -> s{_bddBearerToken = a})
 
 -- | The project id of the beacon to decommission. If the project id is not
 -- specified then the project making the request is used. The project id
 -- must match the project that owns the beacon. Optional.
-beaProjectId :: Lens' BeaconsDecommission (Maybe Text)
-beaProjectId
-  = lens _beaProjectId (\ s a -> s{_beaProjectId = a})
+bddProjectId :: Lens' BeaconsDecommission (Maybe Text)
+bddProjectId
+  = lens _bddProjectId (\ s a -> s{_bddProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+bddFields :: Lens' BeaconsDecommission (Maybe Text)
+bddFields
+  = lens _bddFields (\ s a -> s{_bddFields = a})
 
 -- | JSONP
-beaCallback :: Lens' BeaconsDecommission (Maybe Text)
-beaCallback
-  = lens _beaCallback (\ s a -> s{_beaCallback = a})
+bddCallback :: Lens' BeaconsDecommission (Maybe Text)
+bddCallback
+  = lens _bddCallback (\ s a -> s{_bddCallback = a})
 
 instance GoogleRequest BeaconsDecommission where
         type Rs BeaconsDecommission = Empty
         type Scopes BeaconsDecommission =
              '["https://www.googleapis.com/auth/userlocation.beacon.registry"]
         requestClient BeaconsDecommission'{..}
-          = go _beaBeaconName _beaXgafv _beaUploadProtocol
-              (Just _beaPp)
-              _beaAccessToken
-              _beaUploadType
-              _beaBearerToken
-              _beaProjectId
-              _beaCallback
+          = go _bddBeaconName _bddXgafv _bddUploadProtocol
+              (Just _bddPp)
+              _bddAccessToken
+              _bddUploadType
+              _bddBearerToken
+              _bddProjectId
+              _bddCallback
+              _bddFields
               (Just AltJSON)
               proximityBeaconService
           where go

@@ -41,11 +41,12 @@ module Network.Google.Resource.Slides.Presentations.Create
     , pcUploadType
     , pcPayload
     , pcBearerToken
+    , pcFields
     , pcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Slides.Types
+import Network.Google.Prelude
+import Network.Google.Slides.Types
 
 -- | A resource alias for @slides.presentations.create@ method which the
 -- 'PresentationsCreate' request conforms to.
@@ -59,23 +60,25 @@ type PresentationsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Presentation :>
-                           Post '[JSON] Presentation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Presentation :>
+                             Post '[JSON] Presentation
 
 -- | Creates a new presentation using the title given in the request. Other
 -- fields in the request are ignored. Returns the created presentation.
 --
 -- /See:/ 'presentationsCreate' smart constructor.
 data PresentationsCreate = PresentationsCreate'
-    { _pcXgafv          :: !(Maybe Xgafv)
+    { _pcXgafv :: !(Maybe Xgafv)
     , _pcUploadProtocol :: !(Maybe Text)
-    , _pcPp             :: !Bool
-    , _pcAccessToken    :: !(Maybe Text)
-    , _pcUploadType     :: !(Maybe Text)
-    , _pcPayload        :: !Presentation
-    , _pcBearerToken    :: !(Maybe Text)
-    , _pcCallback       :: !(Maybe Text)
+    , _pcPp :: !Bool
+    , _pcAccessToken :: !(Maybe Text)
+    , _pcUploadType :: !(Maybe Text)
+    , _pcPayload :: !Presentation
+    , _pcBearerToken :: !(Maybe Text)
+    , _pcFields :: !(Maybe Text)
+    , _pcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PresentationsCreate' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data PresentationsCreate = PresentationsCreate'
 --
 -- * 'pcBearerToken'
 --
+-- * 'pcFields'
+--
 -- * 'pcCallback'
 presentationsCreate
     :: Presentation -- ^ 'pcPayload'
     -> PresentationsCreate
-presentationsCreate pPcPayload_ =
+presentationsCreate pPcPayload_ = 
     PresentationsCreate'
     { _pcXgafv = Nothing
     , _pcUploadProtocol = Nothing
@@ -109,6 +114,7 @@ presentationsCreate pPcPayload_ =
     , _pcUploadType = Nothing
     , _pcPayload = pPcPayload_
     , _pcBearerToken = Nothing
+    , _pcFields = Nothing
     , _pcCallback = Nothing
     }
 
@@ -148,6 +154,10 @@ pcBearerToken
   = lens _pcBearerToken
       (\ s a -> s{_pcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pcFields :: Lens' PresentationsCreate (Maybe Text)
+pcFields = lens _pcFields (\ s a -> s{_pcFields = a})
+
 -- | JSONP
 pcCallback :: Lens' PresentationsCreate (Maybe Text)
 pcCallback
@@ -164,6 +174,7 @@ instance GoogleRequest PresentationsCreate where
               _pcUploadType
               _pcBearerToken
               _pcCallback
+              _pcFields
               (Just AltJSON)
               _pcPayload
               slidesService

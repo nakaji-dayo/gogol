@@ -167,6 +167,21 @@ module Network.Google.Gmail
     -- ** gmail.users.settings.sendAs.patch
     , module Network.Google.Resource.Gmail.Users.Settings.SendAs.Patch
 
+    -- ** gmail.users.settings.sendAs.smimeInfo.delete
+    , module Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Delete
+
+    -- ** gmail.users.settings.sendAs.smimeInfo.get
+    , module Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Get
+
+    -- ** gmail.users.settings.sendAs.smimeInfo.insert
+    , module Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Insert
+
+    -- ** gmail.users.settings.sendAs.smimeInfo.list
+    , module Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.List
+
+    -- ** gmail.users.settings.sendAs.smimeInfo.setDefault
+    , module Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.SetDefault
+
     -- ** gmail.users.settings.sendAs.update
     , module Network.Google.Resource.Gmail.Users.Settings.SendAs.Update
 
@@ -295,6 +310,9 @@ module Network.Google.Gmail
     , messagePartHeader
     , mphValue
     , mphName
+
+    -- ** UsersHistoryListHistoryTypes
+    , UsersHistoryListHistoryTypes (..)
 
     -- ** SendAsVerificationStatus
     , SendAsVerificationStatus (..)
@@ -473,6 +491,11 @@ module Network.Google.Gmail
     -- ** ImapSettingsExpungeBehavior
     , ImapSettingsExpungeBehavior (..)
 
+    -- ** ListSmimeInfoResponse
+    , ListSmimeInfoResponse
+    , listSmimeInfoResponse
+    , lsirSmimeInfo
+
     -- ** SmtpMsaSecurityMode
     , SmtpMsaSecurityMode (..)
 
@@ -526,6 +549,17 @@ module Network.Google.Gmail
     , lId
     , lType
 
+    -- ** SmimeInfo
+    , SmimeInfo
+    , smimeInfo
+    , siPem
+    , siExpiration
+    , siEncryptedKeyPassword
+    , siId
+    , siPkcs12
+    , siIssuerCn
+    , siIsDefault
+
     -- ** ListMessagesResponse
     , ListMessagesResponse
     , listMessagesResponse
@@ -539,65 +573,70 @@ module Network.Google.Gmail
     , hmaMessage
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Gmail.Users.Drafts.Create
-import           Network.Google.Resource.Gmail.Users.Drafts.Delete
-import           Network.Google.Resource.Gmail.Users.Drafts.Get
-import           Network.Google.Resource.Gmail.Users.Drafts.List
-import           Network.Google.Resource.Gmail.Users.Drafts.Send
-import           Network.Google.Resource.Gmail.Users.Drafts.Update
-import           Network.Google.Resource.Gmail.Users.GetProFile
-import           Network.Google.Resource.Gmail.Users.History.List
-import           Network.Google.Resource.Gmail.Users.Labels.Create
-import           Network.Google.Resource.Gmail.Users.Labels.Delete
-import           Network.Google.Resource.Gmail.Users.Labels.Get
-import           Network.Google.Resource.Gmail.Users.Labels.List
-import           Network.Google.Resource.Gmail.Users.Labels.Patch
-import           Network.Google.Resource.Gmail.Users.Labels.Update
-import           Network.Google.Resource.Gmail.Users.Messages.Attachments.Get
-import           Network.Google.Resource.Gmail.Users.Messages.BatchDelete
-import           Network.Google.Resource.Gmail.Users.Messages.BatchModify
-import           Network.Google.Resource.Gmail.Users.Messages.Delete
-import           Network.Google.Resource.Gmail.Users.Messages.Get
-import           Network.Google.Resource.Gmail.Users.Messages.Import
-import           Network.Google.Resource.Gmail.Users.Messages.Insert
-import           Network.Google.Resource.Gmail.Users.Messages.List
-import           Network.Google.Resource.Gmail.Users.Messages.Modify
-import           Network.Google.Resource.Gmail.Users.Messages.Send
-import           Network.Google.Resource.Gmail.Users.Messages.Trash
-import           Network.Google.Resource.Gmail.Users.Messages.Untrash
-import           Network.Google.Resource.Gmail.Users.Settings.Filters.Create
-import           Network.Google.Resource.Gmail.Users.Settings.Filters.Delete
-import           Network.Google.Resource.Gmail.Users.Settings.Filters.Get
-import           Network.Google.Resource.Gmail.Users.Settings.Filters.List
-import           Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Create
-import           Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Delete
-import           Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Get
-import           Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.List
-import           Network.Google.Resource.Gmail.Users.Settings.GetAutoForwarding
-import           Network.Google.Resource.Gmail.Users.Settings.GetImap
-import           Network.Google.Resource.Gmail.Users.Settings.GetPop
-import           Network.Google.Resource.Gmail.Users.Settings.GetVacation
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Create
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Delete
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Get
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.List
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Patch
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Update
-import           Network.Google.Resource.Gmail.Users.Settings.SendAs.Verify
-import           Network.Google.Resource.Gmail.Users.Settings.UpdateAutoForwarding
-import           Network.Google.Resource.Gmail.Users.Settings.UpdateImap
-import           Network.Google.Resource.Gmail.Users.Settings.UpdatePop
-import           Network.Google.Resource.Gmail.Users.Settings.UpdateVacation
-import           Network.Google.Resource.Gmail.Users.Stop
-import           Network.Google.Resource.Gmail.Users.Threads.Delete
-import           Network.Google.Resource.Gmail.Users.Threads.Get
-import           Network.Google.Resource.Gmail.Users.Threads.List
-import           Network.Google.Resource.Gmail.Users.Threads.Modify
-import           Network.Google.Resource.Gmail.Users.Threads.Trash
-import           Network.Google.Resource.Gmail.Users.Threads.Untrash
-import           Network.Google.Resource.Gmail.Users.Watch
+import Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Resource.Gmail.Users.Drafts.Create
+import Network.Google.Resource.Gmail.Users.Drafts.Delete
+import Network.Google.Resource.Gmail.Users.Drafts.Get
+import Network.Google.Resource.Gmail.Users.Drafts.List
+import Network.Google.Resource.Gmail.Users.Drafts.Send
+import Network.Google.Resource.Gmail.Users.Drafts.Update
+import Network.Google.Resource.Gmail.Users.GetProFile
+import Network.Google.Resource.Gmail.Users.History.List
+import Network.Google.Resource.Gmail.Users.Labels.Create
+import Network.Google.Resource.Gmail.Users.Labels.Delete
+import Network.Google.Resource.Gmail.Users.Labels.Get
+import Network.Google.Resource.Gmail.Users.Labels.List
+import Network.Google.Resource.Gmail.Users.Labels.Patch
+import Network.Google.Resource.Gmail.Users.Labels.Update
+import Network.Google.Resource.Gmail.Users.Messages.Attachments.Get
+import Network.Google.Resource.Gmail.Users.Messages.BatchDelete
+import Network.Google.Resource.Gmail.Users.Messages.BatchModify
+import Network.Google.Resource.Gmail.Users.Messages.Delete
+import Network.Google.Resource.Gmail.Users.Messages.Get
+import Network.Google.Resource.Gmail.Users.Messages.Import
+import Network.Google.Resource.Gmail.Users.Messages.Insert
+import Network.Google.Resource.Gmail.Users.Messages.List
+import Network.Google.Resource.Gmail.Users.Messages.Modify
+import Network.Google.Resource.Gmail.Users.Messages.Send
+import Network.Google.Resource.Gmail.Users.Messages.Trash
+import Network.Google.Resource.Gmail.Users.Messages.Untrash
+import Network.Google.Resource.Gmail.Users.Settings.Filters.Create
+import Network.Google.Resource.Gmail.Users.Settings.Filters.Delete
+import Network.Google.Resource.Gmail.Users.Settings.Filters.Get
+import Network.Google.Resource.Gmail.Users.Settings.Filters.List
+import Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Create
+import Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Delete
+import Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Get
+import Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.List
+import Network.Google.Resource.Gmail.Users.Settings.GetAutoForwarding
+import Network.Google.Resource.Gmail.Users.Settings.GetImap
+import Network.Google.Resource.Gmail.Users.Settings.GetPop
+import Network.Google.Resource.Gmail.Users.Settings.GetVacation
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Create
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Delete
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Get
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.List
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Patch
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Delete
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Get
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.Insert
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.List
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.SmimeInfo.SetDefault
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Update
+import Network.Google.Resource.Gmail.Users.Settings.SendAs.Verify
+import Network.Google.Resource.Gmail.Users.Settings.UpdateAutoForwarding
+import Network.Google.Resource.Gmail.Users.Settings.UpdateImap
+import Network.Google.Resource.Gmail.Users.Settings.UpdatePop
+import Network.Google.Resource.Gmail.Users.Settings.UpdateVacation
+import Network.Google.Resource.Gmail.Users.Stop
+import Network.Google.Resource.Gmail.Users.Threads.Delete
+import Network.Google.Resource.Gmail.Users.Threads.Get
+import Network.Google.Resource.Gmail.Users.Threads.List
+import Network.Google.Resource.Gmail.Users.Threads.Modify
+import Network.Google.Resource.Gmail.Users.Threads.Trash
+import Network.Google.Resource.Gmail.Users.Threads.Untrash
+import Network.Google.Resource.Gmail.Users.Watch
 
 {- $resources
 TODO
@@ -614,6 +653,11 @@ type GmailAPI =
        :<|> UsersSettingsFiltersGetResource
        :<|> UsersSettingsFiltersCreateResource
        :<|> UsersSettingsFiltersDeleteResource
+       :<|> UsersSettingsSendAsSmimeInfoInsertResource
+       :<|> UsersSettingsSendAsSmimeInfoListResource
+       :<|> UsersSettingsSendAsSmimeInfoGetResource
+       :<|> UsersSettingsSendAsSmimeInfoSetDefaultResource
+       :<|> UsersSettingsSendAsSmimeInfoDeleteResource
        :<|> UsersSettingsSendAsVerifyResource
        :<|> UsersSettingsSendAsListResource
        :<|> UsersSettingsSendAsPatchResource

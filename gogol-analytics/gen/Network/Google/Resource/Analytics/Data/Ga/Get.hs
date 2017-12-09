@@ -46,10 +46,11 @@ module Network.Google.Resource.Analytics.Data.Ga.Get
     , dggMaxResults
     , dggSegment
     , dggStartDate
+    , dggFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.data.ga.get@ method which the
 -- 'DataGaGet' request conforms to.
@@ -71,26 +72,28 @@ type DataGaGetResource =
                                  QueryParam "start-index" (Textual Int32) :>
                                    QueryParam "max-results" (Textual Int32) :>
                                      QueryParam "segment" Text :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] GaData
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] GaData
 
 -- | Returns Analytics data for a view (profile).
 --
 -- /See:/ 'dataGaGet' smart constructor.
 data DataGaGet = DataGaGet'
-    { _dggMetrics          :: !Text
-    , _dggSamplingLevel    :: !(Maybe DataGaGetSamplingLevel)
-    , _dggFilters          :: !(Maybe Text)
-    , _dggIds              :: !Text
-    , _dggEndDate          :: !Text
-    , _dggOutput           :: !(Maybe DataGaGetOutput)
-    , _dggSort             :: !(Maybe Text)
+    { _dggMetrics :: !Text
+    , _dggSamplingLevel :: !(Maybe DataGaGetSamplingLevel)
+    , _dggFilters :: !(Maybe Text)
+    , _dggIds :: !Text
+    , _dggEndDate :: !Text
+    , _dggOutput :: !(Maybe DataGaGetOutput)
+    , _dggSort :: !(Maybe Text)
     , _dggIncludeEmptyRows :: !(Maybe Bool)
-    , _dggDimensions       :: !(Maybe Text)
-    , _dggStartIndex       :: !(Maybe (Textual Int32))
-    , _dggMaxResults       :: !(Maybe (Textual Int32))
-    , _dggSegment          :: !(Maybe Text)
-    , _dggStartDate        :: !Text
+    , _dggDimensions :: !(Maybe Text)
+    , _dggStartIndex :: !(Maybe (Textual Int32))
+    , _dggMaxResults :: !(Maybe (Textual Int32))
+    , _dggSegment :: !(Maybe Text)
+    , _dggStartDate :: !Text
+    , _dggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataGaGet' with the minimum fields required to make a request.
@@ -122,13 +125,15 @@ data DataGaGet = DataGaGet'
 -- * 'dggSegment'
 --
 -- * 'dggStartDate'
+--
+-- * 'dggFields'
 dataGaGet
     :: Text -- ^ 'dggMetrics'
     -> Text -- ^ 'dggIds'
     -> Text -- ^ 'dggEndDate'
     -> Text -- ^ 'dggStartDate'
     -> DataGaGet
-dataGaGet pDggMetrics_ pDggIds_ pDggEndDate_ pDggStartDate_ =
+dataGaGet pDggMetrics_ pDggIds_ pDggEndDate_ pDggStartDate_ = 
     DataGaGet'
     { _dggMetrics = pDggMetrics_
     , _dggSamplingLevel = Nothing
@@ -143,6 +148,7 @@ dataGaGet pDggMetrics_ pDggIds_ pDggEndDate_ pDggStartDate_ =
     , _dggMaxResults = Nothing
     , _dggSegment = Nothing
     , _dggStartDate = pDggStartDate_
+    , _dggFields = Nothing
     }
 
 -- | A comma-separated list of Analytics metrics. E.g.,
@@ -226,6 +232,11 @@ dggStartDate :: Lens' DataGaGet Text
 dggStartDate
   = lens _dggStartDate (\ s a -> s{_dggStartDate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dggFields :: Lens' DataGaGet (Maybe Text)
+dggFields
+  = lens _dggFields (\ s a -> s{_dggFields = a})
+
 instance GoogleRequest DataGaGet where
         type Rs DataGaGet = GaData
         type Scopes DataGaGet =
@@ -244,6 +255,7 @@ instance GoogleRequest DataGaGet where
               _dggStartIndex
               _dggMaxResults
               _dggSegment
+              _dggFields
               (Just AltJSON)
               analyticsService
           where go

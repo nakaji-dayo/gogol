@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.Search
     , rgssUploadType
     , rgssPayload
     , rgssBearerToken
+    , rgssFields
     , rgssCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.search@ method which the
 -- 'ReadGroupSetsSearch' request conforms to.
@@ -64,9 +65,10 @@ type ReadGroupSetsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchReadGroupSetsRequest :>
-                             Post '[JSON] SearchReadGroupSetsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchReadGroupSetsRequest :>
+                               Post '[JSON] SearchReadGroupSetsResponse
 
 -- | Searches for read group sets matching the criteria. For the definitions
 -- of read group sets and other genomics resources, see [Fundamentals of
@@ -77,14 +79,15 @@ type ReadGroupSetsSearchResource =
 --
 -- /See:/ 'readGroupSetsSearch' smart constructor.
 data ReadGroupSetsSearch = ReadGroupSetsSearch'
-    { _rgssXgafv          :: !(Maybe Xgafv)
+    { _rgssXgafv :: !(Maybe Xgafv)
     , _rgssUploadProtocol :: !(Maybe Text)
-    , _rgssPp             :: !Bool
-    , _rgssAccessToken    :: !(Maybe Text)
-    , _rgssUploadType     :: !(Maybe Text)
-    , _rgssPayload        :: !SearchReadGroupSetsRequest
-    , _rgssBearerToken    :: !(Maybe Text)
-    , _rgssCallback       :: !(Maybe Text)
+    , _rgssPp :: !Bool
+    , _rgssAccessToken :: !(Maybe Text)
+    , _rgssUploadType :: !(Maybe Text)
+    , _rgssPayload :: !SearchReadGroupSetsRequest
+    , _rgssBearerToken :: !(Maybe Text)
+    , _rgssFields :: !(Maybe Text)
+    , _rgssCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsSearch' with the minimum fields required to make a request.
@@ -105,11 +108,13 @@ data ReadGroupSetsSearch = ReadGroupSetsSearch'
 --
 -- * 'rgssBearerToken'
 --
+-- * 'rgssFields'
+--
 -- * 'rgssCallback'
 readGroupSetsSearch
     :: SearchReadGroupSetsRequest -- ^ 'rgssPayload'
     -> ReadGroupSetsSearch
-readGroupSetsSearch pRgssPayload_ =
+readGroupSetsSearch pRgssPayload_ = 
     ReadGroupSetsSearch'
     { _rgssXgafv = Nothing
     , _rgssUploadProtocol = Nothing
@@ -118,6 +123,7 @@ readGroupSetsSearch pRgssPayload_ =
     , _rgssUploadType = Nothing
     , _rgssPayload = pRgssPayload_
     , _rgssBearerToken = Nothing
+    , _rgssFields = Nothing
     , _rgssCallback = Nothing
     }
 
@@ -159,6 +165,11 @@ rgssBearerToken
   = lens _rgssBearerToken
       (\ s a -> s{_rgssBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgssFields :: Lens' ReadGroupSetsSearch (Maybe Text)
+rgssFields
+  = lens _rgssFields (\ s a -> s{_rgssFields = a})
+
 -- | JSONP
 rgssCallback :: Lens' ReadGroupSetsSearch (Maybe Text)
 rgssCallback
@@ -177,6 +188,7 @@ instance GoogleRequest ReadGroupSetsSearch where
               _rgssUploadType
               _rgssBearerToken
               _rgssCallback
+              _rgssFields
               (Just AltJSON)
               _rgssPayload
               genomicsService

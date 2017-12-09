@@ -35,11 +35,12 @@ module Network.Google.Resource.DeploymentManager.Manifests.Get
     -- * Request Lenses
     , mgProject
     , mgManifest
+    , mgFields
     , mgDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.manifests.get@ method which the
 -- 'ManifestsGet' request conforms to.
@@ -53,14 +54,16 @@ type ManifestsGetResource =
                  Capture "deployment" Text :>
                    "manifests" :>
                      Capture "manifest" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Manifest
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Manifest
 
 -- | Gets information about a specific manifest.
 --
 -- /See:/ 'manifestsGet' smart constructor.
 data ManifestsGet = ManifestsGet'
-    { _mgProject    :: !Text
-    , _mgManifest   :: !Text
+    { _mgProject :: !Text
+    , _mgManifest :: !Text
+    , _mgFields :: !(Maybe Text)
     , _mgDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data ManifestsGet = ManifestsGet'
 --
 -- * 'mgManifest'
 --
+-- * 'mgFields'
+--
 -- * 'mgDeployment'
 manifestsGet
     :: Text -- ^ 'mgProject'
     -> Text -- ^ 'mgManifest'
     -> Text -- ^ 'mgDeployment'
     -> ManifestsGet
-manifestsGet pMgProject_ pMgManifest_ pMgDeployment_ =
+manifestsGet pMgProject_ pMgManifest_ pMgDeployment_ = 
     ManifestsGet'
     { _mgProject = pMgProject_
     , _mgManifest = pMgManifest_
+    , _mgFields = Nothing
     , _mgDeployment = pMgDeployment_
     }
 
@@ -94,6 +100,10 @@ mgProject
 mgManifest :: Lens' ManifestsGet Text
 mgManifest
   = lens _mgManifest (\ s a -> s{_mgManifest = a})
+
+-- | Selector specifying which fields to include in a partial response.
+mgFields :: Lens' ManifestsGet (Maybe Text)
+mgFields = lens _mgFields (\ s a -> s{_mgFields = a})
 
 -- | The name of the deployment for this request.
 mgDeployment :: Lens' ManifestsGet Text
@@ -108,7 +118,7 @@ instance GoogleRequest ManifestsGet where
                "https://www.googleapis.com/auth/ndev.cloudman",
                "https://www.googleapis.com/auth/ndev.cloudman.readonly"]
         requestClient ManifestsGet'{..}
-          = go _mgProject _mgDeployment _mgManifest
+          = go _mgProject _mgDeployment _mgManifest _mgFields
               (Just AltJSON)
               deploymentManagerService
           where go

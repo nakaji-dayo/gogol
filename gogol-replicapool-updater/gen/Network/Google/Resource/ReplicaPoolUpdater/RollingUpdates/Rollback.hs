@@ -37,10 +37,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Rollback
     , rurRollingUpdate
     , rurProject
     , rurZone
+    , rurFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.rollback@ method which the
 -- 'RollingUpdatesRollback' request conforms to.
@@ -54,7 +55,8 @@ type RollingUpdatesRollbackResource =
                  "rollingUpdates" :>
                    Capture "rollingUpdate" Text :>
                      "rollback" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Rolls back the update in state from ROLLING_FORWARD or PAUSED. Has no
 -- effect if invoked when the state of the update is ROLLED_BACK.
@@ -62,8 +64,9 @@ type RollingUpdatesRollbackResource =
 -- /See:/ 'rollingUpdatesRollback' smart constructor.
 data RollingUpdatesRollback = RollingUpdatesRollback'
     { _rurRollingUpdate :: !Text
-    , _rurProject       :: !Text
-    , _rurZone          :: !Text
+    , _rurProject :: !Text
+    , _rurZone :: !Text
+    , _rurFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesRollback' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data RollingUpdatesRollback = RollingUpdatesRollback'
 -- * 'rurProject'
 --
 -- * 'rurZone'
+--
+-- * 'rurFields'
 rollingUpdatesRollback
     :: Text -- ^ 'rurRollingUpdate'
     -> Text -- ^ 'rurProject'
     -> Text -- ^ 'rurZone'
     -> RollingUpdatesRollback
-rollingUpdatesRollback pRurRollingUpdate_ pRurProject_ pRurZone_ =
+rollingUpdatesRollback pRurRollingUpdate_ pRurProject_ pRurZone_ = 
     RollingUpdatesRollback'
     { _rurRollingUpdate = pRurRollingUpdate_
     , _rurProject = pRurProject_
     , _rurZone = pRurZone_
+    , _rurFields = Nothing
     }
 
 -- | The name of the update.
@@ -102,6 +108,11 @@ rurProject
 rurZone :: Lens' RollingUpdatesRollback Text
 rurZone = lens _rurZone (\ s a -> s{_rurZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rurFields :: Lens' RollingUpdatesRollback (Maybe Text)
+rurFields
+  = lens _rurFields (\ s a -> s{_rurFields = a})
+
 instance GoogleRequest RollingUpdatesRollback where
         type Rs RollingUpdatesRollback = Operation
         type Scopes RollingUpdatesRollback =
@@ -109,6 +120,7 @@ instance GoogleRequest RollingUpdatesRollback where
                "https://www.googleapis.com/auth/replicapool"]
         requestClient RollingUpdatesRollback'{..}
           = go _rurProject _rurZone _rurRollingUpdate
+              _rurFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

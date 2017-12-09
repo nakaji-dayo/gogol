@@ -43,11 +43,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.Publish
     , ptpPayload
     , ptpTopic
     , ptpBearerToken
+    , ptpFields
     , ptpCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.publish@ method which the
 -- 'ProjectsTopicsPublish' request conforms to.
@@ -61,9 +62,10 @@ type ProjectsTopicsPublishResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] PublishRequest :>
-                           Post '[JSON] PublishResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] PublishRequest :>
+                             Post '[JSON] PublishResponse
 
 -- | Adds one or more messages to the topic. Returns \`NOT_FOUND\` if the
 -- topic does not exist. The message payload must not be empty; it must
@@ -71,15 +73,16 @@ type ProjectsTopicsPublishResource =
 --
 -- /See:/ 'projectsTopicsPublish' smart constructor.
 data ProjectsTopicsPublish = ProjectsTopicsPublish'
-    { _ptpXgafv          :: !(Maybe Xgafv)
+    { _ptpXgafv :: !(Maybe Xgafv)
     , _ptpUploadProtocol :: !(Maybe Text)
-    , _ptpPp             :: !Bool
-    , _ptpAccessToken    :: !(Maybe Text)
-    , _ptpUploadType     :: !(Maybe Text)
-    , _ptpPayload        :: !PublishRequest
-    , _ptpTopic          :: !Text
-    , _ptpBearerToken    :: !(Maybe Text)
-    , _ptpCallback       :: !(Maybe Text)
+    , _ptpPp :: !Bool
+    , _ptpAccessToken :: !(Maybe Text)
+    , _ptpUploadType :: !(Maybe Text)
+    , _ptpPayload :: !PublishRequest
+    , _ptpTopic :: !Text
+    , _ptpBearerToken :: !(Maybe Text)
+    , _ptpFields :: !(Maybe Text)
+    , _ptpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsPublish' with the minimum fields required to make a request.
@@ -102,12 +105,14 @@ data ProjectsTopicsPublish = ProjectsTopicsPublish'
 --
 -- * 'ptpBearerToken'
 --
+-- * 'ptpFields'
+--
 -- * 'ptpCallback'
 projectsTopicsPublish
     :: PublishRequest -- ^ 'ptpPayload'
     -> Text -- ^ 'ptpTopic'
     -> ProjectsTopicsPublish
-projectsTopicsPublish pPtpPayload_ pPtpTopic_ =
+projectsTopicsPublish pPtpPayload_ pPtpTopic_ = 
     ProjectsTopicsPublish'
     { _ptpXgafv = Nothing
     , _ptpUploadProtocol = Nothing
@@ -117,6 +122,7 @@ projectsTopicsPublish pPtpPayload_ pPtpTopic_ =
     , _ptpPayload = pPtpPayload_
     , _ptpTopic = pPtpTopic_
     , _ptpBearerToken = Nothing
+    , _ptpFields = Nothing
     , _ptpCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ ptpBearerToken
   = lens _ptpBearerToken
       (\ s a -> s{_ptpBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptpFields :: Lens' ProjectsTopicsPublish (Maybe Text)
+ptpFields
+  = lens _ptpFields (\ s a -> s{_ptpFields = a})
+
 -- | JSONP
 ptpCallback :: Lens' ProjectsTopicsPublish (Maybe Text)
 ptpCallback
@@ -179,6 +190,7 @@ instance GoogleRequest ProjectsTopicsPublish where
               _ptpUploadType
               _ptpBearerToken
               _ptpCallback
+              _ptpFields
               (Just AltJSON)
               _ptpPayload
               pubSubService

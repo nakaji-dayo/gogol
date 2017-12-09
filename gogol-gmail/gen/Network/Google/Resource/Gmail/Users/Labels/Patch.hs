@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Labels.Patch
     , ulpPayload
     , ulpUserId
     , ulpId
+    , ulpFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.patch@ method which the
 -- 'UsersLabelsPatch' request conforms to.
@@ -50,16 +51,18 @@ type UsersLabelsPatchResource =
            Capture "userId" Text :>
              "labels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Label :> Patch '[JSON] Label
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Label :> Patch '[JSON] Label
 
 -- | Updates the specified label. This method supports patch semantics.
 --
 -- /See:/ 'usersLabelsPatch' smart constructor.
 data UsersLabelsPatch = UsersLabelsPatch'
     { _ulpPayload :: !Label
-    , _ulpUserId  :: !Text
-    , _ulpId      :: !Text
+    , _ulpUserId :: !Text
+    , _ulpId :: !Text
+    , _ulpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsPatch' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data UsersLabelsPatch = UsersLabelsPatch'
 -- * 'ulpUserId'
 --
 -- * 'ulpId'
+--
+-- * 'ulpFields'
 usersLabelsPatch
     :: Label -- ^ 'ulpPayload'
     -> Text -- ^ 'ulpId'
     -> UsersLabelsPatch
-usersLabelsPatch pUlpPayload_ pUlpId_ =
+usersLabelsPatch pUlpPayload_ pUlpId_ = 
     UsersLabelsPatch'
     { _ulpPayload = pUlpPayload_
     , _ulpUserId = "me"
     , _ulpId = pUlpId_
+    , _ulpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -97,6 +103,11 @@ ulpUserId
 ulpId :: Lens' UsersLabelsPatch Text
 ulpId = lens _ulpId (\ s a -> s{_ulpId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ulpFields :: Lens' UsersLabelsPatch (Maybe Text)
+ulpFields
+  = lens _ulpFields (\ s a -> s{_ulpFields = a})
+
 instance GoogleRequest UsersLabelsPatch where
         type Rs UsersLabelsPatch = Label
         type Scopes UsersLabelsPatch =
@@ -104,7 +115,8 @@ instance GoogleRequest UsersLabelsPatch where
                "https://www.googleapis.com/auth/gmail.labels",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersLabelsPatch'{..}
-          = go _ulpUserId _ulpId (Just AltJSON) _ulpPayload
+          = go _ulpUserId _ulpId _ulpFields (Just AltJSON)
+              _ulpPayload
               gmailService
           where go
                   = buildClient

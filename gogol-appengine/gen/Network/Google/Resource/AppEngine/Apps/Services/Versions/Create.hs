@@ -42,11 +42,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Create
     , asvcBearerToken
     , asvcAppsId
     , asvcServicesId
+    , asvcFields
     , asvcCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.create@ method which the
 -- 'AppsServicesVersionsCreate' request conforms to.
@@ -57,31 +58,33 @@ type AppsServicesVersionsCreateResource =
            "services" :>
              Capture "servicesId" Text :>
                "versions" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] Version :>
-                                   Post '[JSON] Operation
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON] Version :>
+                                     Post '[JSON] Operation
 
 -- | Deploys code and resource files to a new version.
 --
 -- /See:/ 'appsServicesVersionsCreate' smart constructor.
 data AppsServicesVersionsCreate = AppsServicesVersionsCreate'
-    { _asvcXgafv          :: !(Maybe Text)
+    { _asvcXgafv :: !(Maybe Xgafv)
     , _asvcUploadProtocol :: !(Maybe Text)
-    , _asvcPp             :: !Bool
-    , _asvcAccessToken    :: !(Maybe Text)
-    , _asvcUploadType     :: !(Maybe Text)
-    , _asvcPayload        :: !Version
-    , _asvcBearerToken    :: !(Maybe Text)
-    , _asvcAppsId         :: !Text
-    , _asvcServicesId     :: !Text
-    , _asvcCallback       :: !(Maybe Text)
+    , _asvcPp :: !Bool
+    , _asvcAccessToken :: !(Maybe Text)
+    , _asvcUploadType :: !(Maybe Text)
+    , _asvcPayload :: !Version
+    , _asvcBearerToken :: !(Maybe Text)
+    , _asvcAppsId :: !Text
+    , _asvcServicesId :: !Text
+    , _asvcFields :: !(Maybe Text)
+    , _asvcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsCreate' with the minimum fields required to make a request.
@@ -106,13 +109,15 @@ data AppsServicesVersionsCreate = AppsServicesVersionsCreate'
 --
 -- * 'asvcServicesId'
 --
+-- * 'asvcFields'
+--
 -- * 'asvcCallback'
 appsServicesVersionsCreate
     :: Version -- ^ 'asvcPayload'
     -> Text -- ^ 'asvcAppsId'
     -> Text -- ^ 'asvcServicesId'
     -> AppsServicesVersionsCreate
-appsServicesVersionsCreate pAsvcPayload_ pAsvcAppsId_ pAsvcServicesId_ =
+appsServicesVersionsCreate pAsvcPayload_ pAsvcAppsId_ pAsvcServicesId_ = 
     AppsServicesVersionsCreate'
     { _asvcXgafv = Nothing
     , _asvcUploadProtocol = Nothing
@@ -123,11 +128,12 @@ appsServicesVersionsCreate pAsvcPayload_ pAsvcAppsId_ pAsvcServicesId_ =
     , _asvcBearerToken = Nothing
     , _asvcAppsId = pAsvcAppsId_
     , _asvcServicesId = pAsvcServicesId_
+    , _asvcFields = Nothing
     , _asvcCallback = Nothing
     }
 
 -- | V1 error format.
-asvcXgafv :: Lens' AppsServicesVersionsCreate (Maybe Text)
+asvcXgafv :: Lens' AppsServicesVersionsCreate (Maybe Xgafv)
 asvcXgafv
   = lens _asvcXgafv (\ s a -> s{_asvcXgafv = a})
 
@@ -176,6 +182,11 @@ asvcServicesId
   = lens _asvcServicesId
       (\ s a -> s{_asvcServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asvcFields :: Lens' AppsServicesVersionsCreate (Maybe Text)
+asvcFields
+  = lens _asvcFields (\ s a -> s{_asvcFields = a})
+
 -- | JSONP
 asvcCallback :: Lens' AppsServicesVersionsCreate (Maybe Text)
 asvcCallback
@@ -194,6 +205,7 @@ instance GoogleRequest AppsServicesVersionsCreate
               _asvcUploadType
               _asvcBearerToken
               _asvcCallback
+              _asvcFields
               (Just AltJSON)
               _asvcPayload
               appEngineService

@@ -22,8 +22,7 @@
 --
 -- Uploads a product to your Merchant Center account. If an item with the
 -- same channel, contentLanguage, offerId, and targetCountry already
--- exists, this method updates that entry. This method can only be called
--- for non-multi-client accounts.
+-- exists, this method updates that entry.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.products.insert@.
 module Network.Google.Resource.Content.Products.Insert
@@ -39,10 +38,11 @@ module Network.Google.Resource.Content.Products.Insert
     , piMerchantId
     , piPayload
     , piDryRun
+    , piFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.products.insert@ method which the
 -- 'ProductsInsert' request conforms to.
@@ -52,19 +52,20 @@ type ProductsInsertResource =
          Capture "merchantId" (Textual Word64) :>
            "products" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Product :> Post '[JSON] Product
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Product :> Post '[JSON] Product
 
 -- | Uploads a product to your Merchant Center account. If an item with the
 -- same channel, contentLanguage, offerId, and targetCountry already
--- exists, this method updates that entry. This method can only be called
--- for non-multi-client accounts.
+-- exists, this method updates that entry.
 --
 -- /See:/ 'productsInsert' smart constructor.
 data ProductsInsert = ProductsInsert'
     { _piMerchantId :: !(Textual Word64)
-    , _piPayload    :: !Product
-    , _piDryRun     :: !(Maybe Bool)
+    , _piPayload :: !Product
+    , _piDryRun :: !(Maybe Bool)
+    , _piFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsInsert' with the minimum fields required to make a request.
@@ -76,18 +77,22 @@ data ProductsInsert = ProductsInsert'
 -- * 'piPayload'
 --
 -- * 'piDryRun'
+--
+-- * 'piFields'
 productsInsert
     :: Word64 -- ^ 'piMerchantId'
     -> Product -- ^ 'piPayload'
     -> ProductsInsert
-productsInsert pPiMerchantId_ pPiPayload_ =
+productsInsert pPiMerchantId_ pPiPayload_ = 
     ProductsInsert'
     { _piMerchantId = _Coerce # pPiMerchantId_
     , _piPayload = pPiPayload_
     , _piDryRun = Nothing
+    , _piFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that contains the product. This account cannot be
+-- a multi-client account.
 piMerchantId :: Lens' ProductsInsert Word64
 piMerchantId
   = lens _piMerchantId (\ s a -> s{_piMerchantId = a})
@@ -102,12 +107,16 @@ piPayload
 piDryRun :: Lens' ProductsInsert (Maybe Bool)
 piDryRun = lens _piDryRun (\ s a -> s{_piDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+piFields :: Lens' ProductsInsert (Maybe Text)
+piFields = lens _piFields (\ s a -> s{_piFields = a})
+
 instance GoogleRequest ProductsInsert where
         type Rs ProductsInsert = Product
         type Scopes ProductsInsert =
              '["https://www.googleapis.com/auth/content"]
         requestClient ProductsInsert'{..}
-          = go _piMerchantId _piDryRun (Just AltJSON)
+          = go _piMerchantId _piDryRun _piFields (Just AltJSON)
               _piPayload
               shoppingContentService
           where go

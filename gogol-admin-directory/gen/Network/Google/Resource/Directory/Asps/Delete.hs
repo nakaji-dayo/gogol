@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Asps.Delete
     -- * Request Lenses
     , adCodeId
     , adUserKey
+    , adFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.asps.delete@ method which the
 -- 'AspsDelete' request conforms to.
@@ -50,14 +51,16 @@ type AspsDeleteResource =
              Capture "userKey" Text :>
                "asps" :>
                  Capture "codeId" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete an ASP issued by a user.
 --
 -- /See:/ 'aspsDelete' smart constructor.
 data AspsDelete = AspsDelete'
-    { _adCodeId  :: !(Textual Int32)
+    { _adCodeId :: !(Textual Int32)
     , _adUserKey :: !Text
+    , _adFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AspsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AspsDelete = AspsDelete'
 -- * 'adCodeId'
 --
 -- * 'adUserKey'
+--
+-- * 'adFields'
 aspsDelete
     :: Int32 -- ^ 'adCodeId'
     -> Text -- ^ 'adUserKey'
     -> AspsDelete
-aspsDelete pAdCodeId_ pAdUserKey_ =
+aspsDelete pAdCodeId_ pAdUserKey_ = 
     AspsDelete'
     { _adCodeId = _Coerce # pAdCodeId_
     , _adUserKey = pAdUserKey_
+    , _adFields = Nothing
     }
 
 -- | The unique ID of the ASP to be deleted.
@@ -89,12 +95,16 @@ adUserKey :: Lens' AspsDelete Text
 adUserKey
   = lens _adUserKey (\ s a -> s{_adUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+adFields :: Lens' AspsDelete (Maybe Text)
+adFields = lens _adFields (\ s a -> s{_adFields = a})
+
 instance GoogleRequest AspsDelete where
         type Rs AspsDelete = ()
         type Scopes AspsDelete =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient AspsDelete'{..}
-          = go _adUserKey _adCodeId (Just AltJSON)
+          = go _adUserKey _adCodeId _adFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy AspsDeleteResource)

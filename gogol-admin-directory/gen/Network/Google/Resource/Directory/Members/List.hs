@@ -37,10 +37,11 @@ module Network.Google.Resource.Directory.Members.List
     , mlGroupKey
     , mlPageToken
     , mlMaxResults
+    , mlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.members.list@ method which the
 -- 'MembersList' request conforms to.
@@ -54,16 +55,18 @@ type MembersListResource =
                  QueryParam "roles" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Members
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Members
 
 -- | Retrieve all members in a group (paginated)
 --
 -- /See:/ 'membersList' smart constructor.
 data MembersList = MembersList'
-    { _mlRoles      :: !(Maybe Text)
-    , _mlGroupKey   :: !Text
-    , _mlPageToken  :: !(Maybe Text)
+    { _mlRoles :: !(Maybe Text)
+    , _mlGroupKey :: !Text
+    , _mlPageToken :: !(Maybe Text)
     , _mlMaxResults :: !(Maybe (Textual Int32))
+    , _mlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MembersList' with the minimum fields required to make a request.
@@ -77,22 +80,25 @@ data MembersList = MembersList'
 -- * 'mlPageToken'
 --
 -- * 'mlMaxResults'
+--
+-- * 'mlFields'
 membersList
     :: Text -- ^ 'mlGroupKey'
     -> MembersList
-membersList pMlGroupKey_ =
+membersList pMlGroupKey_ = 
     MembersList'
     { _mlRoles = Nothing
     , _mlGroupKey = pMlGroupKey_
     , _mlPageToken = Nothing
     , _mlMaxResults = Nothing
+    , _mlFields = Nothing
     }
 
 -- | Comma separated role values to filter list results on.
 mlRoles :: Lens' MembersList (Maybe Text)
 mlRoles = lens _mlRoles (\ s a -> s{_mlRoles = a})
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 mlGroupKey :: Lens' MembersList Text
 mlGroupKey
   = lens _mlGroupKey (\ s a -> s{_mlGroupKey = a})
@@ -108,6 +114,10 @@ mlMaxResults
   = lens _mlMaxResults (\ s a -> s{_mlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mlFields :: Lens' MembersList (Maybe Text)
+mlFields = lens _mlFields (\ s a -> s{_mlFields = a})
+
 instance GoogleRequest MembersList where
         type Rs MembersList = Members
         type Scopes MembersList =
@@ -117,6 +127,7 @@ instance GoogleRequest MembersList where
                "https://www.googleapis.com/auth/admin.directory.group.readonly"]
         requestClient MembersList'{..}
           = go _mlGroupKey _mlRoles _mlPageToken _mlMaxResults
+              _mlFields
               (Just AltJSON)
               directoryService
           where go

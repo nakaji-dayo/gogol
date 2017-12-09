@@ -42,11 +42,13 @@ library
         , Network.Google.Resource.Cloudbuild.Projects.Builds.Create
         , Network.Google.Resource.Cloudbuild.Projects.Builds.Get
         , Network.Google.Resource.Cloudbuild.Projects.Builds.List
+        , Network.Google.Resource.Cloudbuild.Projects.Builds.Retry
         , Network.Google.Resource.Cloudbuild.Projects.Triggers.Create
         , Network.Google.Resource.Cloudbuild.Projects.Triggers.Delete
         , Network.Google.Resource.Cloudbuild.Projects.Triggers.Get
         , Network.Google.Resource.Cloudbuild.Projects.Triggers.List
         , Network.Google.Resource.Cloudbuild.Projects.Triggers.Patch
+        , Network.Google.Resource.Cloudbuild.Projects.Triggers.Run
 
     other-modules:
           Network.Google.ContainerBuilder.Types.Product

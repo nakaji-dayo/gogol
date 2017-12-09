@@ -53,6 +53,9 @@ module Network.Google.ProximityBeacon
     -- ** proximitybeacon.beacons.decommission
     , module Network.Google.Resource.ProximityBeacon.Beacons.Decommission
 
+    -- ** proximitybeacon.beacons.delete
+    , module Network.Google.Resource.ProximityBeacon.Beacons.Delete
+
     -- ** proximitybeacon.beacons.diagnostics.list
     , module Network.Google.Resource.ProximityBeacon.Beacons.Diagnostics.List
 
@@ -88,8 +91,15 @@ module Network.Google.ProximityBeacon
     -- ** AttachmentInfo
     , AttachmentInfo
     , attachmentInfo
+    , aiMaxDistanceMeters
     , aiData
     , aiNamespacedType
+
+    -- ** BeaconExpectedStability
+    , BeaconExpectedStability (..)
+
+    -- ** NamespaceServingVisibility
+    , NamespaceServingVisibility (..)
 
     -- ** BeaconProperties
     , BeaconProperties
@@ -127,6 +137,9 @@ module Network.Google.ProximityBeacon
     , eirInitialEid
     , eirServiceEcdhPublicKey
 
+    -- ** AdvertisedIdType
+    , AdvertisedIdType (..)
+
     -- ** ListNamespacesResponse
     , ListNamespacesResponse
     , listNamespacesResponse
@@ -142,17 +155,17 @@ module Network.Google.ProximityBeacon
     -- ** Beacon
     , Beacon
     , beacon
-    , bLatLng
-    , bStatus
-    , bBeaconName
-    , bEphemeralIdRegistration
-    , bIndoorLevel
-    , bExpectedStability
-    , bProvisioningKey
-    , bDescription
-    , bPlaceId
-    , bAdvertisedId
-    , bProperties
+    , beaLatLng
+    , beaStatus
+    , beaBeaconName
+    , beaEphemeralIdRegistration
+    , beaIndoorLevel
+    , beaExpectedStability
+    , beaProvisioningKey
+    , beaDescription
+    , beaPlaceId
+    , beaAdvertisedId
+    , beaProperties
 
     -- ** Diagnostics
     , Diagnostics
@@ -178,6 +191,9 @@ module Network.Google.ProximityBeacon
     , eirpMaxRotationPeriodExponent
     , eirpServiceEcdhPublicKey
 
+    -- ** Xgafv
+    , Xgafv (..)
+
     -- ** BeaconInfo
     , BeaconInfo
     , beaconInfo
@@ -195,6 +211,8 @@ module Network.Google.ProximityBeacon
     -- ** BeaconAttachment
     , BeaconAttachment
     , beaconAttachment
+    , baMaxDistanceMeters
+    , baCreationTimeMs
     , baData
     , baAttachmentName
     , baNamespacedType
@@ -204,6 +222,9 @@ module Network.Google.ProximityBeacon
     , listDiagnosticsResponse
     , ldrNextPageToken
     , ldrDiagnostics
+
+    -- ** BeaconStatus
+    , BeaconStatus (..)
 
     -- ** AdvertisedId
     , AdvertisedId
@@ -224,24 +245,25 @@ module Network.Google.ProximityBeacon
     , gifobrBeacons
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
-import           Network.Google.Resource.ProximityBeacon.BeaconInfo.GetforObserved
-import           Network.Google.Resource.ProximityBeacon.Beacons.Activate
-import           Network.Google.Resource.ProximityBeacon.Beacons.Attachments.BatchDelete
-import           Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Create
-import           Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Delete
-import           Network.Google.Resource.ProximityBeacon.Beacons.Attachments.List
-import           Network.Google.Resource.ProximityBeacon.Beacons.Deactivate
-import           Network.Google.Resource.ProximityBeacon.Beacons.Decommission
-import           Network.Google.Resource.ProximityBeacon.Beacons.Diagnostics.List
-import           Network.Google.Resource.ProximityBeacon.Beacons.Get
-import           Network.Google.Resource.ProximityBeacon.Beacons.List
-import           Network.Google.Resource.ProximityBeacon.Beacons.Register
-import           Network.Google.Resource.ProximityBeacon.Beacons.Update
-import           Network.Google.Resource.ProximityBeacon.GetEidparams
-import           Network.Google.Resource.ProximityBeacon.Namespaces.List
-import           Network.Google.Resource.ProximityBeacon.Namespaces.Update
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
+import Network.Google.Resource.ProximityBeacon.BeaconInfo.GetforObserved
+import Network.Google.Resource.ProximityBeacon.Beacons.Activate
+import Network.Google.Resource.ProximityBeacon.Beacons.Attachments.BatchDelete
+import Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Create
+import Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Delete
+import Network.Google.Resource.ProximityBeacon.Beacons.Attachments.List
+import Network.Google.Resource.ProximityBeacon.Beacons.Deactivate
+import Network.Google.Resource.ProximityBeacon.Beacons.Decommission
+import Network.Google.Resource.ProximityBeacon.Beacons.Delete
+import Network.Google.Resource.ProximityBeacon.Beacons.Diagnostics.List
+import Network.Google.Resource.ProximityBeacon.Beacons.Get
+import Network.Google.Resource.ProximityBeacon.Beacons.List
+import Network.Google.Resource.ProximityBeacon.Beacons.Register
+import Network.Google.Resource.ProximityBeacon.Beacons.Update
+import Network.Google.Resource.ProximityBeacon.GetEidparams
+import Network.Google.Resource.ProximityBeacon.Namespaces.List
+import Network.Google.Resource.ProximityBeacon.Namespaces.Update
 
 {- $resources
 TODO
@@ -261,6 +283,7 @@ type ProximityBeaconAPI =
        :<|> BeaconsActivateResource
        :<|> BeaconsRegisterResource
        :<|> BeaconsDecommissionResource
+       :<|> BeaconsDeleteResource
        :<|> BeaconsUpdateResource
        :<|> NamespacesListResource
        :<|> NamespacesUpdateResource

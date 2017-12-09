@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.Subnetworks.Insert
     , SubnetworksInsert
 
     -- * Request Lenses
+    , siRequestId
     , siProject
     , siPayload
     , siRegion
+    , siFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.subnetworks.insert@ method which the
 -- 'SubnetworksInsert' request conforms to.
@@ -52,39 +54,63 @@ type SubnetworksInsertResource =
              "regions" :>
                Capture "region" Text :>
                  "subnetworks" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Subnetwork :> Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Subnetwork :> Post '[JSON] Operation
 
 -- | Creates a subnetwork in the specified project using the data included in
 -- the request.
 --
 -- /See:/ 'subnetworksInsert' smart constructor.
 data SubnetworksInsert = SubnetworksInsert'
-    { _siProject :: !Text
+    { _siRequestId :: !(Maybe Text)
+    , _siProject :: !Text
     , _siPayload :: !Subnetwork
-    , _siRegion  :: !Text
+    , _siRegion :: !Text
+    , _siFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubnetworksInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'siRequestId'
+--
 -- * 'siProject'
 --
 -- * 'siPayload'
 --
 -- * 'siRegion'
+--
+-- * 'siFields'
 subnetworksInsert
     :: Text -- ^ 'siProject'
     -> Subnetwork -- ^ 'siPayload'
     -> Text -- ^ 'siRegion'
     -> SubnetworksInsert
-subnetworksInsert pSiProject_ pSiPayload_ pSiRegion_ =
+subnetworksInsert pSiProject_ pSiPayload_ pSiRegion_ = 
     SubnetworksInsert'
-    { _siProject = pSiProject_
+    { _siRequestId = Nothing
+    , _siProject = pSiProject_
     , _siPayload = pSiPayload_
     , _siRegion = pSiRegion_
+    , _siFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+siRequestId :: Lens' SubnetworksInsert (Maybe Text)
+siRequestId
+  = lens _siRequestId (\ s a -> s{_siRequestId = a})
 
 -- | Project ID for this request.
 siProject :: Lens' SubnetworksInsert Text
@@ -100,13 +126,19 @@ siPayload
 siRegion :: Lens' SubnetworksInsert Text
 siRegion = lens _siRegion (\ s a -> s{_siRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+siFields :: Lens' SubnetworksInsert (Maybe Text)
+siFields = lens _siFields (\ s a -> s{_siFields = a})
+
 instance GoogleRequest SubnetworksInsert where
         type Rs SubnetworksInsert = Operation
         type Scopes SubnetworksInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient SubnetworksInsert'{..}
-          = go _siProject _siRegion (Just AltJSON) _siPayload
+          = go _siProject _siRegion _siRequestId _siFields
+              (Just AltJSON)
+              _siPayload
               computeService
           where go
                   = buildClient

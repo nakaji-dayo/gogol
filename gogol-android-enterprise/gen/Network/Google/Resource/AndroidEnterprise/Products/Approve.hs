@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.Approve
     , paEnterpriseId
     , paPayload
     , paProductId
+    , paFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.approve@ method which the
 -- 'ProductsApprove' request conforms to.
@@ -55,9 +56,10 @@ type ProductsApproveResource =
              "products" :>
                Capture "productId" Text :>
                  "approve" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] ProductsApproveRequest :>
-                       Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ProductsApproveRequest :>
+                         Post '[JSON] ()
 
 -- | Approves the specified product and the relevant app permissions, if any.
 -- The maximum number of products that you can approve per enterprise
@@ -68,8 +70,9 @@ type ProductsApproveResource =
 -- /See:/ 'productsApprove' smart constructor.
 data ProductsApprove = ProductsApprove'
     { _paEnterpriseId :: !Text
-    , _paPayload      :: !ProductsApproveRequest
-    , _paProductId    :: !Text
+    , _paPayload :: !ProductsApproveRequest
+    , _paProductId :: !Text
+    , _paFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsApprove' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data ProductsApprove = ProductsApprove'
 -- * 'paPayload'
 --
 -- * 'paProductId'
+--
+-- * 'paFields'
 productsApprove
     :: Text -- ^ 'paEnterpriseId'
     -> ProductsApproveRequest -- ^ 'paPayload'
     -> Text -- ^ 'paProductId'
     -> ProductsApprove
-productsApprove pPaEnterpriseId_ pPaPayload_ pPaProductId_ =
+productsApprove pPaEnterpriseId_ pPaPayload_ pPaProductId_ = 
     ProductsApprove'
     { _paEnterpriseId = pPaEnterpriseId_
     , _paPayload = pPaPayload_
     , _paProductId = pPaProductId_
+    , _paFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -109,12 +115,17 @@ paProductId :: Lens' ProductsApprove Text
 paProductId
   = lens _paProductId (\ s a -> s{_paProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+paFields :: Lens' ProductsApprove (Maybe Text)
+paFields = lens _paFields (\ s a -> s{_paFields = a})
+
 instance GoogleRequest ProductsApprove where
         type Rs ProductsApprove = ()
         type Scopes ProductsApprove =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ProductsApprove'{..}
-          = go _paEnterpriseId _paProductId (Just AltJSON)
+          = go _paEnterpriseId _paProductId _paFields
+              (Just AltJSON)
               _paPayload
               androidEnterpriseService
           where go

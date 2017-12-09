@@ -34,10 +34,11 @@ module Network.Google.Resource.Gmail.Users.GetProFile
 
     -- * Request Lenses
     , ugpfUserId
+    , ugpfFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.getProfile@ method which the
 -- 'UsersGetProFile' request conforms to.
@@ -47,13 +48,15 @@ type UsersGetProFileResource =
          "users" :>
            Capture "userId" Text :>
              "profile" :>
-               QueryParam "alt" AltJSON :> Get '[JSON] ProFile
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] ProFile
 
 -- | Gets the current user\'s Gmail profile.
 --
 -- /See:/ 'usersGetProFile' smart constructor.
-newtype UsersGetProFile = UsersGetProFile'
-    { _ugpfUserId :: Text
+data UsersGetProFile = UsersGetProFile'
+    { _ugpfUserId :: !Text
+    , _ugpfFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGetProFile' with the minimum fields required to make a request.
@@ -61,11 +64,14 @@ newtype UsersGetProFile = UsersGetProFile'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ugpfUserId'
+--
+-- * 'ugpfFields'
 usersGetProFile
     :: UsersGetProFile
-usersGetProFile =
+usersGetProFile = 
     UsersGetProFile'
     { _ugpfUserId = "me"
+    , _ugpfFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -73,6 +79,11 @@ usersGetProFile =
 ugpfUserId :: Lens' UsersGetProFile Text
 ugpfUserId
   = lens _ugpfUserId (\ s a -> s{_ugpfUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ugpfFields :: Lens' UsersGetProFile (Maybe Text)
+ugpfFields
+  = lens _ugpfFields (\ s a -> s{_ugpfFields = a})
 
 instance GoogleRequest UsersGetProFile where
         type Rs UsersGetProFile = ProFile
@@ -83,7 +94,8 @@ instance GoogleRequest UsersGetProFile where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersGetProFile'{..}
-          = go _ugpfUserId (Just AltJSON) gmailService
+          = go _ugpfUserId _ugpfFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersGetProFileResource)

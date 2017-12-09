@@ -35,10 +35,11 @@ module Network.Google.Resource.Tasks.Tasks.Get
     -- * Request Lenses
     , tgTaskList
     , tgTask
+    , tgFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.get@ method which the
 -- 'TasksGet' request conforms to.
@@ -49,14 +50,16 @@ type TasksGetResource =
            Capture "tasklist" Text :>
              "tasks" :>
                Capture "task" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Task
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Task
 
 -- | Returns the specified task.
 --
 -- /See:/ 'tasksGet' smart constructor.
 data TasksGet = TasksGet'
     { _tgTaskList :: !Text
-    , _tgTask     :: !Text
+    , _tgTask :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TasksGet = TasksGet'
 -- * 'tgTaskList'
 --
 -- * 'tgTask'
+--
+-- * 'tgFields'
 tasksGet
     :: Text -- ^ 'tgTaskList'
     -> Text -- ^ 'tgTask'
     -> TasksGet
-tasksGet pTgTaskList_ pTgTask_ =
+tasksGet pTgTaskList_ pTgTask_ = 
     TasksGet'
     { _tgTaskList = pTgTaskList_
     , _tgTask = pTgTask_
+    , _tgFields = Nothing
     }
 
 -- | Task list identifier.
@@ -85,13 +91,17 @@ tgTaskList
 tgTask :: Lens' TasksGet Text
 tgTask = lens _tgTask (\ s a -> s{_tgTask = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TasksGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
+
 instance GoogleRequest TasksGet where
         type Rs TasksGet = Task
         type Scopes TasksGet =
              '["https://www.googleapis.com/auth/tasks",
                "https://www.googleapis.com/auth/tasks.readonly"]
         requestClient TasksGet'{..}
-          = go _tgTaskList _tgTask (Just AltJSON)
+          = go _tgTaskList _tgTask _tgFields (Just AltJSON)
               appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TasksGetResource)

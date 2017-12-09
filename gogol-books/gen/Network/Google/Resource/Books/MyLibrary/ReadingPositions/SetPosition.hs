@@ -39,11 +39,12 @@ module Network.Google.Resource.Books.MyLibrary.ReadingPositions.SetPosition
     , mlrpspVolumeId
     , mlrpspSource
     , mlrpspTimestamp
+    , mlrpspFields
     , mlrpspPosition
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.readingpositions.setPosition@ method which the
 -- 'MyLibraryReadingPositionsSetPosition' request conforms to.
@@ -62,19 +63,21 @@ type MyLibraryReadingPositionsSetPositionResource =
                            MyLibraryReadingPositionsSetPositionAction
                            :>
                            QueryParam "source" Text :>
-                             QueryParam "alt" AltJSON :> Post '[JSON] ()
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Sets my reading position information for a volume.
 --
 -- /See:/ 'myLibraryReadingPositionsSetPosition' smart constructor.
 data MyLibraryReadingPositionsSetPosition = MyLibraryReadingPositionsSetPosition'
-    { _mlrpspDeviceCookie   :: !(Maybe Text)
+    { _mlrpspDeviceCookie :: !(Maybe Text)
     , _mlrpspContentVersion :: !(Maybe Text)
-    , _mlrpspAction         :: !(Maybe MyLibraryReadingPositionsSetPositionAction)
-    , _mlrpspVolumeId       :: !Text
-    , _mlrpspSource         :: !(Maybe Text)
-    , _mlrpspTimestamp      :: !Text
-    , _mlrpspPosition       :: !Text
+    , _mlrpspAction :: !(Maybe MyLibraryReadingPositionsSetPositionAction)
+    , _mlrpspVolumeId :: !Text
+    , _mlrpspSource :: !(Maybe Text)
+    , _mlrpspTimestamp :: !Text
+    , _mlrpspFields :: !(Maybe Text)
+    , _mlrpspPosition :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryReadingPositionsSetPosition' with the minimum fields required to make a request.
@@ -93,13 +96,15 @@ data MyLibraryReadingPositionsSetPosition = MyLibraryReadingPositionsSetPosition
 --
 -- * 'mlrpspTimestamp'
 --
+-- * 'mlrpspFields'
+--
 -- * 'mlrpspPosition'
 myLibraryReadingPositionsSetPosition
     :: Text -- ^ 'mlrpspVolumeId'
     -> Text -- ^ 'mlrpspTimestamp'
     -> Text -- ^ 'mlrpspPosition'
     -> MyLibraryReadingPositionsSetPosition
-myLibraryReadingPositionsSetPosition pMlrpspVolumeId_ pMlrpspTimestamp_ pMlrpspPosition_ =
+myLibraryReadingPositionsSetPosition pMlrpspVolumeId_ pMlrpspTimestamp_ pMlrpspPosition_ = 
     MyLibraryReadingPositionsSetPosition'
     { _mlrpspDeviceCookie = Nothing
     , _mlrpspContentVersion = Nothing
@@ -107,6 +112,7 @@ myLibraryReadingPositionsSetPosition pMlrpspVolumeId_ pMlrpspTimestamp_ pMlrpspP
     , _mlrpspVolumeId = pMlrpspVolumeId_
     , _mlrpspSource = Nothing
     , _mlrpspTimestamp = pMlrpspTimestamp_
+    , _mlrpspFields = Nothing
     , _mlrpspPosition = pMlrpspPosition_
     }
 
@@ -144,6 +150,11 @@ mlrpspTimestamp
   = lens _mlrpspTimestamp
       (\ s a -> s{_mlrpspTimestamp = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mlrpspFields :: Lens' MyLibraryReadingPositionsSetPosition (Maybe Text)
+mlrpspFields
+  = lens _mlrpspFields (\ s a -> s{_mlrpspFields = a})
+
 -- | Position string for the new volume reading position.
 mlrpspPosition :: Lens' MyLibraryReadingPositionsSetPosition Text
 mlrpspPosition
@@ -163,6 +174,7 @@ instance GoogleRequest
               _mlrpspContentVersion
               _mlrpspAction
               _mlrpspSource
+              _mlrpspFields
               (Just AltJSON)
               booksService
           where go

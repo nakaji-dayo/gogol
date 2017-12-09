@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -33,8 +33,27 @@ module Network.Google.Drive.Types
     , FileList
     , fileList
     , flNextPageToken
+    , flIncompleteSearch
     , flKind
     , flFiles
+
+    -- * TeamDriveCapabilities
+    , TeamDriveCapabilities
+    , teamDriveCapabilities
+    , tdcCanRename
+    , tdcCanComment
+    , tdcCanRenameTeamDrive
+    , tdcCanChangeTeamDriveBackgRound
+    , tdcCanDownload
+    , tdcCanAddChildren
+    , tdcCanRemoveChildren
+    , tdcCanDeleteTeamDrive
+    , tdcCanListChildren
+    , tdcCanEdit
+    , tdcCanManageMembers
+    , tdcCanReadRevisions
+    , tdcCanCopy
+    , tdcCanShare
 
     -- * FilesListCorpus
     , FilesListCorpus (..)
@@ -74,8 +93,20 @@ module Network.Google.Drive.Types
     -- * FileCapabilities
     , FileCapabilities
     , fileCapabilities
+    , fcCanRename
     , fcCanComment
+    , fcCanDelete
+    , fcCanMoveItemIntoTeamDrive
+    , fcCanDownload
+    , fcCanTrash
+    , fcCanUntrash
+    , fcCanAddChildren
+    , fcCanRemoveChildren
+    , fcCanMoveTeamDriveItem
+    , fcCanReadTeamDrive
+    , fcCanListChildren
     , fcCanEdit
+    , fcCanChangeViewersCanCopyContent
     , fcCanReadRevisions
     , fcCanCopy
     , fcCanShare
@@ -93,6 +124,13 @@ module Network.Google.Drive.Types
     , fchtImage
     , fchtMimeType
 
+    -- * TeamDriveList
+    , TeamDriveList
+    , teamDriveList
+    , tdlNextPageToken
+    , tdlTeamDrives
+    , tdlKind
+
     -- * Channel
     , Channel
     , channel
@@ -106,6 +144,21 @@ module Network.Google.Drive.Types
     , cParams
     , cId
     , cType
+
+    -- * AboutTeamDriveThemesItem
+    , AboutTeamDriveThemesItem
+    , aboutTeamDriveThemesItem
+    , atdtiColorRgb
+    , atdtiBackgRoundImageLink
+    , atdtiId
+
+    -- * TeamDriveBackgRoundImageFile
+    , TeamDriveBackgRoundImageFile
+    , teamDriveBackgRoundImageFile
+    , tdbrifXCoordinate
+    , tdbrifYCoordinate
+    , tdbrifWidth
+    , tdbrifId
 
     -- * FileVideoMediaMetadata
     , FileVideoMediaMetadata
@@ -125,8 +178,24 @@ module Network.Google.Drive.Types
     , chaRemoved
     , chaTime
     , chaKind
+    , chaTeamDrive
+    , chaTeamDriveId
+    , chaType
     , chaFileId
     , chaFile
+
+    -- * TeamDrive
+    , TeamDrive
+    , teamDrive
+    , tdThemeId
+    , tdBackgRoundImageFile
+    , tdColorRgb
+    , tdCreatedTime
+    , tdKind
+    , tdBackgRoundImageLink
+    , tdName
+    , tdId
+    , tdCapabilities
 
     -- * AboutExportFormats
     , AboutExportFormats
@@ -183,6 +252,7 @@ module Network.Google.Drive.Types
     , aUser
     , aStorageQuota
     , aMaxUploadSize
+    , aTeamDriveThemes
     , aFolderColorPalette
 
     -- * FileImageMediaMetadataLocation
@@ -259,6 +329,7 @@ module Network.Google.Drive.Types
     , Permission
     , permission
     , pPhotoLink
+    , pTeamDrivePermissionDetails
     , pKind
     , pDomain
     , pRole
@@ -266,6 +337,7 @@ module Network.Google.Drive.Types
     , pAllowFileDiscovery
     , pDisplayName
     , pId
+    , pDeleted
     , pType
     , pExpirationTime
 
@@ -286,6 +358,7 @@ module Network.Google.Drive.Types
     , fTrashed
     , fWebViewLink
     , fCreatedTime
+    , fTrashedTime
     , fOriginalFilename
     , fKind
     , fLastModifyingUser
@@ -296,6 +369,7 @@ module Network.Google.Drive.Types
     , fExplicitlyTrashed
     , fShared
     , fMD5Checksum
+    , fTeamDriveId
     , fFolderColorRgb
     , fMimeType
     , fIsAppAuthorized
@@ -304,8 +378,11 @@ module Network.Google.Drive.Types
     , fStarred
     , fSpaces
     , fVersion
+    , fHasAugmentedPermissions
     , fWritersCanShare
+    , fTrashingUser
     , fId
+    , fPermissionIds
     , fPermissions
     , fQuotaBytesUsed
     , fAppProperties
@@ -319,6 +396,14 @@ module Network.Google.Drive.Types
     , fWebContentLink
     , fContentHints
     , fProperties
+
+    -- * PermissionTeamDrivePermissionDetailsItem
+    , PermissionTeamDrivePermissionDetailsItem
+    , permissionTeamDrivePermissionDetailsItem
+    , ptdpdiInherited
+    , ptdpdiTeamDrivePermissionType
+    , ptdpdiRole
+    , ptdpdiInheritedFrom
 
     -- * GeneratedIds
     , GeneratedIds
@@ -344,13 +429,14 @@ module Network.Google.Drive.Types
     -- * PermissionList
     , PermissionList
     , permissionList
+    , plNextPageToken
     , plKind
     , plPermissions
     ) where
 
-import           Network.Google.Drive.Types.Product
-import           Network.Google.Drive.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Drive.Types.Product
+import Network.Google.Drive.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v3' of the Drive API. This contains the host and root path used as a starting point for constructing service requests.
 driveService :: ServiceConfig

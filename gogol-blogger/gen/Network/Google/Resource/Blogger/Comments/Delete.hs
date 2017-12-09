@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Comments.Delete
     , cdBlogId
     , cdPostId
     , cdCommentId
+    , cdFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.delete@ method which the
 -- 'CommentsDelete' request conforms to.
@@ -52,15 +53,17 @@ type CommentsDeleteResource =
                Capture "postId" Text :>
                  "comments" :>
                    Capture "commentId" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a comment by ID.
 --
 -- /See:/ 'commentsDelete' smart constructor.
 data CommentsDelete = CommentsDelete'
-    { _cdBlogId    :: !Text
-    , _cdPostId    :: !Text
+    { _cdBlogId :: !Text
+    , _cdPostId :: !Text
     , _cdCommentId :: !Text
+    , _cdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data CommentsDelete = CommentsDelete'
 -- * 'cdPostId'
 --
 -- * 'cdCommentId'
+--
+-- * 'cdFields'
 commentsDelete
     :: Text -- ^ 'cdBlogId'
     -> Text -- ^ 'cdPostId'
     -> Text -- ^ 'cdCommentId'
     -> CommentsDelete
-commentsDelete pCdBlogId_ pCdPostId_ pCdCommentId_ =
+commentsDelete pCdBlogId_ pCdPostId_ pCdCommentId_ = 
     CommentsDelete'
     { _cdBlogId = pCdBlogId_
     , _cdPostId = pCdPostId_
     , _cdCommentId = pCdCommentId_
+    , _cdFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -97,12 +103,17 @@ cdCommentId :: Lens' CommentsDelete Text
 cdCommentId
   = lens _cdCommentId (\ s a -> s{_cdCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cdFields :: Lens' CommentsDelete (Maybe Text)
+cdFields = lens _cdFields (\ s a -> s{_cdFields = a})
+
 instance GoogleRequest CommentsDelete where
         type Rs CommentsDelete = ()
         type Scopes CommentsDelete =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient CommentsDelete'{..}
-          = go _cdBlogId _cdPostId _cdCommentId (Just AltJSON)
+          = go _cdBlogId _cdPostId _cdCommentId _cdFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy CommentsDeleteResource)

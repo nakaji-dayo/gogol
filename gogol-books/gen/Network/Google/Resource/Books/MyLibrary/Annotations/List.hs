@@ -43,10 +43,11 @@ module Network.Google.Resource.Books.MyLibrary.Annotations.List
     , mlalPageToken
     , mlalLayerId
     , mlalMaxResults
+    , mlalFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.mylibrary.annotations.list@ method which the
 -- 'MyLibraryAnnotationsList' request conforms to.
@@ -65,23 +66,25 @@ type MyLibraryAnnotationsListResource =
                            QueryParam "pageToken" Text :>
                              QueryParam "layerId" Text :>
                                QueryParam "maxResults" (Textual Word32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] Annotations
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] Annotations
 
 -- | Retrieves a list of annotations, possibly filtered.
 --
 -- /See:/ 'myLibraryAnnotationsList' smart constructor.
 data MyLibraryAnnotationsList = MyLibraryAnnotationsList'
     { _mlalContentVersion :: !(Maybe Text)
-    , _mlalShowDeleted    :: !(Maybe Bool)
-    , _mlalUpdatedMax     :: !(Maybe Text)
-    , _mlalUpdatedMin     :: !(Maybe Text)
-    , _mlalLayerIds       :: !(Maybe [Text])
-    , _mlalVolumeId       :: !(Maybe Text)
-    , _mlalSource         :: !(Maybe Text)
-    , _mlalPageToken      :: !(Maybe Text)
-    , _mlalLayerId        :: !(Maybe Text)
-    , _mlalMaxResults     :: !(Maybe (Textual Word32))
+    , _mlalShowDeleted :: !(Maybe Bool)
+    , _mlalUpdatedMax :: !(Maybe Text)
+    , _mlalUpdatedMin :: !(Maybe Text)
+    , _mlalLayerIds :: !(Maybe [Text])
+    , _mlalVolumeId :: !(Maybe Text)
+    , _mlalSource :: !(Maybe Text)
+    , _mlalPageToken :: !(Maybe Text)
+    , _mlalLayerId :: !(Maybe Text)
+    , _mlalMaxResults :: !(Maybe (Textual Word32))
+    , _mlalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MyLibraryAnnotationsList' with the minimum fields required to make a request.
@@ -107,9 +110,11 @@ data MyLibraryAnnotationsList = MyLibraryAnnotationsList'
 -- * 'mlalLayerId'
 --
 -- * 'mlalMaxResults'
+--
+-- * 'mlalFields'
 myLibraryAnnotationsList
     :: MyLibraryAnnotationsList
-myLibraryAnnotationsList =
+myLibraryAnnotationsList = 
     MyLibraryAnnotationsList'
     { _mlalContentVersion = Nothing
     , _mlalShowDeleted = Nothing
@@ -121,6 +126,7 @@ myLibraryAnnotationsList =
     , _mlalPageToken = Nothing
     , _mlalLayerId = Nothing
     , _mlalMaxResults = Nothing
+    , _mlalFields = Nothing
     }
 
 -- | The content version for the requested volume.
@@ -185,6 +191,11 @@ mlalMaxResults
       (\ s a -> s{_mlalMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mlalFields :: Lens' MyLibraryAnnotationsList (Maybe Text)
+mlalFields
+  = lens _mlalFields (\ s a -> s{_mlalFields = a})
+
 instance GoogleRequest MyLibraryAnnotationsList where
         type Rs MyLibraryAnnotationsList = Annotations
         type Scopes MyLibraryAnnotationsList =
@@ -199,6 +210,7 @@ instance GoogleRequest MyLibraryAnnotationsList where
               _mlalPageToken
               _mlalLayerId
               _mlalMaxResults
+              _mlalFields
               (Just AltJSON)
               booksService
           where go

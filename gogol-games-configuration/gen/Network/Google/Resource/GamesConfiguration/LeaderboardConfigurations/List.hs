@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.List
     , lclApplicationId
     , lclPageToken
     , lclMaxResults
+    , lclFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.leaderboardConfigurations.list@ method which the
 -- 'LeaderboardConfigurationsList' request conforms to.
@@ -51,16 +52,18 @@ type LeaderboardConfigurationsListResource =
              "leaderboards" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] LeaderboardConfigurationListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] LeaderboardConfigurationListResponse
 
 -- | Returns a list of the leaderboard configurations in this application.
 --
 -- /See:/ 'leaderboardConfigurationsList' smart constructor.
 data LeaderboardConfigurationsList = LeaderboardConfigurationsList'
     { _lclApplicationId :: !Text
-    , _lclPageToken     :: !(Maybe Text)
-    , _lclMaxResults    :: !(Maybe (Textual Int32))
+    , _lclPageToken :: !(Maybe Text)
+    , _lclMaxResults :: !(Maybe (Textual Int32))
+    , _lclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationsList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data LeaderboardConfigurationsList = LeaderboardConfigurationsList'
 -- * 'lclPageToken'
 --
 -- * 'lclMaxResults'
+--
+-- * 'lclFields'
 leaderboardConfigurationsList
     :: Text -- ^ 'lclApplicationId'
     -> LeaderboardConfigurationsList
-leaderboardConfigurationsList pLclApplicationId_ =
+leaderboardConfigurationsList pLclApplicationId_ = 
     LeaderboardConfigurationsList'
     { _lclApplicationId = pLclApplicationId_
     , _lclPageToken = Nothing
     , _lclMaxResults = Nothing
+    , _lclFields = Nothing
     }
 
 -- | The application ID from the Google Play developer console.
@@ -102,6 +108,11 @@ lclMaxResults
       (\ s a -> s{_lclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lclFields :: Lens' LeaderboardConfigurationsList (Maybe Text)
+lclFields
+  = lens _lclFields (\ s a -> s{_lclFields = a})
+
 instance GoogleRequest LeaderboardConfigurationsList
          where
         type Rs LeaderboardConfigurationsList =
@@ -110,6 +121,7 @@ instance GoogleRequest LeaderboardConfigurationsList
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient LeaderboardConfigurationsList'{..}
           = go _lclApplicationId _lclPageToken _lclMaxResults
+              _lclFields
               (Just AltJSON)
               gamesConfigurationService
           where go

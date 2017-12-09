@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.CustomDimensions.List
     , mcdlAccountId
     , mcdlStartIndex
     , mcdlMaxResults
+    , mcdlFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDimensions.list@ method which the
 -- 'ManagementCustomDimensionsList' request conforms to.
@@ -55,17 +56,19 @@ type ManagementCustomDimensionsListResource =
                    "customDimensions" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] CustomDimensions
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] CustomDimensions
 
 -- | Lists custom dimensions to which the user has access.
 --
 -- /See:/ 'managementCustomDimensionsList' smart constructor.
 data ManagementCustomDimensionsList = ManagementCustomDimensionsList'
     { _mcdlWebPropertyId :: !Text
-    , _mcdlAccountId     :: !Text
-    , _mcdlStartIndex    :: !(Maybe (Textual Int32))
-    , _mcdlMaxResults    :: !(Maybe (Textual Int32))
+    , _mcdlAccountId :: !Text
+    , _mcdlStartIndex :: !(Maybe (Textual Int32))
+    , _mcdlMaxResults :: !(Maybe (Textual Int32))
+    , _mcdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDimensionsList' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data ManagementCustomDimensionsList = ManagementCustomDimensionsList'
 -- * 'mcdlStartIndex'
 --
 -- * 'mcdlMaxResults'
+--
+-- * 'mcdlFields'
 managementCustomDimensionsList
     :: Text -- ^ 'mcdlWebPropertyId'
     -> Text -- ^ 'mcdlAccountId'
     -> ManagementCustomDimensionsList
-managementCustomDimensionsList pMcdlWebPropertyId_ pMcdlAccountId_ =
+managementCustomDimensionsList pMcdlWebPropertyId_ pMcdlAccountId_ = 
     ManagementCustomDimensionsList'
     { _mcdlWebPropertyId = pMcdlWebPropertyId_
     , _mcdlAccountId = pMcdlAccountId_
     , _mcdlStartIndex = Nothing
     , _mcdlMaxResults = Nothing
+    , _mcdlFields = Nothing
     }
 
 -- | Web property ID for the custom dimensions to retrieve.
@@ -118,6 +124,11 @@ mcdlMaxResults
       (\ s a -> s{_mcdlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mcdlFields :: Lens' ManagementCustomDimensionsList (Maybe Text)
+mcdlFields
+  = lens _mcdlFields (\ s a -> s{_mcdlFields = a})
+
 instance GoogleRequest ManagementCustomDimensionsList
          where
         type Rs ManagementCustomDimensionsList =
@@ -129,6 +140,7 @@ instance GoogleRequest ManagementCustomDimensionsList
           = go _mcdlAccountId _mcdlWebPropertyId
               _mcdlStartIndex
               _mcdlMaxResults
+              _mcdlFields
               (Just AltJSON)
               analyticsService
           where go

@@ -42,11 +42,12 @@ module Network.Google.Resource.Language.Documents.AnnotateText
     , datUploadType
     , datPayload
     , datBearerToken
+    , datFields
     , datCallback
     ) where
 
-import           Network.Google.Language.Types
-import           Network.Google.Prelude
+import Network.Google.Language.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @language.documents.annotateText@ method which the
 -- 'DocumentsAnnotateText' request conforms to.
@@ -60,9 +61,10 @@ type DocumentsAnnotateTextResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] AnnotateTextRequest :>
-                           Post '[JSON] AnnotateTextResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] AnnotateTextRequest :>
+                             Post '[JSON] AnnotateTextResponse
 
 -- | A convenience method that provides all the features that
 -- analyzeSentiment, analyzeEntities, and analyzeSyntax provide in one
@@ -70,14 +72,15 @@ type DocumentsAnnotateTextResource =
 --
 -- /See:/ 'documentsAnnotateText' smart constructor.
 data DocumentsAnnotateText = DocumentsAnnotateText'
-    { _datXgafv          :: !(Maybe Xgafv)
+    { _datXgafv :: !(Maybe Xgafv)
     , _datUploadProtocol :: !(Maybe Text)
-    , _datPp             :: !Bool
-    , _datAccessToken    :: !(Maybe Text)
-    , _datUploadType     :: !(Maybe Text)
-    , _datPayload        :: !AnnotateTextRequest
-    , _datBearerToken    :: !(Maybe Text)
-    , _datCallback       :: !(Maybe Text)
+    , _datPp :: !Bool
+    , _datAccessToken :: !(Maybe Text)
+    , _datUploadType :: !(Maybe Text)
+    , _datPayload :: !AnnotateTextRequest
+    , _datBearerToken :: !(Maybe Text)
+    , _datFields :: !(Maybe Text)
+    , _datCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DocumentsAnnotateText' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data DocumentsAnnotateText = DocumentsAnnotateText'
 --
 -- * 'datBearerToken'
 --
+-- * 'datFields'
+--
 -- * 'datCallback'
 documentsAnnotateText
     :: AnnotateTextRequest -- ^ 'datPayload'
     -> DocumentsAnnotateText
-documentsAnnotateText pDatPayload_ =
+documentsAnnotateText pDatPayload_ = 
     DocumentsAnnotateText'
     { _datXgafv = Nothing
     , _datUploadProtocol = Nothing
@@ -111,6 +116,7 @@ documentsAnnotateText pDatPayload_ =
     , _datUploadType = Nothing
     , _datPayload = pDatPayload_
     , _datBearerToken = Nothing
+    , _datFields = Nothing
     , _datCallback = Nothing
     }
 
@@ -151,6 +157,11 @@ datBearerToken
   = lens _datBearerToken
       (\ s a -> s{_datBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+datFields :: Lens' DocumentsAnnotateText (Maybe Text)
+datFields
+  = lens _datFields (\ s a -> s{_datFields = a})
+
 -- | JSONP
 datCallback :: Lens' DocumentsAnnotateText (Maybe Text)
 datCallback
@@ -159,13 +170,15 @@ datCallback
 instance GoogleRequest DocumentsAnnotateText where
         type Rs DocumentsAnnotateText = AnnotateTextResponse
         type Scopes DocumentsAnnotateText =
-             '["https://www.googleapis.com/auth/cloud-platform"]
+             '["https://www.googleapis.com/auth/cloud-language",
+               "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DocumentsAnnotateText'{..}
           = go _datXgafv _datUploadProtocol (Just _datPp)
               _datAccessToken
               _datUploadType
               _datBearerToken
               _datCallback
+              _datFields
               (Just AltJSON)
               _datPayload
               languageService

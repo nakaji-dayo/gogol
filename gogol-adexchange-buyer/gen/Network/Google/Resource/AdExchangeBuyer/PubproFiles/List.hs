@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.PubproFiles.List
 
     -- * Request Lenses
     , pflAccountId
+    , pflFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.pubprofiles.list@ method which the
 -- 'PubproFilesList' request conforms to.
@@ -47,14 +48,16 @@ type PubproFilesListResource =
          "publisher" :>
            Capture "accountId" (Textual Int32) :>
              "profiles" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] GetPublisherProFilesByAccountIdResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] GetPublisherProFilesByAccountIdResponse
 
 -- | Gets the requested publisher profile(s) by publisher accountId.
 --
 -- /See:/ 'pubproFilesList' smart constructor.
-newtype PubproFilesList = PubproFilesList'
-    { _pflAccountId :: Textual Int32
+data PubproFilesList = PubproFilesList'
+    { _pflAccountId :: !(Textual Int32)
+    , _pflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PubproFilesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype PubproFilesList = PubproFilesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pflAccountId'
+--
+-- * 'pflFields'
 pubproFilesList
     :: Int32 -- ^ 'pflAccountId'
     -> PubproFilesList
-pubproFilesList pPflAccountId_ =
+pubproFilesList pPflAccountId_ = 
     PubproFilesList'
     { _pflAccountId = _Coerce # pPflAccountId_
+    , _pflFields = Nothing
     }
 
 -- | The accountId of the publisher to get profiles for.
@@ -76,13 +82,18 @@ pflAccountId
   = lens _pflAccountId (\ s a -> s{_pflAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pflFields :: Lens' PubproFilesList (Maybe Text)
+pflFields
+  = lens _pflFields (\ s a -> s{_pflFields = a})
+
 instance GoogleRequest PubproFilesList where
         type Rs PubproFilesList =
              GetPublisherProFilesByAccountIdResponse
         type Scopes PubproFilesList =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient PubproFilesList'{..}
-          = go _pflAccountId (Just AltJSON)
+          = go _pflAccountId _pflFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

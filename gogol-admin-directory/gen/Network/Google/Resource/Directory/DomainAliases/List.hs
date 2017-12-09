@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.DomainAliases.List
     -- * Request Lenses
     , dalCustomer
     , dalParentDomainName
+    , dalFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domainAliases.list@ method which the
 -- 'DomainAliasesList' request conforms to.
@@ -50,14 +51,16 @@ type DomainAliasesListResource =
              Capture "customer" Text :>
                "domainaliases" :>
                  QueryParam "parentDomainName" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] DomainAliases
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] DomainAliases
 
 -- | Lists the domain aliases of the customer.
 --
 -- /See:/ 'domainAliasesList' smart constructor.
 data DomainAliasesList = DomainAliasesList'
-    { _dalCustomer         :: !Text
+    { _dalCustomer :: !Text
     , _dalParentDomainName :: !(Maybe Text)
+    , _dalFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainAliasesList' with the minimum fields required to make a request.
@@ -67,16 +70,19 @@ data DomainAliasesList = DomainAliasesList'
 -- * 'dalCustomer'
 --
 -- * 'dalParentDomainName'
+--
+-- * 'dalFields'
 domainAliasesList
     :: Text -- ^ 'dalCustomer'
     -> DomainAliasesList
-domainAliasesList pDalCustomer_ =
+domainAliasesList pDalCustomer_ = 
     DomainAliasesList'
     { _dalCustomer = pDalCustomer_
     , _dalParentDomainName = Nothing
+    , _dalFields = Nothing
     }
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 dalCustomer :: Lens' DomainAliasesList Text
 dalCustomer
   = lens _dalCustomer (\ s a -> s{_dalCustomer = a})
@@ -87,13 +93,19 @@ dalParentDomainName
   = lens _dalParentDomainName
       (\ s a -> s{_dalParentDomainName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dalFields :: Lens' DomainAliasesList (Maybe Text)
+dalFields
+  = lens _dalFields (\ s a -> s{_dalFields = a})
+
 instance GoogleRequest DomainAliasesList where
         type Rs DomainAliasesList = DomainAliases
         type Scopes DomainAliasesList =
              '["https://www.googleapis.com/auth/admin.directory.domain",
                "https://www.googleapis.com/auth/admin.directory.domain.readonly"]
         requestClient DomainAliasesList'{..}
-          = go _dalCustomer _dalParentDomainName (Just AltJSON)
+          = go _dalCustomer _dalParentDomainName _dalFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

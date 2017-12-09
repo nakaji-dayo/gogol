@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.TargetSSLProxies.Get
     -- * Request Lenses
     , tspgProject
     , tspgTargetSSLProxy
+    , tspgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetSslProxies.get@ method which the
 -- 'TargetSSLProxiesGet' request conforms to.
@@ -51,16 +52,18 @@ type TargetSSLProxiesGetResource =
              "global" :>
                "targetSslProxies" :>
                  Capture "targetSslProxy" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] TargetSSLProxy
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] TargetSSLProxy
 
 -- | Returns the specified TargetSslProxy resource. Get a list of available
 -- target SSL proxies by making a list() request.
 --
 -- /See:/ 'targetSSLProxiesGet' smart constructor.
 data TargetSSLProxiesGet = TargetSSLProxiesGet'
-    { _tspgProject        :: !Text
+    { _tspgProject :: !Text
     , _tspgTargetSSLProxy :: !Text
+    , _tspgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetSSLProxiesGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data TargetSSLProxiesGet = TargetSSLProxiesGet'
 -- * 'tspgProject'
 --
 -- * 'tspgTargetSSLProxy'
+--
+-- * 'tspgFields'
 targetSSLProxiesGet
     :: Text -- ^ 'tspgProject'
     -> Text -- ^ 'tspgTargetSSLProxy'
     -> TargetSSLProxiesGet
-targetSSLProxiesGet pTspgProject_ pTspgTargetSSLProxy_ =
+targetSSLProxiesGet pTspgProject_ pTspgTargetSSLProxy_ = 
     TargetSSLProxiesGet'
     { _tspgProject = pTspgProject_
     , _tspgTargetSSLProxy = pTspgTargetSSLProxy_
+    , _tspgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -91,6 +97,11 @@ tspgTargetSSLProxy
   = lens _tspgTargetSSLProxy
       (\ s a -> s{_tspgTargetSSLProxy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tspgFields :: Lens' TargetSSLProxiesGet (Maybe Text)
+tspgFields
+  = lens _tspgFields (\ s a -> s{_tspgFields = a})
+
 instance GoogleRequest TargetSSLProxiesGet where
         type Rs TargetSSLProxiesGet = TargetSSLProxy
         type Scopes TargetSSLProxiesGet =
@@ -98,7 +109,8 @@ instance GoogleRequest TargetSSLProxiesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient TargetSSLProxiesGet'{..}
-          = go _tspgProject _tspgTargetSSLProxy (Just AltJSON)
+          = go _tspgProject _tspgTargetSSLProxy _tspgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Timeline.Attachments.Insert
 
     -- * Request Lenses
     , taiItemId
+    , taiFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.attachments.insert@ method which the
 -- 'TimelineAttachmentsInsert' request conforms to.
@@ -47,7 +48,8 @@ type TimelineAttachmentsInsertResource =
          "timeline" :>
            Capture "itemId" Text :>
              "attachments" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] Attachment
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] Attachment
        :<|>
        "upload" :>
          "mirror" :>
@@ -55,15 +57,17 @@ type TimelineAttachmentsInsertResource =
              "timeline" :>
                Capture "itemId" Text :>
                  "attachments" :>
-                   QueryParam "alt" AltJSON :>
-                     QueryParam "uploadType" AltMedia :>
-                       AltMedia :> Post '[JSON] Attachment
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       QueryParam "uploadType" AltMedia :>
+                         AltMedia :> Post '[JSON] Attachment
 
 -- | Adds a new attachment to a timeline item.
 --
 -- /See:/ 'timelineAttachmentsInsert' smart constructor.
-newtype TimelineAttachmentsInsert = TimelineAttachmentsInsert'
-    { _taiItemId :: Text
+data TimelineAttachmentsInsert = TimelineAttachmentsInsert'
+    { _taiItemId :: !Text
+    , _taiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineAttachmentsInsert' with the minimum fields required to make a request.
@@ -71,12 +75,15 @@ newtype TimelineAttachmentsInsert = TimelineAttachmentsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'taiItemId'
+--
+-- * 'taiFields'
 timelineAttachmentsInsert
     :: Text -- ^ 'taiItemId'
     -> TimelineAttachmentsInsert
-timelineAttachmentsInsert pTaiItemId_ =
+timelineAttachmentsInsert pTaiItemId_ = 
     TimelineAttachmentsInsert'
     { _taiItemId = pTaiItemId_
+    , _taiFields = Nothing
     }
 
 -- | The ID of the timeline item the attachment belongs to.
@@ -84,13 +91,19 @@ taiItemId :: Lens' TimelineAttachmentsInsert Text
 taiItemId
   = lens _taiItemId (\ s a -> s{_taiItemId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+taiFields :: Lens' TimelineAttachmentsInsert (Maybe Text)
+taiFields
+  = lens _taiFields (\ s a -> s{_taiFields = a})
+
 instance GoogleRequest TimelineAttachmentsInsert
          where
         type Rs TimelineAttachmentsInsert = Attachment
         type Scopes TimelineAttachmentsInsert =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineAttachmentsInsert'{..}
-          = go _taiItemId (Just AltJSON) mirrorService
+          = go _taiItemId _taiFields (Just AltJSON)
+              mirrorService
           where go :<|> _
                   = buildClient
                       (Proxy :: Proxy TimelineAttachmentsInsertResource)
@@ -104,7 +117,9 @@ instance GoogleRequest
              Scopes TimelineAttachmentsInsert
         requestClient
           (MediaUpload TimelineAttachmentsInsert'{..} body)
-          = go _taiItemId (Just AltJSON) (Just AltMedia) body
+          = go _taiItemId _taiFields (Just AltJSON)
+              (Just AltMedia)
+              body
               mirrorService
           where _ :<|> go
                   = buildClient

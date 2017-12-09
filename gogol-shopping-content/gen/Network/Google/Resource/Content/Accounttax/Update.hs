@@ -20,10 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the tax settings of the account. This method can only be called
--- for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- Updates the tax settings of the account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounttax.update@.
 module Network.Google.Resource.Content.Accounttax.Update
@@ -36,14 +33,15 @@ module Network.Google.Resource.Content.Accounttax.Update
     , AccounttaxUpdate
 
     -- * Request Lenses
-    , auuMerchantId
-    , auuPayload
-    , auuAccountId
-    , auuDryRun
+    , auMerchantId
+    , auPayload
+    , auAccountId
+    , auDryRun
+    , auFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounttax.update@ method which the
 -- 'AccounttaxUpdate' request conforms to.
@@ -54,77 +52,83 @@ type AccounttaxUpdateResource =
            "accounttax" :>
              Capture "accountId" (Textual Word64) :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] AccountTax :> Put '[JSON] AccountTax
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] AccountTax :> Put '[JSON] AccountTax
 
--- | Updates the tax settings of the account. This method can only be called
--- for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- | Updates the tax settings of the account.
 --
 -- /See:/ 'accounttaxUpdate' smart constructor.
 data AccounttaxUpdate = AccounttaxUpdate'
-    { _auuMerchantId :: !(Textual Word64)
-    , _auuPayload    :: !AccountTax
-    , _auuAccountId  :: !(Textual Word64)
-    , _auuDryRun     :: !(Maybe Bool)
+    { _auMerchantId :: !(Textual Word64)
+    , _auPayload :: !AccountTax
+    , _auAccountId :: !(Textual Word64)
+    , _auDryRun :: !(Maybe Bool)
+    , _auFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccounttaxUpdate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'auuMerchantId'
+-- * 'auMerchantId'
 --
--- * 'auuPayload'
+-- * 'auPayload'
 --
--- * 'auuAccountId'
+-- * 'auAccountId'
 --
--- * 'auuDryRun'
+-- * 'auDryRun'
+--
+-- * 'auFields'
 accounttaxUpdate
-    :: Word64 -- ^ 'auuMerchantId'
-    -> AccountTax -- ^ 'auuPayload'
-    -> Word64 -- ^ 'auuAccountId'
+    :: Word64 -- ^ 'auMerchantId'
+    -> AccountTax -- ^ 'auPayload'
+    -> Word64 -- ^ 'auAccountId'
     -> AccounttaxUpdate
-accounttaxUpdate pAuuMerchantId_ pAuuPayload_ pAuuAccountId_ =
+accounttaxUpdate pAuMerchantId_ pAuPayload_ pAuAccountId_ = 
     AccounttaxUpdate'
-    { _auuMerchantId = _Coerce # pAuuMerchantId_
-    , _auuPayload = pAuuPayload_
-    , _auuAccountId = _Coerce # pAuuAccountId_
-    , _auuDryRun = Nothing
+    { _auMerchantId = _Coerce # pAuMerchantId_
+    , _auPayload = pAuPayload_
+    , _auAccountId = _Coerce # pAuAccountId_
+    , _auDryRun = Nothing
+    , _auFields = Nothing
     }
 
--- | The ID of the managing account.
-auuMerchantId :: Lens' AccounttaxUpdate Word64
-auuMerchantId
-  = lens _auuMerchantId
-      (\ s a -> s{_auuMerchantId = a})
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
+auMerchantId :: Lens' AccounttaxUpdate Word64
+auMerchantId
+  = lens _auMerchantId (\ s a -> s{_auMerchantId = a})
       . _Coerce
 
 -- | Multipart request metadata.
-auuPayload :: Lens' AccounttaxUpdate AccountTax
-auuPayload
-  = lens _auuPayload (\ s a -> s{_auuPayload = a})
+auPayload :: Lens' AccounttaxUpdate AccountTax
+auPayload
+  = lens _auPayload (\ s a -> s{_auPayload = a})
 
 -- | The ID of the account for which to get\/update account tax settings.
-auuAccountId :: Lens' AccounttaxUpdate Word64
-auuAccountId
-  = lens _auuAccountId (\ s a -> s{_auuAccountId = a})
-      . _Coerce
+auAccountId :: Lens' AccounttaxUpdate Word64
+auAccountId
+  = lens _auAccountId (\ s a -> s{_auAccountId = a}) .
+      _Coerce
 
 -- | Flag to run the request in dry-run mode.
-auuDryRun :: Lens' AccounttaxUpdate (Maybe Bool)
-auuDryRun
-  = lens _auuDryRun (\ s a -> s{_auuDryRun = a})
+auDryRun :: Lens' AccounttaxUpdate (Maybe Bool)
+auDryRun = lens _auDryRun (\ s a -> s{_auDryRun = a})
+
+-- | Selector specifying which fields to include in a partial response.
+auFields :: Lens' AccounttaxUpdate (Maybe Text)
+auFields = lens _auFields (\ s a -> s{_auFields = a})
 
 instance GoogleRequest AccounttaxUpdate where
         type Rs AccounttaxUpdate = AccountTax
         type Scopes AccounttaxUpdate =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccounttaxUpdate'{..}
-          = go _auuMerchantId _auuAccountId _auuDryRun
+          = go _auMerchantId _auAccountId _auDryRun _auFields
               (Just AltJSON)
-              _auuPayload
+              _auPayload
               shoppingContentService
           where go
                   = buildClient

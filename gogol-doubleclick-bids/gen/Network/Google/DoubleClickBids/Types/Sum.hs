@@ -16,7 +16,7 @@
 --
 module Network.Google.DoubleClickBids.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Format of the generated report.
 data QueryMetadataFormat
@@ -101,6 +101,8 @@ data ParametersType
       -- ^ @TYPE_PIXEL_LOAD@
     | TypeReachAndFrequency
       -- ^ @TYPE_REACH_AND_FREQUENCY@
+    | TypeReachAudience
+      -- ^ @TYPE_REACH_AUDIENCE@
     | TypeThirdPartyDataProvider
       -- ^ @TYPE_THIRD_PARTY_DATA_PROVIDER@
     | TypeTrueview
@@ -142,6 +144,7 @@ instance FromHttpApiData ParametersType where
         "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET" -> Right TypePetraNielsenOnlineGlobalMarket
         "TYPE_PIXEL_LOAD" -> Right TypePixelLoad
         "TYPE_REACH_AND_FREQUENCY" -> Right TypeReachAndFrequency
+        "TYPE_REACH_AUDIENCE" -> Right TypeReachAudience
         "TYPE_THIRD_PARTY_DATA_PROVIDER" -> Right TypeThirdPartyDataProvider
         "TYPE_TRUEVIEW" -> Right TypeTrueview
         "TYPE_TRUEVIEW_IAR" -> Right TypeTrueviewIar
@@ -176,6 +179,7 @@ instance ToHttpApiData ParametersType where
         TypePetraNielsenOnlineGlobalMarket -> "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET"
         TypePixelLoad -> "TYPE_PIXEL_LOAD"
         TypeReachAndFrequency -> "TYPE_REACH_AND_FREQUENCY"
+        TypeReachAudience -> "TYPE_REACH_AUDIENCE"
         TypeThirdPartyDataProvider -> "TYPE_THIRD_PARTY_DATA_PROVIDER"
         TypeTrueview -> "TYPE_TRUEVIEW"
         TypeTrueviewIar -> "TYPE_TRUEVIEW_IAR"
@@ -380,7 +384,9 @@ instance ToJSON QueryMetadataDataRange where
     toJSON = toJSONText
 
 data ParametersMetricsItem
-    = MetricActiveViewAverageViewableTime
+    = MetricActiveViewAudibleVisibleOnCompleteImpressions
+      -- ^ @METRIC_ACTIVE_VIEW_AUDIBLE_VISIBLE_ON_COMPLETE_IMPRESSIONS@
+    | MetricActiveViewAverageViewableTime
       -- ^ @METRIC_ACTIVE_VIEW_AVERAGE_VIEWABLE_TIME@
     | MetricActiveViewDistributionUnmeasurable
       -- ^ @METRIC_ACTIVE_VIEW_DISTRIBUTION_UNMEASURABLE@
@@ -396,10 +402,34 @@ data ParametersMetricsItem
       -- ^ @METRIC_ACTIVE_VIEW_PCT_MEASURABLE_IMPRESSIONS@
     | MetricActiveViewPctViewableImpressions
       -- ^ @METRIC_ACTIVE_VIEW_PCT_VIEWABLE_IMPRESSIONS@
+    | MetricActiveViewPercentAudibleVisibleAtStart
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_AT_START@
+    | MetricActiveViewPercentAudibleVisibleFirstQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_FIRST_QUAR@
+    | MetricActiveViewPercentAudibleVisibleOnComplete
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_ON_COMPLETE@
+    | MetricActiveViewPercentAudibleVisibleSecondQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_SECOND_QUAR@
+    | MetricActiveViewPercentAudibleVisibleThirdQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_THIRD_QUAR@
+    | MetricActiveViewPercentViewableForTimeThreshold
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VIEWABLE_FOR_TIME_THRESHOLD@
+    | MetricActiveViewPercentVisibleAtStart
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_AT_START@
+    | MetricActiveViewPercentVisibleFirstQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_FIRST_QUAR@
+    | MetricActiveViewPercentVisibleOnComplete
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_ON_COMPLETE@
+    | MetricActiveViewPercentVisibleSecondQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_SECOND_QUAR@
+    | MetricActiveViewPercentVisibleThirdQuar
+      -- ^ @METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_THIRD_QUAR@
     | MetricActiveViewUnmeasurableImpressions
       -- ^ @METRIC_ACTIVE_VIEW_UNMEASURABLE_IMPRESSIONS@
     | MetricActiveViewUnviewableImpressions
       -- ^ @METRIC_ACTIVE_VIEW_UNVIEWABLE_IMPRESSIONS@
+    | MetricActiveViewViewableForTimeThreshold
+      -- ^ @METRIC_ACTIVE_VIEW_VIEWABLE_FOR_TIME_THRESHOLD@
     | MetricActiveViewViewableImpressions
       -- ^ @METRIC_ACTIVE_VIEW_VIEWABLE_IMPRESSIONS@
     | MetricBidRequests
@@ -738,6 +768,8 @@ data ParametersMetricsItem
       -- ^ @METRIC_PROFIT_VIEWABLE_ECPM_PARTNER@
     | MetricProfitViewableEcpmUsd
       -- ^ @METRIC_PROFIT_VIEWABLE_ECPM_USD@
+    | MetricReachCookieFrequency
+      -- ^ @METRIC_REACH_COOKIE_FREQUENCY@
     | MetricReachCookieReach
       -- ^ @METRIC_REACH_COOKIE_REACH@
     | MetricRevenueAdvertiser
@@ -772,6 +804,8 @@ data ParametersMetricsItem
       -- ^ @METRIC_REVENUE_ECPC_PARTNER@
     | MetricRevenueEcpcUsd
       -- ^ @METRIC_REVENUE_ECPC_USD@
+    | MetricRevenueEcpiavcAdvertiser
+      -- ^ @METRIC_REVENUE_ECPIAVC_ADVERTISER@
     | MetricRevenueEcpmAdvertiser
       -- ^ @METRIC_REVENUE_ECPM_ADVERTISER@
     | MetricRevenueEcpmPartner
@@ -964,6 +998,7 @@ instance Hashable ParametersMetricsItem
 
 instance FromHttpApiData ParametersMetricsItem where
     parseQueryParam = \case
+        "METRIC_ACTIVE_VIEW_AUDIBLE_VISIBLE_ON_COMPLETE_IMPRESSIONS" -> Right MetricActiveViewAudibleVisibleOnCompleteImpressions
         "METRIC_ACTIVE_VIEW_AVERAGE_VIEWABLE_TIME" -> Right MetricActiveViewAverageViewableTime
         "METRIC_ACTIVE_VIEW_DISTRIBUTION_UNMEASURABLE" -> Right MetricActiveViewDistributionUnmeasurable
         "METRIC_ACTIVE_VIEW_DISTRIBUTION_UNVIEWABLE" -> Right MetricActiveViewDistributionUnviewable
@@ -972,8 +1007,20 @@ instance FromHttpApiData ParametersMetricsItem where
         "METRIC_ACTIVE_VIEW_MEASURABLE_IMPRESSIONS" -> Right MetricActiveViewMeasurableImpressions
         "METRIC_ACTIVE_VIEW_PCT_MEASURABLE_IMPRESSIONS" -> Right MetricActiveViewPctMeasurableImpressions
         "METRIC_ACTIVE_VIEW_PCT_VIEWABLE_IMPRESSIONS" -> Right MetricActiveViewPctViewableImpressions
+        "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_AT_START" -> Right MetricActiveViewPercentAudibleVisibleAtStart
+        "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_FIRST_QUAR" -> Right MetricActiveViewPercentAudibleVisibleFirstQuar
+        "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_ON_COMPLETE" -> Right MetricActiveViewPercentAudibleVisibleOnComplete
+        "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_SECOND_QUAR" -> Right MetricActiveViewPercentAudibleVisibleSecondQuar
+        "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_THIRD_QUAR" -> Right MetricActiveViewPercentAudibleVisibleThirdQuar
+        "METRIC_ACTIVE_VIEW_PERCENT_VIEWABLE_FOR_TIME_THRESHOLD" -> Right MetricActiveViewPercentViewableForTimeThreshold
+        "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_AT_START" -> Right MetricActiveViewPercentVisibleAtStart
+        "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_FIRST_QUAR" -> Right MetricActiveViewPercentVisibleFirstQuar
+        "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_ON_COMPLETE" -> Right MetricActiveViewPercentVisibleOnComplete
+        "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_SECOND_QUAR" -> Right MetricActiveViewPercentVisibleSecondQuar
+        "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_THIRD_QUAR" -> Right MetricActiveViewPercentVisibleThirdQuar
         "METRIC_ACTIVE_VIEW_UNMEASURABLE_IMPRESSIONS" -> Right MetricActiveViewUnmeasurableImpressions
         "METRIC_ACTIVE_VIEW_UNVIEWABLE_IMPRESSIONS" -> Right MetricActiveViewUnviewableImpressions
+        "METRIC_ACTIVE_VIEW_VIEWABLE_FOR_TIME_THRESHOLD" -> Right MetricActiveViewViewableForTimeThreshold
         "METRIC_ACTIVE_VIEW_VIEWABLE_IMPRESSIONS" -> Right MetricActiveViewViewableImpressions
         "METRIC_BID_REQUESTS" -> Right MetricBidRequests
         "METRIC_BILLABLE_COST_ADVERTISER" -> Right MetricBillableCostAdvertiser
@@ -1143,6 +1190,7 @@ instance FromHttpApiData ParametersMetricsItem where
         "METRIC_PROFIT_VIEWABLE_ECPM_ADVERTISER" -> Right MetricProfitViewableEcpmAdvertiser
         "METRIC_PROFIT_VIEWABLE_ECPM_PARTNER" -> Right MetricProfitViewableEcpmPartner
         "METRIC_PROFIT_VIEWABLE_ECPM_USD" -> Right MetricProfitViewableEcpmUsd
+        "METRIC_REACH_COOKIE_FREQUENCY" -> Right MetricReachCookieFrequency
         "METRIC_REACH_COOKIE_REACH" -> Right MetricReachCookieReach
         "METRIC_REVENUE_ADVERTISER" -> Right MetricRevenueAdvertiser
         "METRIC_REVENUE_ECPAPC_ADVERTISER" -> Right MetricRevenueEcpapcAdvertiser
@@ -1160,6 +1208,7 @@ instance FromHttpApiData ParametersMetricsItem where
         "METRIC_REVENUE_ECPC_ADVERTISER" -> Right MetricRevenueEcpcAdvertiser
         "METRIC_REVENUE_ECPC_PARTNER" -> Right MetricRevenueEcpcPartner
         "METRIC_REVENUE_ECPC_USD" -> Right MetricRevenueEcpcUsd
+        "METRIC_REVENUE_ECPIAVC_ADVERTISER" -> Right MetricRevenueEcpiavcAdvertiser
         "METRIC_REVENUE_ECPM_ADVERTISER" -> Right MetricRevenueEcpmAdvertiser
         "METRIC_REVENUE_ECPM_PARTNER" -> Right MetricRevenueEcpmPartner
         "METRIC_REVENUE_ECPM_USD" -> Right MetricRevenueEcpmUsd
@@ -1257,6 +1306,7 @@ instance FromHttpApiData ParametersMetricsItem where
 
 instance ToHttpApiData ParametersMetricsItem where
     toQueryParam = \case
+        MetricActiveViewAudibleVisibleOnCompleteImpressions -> "METRIC_ACTIVE_VIEW_AUDIBLE_VISIBLE_ON_COMPLETE_IMPRESSIONS"
         MetricActiveViewAverageViewableTime -> "METRIC_ACTIVE_VIEW_AVERAGE_VIEWABLE_TIME"
         MetricActiveViewDistributionUnmeasurable -> "METRIC_ACTIVE_VIEW_DISTRIBUTION_UNMEASURABLE"
         MetricActiveViewDistributionUnviewable -> "METRIC_ACTIVE_VIEW_DISTRIBUTION_UNVIEWABLE"
@@ -1265,8 +1315,20 @@ instance ToHttpApiData ParametersMetricsItem where
         MetricActiveViewMeasurableImpressions -> "METRIC_ACTIVE_VIEW_MEASURABLE_IMPRESSIONS"
         MetricActiveViewPctMeasurableImpressions -> "METRIC_ACTIVE_VIEW_PCT_MEASURABLE_IMPRESSIONS"
         MetricActiveViewPctViewableImpressions -> "METRIC_ACTIVE_VIEW_PCT_VIEWABLE_IMPRESSIONS"
+        MetricActiveViewPercentAudibleVisibleAtStart -> "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_AT_START"
+        MetricActiveViewPercentAudibleVisibleFirstQuar -> "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_FIRST_QUAR"
+        MetricActiveViewPercentAudibleVisibleOnComplete -> "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_ON_COMPLETE"
+        MetricActiveViewPercentAudibleVisibleSecondQuar -> "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_SECOND_QUAR"
+        MetricActiveViewPercentAudibleVisibleThirdQuar -> "METRIC_ACTIVE_VIEW_PERCENT_AUDIBLE_VISIBLE_THIRD_QUAR"
+        MetricActiveViewPercentViewableForTimeThreshold -> "METRIC_ACTIVE_VIEW_PERCENT_VIEWABLE_FOR_TIME_THRESHOLD"
+        MetricActiveViewPercentVisibleAtStart -> "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_AT_START"
+        MetricActiveViewPercentVisibleFirstQuar -> "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_FIRST_QUAR"
+        MetricActiveViewPercentVisibleOnComplete -> "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_ON_COMPLETE"
+        MetricActiveViewPercentVisibleSecondQuar -> "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_SECOND_QUAR"
+        MetricActiveViewPercentVisibleThirdQuar -> "METRIC_ACTIVE_VIEW_PERCENT_VISIBLE_THIRD_QUAR"
         MetricActiveViewUnmeasurableImpressions -> "METRIC_ACTIVE_VIEW_UNMEASURABLE_IMPRESSIONS"
         MetricActiveViewUnviewableImpressions -> "METRIC_ACTIVE_VIEW_UNVIEWABLE_IMPRESSIONS"
+        MetricActiveViewViewableForTimeThreshold -> "METRIC_ACTIVE_VIEW_VIEWABLE_FOR_TIME_THRESHOLD"
         MetricActiveViewViewableImpressions -> "METRIC_ACTIVE_VIEW_VIEWABLE_IMPRESSIONS"
         MetricBidRequests -> "METRIC_BID_REQUESTS"
         MetricBillableCostAdvertiser -> "METRIC_BILLABLE_COST_ADVERTISER"
@@ -1436,6 +1498,7 @@ instance ToHttpApiData ParametersMetricsItem where
         MetricProfitViewableEcpmAdvertiser -> "METRIC_PROFIT_VIEWABLE_ECPM_ADVERTISER"
         MetricProfitViewableEcpmPartner -> "METRIC_PROFIT_VIEWABLE_ECPM_PARTNER"
         MetricProfitViewableEcpmUsd -> "METRIC_PROFIT_VIEWABLE_ECPM_USD"
+        MetricReachCookieFrequency -> "METRIC_REACH_COOKIE_FREQUENCY"
         MetricReachCookieReach -> "METRIC_REACH_COOKIE_REACH"
         MetricRevenueAdvertiser -> "METRIC_REVENUE_ADVERTISER"
         MetricRevenueEcpapcAdvertiser -> "METRIC_REVENUE_ECPAPC_ADVERTISER"
@@ -1453,6 +1516,7 @@ instance ToHttpApiData ParametersMetricsItem where
         MetricRevenueEcpcAdvertiser -> "METRIC_REVENUE_ECPC_ADVERTISER"
         MetricRevenueEcpcPartner -> "METRIC_REVENUE_ECPC_PARTNER"
         MetricRevenueEcpcUsd -> "METRIC_REVENUE_ECPC_USD"
+        MetricRevenueEcpiavcAdvertiser -> "METRIC_REVENUE_ECPIAVC_ADVERTISER"
         MetricRevenueEcpmAdvertiser -> "METRIC_REVENUE_ECPM_ADVERTISER"
         MetricRevenueEcpmPartner -> "METRIC_REVENUE_ECPM_PARTNER"
         MetricRevenueEcpmUsd -> "METRIC_REVENUE_ECPM_USD"
@@ -1601,8 +1665,6 @@ instance ToJSON QueryScheduleFrequency where
 data DownloadLineItemsRequestFileSpec
     = Ewf
       -- ^ @EWF@
-    | Sdf
-      -- ^ @SDF@
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable DownloadLineItemsRequestFileSpec
@@ -1610,13 +1672,11 @@ instance Hashable DownloadLineItemsRequestFileSpec
 instance FromHttpApiData DownloadLineItemsRequestFileSpec where
     parseQueryParam = \case
         "EWF" -> Right Ewf
-        "SDF" -> Right Sdf
         x -> Left ("Unable to parse DownloadLineItemsRequestFileSpec from: " <> x)
 
 instance ToHttpApiData DownloadLineItemsRequestFileSpec where
     toQueryParam = \case
         Ewf -> "EWF"
-        Sdf -> "SDF"
 
 instance FromJSON DownloadLineItemsRequestFileSpec where
     parseJSON = parseJSONText "DownloadLineItemsRequestFileSpec"
@@ -1667,6 +1727,8 @@ data FilterPairType
       -- ^ @FILTER_BRANDSAFE_CHANNEL_ID@
     | FilterBrowser
       -- ^ @FILTER_BROWSER@
+    | FilterBudgetSegmentDescription
+      -- ^ @FILTER_BUDGET_SEGMENT_DESCRIPTION@
     | FilterCampaignDailyFrequency
       -- ^ @FILTER_CAMPAIGN_DAILY_FREQUENCY@
     | FilterCarrier
@@ -1675,6 +1737,8 @@ data FilterPairType
       -- ^ @FILTER_CHANNEL_ID@
     | FilterCity
       -- ^ @FILTER_CITY@
+    | FilterCompanionCreativeId
+      -- ^ @FILTER_COMPANION_CREATIVE_ID@
     | FilterConversionDelay
       -- ^ @FILTER_CONVERSION_DELAY@
     | FilterCountry
@@ -1771,6 +1835,8 @@ data FilterPairType
       -- ^ @FILTER_SITE_ID@
     | FilterSiteLanguage
       -- ^ @FILTER_SITE_LANGUAGE@
+    | FilterSkippableSupport
+      -- ^ @FILTER_SKIPPABLE_SUPPORT@
     | FilterTargetedUserList
       -- ^ @FILTER_TARGETED_USER_LIST@
     | FilterTimeOfDay
@@ -1894,10 +1960,12 @@ instance FromHttpApiData FilterPairType where
         "FILTER_AGE" -> Right FilterAge
         "FILTER_BRANDSAFE_CHANNEL_ID" -> Right FilterBrandsafeChannelId
         "FILTER_BROWSER" -> Right FilterBrowser
+        "FILTER_BUDGET_SEGMENT_DESCRIPTION" -> Right FilterBudgetSegmentDescription
         "FILTER_CAMPAIGN_DAILY_FREQUENCY" -> Right FilterCampaignDailyFrequency
         "FILTER_CARRIER" -> Right FilterCarrier
         "FILTER_CHANNEL_ID" -> Right FilterChannelId
         "FILTER_CITY" -> Right FilterCity
+        "FILTER_COMPANION_CREATIVE_ID" -> Right FilterCompanionCreativeId
         "FILTER_CONVERSION_DELAY" -> Right FilterConversionDelay
         "FILTER_COUNTRY" -> Right FilterCountry
         "FILTER_CREATIVE_HEIGHT" -> Right FilterCreativeHeight
@@ -1946,6 +2014,7 @@ instance FromHttpApiData FilterPairType where
         "FILTER_REGULAR_CHANNEL_ID" -> Right FilterRegularChannelId
         "FILTER_SITE_ID" -> Right FilterSiteId
         "FILTER_SITE_LANGUAGE" -> Right FilterSiteLanguage
+        "FILTER_SKIPPABLE_SUPPORT" -> Right FilterSkippableSupport
         "FILTER_TARGETED_USER_LIST" -> Right FilterTargetedUserList
         "FILTER_TIME_OF_DAY" -> Right FilterTimeOfDay
         "FILTER_TRUEVIEW_AD_GROUP_AD_ID" -> Right FilterTrueviewAdGroupAdId
@@ -2013,10 +2082,12 @@ instance ToHttpApiData FilterPairType where
         FilterAge -> "FILTER_AGE"
         FilterBrandsafeChannelId -> "FILTER_BRANDSAFE_CHANNEL_ID"
         FilterBrowser -> "FILTER_BROWSER"
+        FilterBudgetSegmentDescription -> "FILTER_BUDGET_SEGMENT_DESCRIPTION"
         FilterCampaignDailyFrequency -> "FILTER_CAMPAIGN_DAILY_FREQUENCY"
         FilterCarrier -> "FILTER_CARRIER"
         FilterChannelId -> "FILTER_CHANNEL_ID"
         FilterCity -> "FILTER_CITY"
+        FilterCompanionCreativeId -> "FILTER_COMPANION_CREATIVE_ID"
         FilterConversionDelay -> "FILTER_CONVERSION_DELAY"
         FilterCountry -> "FILTER_COUNTRY"
         FilterCreativeHeight -> "FILTER_CREATIVE_HEIGHT"
@@ -2065,6 +2136,7 @@ instance ToHttpApiData FilterPairType where
         FilterRegularChannelId -> "FILTER_REGULAR_CHANNEL_ID"
         FilterSiteId -> "FILTER_SITE_ID"
         FilterSiteLanguage -> "FILTER_SITE_LANGUAGE"
+        FilterSkippableSupport -> "FILTER_SKIPPABLE_SUPPORT"
         FilterTargetedUserList -> "FILTER_TARGETED_USER_LIST"
         FilterTimeOfDay -> "FILTER_TIME_OF_DAY"
         FilterTrueviewAdGroupAdId -> "FILTER_TRUEVIEW_AD_GROUP_AD_ID"
@@ -2271,6 +2343,8 @@ data ParametersGroupBysItem
       -- ^ @FILTER_BRANDSAFE_CHANNEL_ID@
     | PGBIFilterBrowser
       -- ^ @FILTER_BROWSER@
+    | PGBIFilterBudgetSegmentDescription
+      -- ^ @FILTER_BUDGET_SEGMENT_DESCRIPTION@
     | PGBIFilterCampaignDailyFrequency
       -- ^ @FILTER_CAMPAIGN_DAILY_FREQUENCY@
     | PGBIFilterCarrier
@@ -2279,6 +2353,8 @@ data ParametersGroupBysItem
       -- ^ @FILTER_CHANNEL_ID@
     | PGBIFilterCity
       -- ^ @FILTER_CITY@
+    | PGBIFilterCompanionCreativeId
+      -- ^ @FILTER_COMPANION_CREATIVE_ID@
     | PGBIFilterConversionDelay
       -- ^ @FILTER_CONVERSION_DELAY@
     | PGBIFilterCountry
@@ -2375,6 +2451,8 @@ data ParametersGroupBysItem
       -- ^ @FILTER_SITE_ID@
     | PGBIFilterSiteLanguage
       -- ^ @FILTER_SITE_LANGUAGE@
+    | PGBIFilterSkippableSupport
+      -- ^ @FILTER_SKIPPABLE_SUPPORT@
     | PGBIFilterTargetedUserList
       -- ^ @FILTER_TARGETED_USER_LIST@
     | PGBIFilterTimeOfDay
@@ -2498,10 +2576,12 @@ instance FromHttpApiData ParametersGroupBysItem where
         "FILTER_AGE" -> Right PGBIFilterAge
         "FILTER_BRANDSAFE_CHANNEL_ID" -> Right PGBIFilterBrandsafeChannelId
         "FILTER_BROWSER" -> Right PGBIFilterBrowser
+        "FILTER_BUDGET_SEGMENT_DESCRIPTION" -> Right PGBIFilterBudgetSegmentDescription
         "FILTER_CAMPAIGN_DAILY_FREQUENCY" -> Right PGBIFilterCampaignDailyFrequency
         "FILTER_CARRIER" -> Right PGBIFilterCarrier
         "FILTER_CHANNEL_ID" -> Right PGBIFilterChannelId
         "FILTER_CITY" -> Right PGBIFilterCity
+        "FILTER_COMPANION_CREATIVE_ID" -> Right PGBIFilterCompanionCreativeId
         "FILTER_CONVERSION_DELAY" -> Right PGBIFilterConversionDelay
         "FILTER_COUNTRY" -> Right PGBIFilterCountry
         "FILTER_CREATIVE_HEIGHT" -> Right PGBIFilterCreativeHeight
@@ -2550,6 +2630,7 @@ instance FromHttpApiData ParametersGroupBysItem where
         "FILTER_REGULAR_CHANNEL_ID" -> Right PGBIFilterRegularChannelId
         "FILTER_SITE_ID" -> Right PGBIFilterSiteId
         "FILTER_SITE_LANGUAGE" -> Right PGBIFilterSiteLanguage
+        "FILTER_SKIPPABLE_SUPPORT" -> Right PGBIFilterSkippableSupport
         "FILTER_TARGETED_USER_LIST" -> Right PGBIFilterTargetedUserList
         "FILTER_TIME_OF_DAY" -> Right PGBIFilterTimeOfDay
         "FILTER_TRUEVIEW_AD_GROUP_AD_ID" -> Right PGBIFilterTrueviewAdGroupAdId
@@ -2617,10 +2698,12 @@ instance ToHttpApiData ParametersGroupBysItem where
         PGBIFilterAge -> "FILTER_AGE"
         PGBIFilterBrandsafeChannelId -> "FILTER_BRANDSAFE_CHANNEL_ID"
         PGBIFilterBrowser -> "FILTER_BROWSER"
+        PGBIFilterBudgetSegmentDescription -> "FILTER_BUDGET_SEGMENT_DESCRIPTION"
         PGBIFilterCampaignDailyFrequency -> "FILTER_CAMPAIGN_DAILY_FREQUENCY"
         PGBIFilterCarrier -> "FILTER_CARRIER"
         PGBIFilterChannelId -> "FILTER_CHANNEL_ID"
         PGBIFilterCity -> "FILTER_CITY"
+        PGBIFilterCompanionCreativeId -> "FILTER_COMPANION_CREATIVE_ID"
         PGBIFilterConversionDelay -> "FILTER_CONVERSION_DELAY"
         PGBIFilterCountry -> "FILTER_COUNTRY"
         PGBIFilterCreativeHeight -> "FILTER_CREATIVE_HEIGHT"
@@ -2669,6 +2752,7 @@ instance ToHttpApiData ParametersGroupBysItem where
         PGBIFilterRegularChannelId -> "FILTER_REGULAR_CHANNEL_ID"
         PGBIFilterSiteId -> "FILTER_SITE_ID"
         PGBIFilterSiteLanguage -> "FILTER_SITE_LANGUAGE"
+        PGBIFilterSkippableSupport -> "FILTER_SKIPPABLE_SUPPORT"
         PGBIFilterTargetedUserList -> "FILTER_TARGETED_USER_LIST"
         PGBIFilterTimeOfDay -> "FILTER_TIME_OF_DAY"
         PGBIFilterTrueviewAdGroupAdId -> "FILTER_TRUEVIEW_AD_GROUP_AD_ID"

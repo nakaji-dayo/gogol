@@ -37,10 +37,11 @@ module Network.Google.Resource.AppState.States.Clear
     -- * Request Lenses
     , scStateKey
     , scCurrentDataVersion
+    , scFields
     ) where
 
-import           Network.Google.AppState.Types
-import           Network.Google.Prelude
+import Network.Google.AppState.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appstate.states.clear@ method which the
 -- 'StatesClear' request conforms to.
@@ -51,7 +52,8 @@ type StatesClearResource =
            Capture "stateKey" (Textual Int32) :>
              "clear" :>
                QueryParam "currentDataVersion" Text :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] WriteResult
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] WriteResult
 
 -- | Clears (sets to empty) the data for the passed key if and only if the
 -- passed version matches the currently stored version. This method results
@@ -59,8 +61,9 @@ type StatesClearResource =
 --
 -- /See:/ 'statesClear' smart constructor.
 data StatesClear = StatesClear'
-    { _scStateKey           :: !(Textual Int32)
+    { _scStateKey :: !(Textual Int32)
     , _scCurrentDataVersion :: !(Maybe Text)
+    , _scFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StatesClear' with the minimum fields required to make a request.
@@ -70,13 +73,16 @@ data StatesClear = StatesClear'
 -- * 'scStateKey'
 --
 -- * 'scCurrentDataVersion'
+--
+-- * 'scFields'
 statesClear
     :: Int32 -- ^ 'scStateKey'
     -> StatesClear
-statesClear pScStateKey_ =
+statesClear pScStateKey_ = 
     StatesClear'
     { _scStateKey = _Coerce # pScStateKey_
     , _scCurrentDataVersion = Nothing
+    , _scFields = Nothing
     }
 
 -- | The key for the data to be retrieved.
@@ -92,12 +98,17 @@ scCurrentDataVersion
   = lens _scCurrentDataVersion
       (\ s a -> s{_scCurrentDataVersion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scFields :: Lens' StatesClear (Maybe Text)
+scFields = lens _scFields (\ s a -> s{_scFields = a})
+
 instance GoogleRequest StatesClear where
         type Rs StatesClear = WriteResult
         type Scopes StatesClear =
              '["https://www.googleapis.com/auth/appstate"]
         requestClient StatesClear'{..}
-          = go _scStateKey _scCurrentDataVersion (Just AltJSON)
+          = go _scStateKey _scCurrentDataVersion _scFields
+              (Just AltJSON)
               appStateService
           where go
                   = buildClient (Proxy :: Proxy StatesClearResource)

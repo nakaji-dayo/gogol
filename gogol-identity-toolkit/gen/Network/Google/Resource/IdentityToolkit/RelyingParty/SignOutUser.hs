@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.SignOutUser
 
     -- * Request Lenses
     , rpsouPayload
+    , rpsouFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.signOutUser@ method which the
 -- 'RelyingPartySignOutUser' request conforms to.
@@ -46,18 +47,20 @@ type RelyingPartySignOutUserResource =
        "v3" :>
          "relyingparty" :>
            "signOutUser" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartySignOutUserRequest
-                 :>
-                 Post '[JSON]
-                   IdentitytoolkitRelyingPartySignOutUserResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartySignOutUserRequest
+                   :>
+                   Post '[JSON]
+                     IdentitytoolkitRelyingPartySignOutUserResponse
 
 -- | Sign out user.
 --
 -- /See:/ 'relyingPartySignOutUser' smart constructor.
-newtype RelyingPartySignOutUser = RelyingPartySignOutUser'
-    { _rpsouPayload :: IdentitytoolkitRelyingPartySignOutUserRequest
+data RelyingPartySignOutUser = RelyingPartySignOutUser'
+    { _rpsouPayload :: !IdentitytoolkitRelyingPartySignOutUserRequest
+    , _rpsouFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartySignOutUser' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype RelyingPartySignOutUser = RelyingPartySignOutUser'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpsouPayload'
+--
+-- * 'rpsouFields'
 relyingPartySignOutUser
     :: IdentitytoolkitRelyingPartySignOutUserRequest -- ^ 'rpsouPayload'
     -> RelyingPartySignOutUser
-relyingPartySignOutUser pRpsouPayload_ =
+relyingPartySignOutUser pRpsouPayload_ = 
     RelyingPartySignOutUser'
     { _rpsouPayload = pRpsouPayload_
+    , _rpsouFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -78,13 +84,18 @@ rpsouPayload :: Lens' RelyingPartySignOutUser IdentitytoolkitRelyingPartySignOut
 rpsouPayload
   = lens _rpsouPayload (\ s a -> s{_rpsouPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rpsouFields :: Lens' RelyingPartySignOutUser (Maybe Text)
+rpsouFields
+  = lens _rpsouFields (\ s a -> s{_rpsouFields = a})
+
 instance GoogleRequest RelyingPartySignOutUser where
         type Rs RelyingPartySignOutUser =
              IdentitytoolkitRelyingPartySignOutUserResponse
         type Scopes RelyingPartySignOutUser =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartySignOutUser'{..}
-          = go (Just AltJSON) _rpsouPayload
+          = go _rpsouFields (Just AltJSON) _rpsouPayload
               identityToolkitService
           where go
                   = buildClient

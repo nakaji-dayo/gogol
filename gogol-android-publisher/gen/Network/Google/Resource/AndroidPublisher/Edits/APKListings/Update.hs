@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.APKListings.Update
     , eapkluPayload
     , eapkluLanguage
     , eapkluEditId
+    , eapkluFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.apklistings.update@ method which the
 -- 'EditsAPKListingsUpdate' request conforms to.
@@ -57,19 +58,22 @@ type EditsAPKListingsUpdateResource =
                    Capture "apkVersionCode" (Textual Int32) :>
                      "listings" :>
                        Capture "language" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] APKListing :> Put '[JSON] APKListing
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] APKListing :>
+                               Put '[JSON] APKListing
 
 -- | Updates or creates the APK-specific localized listing for a specified
 -- APK and language code.
 --
 -- /See:/ 'editsAPKListingsUpdate' smart constructor.
 data EditsAPKListingsUpdate = EditsAPKListingsUpdate'
-    { _eapkluPackageName    :: !Text
+    { _eapkluPackageName :: !Text
     , _eapkluAPKVersionCode :: !(Textual Int32)
-    , _eapkluPayload        :: !APKListing
-    , _eapkluLanguage       :: !Text
-    , _eapkluEditId         :: !Text
+    , _eapkluPayload :: !APKListing
+    , _eapkluLanguage :: !Text
+    , _eapkluEditId :: !Text
+    , _eapkluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsAPKListingsUpdate' with the minimum fields required to make a request.
@@ -85,6 +89,8 @@ data EditsAPKListingsUpdate = EditsAPKListingsUpdate'
 -- * 'eapkluLanguage'
 --
 -- * 'eapkluEditId'
+--
+-- * 'eapkluFields'
 editsAPKListingsUpdate
     :: Text -- ^ 'eapkluPackageName'
     -> Int32 -- ^ 'eapkluAPKVersionCode'
@@ -92,13 +98,14 @@ editsAPKListingsUpdate
     -> Text -- ^ 'eapkluLanguage'
     -> Text -- ^ 'eapkluEditId'
     -> EditsAPKListingsUpdate
-editsAPKListingsUpdate pEapkluPackageName_ pEapkluAPKVersionCode_ pEapkluPayload_ pEapkluLanguage_ pEapkluEditId_ =
+editsAPKListingsUpdate pEapkluPackageName_ pEapkluAPKVersionCode_ pEapkluPayload_ pEapkluLanguage_ pEapkluEditId_ = 
     EditsAPKListingsUpdate'
     { _eapkluPackageName = pEapkluPackageName_
     , _eapkluAPKVersionCode = _Coerce # pEapkluAPKVersionCode_
     , _eapkluPayload = pEapkluPayload_
     , _eapkluLanguage = pEapkluLanguage_
     , _eapkluEditId = pEapkluEditId_
+    , _eapkluFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -135,6 +142,11 @@ eapkluEditId :: Lens' EditsAPKListingsUpdate Text
 eapkluEditId
   = lens _eapkluEditId (\ s a -> s{_eapkluEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eapkluFields :: Lens' EditsAPKListingsUpdate (Maybe Text)
+eapkluFields
+  = lens _eapkluFields (\ s a -> s{_eapkluFields = a})
+
 instance GoogleRequest EditsAPKListingsUpdate where
         type Rs EditsAPKListingsUpdate = APKListing
         type Scopes EditsAPKListingsUpdate =
@@ -143,6 +155,7 @@ instance GoogleRequest EditsAPKListingsUpdate where
           = go _eapkluPackageName _eapkluEditId
               _eapkluAPKVersionCode
               _eapkluLanguage
+              _eapkluFields
               (Just AltJSON)
               _eapkluPayload
               androidPublisherService

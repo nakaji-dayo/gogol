@@ -41,10 +41,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Import
     , umiDeleted
     , umiNeverMarkSpam
     , umiInternalDateSource
+    , umiFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.import@ method which the
 -- 'UsersMessagesImport' request conforms to.
@@ -61,8 +62,9 @@ type UsersMessagesImportResource =
                        QueryParam "internalDateSource"
                          UsersMessagesImportInternalDateSource
                          :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Message :> Post '[JSON] Message
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Message :> Post '[JSON] Message
        :<|>
        "upload" :>
          "gmail" :>
@@ -77,10 +79,11 @@ type UsersMessagesImportResource =
                            QueryParam "internalDateSource"
                              UsersMessagesImportInternalDateSource
                              :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" Multipart :>
-                                 MultipartRelated '[JSON] Message :>
-                                   Post '[JSON] Message
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" Multipart :>
+                                   MultipartRelated '[JSON] Message :>
+                                     Post '[JSON] Message
 
 -- | Imports a message into only this user\'s mailbox, with standard email
 -- delivery scanning and classification similar to receiving via SMTP. Does
@@ -88,12 +91,13 @@ type UsersMessagesImportResource =
 --
 -- /See:/ 'usersMessagesImport' smart constructor.
 data UsersMessagesImport = UsersMessagesImport'
-    { _umiPayload            :: !Message
-    , _umiUserId             :: !Text
+    { _umiPayload :: !Message
+    , _umiUserId :: !Text
     , _umiProcessForCalendar :: !Bool
-    , _umiDeleted            :: !Bool
-    , _umiNeverMarkSpam      :: !Bool
+    , _umiDeleted :: !Bool
+    , _umiNeverMarkSpam :: !Bool
     , _umiInternalDateSource :: !UsersMessagesImportInternalDateSource
+    , _umiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesImport' with the minimum fields required to make a request.
@@ -111,10 +115,12 @@ data UsersMessagesImport = UsersMessagesImport'
 -- * 'umiNeverMarkSpam'
 --
 -- * 'umiInternalDateSource'
+--
+-- * 'umiFields'
 usersMessagesImport
     :: Message -- ^ 'umiPayload'
     -> UsersMessagesImport
-usersMessagesImport pUmiPayload_ =
+usersMessagesImport pUmiPayload_ = 
     UsersMessagesImport'
     { _umiPayload = pUmiPayload_
     , _umiUserId = "me"
@@ -122,6 +128,7 @@ usersMessagesImport pUmiPayload_ =
     , _umiDeleted = False
     , _umiNeverMarkSpam = False
     , _umiInternalDateSource = DateHeader
+    , _umiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -143,8 +150,7 @@ umiProcessForCalendar
       (\ s a -> s{_umiProcessForCalendar = a})
 
 -- | Mark the email as permanently deleted (not TRASH) and only visible in
--- Google Apps Vault to a Vault administrator. Only used for Google Apps
--- for Work accounts.
+-- Google Vault to a Vault administrator. Only used for G Suite accounts.
 umiDeleted :: Lens' UsersMessagesImport Bool
 umiDeleted
   = lens _umiDeleted (\ s a -> s{_umiDeleted = a})
@@ -162,6 +168,11 @@ umiInternalDateSource
   = lens _umiInternalDateSource
       (\ s a -> s{_umiInternalDateSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umiFields :: Lens' UsersMessagesImport (Maybe Text)
+umiFields
+  = lens _umiFields (\ s a -> s{_umiFields = a})
+
 instance GoogleRequest UsersMessagesImport where
         type Rs UsersMessagesImport = Message
         type Scopes UsersMessagesImport =
@@ -173,6 +184,7 @@ instance GoogleRequest UsersMessagesImport where
               (Just _umiDeleted)
               (Just _umiNeverMarkSpam)
               (Just _umiInternalDateSource)
+              _umiFields
               (Just AltJSON)
               _umiPayload
               gmailService
@@ -192,6 +204,7 @@ instance GoogleRequest
               (Just _umiDeleted)
               (Just _umiNeverMarkSpam)
               (Just _umiInternalDateSource)
+              _umiFields
               (Just AltJSON)
               (Just Multipart)
               _umiPayload

@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Column.Update
     , cuPayload
     , cuTableId
     , cuColumnId
+    , cuFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.column.update@ method which the
 -- 'ColumnUpdate' request conforms to.
@@ -50,16 +51,18 @@ type ColumnUpdateResource =
            Capture "tableId" Text :>
              "columns" :>
                Capture "columnId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Column :> Put '[JSON] Column
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Column :> Put '[JSON] Column
 
 -- | Updates the name or type of an existing column.
 --
 -- /See:/ 'columnUpdate' smart constructor.
 data ColumnUpdate = ColumnUpdate'
-    { _cuPayload  :: !Column
-    , _cuTableId  :: !Text
+    { _cuPayload :: !Column
+    , _cuTableId :: !Text
     , _cuColumnId :: !Text
+    , _cuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ColumnUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data ColumnUpdate = ColumnUpdate'
 -- * 'cuTableId'
 --
 -- * 'cuColumnId'
+--
+-- * 'cuFields'
 columnUpdate
     :: Column -- ^ 'cuPayload'
     -> Text -- ^ 'cuTableId'
     -> Text -- ^ 'cuColumnId'
     -> ColumnUpdate
-columnUpdate pCuPayload_ pCuTableId_ pCuColumnId_ =
+columnUpdate pCuPayload_ pCuTableId_ pCuColumnId_ = 
     ColumnUpdate'
     { _cuPayload = pCuPayload_
     , _cuTableId = pCuTableId_
     , _cuColumnId = pCuColumnId_
+    , _cuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -98,12 +104,17 @@ cuColumnId :: Lens' ColumnUpdate Text
 cuColumnId
   = lens _cuColumnId (\ s a -> s{_cuColumnId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cuFields :: Lens' ColumnUpdate (Maybe Text)
+cuFields = lens _cuFields (\ s a -> s{_cuFields = a})
+
 instance GoogleRequest ColumnUpdate where
         type Rs ColumnUpdate = Column
         type Scopes ColumnUpdate =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient ColumnUpdate'{..}
-          = go _cuTableId _cuColumnId (Just AltJSON) _cuPayload
+          = go _cuTableId _cuColumnId _cuFields (Just AltJSON)
+              _cuPayload
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy ColumnUpdateResource)

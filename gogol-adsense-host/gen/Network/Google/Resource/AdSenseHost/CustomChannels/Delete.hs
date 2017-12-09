@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSenseHost.CustomChannels.Delete
     -- * Request Lenses
     , ccdCustomChannelId
     , ccdAdClientId
+    , ccdFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.customchannels.delete@ method which the
 -- 'CustomChannelsDelete' request conforms to.
@@ -49,15 +50,17 @@ type CustomChannelsDeleteResource =
            Capture "adClientId" Text :>
              "customchannels" :>
                Capture "customChannelId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Delete '[JSON] CustomChannel
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Delete '[JSON] CustomChannel
 
 -- | Delete a specific custom channel from the host AdSense account.
 --
 -- /See:/ 'customChannelsDelete' smart constructor.
 data CustomChannelsDelete = CustomChannelsDelete'
     { _ccdCustomChannelId :: !Text
-    , _ccdAdClientId      :: !Text
+    , _ccdAdClientId :: !Text
+    , _ccdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data CustomChannelsDelete = CustomChannelsDelete'
 -- * 'ccdCustomChannelId'
 --
 -- * 'ccdAdClientId'
+--
+-- * 'ccdFields'
 customChannelsDelete
     :: Text -- ^ 'ccdCustomChannelId'
     -> Text -- ^ 'ccdAdClientId'
     -> CustomChannelsDelete
-customChannelsDelete pCcdCustomChannelId_ pCcdAdClientId_ =
+customChannelsDelete pCcdCustomChannelId_ pCcdAdClientId_ = 
     CustomChannelsDelete'
     { _ccdCustomChannelId = pCcdCustomChannelId_
     , _ccdAdClientId = pCcdAdClientId_
+    , _ccdFields = Nothing
     }
 
 -- | Custom channel to delete.
@@ -89,12 +95,17 @@ ccdAdClientId
   = lens _ccdAdClientId
       (\ s a -> s{_ccdAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccdFields :: Lens' CustomChannelsDelete (Maybe Text)
+ccdFields
+  = lens _ccdFields (\ s a -> s{_ccdFields = a})
+
 instance GoogleRequest CustomChannelsDelete where
         type Rs CustomChannelsDelete = CustomChannel
         type Scopes CustomChannelsDelete =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient CustomChannelsDelete'{..}
-          = go _ccdAdClientId _ccdCustomChannelId
+          = go _ccdAdClientId _ccdCustomChannelId _ccdFields
               (Just AltJSON)
               adSenseHostService
           where go

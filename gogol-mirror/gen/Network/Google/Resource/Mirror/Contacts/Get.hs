@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Contacts.Get
 
     -- * Request Lenses
     , cgId
+    , cgFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.contacts.get@ method which the
 -- 'ContactsGet' request conforms to.
@@ -46,13 +47,15 @@ type ContactsGetResource =
        "v1" :>
          "contacts" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Contact
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Contact
 
 -- | Gets a single contact by ID.
 --
 -- /See:/ 'contactsGet' smart constructor.
-newtype ContactsGet = ContactsGet'
-    { _cgId :: Text
+data ContactsGet = ContactsGet'
+    { _cgId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactsGet' with the minimum fields required to make a request.
@@ -60,24 +63,31 @@ newtype ContactsGet = ContactsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cgId'
+--
+-- * 'cgFields'
 contactsGet
     :: Text -- ^ 'cgId'
     -> ContactsGet
-contactsGet pCgId_ =
+contactsGet pCgId_ = 
     ContactsGet'
     { _cgId = pCgId_
+    , _cgFields = Nothing
     }
 
 -- | The ID of the contact.
 cgId :: Lens' ContactsGet Text
 cgId = lens _cgId (\ s a -> s{_cgId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' ContactsGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest ContactsGet where
         type Rs ContactsGet = Contact
         type Scopes ContactsGet =
              '["https://www.googleapis.com/auth/glass.timeline"]
         requestClient ContactsGet'{..}
-          = go _cgId (Just AltJSON) mirrorService
+          = go _cgId _cgFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy ContactsGetResource)
                       mempty

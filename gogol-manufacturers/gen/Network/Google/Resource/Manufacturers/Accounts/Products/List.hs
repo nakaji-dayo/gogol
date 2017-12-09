@@ -42,11 +42,12 @@ module Network.Google.Resource.Manufacturers.Accounts.Products.List
     , aplBearerToken
     , aplPageToken
     , aplPageSize
+    , aplFields
     , aplCallback
     ) where
 
-import           Network.Google.Manufacturers.Types
-import           Network.Google.Prelude
+import Network.Google.Manufacturers.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @manufacturers.accounts.products.list@ method which the
 -- 'AccountsProductsList' request conforms to.
@@ -63,23 +64,25 @@ type AccountsProductsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListProductsResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListProductsResponse
 
 -- | Lists all the products in a Manufacturer Center account.
 --
 -- /See:/ 'accountsProductsList' smart constructor.
 data AccountsProductsList = AccountsProductsList'
-    { _aplParent         :: !Text
-    , _aplXgafv          :: !(Maybe Xgafv)
+    { _aplParent :: !Text
+    , _aplXgafv :: !(Maybe Xgafv)
     , _aplUploadProtocol :: !(Maybe Text)
-    , _aplPp             :: !Bool
-    , _aplAccessToken    :: !(Maybe Text)
-    , _aplUploadType     :: !(Maybe Text)
-    , _aplBearerToken    :: !(Maybe Text)
-    , _aplPageToken      :: !(Maybe Text)
-    , _aplPageSize       :: !(Maybe (Textual Int32))
-    , _aplCallback       :: !(Maybe Text)
+    , _aplPp :: !Bool
+    , _aplAccessToken :: !(Maybe Text)
+    , _aplUploadType :: !(Maybe Text)
+    , _aplBearerToken :: !(Maybe Text)
+    , _aplPageToken :: !(Maybe Text)
+    , _aplPageSize :: !(Maybe (Textual Int32))
+    , _aplFields :: !(Maybe Text)
+    , _aplCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsProductsList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data AccountsProductsList = AccountsProductsList'
 --
 -- * 'aplPageSize'
 --
+-- * 'aplFields'
+--
 -- * 'aplCallback'
 accountsProductsList
     :: Text -- ^ 'aplParent'
     -> AccountsProductsList
-accountsProductsList pAplParent_ =
+accountsProductsList pAplParent_ = 
     AccountsProductsList'
     { _aplParent = pAplParent_
     , _aplXgafv = Nothing
@@ -119,6 +124,7 @@ accountsProductsList pAplParent_ =
     , _aplBearerToken = Nothing
     , _aplPageToken = Nothing
     , _aplPageSize = Nothing
+    , _aplFields = Nothing
     , _aplCallback = Nothing
     }
 
@@ -172,6 +178,11 @@ aplPageSize
   = lens _aplPageSize (\ s a -> s{_aplPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aplFields :: Lens' AccountsProductsList (Maybe Text)
+aplFields
+  = lens _aplFields (\ s a -> s{_aplFields = a})
+
 -- | JSONP
 aplCallback :: Lens' AccountsProductsList (Maybe Text)
 aplCallback
@@ -190,6 +201,7 @@ instance GoogleRequest AccountsProductsList where
               _aplPageToken
               _aplPageSize
               _aplCallback
+              _aplFields
               (Just AltJSON)
               manufacturersService
           where go

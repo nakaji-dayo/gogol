@@ -23,7 +23,9 @@
 -- Deletes an alias of a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
 -- to remove the alias or for access errors. * \`NOT_FOUND\` if the alias
--- does not exist.
+-- does not exist. * \`FAILED_PRECONDITION\` if the alias requested does
+-- not make sense for the requesting user or course (for example, if a user
+-- not in a domain attempts to delete a domain-scoped alias).
 --
 -- /See:/ <https://developers.google.com/classroom/ Google Classroom API Reference> for @classroom.courses.aliases.delete@.
 module Network.Google.Resource.Classroom.Courses.Aliases.Delete
@@ -44,11 +46,12 @@ module Network.Google.Resource.Classroom.Courses.Aliases.Delete
     , cadUploadType
     , cadAlias
     , cadBearerToken
+    , cadFields
     , cadCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.aliases.delete@ method which the
 -- 'CoursesAliasesDelete' request conforms to.
@@ -58,31 +61,35 @@ type CoursesAliasesDeleteResource =
          Capture "courseId" Text :>
            "aliases" :>
              Capture "alias" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an alias of a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
 -- to remove the alias or for access errors. * \`NOT_FOUND\` if the alias
--- does not exist.
+-- does not exist. * \`FAILED_PRECONDITION\` if the alias requested does
+-- not make sense for the requesting user or course (for example, if a user
+-- not in a domain attempts to delete a domain-scoped alias).
 --
 -- /See:/ 'coursesAliasesDelete' smart constructor.
 data CoursesAliasesDelete = CoursesAliasesDelete'
-    { _cadXgafv          :: !(Maybe Text)
+    { _cadXgafv :: !(Maybe Xgafv)
     , _cadUploadProtocol :: !(Maybe Text)
-    , _cadPp             :: !Bool
-    , _cadCourseId       :: !Text
-    , _cadAccessToken    :: !(Maybe Text)
-    , _cadUploadType     :: !(Maybe Text)
-    , _cadAlias          :: !Text
-    , _cadBearerToken    :: !(Maybe Text)
-    , _cadCallback       :: !(Maybe Text)
+    , _cadPp :: !Bool
+    , _cadCourseId :: !Text
+    , _cadAccessToken :: !(Maybe Text)
+    , _cadUploadType :: !(Maybe Text)
+    , _cadAlias :: !Text
+    , _cadBearerToken :: !(Maybe Text)
+    , _cadFields :: !(Maybe Text)
+    , _cadCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesAliasesDelete' with the minimum fields required to make a request.
@@ -105,12 +112,14 @@ data CoursesAliasesDelete = CoursesAliasesDelete'
 --
 -- * 'cadBearerToken'
 --
+-- * 'cadFields'
+--
 -- * 'cadCallback'
 coursesAliasesDelete
     :: Text -- ^ 'cadCourseId'
     -> Text -- ^ 'cadAlias'
     -> CoursesAliasesDelete
-coursesAliasesDelete pCadCourseId_ pCadAlias_ =
+coursesAliasesDelete pCadCourseId_ pCadAlias_ = 
     CoursesAliasesDelete'
     { _cadXgafv = Nothing
     , _cadUploadProtocol = Nothing
@@ -120,11 +129,12 @@ coursesAliasesDelete pCadCourseId_ pCadAlias_ =
     , _cadUploadType = Nothing
     , _cadAlias = pCadAlias_
     , _cadBearerToken = Nothing
+    , _cadFields = Nothing
     , _cadCallback = Nothing
     }
 
 -- | V1 error format.
-cadXgafv :: Lens' CoursesAliasesDelete (Maybe Text)
+cadXgafv :: Lens' CoursesAliasesDelete (Maybe Xgafv)
 cadXgafv = lens _cadXgafv (\ s a -> s{_cadXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -165,6 +175,11 @@ cadBearerToken
   = lens _cadBearerToken
       (\ s a -> s{_cadBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cadFields :: Lens' CoursesAliasesDelete (Maybe Text)
+cadFields
+  = lens _cadFields (\ s a -> s{_cadFields = a})
+
 -- | JSONP
 cadCallback :: Lens' CoursesAliasesDelete (Maybe Text)
 cadCallback
@@ -182,6 +197,7 @@ instance GoogleRequest CoursesAliasesDelete where
               _cadUploadType
               _cadBearerToken
               _cadCallback
+              _cadFields
               (Just AltJSON)
               classroomService
           where go

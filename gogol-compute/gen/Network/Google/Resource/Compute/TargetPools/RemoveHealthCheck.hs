@@ -33,14 +33,16 @@ module Network.Google.Resource.Compute.TargetPools.RemoveHealthCheck
     , TargetPoolsRemoveHealthCheck
 
     -- * Request Lenses
+    , tprhcRequestId
     , tprhcProject
     , tprhcTargetPool
     , tprhcPayload
     , tprhcRegion
+    , tprhcFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetPools.removeHealthCheck@ method which the
 -- 'TargetPoolsRemoveHealthCheck' request conforms to.
@@ -54,23 +56,29 @@ type TargetPoolsRemoveHealthCheckResource =
                  "targetPools" :>
                    Capture "targetPool" Text :>
                      "removeHealthCheck" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TargetPoolsRemoveHealthCheckRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] TargetPoolsRemoveHealthCheckRequest
+                               :> Post '[JSON] Operation
 
 -- | Removes health check URL from a target pool.
 --
 -- /See:/ 'targetPoolsRemoveHealthCheck' smart constructor.
 data TargetPoolsRemoveHealthCheck = TargetPoolsRemoveHealthCheck'
-    { _tprhcProject    :: !Text
+    { _tprhcRequestId :: !(Maybe Text)
+    , _tprhcProject :: !Text
     , _tprhcTargetPool :: !Text
-    , _tprhcPayload    :: !TargetPoolsRemoveHealthCheckRequest
-    , _tprhcRegion     :: !Text
+    , _tprhcPayload :: !TargetPoolsRemoveHealthCheckRequest
+    , _tprhcRegion :: !Text
+    , _tprhcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetPoolsRemoveHealthCheck' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tprhcRequestId'
 --
 -- * 'tprhcProject'
 --
@@ -79,19 +87,38 @@ data TargetPoolsRemoveHealthCheck = TargetPoolsRemoveHealthCheck'
 -- * 'tprhcPayload'
 --
 -- * 'tprhcRegion'
+--
+-- * 'tprhcFields'
 targetPoolsRemoveHealthCheck
     :: Text -- ^ 'tprhcProject'
     -> Text -- ^ 'tprhcTargetPool'
     -> TargetPoolsRemoveHealthCheckRequest -- ^ 'tprhcPayload'
     -> Text -- ^ 'tprhcRegion'
     -> TargetPoolsRemoveHealthCheck
-targetPoolsRemoveHealthCheck pTprhcProject_ pTprhcTargetPool_ pTprhcPayload_ pTprhcRegion_ =
+targetPoolsRemoveHealthCheck pTprhcProject_ pTprhcTargetPool_ pTprhcPayload_ pTprhcRegion_ = 
     TargetPoolsRemoveHealthCheck'
-    { _tprhcProject = pTprhcProject_
+    { _tprhcRequestId = Nothing
+    , _tprhcProject = pTprhcProject_
     , _tprhcTargetPool = pTprhcTargetPool_
     , _tprhcPayload = pTprhcPayload_
     , _tprhcRegion = pTprhcRegion_
+    , _tprhcFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tprhcRequestId :: Lens' TargetPoolsRemoveHealthCheck (Maybe Text)
+tprhcRequestId
+  = lens _tprhcRequestId
+      (\ s a -> s{_tprhcRequestId = a})
 
 -- | Project ID for this request.
 tprhcProject :: Lens' TargetPoolsRemoveHealthCheck Text
@@ -114,6 +141,11 @@ tprhcRegion :: Lens' TargetPoolsRemoveHealthCheck Text
 tprhcRegion
   = lens _tprhcRegion (\ s a -> s{_tprhcRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tprhcFields :: Lens' TargetPoolsRemoveHealthCheck (Maybe Text)
+tprhcFields
+  = lens _tprhcFields (\ s a -> s{_tprhcFields = a})
+
 instance GoogleRequest TargetPoolsRemoveHealthCheck
          where
         type Rs TargetPoolsRemoveHealthCheck = Operation
@@ -122,6 +154,8 @@ instance GoogleRequest TargetPoolsRemoveHealthCheck
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetPoolsRemoveHealthCheck'{..}
           = go _tprhcProject _tprhcRegion _tprhcTargetPool
+              _tprhcRequestId
+              _tprhcFields
               (Just AltJSON)
               _tprhcPayload
               computeService

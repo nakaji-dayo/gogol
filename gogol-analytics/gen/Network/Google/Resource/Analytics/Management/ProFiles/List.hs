@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.ProFiles.List
     , mpflAccountId
     , mpflStartIndex
     , mpflMaxResults
+    , mpflFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profiles.list@ method which the
 -- 'ManagementProFilesList' request conforms to.
@@ -55,16 +56,18 @@ type ManagementProFilesListResource =
                    "profiles" :>
                      QueryParam "start-index" (Textual Int32) :>
                        QueryParam "max-results" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] ProFiles
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] ProFiles
 
 -- | Lists views (profiles) to which the user has access.
 --
 -- /See:/ 'managementProFilesList' smart constructor.
 data ManagementProFilesList = ManagementProFilesList'
     { _mpflWebPropertyId :: !Text
-    , _mpflAccountId     :: !Text
-    , _mpflStartIndex    :: !(Maybe (Textual Int32))
-    , _mpflMaxResults    :: !(Maybe (Textual Int32))
+    , _mpflAccountId :: !Text
+    , _mpflStartIndex :: !(Maybe (Textual Int32))
+    , _mpflMaxResults :: !(Maybe (Textual Int32))
+    , _mpflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFilesList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data ManagementProFilesList = ManagementProFilesList'
 -- * 'mpflStartIndex'
 --
 -- * 'mpflMaxResults'
+--
+-- * 'mpflFields'
 managementProFilesList
     :: Text -- ^ 'mpflWebPropertyId'
     -> Text -- ^ 'mpflAccountId'
     -> ManagementProFilesList
-managementProFilesList pMpflWebPropertyId_ pMpflAccountId_ =
+managementProFilesList pMpflWebPropertyId_ pMpflAccountId_ = 
     ManagementProFilesList'
     { _mpflWebPropertyId = pMpflWebPropertyId_
     , _mpflAccountId = pMpflAccountId_
     , _mpflStartIndex = Nothing
     , _mpflMaxResults = Nothing
+    , _mpflFields = Nothing
     }
 
 -- | Web property ID for the views (profiles) to retrieve. Can either be a
@@ -121,6 +127,11 @@ mpflMaxResults
       (\ s a -> s{_mpflMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mpflFields :: Lens' ManagementProFilesList (Maybe Text)
+mpflFields
+  = lens _mpflFields (\ s a -> s{_mpflFields = a})
+
 instance GoogleRequest ManagementProFilesList where
         type Rs ManagementProFilesList = ProFiles
         type Scopes ManagementProFilesList =
@@ -131,6 +142,7 @@ instance GoogleRequest ManagementProFilesList where
           = go _mpflAccountId _mpflWebPropertyId
               _mpflStartIndex
               _mpflMaxResults
+              _mpflFields
               (Just AltJSON)
               analyticsService
           where go

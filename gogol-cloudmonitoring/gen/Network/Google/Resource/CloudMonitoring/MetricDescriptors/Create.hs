@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudMonitoring.MetricDescriptors.Create
     -- * Request Lenses
     , mdcProject
     , mdcPayload
+    , mdcFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.metricDescriptors.create@ method which the
 -- 'MetricDescriptorsCreate' request conforms to.
@@ -48,9 +49,10 @@ type MetricDescriptorsCreateResource =
          "projects" :>
            Capture "project" Text :>
              "metricDescriptors" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] MetricDescriptor :>
-                   Post '[JSON] MetricDescriptor
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] MetricDescriptor :>
+                     Post '[JSON] MetricDescriptor
 
 -- | Create a new metric.
 --
@@ -58,6 +60,7 @@ type MetricDescriptorsCreateResource =
 data MetricDescriptorsCreate = MetricDescriptorsCreate'
     { _mdcProject :: !Text
     , _mdcPayload :: !MetricDescriptor
+    , _mdcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricDescriptorsCreate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data MetricDescriptorsCreate = MetricDescriptorsCreate'
 -- * 'mdcProject'
 --
 -- * 'mdcPayload'
+--
+-- * 'mdcFields'
 metricDescriptorsCreate
     :: Text -- ^ 'mdcProject'
     -> MetricDescriptor -- ^ 'mdcPayload'
     -> MetricDescriptorsCreate
-metricDescriptorsCreate pMdcProject_ pMdcPayload_ =
+metricDescriptorsCreate pMdcProject_ pMdcPayload_ = 
     MetricDescriptorsCreate'
     { _mdcProject = pMdcProject_
     , _mdcPayload = pMdcPayload_
+    , _mdcFields = Nothing
     }
 
 -- | The project id. The value can be the numeric project ID or string-based
@@ -88,13 +94,19 @@ mdcPayload :: Lens' MetricDescriptorsCreate MetricDescriptor
 mdcPayload
   = lens _mdcPayload (\ s a -> s{_mdcPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdcFields :: Lens' MetricDescriptorsCreate (Maybe Text)
+mdcFields
+  = lens _mdcFields (\ s a -> s{_mdcFields = a})
+
 instance GoogleRequest MetricDescriptorsCreate where
         type Rs MetricDescriptorsCreate = MetricDescriptor
         type Scopes MetricDescriptorsCreate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/monitoring"]
         requestClient MetricDescriptorsCreate'{..}
-          = go _mdcProject (Just AltJSON) _mdcPayload
+          = go _mdcProject _mdcFields (Just AltJSON)
+              _mdcPayload
               cloudMonitoringService
           where go
                   = buildClient

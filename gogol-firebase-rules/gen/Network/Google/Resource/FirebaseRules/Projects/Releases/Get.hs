@@ -40,11 +40,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Releases.Get
     , pUploadType
     , pBearerToken
     , pName
+    , pFields
     , pCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.releases.get@ method which the
 -- 'ProjectsReleasesGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsReleasesGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Release
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Release
 
 -- | Get a \`Release\` by name.
 --
 -- /See:/ 'projectsReleasesGet' smart constructor.
 data ProjectsReleasesGet = ProjectsReleasesGet'
-    { _pXgafv          :: !(Maybe Xgafv)
+    { _pXgafv :: !(Maybe Xgafv)
     , _pUploadProtocol :: !(Maybe Text)
-    , _pPp             :: !Bool
-    , _pAccessToken    :: !(Maybe Text)
-    , _pUploadType     :: !(Maybe Text)
-    , _pBearerToken    :: !(Maybe Text)
-    , _pName           :: !Text
-    , _pCallback       :: !(Maybe Text)
+    , _pPp :: !Bool
+    , _pAccessToken :: !(Maybe Text)
+    , _pUploadType :: !(Maybe Text)
+    , _pBearerToken :: !(Maybe Text)
+    , _pName :: !Text
+    , _pFields :: !(Maybe Text)
+    , _pCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsReleasesGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsReleasesGet = ProjectsReleasesGet'
 --
 -- * 'pName'
 --
+-- * 'pFields'
+--
 -- * 'pCallback'
 projectsReleasesGet
     :: Text -- ^ 'pName'
     -> ProjectsReleasesGet
-projectsReleasesGet pPName_ =
+projectsReleasesGet pPName_ = 
     ProjectsReleasesGet'
     { _pXgafv = Nothing
     , _pUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsReleasesGet pPName_ =
     , _pUploadType = Nothing
     , _pBearerToken = Nothing
     , _pName = pPName_
+    , _pFields = Nothing
     , _pCallback = Nothing
     }
 
@@ -142,6 +148,10 @@ pBearerToken
 pName :: Lens' ProjectsReleasesGet Text
 pName = lens _pName (\ s a -> s{_pName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' ProjectsReleasesGet (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
+
 -- | JSONP
 pCallback :: Lens' ProjectsReleasesGet (Maybe Text)
 pCallback
@@ -159,6 +169,7 @@ instance GoogleRequest ProjectsReleasesGet where
               _pUploadType
               _pBearerToken
               _pCallback
+              _pFields
               (Just AltJSON)
               firebaseRulesService
           where go

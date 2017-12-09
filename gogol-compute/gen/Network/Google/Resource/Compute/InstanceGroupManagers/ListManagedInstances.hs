@@ -45,10 +45,11 @@ module Network.Google.Resource.Compute.InstanceGroupManagers.ListManagedInstance
     , igmlmiFilter
     , igmlmiPageToken
     , igmlmiMaxResults
+    , igmlmiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroupManagers.listManagedInstances@ method which the
 -- 'InstanceGroupManagersListManagedInstances' request conforms to.
@@ -67,9 +68,10 @@ type InstanceGroupManagersListManagedInstancesResource
                          QueryParam "filter" Text :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Word32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Post '[JSON]
-                                   InstanceGroupManagersListManagedInstancesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Post '[JSON]
+                                     InstanceGroupManagersListManagedInstancesResponse
 
 -- | Lists all of the instances in the managed instance group. Each instance
 -- in the list has a currentAction, which indicates the action that the
@@ -80,13 +82,14 @@ type InstanceGroupManagersListManagedInstancesResource
 --
 -- /See:/ 'instanceGroupManagersListManagedInstances' smart constructor.
 data InstanceGroupManagersListManagedInstances = InstanceGroupManagersListManagedInstances'
-    { _igmlmiProject              :: !Text
+    { _igmlmiProject :: !Text
     , _igmlmiInstanceGroupManager :: !Text
-    , _igmlmiZone                 :: !Text
-    , _igmlmiOrderBy              :: !(Maybe Text)
-    , _igmlmiFilter               :: !(Maybe Text)
-    , _igmlmiPageToken            :: !(Maybe Text)
-    , _igmlmiMaxResults           :: !(Textual Word32)
+    , _igmlmiZone :: !Text
+    , _igmlmiOrderBy :: !(Maybe Text)
+    , _igmlmiFilter :: !(Maybe Text)
+    , _igmlmiPageToken :: !(Maybe Text)
+    , _igmlmiMaxResults :: !(Textual Word32)
+    , _igmlmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersListManagedInstances' with the minimum fields required to make a request.
@@ -106,12 +109,14 @@ data InstanceGroupManagersListManagedInstances = InstanceGroupManagersListManage
 -- * 'igmlmiPageToken'
 --
 -- * 'igmlmiMaxResults'
+--
+-- * 'igmlmiFields'
 instanceGroupManagersListManagedInstances
     :: Text -- ^ 'igmlmiProject'
     -> Text -- ^ 'igmlmiInstanceGroupManager'
     -> Text -- ^ 'igmlmiZone'
     -> InstanceGroupManagersListManagedInstances
-instanceGroupManagersListManagedInstances pIgmlmiProject_ pIgmlmiInstanceGroupManager_ pIgmlmiZone_ =
+instanceGroupManagersListManagedInstances pIgmlmiProject_ pIgmlmiInstanceGroupManager_ pIgmlmiZone_ = 
     InstanceGroupManagersListManagedInstances'
     { _igmlmiProject = pIgmlmiProject_
     , _igmlmiInstanceGroupManager = pIgmlmiInstanceGroupManager_
@@ -120,6 +125,7 @@ instanceGroupManagersListManagedInstances pIgmlmiProject_ pIgmlmiInstanceGroupMa
     , _igmlmiFilter = Nothing
     , _igmlmiPageToken = Nothing
     , _igmlmiMaxResults = 500
+    , _igmlmiFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -159,6 +165,11 @@ igmlmiMaxResults
       (\ s a -> s{_igmlmiMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+igmlmiFields :: Lens' InstanceGroupManagersListManagedInstances (Maybe Text)
+igmlmiFields
+  = lens _igmlmiFields (\ s a -> s{_igmlmiFields = a})
+
 instance GoogleRequest
          InstanceGroupManagersListManagedInstances where
         type Rs InstanceGroupManagersListManagedInstances =
@@ -176,6 +187,7 @@ instance GoogleRequest
               _igmlmiFilter
               _igmlmiPageToken
               (Just _igmlmiMaxResults)
+              _igmlmiFields
               (Just AltJSON)
               computeService
           where go

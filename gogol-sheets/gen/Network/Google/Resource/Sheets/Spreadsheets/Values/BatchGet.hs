@@ -45,11 +45,12 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.BatchGet
     , svbgBearerToken
     , svbgDateTimeRenderOption
     , svbgMajorDimension
+    , svbgFields
     , svbgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.batchGet@ method which the
 -- 'SpreadsheetsValuesBatchGet' request conforms to.
@@ -69,26 +70,28 @@ type SpreadsheetsValuesBatchGetResource =
                              QueryParam "dateTimeRenderOption" Text :>
                                QueryParam "majorDimension" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] BatchGetValuesResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] BatchGetValuesResponse
 
 -- | Returns one or more ranges of values from a spreadsheet. The caller must
 -- specify the spreadsheet ID and one or more ranges.
 --
 -- /See:/ 'spreadsheetsValuesBatchGet' smart constructor.
 data SpreadsheetsValuesBatchGet = SpreadsheetsValuesBatchGet'
-    { _svbgXgafv                :: !(Maybe Xgafv)
-    , _svbgValueRenderOption    :: !(Maybe Text)
-    , _svbgUploadProtocol       :: !(Maybe Text)
-    , _svbgPp                   :: !Bool
-    , _svbgAccessToken          :: !(Maybe Text)
-    , _svbgSpreadsheetId        :: !Text
-    , _svbgUploadType           :: !(Maybe Text)
-    , _svbgRanges               :: !(Maybe [Text])
-    , _svbgBearerToken          :: !(Maybe Text)
+    { _svbgXgafv :: !(Maybe Xgafv)
+    , _svbgValueRenderOption :: !(Maybe Text)
+    , _svbgUploadProtocol :: !(Maybe Text)
+    , _svbgPp :: !Bool
+    , _svbgAccessToken :: !(Maybe Text)
+    , _svbgSpreadsheetId :: !Text
+    , _svbgUploadType :: !(Maybe Text)
+    , _svbgRanges :: !(Maybe [Text])
+    , _svbgBearerToken :: !(Maybe Text)
     , _svbgDateTimeRenderOption :: !(Maybe Text)
-    , _svbgMajorDimension       :: !(Maybe Text)
-    , _svbgCallback             :: !(Maybe Text)
+    , _svbgMajorDimension :: !(Maybe Text)
+    , _svbgFields :: !(Maybe Text)
+    , _svbgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesBatchGet' with the minimum fields required to make a request.
@@ -117,11 +120,13 @@ data SpreadsheetsValuesBatchGet = SpreadsheetsValuesBatchGet'
 --
 -- * 'svbgMajorDimension'
 --
+-- * 'svbgFields'
+--
 -- * 'svbgCallback'
 spreadsheetsValuesBatchGet
     :: Text -- ^ 'svbgSpreadsheetId'
     -> SpreadsheetsValuesBatchGet
-spreadsheetsValuesBatchGet pSvbgSpreadsheetId_ =
+spreadsheetsValuesBatchGet pSvbgSpreadsheetId_ = 
     SpreadsheetsValuesBatchGet'
     { _svbgXgafv = Nothing
     , _svbgValueRenderOption = Nothing
@@ -134,6 +139,7 @@ spreadsheetsValuesBatchGet pSvbgSpreadsheetId_ =
     , _svbgBearerToken = Nothing
     , _svbgDateTimeRenderOption = Nothing
     , _svbgMajorDimension = Nothing
+    , _svbgFields = Nothing
     , _svbgCallback = Nothing
     }
 
@@ -208,6 +214,11 @@ svbgMajorDimension
   = lens _svbgMajorDimension
       (\ s a -> s{_svbgMajorDimension = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svbgFields :: Lens' SpreadsheetsValuesBatchGet (Maybe Text)
+svbgFields
+  = lens _svbgFields (\ s a -> s{_svbgFields = a})
+
 -- | JSONP
 svbgCallback :: Lens' SpreadsheetsValuesBatchGet (Maybe Text)
 svbgCallback
@@ -219,6 +230,7 @@ instance GoogleRequest SpreadsheetsValuesBatchGet
              BatchGetValuesResponse
         type Scopes SpreadsheetsValuesBatchGet =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/drive.readonly",
                "https://www.googleapis.com/auth/spreadsheets",
                "https://www.googleapis.com/auth/spreadsheets.readonly"]
@@ -234,6 +246,7 @@ instance GoogleRequest SpreadsheetsValuesBatchGet
               _svbgDateTimeRenderOption
               _svbgMajorDimension
               _svbgCallback
+              _svbgFields
               (Just AltJSON)
               sheetsService
           where go

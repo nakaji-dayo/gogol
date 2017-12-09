@@ -45,11 +45,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.ModifyAckDeadline
     , psmadPayload
     , psmadBearerToken
     , psmadSubscription
+    , psmadFields
     , psmadCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.modifyAckDeadline@ method which the
 -- 'ProjectsSubscriptionsModifyAckDeadline' request conforms to.
@@ -64,9 +65,10 @@ type ProjectsSubscriptionsModifyAckDeadlineResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ModifyAckDeadlineRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ModifyAckDeadlineRequest :>
+                             Post '[JSON] Empty
 
 -- | Modifies the ack deadline for a specific message. This method is useful
 -- to indicate that more time is needed to process a message by the
@@ -76,15 +78,16 @@ type ProjectsSubscriptionsModifyAckDeadlineResource =
 --
 -- /See:/ 'projectsSubscriptionsModifyAckDeadline' smart constructor.
 data ProjectsSubscriptionsModifyAckDeadline = ProjectsSubscriptionsModifyAckDeadline'
-    { _psmadXgafv          :: !(Maybe Xgafv)
+    { _psmadXgafv :: !(Maybe Xgafv)
     , _psmadUploadProtocol :: !(Maybe Text)
-    , _psmadPp             :: !Bool
-    , _psmadAccessToken    :: !(Maybe Text)
-    , _psmadUploadType     :: !(Maybe Text)
-    , _psmadPayload        :: !ModifyAckDeadlineRequest
-    , _psmadBearerToken    :: !(Maybe Text)
-    , _psmadSubscription   :: !Text
-    , _psmadCallback       :: !(Maybe Text)
+    , _psmadPp :: !Bool
+    , _psmadAccessToken :: !(Maybe Text)
+    , _psmadUploadType :: !(Maybe Text)
+    , _psmadPayload :: !ModifyAckDeadlineRequest
+    , _psmadBearerToken :: !(Maybe Text)
+    , _psmadSubscription :: !Text
+    , _psmadFields :: !(Maybe Text)
+    , _psmadCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsModifyAckDeadline' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data ProjectsSubscriptionsModifyAckDeadline = ProjectsSubscriptionsModifyAckDead
 --
 -- * 'psmadSubscription'
 --
+-- * 'psmadFields'
+--
 -- * 'psmadCallback'
 projectsSubscriptionsModifyAckDeadline
     :: ModifyAckDeadlineRequest -- ^ 'psmadPayload'
     -> Text -- ^ 'psmadSubscription'
     -> ProjectsSubscriptionsModifyAckDeadline
-projectsSubscriptionsModifyAckDeadline pPsmadPayload_ pPsmadSubscription_ =
+projectsSubscriptionsModifyAckDeadline pPsmadPayload_ pPsmadSubscription_ = 
     ProjectsSubscriptionsModifyAckDeadline'
     { _psmadXgafv = Nothing
     , _psmadUploadProtocol = Nothing
@@ -122,6 +127,7 @@ projectsSubscriptionsModifyAckDeadline pPsmadPayload_ pPsmadSubscription_ =
     , _psmadPayload = pPsmadPayload_
     , _psmadBearerToken = Nothing
     , _psmadSubscription = pPsmadSubscription_
+    , _psmadFields = Nothing
     , _psmadCallback = Nothing
     }
 
@@ -170,6 +176,11 @@ psmadSubscription
   = lens _psmadSubscription
       (\ s a -> s{_psmadSubscription = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psmadFields :: Lens' ProjectsSubscriptionsModifyAckDeadline (Maybe Text)
+psmadFields
+  = lens _psmadFields (\ s a -> s{_psmadFields = a})
+
 -- | JSONP
 psmadCallback :: Lens' ProjectsSubscriptionsModifyAckDeadline (Maybe Text)
 psmadCallback
@@ -192,6 +203,7 @@ instance GoogleRequest
               _psmadUploadType
               _psmadBearerToken
               _psmadCallback
+              _psmadFields
               (Just AltJSON)
               _psmadPayload
               pubSubService

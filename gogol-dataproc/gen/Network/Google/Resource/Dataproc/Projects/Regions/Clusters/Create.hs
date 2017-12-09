@@ -42,11 +42,12 @@ module Network.Google.Resource.Dataproc.Projects.Regions.Clusters.Create
     , prccBearerToken
     , prccRegion
     , prccProjectId
+    , prccFields
     , prccCallback
     ) where
 
-import           Network.Google.Dataproc.Types
-import           Network.Google.Prelude
+import Network.Google.Dataproc.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataproc.projects.regions.clusters.create@ method which the
 -- 'ProjectsRegionsClustersCreate' request conforms to.
@@ -57,31 +58,33 @@ type ProjectsRegionsClustersCreateResource =
            "regions" :>
              Capture "region" Text :>
                "clusters" :>
-                 QueryParam "$.xgafv" Text :>
+                 QueryParam "$.xgafv" Xgafv :>
                    QueryParam "upload_protocol" Text :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] Cluster :>
-                                   Post '[JSON] Operation
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON] Cluster :>
+                                     Post '[JSON] Operation
 
 -- | Creates a cluster in a project.
 --
 -- /See:/ 'projectsRegionsClustersCreate' smart constructor.
 data ProjectsRegionsClustersCreate = ProjectsRegionsClustersCreate'
-    { _prccXgafv          :: !(Maybe Text)
+    { _prccXgafv :: !(Maybe Xgafv)
     , _prccUploadProtocol :: !(Maybe Text)
-    , _prccPp             :: !Bool
-    , _prccAccessToken    :: !(Maybe Text)
-    , _prccUploadType     :: !(Maybe Text)
-    , _prccPayload        :: !Cluster
-    , _prccBearerToken    :: !(Maybe Text)
-    , _prccRegion         :: !Text
-    , _prccProjectId      :: !Text
-    , _prccCallback       :: !(Maybe Text)
+    , _prccPp :: !Bool
+    , _prccAccessToken :: !(Maybe Text)
+    , _prccUploadType :: !(Maybe Text)
+    , _prccPayload :: !Cluster
+    , _prccBearerToken :: !(Maybe Text)
+    , _prccRegion :: !Text
+    , _prccProjectId :: !Text
+    , _prccFields :: !(Maybe Text)
+    , _prccCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRegionsClustersCreate' with the minimum fields required to make a request.
@@ -106,13 +109,15 @@ data ProjectsRegionsClustersCreate = ProjectsRegionsClustersCreate'
 --
 -- * 'prccProjectId'
 --
+-- * 'prccFields'
+--
 -- * 'prccCallback'
 projectsRegionsClustersCreate
     :: Cluster -- ^ 'prccPayload'
     -> Text -- ^ 'prccRegion'
     -> Text -- ^ 'prccProjectId'
     -> ProjectsRegionsClustersCreate
-projectsRegionsClustersCreate pPrccPayload_ pPrccRegion_ pPrccProjectId_ =
+projectsRegionsClustersCreate pPrccPayload_ pPrccRegion_ pPrccProjectId_ = 
     ProjectsRegionsClustersCreate'
     { _prccXgafv = Nothing
     , _prccUploadProtocol = Nothing
@@ -123,11 +128,12 @@ projectsRegionsClustersCreate pPrccPayload_ pPrccRegion_ pPrccProjectId_ =
     , _prccBearerToken = Nothing
     , _prccRegion = pPrccRegion_
     , _prccProjectId = pPrccProjectId_
+    , _prccFields = Nothing
     , _prccCallback = Nothing
     }
 
 -- | V1 error format.
-prccXgafv :: Lens' ProjectsRegionsClustersCreate (Maybe Text)
+prccXgafv :: Lens' ProjectsRegionsClustersCreate (Maybe Xgafv)
 prccXgafv
   = lens _prccXgafv (\ s a -> s{_prccXgafv = a})
 
@@ -164,17 +170,22 @@ prccBearerToken
   = lens _prccBearerToken
       (\ s a -> s{_prccBearerToken = a})
 
--- | [Required] The Cloud Dataproc region in which to handle the request.
+-- | Required. The Cloud Dataproc region in which to handle the request.
 prccRegion :: Lens' ProjectsRegionsClustersCreate Text
 prccRegion
   = lens _prccRegion (\ s a -> s{_prccRegion = a})
 
--- | [Required] The ID of the Google Cloud Platform project that the cluster
+-- | Required. The ID of the Google Cloud Platform project that the cluster
 -- belongs to.
 prccProjectId :: Lens' ProjectsRegionsClustersCreate Text
 prccProjectId
   = lens _prccProjectId
       (\ s a -> s{_prccProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+prccFields :: Lens' ProjectsRegionsClustersCreate (Maybe Text)
+prccFields
+  = lens _prccFields (\ s a -> s{_prccFields = a})
 
 -- | JSONP
 prccCallback :: Lens' ProjectsRegionsClustersCreate (Maybe Text)
@@ -194,6 +205,7 @@ instance GoogleRequest ProjectsRegionsClustersCreate
               _prccUploadType
               _prccBearerToken
               _prccCallback
+              _prccFields
               (Just AltJSON)
               _prccPayload
               dataprocService

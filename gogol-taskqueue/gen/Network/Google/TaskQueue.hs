@@ -105,16 +105,16 @@ module Network.Google.TaskQueue
     , ttLeaseTimestamp
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.TaskQueue.TaskQueues.Get
-import           Network.Google.Resource.TaskQueue.Tasks.Delete
-import           Network.Google.Resource.TaskQueue.Tasks.Get
-import           Network.Google.Resource.TaskQueue.Tasks.Insert
-import           Network.Google.Resource.TaskQueue.Tasks.Lease
-import           Network.Google.Resource.TaskQueue.Tasks.List
-import           Network.Google.Resource.TaskQueue.Tasks.Patch
-import           Network.Google.Resource.TaskQueue.Tasks.Update
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.Resource.TaskQueue.TaskQueues.Get
+import Network.Google.Resource.TaskQueue.Tasks.Delete
+import Network.Google.Resource.TaskQueue.Tasks.Get
+import Network.Google.Resource.TaskQueue.Tasks.Insert
+import Network.Google.Resource.TaskQueue.Tasks.Lease
+import Network.Google.Resource.TaskQueue.Tasks.List
+import Network.Google.Resource.TaskQueue.Tasks.Patch
+import Network.Google.Resource.TaskQueue.Tasks.Update
+import Network.Google.TaskQueue.Types
 
 {- $resources
 TODO

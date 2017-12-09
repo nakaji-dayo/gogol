@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.InAppProducts.Insert
     , iapiAutoConvertMissingPrices
     , iapiPackageName
     , iapiPayload
+    , iapiFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.inappproducts.insert@ method which the
 -- 'InAppProductsInsert' request conforms to.
@@ -50,17 +51,19 @@ type InAppProductsInsertResource =
            Capture "packageName" Text :>
              "inappproducts" :>
                QueryParam "autoConvertMissingPrices" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] InAppProduct :>
-                     Post '[JSON] InAppProduct
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] InAppProduct :>
+                       Post '[JSON] InAppProduct
 
 -- | Creates a new in-app product for an app.
 --
 -- /See:/ 'inAppProductsInsert' smart constructor.
 data InAppProductsInsert = InAppProductsInsert'
     { _iapiAutoConvertMissingPrices :: !(Maybe Bool)
-    , _iapiPackageName              :: !Text
-    , _iapiPayload                  :: !InAppProduct
+    , _iapiPackageName :: !Text
+    , _iapiPayload :: !InAppProduct
+    , _iapiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InAppProductsInsert' with the minimum fields required to make a request.
@@ -72,15 +75,18 @@ data InAppProductsInsert = InAppProductsInsert'
 -- * 'iapiPackageName'
 --
 -- * 'iapiPayload'
+--
+-- * 'iapiFields'
 inAppProductsInsert
     :: Text -- ^ 'iapiPackageName'
     -> InAppProduct -- ^ 'iapiPayload'
     -> InAppProductsInsert
-inAppProductsInsert pIapiPackageName_ pIapiPayload_ =
+inAppProductsInsert pIapiPackageName_ pIapiPayload_ = 
     InAppProductsInsert'
     { _iapiAutoConvertMissingPrices = Nothing
     , _iapiPackageName = pIapiPackageName_
     , _iapiPayload = pIapiPayload_
+    , _iapiFields = Nothing
     }
 
 -- | If true the prices for all regions targeted by the parent app that
@@ -103,12 +109,18 @@ iapiPayload :: Lens' InAppProductsInsert InAppProduct
 iapiPayload
   = lens _iapiPayload (\ s a -> s{_iapiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iapiFields :: Lens' InAppProductsInsert (Maybe Text)
+iapiFields
+  = lens _iapiFields (\ s a -> s{_iapiFields = a})
+
 instance GoogleRequest InAppProductsInsert where
         type Rs InAppProductsInsert = InAppProduct
         type Scopes InAppProductsInsert =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient InAppProductsInsert'{..}
           = go _iapiPackageName _iapiAutoConvertMissingPrices
+              _iapiFields
               (Just AltJSON)
               _iapiPayload
               androidPublisherService

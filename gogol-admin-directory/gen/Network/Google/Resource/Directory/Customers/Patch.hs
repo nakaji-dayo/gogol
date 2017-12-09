@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Customers.Patch
     -- * Request Lenses
     , cpCustomerKey
     , cpPayload
+    , cpFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.customers.patch@ method which the
 -- 'CustomersPatch' request conforms to.
@@ -48,15 +49,17 @@ type CustomersPatchResource =
          "v1" :>
            "customers" :>
              Capture "customerKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Customer :> Patch '[JSON] Customer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Customer :> Patch '[JSON] Customer
 
 -- | Updates a customer. This method supports patch semantics.
 --
 -- /See:/ 'customersPatch' smart constructor.
 data CustomersPatch = CustomersPatch'
     { _cpCustomerKey :: !Text
-    , _cpPayload     :: !Customer
+    , _cpPayload :: !Customer
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomersPatch' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CustomersPatch = CustomersPatch'
 -- * 'cpCustomerKey'
 --
 -- * 'cpPayload'
+--
+-- * 'cpFields'
 customersPatch
     :: Text -- ^ 'cpCustomerKey'
     -> Customer -- ^ 'cpPayload'
     -> CustomersPatch
-customersPatch pCpCustomerKey_ pCpPayload_ =
+customersPatch pCpCustomerKey_ pCpPayload_ = 
     CustomersPatch'
     { _cpCustomerKey = pCpCustomerKey_
     , _cpPayload = pCpPayload_
+    , _cpFields = Nothing
     }
 
 -- | Id of the customer to be updated
@@ -87,12 +93,17 @@ cpPayload :: Lens' CustomersPatch Customer
 cpPayload
   = lens _cpPayload (\ s a -> s{_cpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' CustomersPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest CustomersPatch where
         type Rs CustomersPatch = Customer
         type Scopes CustomersPatch =
              '["https://www.googleapis.com/auth/admin.directory.customer"]
         requestClient CustomersPatch'{..}
-          = go _cpCustomerKey (Just AltJSON) _cpPayload
+          = go _cpCustomerKey _cpFields (Just AltJSON)
+              _cpPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy CustomersPatchResource)

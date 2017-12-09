@@ -47,10 +47,11 @@ module Network.Google.Resource.Books.Volumes.List
     , vlMaxResults
     , vlShowPreOrders
     , vlPrintType
+    , vlFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.list@ method which the
 -- 'VolumesList' request conforms to.
@@ -77,27 +78,29 @@ type VolumesListResource =
                                    QueryParam "showPreorders" Bool :>
                                      QueryParam "printType" VolumesListPrintType
                                        :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] Volumes
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] Volumes
 
 -- | Performs a book search.
 --
 -- /See:/ 'volumesList' smart constructor.
 data VolumesList = VolumesList'
-    { _vlOrderBy                  :: !(Maybe VolumesListOrderBy)
+    { _vlOrderBy :: !(Maybe VolumesListOrderBy)
     , _vlMaxAllowedMaturityRating :: !(Maybe VolumesListMaxAllowedMaturityRating)
-    , _vlLibraryRestrict          :: !(Maybe VolumesListLibraryRestrict)
-    , _vlPartner                  :: !(Maybe Text)
-    , _vlQ                        :: !Text
-    , _vlDownload                 :: !(Maybe VolumesListDownload)
-    , _vlSource                   :: !(Maybe Text)
-    , _vlProjection               :: !(Maybe VolumesListProjection)
-    , _vlFilter                   :: !(Maybe VolumesListFilter)
-    , _vlLangRestrict             :: !(Maybe Text)
-    , _vlStartIndex               :: !(Maybe (Textual Word32))
-    , _vlMaxResults               :: !(Maybe (Textual Word32))
-    , _vlShowPreOrders            :: !(Maybe Bool)
-    , _vlPrintType                :: !(Maybe VolumesListPrintType)
+    , _vlLibraryRestrict :: !(Maybe VolumesListLibraryRestrict)
+    , _vlPartner :: !(Maybe Text)
+    , _vlQ :: !Text
+    , _vlDownload :: !(Maybe VolumesListDownload)
+    , _vlSource :: !(Maybe Text)
+    , _vlProjection :: !(Maybe VolumesListProjection)
+    , _vlFilter :: !(Maybe VolumesListFilter)
+    , _vlLangRestrict :: !(Maybe Text)
+    , _vlStartIndex :: !(Maybe (Textual Word32))
+    , _vlMaxResults :: !(Maybe (Textual Word32))
+    , _vlShowPreOrders :: !(Maybe Bool)
+    , _vlPrintType :: !(Maybe VolumesListPrintType)
+    , _vlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesList' with the minimum fields required to make a request.
@@ -131,10 +134,12 @@ data VolumesList = VolumesList'
 -- * 'vlShowPreOrders'
 --
 -- * 'vlPrintType'
+--
+-- * 'vlFields'
 volumesList
     :: Text -- ^ 'vlQ'
     -> VolumesList
-volumesList pVlQ_ =
+volumesList pVlQ_ = 
     VolumesList'
     { _vlOrderBy = Nothing
     , _vlMaxAllowedMaturityRating = Nothing
@@ -150,6 +155,7 @@ volumesList pVlQ_ =
     , _vlMaxResults = Nothing
     , _vlShowPreOrders = Nothing
     , _vlPrintType = Nothing
+    , _vlFields = Nothing
     }
 
 -- | Sort search results.
@@ -226,6 +232,10 @@ vlPrintType :: Lens' VolumesList (Maybe VolumesListPrintType)
 vlPrintType
   = lens _vlPrintType (\ s a -> s{_vlPrintType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vlFields :: Lens' VolumesList (Maybe Text)
+vlFields = lens _vlFields (\ s a -> s{_vlFields = a})
+
 instance GoogleRequest VolumesList where
         type Rs VolumesList = Volumes
         type Scopes VolumesList =
@@ -244,6 +254,7 @@ instance GoogleRequest VolumesList where
               _vlMaxResults
               _vlShowPreOrders
               _vlPrintType
+              _vlFields
               (Just AltJSON)
               booksService
           where go

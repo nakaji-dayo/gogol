@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.CallSets.Delete
     , csdUploadType
     , csdBearerToken
     , csdCallSetId
+    , csdFields
     , csdCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.callsets.delete@ method which the
 -- 'CallSetsDelete' request conforms to.
@@ -61,7 +62,8 @@ type CallSetsDeleteResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a call set. For the definitions of call sets and other genomics
 -- resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type CallSetsDeleteResource =
 --
 -- /See:/ 'callSetsDelete' smart constructor.
 data CallSetsDelete = CallSetsDelete'
-    { _csdXgafv          :: !(Maybe Xgafv)
+    { _csdXgafv :: !(Maybe Xgafv)
     , _csdUploadProtocol :: !(Maybe Text)
-    , _csdPp             :: !Bool
-    , _csdAccessToken    :: !(Maybe Text)
-    , _csdUploadType     :: !(Maybe Text)
-    , _csdBearerToken    :: !(Maybe Text)
-    , _csdCallSetId      :: !Text
-    , _csdCallback       :: !(Maybe Text)
+    , _csdPp :: !Bool
+    , _csdAccessToken :: !(Maybe Text)
+    , _csdUploadType :: !(Maybe Text)
+    , _csdBearerToken :: !(Maybe Text)
+    , _csdCallSetId :: !Text
+    , _csdFields :: !(Maybe Text)
+    , _csdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CallSetsDelete' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data CallSetsDelete = CallSetsDelete'
 --
 -- * 'csdCallSetId'
 --
+-- * 'csdFields'
+--
 -- * 'csdCallback'
 callSetsDelete
     :: Text -- ^ 'csdCallSetId'
     -> CallSetsDelete
-callSetsDelete pCsdCallSetId_ =
+callSetsDelete pCsdCallSetId_ = 
     CallSetsDelete'
     { _csdXgafv = Nothing
     , _csdUploadProtocol = Nothing
@@ -110,6 +115,7 @@ callSetsDelete pCsdCallSetId_ =
     , _csdUploadType = Nothing
     , _csdBearerToken = Nothing
     , _csdCallSetId = pCsdCallSetId_
+    , _csdFields = Nothing
     , _csdCallback = Nothing
     }
 
@@ -150,6 +156,11 @@ csdCallSetId :: Lens' CallSetsDelete Text
 csdCallSetId
   = lens _csdCallSetId (\ s a -> s{_csdCallSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csdFields :: Lens' CallSetsDelete (Maybe Text)
+csdFields
+  = lens _csdFields (\ s a -> s{_csdFields = a})
+
 -- | JSONP
 csdCallback :: Lens' CallSetsDelete (Maybe Text)
 csdCallback
@@ -167,6 +178,7 @@ instance GoogleRequest CallSetsDelete where
               _csdUploadType
               _csdBearerToken
               _csdCallback
+              _csdFields
               (Just AltJSON)
               genomicsService
           where go

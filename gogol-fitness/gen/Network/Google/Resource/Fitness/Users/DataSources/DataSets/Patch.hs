@@ -41,10 +41,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.DataSets.Patch
     , udsdspUserId
     , udsdspDataSetId
     , udsdspCurrentTimeMillis
+    , udsdspFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.datasets.patch@ method which the
 -- 'UsersDataSourcesDataSetsPatch' request conforms to.
@@ -58,8 +59,9 @@ type UsersDataSourcesDataSetsPatchResource =
                  "datasets" :>
                    Capture "datasetId" Text :>
                      QueryParam "currentTimeMillis" (Textual Int64) :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
 
 -- | Adds data points to a dataset. The dataset need not be previously
 -- created. All points within the given dataset will be returned with
@@ -68,11 +70,12 @@ type UsersDataSourcesDataSetsPatchResource =
 --
 -- /See:/ 'usersDataSourcesDataSetsPatch' smart constructor.
 data UsersDataSourcesDataSetsPatch = UsersDataSourcesDataSetsPatch'
-    { _udsdspDataSourceId      :: !Text
-    , _udsdspPayload           :: !DataSet
-    , _udsdspUserId            :: !Text
-    , _udsdspDataSetId         :: !Text
+    { _udsdspDataSourceId :: !Text
+    , _udsdspPayload :: !DataSet
+    , _udsdspUserId :: !Text
+    , _udsdspDataSetId :: !Text
     , _udsdspCurrentTimeMillis :: !(Maybe (Textual Int64))
+    , _udsdspFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesDataSetsPatch' with the minimum fields required to make a request.
@@ -88,19 +91,22 @@ data UsersDataSourcesDataSetsPatch = UsersDataSourcesDataSetsPatch'
 -- * 'udsdspDataSetId'
 --
 -- * 'udsdspCurrentTimeMillis'
+--
+-- * 'udsdspFields'
 usersDataSourcesDataSetsPatch
     :: Text -- ^ 'udsdspDataSourceId'
     -> DataSet -- ^ 'udsdspPayload'
     -> Text -- ^ 'udsdspUserId'
     -> Text -- ^ 'udsdspDataSetId'
     -> UsersDataSourcesDataSetsPatch
-usersDataSourcesDataSetsPatch pUdsdspDataSourceId_ pUdsdspPayload_ pUdsdspUserId_ pUdsdspDataSetId_ =
+usersDataSourcesDataSetsPatch pUdsdspDataSourceId_ pUdsdspPayload_ pUdsdspUserId_ pUdsdspDataSetId_ = 
     UsersDataSourcesDataSetsPatch'
     { _udsdspDataSourceId = pUdsdspDataSourceId_
     , _udsdspPayload = pUdsdspPayload_
     , _udsdspUserId = pUdsdspUserId_
     , _udsdspDataSetId = pUdsdspDataSetId_
     , _udsdspCurrentTimeMillis = Nothing
+    , _udsdspFields = Nothing
     }
 
 -- | The data stream ID of the data source that created the dataset.
@@ -139,6 +145,11 @@ udsdspCurrentTimeMillis
       (\ s a -> s{_udsdspCurrentTimeMillis = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+udsdspFields :: Lens' UsersDataSourcesDataSetsPatch (Maybe Text)
+udsdspFields
+  = lens _udsdspFields (\ s a -> s{_udsdspFields = a})
+
 instance GoogleRequest UsersDataSourcesDataSetsPatch
          where
         type Rs UsersDataSourcesDataSetsPatch = DataSet
@@ -156,6 +167,7 @@ instance GoogleRequest UsersDataSourcesDataSetsPatch
           = go _udsdspUserId _udsdspDataSourceId
               _udsdspDataSetId
               _udsdspCurrentTimeMillis
+              _udsdspFields
               (Just AltJSON)
               _udsdspPayload
               fitnessService

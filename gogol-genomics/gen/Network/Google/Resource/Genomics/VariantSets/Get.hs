@@ -42,11 +42,12 @@ module Network.Google.Resource.Genomics.VariantSets.Get
     , vsgAccessToken
     , vsgUploadType
     , vsgBearerToken
+    , vsgFields
     , vsgCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.variantsets.get@ method which the
 -- 'VariantSetsGet' request conforms to.
@@ -61,7 +62,8 @@ type VariantSetsGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] VariantSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] VariantSet
 
 -- | Gets a variant set by ID. For the definitions of variant sets and other
 -- genomics resources, see [Fundamentals of Google
@@ -69,14 +71,15 @@ type VariantSetsGetResource =
 --
 -- /See:/ 'variantSetsGet' smart constructor.
 data VariantSetsGet = VariantSetsGet'
-    { _vsgXgafv          :: !(Maybe Xgafv)
+    { _vsgXgafv :: !(Maybe Xgafv)
     , _vsgUploadProtocol :: !(Maybe Text)
-    , _vsgPp             :: !Bool
-    , _vsgVariantSetId   :: !Text
-    , _vsgAccessToken    :: !(Maybe Text)
-    , _vsgUploadType     :: !(Maybe Text)
-    , _vsgBearerToken    :: !(Maybe Text)
-    , _vsgCallback       :: !(Maybe Text)
+    , _vsgPp :: !Bool
+    , _vsgVariantSetId :: !Text
+    , _vsgAccessToken :: !(Maybe Text)
+    , _vsgUploadType :: !(Maybe Text)
+    , _vsgBearerToken :: !(Maybe Text)
+    , _vsgFields :: !(Maybe Text)
+    , _vsgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VariantSetsGet' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data VariantSetsGet = VariantSetsGet'
 --
 -- * 'vsgBearerToken'
 --
+-- * 'vsgFields'
+--
 -- * 'vsgCallback'
 variantSetsGet
     :: Text -- ^ 'vsgVariantSetId'
     -> VariantSetsGet
-variantSetsGet pVsgVariantSetId_ =
+variantSetsGet pVsgVariantSetId_ = 
     VariantSetsGet'
     { _vsgXgafv = Nothing
     , _vsgUploadProtocol = Nothing
@@ -110,6 +115,7 @@ variantSetsGet pVsgVariantSetId_ =
     , _vsgAccessToken = Nothing
     , _vsgUploadType = Nothing
     , _vsgBearerToken = Nothing
+    , _vsgFields = Nothing
     , _vsgCallback = Nothing
     }
 
@@ -151,6 +157,11 @@ vsgBearerToken
   = lens _vsgBearerToken
       (\ s a -> s{_vsgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vsgFields :: Lens' VariantSetsGet (Maybe Text)
+vsgFields
+  = lens _vsgFields (\ s a -> s{_vsgFields = a})
+
 -- | JSONP
 vsgCallback :: Lens' VariantSetsGet (Maybe Text)
 vsgCallback
@@ -169,6 +180,7 @@ instance GoogleRequest VariantSetsGet where
               _vsgUploadType
               _vsgBearerToken
               _vsgCallback
+              _vsgFields
               (Just AltJSON)
               genomicsService
           where go

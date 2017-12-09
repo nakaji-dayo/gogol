@@ -20,10 +20,11 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates the specified BackendService resource with the data included in
+-- Patches the specified BackendService resource with the data included in
 -- the request. There are several restrictions and guidelines to keep in
 -- mind when updating a backend service. Read Restrictions and Guidelines
--- for more information. This method supports patch semantics.
+-- for more information. This method supports PATCH semantics and uses the
+-- JSON merge patch format and processing rules.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.backendServices.patch@.
 module Network.Google.Resource.Compute.BackendServices.Patch
@@ -36,13 +37,15 @@ module Network.Google.Resource.Compute.BackendServices.Patch
     , BackendServicesPatch
 
     -- * Request Lenses
+    , bspRequestId
     , bspProject
     , bspPayload
+    , bspFields
     , bspBackendService
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.backendServices.patch@ method which the
 -- 'BackendServicesPatch' request conforms to.
@@ -54,19 +57,24 @@ type BackendServicesPatchResource =
              "global" :>
                "backendServices" :>
                  Capture "backendService" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] BackendService :>
-                       Patch '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] BackendService :>
+                           Patch '[JSON] Operation
 
--- | Updates the specified BackendService resource with the data included in
+-- | Patches the specified BackendService resource with the data included in
 -- the request. There are several restrictions and guidelines to keep in
 -- mind when updating a backend service. Read Restrictions and Guidelines
--- for more information. This method supports patch semantics.
+-- for more information. This method supports PATCH semantics and uses the
+-- JSON merge patch format and processing rules.
 --
 -- /See:/ 'backendServicesPatch' smart constructor.
 data BackendServicesPatch = BackendServicesPatch'
-    { _bspProject        :: !Text
-    , _bspPayload        :: !BackendService
+    { _bspRequestId :: !(Maybe Text)
+    , _bspProject :: !Text
+    , _bspPayload :: !BackendService
+    , _bspFields :: !(Maybe Text)
     , _bspBackendService :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -74,9 +82,13 @@ data BackendServicesPatch = BackendServicesPatch'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'bspRequestId'
+--
 -- * 'bspProject'
 --
 -- * 'bspPayload'
+--
+-- * 'bspFields'
 --
 -- * 'bspBackendService'
 backendServicesPatch
@@ -84,12 +96,28 @@ backendServicesPatch
     -> BackendService -- ^ 'bspPayload'
     -> Text -- ^ 'bspBackendService'
     -> BackendServicesPatch
-backendServicesPatch pBspProject_ pBspPayload_ pBspBackendService_ =
+backendServicesPatch pBspProject_ pBspPayload_ pBspBackendService_ = 
     BackendServicesPatch'
-    { _bspProject = pBspProject_
+    { _bspRequestId = Nothing
+    , _bspProject = pBspProject_
     , _bspPayload = pBspPayload_
+    , _bspFields = Nothing
     , _bspBackendService = pBspBackendService_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+bspRequestId :: Lens' BackendServicesPatch (Maybe Text)
+bspRequestId
+  = lens _bspRequestId (\ s a -> s{_bspRequestId = a})
 
 -- | Project ID for this request.
 bspProject :: Lens' BackendServicesPatch Text
@@ -101,7 +129,12 @@ bspPayload :: Lens' BackendServicesPatch BackendService
 bspPayload
   = lens _bspPayload (\ s a -> s{_bspPayload = a})
 
--- | Name of the BackendService resource to update.
+-- | Selector specifying which fields to include in a partial response.
+bspFields :: Lens' BackendServicesPatch (Maybe Text)
+bspFields
+  = lens _bspFields (\ s a -> s{_bspFields = a})
+
+-- | Name of the BackendService resource to patch.
 bspBackendService :: Lens' BackendServicesPatch Text
 bspBackendService
   = lens _bspBackendService
@@ -113,7 +146,9 @@ instance GoogleRequest BackendServicesPatch where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient BackendServicesPatch'{..}
-          = go _bspProject _bspBackendService (Just AltJSON)
+          = go _bspProject _bspBackendService _bspRequestId
+              _bspFields
+              (Just AltJSON)
               _bspPayload
               computeService
           where go

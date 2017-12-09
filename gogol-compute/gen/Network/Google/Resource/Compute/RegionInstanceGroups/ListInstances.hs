@@ -44,10 +44,11 @@ module Network.Google.Resource.Compute.RegionInstanceGroups.ListInstances
     , rigliPageToken
     , rigliInstanceGroup
     , rigliMaxResults
+    , rigliFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroups.listInstances@ method which the
 -- 'RegionInstanceGroupsListInstances'' request conforms to.
@@ -65,12 +66,13 @@ type RegionInstanceGroupsListInstancesResource =
                          QueryParam "filter" Text :>
                            QueryParam "pageToken" Text :>
                              QueryParam "maxResults" (Textual Word32) :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON]
-                                   RegionInstanceGroupsListInstancesRequest
-                                   :>
-                                   Post '[JSON]
-                                     RegionInstanceGroupsListInstances
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON]
+                                     RegionInstanceGroupsListInstancesRequest
+                                     :>
+                                     Post '[JSON]
+                                       RegionInstanceGroupsListInstances
 
 -- | Lists the instances in the specified instance group and displays
 -- information about the named ports. Depending on the specified options,
@@ -79,14 +81,15 @@ type RegionInstanceGroupsListInstancesResource =
 --
 -- /See:/ 'regionInstanceGroupsListInstances'' smart constructor.
 data RegionInstanceGroupsListInstances' = RegionInstanceGroupsListInstances''
-    { _rigliOrderBy       :: !(Maybe Text)
-    , _rigliProject       :: !Text
-    , _rigliPayload       :: !RegionInstanceGroupsListInstancesRequest
-    , _rigliFilter        :: !(Maybe Text)
-    , _rigliRegion        :: !Text
-    , _rigliPageToken     :: !(Maybe Text)
+    { _rigliOrderBy :: !(Maybe Text)
+    , _rigliProject :: !Text
+    , _rigliPayload :: !RegionInstanceGroupsListInstancesRequest
+    , _rigliFilter :: !(Maybe Text)
+    , _rigliRegion :: !Text
+    , _rigliPageToken :: !(Maybe Text)
     , _rigliInstanceGroup :: !Text
-    , _rigliMaxResults    :: !(Textual Word32)
+    , _rigliMaxResults :: !(Textual Word32)
+    , _rigliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupsListInstances'' with the minimum fields required to make a request.
@@ -108,13 +111,15 @@ data RegionInstanceGroupsListInstances' = RegionInstanceGroupsListInstances''
 -- * 'rigliInstanceGroup'
 --
 -- * 'rigliMaxResults'
+--
+-- * 'rigliFields'
 regionInstanceGroupsListInstances'
     :: Text -- ^ 'rigliProject'
     -> RegionInstanceGroupsListInstancesRequest -- ^ 'rigliPayload'
     -> Text -- ^ 'rigliRegion'
     -> Text -- ^ 'rigliInstanceGroup'
     -> RegionInstanceGroupsListInstances'
-regionInstanceGroupsListInstances' pRigliProject_ pRigliPayload_ pRigliRegion_ pRigliInstanceGroup_ =
+regionInstanceGroupsListInstances' pRigliProject_ pRigliPayload_ pRigliRegion_ pRigliInstanceGroup_ = 
     RegionInstanceGroupsListInstances''
     { _rigliOrderBy = Nothing
     , _rigliProject = pRigliProject_
@@ -124,6 +129,7 @@ regionInstanceGroupsListInstances' pRigliProject_ pRigliPayload_ pRigliRegion_ p
     , _rigliPageToken = Nothing
     , _rigliInstanceGroup = pRigliInstanceGroup_
     , _rigliMaxResults = 500
+    , _rigliFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -148,26 +154,25 @@ rigliPayload :: Lens' RegionInstanceGroupsListInstances' RegionInstanceGroupsLis
 rigliPayload
   = lens _rigliPayload (\ s a -> s{_rigliPayload = a})
 
--- | Sets a filter expression for filtering listed resources, in the form
--- filter={expression}. Your {expression} must be in the format: field_name
--- comparison_string literal_string. The field_name is the name of the
--- field you want to compare. Only atomic field types are supported
--- (string, number, boolean). The comparison_string must be either eq
--- (equals) or ne (not equals). The literal_string is the string value to
--- filter to. The literal value must be valid for the type of field you are
--- filtering by (string, number, boolean). For string fields, the literal
--- value is interpreted as a regular expression using RE2 syntax. The
--- literal value must match the entire field. For example, to filter for
--- instances that do not have a name of example-instance, you would use
--- filter=name ne example-instance. You can filter on nested fields. For
--- example, you could filter on instances that have set the
--- scheduling.automaticRestart field to true. Use filtering on nested
--- fields to take advantage of labels to organize and search for results
--- based on label values. To filter on multiple expressions, provide each
--- separate expression within parentheses. For example,
--- (scheduling.automaticRestart eq true) (zone eq us-central1-f). Multiple
--- expressions are treated as AND expressions, meaning that resources must
--- match all expressions to pass the filters.
+-- | Sets a filter {expression} for filtering listed resources. Your
+-- {expression} must be in the format: field_name comparison_string
+-- literal_string. The field_name is the name of the field you want to
+-- compare. Only atomic field types are supported (string, number,
+-- boolean). The comparison_string must be either eq (equals) or ne (not
+-- equals). The literal_string is the string value to filter to. The
+-- literal value must be valid for the type of field you are filtering by
+-- (string, number, boolean). For string fields, the literal value is
+-- interpreted as a regular expression using RE2 syntax. The literal value
+-- must match the entire field. For example, to filter for instances that
+-- do not have a name of example-instance, you would use name ne
+-- example-instance. You can filter on nested fields. For example, you
+-- could filter on instances that have set the scheduling.automaticRestart
+-- field to true. Use filtering on nested fields to take advantage of
+-- labels to organize and search for results based on label values. To
+-- filter on multiple expressions, provide each separate expression within
+-- parentheses. For example, (scheduling.automaticRestart eq true) (zone eq
+-- us-central1-f). Multiple expressions are treated as AND expressions,
+-- meaning that resources must match all expressions to pass the filters.
 rigliFilter :: Lens' RegionInstanceGroupsListInstances' (Maybe Text)
 rigliFilter
   = lens _rigliFilter (\ s a -> s{_rigliFilter = a})
@@ -194,12 +199,18 @@ rigliInstanceGroup
 -- | The maximum number of results per page that should be returned. If the
 -- number of available results is larger than maxResults, Compute Engine
 -- returns a nextPageToken that can be used to get the next page of results
--- in subsequent list requests.
+-- in subsequent list requests. Acceptable values are 0 to 500, inclusive.
+-- (Default: 500)
 rigliMaxResults :: Lens' RegionInstanceGroupsListInstances' Word32
 rigliMaxResults
   = lens _rigliMaxResults
       (\ s a -> s{_rigliMaxResults = a})
       . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+rigliFields :: Lens' RegionInstanceGroupsListInstances' (Maybe Text)
+rigliFields
+  = lens _rigliFields (\ s a -> s{_rigliFields = a})
 
 instance GoogleRequest
          RegionInstanceGroupsListInstances' where
@@ -215,6 +226,7 @@ instance GoogleRequest
               _rigliFilter
               _rigliPageToken
               (Just _rigliMaxResults)
+              _rigliFields
               (Just AltJSON)
               _rigliPayload
               computeService

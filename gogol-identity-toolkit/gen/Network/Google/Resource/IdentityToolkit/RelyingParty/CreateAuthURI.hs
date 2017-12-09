@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.CreateAuthURI
 
     -- * Request Lenses
     , rpcauPayload
+    , rpcauFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.createAuthUri@ method which the
 -- 'RelyingPartyCreateAuthURI' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyCreateAuthURIResource =
        "v3" :>
          "relyingparty" :>
            "createAuthUri" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyCreateAuthURIRequest
-                 :> Post '[JSON] CreateAuthURIResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyCreateAuthURIRequest
+                   :> Post '[JSON] CreateAuthURIResponse
 
 -- | Creates the URI used by the IdP to authenticate the user.
 --
 -- /See:/ 'relyingPartyCreateAuthURI' smart constructor.
-newtype RelyingPartyCreateAuthURI = RelyingPartyCreateAuthURI'
-    { _rpcauPayload :: IdentitytoolkitRelyingPartyCreateAuthURIRequest
+data RelyingPartyCreateAuthURI = RelyingPartyCreateAuthURI'
+    { _rpcauPayload :: !IdentitytoolkitRelyingPartyCreateAuthURIRequest
+    , _rpcauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyCreateAuthURI' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyCreateAuthURI = RelyingPartyCreateAuthURI'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpcauPayload'
+--
+-- * 'rpcauFields'
 relyingPartyCreateAuthURI
     :: IdentitytoolkitRelyingPartyCreateAuthURIRequest -- ^ 'rpcauPayload'
     -> RelyingPartyCreateAuthURI
-relyingPartyCreateAuthURI pRpcauPayload_ =
+relyingPartyCreateAuthURI pRpcauPayload_ = 
     RelyingPartyCreateAuthURI'
     { _rpcauPayload = pRpcauPayload_
+    , _rpcauFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpcauPayload :: Lens' RelyingPartyCreateAuthURI IdentitytoolkitRelyingPartyCreateAuthURIRequest
 rpcauPayload
   = lens _rpcauPayload (\ s a -> s{_rpcauPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpcauFields :: Lens' RelyingPartyCreateAuthURI (Maybe Text)
+rpcauFields
+  = lens _rpcauFields (\ s a -> s{_rpcauFields = a})
 
 instance GoogleRequest RelyingPartyCreateAuthURI
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartyCreateAuthURI
         type Scopes RelyingPartyCreateAuthURI =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyCreateAuthURI'{..}
-          = go (Just AltJSON) _rpcauPayload
+          = go _rpcauFields (Just AltJSON) _rpcauPayload
               identityToolkitService
           where go
                   = buildClient

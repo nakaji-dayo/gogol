@@ -39,10 +39,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Insert
     , uUserId
     , uDeleted
     , uInternalDateSource
+    , uFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.insert@ method which the
 -- 'UsersMessagesInsert' request conforms to.
@@ -56,8 +57,9 @@ type UsersMessagesInsertResource =
                  QueryParam "internalDateSource"
                    UsersMessagesInsertInternalDateSource
                    :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Message :> Post '[JSON] Message
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Message :> Post '[JSON] Message
        :<|>
        "upload" :>
          "gmail" :>
@@ -69,10 +71,11 @@ type UsersMessagesInsertResource =
                      QueryParam "internalDateSource"
                        UsersMessagesInsertInternalDateSource
                        :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" Multipart :>
-                           MultipartRelated '[JSON] Message :>
-                             Post '[JSON] Message
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" Multipart :>
+                             MultipartRelated '[JSON] Message :>
+                               Post '[JSON] Message
 
 -- | Directly inserts a message into only this user\'s mailbox similar to
 -- IMAP APPEND, bypassing most scanning and classification. Does not send a
@@ -80,10 +83,11 @@ type UsersMessagesInsertResource =
 --
 -- /See:/ 'usersMessagesInsert' smart constructor.
 data UsersMessagesInsert = UsersMessagesInsert'
-    { _uPayload            :: !Message
-    , _uUserId             :: !Text
-    , _uDeleted            :: !Bool
+    { _uPayload :: !Message
+    , _uUserId :: !Text
+    , _uDeleted :: !Bool
     , _uInternalDateSource :: !UsersMessagesInsertInternalDateSource
+    , _uFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesInsert' with the minimum fields required to make a request.
@@ -97,15 +101,18 @@ data UsersMessagesInsert = UsersMessagesInsert'
 -- * 'uDeleted'
 --
 -- * 'uInternalDateSource'
+--
+-- * 'uFields'
 usersMessagesInsert
     :: Message -- ^ 'uPayload'
     -> UsersMessagesInsert
-usersMessagesInsert pUPayload_ =
+usersMessagesInsert pUPayload_ = 
     UsersMessagesInsert'
     { _uPayload = pUPayload_
     , _uUserId = "me"
     , _uDeleted = False
     , _uInternalDateSource = UMIIDSReceivedTime
+    , _uFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -118,8 +125,7 @@ uUserId :: Lens' UsersMessagesInsert Text
 uUserId = lens _uUserId (\ s a -> s{_uUserId = a})
 
 -- | Mark the email as permanently deleted (not TRASH) and only visible in
--- Google Apps Vault to a Vault administrator. Only used for Google Apps
--- for Work accounts.
+-- Google Vault to a Vault administrator. Only used for G Suite accounts.
 uDeleted :: Lens' UsersMessagesInsert Bool
 uDeleted = lens _uDeleted (\ s a -> s{_uDeleted = a})
 
@@ -128,6 +134,10 @@ uInternalDateSource :: Lens' UsersMessagesInsert UsersMessagesInsertInternalDate
 uInternalDateSource
   = lens _uInternalDateSource
       (\ s a -> s{_uInternalDateSource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+uFields :: Lens' UsersMessagesInsert (Maybe Text)
+uFields = lens _uFields (\ s a -> s{_uFields = a})
 
 instance GoogleRequest UsersMessagesInsert where
         type Rs UsersMessagesInsert = Message
@@ -138,6 +148,7 @@ instance GoogleRequest UsersMessagesInsert where
         requestClient UsersMessagesInsert'{..}
           = go _uUserId (Just _uDeleted)
               (Just _uInternalDateSource)
+              _uFields
               (Just AltJSON)
               _uPayload
               gmailService
@@ -155,6 +166,7 @@ instance GoogleRequest
           (MediaUpload UsersMessagesInsert'{..} body)
           = go _uUserId (Just _uDeleted)
               (Just _uInternalDateSource)
+              _uFields
               (Just AltJSON)
               (Just Multipart)
               _uPayload

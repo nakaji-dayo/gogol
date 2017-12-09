@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.UserRoles.Insert
     -- * Request Lenses
     , uriProFileId
     , uriPayload
+    , uriFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRoles.insert@ method which the
 -- 'UserRolesInsert' request conforms to.
 type UserRolesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRoles" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] UserRole :> Post '[JSON] UserRole
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] UserRole :> Post '[JSON] UserRole
 
 -- | Inserts a new user role.
 --
 -- /See:/ 'userRolesInsert' smart constructor.
 data UserRolesInsert = UserRolesInsert'
     { _uriProFileId :: !(Textual Int64)
-    , _uriPayload   :: !UserRole
+    , _uriPayload :: !UserRole
+    , _uriFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolesInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data UserRolesInsert = UserRolesInsert'
 -- * 'uriProFileId'
 --
 -- * 'uriPayload'
+--
+-- * 'uriFields'
 userRolesInsert
     :: Int64 -- ^ 'uriProFileId'
     -> UserRole -- ^ 'uriPayload'
     -> UserRolesInsert
-userRolesInsert pUriProFileId_ pUriPayload_ =
+userRolesInsert pUriProFileId_ pUriPayload_ = 
     UserRolesInsert'
     { _uriProFileId = _Coerce # pUriProFileId_
     , _uriPayload = pUriPayload_
+    , _uriFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ uriPayload :: Lens' UserRolesInsert UserRole
 uriPayload
   = lens _uriPayload (\ s a -> s{_uriPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uriFields :: Lens' UserRolesInsert (Maybe Text)
+uriFields
+  = lens _uriFields (\ s a -> s{_uriFields = a})
+
 instance GoogleRequest UserRolesInsert where
         type Rs UserRolesInsert = UserRole
         type Scopes UserRolesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserRolesInsert'{..}
-          = go _uriProFileId (Just AltJSON) _uriPayload
+          = go _uriProFileId _uriFields (Just AltJSON)
+              _uriPayload
               dFAReportingService
           where go
                   = buildClient

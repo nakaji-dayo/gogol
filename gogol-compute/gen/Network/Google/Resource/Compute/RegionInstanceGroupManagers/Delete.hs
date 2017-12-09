@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.Delete
     , RegionInstanceGroupManagersDelete
 
     -- * Request Lenses
+    , rigmdRequestId
     , rigmdProject
     , rigmdInstanceGroupManager
     , rigmdRegion
+    , rigmdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.delete@ method which the
 -- 'RegionInstanceGroupManagersDelete' request conforms to.
@@ -53,38 +55,63 @@ type RegionInstanceGroupManagersDeleteResource =
                Capture "region" Text :>
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified managed instance group and all of the instances in
 -- that group.
 --
 -- /See:/ 'regionInstanceGroupManagersDelete' smart constructor.
 data RegionInstanceGroupManagersDelete = RegionInstanceGroupManagersDelete'
-    { _rigmdProject              :: !Text
+    { _rigmdRequestId :: !(Maybe Text)
+    , _rigmdProject :: !Text
     , _rigmdInstanceGroupManager :: !Text
-    , _rigmdRegion               :: !Text
+    , _rigmdRegion :: !Text
+    , _rigmdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'rigmdRequestId'
+--
 -- * 'rigmdProject'
 --
 -- * 'rigmdInstanceGroupManager'
 --
 -- * 'rigmdRegion'
+--
+-- * 'rigmdFields'
 regionInstanceGroupManagersDelete
     :: Text -- ^ 'rigmdProject'
     -> Text -- ^ 'rigmdInstanceGroupManager'
     -> Text -- ^ 'rigmdRegion'
     -> RegionInstanceGroupManagersDelete
-regionInstanceGroupManagersDelete pRigmdProject_ pRigmdInstanceGroupManager_ pRigmdRegion_ =
+regionInstanceGroupManagersDelete pRigmdProject_ pRigmdInstanceGroupManager_ pRigmdRegion_ = 
     RegionInstanceGroupManagersDelete'
-    { _rigmdProject = pRigmdProject_
+    { _rigmdRequestId = Nothing
+    , _rigmdProject = pRigmdProject_
     , _rigmdInstanceGroupManager = pRigmdInstanceGroupManager_
     , _rigmdRegion = pRigmdRegion_
+    , _rigmdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rigmdRequestId :: Lens' RegionInstanceGroupManagersDelete (Maybe Text)
+rigmdRequestId
+  = lens _rigmdRequestId
+      (\ s a -> s{_rigmdRequestId = a})
 
 -- | Project ID for this request.
 rigmdProject :: Lens' RegionInstanceGroupManagersDelete Text
@@ -102,6 +129,11 @@ rigmdRegion :: Lens' RegionInstanceGroupManagersDelete Text
 rigmdRegion
   = lens _rigmdRegion (\ s a -> s{_rigmdRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmdFields :: Lens' RegionInstanceGroupManagersDelete (Maybe Text)
+rigmdFields
+  = lens _rigmdFields (\ s a -> s{_rigmdFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersDelete where
         type Rs RegionInstanceGroupManagersDelete = Operation
@@ -111,6 +143,8 @@ instance GoogleRequest
         requestClient RegionInstanceGroupManagersDelete'{..}
           = go _rigmdProject _rigmdRegion
               _rigmdInstanceGroupManager
+              _rigmdRequestId
+              _rigmdFields
               (Just AltJSON)
               computeService
           where go

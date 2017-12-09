@@ -42,11 +42,12 @@ module Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.Get
     , aogAccountId
     , aogBearerToken
     , aogOrderId
+    , aogFields
     , aogCallback
     ) where
 
-import           Network.Google.PlayMoviesPartner.Types
-import           Network.Google.Prelude
+import Network.Google.PlayMoviesPartner.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @playmoviespartner.accounts.orders.get@ method which the
 -- 'AccountsOrdersGet' request conforms to.
@@ -56,29 +57,31 @@ type AccountsOrdersGetResource =
          Capture "accountId" Text :>
            "orders" :>
              Capture "orderId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Order
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Order
 
 -- | Get an Order given its id. See _Authentication and Authorization rules_
 -- and _Get methods rules_ for more information about this method.
 --
 -- /See:/ 'accountsOrdersGet' smart constructor.
 data AccountsOrdersGet = AccountsOrdersGet'
-    { _aogXgafv          :: !(Maybe Text)
+    { _aogXgafv :: !(Maybe Xgafv)
     , _aogUploadProtocol :: !(Maybe Text)
-    , _aogPp             :: !Bool
-    , _aogAccessToken    :: !(Maybe Text)
-    , _aogUploadType     :: !(Maybe Text)
-    , _aogAccountId      :: !Text
-    , _aogBearerToken    :: !(Maybe Text)
-    , _aogOrderId        :: !Text
-    , _aogCallback       :: !(Maybe Text)
+    , _aogPp :: !Bool
+    , _aogAccessToken :: !(Maybe Text)
+    , _aogUploadType :: !(Maybe Text)
+    , _aogAccountId :: !Text
+    , _aogBearerToken :: !(Maybe Text)
+    , _aogOrderId :: !Text
+    , _aogFields :: !(Maybe Text)
+    , _aogCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsOrdersGet' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data AccountsOrdersGet = AccountsOrdersGet'
 --
 -- * 'aogOrderId'
 --
+-- * 'aogFields'
+--
 -- * 'aogCallback'
 accountsOrdersGet
     :: Text -- ^ 'aogAccountId'
     -> Text -- ^ 'aogOrderId'
     -> AccountsOrdersGet
-accountsOrdersGet pAogAccountId_ pAogOrderId_ =
+accountsOrdersGet pAogAccountId_ pAogOrderId_ = 
     AccountsOrdersGet'
     { _aogXgafv = Nothing
     , _aogUploadProtocol = Nothing
@@ -116,11 +121,12 @@ accountsOrdersGet pAogAccountId_ pAogOrderId_ =
     , _aogAccountId = pAogAccountId_
     , _aogBearerToken = Nothing
     , _aogOrderId = pAogOrderId_
+    , _aogFields = Nothing
     , _aogCallback = Nothing
     }
 
 -- | V1 error format.
-aogXgafv :: Lens' AccountsOrdersGet (Maybe Text)
+aogXgafv :: Lens' AccountsOrdersGet (Maybe Xgafv)
 aogXgafv = lens _aogXgafv (\ s a -> s{_aogXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -161,6 +167,11 @@ aogOrderId :: Lens' AccountsOrdersGet Text
 aogOrderId
   = lens _aogOrderId (\ s a -> s{_aogOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aogFields :: Lens' AccountsOrdersGet (Maybe Text)
+aogFields
+  = lens _aogFields (\ s a -> s{_aogFields = a})
+
 -- | JSONP
 aogCallback :: Lens' AccountsOrdersGet (Maybe Text)
 aogCallback
@@ -178,6 +189,7 @@ instance GoogleRequest AccountsOrdersGet where
               _aogUploadType
               _aogBearerToken
               _aogCallback
+              _aogFields
               (Just AltJSON)
               playMoviesPartnerService
           where go

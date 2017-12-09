@@ -22,9 +22,8 @@
 --
 -- Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.folders.sinks.create@.
 module Network.Google.Resource.Logging.Folders.Sinks.Create
@@ -46,11 +45,12 @@ module Network.Google.Resource.Logging.Folders.Sinks.Create
     , fscUploadType
     , fscPayload
     , fscBearerToken
+    , fscFields
     , fscCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.folders.sinks.create@ method which the
 -- 'FoldersSinksCreate' request conforms to.
@@ -66,27 +66,28 @@ type FoldersSinksCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
 
 -- | Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ 'foldersSinksCreate' smart constructor.
 data FoldersSinksCreate = FoldersSinksCreate'
-    { _fscParent               :: !Text
-    , _fscXgafv                :: !(Maybe Xgafv)
+    { _fscParent :: !Text
+    , _fscXgafv :: !(Maybe Xgafv)
     , _fscUniqueWriterIdentity :: !(Maybe Bool)
-    , _fscUploadProtocol       :: !(Maybe Text)
-    , _fscPp                   :: !Bool
-    , _fscAccessToken          :: !(Maybe Text)
-    , _fscUploadType           :: !(Maybe Text)
-    , _fscPayload              :: !LogSink
-    , _fscBearerToken          :: !(Maybe Text)
-    , _fscCallback             :: !(Maybe Text)
+    , _fscUploadProtocol :: !(Maybe Text)
+    , _fscPp :: !Bool
+    , _fscAccessToken :: !(Maybe Text)
+    , _fscUploadType :: !(Maybe Text)
+    , _fscPayload :: !LogSink
+    , _fscBearerToken :: !(Maybe Text)
+    , _fscFields :: !(Maybe Text)
+    , _fscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FoldersSinksCreate' with the minimum fields required to make a request.
@@ -111,12 +112,14 @@ data FoldersSinksCreate = FoldersSinksCreate'
 --
 -- * 'fscBearerToken'
 --
+-- * 'fscFields'
+--
 -- * 'fscCallback'
 foldersSinksCreate
     :: Text -- ^ 'fscParent'
     -> LogSink -- ^ 'fscPayload'
     -> FoldersSinksCreate
-foldersSinksCreate pFscParent_ pFscPayload_ =
+foldersSinksCreate pFscParent_ pFscPayload_ = 
     FoldersSinksCreate'
     { _fscParent = pFscParent_
     , _fscXgafv = Nothing
@@ -127,11 +130,13 @@ foldersSinksCreate pFscParent_ pFscPayload_ =
     , _fscUploadType = Nothing
     , _fscPayload = pFscPayload_
     , _fscBearerToken = Nothing
+    , _fscFields = Nothing
     , _fscCallback = Nothing
     }
 
 -- | Required. The resource in which to create the sink:
 -- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 -- Examples: \"projects\/my-logging-project\",
 -- \"organizations\/123456789\".
 fscParent :: Lens' FoldersSinksCreate Text
@@ -145,13 +150,13 @@ fscXgafv = lens _fscXgafv (\ s a -> s{_fscXgafv = a})
 -- | Optional. Determines the kind of IAM identity returned as
 -- writer_identity in the new sink. If this value is omitted or set to
 -- false, and if the sink\'s parent is a project, then the value returned
--- as writer_identity is cloud-logs\'google.com, the same identity used
--- before the addition of writer identities to this API. The sink\'s
--- destination must be in the same project as the sink itself.If this field
--- is set to true, or if the sink is owned by a non-project resource such
--- as an organization, then the value of writer_identity will be a unique
--- service account used only for exports from the new sink. For more
--- information, see writer_identity in LogSink.
+-- as writer_identity is the same group or service account used by
+-- Stackdriver Logging before the addition of writer identities to this
+-- API. The sink\'s destination must be in the same project as the sink
+-- itself.If this field is set to true, or if the sink is owned by a
+-- non-project resource such as an organization, then the value of
+-- writer_identity will be a unique service account used only for exports
+-- from the new sink. For more information, see writer_identity in LogSink.
 fscUniqueWriterIdentity :: Lens' FoldersSinksCreate (Maybe Bool)
 fscUniqueWriterIdentity
   = lens _fscUniqueWriterIdentity
@@ -190,6 +195,11 @@ fscBearerToken
   = lens _fscBearerToken
       (\ s a -> s{_fscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+fscFields :: Lens' FoldersSinksCreate (Maybe Text)
+fscFields
+  = lens _fscFields (\ s a -> s{_fscFields = a})
+
 -- | JSONP
 fscCallback :: Lens' FoldersSinksCreate (Maybe Text)
 fscCallback
@@ -208,6 +218,7 @@ instance GoogleRequest FoldersSinksCreate where
               _fscUploadType
               _fscBearerToken
               _fscCallback
+              _fscFields
               (Just AltJSON)
               _fscPayload
               loggingService

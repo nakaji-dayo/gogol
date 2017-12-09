@@ -21,7 +21,8 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Deletes all the log entries in a log. The log reappears if it receives
--- new entries.
+-- new entries. Log entries written shortly before the delete operation
+-- might not be deleted.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.billingAccounts.logs.delete@.
 module Network.Google.Resource.Logging.BillingAccounts.Logs.Delete
@@ -41,11 +42,12 @@ module Network.Google.Resource.Logging.BillingAccounts.Logs.Delete
     , baldUploadType
     , baldBearerToken
     , baldLogName
+    , baldFields
     , baldCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.billingAccounts.logs.delete@ method which the
 -- 'BillingAccountsLogsDelete' request conforms to.
@@ -59,21 +61,24 @@ type BillingAccountsLogsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes all the log entries in a log. The log reappears if it receives
--- new entries.
+-- new entries. Log entries written shortly before the delete operation
+-- might not be deleted.
 --
 -- /See:/ 'billingAccountsLogsDelete' smart constructor.
 data BillingAccountsLogsDelete = BillingAccountsLogsDelete'
-    { _baldXgafv          :: !(Maybe Xgafv)
+    { _baldXgafv :: !(Maybe Xgafv)
     , _baldUploadProtocol :: !(Maybe Text)
-    , _baldPp             :: !Bool
-    , _baldAccessToken    :: !(Maybe Text)
-    , _baldUploadType     :: !(Maybe Text)
-    , _baldBearerToken    :: !(Maybe Text)
-    , _baldLogName        :: !Text
-    , _baldCallback       :: !(Maybe Text)
+    , _baldPp :: !Bool
+    , _baldAccessToken :: !(Maybe Text)
+    , _baldUploadType :: !(Maybe Text)
+    , _baldBearerToken :: !(Maybe Text)
+    , _baldLogName :: !Text
+    , _baldFields :: !(Maybe Text)
+    , _baldCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsLogsDelete' with the minimum fields required to make a request.
@@ -94,11 +99,13 @@ data BillingAccountsLogsDelete = BillingAccountsLogsDelete'
 --
 -- * 'baldLogName'
 --
+-- * 'baldFields'
+--
 -- * 'baldCallback'
 billingAccountsLogsDelete
     :: Text -- ^ 'baldLogName'
     -> BillingAccountsLogsDelete
-billingAccountsLogsDelete pBaldLogName_ =
+billingAccountsLogsDelete pBaldLogName_ = 
     BillingAccountsLogsDelete'
     { _baldXgafv = Nothing
     , _baldUploadProtocol = Nothing
@@ -107,6 +114,7 @@ billingAccountsLogsDelete pBaldLogName_ =
     , _baldUploadType = Nothing
     , _baldBearerToken = Nothing
     , _baldLogName = pBaldLogName_
+    , _baldFields = Nothing
     , _baldCallback = Nothing
     }
 
@@ -145,13 +153,20 @@ baldBearerToken
 
 -- | Required. The resource name of the log to delete:
 -- \"projects\/[PROJECT_ID]\/logs\/[LOG_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/logs\/[LOG_ID]\" [LOG_ID] must be
--- URL-encoded. For example, \"projects\/my-project-id\/logs\/syslog\",
+-- \"organizations\/[ORGANIZATION_ID]\/logs\/[LOG_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/logs\/[LOG_ID]\"
+-- \"folders\/[FOLDER_ID]\/logs\/[LOG_ID]\" [LOG_ID] must be URL-encoded.
+-- For example, \"projects\/my-project-id\/logs\/syslog\",
 -- \"organizations\/1234567890\/logs\/cloudresourcemanager.googleapis.com%2Factivity\".
 -- For more information about log names, see LogEntry.
 baldLogName :: Lens' BillingAccountsLogsDelete Text
 baldLogName
   = lens _baldLogName (\ s a -> s{_baldLogName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+baldFields :: Lens' BillingAccountsLogsDelete (Maybe Text)
+baldFields
+  = lens _baldFields (\ s a -> s{_baldFields = a})
 
 -- | JSONP
 baldCallback :: Lens' BillingAccountsLogsDelete (Maybe Text)
@@ -171,6 +186,7 @@ instance GoogleRequest BillingAccountsLogsDelete
               _baldUploadType
               _baldBearerToken
               _baldCallback
+              _baldFields
               (Just AltJSON)
               loggingService
           where go

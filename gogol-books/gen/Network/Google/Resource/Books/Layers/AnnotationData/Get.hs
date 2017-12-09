@@ -43,10 +43,11 @@ module Network.Google.Resource.Books.Layers.AnnotationData.Get
     , ladgSource
     , ladgH
     , ladgLayerId
+    , ladgFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.layers.annotationData.get@ method which the
 -- 'LayersAnnotationDataGet' request conforms to.
@@ -66,23 +67,25 @@ type LayersAnnotationDataGetResource =
                              QueryParam "allowWebDefinitions" Bool :>
                                QueryParam "source" Text :>
                                  QueryParam "h" (Textual Int32) :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] AnnotationData
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] AnnotationData
 
 -- | Gets the annotation data.
 --
 -- /See:/ 'layersAnnotationDataGet' smart constructor.
 data LayersAnnotationDataGet = LayersAnnotationDataGet'
-    { _ladgW                   :: !(Maybe (Textual Int32))
-    , _ladgScale               :: !(Maybe (Textual Int32))
-    , _ladgLocale              :: !(Maybe Text)
-    , _ladgContentVersion      :: !Text
+    { _ladgW :: !(Maybe (Textual Int32))
+    , _ladgScale :: !(Maybe (Textual Int32))
+    , _ladgLocale :: !(Maybe Text)
+    , _ladgContentVersion :: !Text
     , _ladgAllowWebDefinitions :: !(Maybe Bool)
-    , _ladgAnnotationDataId    :: !Text
-    , _ladgVolumeId            :: !Text
-    , _ladgSource              :: !(Maybe Text)
-    , _ladgH                   :: !(Maybe (Textual Int32))
-    , _ladgLayerId             :: !Text
+    , _ladgAnnotationDataId :: !Text
+    , _ladgVolumeId :: !Text
+    , _ladgSource :: !(Maybe Text)
+    , _ladgH :: !(Maybe (Textual Int32))
+    , _ladgLayerId :: !Text
+    , _ladgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LayersAnnotationDataGet' with the minimum fields required to make a request.
@@ -108,13 +111,15 @@ data LayersAnnotationDataGet = LayersAnnotationDataGet'
 -- * 'ladgH'
 --
 -- * 'ladgLayerId'
+--
+-- * 'ladgFields'
 layersAnnotationDataGet
     :: Text -- ^ 'ladgContentVersion'
     -> Text -- ^ 'ladgAnnotationDataId'
     -> Text -- ^ 'ladgVolumeId'
     -> Text -- ^ 'ladgLayerId'
     -> LayersAnnotationDataGet
-layersAnnotationDataGet pLadgContentVersion_ pLadgAnnotationDataId_ pLadgVolumeId_ pLadgLayerId_ =
+layersAnnotationDataGet pLadgContentVersion_ pLadgAnnotationDataId_ pLadgVolumeId_ pLadgLayerId_ = 
     LayersAnnotationDataGet'
     { _ladgW = Nothing
     , _ladgScale = Nothing
@@ -126,6 +131,7 @@ layersAnnotationDataGet pLadgContentVersion_ pLadgAnnotationDataId_ pLadgVolumeI
     , _ladgSource = Nothing
     , _ladgH = Nothing
     , _ladgLayerId = pLadgLayerId_
+    , _ladgFields = Nothing
     }
 
 -- | The requested pixel width for any images. If width is provided height
@@ -187,6 +193,11 @@ ladgLayerId :: Lens' LayersAnnotationDataGet Text
 ladgLayerId
   = lens _ladgLayerId (\ s a -> s{_ladgLayerId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ladgFields :: Lens' LayersAnnotationDataGet (Maybe Text)
+ladgFields
+  = lens _ladgFields (\ s a -> s{_ladgFields = a})
+
 instance GoogleRequest LayersAnnotationDataGet where
         type Rs LayersAnnotationDataGet = AnnotationData
         type Scopes LayersAnnotationDataGet =
@@ -200,6 +211,7 @@ instance GoogleRequest LayersAnnotationDataGet where
               _ladgAllowWebDefinitions
               _ladgSource
               _ladgH
+              _ladgFields
               (Just AltJSON)
               booksService
           where go

@@ -37,10 +37,11 @@ module Network.Google.Resource.AdExchangeBuyer.Proposals.Update
     , puRevisionNumber
     , puPayload
     , puProposalId
+    , puFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.proposals.update@ method which the
 -- 'ProposalsUpdate' request conforms to.
@@ -51,17 +52,19 @@ type ProposalsUpdateResource =
            Capture "proposalId" Text :>
              Capture "revisionNumber" (Textual Int64) :>
                Capture "updateAction" ProposalsUpdateUpdateAction :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Proposal :> Put '[JSON] Proposal
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Proposal :> Put '[JSON] Proposal
 
 -- | Update the given proposal
 --
 -- /See:/ 'proposalsUpdate' smart constructor.
 data ProposalsUpdate = ProposalsUpdate'
-    { _puUpdateAction   :: !ProposalsUpdateUpdateAction
+    { _puUpdateAction :: !ProposalsUpdateUpdateAction
     , _puRevisionNumber :: !(Textual Int64)
-    , _puPayload        :: !Proposal
-    , _puProposalId     :: !Text
+    , _puPayload :: !Proposal
+    , _puProposalId :: !Text
+    , _puFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProposalsUpdate' with the minimum fields required to make a request.
@@ -75,18 +78,21 @@ data ProposalsUpdate = ProposalsUpdate'
 -- * 'puPayload'
 --
 -- * 'puProposalId'
+--
+-- * 'puFields'
 proposalsUpdate
     :: ProposalsUpdateUpdateAction -- ^ 'puUpdateAction'
     -> Int64 -- ^ 'puRevisionNumber'
     -> Proposal -- ^ 'puPayload'
     -> Text -- ^ 'puProposalId'
     -> ProposalsUpdate
-proposalsUpdate pPuUpdateAction_ pPuRevisionNumber_ pPuPayload_ pPuProposalId_ =
+proposalsUpdate pPuUpdateAction_ pPuRevisionNumber_ pPuPayload_ pPuProposalId_ = 
     ProposalsUpdate'
     { _puUpdateAction = pPuUpdateAction_
     , _puRevisionNumber = _Coerce # pPuRevisionNumber_
     , _puPayload = pPuPayload_
     , _puProposalId = pPuProposalId_
+    , _puFields = Nothing
     }
 
 -- | The proposed action to take on the proposal. This field is required and
@@ -116,12 +122,17 @@ puProposalId :: Lens' ProposalsUpdate Text
 puProposalId
   = lens _puProposalId (\ s a -> s{_puProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puFields :: Lens' ProposalsUpdate (Maybe Text)
+puFields = lens _puFields (\ s a -> s{_puFields = a})
+
 instance GoogleRequest ProposalsUpdate where
         type Rs ProposalsUpdate = Proposal
         type Scopes ProposalsUpdate =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProposalsUpdate'{..}
           = go _puProposalId _puRevisionNumber _puUpdateAction
+              _puFields
               (Just AltJSON)
               _puPayload
               adExchangeBuyerService

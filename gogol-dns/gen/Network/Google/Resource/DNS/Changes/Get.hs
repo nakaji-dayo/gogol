@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.Changes.Get
     , cgChangeId
     , cgManagedZone
     , cgClientOperationId
+    , cgFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.changes.get@ method which the
 -- 'ChangesGet' request conforms to.
@@ -54,16 +55,18 @@ type ChangesGetResource =
                  "changes" :>
                    Capture "changeId" Text :>
                      QueryParam "clientOperationId" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Change
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Change
 
 -- | Fetch the representation of an existing Change.
 --
 -- /See:/ 'changesGet' smart constructor.
 data ChangesGet = ChangesGet'
-    { _cgProject           :: !Text
-    , _cgChangeId          :: !Text
-    , _cgManagedZone       :: !Text
+    { _cgProject :: !Text
+    , _cgChangeId :: !Text
+    , _cgManagedZone :: !Text
     , _cgClientOperationId :: !(Maybe Text)
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesGet' with the minimum fields required to make a request.
@@ -77,17 +80,20 @@ data ChangesGet = ChangesGet'
 -- * 'cgManagedZone'
 --
 -- * 'cgClientOperationId'
+--
+-- * 'cgFields'
 changesGet
     :: Text -- ^ 'cgProject'
     -> Text -- ^ 'cgChangeId'
     -> Text -- ^ 'cgManagedZone'
     -> ChangesGet
-changesGet pCgProject_ pCgChangeId_ pCgManagedZone_ =
+changesGet pCgProject_ pCgChangeId_ pCgManagedZone_ = 
     ChangesGet'
     { _cgProject = pCgProject_
     , _cgChangeId = pCgChangeId_
     , _cgManagedZone = pCgManagedZone_
     , _cgClientOperationId = Nothing
+    , _cgFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -116,6 +122,10 @@ cgClientOperationId
   = lens _cgClientOperationId
       (\ s a -> s{_cgClientOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' ChangesGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest ChangesGet where
         type Rs ChangesGet = Change
         type Scopes ChangesGet =
@@ -126,6 +136,7 @@ instance GoogleRequest ChangesGet where
         requestClient ChangesGet'{..}
           = go _cgProject _cgManagedZone _cgChangeId
               _cgClientOperationId
+              _cgFields
               (Just AltJSON)
               dNSService
           where go

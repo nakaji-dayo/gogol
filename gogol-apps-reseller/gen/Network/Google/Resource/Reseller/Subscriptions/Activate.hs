@@ -35,10 +35,11 @@ module Network.Google.Resource.Reseller.Subscriptions.Activate
     -- * Request Lenses
     , saCustomerId
     , saSubscriptionId
+    , saFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.subscriptions.activate@ method which the
 -- 'SubscriptionsActivate' request conforms to.
@@ -51,14 +52,16 @@ type SubscriptionsActivateResource =
                "subscriptions" :>
                  Capture "subscriptionId" Text :>
                    "activate" :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] Subscription
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] Subscription
 
 -- | Activates a subscription previously suspended by the reseller
 --
 -- /See:/ 'subscriptionsActivate' smart constructor.
 data SubscriptionsActivate = SubscriptionsActivate'
-    { _saCustomerId     :: !Text
+    { _saCustomerId :: !Text
     , _saSubscriptionId :: !Text
+    , _saFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsActivate' with the minimum fields required to make a request.
@@ -68,33 +71,48 @@ data SubscriptionsActivate = SubscriptionsActivate'
 -- * 'saCustomerId'
 --
 -- * 'saSubscriptionId'
+--
+-- * 'saFields'
 subscriptionsActivate
     :: Text -- ^ 'saCustomerId'
     -> Text -- ^ 'saSubscriptionId'
     -> SubscriptionsActivate
-subscriptionsActivate pSaCustomerId_ pSaSubscriptionId_ =
+subscriptionsActivate pSaCustomerId_ pSaSubscriptionId_ = 
     SubscriptionsActivate'
     { _saCustomerId = pSaCustomerId_
     , _saSubscriptionId = pSaSubscriptionId_
+    , _saFields = Nothing
     }
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 saCustomerId :: Lens' SubscriptionsActivate Text
 saCustomerId
   = lens _saCustomerId (\ s a -> s{_saCustomerId = a})
 
--- | Id of the subscription, which is unique for a customer
+-- | This is a required property. The subscriptionId is the subscription
+-- identifier and is unique for each customer. Since a subscriptionId
+-- changes when a subscription is updated, we recommend to not use this ID
+-- as a key for persistent data. And the subscriptionId can be found using
+-- the retrieve all reseller subscriptions method.
 saSubscriptionId :: Lens' SubscriptionsActivate Text
 saSubscriptionId
   = lens _saSubscriptionId
       (\ s a -> s{_saSubscriptionId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+saFields :: Lens' SubscriptionsActivate (Maybe Text)
+saFields = lens _saFields (\ s a -> s{_saFields = a})
 
 instance GoogleRequest SubscriptionsActivate where
         type Rs SubscriptionsActivate = Subscription
         type Scopes SubscriptionsActivate =
              '["https://www.googleapis.com/auth/apps.order"]
         requestClient SubscriptionsActivate'{..}
-          = go _saCustomerId _saSubscriptionId (Just AltJSON)
+          = go _saCustomerId _saSubscriptionId _saFields
+              (Just AltJSON)
               appsResellerService
           where go
                   = buildClient

@@ -17,8 +17,8 @@
 --
 module Network.Google.DNS.Types.Product where
 
-import           Network.Google.DNS.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DNS.Types.Sum
+import Network.Google.Prelude
 
 --
 -- /See:/ 'operationDNSKeyContext' smart constructor.
@@ -36,7 +36,7 @@ data OperationDNSKeyContext = OperationDNSKeyContext'
 -- * 'odkcNewValue'
 operationDNSKeyContext
     :: OperationDNSKeyContext
-operationDNSKeyContext =
+operationDNSKeyContext = 
     OperationDNSKeyContext'
     { _odkcOldValue = Nothing
     , _odkcNewValue = Nothing
@@ -71,9 +71,9 @@ instance ToJSON OperationDNSKeyContext where
 -- /See:/ 'dnsKeysListResponse' smart constructor.
 data DNSKeysListResponse = DNSKeysListResponse'
     { _dklrNextPageToken :: !(Maybe Text)
-    , _dklrDNSKeys       :: !(Maybe [DNSKey])
-    , _dklrKind          :: !Text
-    , _dklrHeader        :: !(Maybe ResponseHeader)
+    , _dklrDNSKeys :: !(Maybe [DNSKey])
+    , _dklrKind :: !Text
+    , _dklrHeader :: !(Maybe ResponseHeader)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DNSKeysListResponse' with the minimum fields required to make a request.
@@ -89,7 +89,7 @@ data DNSKeysListResponse = DNSKeysListResponse'
 -- * 'dklrHeader'
 dnsKeysListResponse
     :: DNSKeysListResponse
-dnsKeysListResponse =
+dnsKeysListResponse = 
     DNSKeysListResponse'
     { _dklrNextPageToken = Nothing
     , _dklrDNSKeys = Nothing
@@ -151,9 +151,9 @@ instance ToJSON DNSKeysListResponse where
 -- /See:/ 'changesListResponse' smart constructor.
 data ChangesListResponse = ChangesListResponse'
     { _clrNextPageToken :: !(Maybe Text)
-    , _clrChanges       :: !(Maybe [Change])
-    , _clrKind          :: !Text
-    , _clrHeader        :: !(Maybe ResponseHeader)
+    , _clrChanges :: !(Maybe [Change])
+    , _clrKind :: !Text
+    , _clrHeader :: !(Maybe ResponseHeader)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesListResponse' with the minimum fields required to make a request.
@@ -169,7 +169,7 @@ data ChangesListResponse = ChangesListResponse'
 -- * 'clrHeader'
 changesListResponse
     :: ChangesListResponse
-changesListResponse =
+changesListResponse = 
     ChangesListResponse'
     { _clrNextPageToken = Nothing
     , _clrChanges = Nothing
@@ -238,7 +238,7 @@ newtype ManagedZonesDeleteResponse = ManagedZonesDeleteResponse'
 -- * 'mzdrHeader'
 managedZonesDeleteResponse
     :: ManagedZonesDeleteResponse
-managedZonesDeleteResponse =
+managedZonesDeleteResponse = 
     ManagedZonesDeleteResponse'
     { _mzdrHeader = Nothing
     }
@@ -263,10 +263,10 @@ instance ToJSON ManagedZonesDeleteResponse where
 --
 -- /See:/ 'project' smart constructor.
 data Project = Project'
-    { _pKind   :: !Text
-    , _pId     :: !(Maybe Text)
+    { _pKind :: !Text
+    , _pId :: !(Maybe Text)
     , _pNumber :: !(Maybe (Textual Word64))
-    , _pQuota  :: !(Maybe Quota)
+    , _pQuota :: !(Maybe Quota)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Project' with the minimum fields required to make a request.
@@ -282,7 +282,7 @@ data Project = Project'
 -- * 'pQuota'
 project
     :: Project
-project =
+project = 
     Project'
     { _pKind = "dns#project"
     , _pId = Nothing
@@ -335,13 +335,13 @@ instance ToJSON Project where
 --
 -- /See:/ 'operation' smart constructor.
 data Operation = Operation'
-    { _oStatus        :: !(Maybe OperationStatus)
-    , _oStartTime     :: !(Maybe Text)
-    , _oKind          :: !Text
-    , _oUser          :: !(Maybe Text)
-    , _oId            :: !(Maybe Text)
-    , _oType          :: !(Maybe Text)
-    , _oZoneContext   :: !(Maybe OperationManagedZoneContext)
+    { _oStatus :: !(Maybe OperationStatus)
+    , _oStartTime :: !(Maybe Text)
+    , _oKind :: !Text
+    , _oUser :: !(Maybe Text)
+    , _oId :: !(Maybe Text)
+    , _oType :: !(Maybe Text)
+    , _oZoneContext :: !(Maybe OperationManagedZoneContext)
     , _oDNSKeyContext :: !(Maybe OperationDNSKeyContext)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -366,7 +366,7 @@ data Operation = Operation'
 -- * 'oDNSKeyContext'
 operation
     :: Operation
-operation =
+operation = 
     Operation'
     { _oStatus = Nothing
     , _oStartTime = Nothing
@@ -452,8 +452,8 @@ instance ToJSON Operation where
 --
 -- /See:/ 'dnsKeySpec' smart constructor.
 data DNSKeySpec = DNSKeySpec'
-    { _dksKeyType   :: !(Maybe DNSKeySpecKeyType)
-    , _dksKind      :: !Text
+    { _dksKeyType :: !(Maybe DNSKeySpecKeyType)
+    , _dksKind :: !Text
     , _dksAlgorithm :: !(Maybe DNSKeySpecAlgorithm)
     , _dksKeyLength :: !(Maybe (Textual Word32))
     } deriving (Eq,Show,Data,Typeable,Generic)
@@ -471,7 +471,7 @@ data DNSKeySpec = DNSKeySpec'
 -- * 'dksKeyLength'
 dnsKeySpec
     :: DNSKeySpec
-dnsKeySpec =
+dnsKeySpec = 
     DNSKeySpec'
     { _dksKeyType = Nothing
     , _dksKind = "dns#dnsKeySpec"
@@ -527,12 +527,12 @@ instance ToJSON DNSKeySpec where
 --
 -- /See:/ 'change' smart constructor.
 data Change = Change'
-    { _cStatus    :: !(Maybe ChangeStatus)
+    { _cStatus :: !(Maybe ChangeStatus)
     , _cAdditions :: !(Maybe [ResourceRecordSet])
     , _cStartTime :: !(Maybe Text)
-    , _cKind      :: !Text
+    , _cKind :: !Text
     , _cDeletions :: !(Maybe [ResourceRecordSet])
-    , _cId        :: !(Maybe Text)
+    , _cId :: !(Maybe Text)
     , _cIsServing :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -555,7 +555,7 @@ data Change = Change'
 -- * 'cIsServing'
 change
     :: Change
-change =
+change = 
     Change'
     { _cStatus = Nothing
     , _cAdditions = Nothing
@@ -632,16 +632,16 @@ instance ToJSON Change where
 -- /See:/ 'dnsKey' smart constructor.
 data DNSKey = DNSKey'
     { _dkCreationTime :: !(Maybe Text)
-    , _dkKeyTag       :: !(Maybe (Textual Int32))
-    , _dkKind         :: !Text
-    , _dkDigests      :: !(Maybe [DNSKeyDigest])
-    , _dkPublicKey    :: !(Maybe Text)
-    , _dkAlgorithm    :: !(Maybe DNSKeyAlgorithm)
-    , _dkId           :: !(Maybe Text)
-    , _dkType         :: !(Maybe DNSKeyType)
-    , _dkKeyLength    :: !(Maybe (Textual Word32))
-    , _dkIsActive     :: !(Maybe Bool)
-    , _dkDescription  :: !(Maybe Text)
+    , _dkKeyTag :: !(Maybe (Textual Int32))
+    , _dkKind :: !Text
+    , _dkDigests :: !(Maybe [DNSKeyDigest])
+    , _dkPublicKey :: !(Maybe Text)
+    , _dkAlgorithm :: !(Maybe DNSKeyAlgorithm)
+    , _dkId :: !(Maybe Text)
+    , _dkType :: !(Maybe DNSKeyType)
+    , _dkKeyLength :: !(Maybe (Textual Word32))
+    , _dkIsActive :: !(Maybe Bool)
+    , _dkDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DNSKey' with the minimum fields required to make a request.
@@ -671,7 +671,7 @@ data DNSKey = DNSKey'
 -- * 'dkDescription'
 dnsKey
     :: DNSKey
-dnsKey =
+dnsKey = 
     DNSKey'
     { _dkCreationTime = Nothing
     , _dkKeyTag = Nothing
@@ -810,7 +810,7 @@ data OperationManagedZoneContext = OperationManagedZoneContext'
 -- * 'omzcNewValue'
 operationManagedZoneContext
     :: OperationManagedZoneContext
-operationManagedZoneContext =
+operationManagedZoneContext = 
     OperationManagedZoneContext'
     { _omzcOldValue = Nothing
     , _omzcNewValue = Nothing
@@ -854,7 +854,7 @@ newtype ResponseHeader = ResponseHeader'
 -- * 'rhOperationId'
 responseHeader
     :: ResponseHeader
-responseHeader =
+responseHeader = 
     ResponseHeader'
     { _rhOperationId = Nothing
     }
@@ -881,9 +881,9 @@ instance ToJSON ResponseHeader where
 -- /See:/ 'managedZoneOperationsListResponse' smart constructor.
 data ManagedZoneOperationsListResponse = ManagedZoneOperationsListResponse'
     { _mzolrNextPageToken :: !(Maybe Text)
-    , _mzolrKind          :: !Text
-    , _mzolrHeader        :: !(Maybe ResponseHeader)
-    , _mzolrOperations    :: !(Maybe [Operation])
+    , _mzolrKind :: !Text
+    , _mzolrHeader :: !(Maybe ResponseHeader)
+    , _mzolrOperations :: !(Maybe [Operation])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZoneOperationsListResponse' with the minimum fields required to make a request.
@@ -899,7 +899,7 @@ data ManagedZoneOperationsListResponse = ManagedZoneOperationsListResponse'
 -- * 'mzolrOperations'
 managedZoneOperationsListResponse
     :: ManagedZoneOperationsListResponse
-managedZoneOperationsListResponse =
+managedZoneOperationsListResponse = 
     ManagedZoneOperationsListResponse'
     { _mzolrNextPageToken = Nothing
     , _mzolrKind = "dns#managedZoneOperationsListResponse"
@@ -964,9 +964,9 @@ instance ToJSON ManagedZoneOperationsListResponse
 -- /See:/ 'resourceRecordSetsListResponse' smart constructor.
 data ResourceRecordSetsListResponse = ResourceRecordSetsListResponse'
     { _rrslrNextPageToken :: !(Maybe Text)
-    , _rrslrKind          :: !Text
-    , _rrslrHeader        :: !(Maybe ResponseHeader)
-    , _rrslrRrSets        :: !(Maybe [ResourceRecordSet])
+    , _rrslrKind :: !Text
+    , _rrslrHeader :: !(Maybe ResponseHeader)
+    , _rrslrRrSets :: !(Maybe [ResourceRecordSet])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourceRecordSetsListResponse' with the minimum fields required to make a request.
@@ -982,7 +982,7 @@ data ResourceRecordSetsListResponse = ResourceRecordSetsListResponse'
 -- * 'rrslrRrSets'
 resourceRecordSetsListResponse
     :: ResourceRecordSetsListResponse
-resourceRecordSetsListResponse =
+resourceRecordSetsListResponse = 
     ResourceRecordSetsListResponse'
     { _rrslrNextPageToken = Nothing
     , _rrslrKind = "dns#resourceRecordSetsListResponse"
@@ -1044,10 +1044,10 @@ instance ToJSON ResourceRecordSetsListResponse where
 --
 -- /See:/ 'managedZoneDNSSecConfig' smart constructor.
 data ManagedZoneDNSSecConfig = ManagedZoneDNSSecConfig'
-    { _mzdscState           :: !(Maybe ManagedZoneDNSSecConfigState)
-    , _mzdscKind            :: !Text
+    { _mzdscState :: !(Maybe ManagedZoneDNSSecConfigState)
+    , _mzdscKind :: !Text
     , _mzdscDefaultKeySpecs :: !(Maybe [DNSKeySpec])
-    , _mzdscNonExistence    :: !(Maybe ManagedZoneDNSSecConfigNonExistence)
+    , _mzdscNonExistence :: !(Maybe ManagedZoneDNSSecConfigNonExistence)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZoneDNSSecConfig' with the minimum fields required to make a request.
@@ -1063,7 +1063,7 @@ data ManagedZoneDNSSecConfig = ManagedZoneDNSSecConfig'
 -- * 'mzdscNonExistence'
 managedZoneDNSSecConfig
     :: ManagedZoneDNSSecConfig
-managedZoneDNSSecConfig =
+managedZoneDNSSecConfig = 
     ManagedZoneDNSSecConfig'
     { _mzdscState = Nothing
     , _mzdscKind = "dns#managedZoneDnsSecConfig"
@@ -1121,12 +1121,12 @@ instance ToJSON ManagedZoneDNSSecConfig where
 --
 -- /See:/ 'resourceRecordSet' smart constructor.
 data ResourceRecordSet = ResourceRecordSet'
-    { _rrsTtl              :: !(Maybe (Textual Int32))
-    , _rrsKind             :: !Text
+    { _rrsTtl :: !(Maybe (Textual Int32))
+    , _rrsKind :: !Text
     , _rrsSignatureRrDatas :: !(Maybe [Text])
-    , _rrsName             :: !(Maybe Text)
-    , _rrsType             :: !(Maybe Text)
-    , _rrsRrDatas          :: !(Maybe [Text])
+    , _rrsName :: !(Maybe Text)
+    , _rrsType :: !(Maybe Text)
+    , _rrsRrDatas :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourceRecordSet' with the minimum fields required to make a request.
@@ -1146,7 +1146,7 @@ data ResourceRecordSet = ResourceRecordSet'
 -- * 'rrsRrDatas'
 resourceRecordSet
     :: ResourceRecordSet
-resourceRecordSet =
+resourceRecordSet = 
     ResourceRecordSet'
     { _rrsTtl = Nothing
     , _rrsKind = "dns#resourceRecordSet"
@@ -1219,15 +1219,15 @@ instance ToJSON ResourceRecordSet where
 --
 -- /See:/ 'managedZone' smart constructor.
 data ManagedZone = ManagedZone'
-    { _mzCreationTime  :: !(Maybe Text)
-    , _mzKind          :: !Text
+    { _mzCreationTime :: !(Maybe Text)
+    , _mzKind :: !Text
     , _mzNameServerSet :: !(Maybe Text)
-    , _mzName          :: !(Maybe Text)
-    , _mzId            :: !(Maybe (Textual Word64))
-    , _mzDNSName       :: !(Maybe Text)
-    , _mzDescription   :: !(Maybe Text)
-    , _mzDNSsecConfig  :: !(Maybe ManagedZoneDNSSecConfig)
-    , _mzNameServers   :: !(Maybe [Text])
+    , _mzName :: !(Maybe Text)
+    , _mzId :: !(Maybe (Textual Word64))
+    , _mzDNSName :: !(Maybe Text)
+    , _mzDescription :: !(Maybe Text)
+    , _mzDNSsecConfig :: !(Maybe ManagedZoneDNSSecConfig)
+    , _mzNameServers :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZone' with the minimum fields required to make a request.
@@ -1253,7 +1253,7 @@ data ManagedZone = ManagedZone'
 -- * 'mzNameServers'
 managedZone
     :: ManagedZone
-managedZone =
+managedZone = 
     ManagedZone'
     { _mzCreationTime = Nothing
     , _mzKind = "dns#managedZone"
@@ -1359,15 +1359,15 @@ instance ToJSON ManagedZone where
 --
 -- /See:/ 'quota' smart constructor.
 data Quota = Quota'
-    { _qRrSetDeletionsPerChange  :: !(Maybe (Textual Int32))
-    , _qWhiteListedKeySpecs      :: !(Maybe [DNSKeySpec])
-    , _qRrSetsPerManagedZone     :: !(Maybe (Textual Int32))
-    , _qKind                     :: !Text
-    , _qResourceRecordsPerRrSet  :: !(Maybe (Textual Int32))
-    , _qRrSetAdditionsPerChange  :: !(Maybe (Textual Int32))
-    , _qManagedZones             :: !(Maybe (Textual Int32))
+    { _qRrSetDeletionsPerChange :: !(Maybe (Textual Int32))
+    , _qWhiteListedKeySpecs :: !(Maybe [DNSKeySpec])
+    , _qRrSetsPerManagedZone :: !(Maybe (Textual Int32))
+    , _qKind :: !Text
+    , _qResourceRecordsPerRrSet :: !(Maybe (Textual Int32))
+    , _qRrSetAdditionsPerChange :: !(Maybe (Textual Int32))
+    , _qManagedZones :: !(Maybe (Textual Int32))
     , _qTotalRrDataSizePerChange :: !(Maybe (Textual Int32))
-    , _qDNSKeysPerManagedZone    :: !(Maybe (Textual Int32))
+    , _qDNSKeysPerManagedZone :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Quota' with the minimum fields required to make a request.
@@ -1393,7 +1393,7 @@ data Quota = Quota'
 -- * 'qDNSKeysPerManagedZone'
 quota
     :: Quota
-quota =
+quota = 
     Quota'
     { _qRrSetDeletionsPerChange = Nothing
     , _qWhiteListedKeySpecs = Nothing
@@ -1510,7 +1510,7 @@ instance ToJSON Quota where
 -- /See:/ 'dnsKeyDigest' smart constructor.
 data DNSKeyDigest = DNSKeyDigest'
     { _dkdDigest :: !(Maybe Text)
-    , _dkdType   :: !(Maybe DNSKeyDigestType)
+    , _dkdType :: !(Maybe DNSKeyDigestType)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DNSKeyDigest' with the minimum fields required to make a request.
@@ -1522,7 +1522,7 @@ data DNSKeyDigest = DNSKeyDigest'
 -- * 'dkdType'
 dnsKeyDigest
     :: DNSKeyDigest
-dnsKeyDigest =
+dnsKeyDigest = 
     DNSKeyDigest'
     { _dkdDigest = Nothing
     , _dkdType = Nothing
@@ -1556,9 +1556,9 @@ instance ToJSON DNSKeyDigest where
 -- /See:/ 'managedZonesListResponse' smart constructor.
 data ManagedZonesListResponse = ManagedZonesListResponse'
     { _mzlrNextPageToken :: !(Maybe Text)
-    , _mzlrKind          :: !Text
-    , _mzlrHeader        :: !(Maybe ResponseHeader)
-    , _mzlrManagedZones  :: !(Maybe [ManagedZone])
+    , _mzlrKind :: !Text
+    , _mzlrHeader :: !(Maybe ResponseHeader)
+    , _mzlrManagedZones :: !(Maybe [ManagedZone])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesListResponse' with the minimum fields required to make a request.
@@ -1574,7 +1574,7 @@ data ManagedZonesListResponse = ManagedZonesListResponse'
 -- * 'mzlrManagedZones'
 managedZonesListResponse
     :: ManagedZonesListResponse
-managedZonesListResponse =
+managedZonesListResponse = 
     ManagedZonesListResponse'
     { _mzlrNextPageToken = Nothing
     , _mzlrKind = "dns#managedZonesListResponse"

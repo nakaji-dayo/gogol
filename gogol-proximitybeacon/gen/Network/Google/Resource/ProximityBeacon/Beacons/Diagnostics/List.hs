@@ -50,11 +50,12 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Diagnostics.List
     , bdlProjectId
     , bdlPageSize
     , bdlAlertFilter
+    , bdlFields
     , bdlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.diagnostics.list@ method which the
 -- 'BeaconsDiagnosticsList' request conforms to.
@@ -62,7 +63,7 @@ type BeaconsDiagnosticsListResource =
      "v1beta1" :>
        Capture "beaconName" Text :>
          "diagnostics" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -73,8 +74,9 @@ type BeaconsDiagnosticsListResource =
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "alertFilter" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ListDiagnosticsResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ListDiagnosticsResponse
 
 -- | List the diagnostics for a single beacon. You can also list diagnostics
 -- for all the beacons owned by your Google Developers Console project by
@@ -86,18 +88,19 @@ type BeaconsDiagnosticsListResource =
 --
 -- /See:/ 'beaconsDiagnosticsList' smart constructor.
 data BeaconsDiagnosticsList = BeaconsDiagnosticsList'
-    { _bdlXgafv          :: !(Maybe Text)
+    { _bdlXgafv :: !(Maybe Xgafv)
     , _bdlUploadProtocol :: !(Maybe Text)
-    , _bdlPp             :: !Bool
-    , _bdlAccessToken    :: !(Maybe Text)
-    , _bdlBeaconName     :: !Text
-    , _bdlUploadType     :: !(Maybe Text)
-    , _bdlBearerToken    :: !(Maybe Text)
-    , _bdlPageToken      :: !(Maybe Text)
-    , _bdlProjectId      :: !(Maybe Text)
-    , _bdlPageSize       :: !(Maybe (Textual Int32))
-    , _bdlAlertFilter    :: !(Maybe Text)
-    , _bdlCallback       :: !(Maybe Text)
+    , _bdlPp :: !Bool
+    , _bdlAccessToken :: !(Maybe Text)
+    , _bdlBeaconName :: !Text
+    , _bdlUploadType :: !(Maybe Text)
+    , _bdlBearerToken :: !(Maybe Text)
+    , _bdlPageToken :: !(Maybe Text)
+    , _bdlProjectId :: !(Maybe Text)
+    , _bdlPageSize :: !(Maybe (Textual Int32))
+    , _bdlAlertFilter :: !(Maybe Text)
+    , _bdlFields :: !(Maybe Text)
+    , _bdlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsDiagnosticsList' with the minimum fields required to make a request.
@@ -126,11 +129,13 @@ data BeaconsDiagnosticsList = BeaconsDiagnosticsList'
 --
 -- * 'bdlAlertFilter'
 --
+-- * 'bdlFields'
+--
 -- * 'bdlCallback'
 beaconsDiagnosticsList
     :: Text -- ^ 'bdlBeaconName'
     -> BeaconsDiagnosticsList
-beaconsDiagnosticsList pBdlBeaconName_ =
+beaconsDiagnosticsList pBdlBeaconName_ = 
     BeaconsDiagnosticsList'
     { _bdlXgafv = Nothing
     , _bdlUploadProtocol = Nothing
@@ -143,11 +148,12 @@ beaconsDiagnosticsList pBdlBeaconName_ =
     , _bdlProjectId = Nothing
     , _bdlPageSize = Nothing
     , _bdlAlertFilter = Nothing
+    , _bdlFields = Nothing
     , _bdlCallback = Nothing
     }
 
 -- | V1 error format.
-bdlXgafv :: Lens' BeaconsDiagnosticsList (Maybe Text)
+bdlXgafv :: Lens' BeaconsDiagnosticsList (Maybe Xgafv)
 bdlXgafv = lens _bdlXgafv (\ s a -> s{_bdlXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -211,6 +217,11 @@ bdlAlertFilter
   = lens _bdlAlertFilter
       (\ s a -> s{_bdlAlertFilter = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bdlFields :: Lens' BeaconsDiagnosticsList (Maybe Text)
+bdlFields
+  = lens _bdlFields (\ s a -> s{_bdlFields = a})
+
 -- | JSONP
 bdlCallback :: Lens' BeaconsDiagnosticsList (Maybe Text)
 bdlCallback
@@ -232,6 +243,7 @@ instance GoogleRequest BeaconsDiagnosticsList where
               _bdlPageSize
               _bdlAlertFilter
               _bdlCallback
+              _bdlFields
               (Just AltJSON)
               proximityBeaconService
           where go

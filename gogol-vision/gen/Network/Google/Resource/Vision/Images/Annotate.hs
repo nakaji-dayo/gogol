@@ -40,11 +40,12 @@ module Network.Google.Resource.Vision.Images.Annotate
     , iaUploadType
     , iaPayload
     , iaBearerToken
+    , iaFields
     , iaCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Vision.Types
+import Network.Google.Prelude
+import Network.Google.Vision.Types
 
 -- | A resource alias for @vision.images.annotate@ method which the
 -- 'ImagesAnnotate' request conforms to.
@@ -58,22 +59,24 @@ type ImagesAnnotateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] BatchAnnotateImagesRequest :>
-                           Post '[JSON] BatchAnnotateImagesResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] BatchAnnotateImagesRequest :>
+                             Post '[JSON] BatchAnnotateImagesResponse
 
 -- | Run image detection and annotation for a batch of images.
 --
 -- /See:/ 'imagesAnnotate' smart constructor.
 data ImagesAnnotate = ImagesAnnotate'
-    { _iaXgafv          :: !(Maybe Xgafv)
+    { _iaXgafv :: !(Maybe Xgafv)
     , _iaUploadProtocol :: !(Maybe Text)
-    , _iaPp             :: !Bool
-    , _iaAccessToken    :: !(Maybe Text)
-    , _iaUploadType     :: !(Maybe Text)
-    , _iaPayload        :: !BatchAnnotateImagesRequest
-    , _iaBearerToken    :: !(Maybe Text)
-    , _iaCallback       :: !(Maybe Text)
+    , _iaPp :: !Bool
+    , _iaAccessToken :: !(Maybe Text)
+    , _iaUploadType :: !(Maybe Text)
+    , _iaPayload :: !BatchAnnotateImagesRequest
+    , _iaBearerToken :: !(Maybe Text)
+    , _iaFields :: !(Maybe Text)
+    , _iaCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImagesAnnotate' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data ImagesAnnotate = ImagesAnnotate'
 --
 -- * 'iaBearerToken'
 --
+-- * 'iaFields'
+--
 -- * 'iaCallback'
 imagesAnnotate
     :: BatchAnnotateImagesRequest -- ^ 'iaPayload'
     -> ImagesAnnotate
-imagesAnnotate pIaPayload_ =
+imagesAnnotate pIaPayload_ = 
     ImagesAnnotate'
     { _iaXgafv = Nothing
     , _iaUploadProtocol = Nothing
@@ -107,6 +112,7 @@ imagesAnnotate pIaPayload_ =
     , _iaUploadType = Nothing
     , _iaPayload = pIaPayload_
     , _iaBearerToken = Nothing
+    , _iaFields = Nothing
     , _iaCallback = Nothing
     }
 
@@ -146,6 +152,10 @@ iaBearerToken
   = lens _iaBearerToken
       (\ s a -> s{_iaBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iaFields :: Lens' ImagesAnnotate (Maybe Text)
+iaFields = lens _iaFields (\ s a -> s{_iaFields = a})
+
 -- | JSONP
 iaCallback :: Lens' ImagesAnnotate (Maybe Text)
 iaCallback
@@ -154,13 +164,15 @@ iaCallback
 instance GoogleRequest ImagesAnnotate where
         type Rs ImagesAnnotate = BatchAnnotateImagesResponse
         type Scopes ImagesAnnotate =
-             '["https://www.googleapis.com/auth/cloud-platform"]
+             '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/cloud-vision"]
         requestClient ImagesAnnotate'{..}
           = go _iaXgafv _iaUploadProtocol (Just _iaPp)
               _iaAccessToken
               _iaUploadType
               _iaBearerToken
               _iaCallback
+              _iaFields
               (Just AltJSON)
               _iaPayload
               visionService

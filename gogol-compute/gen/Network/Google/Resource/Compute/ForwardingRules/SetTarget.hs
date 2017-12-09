@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.ForwardingRules.SetTarget
     , ForwardingRulesSetTarget
 
     -- * Request Lenses
+    , frstRequestId
     , frstProject
     , frstForwardingRule
     , frstPayload
     , frstRegion
+    , frstFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.forwardingRules.setTarget@ method which the
 -- 'ForwardingRulesSetTarget' request conforms to.
@@ -55,24 +57,30 @@ type ForwardingRulesSetTargetResource =
                  "forwardingRules" :>
                    Capture "forwardingRule" Text :>
                      "setTarget" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] TargetReference :>
-                           Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] TargetReference :>
+                               Post '[JSON] Operation
 
 -- | Changes target URL for forwarding rule. The new target should be of the
 -- same type as the old target.
 --
 -- /See:/ 'forwardingRulesSetTarget' smart constructor.
 data ForwardingRulesSetTarget = ForwardingRulesSetTarget'
-    { _frstProject        :: !Text
+    { _frstRequestId :: !(Maybe Text)
+    , _frstProject :: !Text
     , _frstForwardingRule :: !Text
-    , _frstPayload        :: !TargetReference
-    , _frstRegion         :: !Text
+    , _frstPayload :: !TargetReference
+    , _frstRegion :: !Text
+    , _frstFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ForwardingRulesSetTarget' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'frstRequestId'
 --
 -- * 'frstProject'
 --
@@ -81,19 +89,38 @@ data ForwardingRulesSetTarget = ForwardingRulesSetTarget'
 -- * 'frstPayload'
 --
 -- * 'frstRegion'
+--
+-- * 'frstFields'
 forwardingRulesSetTarget
     :: Text -- ^ 'frstProject'
     -> Text -- ^ 'frstForwardingRule'
     -> TargetReference -- ^ 'frstPayload'
     -> Text -- ^ 'frstRegion'
     -> ForwardingRulesSetTarget
-forwardingRulesSetTarget pFrstProject_ pFrstForwardingRule_ pFrstPayload_ pFrstRegion_ =
+forwardingRulesSetTarget pFrstProject_ pFrstForwardingRule_ pFrstPayload_ pFrstRegion_ = 
     ForwardingRulesSetTarget'
-    { _frstProject = pFrstProject_
+    { _frstRequestId = Nothing
+    , _frstProject = pFrstProject_
     , _frstForwardingRule = pFrstForwardingRule_
     , _frstPayload = pFrstPayload_
     , _frstRegion = pFrstRegion_
+    , _frstFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+frstRequestId :: Lens' ForwardingRulesSetTarget (Maybe Text)
+frstRequestId
+  = lens _frstRequestId
+      (\ s a -> s{_frstRequestId = a})
 
 -- | Project ID for this request.
 frstProject :: Lens' ForwardingRulesSetTarget Text
@@ -116,6 +143,11 @@ frstRegion :: Lens' ForwardingRulesSetTarget Text
 frstRegion
   = lens _frstRegion (\ s a -> s{_frstRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+frstFields :: Lens' ForwardingRulesSetTarget (Maybe Text)
+frstFields
+  = lens _frstFields (\ s a -> s{_frstFields = a})
+
 instance GoogleRequest ForwardingRulesSetTarget where
         type Rs ForwardingRulesSetTarget = Operation
         type Scopes ForwardingRulesSetTarget =
@@ -123,6 +155,8 @@ instance GoogleRequest ForwardingRulesSetTarget where
                "https://www.googleapis.com/auth/compute"]
         requestClient ForwardingRulesSetTarget'{..}
           = go _frstProject _frstRegion _frstForwardingRule
+              _frstRequestId
+              _frstFields
               (Just AltJSON)
               _frstPayload
               computeService

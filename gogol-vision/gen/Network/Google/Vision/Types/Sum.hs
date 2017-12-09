@@ -16,7 +16,7 @@
 --
 module Network.Google.Vision.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Under-exposed likelihood.
 data FaceAnnotationUnderExposedLikelihood
@@ -116,7 +116,58 @@ instance FromJSON FaceAnnotationHeadwearLikelihood where
 instance ToJSON FaceAnnotationHeadwearLikelihood where
     toJSON = toJSONText
 
--- | Represents the adult content likelihood for the image.
+-- | Detected block type (text, image etc) for this block.
+data BlockBlockType
+    = BBTUnknown
+      -- ^ @UNKNOWN@
+      -- Unknown block type.
+    | BBTText
+      -- ^ @TEXT@
+      -- Regular text block.
+    | BBTTable
+      -- ^ @TABLE@
+      -- Table block.
+    | BBTPicture
+      -- ^ @PICTURE@
+      -- Image block.
+    | BBTRuler
+      -- ^ @RULER@
+      -- Horizontal\/vertical line box.
+    | BBTBarcode
+      -- ^ @BARCODE@
+      -- Barcode block.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable BlockBlockType
+
+instance FromHttpApiData BlockBlockType where
+    parseQueryParam = \case
+        "UNKNOWN" -> Right BBTUnknown
+        "TEXT" -> Right BBTText
+        "TABLE" -> Right BBTTable
+        "PICTURE" -> Right BBTPicture
+        "RULER" -> Right BBTRuler
+        "BARCODE" -> Right BBTBarcode
+        x -> Left ("Unable to parse BlockBlockType from: " <> x)
+
+instance ToHttpApiData BlockBlockType where
+    toQueryParam = \case
+        BBTUnknown -> "UNKNOWN"
+        BBTText -> "TEXT"
+        BBTTable -> "TABLE"
+        BBTPicture -> "PICTURE"
+        BBTRuler -> "RULER"
+        BBTBarcode -> "BARCODE"
+
+instance FromJSON BlockBlockType where
+    parseJSON = parseJSONText "BlockBlockType"
+
+instance ToJSON BlockBlockType where
+    toJSON = toJSONText
+
+-- | Represents the adult content likelihood for the image. Adult content may
+-- contain elements such as nudity, pornographic images or cartoons, or
+-- sexual activities.
 data SafeSearchAnnotationAdult
     = SSAAUnknown
       -- ^ @UNKNOWN@
@@ -312,7 +363,7 @@ instance FromJSON FaceAnnotationBlurredLikelihood where
 instance ToJSON FaceAnnotationBlurredLikelihood where
     toJSON = toJSONText
 
--- | Violence likelihood.
+-- | Likelihood that this image contains violent content.
 data SafeSearchAnnotationViolence
     = SSAVUnknown
       -- ^ @UNKNOWN@
@@ -381,12 +432,22 @@ data FeatureType
     | TextDetection
       -- ^ @TEXT_DETECTION@
       -- Run OCR.
+    | DocumentTextDetection
+      -- ^ @DOCUMENT_TEXT_DETECTION@
+      -- Run dense text document OCR. Takes precedence when both
+      -- DOCUMENT_TEXT_DETECTION and TEXT_DETECTION are present.
     | SafeSearchDetection
       -- ^ @SAFE_SEARCH_DETECTION@
       -- Run computer vision models to compute image safe-search properties.
     | ImageProperties
       -- ^ @IMAGE_PROPERTIES@
       -- Compute a set of image properties, such as the image\'s dominant colors.
+    | CropHints
+      -- ^ @CROP_HINTS@
+      -- Run crop hints.
+    | WebDetection
+      -- ^ @WEB_DETECTION@
+      -- Run web detection.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable FeatureType
@@ -399,8 +460,11 @@ instance FromHttpApiData FeatureType where
         "LOGO_DETECTION" -> Right LogoDetection
         "LABEL_DETECTION" -> Right LabelDetection
         "TEXT_DETECTION" -> Right TextDetection
+        "DOCUMENT_TEXT_DETECTION" -> Right DocumentTextDetection
         "SAFE_SEARCH_DETECTION" -> Right SafeSearchDetection
         "IMAGE_PROPERTIES" -> Right ImageProperties
+        "CROP_HINTS" -> Right CropHints
+        "WEB_DETECTION" -> Right WebDetection
         x -> Left ("Unable to parse FeatureType from: " <> x)
 
 instance ToHttpApiData FeatureType where
@@ -411,8 +475,11 @@ instance ToHttpApiData FeatureType where
         LogoDetection -> "LOGO_DETECTION"
         LabelDetection -> "LABEL_DETECTION"
         TextDetection -> "TEXT_DETECTION"
+        DocumentTextDetection -> "DOCUMENT_TEXT_DETECTION"
         SafeSearchDetection -> "SAFE_SEARCH_DETECTION"
         ImageProperties -> "IMAGE_PROPERTIES"
+        CropHints -> "CROP_HINTS"
+        WebDetection -> "WEB_DETECTION"
 
 instance FromJSON FeatureType where
     parseJSON = parseJSONText "FeatureType"
@@ -838,4 +905,54 @@ instance FromJSON FaceAnnotationJoyLikelihood where
     parseJSON = parseJSONText "FaceAnnotationJoyLikelihood"
 
 instance ToJSON FaceAnnotationJoyLikelihood where
+    toJSON = toJSONText
+
+-- | Detected break type.
+data DetectedBreakType
+    = DBTUnknown
+      -- ^ @UNKNOWN@
+      -- Unknown break label type.
+    | DBTSpace
+      -- ^ @SPACE@
+      -- Regular space.
+    | DBTSureSpace
+      -- ^ @SURE_SPACE@
+      -- Sure space (very wide).
+    | DBTEolSureSpace
+      -- ^ @EOL_SURE_SPACE@
+      -- Line-wrapping break.
+    | DBTHyphen
+      -- ^ @HYPHEN@
+      -- End-line hyphen that is not present in text; does not co-occur with
+      -- \`SPACE\`, \`LEADER_SPACE\`, or \`LINE_BREAK\`.
+    | DBTLineBreak
+      -- ^ @LINE_BREAK@
+      -- Line break that ends a paragraph.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DetectedBreakType
+
+instance FromHttpApiData DetectedBreakType where
+    parseQueryParam = \case
+        "UNKNOWN" -> Right DBTUnknown
+        "SPACE" -> Right DBTSpace
+        "SURE_SPACE" -> Right DBTSureSpace
+        "EOL_SURE_SPACE" -> Right DBTEolSureSpace
+        "HYPHEN" -> Right DBTHyphen
+        "LINE_BREAK" -> Right DBTLineBreak
+        x -> Left ("Unable to parse DetectedBreakType from: " <> x)
+
+instance ToHttpApiData DetectedBreakType where
+    toQueryParam = \case
+        DBTUnknown -> "UNKNOWN"
+        DBTSpace -> "SPACE"
+        DBTSureSpace -> "SURE_SPACE"
+        DBTEolSureSpace -> "EOL_SURE_SPACE"
+        DBTHyphen -> "HYPHEN"
+        DBTLineBreak -> "LINE_BREAK"
+
+instance FromJSON DetectedBreakType where
+    parseJSON = parseJSONText "DetectedBreakType"
+
+instance ToJSON DetectedBreakType where
     toJSON = toJSONText

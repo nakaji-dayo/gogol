@@ -41,10 +41,11 @@ module Network.Google.Resource.YouTube.Captions.Download
     , capaOnBehalfOfContentOwner
     , capaId
     , capaTfmt
+    , capaFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.captions.download@ method which the
 -- 'CaptionsDownload' request conforms to.
@@ -57,7 +58,8 @@ type CaptionsDownloadResource =
                QueryParam "tlang" Text :>
                  QueryParam "onBehalfOfContentOwner" Text :>
                    QueryParam "tfmt" CaptionsDownloadTfmt :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] ()
        :<|>
        "youtube" :>
          "v3" :>
@@ -67,8 +69,9 @@ type CaptionsDownloadResource =
                  QueryParam "tlang" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "tfmt" CaptionsDownloadTfmt :>
-                       QueryParam "alt" AltMedia :>
-                         Get '[OctetStream] Stream
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltMedia :>
+                           Get '[OctetStream] Stream
 
 -- | Downloads a caption track. The caption track is returned in its original
 -- format unless the request specifies a value for the tfmt parameter and
@@ -77,11 +80,12 @@ type CaptionsDownloadResource =
 --
 -- /See:/ 'captionsDownload' smart constructor.
 data CaptionsDownload = CaptionsDownload'
-    { _capaOnBehalfOf             :: !(Maybe Text)
-    , _capaTlang                  :: !(Maybe Text)
+    { _capaOnBehalfOf :: !(Maybe Text)
+    , _capaTlang :: !(Maybe Text)
     , _capaOnBehalfOfContentOwner :: !(Maybe Text)
-    , _capaId                     :: !Text
-    , _capaTfmt                   :: !(Maybe CaptionsDownloadTfmt)
+    , _capaId :: !Text
+    , _capaTfmt :: !(Maybe CaptionsDownloadTfmt)
+    , _capaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CaptionsDownload' with the minimum fields required to make a request.
@@ -97,16 +101,19 @@ data CaptionsDownload = CaptionsDownload'
 -- * 'capaId'
 --
 -- * 'capaTfmt'
+--
+-- * 'capaFields'
 captionsDownload
     :: Text -- ^ 'capaId'
     -> CaptionsDownload
-captionsDownload pCapaId_ =
+captionsDownload pCapaId_ = 
     CaptionsDownload'
     { _capaOnBehalfOf = Nothing
     , _capaTlang = Nothing
     , _capaOnBehalfOfContentOwner = Nothing
     , _capaId = pCapaId_
     , _capaTfmt = Nothing
+    , _capaFields = Nothing
     }
 
 -- | ID of the Google+ Page for the channel that the request is be on behalf
@@ -152,6 +159,11 @@ capaId = lens _capaId (\ s a -> s{_capaId = a})
 capaTfmt :: Lens' CaptionsDownload (Maybe CaptionsDownloadTfmt)
 capaTfmt = lens _capaTfmt (\ s a -> s{_capaTfmt = a})
 
+-- | Selector specifying which fields to include in a partial response.
+capaFields :: Lens' CaptionsDownload (Maybe Text)
+capaFields
+  = lens _capaFields (\ s a -> s{_capaFields = a})
+
 instance GoogleRequest CaptionsDownload where
         type Rs CaptionsDownload = ()
         type Scopes CaptionsDownload =
@@ -161,6 +173,7 @@ instance GoogleRequest CaptionsDownload where
           = go _capaId _capaOnBehalfOf _capaTlang
               _capaOnBehalfOfContentOwner
               _capaTfmt
+              _capaFields
               (Just AltJSON)
               youTubeService
           where go :<|> _
@@ -177,6 +190,7 @@ instance GoogleRequest
           = go _capaId _capaOnBehalfOf _capaTlang
               _capaOnBehalfOfContentOwner
               _capaTfmt
+              _capaFields
               (Just AltMedia)
               youTubeService
           where _ :<|> go

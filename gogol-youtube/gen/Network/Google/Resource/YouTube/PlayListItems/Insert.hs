@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.PlayListItems.Insert
     , pliiPart
     , pliiPayload
     , pliiOnBehalfOfContentOwner
+    , pliiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlistItems.insert@ method which the
 -- 'PlayListItemsInsert' request conforms to.
@@ -49,17 +50,19 @@ type PlayListItemsInsertResource =
          "playlistItems" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlayListItem :>
-                   Post '[JSON] PlayListItem
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlayListItem :>
+                     Post '[JSON] PlayListItem
 
 -- | Adds a resource to a playlist.
 --
 -- /See:/ 'playListItemsInsert' smart constructor.
 data PlayListItemsInsert = PlayListItemsInsert'
-    { _pliiPart                   :: !Text
-    , _pliiPayload                :: !PlayListItem
+    { _pliiPart :: !Text
+    , _pliiPayload :: !PlayListItem
     , _pliiOnBehalfOfContentOwner :: !(Maybe Text)
+    , _pliiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListItemsInsert' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data PlayListItemsInsert = PlayListItemsInsert'
 -- * 'pliiPayload'
 --
 -- * 'pliiOnBehalfOfContentOwner'
+--
+-- * 'pliiFields'
 playListItemsInsert
     :: Text -- ^ 'pliiPart'
     -> PlayListItem -- ^ 'pliiPayload'
     -> PlayListItemsInsert
-playListItemsInsert pPliiPart_ pPliiPayload_ =
+playListItemsInsert pPliiPart_ pPliiPayload_ = 
     PlayListItemsInsert'
     { _pliiPart = pPliiPart_
     , _pliiPayload = pPliiPayload_
     , _pliiOnBehalfOfContentOwner = Nothing
+    , _pliiFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -108,6 +114,11 @@ pliiOnBehalfOfContentOwner
   = lens _pliiOnBehalfOfContentOwner
       (\ s a -> s{_pliiOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pliiFields :: Lens' PlayListItemsInsert (Maybe Text)
+pliiFields
+  = lens _pliiFields (\ s a -> s{_pliiFields = a})
+
 instance GoogleRequest PlayListItemsInsert where
         type Rs PlayListItemsInsert = PlayListItem
         type Scopes PlayListItemsInsert =
@@ -116,6 +127,7 @@ instance GoogleRequest PlayListItemsInsert where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient PlayListItemsInsert'{..}
           = go (Just _pliiPart) _pliiOnBehalfOfContentOwner
+              _pliiFields
               (Just AltJSON)
               _pliiPayload
               youTubeService

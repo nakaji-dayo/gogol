@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Undelete
     -- * Request Lenses
     , uuPayload
     , uuUserKey
+    , uuFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.undelete@ method which the
 -- 'UsersUndelete' request conforms to.
@@ -49,8 +50,9 @@ type UsersUndeleteResource =
            "users" :>
              Capture "userKey" Text :>
                "undelete" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] UserUndelete :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] UserUndelete :> Post '[JSON] ()
 
 -- | Undelete a deleted user
 --
@@ -58,6 +60,7 @@ type UsersUndeleteResource =
 data UsersUndelete = UsersUndelete'
     { _uuPayload :: !UserUndelete
     , _uuUserKey :: !Text
+    , _uuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersUndelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersUndelete = UsersUndelete'
 -- * 'uuPayload'
 --
 -- * 'uuUserKey'
+--
+-- * 'uuFields'
 usersUndelete
     :: UserUndelete -- ^ 'uuPayload'
     -> Text -- ^ 'uuUserKey'
     -> UsersUndelete
-usersUndelete pUuPayload_ pUuUserKey_ =
+usersUndelete pUuPayload_ pUuUserKey_ = 
     UsersUndelete'
     { _uuPayload = pUuPayload_
     , _uuUserKey = pUuUserKey_
+    , _uuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,12 +93,16 @@ uuUserKey :: Lens' UsersUndelete Text
 uuUserKey
   = lens _uuUserKey (\ s a -> s{_uuUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uuFields :: Lens' UsersUndelete (Maybe Text)
+uuFields = lens _uuFields (\ s a -> s{_uuFields = a})
+
 instance GoogleRequest UsersUndelete where
         type Rs UsersUndelete = ()
         type Scopes UsersUndelete =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersUndelete'{..}
-          = go _uuUserKey (Just AltJSON) _uuPayload
+          = go _uuUserKey _uuFields (Just AltJSON) _uuPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersUndeleteResource)

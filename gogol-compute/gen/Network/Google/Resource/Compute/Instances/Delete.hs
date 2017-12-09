@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.Instances.Delete
     , InstancesDelete
 
     -- * Request Lenses
+    , idRequestId
     , idProject
     , idZone
+    , idFields
     , idInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.delete@ method which the
 -- 'InstancesDelete' request conforms to.
@@ -53,15 +55,19 @@ type InstancesDeleteResource =
                Capture "zone" Text :>
                  "instances" :>
                    Capture "instance" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified Instance resource. For more information, see
 -- Stopping or Deleting an Instance.
 --
 -- /See:/ 'instancesDelete' smart constructor.
 data InstancesDelete = InstancesDelete'
-    { _idProject  :: !Text
-    , _idZone     :: !Text
+    { _idRequestId :: !(Maybe Text)
+    , _idProject :: !Text
+    , _idZone :: !Text
+    , _idFields :: !(Maybe Text)
     , _idInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -69,9 +75,13 @@ data InstancesDelete = InstancesDelete'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'idRequestId'
+--
 -- * 'idProject'
 --
 -- * 'idZone'
+--
+-- * 'idFields'
 --
 -- * 'idInstance'
 instancesDelete
@@ -79,12 +89,28 @@ instancesDelete
     -> Text -- ^ 'idZone'
     -> Text -- ^ 'idInstance'
     -> InstancesDelete
-instancesDelete pIdProject_ pIdZone_ pIdInstance_ =
+instancesDelete pIdProject_ pIdZone_ pIdInstance_ = 
     InstancesDelete'
-    { _idProject = pIdProject_
+    { _idRequestId = Nothing
+    , _idProject = pIdProject_
     , _idZone = pIdZone_
+    , _idFields = Nothing
     , _idInstance = pIdInstance_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+idRequestId :: Lens' InstancesDelete (Maybe Text)
+idRequestId
+  = lens _idRequestId (\ s a -> s{_idRequestId = a})
 
 -- | Project ID for this request.
 idProject :: Lens' InstancesDelete Text
@@ -94,6 +120,10 @@ idProject
 -- | The name of the zone for this request.
 idZone :: Lens' InstancesDelete Text
 idZone = lens _idZone (\ s a -> s{_idZone = a})
+
+-- | Selector specifying which fields to include in a partial response.
+idFields :: Lens' InstancesDelete (Maybe Text)
+idFields = lens _idFields (\ s a -> s{_idFields = a})
 
 -- | Name of the instance resource to delete.
 idInstance :: Lens' InstancesDelete Text
@@ -106,7 +136,9 @@ instance GoogleRequest InstancesDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient InstancesDelete'{..}
-          = go _idProject _idZone _idInstance (Just AltJSON)
+          = go _idProject _idZone _idInstance _idRequestId
+              _idFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

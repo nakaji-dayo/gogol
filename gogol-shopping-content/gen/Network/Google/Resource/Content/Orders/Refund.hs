@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Refund a portion of the order, up to the full amount paid. This method
--- can only be called for non-multi-client accounts.
+-- Refund a portion of the order, up to the full amount paid.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.refund@.
 module Network.Google.Resource.Content.Orders.Refund
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.Refund
     , orMerchantId
     , orPayload
     , orOrderId
+    , orFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.refund@ method which the
 -- 'OrdersRefund' request conforms to.
@@ -51,18 +51,19 @@ type OrdersRefundResource =
            "orders" :>
              Capture "orderId" Text :>
                "refund" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrdersRefundRequest :>
-                     Post '[JSON] OrdersRefundResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrdersRefundRequest :>
+                       Post '[JSON] OrdersRefundResponse
 
--- | Refund a portion of the order, up to the full amount paid. This method
--- can only be called for non-multi-client accounts.
+-- | Refund a portion of the order, up to the full amount paid.
 --
 -- /See:/ 'ordersRefund' smart constructor.
 data OrdersRefund = OrdersRefund'
     { _orMerchantId :: !(Textual Word64)
-    , _orPayload    :: !OrdersRefundRequest
-    , _orOrderId    :: !Text
+    , _orPayload :: !OrdersRefundRequest
+    , _orOrderId :: !Text
+    , _orFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersRefund' with the minimum fields required to make a request.
@@ -74,19 +75,23 @@ data OrdersRefund = OrdersRefund'
 -- * 'orPayload'
 --
 -- * 'orOrderId'
+--
+-- * 'orFields'
 ordersRefund
     :: Word64 -- ^ 'orMerchantId'
     -> OrdersRefundRequest -- ^ 'orPayload'
     -> Text -- ^ 'orOrderId'
     -> OrdersRefund
-ordersRefund pOrMerchantId_ pOrPayload_ pOrOrderId_ =
+ordersRefund pOrMerchantId_ pOrPayload_ pOrOrderId_ = 
     OrdersRefund'
     { _orMerchantId = _Coerce # pOrMerchantId_
     , _orPayload = pOrPayload_
     , _orOrderId = pOrOrderId_
+    , _orFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 orMerchantId :: Lens' OrdersRefund Word64
 orMerchantId
   = lens _orMerchantId (\ s a -> s{_orMerchantId = a})
@@ -102,12 +107,17 @@ orOrderId :: Lens' OrdersRefund Text
 orOrderId
   = lens _orOrderId (\ s a -> s{_orOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+orFields :: Lens' OrdersRefund (Maybe Text)
+orFields = lens _orFields (\ s a -> s{_orFields = a})
+
 instance GoogleRequest OrdersRefund where
         type Rs OrdersRefund = OrdersRefundResponse
         type Scopes OrdersRefund =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersRefund'{..}
-          = go _orMerchantId _orOrderId (Just AltJSON)
+          = go _orMerchantId _orOrderId _orFields
+              (Just AltJSON)
               _orPayload
               shoppingContentService
           where go

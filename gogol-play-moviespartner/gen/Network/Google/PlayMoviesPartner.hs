@@ -49,6 +49,15 @@ module Network.Google.PlayMoviesPartner
 
     -- * Types
 
+    -- ** AvailWorkType
+    , AvailWorkType (..)
+
+    -- ** OrderStatus
+    , OrderStatus (..)
+
+    -- ** AvailFormatProFile
+    , AvailFormatProFile (..)
+
     -- ** Avail
     , Avail
     , avail
@@ -86,6 +95,9 @@ module Network.Google.PlayMoviesPartner
     , aSeasonAltId
     , aTitleInternalAlias
 
+    -- ** OrderType
+    , OrderType (..)
+
     -- ** ListAvailsResponse
     , ListAvailsResponse
     , listAvailsResponse
@@ -93,12 +105,27 @@ module Network.Google.PlayMoviesPartner
     , larAvails
     , larTotalSize
 
+    -- ** StoreInfoType
+    , StoreInfoType (..)
+
     -- ** ListOrdersResponse
     , ListOrdersResponse
     , listOrdersResponse
     , lorNextPageToken
     , lorTotalSize
     , lorOrders
+
+    -- ** Xgafv
+    , Xgafv (..)
+
+    -- ** OrderNormalizedPriority
+    , OrderNormalizedPriority (..)
+
+    -- ** AvailLicenseType
+    , AvailLicenseType (..)
+
+    -- ** OrderStatusDetail
+    , OrderStatusDetail (..)
 
     -- ** ListStoreInfosResponse
     , ListStoreInfosResponse
@@ -164,14 +191,14 @@ module Network.Google.PlayMoviesPartner
     , siShowId
     ) where
 
-import           Network.Google.PlayMoviesPartner.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.Avails.Get
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.Avails.List
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.Get
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.List
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.StoreInfos.Country.Get
-import           Network.Google.Resource.PlayMoviesPartner.Accounts.StoreInfos.List
+import Network.Google.Prelude
+import Network.Google.PlayMoviesPartner.Types
+import Network.Google.Resource.PlayMoviesPartner.Accounts.Avails.Get
+import Network.Google.Resource.PlayMoviesPartner.Accounts.Avails.List
+import Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.Get
+import Network.Google.Resource.PlayMoviesPartner.Accounts.Orders.List
+import Network.Google.Resource.PlayMoviesPartner.Accounts.StoreInfos.Country.Get
+import Network.Google.Resource.PlayMoviesPartner.Accounts.StoreInfos.List
 
 {- $resources
 TODO

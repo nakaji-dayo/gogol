@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.ChannelSections.Delete
     -- * Request Lenses
     , csdOnBehalfOfContentOwner
     , csdId
+    , csdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channelSections.delete@ method which the
 -- 'ChannelSectionsDelete' request conforms to.
@@ -48,14 +49,16 @@ type ChannelSectionsDeleteResource =
          "channelSections" :>
            QueryParam "id" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a channelSection.
 --
 -- /See:/ 'channelSectionsDelete' smart constructor.
 data ChannelSectionsDelete = ChannelSectionsDelete'
     { _csdOnBehalfOfContentOwner :: !(Maybe Text)
-    , _csdId                     :: !Text
+    , _csdId :: !Text
+    , _csdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelSectionsDelete' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data ChannelSectionsDelete = ChannelSectionsDelete'
 -- * 'csdOnBehalfOfContentOwner'
 --
 -- * 'csdId'
+--
+-- * 'csdFields'
 channelSectionsDelete
     :: Text -- ^ 'csdId'
     -> ChannelSectionsDelete
-channelSectionsDelete pCsdId_ =
+channelSectionsDelete pCsdId_ = 
     ChannelSectionsDelete'
     { _csdOnBehalfOfContentOwner = Nothing
     , _csdId = pCsdId_
+    , _csdFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -95,6 +101,11 @@ csdOnBehalfOfContentOwner
 csdId :: Lens' ChannelSectionsDelete Text
 csdId = lens _csdId (\ s a -> s{_csdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csdFields :: Lens' ChannelSectionsDelete (Maybe Text)
+csdFields
+  = lens _csdFields (\ s a -> s{_csdFields = a})
+
 instance GoogleRequest ChannelSectionsDelete where
         type Rs ChannelSectionsDelete = ()
         type Scopes ChannelSectionsDelete =
@@ -103,6 +114,7 @@ instance GoogleRequest ChannelSectionsDelete where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient ChannelSectionsDelete'{..}
           = go (Just _csdId) _csdOnBehalfOfContentOwner
+              _csdFields
               (Just AltJSON)
               youTubeService
           where go

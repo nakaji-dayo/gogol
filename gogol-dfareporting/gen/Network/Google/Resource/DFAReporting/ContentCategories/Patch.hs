@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.ContentCategories.Patch
     , ccpProFileId
     , ccpPayload
     , ccpId
+    , ccpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.contentCategories.patch@ method which the
 -- 'ContentCategoriesPatch' request conforms to.
 type ContentCategoriesPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "contentCategories" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ContentCategory :>
-                     Patch '[JSON] ContentCategory
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ContentCategory :>
+                       Patch '[JSON] ContentCategory
 
 -- | Updates an existing content category. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type ContentCategoriesPatchResource =
 -- /See:/ 'contentCategoriesPatch' smart constructor.
 data ContentCategoriesPatch = ContentCategoriesPatch'
     { _ccpProFileId :: !(Textual Int64)
-    , _ccpPayload   :: !ContentCategory
-    , _ccpId        :: !(Textual Int64)
+    , _ccpPayload :: !ContentCategory
+    , _ccpId :: !(Textual Int64)
+    , _ccpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategoriesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data ContentCategoriesPatch = ContentCategoriesPatch'
 -- * 'ccpPayload'
 --
 -- * 'ccpId'
+--
+-- * 'ccpFields'
 contentCategoriesPatch
     :: Int64 -- ^ 'ccpProFileId'
     -> ContentCategory -- ^ 'ccpPayload'
     -> Int64 -- ^ 'ccpId'
     -> ContentCategoriesPatch
-contentCategoriesPatch pCcpProFileId_ pCcpPayload_ pCcpId_ =
+contentCategoriesPatch pCcpProFileId_ pCcpPayload_ pCcpId_ = 
     ContentCategoriesPatch'
     { _ccpProFileId = _Coerce # pCcpProFileId_
     , _ccpPayload = pCcpPayload_
     , _ccpId = _Coerce # pCcpId_
+    , _ccpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ ccpId :: Lens' ContentCategoriesPatch Int64
 ccpId
   = lens _ccpId (\ s a -> s{_ccpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ccpFields :: Lens' ContentCategoriesPatch (Maybe Text)
+ccpFields
+  = lens _ccpFields (\ s a -> s{_ccpFields = a})
+
 instance GoogleRequest ContentCategoriesPatch where
         type Rs ContentCategoriesPatch = ContentCategory
         type Scopes ContentCategoriesPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ContentCategoriesPatch'{..}
-          = go _ccpProFileId (Just _ccpId) (Just AltJSON)
+          = go _ccpProFileId (Just _ccpId) _ccpFields
+              (Just AltJSON)
               _ccpPayload
               dFAReportingService
           where go

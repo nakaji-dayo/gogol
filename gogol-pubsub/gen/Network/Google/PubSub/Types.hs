@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -35,6 +35,19 @@ module Network.Google.PubSub.Types
     , rmAckId
     , rmMessage
 
+    -- * Snapshot
+    , Snapshot
+    , snapshot
+    , sTopic
+    , sName
+    , sExpireTime
+
+    -- * ListTopicSnapshotsResponse
+    , ListTopicSnapshotsResponse
+    , listTopicSnapshotsResponse
+    , ltsrNextPageToken
+    , ltsrSnapshots
+
     -- * ModifyAckDeadlineRequest
     , ModifyAckDeadlineRequest
     , modifyAckDeadlineRequest
@@ -61,8 +74,8 @@ module Network.Google.PubSub.Types
     -- * ListTopicSubscriptionsResponse
     , ListTopicSubscriptionsResponse
     , listTopicSubscriptionsResponse
-    , ltsrNextPageToken
-    , ltsrSubscriptions
+    , lNextPageToken
+    , lSubscriptions
 
     -- * ListTopicsResponse
     , ListTopicsResponse
@@ -75,15 +88,38 @@ module Network.Google.PubSub.Types
     , pullResponse
     , prReceivedMessages
 
+    -- * ListSnapshotsResponse
+    , ListSnapshotsResponse
+    , listSnapshotsResponse
+    , lsrNextPageToken
+    , lsrSnapshots
+
     -- * SetIAMPolicyRequest
     , SetIAMPolicyRequest
     , setIAMPolicyRequest
     , siprPolicy
 
+    -- * CreateSnapshotRequest
+    , CreateSnapshotRequest
+    , createSnapshotRequest
+    , csrSubscription
+
+    -- * SeekRequest
+    , SeekRequest
+    , seekRequest
+    , srSnapshot
+    , srTime
+
     -- * Topic
     , Topic
     , topic
     , tName
+
+    -- * UpdateSnapshotRequest
+    , UpdateSnapshotRequest
+    , updateSnapshotRequest
+    , usrSnapshot
+    , usrUpdateMask
 
     -- * PullRequest
     , PullRequest
@@ -126,6 +162,10 @@ module Network.Google.PubSub.Types
     , pVersion
     , pBindings
 
+    -- * SeekResponse
+    , SeekResponse
+    , seekResponse
+
     -- * PushConfigAttributes
     , PushConfigAttributes
     , pushConfigAttributes
@@ -134,16 +174,24 @@ module Network.Google.PubSub.Types
     -- * Subscription
     , Subscription
     , subscription
-    , sPushConfig
-    , sTopic
-    , sName
-    , sAckDeadlineSeconds
+    , subPushConfig
+    , subMessageRetentionDuration
+    , subTopic
+    , subName
+    , subRetainAckedMessages
+    , subAckDeadlineSeconds
+
+    -- * UpdateSubscriptionRequest
+    , UpdateSubscriptionRequest
+    , updateSubscriptionRequest
+    , uUpdateMask
+    , uSubscription
 
     -- * ListSubscriptionsResponse
     , ListSubscriptionsResponse
     , listSubscriptionsResponse
-    , lsrNextPageToken
-    , lsrSubscriptions
+    , lisNextPageToken
+    , lisSubscriptions
 
     -- * Binding
     , Binding
@@ -157,9 +205,9 @@ module Network.Google.PubSub.Types
     , arAckIds
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types.Product
-import           Network.Google.PubSub.Types.Sum
+import Network.Google.Prelude
+import Network.Google.PubSub.Types.Product
+import Network.Google.PubSub.Types.Sum
 
 -- | Default request referring to version 'v1' of the Google Cloud Pub/Sub API. This contains the host and root path used as a starting point for constructing service requests.
 pubSubService :: ServiceConfig

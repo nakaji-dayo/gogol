@@ -16,7 +16,7 @@
 --
 module Network.Google.Fonts.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Enables sorting of the list
 data WebfontsListSort

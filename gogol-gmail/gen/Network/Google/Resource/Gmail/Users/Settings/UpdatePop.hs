@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.UpdatePop
     -- * Request Lenses
     , usupPayload
     , usupUserId
+    , usupFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.updatePop@ method which the
 -- 'UsersSettingsUpdatePop' request conforms to.
@@ -49,16 +50,18 @@ type UsersSettingsUpdatePopResource =
            Capture "userId" Text :>
              "settings" :>
                "pop" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] PopSettings :>
-                     Put '[JSON] PopSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] PopSettings :>
+                       Put '[JSON] PopSettings
 
 -- | Updates POP settings.
 --
 -- /See:/ 'usersSettingsUpdatePop' smart constructor.
 data UsersSettingsUpdatePop = UsersSettingsUpdatePop'
     { _usupPayload :: !PopSettings
-    , _usupUserId  :: !Text
+    , _usupUserId :: !Text
+    , _usupFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsUpdatePop' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersSettingsUpdatePop = UsersSettingsUpdatePop'
 -- * 'usupPayload'
 --
 -- * 'usupUserId'
+--
+-- * 'usupFields'
 usersSettingsUpdatePop
     :: PopSettings -- ^ 'usupPayload'
     -> UsersSettingsUpdatePop
-usersSettingsUpdatePop pUsupPayload_ =
+usersSettingsUpdatePop pUsupPayload_ = 
     UsersSettingsUpdatePop'
     { _usupPayload = pUsupPayload_
     , _usupUserId = "me"
+    , _usupFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,12 +94,18 @@ usupUserId :: Lens' UsersSettingsUpdatePop Text
 usupUserId
   = lens _usupUserId (\ s a -> s{_usupUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usupFields :: Lens' UsersSettingsUpdatePop (Maybe Text)
+usupFields
+  = lens _usupFields (\ s a -> s{_usupFields = a})
+
 instance GoogleRequest UsersSettingsUpdatePop where
         type Rs UsersSettingsUpdatePop = PopSettings
         type Scopes UsersSettingsUpdatePop =
              '["https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsUpdatePop'{..}
-          = go _usupUserId (Just AltJSON) _usupPayload
+          = go _usupUserId _usupFields (Just AltJSON)
+              _usupPayload
               gmailService
           where go
                   = buildClient

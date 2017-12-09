@@ -43,11 +43,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Instances.Delete
     , aBearerToken
     , aAppsId
     , aServicesId
+    , aFields
     , aCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.instances.delete@ method which the
 -- 'AppsServicesVersionsInstancesDelete' request conforms to.
@@ -61,31 +62,33 @@ type AppsServicesVersionsInstancesDeleteResource =
                  Capture "versionsId" Text :>
                    "instances" :>
                      Capture "instancesId" Text :>
-                       QueryParam "$.xgafv" Text :>
+                       QueryParam "$.xgafv" Xgafv :>
                          QueryParam "upload_protocol" Text :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Delete '[JSON] Operation
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Delete '[JSON] Operation
 
 -- | Stops a running instance.
 --
 -- /See:/ 'appsServicesVersionsInstancesDelete' smart constructor.
 data AppsServicesVersionsInstancesDelete = AppsServicesVersionsInstancesDelete'
-    { _aXgafv          :: !(Maybe Text)
-    , _aInstancesId    :: !Text
+    { _aXgafv :: !(Maybe Xgafv)
+    , _aInstancesId :: !Text
     , _aUploadProtocol :: !(Maybe Text)
-    , _aPp             :: !Bool
-    , _aAccessToken    :: !(Maybe Text)
-    , _aUploadType     :: !(Maybe Text)
-    , _aVersionsId     :: !Text
-    , _aBearerToken    :: !(Maybe Text)
-    , _aAppsId         :: !Text
-    , _aServicesId     :: !Text
-    , _aCallback       :: !(Maybe Text)
+    , _aPp :: !Bool
+    , _aAccessToken :: !(Maybe Text)
+    , _aUploadType :: !(Maybe Text)
+    , _aVersionsId :: !Text
+    , _aBearerToken :: !(Maybe Text)
+    , _aAppsId :: !Text
+    , _aServicesId :: !Text
+    , _aFields :: !(Maybe Text)
+    , _aCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsInstancesDelete' with the minimum fields required to make a request.
@@ -112,6 +115,8 @@ data AppsServicesVersionsInstancesDelete = AppsServicesVersionsInstancesDelete'
 --
 -- * 'aServicesId'
 --
+-- * 'aFields'
+--
 -- * 'aCallback'
 appsServicesVersionsInstancesDelete
     :: Text -- ^ 'aInstancesId'
@@ -119,7 +124,7 @@ appsServicesVersionsInstancesDelete
     -> Text -- ^ 'aAppsId'
     -> Text -- ^ 'aServicesId'
     -> AppsServicesVersionsInstancesDelete
-appsServicesVersionsInstancesDelete pAInstancesId_ pAVersionsId_ pAAppsId_ pAServicesId_ =
+appsServicesVersionsInstancesDelete pAInstancesId_ pAVersionsId_ pAAppsId_ pAServicesId_ = 
     AppsServicesVersionsInstancesDelete'
     { _aXgafv = Nothing
     , _aInstancesId = pAInstancesId_
@@ -131,11 +136,12 @@ appsServicesVersionsInstancesDelete pAInstancesId_ pAVersionsId_ pAAppsId_ pASer
     , _aBearerToken = Nothing
     , _aAppsId = pAAppsId_
     , _aServicesId = pAServicesId_
+    , _aFields = Nothing
     , _aCallback = Nothing
     }
 
 -- | V1 error format.
-aXgafv :: Lens' AppsServicesVersionsInstancesDelete (Maybe Text)
+aXgafv :: Lens' AppsServicesVersionsInstancesDelete (Maybe Xgafv)
 aXgafv = lens _aXgafv (\ s a -> s{_aXgafv = a})
 
 -- | Part of \`name\`. See documentation of \`appsId\`.
@@ -183,6 +189,10 @@ aServicesId :: Lens' AppsServicesVersionsInstancesDelete Text
 aServicesId
   = lens _aServicesId (\ s a -> s{_aServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aFields :: Lens' AppsServicesVersionsInstancesDelete (Maybe Text)
+aFields = lens _aFields (\ s a -> s{_aFields = a})
+
 -- | JSONP
 aCallback :: Lens' AppsServicesVersionsInstancesDelete (Maybe Text)
 aCallback
@@ -204,6 +214,7 @@ instance GoogleRequest
               _aUploadType
               _aBearerToken
               _aCallback
+              _aFields
               (Just AltJSON)
               appEngineService
           where go

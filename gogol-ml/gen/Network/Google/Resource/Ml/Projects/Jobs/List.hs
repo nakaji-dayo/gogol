@@ -22,7 +22,7 @@
 --
 -- Lists the jobs in the project.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.jobs.list@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.jobs.list@.
 module Network.Google.Resource.Ml.Projects.Jobs.List
     (
     -- * REST Resource
@@ -43,16 +43,17 @@ module Network.Google.Resource.Ml.Projects.Jobs.List
     , pjlFilter
     , pjlPageToken
     , pjlPageSize
+    , pjlFields
     , pjlCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.jobs.list@ method which the
 -- 'ProjectsJobsList' request conforms to.
 type ProjectsJobsListResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "parent" Text :>
          "jobs" :>
            QueryParam "$.xgafv" Xgafv :>
@@ -65,25 +66,26 @@ type ProjectsJobsListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON]
-                                   GoogleCloudMlV1beta1__ListJobsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] GoogleCloudMlV1__ListJobsResponse
 
 -- | Lists the jobs in the project.
 --
 -- /See:/ 'projectsJobsList' smart constructor.
 data ProjectsJobsList = ProjectsJobsList'
-    { _pjlParent         :: !Text
-    , _pjlXgafv          :: !(Maybe Xgafv)
+    { _pjlParent :: !Text
+    , _pjlXgafv :: !(Maybe Xgafv)
     , _pjlUploadProtocol :: !(Maybe Text)
-    , _pjlPp             :: !Bool
-    , _pjlAccessToken    :: !(Maybe Text)
-    , _pjlUploadType     :: !(Maybe Text)
-    , _pjlBearerToken    :: !(Maybe Text)
-    , _pjlFilter         :: !(Maybe Text)
-    , _pjlPageToken      :: !(Maybe Text)
-    , _pjlPageSize       :: !(Maybe (Textual Int32))
-    , _pjlCallback       :: !(Maybe Text)
+    , _pjlPp :: !Bool
+    , _pjlAccessToken :: !(Maybe Text)
+    , _pjlUploadType :: !(Maybe Text)
+    , _pjlBearerToken :: !(Maybe Text)
+    , _pjlFilter :: !(Maybe Text)
+    , _pjlPageToken :: !(Maybe Text)
+    , _pjlPageSize :: !(Maybe (Textual Int32))
+    , _pjlFields :: !(Maybe Text)
+    , _pjlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsJobsList' with the minimum fields required to make a request.
@@ -110,11 +112,13 @@ data ProjectsJobsList = ProjectsJobsList'
 --
 -- * 'pjlPageSize'
 --
+-- * 'pjlFields'
+--
 -- * 'pjlCallback'
 projectsJobsList
     :: Text -- ^ 'pjlParent'
     -> ProjectsJobsList
-projectsJobsList pPjlParent_ =
+projectsJobsList pPjlParent_ = 
     ProjectsJobsList'
     { _pjlParent = pPjlParent_
     , _pjlXgafv = Nothing
@@ -126,11 +130,11 @@ projectsJobsList pPjlParent_ =
     , _pjlFilter = Nothing
     , _pjlPageToken = Nothing
     , _pjlPageSize = Nothing
+    , _pjlFields = Nothing
     , _pjlCallback = Nothing
     }
 
--- | Required. The name of the project for which to list jobs. Authorization:
--- requires \`Viewer\` role on the specified project.
+-- | Required. The name of the project for which to list jobs.
 pjlParent :: Lens' ProjectsJobsList Text
 pjlParent
   = lens _pjlParent (\ s a -> s{_pjlParent = a})
@@ -188,6 +192,11 @@ pjlPageSize
   = lens _pjlPageSize (\ s a -> s{_pjlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pjlFields :: Lens' ProjectsJobsList (Maybe Text)
+pjlFields
+  = lens _pjlFields (\ s a -> s{_pjlFields = a})
+
 -- | JSONP
 pjlCallback :: Lens' ProjectsJobsList (Maybe Text)
 pjlCallback
@@ -195,7 +204,7 @@ pjlCallback
 
 instance GoogleRequest ProjectsJobsList where
         type Rs ProjectsJobsList =
-             GoogleCloudMlV1beta1__ListJobsResponse
+             GoogleCloudMlV1__ListJobsResponse
         type Scopes ProjectsJobsList =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient ProjectsJobsList'{..}
@@ -208,6 +217,7 @@ instance GoogleRequest ProjectsJobsList where
               _pjlPageToken
               _pjlPageSize
               _pjlCallback
+              _pjlFields
               (Just AltJSON)
               machineLearningService
           where go

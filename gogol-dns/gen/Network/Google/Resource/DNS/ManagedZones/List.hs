@@ -37,10 +37,11 @@ module Network.Google.Resource.DNS.ManagedZones.List
     , mzlPageToken
     , mzlDNSName
     , mzlMaxResults
+    , mzlFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.managedZones.list@ method which the
 -- 'ManagedZonesList' request conforms to.
@@ -53,17 +54,19 @@ type ManagedZonesListResource =
                QueryParam "pageToken" Text :>
                  QueryParam "dnsName" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] ManagedZonesListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] ManagedZonesListResponse
 
 -- | Enumerate ManagedZones that have been created but not yet deleted.
 --
 -- /See:/ 'managedZonesList' smart constructor.
 data ManagedZonesList = ManagedZonesList'
-    { _mzlProject    :: !Text
-    , _mzlPageToken  :: !(Maybe Text)
-    , _mzlDNSName    :: !(Maybe Text)
+    { _mzlProject :: !Text
+    , _mzlPageToken :: !(Maybe Text)
+    , _mzlDNSName :: !(Maybe Text)
     , _mzlMaxResults :: !(Maybe (Textual Int32))
+    , _mzlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedZonesList' with the minimum fields required to make a request.
@@ -77,15 +80,18 @@ data ManagedZonesList = ManagedZonesList'
 -- * 'mzlDNSName'
 --
 -- * 'mzlMaxResults'
+--
+-- * 'mzlFields'
 managedZonesList
     :: Text -- ^ 'mzlProject'
     -> ManagedZonesList
-managedZonesList pMzlProject_ =
+managedZonesList pMzlProject_ = 
     ManagedZonesList'
     { _mzlProject = pMzlProject_
     , _mzlPageToken = Nothing
     , _mzlDNSName = Nothing
     , _mzlMaxResults = Nothing
+    , _mzlFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -112,6 +118,11 @@ mzlMaxResults
       (\ s a -> s{_mzlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mzlFields :: Lens' ManagedZonesList (Maybe Text)
+mzlFields
+  = lens _mzlFields (\ s a -> s{_mzlFields = a})
+
 instance GoogleRequest ManagedZonesList where
         type Rs ManagedZonesList = ManagedZonesListResponse
         type Scopes ManagedZonesList =
@@ -122,6 +133,7 @@ instance GoogleRequest ManagedZonesList where
         requestClient ManagedZonesList'{..}
           = go _mzlProject _mzlPageToken _mzlDNSName
               _mzlMaxResults
+              _mzlFields
               (Just AltJSON)
               dNSService
           where go

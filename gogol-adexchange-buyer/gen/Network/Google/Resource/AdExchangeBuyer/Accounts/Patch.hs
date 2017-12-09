@@ -36,10 +36,11 @@ module Network.Google.Resource.AdExchangeBuyer.Accounts.Patch
     , apPayload
     , apConfirmUnsafeAccountChange
     , apId
+    , apFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.accounts.patch@ method which the
 -- 'AccountsPatch' request conforms to.
@@ -49,16 +50,18 @@ type AccountsPatchResource =
          "accounts" :>
            Capture "id" (Textual Int32) :>
              QueryParam "confirmUnsafeAccountChange" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Account :> Patch '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Account :> Patch '[JSON] Account
 
 -- | Updates an existing account. This method supports patch semantics.
 --
 -- /See:/ 'accountsPatch' smart constructor.
 data AccountsPatch = AccountsPatch'
-    { _apPayload                    :: !Account
+    { _apPayload :: !Account
     , _apConfirmUnsafeAccountChange :: !(Maybe Bool)
-    , _apId                         :: !(Textual Int32)
+    , _apId :: !(Textual Int32)
+    , _apFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsPatch' with the minimum fields required to make a request.
@@ -70,15 +73,18 @@ data AccountsPatch = AccountsPatch'
 -- * 'apConfirmUnsafeAccountChange'
 --
 -- * 'apId'
+--
+-- * 'apFields'
 accountsPatch
     :: Account -- ^ 'apPayload'
     -> Int32 -- ^ 'apId'
     -> AccountsPatch
-accountsPatch pApPayload_ pApId_ =
+accountsPatch pApPayload_ pApId_ = 
     AccountsPatch'
     { _apPayload = pApPayload_
     , _apConfirmUnsafeAccountChange = Nothing
     , _apId = _Coerce # pApId_
+    , _apFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -96,12 +102,16 @@ apConfirmUnsafeAccountChange
 apId :: Lens' AccountsPatch Int32
 apId = lens _apId (\ s a -> s{_apId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' AccountsPatch (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
+
 instance GoogleRequest AccountsPatch where
         type Rs AccountsPatch = Account
         type Scopes AccountsPatch =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient AccountsPatch'{..}
-          = go _apId _apConfirmUnsafeAccountChange
+          = go _apId _apConfirmUnsafeAccountChange _apFields
               (Just AltJSON)
               _apPayload
               adExchangeBuyerService

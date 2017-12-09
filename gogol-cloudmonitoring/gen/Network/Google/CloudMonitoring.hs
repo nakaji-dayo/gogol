@@ -206,14 +206,14 @@ module Network.Google.CloudMonitoring
     , tTimeseriesDesc
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.CloudMonitoring.MetricDescriptors.Create
-import           Network.Google.Resource.CloudMonitoring.MetricDescriptors.Delete
-import           Network.Google.Resource.CloudMonitoring.MetricDescriptors.List
-import           Network.Google.Resource.CloudMonitoring.Timeseries.List
-import           Network.Google.Resource.CloudMonitoring.Timeseries.Write
-import           Network.Google.Resource.CloudMonitoring.TimeseriesDescriptors.List
+import Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Resource.CloudMonitoring.MetricDescriptors.Create
+import Network.Google.Resource.CloudMonitoring.MetricDescriptors.Delete
+import Network.Google.Resource.CloudMonitoring.MetricDescriptors.List
+import Network.Google.Resource.CloudMonitoring.Timeseries.List
+import Network.Google.Resource.CloudMonitoring.Timeseries.Write
+import Network.Google.Resource.CloudMonitoring.TimeseriesDescriptors.List
 
 {- $resources
 TODO

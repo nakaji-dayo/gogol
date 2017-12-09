@@ -41,18 +41,19 @@ module Network.Google.Resource.StorageTransfer.TransferJobs.Get
     , tjgUploadType
     , tjgBearerToken
     , tjgProjectId
+    , tjgFields
     , tjgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.transferJobs.get@ method which the
 -- 'TransferJobsGet' request conforms to.
 type TransferJobsGetResource =
      "v1" :>
        Capture "jobName" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -60,21 +61,23 @@ type TransferJobsGetResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] TransferJob
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] TransferJob
 
 -- | Gets a transfer job.
 --
 -- /See:/ 'transferJobsGet' smart constructor.
 data TransferJobsGet = TransferJobsGet'
-    { _tjgXgafv          :: !(Maybe Text)
+    { _tjgXgafv :: !(Maybe Xgafv)
     , _tjgUploadProtocol :: !(Maybe Text)
-    , _tjgPp             :: !Bool
-    , _tjgAccessToken    :: !(Maybe Text)
-    , _tjgJobName        :: !Text
-    , _tjgUploadType     :: !(Maybe Text)
-    , _tjgBearerToken    :: !(Maybe Text)
-    , _tjgProjectId      :: !(Maybe Text)
-    , _tjgCallback       :: !(Maybe Text)
+    , _tjgPp :: !Bool
+    , _tjgAccessToken :: !(Maybe Text)
+    , _tjgJobName :: !Text
+    , _tjgUploadType :: !(Maybe Text)
+    , _tjgBearerToken :: !(Maybe Text)
+    , _tjgProjectId :: !(Maybe Text)
+    , _tjgFields :: !(Maybe Text)
+    , _tjgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransferJobsGet' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data TransferJobsGet = TransferJobsGet'
 --
 -- * 'tjgProjectId'
 --
+-- * 'tjgFields'
+--
 -- * 'tjgCallback'
 transferJobsGet
     :: Text -- ^ 'tjgJobName'
     -> TransferJobsGet
-transferJobsGet pTjgJobName_ =
+transferJobsGet pTjgJobName_ = 
     TransferJobsGet'
     { _tjgXgafv = Nothing
     , _tjgUploadProtocol = Nothing
@@ -111,11 +116,12 @@ transferJobsGet pTjgJobName_ =
     , _tjgUploadType = Nothing
     , _tjgBearerToken = Nothing
     , _tjgProjectId = Nothing
+    , _tjgFields = Nothing
     , _tjgCallback = Nothing
     }
 
 -- | V1 error format.
-tjgXgafv :: Lens' TransferJobsGet (Maybe Text)
+tjgXgafv :: Lens' TransferJobsGet (Maybe Xgafv)
 tjgXgafv = lens _tjgXgafv (\ s a -> s{_tjgXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -151,11 +157,16 @@ tjgBearerToken
   = lens _tjgBearerToken
       (\ s a -> s{_tjgBearerToken = a})
 
--- | The ID of the Google Developers Console project that owns the job.
+-- | The ID of the Google Cloud Platform Console project that owns the job.
 -- Required.
 tjgProjectId :: Lens' TransferJobsGet (Maybe Text)
 tjgProjectId
   = lens _tjgProjectId (\ s a -> s{_tjgProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+tjgFields :: Lens' TransferJobsGet (Maybe Text)
+tjgFields
+  = lens _tjgFields (\ s a -> s{_tjgFields = a})
 
 -- | JSONP
 tjgCallback :: Lens' TransferJobsGet (Maybe Text)
@@ -174,6 +185,7 @@ instance GoogleRequest TransferJobsGet where
               _tjgBearerToken
               _tjgProjectId
               _tjgCallback
+              _tjgFields
               (Just AltJSON)
               storageTransferService
           where go

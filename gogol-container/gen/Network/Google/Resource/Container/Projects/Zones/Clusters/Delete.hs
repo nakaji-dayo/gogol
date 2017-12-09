@@ -46,11 +46,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.Delete
     , pzcdBearerToken
     , pzcdClusterId
     , pzcdProjectId
+    , pzcdFields
     , pzcdCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.delete@ method which the
 -- 'ProjectsZonesClustersDelete' request conforms to.
@@ -62,15 +63,16 @@ type ProjectsZonesClustersDeleteResource =
              Capture "zone" Text :>
                "clusters" :>
                  Capture "clusterId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Delete '[JSON] Operation
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Delete '[JSON] Operation
 
 -- | Deletes the cluster, including the Kubernetes endpoint and all worker
 -- nodes. Firewalls and routes that were configured during cluster creation
@@ -80,16 +82,17 @@ type ProjectsZonesClustersDeleteResource =
 --
 -- /See:/ 'projectsZonesClustersDelete' smart constructor.
 data ProjectsZonesClustersDelete = ProjectsZonesClustersDelete'
-    { _pzcdXgafv          :: !(Maybe Text)
+    { _pzcdXgafv :: !(Maybe Xgafv)
     , _pzcdUploadProtocol :: !(Maybe Text)
-    , _pzcdPp             :: !Bool
-    , _pzcdAccessToken    :: !(Maybe Text)
-    , _pzcdUploadType     :: !(Maybe Text)
-    , _pzcdZone           :: !Text
-    , _pzcdBearerToken    :: !(Maybe Text)
-    , _pzcdClusterId      :: !Text
-    , _pzcdProjectId      :: !Text
-    , _pzcdCallback       :: !(Maybe Text)
+    , _pzcdPp :: !Bool
+    , _pzcdAccessToken :: !(Maybe Text)
+    , _pzcdUploadType :: !(Maybe Text)
+    , _pzcdZone :: !Text
+    , _pzcdBearerToken :: !(Maybe Text)
+    , _pzcdClusterId :: !Text
+    , _pzcdProjectId :: !Text
+    , _pzcdFields :: !(Maybe Text)
+    , _pzcdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersDelete' with the minimum fields required to make a request.
@@ -114,13 +117,15 @@ data ProjectsZonesClustersDelete = ProjectsZonesClustersDelete'
 --
 -- * 'pzcdProjectId'
 --
+-- * 'pzcdFields'
+--
 -- * 'pzcdCallback'
 projectsZonesClustersDelete
     :: Text -- ^ 'pzcdZone'
     -> Text -- ^ 'pzcdClusterId'
     -> Text -- ^ 'pzcdProjectId'
     -> ProjectsZonesClustersDelete
-projectsZonesClustersDelete pPzcdZone_ pPzcdClusterId_ pPzcdProjectId_ =
+projectsZonesClustersDelete pPzcdZone_ pPzcdClusterId_ pPzcdProjectId_ = 
     ProjectsZonesClustersDelete'
     { _pzcdXgafv = Nothing
     , _pzcdUploadProtocol = Nothing
@@ -131,11 +136,12 @@ projectsZonesClustersDelete pPzcdZone_ pPzcdClusterId_ pPzcdProjectId_ =
     , _pzcdBearerToken = Nothing
     , _pzcdClusterId = pPzcdClusterId_
     , _pzcdProjectId = pPzcdProjectId_
+    , _pzcdFields = Nothing
     , _pzcdCallback = Nothing
     }
 
 -- | V1 error format.
-pzcdXgafv :: Lens' ProjectsZonesClustersDelete (Maybe Text)
+pzcdXgafv :: Lens' ProjectsZonesClustersDelete (Maybe Xgafv)
 pzcdXgafv
   = lens _pzcdXgafv (\ s a -> s{_pzcdXgafv = a})
 
@@ -185,6 +191,11 @@ pzcdProjectId
   = lens _pzcdProjectId
       (\ s a -> s{_pzcdProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcdFields :: Lens' ProjectsZonesClustersDelete (Maybe Text)
+pzcdFields
+  = lens _pzcdFields (\ s a -> s{_pzcdFields = a})
+
 -- | JSONP
 pzcdCallback :: Lens' ProjectsZonesClustersDelete (Maybe Text)
 pzcdCallback
@@ -204,6 +215,7 @@ instance GoogleRequest ProjectsZonesClustersDelete
               _pzcdUploadType
               _pzcdBearerToken
               _pzcdCallback
+              _pzcdFields
               (Just AltJSON)
               containerService
           where go

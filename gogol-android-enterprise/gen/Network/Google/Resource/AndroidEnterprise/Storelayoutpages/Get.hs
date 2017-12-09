@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Get
     -- * Request Lenses
     , sgEnterpriseId
     , sgPageId
+    , sgFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutpages.get@ method which the
 -- 'StorelayoutpagesGet' request conforms to.
@@ -50,14 +51,16 @@ type StorelayoutpagesGetResource =
              "storeLayout" :>
                "pages" :>
                  Capture "pageId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] StorePage
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] StorePage
 
 -- | Retrieves details of a store page.
 --
 -- /See:/ 'storelayoutpagesGet' smart constructor.
 data StorelayoutpagesGet = StorelayoutpagesGet'
     { _sgEnterpriseId :: !Text
-    , _sgPageId       :: !Text
+    , _sgPageId :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutpagesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data StorelayoutpagesGet = StorelayoutpagesGet'
 -- * 'sgEnterpriseId'
 --
 -- * 'sgPageId'
+--
+-- * 'sgFields'
 storelayoutpagesGet
     :: Text -- ^ 'sgEnterpriseId'
     -> Text -- ^ 'sgPageId'
     -> StorelayoutpagesGet
-storelayoutpagesGet pSgEnterpriseId_ pSgPageId_ =
+storelayoutpagesGet pSgEnterpriseId_ pSgPageId_ = 
     StorelayoutpagesGet'
     { _sgEnterpriseId = pSgEnterpriseId_
     , _sgPageId = pSgPageId_
+    , _sgFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -87,12 +93,17 @@ sgEnterpriseId
 sgPageId :: Lens' StorelayoutpagesGet Text
 sgPageId = lens _sgPageId (\ s a -> s{_sgPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' StorelayoutpagesGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
+
 instance GoogleRequest StorelayoutpagesGet where
         type Rs StorelayoutpagesGet = StorePage
         type Scopes StorelayoutpagesGet =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutpagesGet'{..}
-          = go _sgEnterpriseId _sgPageId (Just AltJSON)
+          = go _sgEnterpriseId _sgPageId _sgFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

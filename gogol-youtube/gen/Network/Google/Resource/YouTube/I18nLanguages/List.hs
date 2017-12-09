@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.I18nLanguages.List
     -- * Request Lenses
     , illPart
     , illHl
+    , illFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.i18nLanguages.list@ method which the
 -- 'I18nLanguagesList' request conforms to.
@@ -49,8 +50,9 @@ type I18nLanguagesListResource =
          "i18nLanguages" :>
            QueryParam "part" Text :>
              QueryParam "hl" Text :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] I18nLanguageListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] I18nLanguageListResponse
 
 -- | Returns a list of application languages that the YouTube website
 -- supports.
@@ -58,7 +60,8 @@ type I18nLanguagesListResource =
 -- /See:/ 'i18nLanguagesList' smart constructor.
 data I18nLanguagesList = I18nLanguagesList'
     { _illPart :: !Text
-    , _illHl   :: !Text
+    , _illHl :: !Text
+    , _illFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'I18nLanguagesList' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data I18nLanguagesList = I18nLanguagesList'
 -- * 'illPart'
 --
 -- * 'illHl'
+--
+-- * 'illFields'
 i18nLanguagesList
     :: Text -- ^ 'illPart'
     -> I18nLanguagesList
-i18nLanguagesList pIllPart_ =
+i18nLanguagesList pIllPart_ = 
     I18nLanguagesList'
     { _illPart = pIllPart_
     , _illHl = "en_US"
+    , _illFields = Nothing
     }
 
 -- | The part parameter specifies the i18nLanguage resource properties that
@@ -87,6 +93,11 @@ illPart = lens _illPart (\ s a -> s{_illPart = a})
 illHl :: Lens' I18nLanguagesList Text
 illHl = lens _illHl (\ s a -> s{_illHl = a})
 
+-- | Selector specifying which fields to include in a partial response.
+illFields :: Lens' I18nLanguagesList (Maybe Text)
+illFields
+  = lens _illFields (\ s a -> s{_illFields = a})
+
 instance GoogleRequest I18nLanguagesList where
         type Rs I18nLanguagesList = I18nLanguageListResponse
         type Scopes I18nLanguagesList =
@@ -95,7 +106,8 @@ instance GoogleRequest I18nLanguagesList where
                "https://www.googleapis.com/auth/youtube.readonly",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient I18nLanguagesList'{..}
-          = go (Just _illPart) (Just _illHl) (Just AltJSON)
+          = go (Just _illPart) (Just _illHl) _illFields
+              (Just AltJSON)
               youTubeService
           where go
                   = buildClient

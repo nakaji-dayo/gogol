@@ -26,9 +26,9 @@
 -- model. When you add a version to a model that already has one or more
 -- versions, the default version does not automatically change. If you want
 -- a new version to be the default, you must call
--- [projects.models.versions.setDefault](\/ml\/reference\/rest\/v1beta1\/projects.models.versions\/setDefault).
+-- [projects.models.versions.setDefault](\/ml-engine\/reference\/rest\/v1\/projects.models.versions\/setDefault).
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.models.versions.create@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.models.versions.create@.
 module Network.Google.Resource.Ml.Projects.Models.Versions.Create
     (
     -- * REST Resource
@@ -47,16 +47,17 @@ module Network.Google.Resource.Ml.Projects.Models.Versions.Create
     , pmvcUploadType
     , pmvcPayload
     , pmvcBearerToken
+    , pmvcFields
     , pmvcCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.models.versions.create@ method which the
 -- 'ProjectsModelsVersionsCreate' request conforms to.
 type ProjectsModelsVersionsCreateResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "parent" Text :>
          "versions" :>
            QueryParam "$.xgafv" Xgafv :>
@@ -66,9 +67,10 @@ type ProjectsModelsVersionsCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] GoogleCloudMlV1beta1__Version :>
-                             Post '[JSON] GoogleLongrunning__Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] GoogleCloudMlV1__Version :>
+                               Post '[JSON] GoogleLongrunning__Operation
 
 -- | Creates a new version of a model from a trained TensorFlow model. If the
 -- version created in the cloud by this call is the first deployed version
@@ -76,19 +78,20 @@ type ProjectsModelsVersionsCreateResource =
 -- model. When you add a version to a model that already has one or more
 -- versions, the default version does not automatically change. If you want
 -- a new version to be the default, you must call
--- [projects.models.versions.setDefault](\/ml\/reference\/rest\/v1beta1\/projects.models.versions\/setDefault).
+-- [projects.models.versions.setDefault](\/ml-engine\/reference\/rest\/v1\/projects.models.versions\/setDefault).
 --
 -- /See:/ 'projectsModelsVersionsCreate' smart constructor.
 data ProjectsModelsVersionsCreate = ProjectsModelsVersionsCreate'
-    { _pmvcParent         :: !Text
-    , _pmvcXgafv          :: !(Maybe Xgafv)
+    { _pmvcParent :: !Text
+    , _pmvcXgafv :: !(Maybe Xgafv)
     , _pmvcUploadProtocol :: !(Maybe Text)
-    , _pmvcPp             :: !Bool
-    , _pmvcAccessToken    :: !(Maybe Text)
-    , _pmvcUploadType     :: !(Maybe Text)
-    , _pmvcPayload        :: !GoogleCloudMlV1beta1__Version
-    , _pmvcBearerToken    :: !(Maybe Text)
-    , _pmvcCallback       :: !(Maybe Text)
+    , _pmvcPp :: !Bool
+    , _pmvcAccessToken :: !(Maybe Text)
+    , _pmvcUploadType :: !(Maybe Text)
+    , _pmvcPayload :: !GoogleCloudMlV1__Version
+    , _pmvcBearerToken :: !(Maybe Text)
+    , _pmvcFields :: !(Maybe Text)
+    , _pmvcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsModelsVersionsCreate' with the minimum fields required to make a request.
@@ -111,12 +114,14 @@ data ProjectsModelsVersionsCreate = ProjectsModelsVersionsCreate'
 --
 -- * 'pmvcBearerToken'
 --
+-- * 'pmvcFields'
+--
 -- * 'pmvcCallback'
 projectsModelsVersionsCreate
     :: Text -- ^ 'pmvcParent'
-    -> GoogleCloudMlV1beta1__Version -- ^ 'pmvcPayload'
+    -> GoogleCloudMlV1__Version -- ^ 'pmvcPayload'
     -> ProjectsModelsVersionsCreate
-projectsModelsVersionsCreate pPmvcParent_ pPmvcPayload_ =
+projectsModelsVersionsCreate pPmvcParent_ pPmvcPayload_ = 
     ProjectsModelsVersionsCreate'
     { _pmvcParent = pPmvcParent_
     , _pmvcXgafv = Nothing
@@ -126,11 +131,11 @@ projectsModelsVersionsCreate pPmvcParent_ pPmvcPayload_ =
     , _pmvcUploadType = Nothing
     , _pmvcPayload = pPmvcPayload_
     , _pmvcBearerToken = Nothing
+    , _pmvcFields = Nothing
     , _pmvcCallback = Nothing
     }
 
--- | Required. The name of the model. Authorization: requires \`Editor\` role
--- on the parent project.
+-- | Required. The name of the model.
 pmvcParent :: Lens' ProjectsModelsVersionsCreate Text
 pmvcParent
   = lens _pmvcParent (\ s a -> s{_pmvcParent = a})
@@ -163,7 +168,7 @@ pmvcUploadType
       (\ s a -> s{_pmvcUploadType = a})
 
 -- | Multipart request metadata.
-pmvcPayload :: Lens' ProjectsModelsVersionsCreate GoogleCloudMlV1beta1__Version
+pmvcPayload :: Lens' ProjectsModelsVersionsCreate GoogleCloudMlV1__Version
 pmvcPayload
   = lens _pmvcPayload (\ s a -> s{_pmvcPayload = a})
 
@@ -172,6 +177,11 @@ pmvcBearerToken :: Lens' ProjectsModelsVersionsCreate (Maybe Text)
 pmvcBearerToken
   = lens _pmvcBearerToken
       (\ s a -> s{_pmvcBearerToken = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pmvcFields :: Lens' ProjectsModelsVersionsCreate (Maybe Text)
+pmvcFields
+  = lens _pmvcFields (\ s a -> s{_pmvcFields = a})
 
 -- | JSONP
 pmvcCallback :: Lens' ProjectsModelsVersionsCreate (Maybe Text)
@@ -191,6 +201,7 @@ instance GoogleRequest ProjectsModelsVersionsCreate
               _pmvcUploadType
               _pmvcBearerToken
               _pmvcCallback
+              _pmvcFields
               (Just AltJSON)
               _pmvcPayload
               machineLearningService

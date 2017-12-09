@@ -17,17 +17,17 @@
 --
 module Network.Google.Script.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.Script.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Script.Types.Sum
 
 -- | If a \`run\` call succeeds but the script function (or Apps Script
--- itself) throws an exception, the response body\'s \`error\` field will
--- contain this \`Status\` object.
+-- itself) throws an exception, the response body\'s error field contains
+-- this \`Status\` object.
 --
 -- /See:/ 'status' smart constructor.
 data Status = Status'
     { _sDetails :: !(Maybe [StatusDetailsItem])
-    , _sCode    :: !(Maybe (Textual Int32))
+    , _sCode :: !(Maybe (Textual Int32))
     , _sMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -42,14 +42,14 @@ data Status = Status'
 -- * 'sMessage'
 status
     :: Status
-status =
+status = 
     Status'
     { _sDetails = Nothing
     , _sCode = Nothing
     , _sMessage = Nothing
     }
 
--- | An array that contains a single \`ExecutionError\` object that provides
+-- | An array that contains a single ExecutionError object that provides
 -- information about the nature of the error.
 sDetails :: Lens' Status [StatusDetailsItem]
 sDetails
@@ -57,15 +57,19 @@ sDetails
       _Default
       . _Coerce
 
--- | The status code, which should be an enum value of google.rpc.Code.
+-- | The status code. For this API, this value either:
+--
+-- -   3, indicating an \`INVALID_ARGUMENT\` error, or
+-- -   1, indicating a \`CANCELLED\` execution.
 sCode :: Lens' Status (Maybe Int32)
 sCode
   = lens _sCode (\ s a -> s{_sCode = a}) .
       mapping _Coerce
 
--- | A developer-facing error message, which should be in English. Any
--- user-facing error message should be localized and sent in the
--- google.rpc.Status.details field, or localized by the client.
+-- | A developer-facing error message, which is in English. Any user-facing
+-- error message is localized and sent in the
+-- [google.rpc.Status.details](google.rpc.Status.details) field, or
+-- localized by the client.
 sMessage :: Lens' Status (Maybe Text)
 sMessage = lens _sMessage (\ s a -> s{_sMessage = a})
 
@@ -85,28 +89,34 @@ instance ToJSON Status where
                   ("code" .=) <$> _sCode,
                   ("message" .=) <$> _sMessage])
 
--- | The response will not arrive until the function finishes executing. The
--- maximum runtime is listed in the guide to [limitations in Apps
--- Script](https:\/\/developers.google.com\/apps-script\/guides\/services\/quotas#current_limitations).
--- If the script function returns successfully, the \`response\` field will
--- contain an \`ExecutionResponse\` object with the function\'s return
--- value in the object\'s \`result\` field. If the script function (or Apps
--- Script itself) throws an exception, the \`error\` field will contain a
--- \`Status\` object. The \`Status\` object\'s \`details\` field will
--- contain an array with a single \`ExecutionError\` object that provides
--- information about the nature of the error. If the \`run\` call itself
--- fails (for example, because of a malformed request or an authorization
--- error), the method will return an HTTP response code in the 4XX range
--- with a different format for the response body. Client libraries will
--- automatically convert a 4XX response into an exception class.
+-- | A representation of a execution of an Apps Script function that is
+-- started using run. The execution response does not arrive until the
+-- function finishes executing. The maximum execution runtime is listed in
+-- the [Apps Script quotas
+-- guide](\/apps-script\/guides\/services\/quotas#current_limitations).
+--
+-- After the execution is started, it can have one of four outcomes:
+--
+-- -   If the script function returns successfully, the response field
+--     contains an ExecutionResponse object with the function\'s return
+--     value in the object\'s \`result\` field.
+-- -   If the script function (or Apps Script itself) throws an exception,
+--     the error field contains a Status object. The \`Status\` object\'s
+--     \`details\` field contains an array with a single ExecutionError
+--     object that provides information about the nature of the error.
+-- -   If the execution has not yet completed, the done field is \`false\`
+--     and the neither the \`response\` nor \`error\` fields are present.
+-- -   If the \`run\` call itself fails (for example, because of a
+--     malformed request or an authorization error), the method returns an
+--     HTTP response code in the 4XX range with a different format for the
+--     response body. Client libraries automatically convert a 4XX response
+--     into an exception class.
 --
 -- /See:/ 'operation' smart constructor.
 data Operation = Operation'
-    { _oDone     :: !(Maybe Bool)
-    , _oError    :: !(Maybe Status)
+    { _oDone :: !(Maybe Bool)
+    , _oError :: !(Maybe Status)
     , _oResponse :: !(Maybe OperationResponse)
-    , _oName     :: !(Maybe Text)
-    , _oMetadata :: !(Maybe OperationMetadata)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Operation' with the minimum fields required to make a request.
@@ -118,48 +128,34 @@ data Operation = Operation'
 -- * 'oError'
 --
 -- * 'oResponse'
---
--- * 'oName'
---
--- * 'oMetadata'
 operation
     :: Operation
-operation =
+operation = 
     Operation'
     { _oDone = Nothing
     , _oError = Nothing
     , _oResponse = Nothing
-    , _oName = Nothing
-    , _oMetadata = Nothing
     }
 
--- | This field is not used.
+-- | This field indicates whether the script execution has completed. A
+-- completed execution has a populated \`response\` field containing the
+-- ExecutionResponse from function that was executed.
 oDone :: Lens' Operation (Maybe Bool)
 oDone = lens _oDone (\ s a -> s{_oDone = a})
 
 -- | If a \`run\` call succeeds but the script function (or Apps Script
--- itself) throws an exception, this field will contain a \`Status\`
--- object. The \`Status\` object\'s \`details\` field will contain an array
--- with a single \`ExecutionError\` object that provides information about
--- the nature of the error.
+-- itself) throws an exception, this field contains a Status object. The
+-- \`Status\` object\'s \`details\` field contains an array with a single
+-- ExecutionError object that provides information about the nature of the
+-- error.
 oError :: Lens' Operation (Maybe Status)
 oError = lens _oError (\ s a -> s{_oError = a})
 
--- | If the script function returns successfully, this field will contain an
--- \`ExecutionResponse\` object with the function\'s return value as the
--- object\'s \`result\` field.
+-- | If the script function returns successfully, this field contains an
+-- ExecutionResponse object with the function\'s return value.
 oResponse :: Lens' Operation (Maybe OperationResponse)
 oResponse
   = lens _oResponse (\ s a -> s{_oResponse = a})
-
--- | This field is not used.
-oName :: Lens' Operation (Maybe Text)
-oName = lens _oName (\ s a -> s{_oName = a})
-
--- | This field is not used.
-oMetadata :: Lens' Operation (Maybe OperationMetadata)
-oMetadata
-  = lens _oMetadata (\ s a -> s{_oMetadata = a})
 
 instance FromJSON Operation where
         parseJSON
@@ -167,29 +163,25 @@ instance FromJSON Operation where
               (\ o ->
                  Operation' <$>
                    (o .:? "done") <*> (o .:? "error") <*>
-                     (o .:? "response")
-                     <*> (o .:? "name")
-                     <*> (o .:? "metadata"))
+                     (o .:? "response"))
 
 instance ToJSON Operation where
         toJSON Operation'{..}
           = object
               (catMaybes
                  [("done" .=) <$> _oDone, ("error" .=) <$> _oError,
-                  ("response" .=) <$> _oResponse,
-                  ("name" .=) <$> _oName,
-                  ("metadata" .=) <$> _oMetadata])
+                  ("response" .=) <$> _oResponse])
 
 -- | A request to run the function in a script. The script is identified by
--- the specified \`script_id\`. Executing a function on a script will
--- return results based on the implementation of the script.
+-- the specified \`script_id\`. Executing a function on a script returns
+-- results based on the implementation of the script.
 --
 -- /See:/ 'executionRequest' smart constructor.
 data ExecutionRequest = ExecutionRequest'
-    { _erFunction     :: !(Maybe Text)
+    { _erFunction :: !(Maybe Text)
     , _erSessionState :: !(Maybe Text)
-    , _erDevMode      :: !(Maybe Bool)
-    , _erParameters   :: !(Maybe [JSONValue])
+    , _erDevMode :: !(Maybe Bool)
+    , _erParameters :: !(Maybe [JSONValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ExecutionRequest' with the minimum fields required to make a request.
@@ -205,7 +197,7 @@ data ExecutionRequest = ExecutionRequest'
 -- * 'erParameters'
 executionRequest
     :: ExecutionRequest
-executionRequest =
+executionRequest = 
     ExecutionRequest'
     { _erFunction = Nothing
     , _erSessionState = Nothing
@@ -219,7 +211,18 @@ erFunction :: Lens' ExecutionRequest (Maybe Text)
 erFunction
   = lens _erFunction (\ s a -> s{_erFunction = a})
 
--- | This field is not used.
+-- | For Android add-ons only. An ID that represents the user\'s current
+-- session in the Android app for Google Docs or Sheets, included as extra
+-- data in the
+-- [Intent](https:\/\/developer.android.com\/guide\/components\/intents-filters.html)
+-- that launches the add-on. When an Android add-on is run with a session
+-- state, it gains the privileges of a
+-- [bound](https:\/\/developers.google.com\/apps-script\/guides\/bound)
+-- script—that is, it can access information like the user\'s current
+-- cursor position (in Docs) or selected cell (in Sheets). To retrieve the
+-- state, call
+-- \`Intent.getStringExtra(\"com.google.android.apps.docs.addons.SessionState\")\`.
+-- Optional.
 erSessionState :: Lens' ExecutionRequest (Maybe Text)
 erSessionState
   = lens _erSessionState
@@ -227,16 +230,17 @@ erSessionState
 
 -- | If \`true\` and the user is an owner of the script, the script runs at
 -- the most recently saved version rather than the version deployed for use
--- with the Execution API. Optional; default is \`false\`.
+-- with the Apps Script API. Optional; default is \`false\`.
 erDevMode :: Lens' ExecutionRequest (Maybe Bool)
 erDevMode
   = lens _erDevMode (\ s a -> s{_erDevMode = a})
 
--- | The parameters to be passed to the function being executed. The type for
--- each parameter should match the expected type in Apps Script. Parameters
--- cannot be Apps Script-specific objects (such as a \`Document\` or
--- \`Calendar\`); they can only be primitive types such as a \`string\`,
--- \`number\`, \`array\`, \`object\`, or \`boolean\`. Optional.
+-- | The parameters to be passed to the function being executed. The object
+-- type for each parameter should match the expected type in Apps Script.
+-- Parameters cannot be Apps Script-specific object types (such as a
+-- \`Document\` or a \`Calendar\`); they can only be primitive types such
+-- as \`string\`, \`number\`, \`array\`, \`object\`, or \`boolean\`.
+-- Optional.
 erParameters :: Lens' ExecutionRequest [JSONValue]
 erParameters
   = lens _erParameters (\ s a -> s{_erParameters = a})
@@ -275,7 +279,7 @@ newtype StatusDetailsItem = StatusDetailsItem'
 statusDetailsItem
     :: HashMap Text JSONValue -- ^ 'sdiAddtional'
     -> StatusDetailsItem
-statusDetailsItem pSdiAddtional_ =
+statusDetailsItem pSdiAddtional_ = 
     StatusDetailsItem'
     { _sdiAddtional = _Coerce # pSdiAddtional_
     }
@@ -298,7 +302,7 @@ instance ToJSON StatusDetailsItem where
 --
 -- /See:/ 'scriptStackTraceElement' smart constructor.
 data ScriptStackTraceElement = ScriptStackTraceElement'
-    { _ssteFunction   :: !(Maybe Text)
+    { _ssteFunction :: !(Maybe Text)
     , _ssteLineNumber :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -311,7 +315,7 @@ data ScriptStackTraceElement = ScriptStackTraceElement'
 -- * 'ssteLineNumber'
 scriptStackTraceElement
     :: ScriptStackTraceElement
-scriptStackTraceElement =
+scriptStackTraceElement = 
     ScriptStackTraceElement'
     { _ssteFunction = Nothing
     , _ssteLineNumber = Nothing
@@ -343,18 +347,18 @@ instance ToJSON ScriptStackTraceElement where
                  [("function" .=) <$> _ssteFunction,
                   ("lineNumber" .=) <$> _ssteLineNumber])
 
--- | An object that provides information about the nature of an error in the
--- Apps Script Execution API. If an \`run\` call succeeds but the script
--- function (or Apps Script itself) throws an exception, the response
--- body\'s \`error\` field will contain a \`Status\` object. The \`Status\`
--- object\'s \`details\` field will contain an array with a single one of
--- these \`ExecutionError\` objects.
+-- | An object that provides information about the nature of an error
+-- resulting from an attempted execution of a script function using the
+-- Apps Script API. If a run call succeeds but the script function (or Apps
+-- Script itself) throws an exception, the response body\'s error field
+-- contains a Status object. The \`Status\` object\'s \`details\` field
+-- contains an array with a single one of these \`ExecutionError\` objects.
 --
 -- /See:/ 'executionError' smart constructor.
 data ExecutionError = ExecutionError'
     { _eeScriptStackTraceElements :: !(Maybe [ScriptStackTraceElement])
-    , _eeErrorType                :: !(Maybe Text)
-    , _eeErrorMessage             :: !(Maybe Text)
+    , _eeErrorType :: !(Maybe Text)
+    , _eeErrorMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ExecutionError' with the minimum fields required to make a request.
@@ -368,7 +372,7 @@ data ExecutionError = ExecutionError'
 -- * 'eeErrorMessage'
 executionError
     :: ExecutionError
-executionError =
+executionError = 
     ExecutionError'
     { _eeScriptStackTraceElements = Nothing
     , _eeErrorType = Nothing
@@ -415,43 +419,8 @@ instance ToJSON ExecutionError where
                   ("errorType" .=) <$> _eeErrorType,
                   ("errorMessage" .=) <$> _eeErrorMessage])
 
--- | This field is not used.
---
--- /See:/ 'operationMetadata' smart constructor.
-newtype OperationMetadata = OperationMetadata'
-    { _omAddtional :: HashMap Text JSONValue
-    } deriving (Eq,Show,Data,Typeable,Generic)
-
--- | Creates a value of 'OperationMetadata' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'omAddtional'
-operationMetadata
-    :: HashMap Text JSONValue -- ^ 'omAddtional'
-    -> OperationMetadata
-operationMetadata pOmAddtional_ =
-    OperationMetadata'
-    { _omAddtional = _Coerce # pOmAddtional_
-    }
-
--- | Properties of the object. Contains field \'type with type URL.
-omAddtional :: Lens' OperationMetadata (HashMap Text JSONValue)
-omAddtional
-  = lens _omAddtional (\ s a -> s{_omAddtional = a}) .
-      _Coerce
-
-instance FromJSON OperationMetadata where
-        parseJSON
-          = withObject "OperationMetadata"
-              (\ o -> OperationMetadata' <$> (parseJSONObject o))
-
-instance ToJSON OperationMetadata where
-        toJSON = toJSON . _omAddtional
-
--- | If the script function returns successfully, this field will contain an
--- \`ExecutionResponse\` object with the function\'s return value as the
--- object\'s \`result\` field.
+-- | If the script function returns successfully, this field contains an
+-- ExecutionResponse object with the function\'s return value.
 --
 -- /See:/ 'operationResponse' smart constructor.
 newtype OperationResponse = OperationResponse'
@@ -466,7 +435,7 @@ newtype OperationResponse = OperationResponse'
 operationResponse
     :: HashMap Text JSONValue -- ^ 'orAddtional'
     -> OperationResponse
-operationResponse pOrAddtional_ =
+operationResponse pOrAddtional_ = 
     OperationResponse'
     { _orAddtional = _Coerce # pOrAddtional_
     }
@@ -485,38 +454,31 @@ instance FromJSON OperationResponse where
 instance ToJSON OperationResponse where
         toJSON = toJSON . _orAddtional
 
--- | An object that provides the return value of a function executed through
--- the Apps Script Execution API. If an \`run\` call succeeds and the
--- script function returns successfully, the response body\'s \`response\`
--- field will contain this \`ExecutionResponse\` object.
+-- | An object that provides the return value of a function executed using
+-- the Apps Script API. If the script function returns successfully, the
+-- response body\'s response field contains this \`ExecutionResponse\`
+-- object.
 --
 -- /See:/ 'executionResponse' smart constructor.
-data ExecutionResponse = ExecutionResponse'
-    { _erStatus :: !(Maybe Text)
-    , _erResult :: !(Maybe JSONValue)
+newtype ExecutionResponse = ExecutionResponse'
+    { _erResult :: Maybe JSONValue
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ExecutionResponse' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'erStatus'
---
 -- * 'erResult'
 executionResponse
     :: ExecutionResponse
-executionResponse =
+executionResponse = 
     ExecutionResponse'
-    { _erStatus = Nothing
-    , _erResult = Nothing
+    { _erResult = Nothing
     }
 
-erStatus :: Lens' ExecutionResponse (Maybe Text)
-erStatus = lens _erStatus (\ s a -> s{_erStatus = a})
-
--- | The return value of the script function. The type will match the type
--- returned in Apps Script. Functions called through the Execution API
--- cannot return Apps Script-specific objects (such as a \`Document\` or
+-- | The return value of the script function. The type matches the object
+-- type returned in Apps Script. Functions called using the Apps Script API
+-- cannot return Apps Script-specific objects (such as a \`Document\` or a
 -- \`Calendar\`); they can only return primitive types such as a
 -- \`string\`, \`number\`, \`array\`, \`object\`, or \`boolean\`.
 erResult :: Lens' ExecutionResponse (Maybe JSONValue)
@@ -525,13 +487,8 @@ erResult = lens _erResult (\ s a -> s{_erResult = a})
 instance FromJSON ExecutionResponse where
         parseJSON
           = withObject "ExecutionResponse"
-              (\ o ->
-                 ExecutionResponse' <$>
-                   (o .:? "status") <*> (o .:? "result"))
+              (\ o -> ExecutionResponse' <$> (o .:? "result"))
 
 instance ToJSON ExecutionResponse where
         toJSON ExecutionResponse'{..}
-          = object
-              (catMaybes
-                 [("status" .=) <$> _erStatus,
-                  ("result" .=) <$> _erResult])
+          = object (catMaybes [("result" .=) <$> _erResult])

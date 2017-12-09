@@ -37,10 +37,11 @@ module Network.Google.Resource.ReplicaPoolUpdater.RollingUpdates.Cancel
     , rucRollingUpdate
     , rucProject
     , rucZone
+    , rucFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ReplicaPoolUpdater.Types
+import Network.Google.Prelude
+import Network.Google.ReplicaPoolUpdater.Types
 
 -- | A resource alias for @replicapoolupdater.rollingUpdates.cancel@ method which the
 -- 'RollingUpdatesCancel' request conforms to.
@@ -54,7 +55,8 @@ type RollingUpdatesCancelResource =
                  "rollingUpdates" :>
                    Capture "rollingUpdate" Text :>
                      "cancel" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Cancels an update. The update must be PAUSED before it can be cancelled.
 -- This has no effect if the update is already CANCELLED.
@@ -62,8 +64,9 @@ type RollingUpdatesCancelResource =
 -- /See:/ 'rollingUpdatesCancel' smart constructor.
 data RollingUpdatesCancel = RollingUpdatesCancel'
     { _rucRollingUpdate :: !Text
-    , _rucProject       :: !Text
-    , _rucZone          :: !Text
+    , _rucProject :: !Text
+    , _rucZone :: !Text
+    , _rucFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RollingUpdatesCancel' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data RollingUpdatesCancel = RollingUpdatesCancel'
 -- * 'rucProject'
 --
 -- * 'rucZone'
+--
+-- * 'rucFields'
 rollingUpdatesCancel
     :: Text -- ^ 'rucRollingUpdate'
     -> Text -- ^ 'rucProject'
     -> Text -- ^ 'rucZone'
     -> RollingUpdatesCancel
-rollingUpdatesCancel pRucRollingUpdate_ pRucProject_ pRucZone_ =
+rollingUpdatesCancel pRucRollingUpdate_ pRucProject_ pRucZone_ = 
     RollingUpdatesCancel'
     { _rucRollingUpdate = pRucRollingUpdate_
     , _rucProject = pRucProject_
     , _rucZone = pRucZone_
+    , _rucFields = Nothing
     }
 
 -- | The name of the update.
@@ -102,6 +108,11 @@ rucProject
 rucZone :: Lens' RollingUpdatesCancel Text
 rucZone = lens _rucZone (\ s a -> s{_rucZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rucFields :: Lens' RollingUpdatesCancel (Maybe Text)
+rucFields
+  = lens _rucFields (\ s a -> s{_rucFields = a})
+
 instance GoogleRequest RollingUpdatesCancel where
         type Rs RollingUpdatesCancel = Operation
         type Scopes RollingUpdatesCancel =
@@ -109,6 +120,7 @@ instance GoogleRequest RollingUpdatesCancel where
                "https://www.googleapis.com/auth/replicapool"]
         requestClient RollingUpdatesCancel'{..}
           = go _rucProject _rucZone _rucRollingUpdate
+              _rucFields
               (Just AltJSON)
               replicaPoolUpdaterService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.Calendars.Patch
     -- * Request Lenses
     , cpCalendarId
     , cpPayload
+    , cpFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.patch@ method which the
 -- 'CalendarsPatch' request conforms to.
@@ -47,15 +48,17 @@ type CalendarsPatchResource =
        "v3" :>
          "calendars" :>
            Capture "calendarId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Calendar :> Patch '[JSON] Calendar
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Calendar :> Patch '[JSON] Calendar
 
 -- | Updates metadata for a calendar. This method supports patch semantics.
 --
 -- /See:/ 'calendarsPatch' smart constructor.
 data CalendarsPatch = CalendarsPatch'
     { _cpCalendarId :: !Text
-    , _cpPayload    :: !Calendar
+    , _cpPayload :: !Calendar
+    , _cpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsPatch' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data CalendarsPatch = CalendarsPatch'
 -- * 'cpCalendarId'
 --
 -- * 'cpPayload'
+--
+-- * 'cpFields'
 calendarsPatch
     :: Text -- ^ 'cpCalendarId'
     -> Calendar -- ^ 'cpPayload'
     -> CalendarsPatch
-calendarsPatch pCpCalendarId_ pCpPayload_ =
+calendarsPatch pCpCalendarId_ pCpPayload_ = 
     CalendarsPatch'
     { _cpCalendarId = pCpCalendarId_
     , _cpPayload = pCpPayload_
+    , _cpFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -87,12 +93,17 @@ cpPayload :: Lens' CalendarsPatch Calendar
 cpPayload
   = lens _cpPayload (\ s a -> s{_cpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cpFields :: Lens' CalendarsPatch (Maybe Text)
+cpFields = lens _cpFields (\ s a -> s{_cpFields = a})
+
 instance GoogleRequest CalendarsPatch where
         type Rs CalendarsPatch = Calendar
         type Scopes CalendarsPatch =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarsPatch'{..}
-          = go _cpCalendarId (Just AltJSON) _cpPayload
+          = go _cpCalendarId _cpFields (Just AltJSON)
+              _cpPayload
               appsCalendarService
           where go
                   = buildClient (Proxy :: Proxy CalendarsPatchResource)

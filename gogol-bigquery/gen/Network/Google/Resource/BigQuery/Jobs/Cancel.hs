@@ -37,10 +37,11 @@ module Network.Google.Resource.BigQuery.Jobs.Cancel
     -- * Request Lenses
     , jcJobId
     , jcProjectId
+    , jcFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.cancel@ method which the
 -- 'JobsCancel' request conforms to.
@@ -52,8 +53,9 @@ type JobsCancelResource =
              "jobs" :>
                Capture "jobId" Text :>
                  "cancel" :>
-                   QueryParam "alt" AltJSON :>
-                     Post '[JSON] JobCancelResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Post '[JSON] JobCancelResponse
 
 -- | Requests that a job be cancelled. This call will return immediately, and
 -- the client will need to poll for the job status to see if the cancel
@@ -61,8 +63,9 @@ type JobsCancelResource =
 --
 -- /See:/ 'jobsCancel' smart constructor.
 data JobsCancel = JobsCancel'
-    { _jcJobId     :: !Text
+    { _jcJobId :: !Text
     , _jcProjectId :: !Text
+    , _jcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsCancel' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data JobsCancel = JobsCancel'
 -- * 'jcJobId'
 --
 -- * 'jcProjectId'
+--
+-- * 'jcFields'
 jobsCancel
     :: Text -- ^ 'jcJobId'
     -> Text -- ^ 'jcProjectId'
     -> JobsCancel
-jobsCancel pJcJobId_ pJcProjectId_ =
+jobsCancel pJcJobId_ pJcProjectId_ = 
     JobsCancel'
     { _jcJobId = pJcJobId_
     , _jcProjectId = pJcProjectId_
+    , _jcFields = Nothing
     }
 
 -- | [Required] Job ID of the job to cancel
@@ -91,13 +97,17 @@ jcProjectId :: Lens' JobsCancel Text
 jcProjectId
   = lens _jcProjectId (\ s a -> s{_jcProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jcFields :: Lens' JobsCancel (Maybe Text)
+jcFields = lens _jcFields (\ s a -> s{_jcFields = a})
+
 instance GoogleRequest JobsCancel where
         type Rs JobsCancel = JobCancelResponse
         type Scopes JobsCancel =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient JobsCancel'{..}
-          = go _jcProjectId _jcJobId (Just AltJSON)
+          = go _jcProjectId _jcJobId _jcFields (Just AltJSON)
               bigQueryService
           where go
                   = buildClient (Proxy :: Proxy JobsCancelResource)

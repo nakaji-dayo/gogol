@@ -17,22 +17,22 @@
 --
 module Network.Google.AdExchangeBuyer.Types.Product where
 
-import           Network.Google.AdExchangeBuyer.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types.Sum
+import Network.Google.Prelude
 
 -- | A proposal is associated with a bunch of notes which may optionally be
 -- associated with a deal and\/or revision number.
 --
 -- /See:/ 'marketplaceNote' smart constructor.
 data MarketplaceNote = MarketplaceNote'
-    { _mnNote                   :: !(Maybe Text)
-    , _mnKind                   :: !Text
-    , _mnTimestampMs            :: !(Maybe (Textual Int64))
-    , _mnProposalId             :: !(Maybe Text)
-    , _mnDealId                 :: !(Maybe Text)
+    { _mnNote :: !(Maybe Text)
+    , _mnKind :: !Text
+    , _mnTimestampMs :: !(Maybe (Textual Int64))
+    , _mnProposalId :: !(Maybe Text)
+    , _mnDealId :: !(Maybe Text)
     , _mnProposalRevisionNumber :: !(Maybe (Textual Int64))
-    , _mnNoteId                 :: !(Maybe Text)
-    , _mnCreatorRole            :: !(Maybe Text)
+    , _mnNoteId :: !(Maybe Text)
+    , _mnCreatorRole :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceNote' with the minimum fields required to make a request.
@@ -56,7 +56,7 @@ data MarketplaceNote = MarketplaceNote'
 -- * 'mnCreatorRole'
 marketplaceNote
     :: MarketplaceNote
-marketplaceNote =
+marketplaceNote = 
     MarketplaceNote'
     { _mnNote = Nothing
     , _mnKind = "adexchangebuyer#marketplaceNote"
@@ -144,20 +144,20 @@ instance ToJSON MarketplaceNote where
 --
 -- /See:/ 'creativeNATiveAd' smart constructor.
 data CreativeNATiveAd = CreativeNATiveAd'
-    { _cnataImage                 :: !(Maybe CreativeNATiveAdImage)
-    , _cnataAppIcon               :: !(Maybe CreativeNATiveAdAppIcon)
-    , _cnataClickTrackingURL      :: !(Maybe Text)
-    , _cnataClickLinkURL          :: !(Maybe Text)
-    , _cnataBody                  :: !(Maybe Text)
-    , _cnataHeadline              :: !(Maybe Text)
+    { _cnataImage :: !(Maybe CreativeNATiveAdImage)
+    , _cnataAppIcon :: !(Maybe CreativeNATiveAdAppIcon)
+    , _cnataClickTrackingURL :: !(Maybe Text)
+    , _cnataClickLinkURL :: !(Maybe Text)
+    , _cnataBody :: !(Maybe Text)
+    , _cnataHeadline :: !(Maybe Text)
     , _cnataImpressionTrackingURL :: !(Maybe [Text])
-    , _cnataCallToAction          :: !(Maybe Text)
-    , _cnataStore                 :: !(Maybe Text)
-    , _cnataVideoURL              :: !(Maybe Text)
-    , _cnataPrice                 :: !(Maybe Text)
-    , _cnataAdvertiser            :: !(Maybe Text)
-    , _cnataStarRating            :: !(Maybe (Textual Double))
-    , _cnataLogo                  :: !(Maybe CreativeNATiveAdLogo)
+    , _cnataCallToAction :: !(Maybe Text)
+    , _cnataStore :: !(Maybe Text)
+    , _cnataVideoURL :: !(Maybe Text)
+    , _cnataPrice :: !(Maybe Text)
+    , _cnataAdvertiser :: !(Maybe Text)
+    , _cnataStarRating :: !(Maybe (Textual Double))
+    , _cnataLogo :: !(Maybe CreativeNATiveAdLogo)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeNATiveAd' with the minimum fields required to make a request.
@@ -193,7 +193,7 @@ data CreativeNATiveAd = CreativeNATiveAd'
 -- * 'cnataLogo'
 creativeNATiveAd
     :: CreativeNATiveAd
-creativeNATiveAd =
+creativeNATiveAd = 
     CreativeNATiveAd'
     { _cnataImage = Nothing
     , _cnataAppIcon = Nothing
@@ -334,7 +334,7 @@ instance ToJSON CreativeNATiveAd where
 --
 -- /See:/ 'editAllOrderDealsResponse' smart constructor.
 data EditAllOrderDealsResponse = EditAllOrderDealsResponse'
-    { _eaodrDeals               :: !(Maybe [MarketplaceDeal])
+    { _eaodrDeals :: !(Maybe [MarketplaceDeal])
     , _eaodrOrderRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -347,7 +347,7 @@ data EditAllOrderDealsResponse = EditAllOrderDealsResponse'
 -- * 'eaodrOrderRevisionNumber'
 editAllOrderDealsResponse
     :: EditAllOrderDealsResponse
-editAllOrderDealsResponse =
+editAllOrderDealsResponse = 
     EditAllOrderDealsResponse'
     { _eaodrDeals = Nothing
     , _eaodrOrderRevisionNumber = Nothing
@@ -390,8 +390,8 @@ instance ToJSON EditAllOrderDealsResponse where
 -- /See:/ 'creativesList' smart constructor.
 data CreativesList = CreativesList'
     { _clNextPageToken :: !(Maybe Text)
-    , _clKind          :: !Text
-    , _clItems         :: !(Maybe [Creative])
+    , _clKind :: !Text
+    , _clItems :: !(Maybe [Creative])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesList' with the minimum fields required to make a request.
@@ -405,7 +405,7 @@ data CreativesList = CreativesList'
 -- * 'clItems'
 creativesList
     :: CreativesList
-creativesList =
+creativesList = 
     CreativesList'
     { _clNextPageToken = Nothing
     , _clKind = "adexchangebuyer#creativesList"
@@ -448,9 +448,9 @@ instance ToJSON CreativesList where
 --
 -- /See:/ 'creativeDealIdsDealStatusesItem' smart constructor.
 data CreativeDealIdsDealStatusesItem = CreativeDealIdsDealStatusesItem'
-    { _cdidsiArcStatus     :: !(Maybe Text)
+    { _cdidsiArcStatus :: !(Maybe Text)
     , _cdidsiWebPropertyId :: !(Maybe (Textual Int32))
-    , _cdidsiDealId        :: !(Maybe (Textual Int64))
+    , _cdidsiDealId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeDealIdsDealStatusesItem' with the minimum fields required to make a request.
@@ -464,7 +464,7 @@ data CreativeDealIdsDealStatusesItem = CreativeDealIdsDealStatusesItem'
 -- * 'cdidsiDealId'
 creativeDealIdsDealStatusesItem
     :: CreativeDealIdsDealStatusesItem
-creativeDealIdsDealStatusesItem =
+creativeDealIdsDealStatusesItem = 
     CreativeDealIdsDealStatusesItem'
     { _cdidsiArcStatus = Nothing
     , _cdidsiWebPropertyId = Nothing
@@ -510,9 +510,9 @@ instance ToJSON CreativeDealIdsDealStatusesItem where
 --
 -- /See:/ 'creativeServingRestrictionsItemContextsItem' smart constructor.
 data CreativeServingRestrictionsItemContextsItem = CreativeServingRestrictionsItemContextsItem'
-    { _csriciPlatform      :: !(Maybe [Text])
-    , _csriciContextType   :: !(Maybe Text)
-    , _csriciAuctionType   :: !(Maybe [Text])
+    { _csriciPlatform :: !(Maybe [Text])
+    , _csriciContextType :: !(Maybe Text)
+    , _csriciAuctionType :: !(Maybe [Text])
     , _csriciGeoCriteriaId :: !(Maybe [Textual Int32])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -529,7 +529,7 @@ data CreativeServingRestrictionsItemContextsItem = CreativeServingRestrictionsIt
 -- * 'csriciGeoCriteriaId'
 creativeServingRestrictionsItemContextsItem
     :: CreativeServingRestrictionsItemContextsItem
-creativeServingRestrictionsItemContextsItem =
+creativeServingRestrictionsItemContextsItem = 
     CreativeServingRestrictionsItemContextsItem'
     { _csriciPlatform = Nothing
     , _csriciContextType = Nothing
@@ -562,7 +562,9 @@ csriciAuctionType
       . _Coerce
 
 -- | Only set when contextType=LOCATION. Represents the geo criterias this
--- restriction applies to.
+-- restriction applies to. Impressions are considered to match a context if
+-- either the user location or publisher location matches a given
+-- geoCriteriaId.
 csriciGeoCriteriaId :: Lens' CreativeServingRestrictionsItemContextsItem [Int32]
 csriciGeoCriteriaId
   = lens _csriciGeoCriteriaId
@@ -606,7 +608,7 @@ newtype CreateOrdersResponse = CreateOrdersResponse'
 -- * 'corProposals'
 createOrdersResponse
     :: CreateOrdersResponse
-createOrdersResponse =
+createOrdersResponse = 
     CreateOrdersResponse'
     { _corProposals = Nothing
     }
@@ -633,9 +635,9 @@ instance ToJSON CreateOrdersResponse where
 --
 -- /See:/ 'accountBidderLocationItem' smart constructor.
 data AccountBidderLocationItem = AccountBidderLocationItem'
-    { _abliURL         :: !(Maybe Text)
-    , _abliMaximumQps  :: !(Maybe (Textual Int32))
-    , _abliRegion      :: !(Maybe Text)
+    { _abliURL :: !(Maybe Text)
+    , _abliMaximumQps :: !(Maybe (Textual Int32))
+    , _abliRegion :: !(Maybe Text)
     , _abliBidProtocol :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -652,7 +654,7 @@ data AccountBidderLocationItem = AccountBidderLocationItem'
 -- * 'abliBidProtocol'
 accountBidderLocationItem
     :: AccountBidderLocationItem
-accountBidderLocationItem =
+accountBidderLocationItem = 
     AccountBidderLocationItem'
     { _abliURL = Nothing
     , _abliMaximumQps = Nothing
@@ -681,8 +683,9 @@ abliRegion
 -- | The protocol that the bidder endpoint is using. OpenRTB protocols with
 -- prefix PROTOCOL_OPENRTB_PROTOBUF use proto buffer, otherwise use JSON.
 -- Allowed values: - PROTOCOL_ADX - PROTOCOL_OPENRTB_2_2 -
--- PROTOCOL_OPENRTB_2_3 - PROTOCOL_OPENRTB_2_4 -
--- PROTOCOL_OPENRTB_PROTOBUF_2_3 - PROTOCOL_OPENRTB_PROTOBUF_2_4
+-- PROTOCOL_OPENRTB_2_3 - PROTOCOL_OPENRTB_2_4 - PROTOCOL_OPENRTB_2_5 -
+-- PROTOCOL_OPENRTB_PROTOBUF_2_3 - PROTOCOL_OPENRTB_PROTOBUF_2_4 -
+-- PROTOCOL_OPENRTB_PROTOBUF_2_5
 abliBidProtocol :: Lens' AccountBidderLocationItem (Maybe Text)
 abliBidProtocol
   = lens _abliBidProtocol
@@ -710,7 +713,7 @@ instance ToJSON AccountBidderLocationItem where
 -- /See:/ 'privateData' smart constructor.
 data PrivateData = PrivateData'
     { _pdReferencePayload :: !(Maybe Bytes)
-    , _pdReferenceId      :: !(Maybe Text)
+    , _pdReferenceId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PrivateData' with the minimum fields required to make a request.
@@ -722,7 +725,7 @@ data PrivateData = PrivateData'
 -- * 'pdReferenceId'
 privateData
     :: PrivateData
-privateData =
+privateData = 
     PrivateData'
     { _pdReferencePayload = Nothing
     , _pdReferenceId = Nothing
@@ -758,11 +761,11 @@ instance ToJSON PrivateData where
 -- /See:/ 'budget' smart constructor.
 data Budget = Budget'
     { _bCurrencyCode :: !(Maybe Text)
-    , _bKind         :: !Text
+    , _bKind :: !Text
     , _bBudgetAmount :: !(Maybe (Textual Int64))
-    , _bAccountId    :: !(Maybe (Textual Int64))
-    , _bId           :: !(Maybe Text)
-    , _bBillingId    :: !(Maybe (Textual Int64))
+    , _bAccountId :: !(Maybe (Textual Int64))
+    , _bId :: !(Maybe Text)
+    , _bBillingId :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Budget' with the minimum fields required to make a request.
@@ -782,7 +785,7 @@ data Budget = Budget'
 -- * 'bBillingId'
 budget
     :: Budget
-budget =
+budget = 
     Budget'
     { _bCurrencyCode = Nothing
     , _bKind = "adexchangebuyer#budget"
@@ -862,7 +865,7 @@ newtype AddOrderNotesRequest = AddOrderNotesRequest'
 -- * 'aonrNotes'
 addOrderNotesRequest
     :: AddOrderNotesRequest
-addOrderNotesRequest =
+addOrderNotesRequest = 
     AddOrderNotesRequest'
     { _aonrNotes = Nothing
     }
@@ -888,8 +891,8 @@ instance ToJSON AddOrderNotesRequest where
 -- /See:/ 'deliveryControlFrequencyCap' smart constructor.
 data DeliveryControlFrequencyCap = DeliveryControlFrequencyCap'
     { _dcfcMaxImpressions :: !(Maybe (Textual Int32))
-    , _dcfcNumTimeUnits   :: !(Maybe (Textual Int32))
-    , _dcfcTimeUnitType   :: !(Maybe Text)
+    , _dcfcNumTimeUnits :: !(Maybe (Textual Int32))
+    , _dcfcTimeUnitType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeliveryControlFrequencyCap' with the minimum fields required to make a request.
@@ -903,7 +906,7 @@ data DeliveryControlFrequencyCap = DeliveryControlFrequencyCap'
 -- * 'dcfcTimeUnitType'
 deliveryControlFrequencyCap
     :: DeliveryControlFrequencyCap
-deliveryControlFrequencyCap =
+deliveryControlFrequencyCap = 
     DeliveryControlFrequencyCap'
     { _dcfcMaxImpressions = Nothing
     , _dcfcNumTimeUnits = Nothing
@@ -947,7 +950,7 @@ instance ToJSON DeliveryControlFrequencyCap where
 -- /See:/ 'marketplaceDealParty' smart constructor.
 data MarketplaceDealParty = MarketplaceDealParty'
     { _mdpSeller :: !(Maybe Seller)
-    , _mdpBuyer  :: !(Maybe Buyer)
+    , _mdpBuyer :: !(Maybe Buyer)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceDealParty' with the minimum fields required to make a request.
@@ -959,7 +962,7 @@ data MarketplaceDealParty = MarketplaceDealParty'
 -- * 'mdpBuyer'
 marketplaceDealParty
     :: MarketplaceDealParty
-marketplaceDealParty =
+marketplaceDealParty = 
     MarketplaceDealParty'
     { _mdpSeller = Nothing
     , _mdpBuyer = Nothing
@@ -1003,7 +1006,7 @@ newtype GetOrderNotesResponse = GetOrderNotesResponse'
 -- * 'gonrNotes'
 getOrderNotesResponse
     :: GetOrderNotesResponse
-getOrderNotesResponse =
+getOrderNotesResponse = 
     GetOrderNotesResponse'
     { _gonrNotes = Nothing
     }
@@ -1042,7 +1045,7 @@ newtype GetOrdersResponse = GetOrdersResponse'
 -- * 'gorProposals'
 getOrdersResponse
     :: GetOrdersResponse
-getOrdersResponse =
+getOrdersResponse = 
     GetOrdersResponse'
     { _gorProposals = Nothing
     }
@@ -1069,7 +1072,7 @@ instance ToJSON GetOrdersResponse where
 --
 -- /See:/ 'creativeServingRestrictionsItemDisApprovalReasonsItem' smart constructor.
 data CreativeServingRestrictionsItemDisApprovalReasonsItem = CreativeServingRestrictionsItemDisApprovalReasonsItem'
-    { _csridariReason  :: !(Maybe Text)
+    { _csridariReason :: !(Maybe Text)
     , _csridariDetails :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1082,7 +1085,7 @@ data CreativeServingRestrictionsItemDisApprovalReasonsItem = CreativeServingRest
 -- * 'csridariDetails'
 creativeServingRestrictionsItemDisApprovalReasonsItem
     :: CreativeServingRestrictionsItemDisApprovalReasonsItem
-creativeServingRestrictionsItemDisApprovalReasonsItem =
+creativeServingRestrictionsItemDisApprovalReasonsItem = 
     CreativeServingRestrictionsItemDisApprovalReasonsItem'
     { _csridariReason = Nothing
     , _csridariDetails = Nothing
@@ -1128,7 +1131,7 @@ instance ToJSON
 --
 -- /See:/ 'accountsList' smart constructor.
 data AccountsList = AccountsList'
-    { _alKind  :: !Text
+    { _alKind :: !Text
     , _alItems :: !(Maybe [Account])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1141,7 +1144,7 @@ data AccountsList = AccountsList'
 -- * 'alItems'
 accountsList
     :: AccountsList
-accountsList =
+accountsList = 
     AccountsList'
     { _alKind = "adexchangebuyer#accountsList"
     , _alItems = Nothing
@@ -1179,7 +1182,7 @@ instance ToJSON AccountsList where
 -- /See:/ 'dimension' smart constructor.
 data Dimension = Dimension'
     { _dDimensionValues :: !(Maybe [DimensionDimensionValue])
-    , _dDimensionType   :: !(Maybe Text)
+    , _dDimensionType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Dimension' with the minimum fields required to make a request.
@@ -1191,7 +1194,7 @@ data Dimension = Dimension'
 -- * 'dDimensionType'
 dimension
     :: Dimension
-dimension =
+dimension = 
     Dimension'
     { _dDimensionValues = Nothing
     , _dDimensionType = Nothing
@@ -1227,7 +1230,7 @@ instance ToJSON Dimension where
 --
 -- /See:/ 'createOrdersRequest' smart constructor.
 data CreateOrdersRequest = CreateOrdersRequest'
-    { _cProposals       :: !(Maybe [Proposal])
+    { _cProposals :: !(Maybe [Proposal])
     , _cWebPropertyCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1240,7 +1243,7 @@ data CreateOrdersRequest = CreateOrdersRequest'
 -- * 'cWebPropertyCode'
 createOrdersRequest
     :: CreateOrdersRequest
-createOrdersRequest =
+createOrdersRequest = 
     CreateOrdersRequest'
     { _cProposals = Nothing
     , _cWebPropertyCode = Nothing
@@ -1278,8 +1281,8 @@ instance ToJSON CreateOrdersRequest where
 -- /See:/ 'creativeCorrectionsItem' smart constructor.
 data CreativeCorrectionsItem = CreativeCorrectionsItem'
     { _cciContexts :: !(Maybe [CreativeCorrectionsItemContextsItem])
-    , _cciReason   :: !(Maybe Text)
-    , _cciDetails  :: !(Maybe [Text])
+    , _cciReason :: !(Maybe Text)
+    , _cciDetails :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeCorrectionsItem' with the minimum fields required to make a request.
@@ -1293,7 +1296,7 @@ data CreativeCorrectionsItem = CreativeCorrectionsItem'
 -- * 'cciDetails'
 creativeCorrectionsItem
     :: CreativeCorrectionsItem
-creativeCorrectionsItem =
+creativeCorrectionsItem = 
     CreativeCorrectionsItem'
     { _cciContexts = Nothing
     , _cciReason = Nothing
@@ -1351,7 +1354,7 @@ data DealTermsRubiconNonGuaranteedTerms = DealTermsRubiconNonGuaranteedTerms'
 -- * 'dtrngtStandardPrice'
 dealTermsRubiconNonGuaranteedTerms
     :: DealTermsRubiconNonGuaranteedTerms
-dealTermsRubiconNonGuaranteedTerms =
+dealTermsRubiconNonGuaranteedTerms = 
     DealTermsRubiconNonGuaranteedTerms'
     { _dtrngtPriorityPrice = Nothing
     , _dtrngtStandardPrice = Nothing
@@ -1387,8 +1390,9 @@ instance ToJSON DealTermsRubiconNonGuaranteedTerms
 
 --
 -- /See:/ 'dealServingMetadata' smart constructor.
-newtype DealServingMetadata = DealServingMetadata'
-    { _dsmDealPauseStatus :: Maybe DealServingMetadataDealPauseStatus
+data DealServingMetadata = DealServingMetadata'
+    { _dsmDealPauseStatus :: !(Maybe DealServingMetadataDealPauseStatus)
+    , _dsmAlcoholAdsAllowed :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DealServingMetadata' with the minimum fields required to make a request.
@@ -1396,11 +1400,14 @@ newtype DealServingMetadata = DealServingMetadata'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'dsmDealPauseStatus'
+--
+-- * 'dsmAlcoholAdsAllowed'
 dealServingMetadata
     :: DealServingMetadata
-dealServingMetadata =
+dealServingMetadata = 
     DealServingMetadata'
     { _dsmDealPauseStatus = Nothing
+    , _dsmAlcoholAdsAllowed = Nothing
     }
 
 -- | Tracks which parties (if any) have paused a deal. (readonly, except via
@@ -1410,22 +1417,33 @@ dsmDealPauseStatus
   = lens _dsmDealPauseStatus
       (\ s a -> s{_dsmDealPauseStatus = a})
 
+-- | True if alcohol ads are allowed for this deal (read-only). This field is
+-- only populated when querying for finalized orders using the method
+-- GetFinalizedOrderDeals
+dsmAlcoholAdsAllowed :: Lens' DealServingMetadata (Maybe Bool)
+dsmAlcoholAdsAllowed
+  = lens _dsmAlcoholAdsAllowed
+      (\ s a -> s{_dsmAlcoholAdsAllowed = a})
+
 instance FromJSON DealServingMetadata where
         parseJSON
           = withObject "DealServingMetadata"
               (\ o ->
-                 DealServingMetadata' <$> (o .:? "dealPauseStatus"))
+                 DealServingMetadata' <$>
+                   (o .:? "dealPauseStatus") <*>
+                     (o .:? "alcoholAdsAllowed"))
 
 instance ToJSON DealServingMetadata where
         toJSON DealServingMetadata'{..}
           = object
               (catMaybes
-                 [("dealPauseStatus" .=) <$> _dsmDealPauseStatus])
+                 [("dealPauseStatus" .=) <$> _dsmDealPauseStatus,
+                  ("alcoholAdsAllowed" .=) <$> _dsmAlcoholAdsAllowed])
 
 --
 -- /See:/ 'addOrderDealsResponse' smart constructor.
 data AddOrderDealsResponse = AddOrderDealsResponse'
-    { _aodrDeals                  :: !(Maybe [MarketplaceDeal])
+    { _aodrDeals :: !(Maybe [MarketplaceDeal])
     , _aodrProposalRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1438,7 +1456,7 @@ data AddOrderDealsResponse = AddOrderDealsResponse'
 -- * 'aodrProposalRevisionNumber'
 addOrderDealsResponse
     :: AddOrderDealsResponse
-addOrderDealsResponse =
+addOrderDealsResponse = 
     AddOrderDealsResponse'
     { _aodrDeals = Nothing
     , _aodrProposalRevisionNumber = Nothing
@@ -1478,8 +1496,8 @@ instance ToJSON AddOrderDealsResponse where
 -- /See:/ 'deliveryControl' smart constructor.
 data DeliveryControl = DeliveryControl'
     { _dcCreativeBlockingLevel :: !(Maybe Text)
-    , _dcFrequencyCaps         :: !(Maybe [DeliveryControlFrequencyCap])
-    , _dcDeliveryRateType      :: !(Maybe Text)
+    , _dcFrequencyCaps :: !(Maybe [DeliveryControlFrequencyCap])
+    , _dcDeliveryRateType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DeliveryControl' with the minimum fields required to make a request.
@@ -1493,7 +1511,7 @@ data DeliveryControl = DeliveryControl'
 -- * 'dcDeliveryRateType'
 deliveryControl
     :: DeliveryControl
-deliveryControl =
+deliveryControl = 
     DeliveryControl'
     { _dcCreativeBlockingLevel = Nothing
     , _dcFrequencyCaps = Nothing
@@ -1535,24 +1553,25 @@ instance ToJSON DeliveryControl where
                   ("frequencyCaps" .=) <$> _dcFrequencyCaps,
                   ("deliveryRateType" .=) <$> _dcDeliveryRateType])
 
--- | Used to specify pricing rules for buyers\/advertisers. Each
--- PricePerBuyer in an product can become [0,1] deals. To check if there is
--- a PricePerBuyer for a particular buyer or buyer\/advertiser pair, we
--- look for the most specific matching rule - we first look for a rule
--- matching the buyer and advertiser, next a rule with the buyer but an
--- empty advertiser list, and otherwise look for a matching rule where no
--- buyer is set.
+-- | Used to specify pricing rules for buyers. Each PricePerBuyer in a
+-- product can become [0,1] deals. To check if there is a PricePerBuyer for
+-- a particular buyer we look for the most specific matching rule - we
+-- first look for a rule matching the buyer and otherwise look for a
+-- matching rule where no buyer is set.
 --
 -- /See:/ 'pricePerBuyer' smart constructor.
 data PricePerBuyer = PricePerBuyer'
-    { _ppbPrice       :: !(Maybe Price)
+    { _ppbBilledBuyer :: !(Maybe Buyer)
+    , _ppbPrice :: !(Maybe Price)
     , _ppbAuctionTier :: !(Maybe Text)
-    , _ppbBuyer       :: !(Maybe Buyer)
+    , _ppbBuyer :: !(Maybe Buyer)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PricePerBuyer' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ppbBilledBuyer'
 --
 -- * 'ppbPrice'
 --
@@ -1561,12 +1580,19 @@ data PricePerBuyer = PricePerBuyer'
 -- * 'ppbBuyer'
 pricePerBuyer
     :: PricePerBuyer
-pricePerBuyer =
+pricePerBuyer = 
     PricePerBuyer'
-    { _ppbPrice = Nothing
+    { _ppbBilledBuyer = Nothing
+    , _ppbPrice = Nothing
     , _ppbAuctionTier = Nothing
     , _ppbBuyer = Nothing
     }
+
+-- | Reference to the buyer that will get billed.
+ppbBilledBuyer :: Lens' PricePerBuyer (Maybe Buyer)
+ppbBilledBuyer
+  = lens _ppbBilledBuyer
+      (\ s a -> s{_ppbBilledBuyer = a})
 
 -- | The specified price
 ppbPrice :: Lens' PricePerBuyer (Maybe Price)
@@ -1589,14 +1615,16 @@ instance FromJSON PricePerBuyer where
           = withObject "PricePerBuyer"
               (\ o ->
                  PricePerBuyer' <$>
-                   (o .:? "price") <*> (o .:? "auctionTier") <*>
-                     (o .:? "buyer"))
+                   (o .:? "billedBuyer") <*> (o .:? "price") <*>
+                     (o .:? "auctionTier")
+                     <*> (o .:? "buyer"))
 
 instance ToJSON PricePerBuyer where
         toJSON PricePerBuyer'{..}
           = object
               (catMaybes
-                 [("price" .=) <$> _ppbPrice,
+                 [("billedBuyer" .=) <$> _ppbBilledBuyer,
+                  ("price" .=) <$> _ppbPrice,
                   ("auctionTier" .=) <$> _ppbAuctionTier,
                   ("buyer" .=) <$> _ppbBuyer])
 
@@ -1604,34 +1632,34 @@ instance ToJSON PricePerBuyer where
 --
 -- /See:/ 'creative' smart constructor.
 data Creative = Creative'
-    { _cAttribute               :: !(Maybe [Textual Int32])
-    , _cNATiveAd                :: !(Maybe CreativeNATiveAd)
-    , _cHeight                  :: !(Maybe (Textual Int32))
-    , _cBuyerCreativeId         :: !(Maybe Text)
-    , _cAdvertiserName          :: !(Maybe Text)
+    { _cAttribute :: !(Maybe [Textual Int32])
+    , _cNATiveAd :: !(Maybe CreativeNATiveAd)
+    , _cHeight :: !(Maybe (Textual Int32))
+    , _cBuyerCreativeId :: !(Maybe Text)
+    , _cAdvertiserName :: !(Maybe Text)
     , _cAdChoicesDestinationURL :: !(Maybe Text)
-    , _cAgencyId                :: !(Maybe (Textual Int64))
-    , _cCorrections             :: !(Maybe [CreativeCorrectionsItem])
-    , _cProductCategories       :: !(Maybe [Textual Int32])
-    , _cKind                    :: !Text
-    , _cHTMLSnippet             :: !(Maybe Text)
-    , _cAdvertiserId            :: !(Maybe [Textual Int64])
-    , _cRestrictedCategories    :: !(Maybe [Textual Int32])
-    , _cDealsStatus             :: !(Maybe Text)
-    , _cWidth                   :: !(Maybe (Textual Int32))
-    , _cClickThroughURL         :: !(Maybe [Text])
-    , _cLanguages               :: !(Maybe [Text])
-    , _cVendorType              :: !(Maybe [Textual Int32])
-    , _cAccountId               :: !(Maybe (Textual Int32))
-    , _cImpressionTrackingURL   :: !(Maybe [Text])
-    , _cFilteringReasons        :: !(Maybe CreativeFilteringReasons)
-    , _cVersion                 :: !(Maybe (Textual Int32))
-    , _cSensitiveCategories     :: !(Maybe [Textual Int32])
-    , _cVideoURL                :: !(Maybe Text)
-    , _cAPIUploadTimestamp      :: !(Maybe DateTime')
-    , _cServingRestrictions     :: !(Maybe [CreativeServingRestrictionsItem])
-    , _cDetectedDomains         :: !(Maybe [Text])
-    , _cOpenAuctionStatus       :: !(Maybe Text)
+    , _cAgencyId :: !(Maybe (Textual Int64))
+    , _cCorrections :: !(Maybe [CreativeCorrectionsItem])
+    , _cProductCategories :: !(Maybe [Textual Int32])
+    , _cKind :: !Text
+    , _cHTMLSnippet :: !(Maybe Text)
+    , _cAdvertiserId :: !(Maybe [Textual Int64])
+    , _cRestrictedCategories :: !(Maybe [Textual Int32])
+    , _cDealsStatus :: !(Maybe Text)
+    , _cWidth :: !(Maybe (Textual Int32))
+    , _cClickThroughURL :: !(Maybe [Text])
+    , _cLanguages :: !(Maybe [Text])
+    , _cVendorType :: !(Maybe [Textual Int32])
+    , _cAccountId :: !(Maybe (Textual Int32))
+    , _cImpressionTrackingURL :: !(Maybe [Text])
+    , _cFilteringReasons :: !(Maybe CreativeFilteringReasons)
+    , _cVersion :: !(Maybe (Textual Int32))
+    , _cSensitiveCategories :: !(Maybe [Textual Int32])
+    , _cVideoURL :: !(Maybe Text)
+    , _cAPIUploadTimestamp :: !(Maybe DateTime')
+    , _cServingRestrictions :: !(Maybe [CreativeServingRestrictionsItem])
+    , _cDetectedDomains :: !(Maybe [Text])
+    , _cOpenAuctionStatus :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Creative' with the minimum fields required to make a request.
@@ -1695,7 +1723,7 @@ data Creative = Creative'
 -- * 'cOpenAuctionStatus'
 creative
     :: Creative
-creative =
+creative = 
     Creative'
     { _cAttribute = Nothing
     , _cNATiveAd = Nothing
@@ -1727,7 +1755,9 @@ creative =
     , _cOpenAuctionStatus = Nothing
     }
 
--- | All attributes for the ads that may be shown from this snippet.
+-- | List of buyer selectable attributes for the ads that may be shown from
+-- this snippet. Each attribute is represented by an integer as defined in
+-- buyer-declarable-creative-attributes.txt.
 cAttribute :: Lens' Creative [Int32]
 cAttribute
   = lens _cAttribute (\ s a -> s{_cAttribute = a}) .
@@ -1752,7 +1782,8 @@ cBuyerCreativeId
   = lens _cBuyerCreativeId
       (\ s a -> s{_cBuyerCreativeId = a})
 
--- | The name of the company being advertised in the creative.
+-- | The name of the company being advertised in the creative. The value
+-- provided must exist in the advertisers.txt file.
 cAdvertiserName :: Lens' Creative (Maybe Text)
 cAdvertiserName
   = lens _cAdvertiserName
@@ -1779,8 +1810,9 @@ cCorrections
       . _Default
       . _Coerce
 
--- | Detected product categories, if any. Read-only. This field should not be
--- set in requests.
+-- | Detected product categories, if any. Each category is represented by an
+-- integer as defined in ad-product-categories.txt. Read-only. This field
+-- should not be set in requests.
 cProductCategories :: Lens' Creative [Int32]
 cProductCategories
   = lens _cProductCategories
@@ -1808,7 +1840,8 @@ cAdvertiserId
       . _Coerce
 
 -- | All restricted categories for the ads that may be shown from this
--- snippet.
+-- snippet. Each category is represented by an integer as defined in the
+-- ad-restricted-categories.txt.
 cRestrictedCategories :: Lens' Creative [Int32]
 cRestrictedCategories
   = lens _cRestrictedCategories
@@ -1847,7 +1880,8 @@ cLanguages
       _Default
       . _Coerce
 
--- | All vendor types for the ads that may be shown from this snippet.
+-- | List of vendor types for the ads that may be shown from this snippet.
+-- Each vendor type is represented by an integer as defined in vendors.txt.
 cVendorType :: Lens' Creative [Int32]
 cVendorType
   = lens _cVendorType (\ s a -> s{_cVendorType = a}) .
@@ -1882,8 +1916,9 @@ cVersion
   = lens _cVersion (\ s a -> s{_cVersion = a}) .
       mapping _Coerce
 
--- | Detected sensitive categories, if any. Read-only. This field should not
--- be set in requests.
+-- | Detected sensitive categories, if any. Each category is represented by
+-- an integer as defined in ad-sensitive-categories.txt. Read-only. This
+-- field should not be set in requests.
 cSensitiveCategories :: Lens' Creative [Int32]
 cSensitiveCategories
   = lens _cSensitiveCategories
@@ -1910,7 +1945,8 @@ cAPIUploadTimestamp
 -- | The granular status of this ad in specific contexts. A context here
 -- relates to where something ultimately serves (for example, a physical
 -- location, a platform, an HTTPS vs HTTP request, or the type of auction).
--- Read-only. This field should not be set in requests.
+-- Read-only. This field should not be set in requests. See the examples in
+-- the Creatives guide for more details.
 cServingRestrictions :: Lens' Creative [CreativeServingRestrictionsItem]
 cServingRestrictions
   = lens _cServingRestrictions
@@ -2009,11 +2045,11 @@ instance ToJSON Creative where
 --
 -- /See:/ 'targetingValueDayPartTargetingDayPart' smart constructor.
 data TargetingValueDayPartTargetingDayPart = TargetingValueDayPartTargetingDayPart'
-    { _tvdptdpEndHour     :: !(Maybe (Textual Int32))
-    , _tvdptdpStartHour   :: !(Maybe (Textual Int32))
+    { _tvdptdpEndHour :: !(Maybe (Textual Int32))
+    , _tvdptdpStartHour :: !(Maybe (Textual Int32))
     , _tvdptdpStartMinute :: !(Maybe (Textual Int32))
-    , _tvdptdpDayOfWeek   :: !(Maybe Text)
-    , _tvdptdpEndMinute   :: !(Maybe (Textual Int32))
+    , _tvdptdpDayOfWeek :: !(Maybe Text)
+    , _tvdptdpEndMinute :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingValueDayPartTargetingDayPart' with the minimum fields required to make a request.
@@ -2031,7 +2067,7 @@ data TargetingValueDayPartTargetingDayPart = TargetingValueDayPartTargetingDayPa
 -- * 'tvdptdpEndMinute'
 targetingValueDayPartTargetingDayPart
     :: TargetingValueDayPartTargetingDayPart
-targetingValueDayPartTargetingDayPart =
+targetingValueDayPartTargetingDayPart = 
     TargetingValueDayPartTargetingDayPart'
     { _tvdptdpEndHour = Nothing
     , _tvdptdpStartHour = Nothing
@@ -2095,8 +2131,8 @@ instance ToJSON TargetingValueDayPartTargetingDayPart
 --
 -- /See:/ 'dimensionDimensionValue' smart constructor.
 data DimensionDimensionValue = DimensionDimensionValue'
-    { _ddvName       :: !(Maybe Text)
-    , _ddvId         :: !(Maybe (Textual Int32))
+    { _ddvName :: !(Maybe Text)
+    , _ddvId :: !(Maybe (Textual Int32))
     , _ddvPercentage :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2111,7 +2147,7 @@ data DimensionDimensionValue = DimensionDimensionValue'
 -- * 'ddvPercentage'
 dimensionDimensionValue
     :: DimensionDimensionValue
-dimensionDimensionValue =
+dimensionDimensionValue = 
     DimensionDimensionValue'
     { _ddvName = Nothing
     , _ddvId = Nothing
@@ -2156,7 +2192,7 @@ instance ToJSON DimensionDimensionValue where
 --
 -- /See:/ 'pretargetingConfigList' smart constructor.
 data PretargetingConfigList = PretargetingConfigList'
-    { _pclKind  :: !Text
+    { _pclKind :: !Text
     , _pclItems :: !(Maybe [PretargetingConfig])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2169,7 +2205,7 @@ data PretargetingConfigList = PretargetingConfigList'
 -- * 'pclItems'
 pretargetingConfigList
     :: PretargetingConfigList
-pretargetingConfigList =
+pretargetingConfigList = 
     PretargetingConfigList'
     { _pclKind = "adexchangebuyer#pretargetingConfigList"
     , _pclItems = Nothing
@@ -2215,7 +2251,7 @@ newtype DealTermsNonGuaranteedFixedPriceTerms = DealTermsNonGuaranteedFixedPrice
 -- * 'dtngfptFixedPrices'
 dealTermsNonGuaranteedFixedPriceTerms
     :: DealTermsNonGuaranteedFixedPriceTerms
-dealTermsNonGuaranteedFixedPriceTerms =
+dealTermsNonGuaranteedFixedPriceTerms = 
     DealTermsNonGuaranteedFixedPriceTerms'
     { _dtngfptFixedPrices = Nothing
     }
@@ -2247,28 +2283,28 @@ instance ToJSON DealTermsNonGuaranteedFixedPriceTerms
 --
 -- /See:/ 'performanceReport' smart constructor.
 data PerformanceReport = PerformanceReport'
-    { _prFilteredBidRate         :: !(Maybe (Textual Double))
-    , _prKind                    :: !Text
-    , _prLatency95thPercentile   :: !(Maybe (Textual Double))
+    { _prFilteredBidRate :: !(Maybe (Textual Double))
+    , _prKind :: !Text
+    , _prLatency95thPercentile :: !(Maybe (Textual Double))
     , _prCookieMatcherStatusRate :: !(Maybe [JSONValue])
-    , _prHostedMatchStatusRate   :: !(Maybe [JSONValue])
+    , _prHostedMatchStatusRate :: !(Maybe [JSONValue])
     , _prUnsuccessfulRequestRate :: !(Maybe (Textual Double))
-    , _prBidRequestRate          :: !(Maybe (Textual Double))
-    , _prQuotaThrottledLimit     :: !(Maybe (Textual Double))
-    , _prQuotaConfiguredLimit    :: !(Maybe (Textual Double))
-    , _prSuccessfulRequestRate   :: !(Maybe (Textual Double))
-    , _prLatency85thPercentile   :: !(Maybe (Textual Double))
-    , _prCalloutStatusRate       :: !(Maybe [JSONValue])
-    , _prLatency50thPercentile   :: !(Maybe (Textual Double))
-    , _prBidRate                 :: !(Maybe (Textual Double))
-    , _prCreativeStatusRate      :: !(Maybe [JSONValue])
-    , _prNoQuotaInRegion         :: !(Maybe (Textual Double))
-    , _prRegion                  :: !(Maybe Text)
-    , _prInventoryMatchRate      :: !(Maybe (Textual Double))
-    , _prPixelMatchResponses     :: !(Maybe (Textual Double))
-    , _prTimestamp               :: !(Maybe (Textual Int64))
-    , _prPixelMatchRequests      :: !(Maybe (Textual Double))
-    , _prOutOfQuota              :: !(Maybe (Textual Double))
+    , _prBidRequestRate :: !(Maybe (Textual Double))
+    , _prQuotaThrottledLimit :: !(Maybe (Textual Double))
+    , _prQuotaConfiguredLimit :: !(Maybe (Textual Double))
+    , _prSuccessfulRequestRate :: !(Maybe (Textual Double))
+    , _prLatency85thPercentile :: !(Maybe (Textual Double))
+    , _prCalloutStatusRate :: !(Maybe [JSONValue])
+    , _prLatency50thPercentile :: !(Maybe (Textual Double))
+    , _prBidRate :: !(Maybe (Textual Double))
+    , _prCreativeStatusRate :: !(Maybe [JSONValue])
+    , _prNoQuotaInRegion :: !(Maybe (Textual Double))
+    , _prRegion :: !(Maybe Text)
+    , _prInventoryMatchRate :: !(Maybe (Textual Double))
+    , _prPixelMatchResponses :: !(Maybe (Textual Double))
+    , _prTimestamp :: !(Maybe (Textual Int64))
+    , _prPixelMatchRequests :: !(Maybe (Textual Double))
+    , _prOutOfQuota :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PerformanceReport' with the minimum fields required to make a request.
@@ -2320,7 +2356,7 @@ data PerformanceReport = PerformanceReport'
 -- * 'prOutOfQuota'
 performanceReport
     :: PerformanceReport
-performanceReport =
+performanceReport = 
     PerformanceReport'
     { _prFilteredBidRate = Nothing
     , _prKind = "adexchangebuyer#performanceReport"
@@ -2573,7 +2609,7 @@ instance ToJSON PerformanceReport where
 -- /See:/ 'pretargetingConfigExcludedPlacementsItem' smart constructor.
 data PretargetingConfigExcludedPlacementsItem = PretargetingConfigExcludedPlacementsItem'
     { _pcepiToken :: !(Maybe Text)
-    , _pcepiType  :: !(Maybe Text)
+    , _pcepiType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigExcludedPlacementsItem' with the minimum fields required to make a request.
@@ -2585,7 +2621,7 @@ data PretargetingConfigExcludedPlacementsItem = PretargetingConfigExcludedPlacem
 -- * 'pcepiType'
 pretargetingConfigExcludedPlacementsItem
     :: PretargetingConfigExcludedPlacementsItem
-pretargetingConfigExcludedPlacementsItem =
+pretargetingConfigExcludedPlacementsItem = 
     PretargetingConfigExcludedPlacementsItem'
     { _pcepiToken = Nothing
     , _pcepiType = Nothing
@@ -2623,7 +2659,7 @@ instance ToJSON
 --
 -- /See:/ 'seller' smart constructor.
 data Seller = Seller'
-    { _sAccountId    :: !(Maybe Text)
+    { _sAccountId :: !(Maybe Text)
     , _sSubAccountId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2636,7 +2672,7 @@ data Seller = Seller'
 -- * 'sSubAccountId'
 seller
     :: Seller
-seller =
+seller = 
     Seller'
     { _sAccountId = Nothing
     , _sSubAccountId = Nothing
@@ -2672,14 +2708,14 @@ instance ToJSON Seller where
 --
 -- /See:/ 'account' smart constructor.
 data Account = Account'
-    { _aMaximumTotalQps        :: !(Maybe (Textual Int32))
-    , _aKind                   :: !Text
-    , _aCookieMatchingURL      :: !(Maybe Text)
+    { _aMaximumTotalQps :: !(Maybe (Textual Int32))
+    , _aKind :: !Text
+    , _aCookieMatchingURL :: !(Maybe Text)
     , _aMaximumActiveCreatives :: !(Maybe (Textual Int32))
-    , _aCookieMatchingNid      :: !(Maybe Text)
-    , _aNumberActiveCreatives  :: !(Maybe (Textual Int32))
-    , _aId                     :: !(Maybe (Textual Int32))
-    , _aBidderLocation         :: !(Maybe [AccountBidderLocationItem])
+    , _aCookieMatchingNid :: !(Maybe Text)
+    , _aNumberActiveCreatives :: !(Maybe (Textual Int32))
+    , _aId :: !(Maybe (Textual Int32))
+    , _aBidderLocation :: !(Maybe [AccountBidderLocationItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Account' with the minimum fields required to make a request.
@@ -2703,7 +2739,7 @@ data Account = Account'
 -- * 'aBidderLocation'
 account
     :: Account
-account =
+account = 
     Account'
     { _aMaximumTotalQps = Nothing
     , _aKind = "adexchangebuyer#account"
@@ -2804,8 +2840,8 @@ instance ToJSON Account where
 --
 -- /See:/ 'deleteOrderDealsRequest' smart constructor.
 data DeleteOrderDealsRequest = DeleteOrderDealsRequest'
-    { _dodrUpdateAction           :: !(Maybe Text)
-    , _dodrDealIds                :: !(Maybe [Text])
+    { _dodrUpdateAction :: !(Maybe Text)
+    , _dodrDealIds :: !(Maybe [Text])
     , _dodrProposalRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2820,7 +2856,7 @@ data DeleteOrderDealsRequest = DeleteOrderDealsRequest'
 -- * 'dodrProposalRevisionNumber'
 deleteOrderDealsRequest
     :: DeleteOrderDealsRequest
-deleteOrderDealsRequest =
+deleteOrderDealsRequest = 
     DeleteOrderDealsRequest'
     { _dodrUpdateAction = Nothing
     , _dodrDealIds = Nothing
@@ -2869,7 +2905,7 @@ instance ToJSON DeleteOrderDealsRequest where
 -- /See:/ 'contactInformation' smart constructor.
 data ContactInformation = ContactInformation'
     { _ciEmail :: !(Maybe Text)
-    , _ciName  :: !(Maybe Text)
+    , _ciName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContactInformation' with the minimum fields required to make a request.
@@ -2881,7 +2917,7 @@ data ContactInformation = ContactInformation'
 -- * 'ciName'
 contactInformation
     :: ContactInformation
-contactInformation =
+contactInformation = 
     ContactInformation'
     { _ciEmail = Nothing
     , _ciName = Nothing
@@ -2913,8 +2949,8 @@ instance ToJSON ContactInformation where
 -- /See:/ 'creativeNATiveAdLogo' smart constructor.
 data CreativeNATiveAdLogo = CreativeNATiveAdLogo'
     { _cnatalHeight :: !(Maybe (Textual Int32))
-    , _cnatalURL    :: !(Maybe Text)
-    , _cnatalWidth  :: !(Maybe (Textual Int32))
+    , _cnatalURL :: !(Maybe Text)
+    , _cnatalWidth :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeNATiveAdLogo' with the minimum fields required to make a request.
@@ -2928,7 +2964,7 @@ data CreativeNATiveAdLogo = CreativeNATiveAdLogo'
 -- * 'cnatalWidth'
 creativeNATiveAdLogo
     :: CreativeNATiveAdLogo
-creativeNATiveAdLogo =
+creativeNATiveAdLogo = 
     CreativeNATiveAdLogo'
     { _cnatalHeight = Nothing
     , _cnatalURL = Nothing
@@ -2978,7 +3014,7 @@ newtype GetOrderDealsResponse = GetOrderDealsResponse'
 -- * 'godrDeals'
 getOrderDealsResponse
     :: GetOrderDealsResponse
-getOrderDealsResponse =
+getOrderDealsResponse = 
     GetOrderDealsResponse'
     { _godrDeals = Nothing
     }
@@ -3005,7 +3041,7 @@ instance ToJSON GetOrderDealsResponse where
 --
 -- /See:/ 'performanceReportList' smart constructor.
 data PerformanceReportList = PerformanceReportList'
-    { _prlKind              :: !Text
+    { _prlKind :: !Text
     , _prlPerformanceReport :: !(Maybe [PerformanceReport])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3018,7 +3054,7 @@ data PerformanceReportList = PerformanceReportList'
 -- * 'prlPerformanceReport'
 performanceReportList
     :: PerformanceReportList
-performanceReportList =
+performanceReportList = 
     PerformanceReportList'
     { _prlKind = "adexchangebuyer#performanceReportList"
     , _prlPerformanceReport = Nothing
@@ -3055,31 +3091,31 @@ instance ToJSON PerformanceReportList where
 --
 -- /See:/ 'pretargetingConfig' smart constructor.
 data PretargetingConfig = PretargetingConfig'
-    { _pcPlatforms                     :: !(Maybe [Text])
-    , _pcMobileCarriers                :: !(Maybe [Textual Int64])
-    , _pcVendorTypes                   :: !(Maybe [Textual Int64])
-    , _pcExcludedGeoCriteriaIds        :: !(Maybe [Textual Int64])
-    , _pcSupportedCreativeAttributes   :: !(Maybe [Textual Int64])
-    , _pcUserLists                     :: !(Maybe [Textual Int64])
-    , _pcKind                          :: !Text
-    , _pcExcludedPlacements            :: !(Maybe [PretargetingConfigExcludedPlacementsItem])
-    , _pcUserIdentifierDataRequired    :: !(Maybe [Text])
-    , _pcMinimumViewabilityDecile      :: !(Maybe (Textual Int32))
-    , _pcMobileDevices                 :: !(Maybe [Textual Int64])
-    , _pcLanguages                     :: !(Maybe [Text])
-    , _pcVerticals                     :: !(Maybe [Textual Int64])
-    , _pcVideoPlayerSizes              :: !(Maybe [PretargetingConfigVideoPlayerSizesItem])
-    , _pcConfigId                      :: !(Maybe (Textual Int64))
-    , _pcPlacements                    :: !(Maybe [PretargetingConfigPlacementsItem])
-    , _pcExcludedUserLists             :: !(Maybe [Textual Int64])
-    , _pcConfigName                    :: !(Maybe Text)
-    , _pcGeoCriteriaIds                :: !(Maybe [Textual Int64])
-    , _pcDimensions                    :: !(Maybe [PretargetingConfigDimensionsItem])
-    , _pcExcludedVerticals             :: !(Maybe [Textual Int64])
-    , _pcCreativeType                  :: !(Maybe [Text])
-    , _pcIsActive                      :: !(Maybe Bool)
-    , _pcExcludedContentLabels         :: !(Maybe [Textual Int64])
-    , _pcBillingId                     :: !(Maybe (Textual Int64))
+    { _pcPlatforms :: !(Maybe [Text])
+    , _pcMobileCarriers :: !(Maybe [Textual Int64])
+    , _pcVendorTypes :: !(Maybe [Textual Int64])
+    , _pcExcludedGeoCriteriaIds :: !(Maybe [Textual Int64])
+    , _pcSupportedCreativeAttributes :: !(Maybe [Textual Int64])
+    , _pcUserLists :: !(Maybe [Textual Int64])
+    , _pcKind :: !Text
+    , _pcExcludedPlacements :: !(Maybe [PretargetingConfigExcludedPlacementsItem])
+    , _pcUserIdentifierDataRequired :: !(Maybe [Text])
+    , _pcMinimumViewabilityDecile :: !(Maybe (Textual Int32))
+    , _pcMobileDevices :: !(Maybe [Textual Int64])
+    , _pcLanguages :: !(Maybe [Text])
+    , _pcVerticals :: !(Maybe [Textual Int64])
+    , _pcVideoPlayerSizes :: !(Maybe [PretargetingConfigVideoPlayerSizesItem])
+    , _pcConfigId :: !(Maybe (Textual Int64))
+    , _pcPlacements :: !(Maybe [PretargetingConfigPlacementsItem])
+    , _pcExcludedUserLists :: !(Maybe [Textual Int64])
+    , _pcConfigName :: !(Maybe Text)
+    , _pcGeoCriteriaIds :: !(Maybe [Textual Int64])
+    , _pcDimensions :: !(Maybe [PretargetingConfigDimensionsItem])
+    , _pcExcludedVerticals :: !(Maybe [Textual Int64])
+    , _pcCreativeType :: !(Maybe [Text])
+    , _pcIsActive :: !(Maybe Bool)
+    , _pcExcludedContentLabels :: !(Maybe [Textual Int64])
+    , _pcBillingId :: !(Maybe (Textual Int64))
     , _pcMobileOperatingSystemVersions :: !(Maybe [Textual Int64])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3140,7 +3176,7 @@ data PretargetingConfig = PretargetingConfig'
 -- * 'pcMobileOperatingSystemVersions'
 pretargetingConfig
     :: PretargetingConfig
-pretargetingConfig =
+pretargetingConfig = 
     PretargetingConfig'
     { _pcPlatforms = Nothing
     , _pcMobileCarriers = Nothing
@@ -3459,7 +3495,7 @@ instance ToJSON PretargetingConfig where
 -- /See:/ 'creativeFilteringReasons' smart constructor.
 data CreativeFilteringReasons = CreativeFilteringReasons'
     { _cfrReasons :: !(Maybe [CreativeFilteringReasonsReasonsItem])
-    , _cfrDate    :: !(Maybe Text)
+    , _cfrDate :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFilteringReasons' with the minimum fields required to make a request.
@@ -3471,7 +3507,7 @@ data CreativeFilteringReasons = CreativeFilteringReasons'
 -- * 'cfrDate'
 creativeFilteringReasons
     :: CreativeFilteringReasons
-creativeFilteringReasons =
+creativeFilteringReasons = 
     CreativeFilteringReasons'
     { _cfrReasons = Nothing
     , _cfrDate = Nothing
@@ -3506,10 +3542,11 @@ instance ToJSON CreativeFilteringReasons where
 --
 -- /See:/ 'targetingValueCreativeSize' smart constructor.
 data TargetingValueCreativeSize = TargetingValueCreativeSize'
-    { _tvcsSize             :: !(Maybe TargetingValueSize)
-    , _tvcsCompanionSizes   :: !(Maybe [TargetingValueSize])
-    , _tvcsSkippableAdType  :: !(Maybe Text)
+    { _tvcsSize :: !(Maybe TargetingValueSize)
+    , _tvcsCompanionSizes :: !(Maybe [TargetingValueSize])
+    , _tvcsSkippableAdType :: !(Maybe Text)
     , _tvcsCreativeSizeType :: !(Maybe Text)
+    , _tvcsNATiveTemplate :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingValueCreativeSize' with the minimum fields required to make a request.
@@ -3523,14 +3560,17 @@ data TargetingValueCreativeSize = TargetingValueCreativeSize'
 -- * 'tvcsSkippableAdType'
 --
 -- * 'tvcsCreativeSizeType'
+--
+-- * 'tvcsNATiveTemplate'
 targetingValueCreativeSize
     :: TargetingValueCreativeSize
-targetingValueCreativeSize =
+targetingValueCreativeSize = 
     TargetingValueCreativeSize'
     { _tvcsSize = Nothing
     , _tvcsCompanionSizes = Nothing
     , _tvcsSkippableAdType = Nothing
     , _tvcsCreativeSizeType = Nothing
+    , _tvcsNATiveTemplate = Nothing
     }
 
 -- | For regular or video creative size type, specifies the size of the
@@ -3558,6 +3598,12 @@ tvcsCreativeSizeType
   = lens _tvcsCreativeSizeType
       (\ s a -> s{_tvcsCreativeSizeType = a})
 
+-- | The native template for native ad.
+tvcsNATiveTemplate :: Lens' TargetingValueCreativeSize (Maybe Text)
+tvcsNATiveTemplate
+  = lens _tvcsNATiveTemplate
+      (\ s a -> s{_tvcsNATiveTemplate = a})
+
 instance FromJSON TargetingValueCreativeSize where
         parseJSON
           = withObject "TargetingValueCreativeSize"
@@ -3566,7 +3612,8 @@ instance FromJSON TargetingValueCreativeSize where
                    (o .:? "size") <*>
                      (o .:? "companionSizes" .!= mempty)
                      <*> (o .:? "skippableAdType")
-                     <*> (o .:? "creativeSizeType"))
+                     <*> (o .:? "creativeSizeType")
+                     <*> (o .:? "nativeTemplate"))
 
 instance ToJSON TargetingValueCreativeSize where
         toJSON TargetingValueCreativeSize'{..}
@@ -3575,14 +3622,15 @@ instance ToJSON TargetingValueCreativeSize where
                  [("size" .=) <$> _tvcsSize,
                   ("companionSizes" .=) <$> _tvcsCompanionSizes,
                   ("skippableAdType" .=) <$> _tvcsSkippableAdType,
-                  ("creativeSizeType" .=) <$> _tvcsCreativeSizeType])
+                  ("creativeSizeType" .=) <$> _tvcsCreativeSizeType,
+                  ("nativeTemplate" .=) <$> _tvcsNATiveTemplate])
 
 --
 -- /See:/ 'dealTermsGuaranteedFixedPriceTermsBillingInfo' smart constructor.
 data DealTermsGuaranteedFixedPriceTermsBillingInfo = DealTermsGuaranteedFixedPriceTermsBillingInfo'
-    { _dtgfptbiCurrencyConversionTimeMs   :: !(Maybe (Textual Int64))
-    , _dtgfptbiDfpLineItemId              :: !(Maybe (Textual Int64))
-    , _dtgfptbiPrice                      :: !(Maybe Price)
+    { _dtgfptbiCurrencyConversionTimeMs :: !(Maybe (Textual Int64))
+    , _dtgfptbiDfpLineItemId :: !(Maybe (Textual Int64))
+    , _dtgfptbiPrice :: !(Maybe Price)
     , _dtgfptbiOriginalContractedQuantity :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3599,7 +3647,7 @@ data DealTermsGuaranteedFixedPriceTermsBillingInfo = DealTermsGuaranteedFixedPri
 -- * 'dtgfptbiOriginalContractedQuantity'
 dealTermsGuaranteedFixedPriceTermsBillingInfo
     :: DealTermsGuaranteedFixedPriceTermsBillingInfo
-dealTermsGuaranteedFixedPriceTermsBillingInfo =
+dealTermsGuaranteedFixedPriceTermsBillingInfo = 
     DealTermsGuaranteedFixedPriceTermsBillingInfo'
     { _dtgfptbiCurrencyConversionTimeMs = Nothing
     , _dtgfptbiDfpLineItemId = Nothing
@@ -3609,8 +3657,7 @@ dealTermsGuaranteedFixedPriceTermsBillingInfo =
 
 -- | The timestamp (in ms since epoch) when the original reservation price
 -- for the deal was first converted to DFP currency. This is used to
--- convert the contracted price into advertiser\'s currency without
--- discrepancy.
+-- convert the contracted price into buyer\'s currency without discrepancy.
 dtgfptbiCurrencyConversionTimeMs :: Lens' DealTermsGuaranteedFixedPriceTermsBillingInfo (Maybe Int64)
 dtgfptbiCurrencyConversionTimeMs
   = lens _dtgfptbiCurrencyConversionTimeMs
@@ -3681,7 +3728,7 @@ newtype GetPublisherProFilesByAccountIdResponse = GetPublisherProFilesByAccountI
 -- * 'gppfbairProFiles'
 getPublisherProFilesByAccountIdResponse
     :: GetPublisherProFilesByAccountIdResponse
-getPublisherProFilesByAccountIdResponse =
+getPublisherProFilesByAccountIdResponse = 
     GetPublisherProFilesByAccountIdResponse'
     { _gppfbairProFiles = Nothing
     }
@@ -3719,29 +3766,29 @@ instance ToJSON
 --
 -- /See:/ 'proposal' smart constructor.
 data Proposal = Proposal'
-    { _pBuyerPrivateData           :: !(Maybe PrivateData)
-    , _pIsSetupComplete            :: !(Maybe Bool)
-    , _pInventorySource            :: !(Maybe Text)
-    , _pBuyerContacts              :: !(Maybe [ContactInformation])
-    , _pKind                       :: !Text
-    , _pOriginatorRole             :: !(Maybe Text)
-    , _pDBmAdvertiserIds           :: !(Maybe [Text])
-    , _pRevisionNumber             :: !(Maybe (Textual Int64))
-    , _pBilledBuyer                :: !(Maybe Buyer)
-    , _pPrivateAuctionId           :: !(Maybe Text)
-    , _pIsRenegotiating            :: !(Maybe Bool)
-    , _pHasSellerSignedOff         :: !(Maybe Bool)
-    , _pSeller                     :: !(Maybe Seller)
-    , _pProposalId                 :: !(Maybe Text)
-    , _pName                       :: !(Maybe Text)
-    , _pSellerContacts             :: !(Maybe [ContactInformation])
-    , _pLabels                     :: !(Maybe [MarketplaceLabel])
-    , _pRevisionTimeMs             :: !(Maybe (Textual Int64))
-    , _pProposalState              :: !(Maybe Text)
+    { _pBuyerPrivateData :: !(Maybe PrivateData)
+    , _pIsSetupComplete :: !(Maybe Bool)
+    , _pInventorySource :: !(Maybe Text)
+    , _pBuyerContacts :: !(Maybe [ContactInformation])
+    , _pKind :: !Text
+    , _pOriginatorRole :: !(Maybe Text)
+    , _pDBmAdvertiserIds :: !(Maybe [Text])
+    , _pRevisionNumber :: !(Maybe (Textual Int64))
+    , _pBilledBuyer :: !(Maybe Buyer)
+    , _pPrivateAuctionId :: !(Maybe Text)
+    , _pIsRenegotiating :: !(Maybe Bool)
+    , _pHasSellerSignedOff :: !(Maybe Bool)
+    , _pSeller :: !(Maybe Seller)
+    , _pProposalId :: !(Maybe Text)
+    , _pName :: !(Maybe Text)
+    , _pSellerContacts :: !(Maybe [ContactInformation])
+    , _pLabels :: !(Maybe [MarketplaceLabel])
+    , _pRevisionTimeMs :: !(Maybe (Textual Int64))
+    , _pProposalState :: !(Maybe Text)
     , _pLastUpdaterOrCommentorRole :: !(Maybe Text)
-    , _pNegotiationId              :: !(Maybe Text)
-    , _pHasBuyerSignedOff          :: !(Maybe Bool)
-    , _pBuyer                      :: !(Maybe Buyer)
+    , _pNegotiationId :: !(Maybe Text)
+    , _pHasBuyerSignedOff :: !(Maybe Bool)
+    , _pBuyer :: !(Maybe Buyer)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Proposal' with the minimum fields required to make a request.
@@ -3795,7 +3842,7 @@ data Proposal = Proposal'
 -- * 'pBuyer'
 proposal
     :: Proposal
-proposal =
+proposal = 
     Proposal'
     { _pBuyerPrivateData = Nothing
     , _pIsSetupComplete = Nothing
@@ -3829,7 +3876,8 @@ pBuyerPrivateData
       (\ s a -> s{_pBuyerPrivateData = a})
 
 -- | True, if the buyside inventory setup is complete for this proposal.
--- (readonly, except via OrderSetupCompleted action)
+-- (readonly, except via OrderSetupCompleted action) Deprecated in favor of
+-- deal level setup complete flag.
 pIsSetupComplete :: Lens' Proposal (Maybe Bool)
 pIsSetupComplete
   = lens _pIsSetupComplete
@@ -4030,7 +4078,7 @@ instance ToJSON Proposal where
 --
 -- /See:/ 'billingInfoList' smart constructor.
 data BillingInfoList = BillingInfoList'
-    { _bilKind  :: !Text
+    { _bilKind :: !Text
     , _bilItems :: !(Maybe [BillingInfo])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4043,7 +4091,7 @@ data BillingInfoList = BillingInfoList'
 -- * 'bilItems'
 billingInfoList
     :: BillingInfoList
-billingInfoList =
+billingInfoList = 
     BillingInfoList'
     { _bilKind = "adexchangebuyer#billingInfoList"
     , _bilItems = Nothing
@@ -4088,7 +4136,7 @@ newtype AddOrderNotesResponse = AddOrderNotesResponse'
 -- * 'aNotes'
 addOrderNotesResponse
     :: AddOrderNotesResponse
-addOrderNotesResponse =
+addOrderNotesResponse = 
     AddOrderNotesResponse'
     { _aNotes = Nothing
     }
@@ -4113,7 +4161,7 @@ instance ToJSON AddOrderNotesResponse where
 -- /See:/ 'targetingValueSize' smart constructor.
 data TargetingValueSize = TargetingValueSize'
     { _tvsHeight :: !(Maybe (Textual Int32))
-    , _tvsWidth  :: !(Maybe (Textual Int32))
+    , _tvsWidth :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingValueSize' with the minimum fields required to make a request.
@@ -4125,7 +4173,7 @@ data TargetingValueSize = TargetingValueSize'
 -- * 'tvsWidth'
 targetingValueSize
     :: TargetingValueSize
-targetingValueSize =
+targetingValueSize = 
     TargetingValueSize'
     { _tvsHeight = Nothing
     , _tvsWidth = Nothing
@@ -4160,9 +4208,9 @@ instance ToJSON TargetingValueSize where
 --
 -- /See:/ 'updatePrivateAuctionProposalRequest' smart constructor.
 data UpdatePrivateAuctionProposalRequest = UpdatePrivateAuctionProposalRequest'
-    { _upaprExternalDealId         :: !(Maybe Text)
-    , _upaprUpdateAction           :: !(Maybe Text)
-    , _upaprNote                   :: !(Maybe MarketplaceNote)
+    { _upaprExternalDealId :: !(Maybe Text)
+    , _upaprUpdateAction :: !(Maybe Text)
+    , _upaprNote :: !(Maybe MarketplaceNote)
     , _upaprProposalRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4179,7 +4227,7 @@ data UpdatePrivateAuctionProposalRequest = UpdatePrivateAuctionProposalRequest'
 -- * 'upaprProposalRevisionNumber'
 updatePrivateAuctionProposalRequest
     :: UpdatePrivateAuctionProposalRequest
-updatePrivateAuctionProposalRequest =
+updatePrivateAuctionProposalRequest = 
     UpdatePrivateAuctionProposalRequest'
     { _upaprExternalDealId = Nothing
     , _upaprUpdateAction = Nothing
@@ -4236,7 +4284,7 @@ instance ToJSON UpdatePrivateAuctionProposalRequest
 -- /See:/ 'pretargetingConfigDimensionsItem' smart constructor.
 data PretargetingConfigDimensionsItem = PretargetingConfigDimensionsItem'
     { _pcdiHeight :: !(Maybe (Textual Int64))
-    , _pcdiWidth  :: !(Maybe (Textual Int64))
+    , _pcdiWidth :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigDimensionsItem' with the minimum fields required to make a request.
@@ -4248,7 +4296,7 @@ data PretargetingConfigDimensionsItem = PretargetingConfigDimensionsItem'
 -- * 'pcdiWidth'
 pretargetingConfigDimensionsItem
     :: PretargetingConfigDimensionsItem
-pretargetingConfigDimensionsItem =
+pretargetingConfigDimensionsItem = 
     PretargetingConfigDimensionsItem'
     { _pcdiHeight = Nothing
     , _pcdiWidth = Nothing
@@ -4285,9 +4333,9 @@ instance ToJSON PretargetingConfigDimensionsItem
 --
 -- /See:/ 'creativeCorrectionsItemContextsItem' smart constructor.
 data CreativeCorrectionsItemContextsItem = CreativeCorrectionsItemContextsItem'
-    { _cciciPlatform      :: !(Maybe [Text])
-    , _cciciContextType   :: !(Maybe Text)
-    , _cciciAuctionType   :: !(Maybe [Text])
+    { _cciciPlatform :: !(Maybe [Text])
+    , _cciciContextType :: !(Maybe Text)
+    , _cciciAuctionType :: !(Maybe [Text])
     , _cciciGeoCriteriaId :: !(Maybe [Textual Int32])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4304,7 +4352,7 @@ data CreativeCorrectionsItemContextsItem = CreativeCorrectionsItemContextsItem'
 -- * 'cciciGeoCriteriaId'
 creativeCorrectionsItemContextsItem
     :: CreativeCorrectionsItemContextsItem
-creativeCorrectionsItemContextsItem =
+creativeCorrectionsItemContextsItem = 
     CreativeCorrectionsItemContextsItem'
     { _cciciPlatform = Nothing
     , _cciciContextType = Nothing
@@ -4371,8 +4419,8 @@ instance ToJSON CreativeCorrectionsItemContextsItem
 -- /See:/ 'publisherProvidedForecast' smart constructor.
 data PublisherProvidedForecast = PublisherProvidedForecast'
     { _ppfWeeklyImpressions :: !(Maybe (Textual Int64))
-    , _ppfWeeklyUniques     :: !(Maybe (Textual Int64))
-    , _ppfDimensions        :: !(Maybe [Dimension])
+    , _ppfWeeklyUniques :: !(Maybe (Textual Int64))
+    , _ppfDimensions :: !(Maybe [Dimension])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PublisherProvidedForecast' with the minimum fields required to make a request.
@@ -4386,7 +4434,7 @@ data PublisherProvidedForecast = PublisherProvidedForecast'
 -- * 'ppfDimensions'
 publisherProvidedForecast
     :: PublisherProvidedForecast
-publisherProvidedForecast =
+publisherProvidedForecast = 
     PublisherProvidedForecast'
     { _ppfWeeklyImpressions = Nothing
     , _ppfWeeklyUniques = Nothing
@@ -4435,9 +4483,9 @@ instance ToJSON PublisherProvidedForecast where
 --
 -- /See:/ 'targetingValue' smart constructor.
 data TargetingValue = TargetingValue'
-    { _tvCreativeSizeValue     :: !(Maybe TargetingValueCreativeSize)
-    , _tvStringValue           :: !(Maybe Text)
-    , _tvLongValue             :: !(Maybe (Textual Int64))
+    { _tvCreativeSizeValue :: !(Maybe TargetingValueCreativeSize)
+    , _tvStringValue :: !(Maybe Text)
+    , _tvLongValue :: !(Maybe (Textual Int64))
     , _tvDayPartTargetingValue :: !(Maybe TargetingValueDayPartTargeting)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4454,7 +4502,7 @@ data TargetingValue = TargetingValue'
 -- * 'tvDayPartTargetingValue'
 targetingValue
     :: TargetingValue
-targetingValue =
+targetingValue = 
     TargetingValue'
     { _tvCreativeSizeValue = Nothing
     , _tvStringValue = Nothing
@@ -4511,8 +4559,8 @@ instance ToJSON TargetingValue where
 -- /See:/ 'creativeNATiveAdAppIcon' smart constructor.
 data CreativeNATiveAdAppIcon = CreativeNATiveAdAppIcon'
     { _cnataaiHeight :: !(Maybe (Textual Int32))
-    , _cnataaiURL    :: !(Maybe Text)
-    , _cnataaiWidth  :: !(Maybe (Textual Int32))
+    , _cnataaiURL :: !(Maybe Text)
+    , _cnataaiWidth :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeNATiveAdAppIcon' with the minimum fields required to make a request.
@@ -4526,7 +4574,7 @@ data CreativeNATiveAdAppIcon = CreativeNATiveAdAppIcon'
 -- * 'cnataaiWidth'
 creativeNATiveAdAppIcon
     :: CreativeNATiveAdAppIcon
-creativeNATiveAdAppIcon =
+creativeNATiveAdAppIcon = 
     CreativeNATiveAdAppIcon'
     { _cnataaiHeight = Nothing
     , _cnataaiURL = Nothing
@@ -4567,9 +4615,9 @@ instance ToJSON CreativeNATiveAdAppIcon where
 --
 -- /See:/ 'price' smart constructor.
 data Price = Price'
-    { _pCurrencyCode      :: !(Maybe Text)
-    , _pAmountMicros      :: !(Maybe (Textual Double))
-    , _pPricingType       :: !(Maybe Text)
+    { _pCurrencyCode :: !(Maybe Text)
+    , _pAmountMicros :: !(Maybe (Textual Double))
+    , _pPricingType :: !(Maybe Text)
     , _pExpectedCpmMicros :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -4586,7 +4634,7 @@ data Price = Price'
 -- * 'pExpectedCpmMicros'
 price
     :: Price
-price =
+price = 
     Price'
     { _pCurrencyCode = Nothing
     , _pAmountMicros = Nothing
@@ -4640,9 +4688,9 @@ instance ToJSON Price where
 --
 -- /See:/ 'pretargetingConfigVideoPlayerSizesItem' smart constructor.
 data PretargetingConfigVideoPlayerSizesItem = PretargetingConfigVideoPlayerSizesItem'
-    { _pcvpsiMinWidth    :: !(Maybe (Textual Int64))
+    { _pcvpsiMinWidth :: !(Maybe (Textual Int64))
     , _pcvpsiAspectRatio :: !(Maybe Text)
-    , _pcvpsiMinHeight   :: !(Maybe (Textual Int64))
+    , _pcvpsiMinHeight :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigVideoPlayerSizesItem' with the minimum fields required to make a request.
@@ -4656,7 +4704,7 @@ data PretargetingConfigVideoPlayerSizesItem = PretargetingConfigVideoPlayerSizes
 -- * 'pcvpsiMinHeight'
 pretargetingConfigVideoPlayerSizesItem
     :: PretargetingConfigVideoPlayerSizesItem
-pretargetingConfigVideoPlayerSizesItem =
+pretargetingConfigVideoPlayerSizesItem = 
     PretargetingConfigVideoPlayerSizesItem'
     { _pcvpsiMinWidth = Nothing
     , _pcvpsiAspectRatio = Nothing
@@ -4707,10 +4755,10 @@ instance ToJSON
 --
 -- /See:/ 'editAllOrderDealsRequest' smart constructor.
 data EditAllOrderDealsRequest = EditAllOrderDealsRequest'
-    { _eUpdateAction           :: !(Maybe Text)
-    , _eDeals                  :: !(Maybe [MarketplaceDeal])
+    { _eUpdateAction :: !(Maybe Text)
+    , _eDeals :: !(Maybe [MarketplaceDeal])
     , _eProposalRevisionNumber :: !(Maybe (Textual Int64))
-    , _eProposal               :: !(Maybe Proposal)
+    , _eProposal :: !(Maybe Proposal)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditAllOrderDealsRequest' with the minimum fields required to make a request.
@@ -4726,7 +4774,7 @@ data EditAllOrderDealsRequest = EditAllOrderDealsRequest'
 -- * 'eProposal'
 editAllOrderDealsRequest
     :: EditAllOrderDealsRequest
-editAllOrderDealsRequest =
+editAllOrderDealsRequest = 
     EditAllOrderDealsRequest'
     { _eUpdateAction = Nothing
     , _eDeals = Nothing
@@ -4793,10 +4841,10 @@ instance ToJSON EditAllOrderDealsRequest where
 --
 -- /See:/ 'billingInfo' smart constructor.
 data BillingInfo = BillingInfo'
-    { _biKind        :: !Text
+    { _biKind :: !Text
     , _biAccountName :: !(Maybe Text)
-    , _biAccountId   :: !(Maybe (Textual Int32))
-    , _biBillingId   :: !(Maybe [Text])
+    , _biAccountId :: !(Maybe (Textual Int32))
+    , _biBillingId :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingInfo' with the minimum fields required to make a request.
@@ -4812,7 +4860,7 @@ data BillingInfo = BillingInfo'
 -- * 'biBillingId'
 billingInfo
     :: BillingInfo
-billingInfo =
+billingInfo = 
     BillingInfo'
     { _biKind = "adexchangebuyer#billingInfo"
     , _biAccountName = Nothing
@@ -4868,7 +4916,7 @@ instance ToJSON BillingInfo where
 -- /See:/ 'targetingValueDayPartTargeting' smart constructor.
 data TargetingValueDayPartTargeting = TargetingValueDayPartTargeting'
     { _tvdptTimeZoneType :: !(Maybe Text)
-    , _tvdptDayParts     :: !(Maybe [TargetingValueDayPartTargetingDayPart])
+    , _tvdptDayParts :: !(Maybe [TargetingValueDayPartTargetingDayPart])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetingValueDayPartTargeting' with the minimum fields required to make a request.
@@ -4880,7 +4928,7 @@ data TargetingValueDayPartTargeting = TargetingValueDayPartTargeting'
 -- * 'tvdptDayParts'
 targetingValueDayPartTargeting
     :: TargetingValueDayPartTargeting
-targetingValueDayPartTargeting =
+targetingValueDayPartTargeting = 
     TargetingValueDayPartTargeting'
     { _tvdptTimeZoneType = Nothing
     , _tvdptDayParts = Nothing
@@ -4917,7 +4965,7 @@ instance ToJSON TargetingValueDayPartTargeting where
 --
 -- /See:/ 'sharedTargeting' smart constructor.
 data SharedTargeting = SharedTargeting'
-    { _stKey        :: !(Maybe Text)
+    { _stKey :: !(Maybe Text)
     , _stExclusions :: !(Maybe [TargetingValue])
     , _stInclusions :: !(Maybe [TargetingValue])
     } deriving (Eq,Show,Data,Typeable,Generic)
@@ -4933,7 +4981,7 @@ data SharedTargeting = SharedTargeting'
 -- * 'stInclusions'
 sharedTargeting
     :: SharedTargeting
-sharedTargeting =
+sharedTargeting = 
     SharedTargeting'
     { _stKey = Nothing
     , _stExclusions = Nothing
@@ -4981,8 +5029,8 @@ instance ToJSON SharedTargeting where
 -- /See:/ 'creativeNATiveAdImage' smart constructor.
 data CreativeNATiveAdImage = CreativeNATiveAdImage'
     { _cnataiHeight :: !(Maybe (Textual Int32))
-    , _cnataiURL    :: !(Maybe Text)
-    , _cnataiWidth  :: !(Maybe (Textual Int32))
+    , _cnataiURL :: !(Maybe Text)
+    , _cnataiWidth :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeNATiveAdImage' with the minimum fields required to make a request.
@@ -4996,7 +5044,7 @@ data CreativeNATiveAdImage = CreativeNATiveAdImage'
 -- * 'cnataiWidth'
 creativeNATiveAdImage
     :: CreativeNATiveAdImage
-creativeNATiveAdImage =
+creativeNATiveAdImage = 
     CreativeNATiveAdImage'
     { _cnataiHeight = Nothing
     , _cnataiURL = Nothing
@@ -5043,30 +5091,33 @@ instance ToJSON CreativeNATiveAdImage where
 --
 -- /See:/ 'product' smart constructor.
 data Product = Product'
-    { _proState                         :: !(Maybe Text)
-    , _proInventorySource               :: !(Maybe Text)
-    , _proWebPropertyCode               :: !(Maybe Text)
-    , _proCreationTimeMs                :: !(Maybe (Textual Int64))
-    , _proTerms                         :: !(Maybe DealTerms)
-    , _proLastUpdateTimeMs              :: !(Maybe (Textual Int64))
-    , _proKind                          :: !Text
-    , _proRevisionNumber                :: !(Maybe (Textual Int64))
-    , _proPrivateAuctionId              :: !(Maybe Text)
-    , _proDeliveryControl               :: !(Maybe DeliveryControl)
-    , _proHasCreatorSignedOff           :: !(Maybe Bool)
-    , _proFlightStartTimeMs             :: !(Maybe (Textual Int64))
-    , _proSharedTargetings              :: !(Maybe [SharedTargeting])
-    , _proSeller                        :: !(Maybe Seller)
-    , _proSyndicationProduct            :: !(Maybe Text)
-    , _proFlightEndTimeMs               :: !(Maybe (Textual Int64))
-    , _proName                          :: !(Maybe Text)
-    , _proCreatorContacts               :: !(Maybe [ContactInformation])
+    { _proState :: !(Maybe Text)
+    , _proInventorySource :: !(Maybe Text)
+    , _proWebPropertyCode :: !(Maybe Text)
+    , _proCreationTimeMs :: !(Maybe (Textual Int64))
+    , _proTerms :: !(Maybe DealTerms)
+    , _proLastUpdateTimeMs :: !(Maybe (Textual Int64))
+    , _proKind :: !Text
+    , _proRevisionNumber :: !(Maybe (Textual Int64))
+    , _proBilledBuyer :: !(Maybe Buyer)
+    , _proPrivateAuctionId :: !(Maybe Text)
+    , _proDeliveryControl :: !(Maybe DeliveryControl)
+    , _proHasCreatorSignedOff :: !(Maybe Bool)
+    , _proFlightStartTimeMs :: !(Maybe (Textual Int64))
+    , _proSharedTargetings :: !(Maybe [SharedTargeting])
+    , _proSeller :: !(Maybe Seller)
+    , _proSyndicationProduct :: !(Maybe Text)
+    , _proFlightEndTimeMs :: !(Maybe (Textual Int64))
+    , _proName :: !(Maybe Text)
+    , _proCreatorContacts :: !(Maybe [ContactInformation])
     , _proMarketplacePublisherProFileId :: !(Maybe Text)
-    , _proPublisherProvidedForecast     :: !(Maybe PublisherProvidedForecast)
-    , _proLabels                        :: !(Maybe [MarketplaceLabel])
-    , _proPublisherProFileId            :: !(Maybe Text)
-    , _proLegacyOfferId                 :: !(Maybe Text)
-    , _proProductId                     :: !(Maybe Text)
+    , _proPublisherProvidedForecast :: !(Maybe PublisherProvidedForecast)
+    , _proLabels :: !(Maybe [MarketplaceLabel])
+    , _proCreatorRole :: !(Maybe Text)
+    , _proPublisherProFileId :: !(Maybe Text)
+    , _proLegacyOfferId :: !(Maybe Text)
+    , _proProductId :: !(Maybe Text)
+    , _proBuyer :: !(Maybe Buyer)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Product' with the minimum fields required to make a request.
@@ -5088,6 +5139,8 @@ data Product = Product'
 -- * 'proKind'
 --
 -- * 'proRevisionNumber'
+--
+-- * 'proBilledBuyer'
 --
 -- * 'proPrivateAuctionId'
 --
@@ -5115,14 +5168,18 @@ data Product = Product'
 --
 -- * 'proLabels'
 --
+-- * 'proCreatorRole'
+--
 -- * 'proPublisherProFileId'
 --
 -- * 'proLegacyOfferId'
 --
 -- * 'proProductId'
+--
+-- * 'proBuyer'
 product
     :: Product
-product =
+product = 
     Product'
     { _proState = Nothing
     , _proInventorySource = Nothing
@@ -5132,6 +5189,7 @@ product =
     , _proLastUpdateTimeMs = Nothing
     , _proKind = "adexchangebuyer#product"
     , _proRevisionNumber = Nothing
+    , _proBilledBuyer = Nothing
     , _proPrivateAuctionId = Nothing
     , _proDeliveryControl = Nothing
     , _proHasCreatorSignedOff = Nothing
@@ -5145,9 +5203,11 @@ product =
     , _proMarketplacePublisherProFileId = Nothing
     , _proPublisherProvidedForecast = Nothing
     , _proLabels = Nothing
+    , _proCreatorRole = Nothing
     , _proPublisherProFileId = Nothing
     , _proLegacyOfferId = Nothing
     , _proProductId = Nothing
+    , _proBuyer = Nothing
     }
 
 -- | The state of the product. (buyer-readonly)
@@ -5196,6 +5256,13 @@ proRevisionNumber
   = lens _proRevisionNumber
       (\ s a -> s{_proRevisionNumber = a})
       . mapping _Coerce
+
+-- | The billed buyer corresponding to the buyer that created the offer.
+-- (readonly, except on create)
+proBilledBuyer :: Lens' Product (Maybe Buyer)
+proBilledBuyer
+  = lens _proBilledBuyer
+      (\ s a -> s{_proBilledBuyer = a})
 
 -- | Optional private auction id if this offer is a private auction offer.
 proPrivateAuctionId :: Lens' Product (Maybe Text)
@@ -5294,6 +5361,13 @@ proLabels
       _Default
       . _Coerce
 
+-- | The role that created the offer. Set to BUYER for buyer initiated
+-- offers.
+proCreatorRole :: Lens' Product (Maybe Text)
+proCreatorRole
+  = lens _proCreatorRole
+      (\ s a -> s{_proCreatorRole = a})
+
 -- | Id of the publisher profile for a given seller. A (seller.account_id,
 -- publisher_profile_id) pair uniquely identifies a publisher profile.
 -- Buyers can call the PublisherProfiles::List endpoint to get a list of
@@ -5314,6 +5388,11 @@ proProductId :: Lens' Product (Maybe Text)
 proProductId
   = lens _proProductId (\ s a -> s{_proProductId = a})
 
+-- | The buyer that created the offer if this is a buyer initiated offer
+-- (readonly, except on create)
+proBuyer :: Lens' Product (Maybe Buyer)
+proBuyer = lens _proBuyer (\ s a -> s{_proBuyer = a})
+
 instance FromJSON Product where
         parseJSON
           = withObject "Product"
@@ -5326,6 +5405,7 @@ instance FromJSON Product where
                      <*> (o .:? "lastUpdateTimeMs")
                      <*> (o .:? "kind" .!= "adexchangebuyer#product")
                      <*> (o .:? "revisionNumber")
+                     <*> (o .:? "billedBuyer")
                      <*> (o .:? "privateAuctionId")
                      <*> (o .:? "deliveryControl")
                      <*> (o .:? "hasCreatorSignedOff")
@@ -5339,9 +5419,11 @@ instance FromJSON Product where
                      <*> (o .:? "marketplacePublisherProfileId")
                      <*> (o .:? "publisherProvidedForecast")
                      <*> (o .:? "labels" .!= mempty)
+                     <*> (o .:? "creatorRole")
                      <*> (o .:? "publisherProfileId")
                      <*> (o .:? "legacyOfferId")
-                     <*> (o .:? "productId"))
+                     <*> (o .:? "productId")
+                     <*> (o .:? "buyer"))
 
 instance ToJSON Product where
         toJSON Product'{..}
@@ -5355,6 +5437,7 @@ instance ToJSON Product where
                   ("lastUpdateTimeMs" .=) <$> _proLastUpdateTimeMs,
                   Just ("kind" .= _proKind),
                   ("revisionNumber" .=) <$> _proRevisionNumber,
+                  ("billedBuyer" .=) <$> _proBilledBuyer,
                   ("privateAuctionId" .=) <$> _proPrivateAuctionId,
                   ("deliveryControl" .=) <$> _proDeliveryControl,
                   ("hasCreatorSignedOff" .=) <$>
@@ -5371,15 +5454,17 @@ instance ToJSON Product where
                   ("publisherProvidedForecast" .=) <$>
                     _proPublisherProvidedForecast,
                   ("labels" .=) <$> _proLabels,
+                  ("creatorRole" .=) <$> _proCreatorRole,
                   ("publisherProfileId" .=) <$> _proPublisherProFileId,
                   ("legacyOfferId" .=) <$> _proLegacyOfferId,
-                  ("productId" .=) <$> _proProductId])
+                  ("productId" .=) <$> _proProductId,
+                  ("buyer" .=) <$> _proBuyer])
 
 --
 -- /See:/ 'creativeServingRestrictionsItem' smart constructor.
 data CreativeServingRestrictionsItem = CreativeServingRestrictionsItem'
-    { _csriContexts           :: !(Maybe [CreativeServingRestrictionsItemContextsItem])
-    , _csriReason             :: !(Maybe Text)
+    { _csriContexts :: !(Maybe [CreativeServingRestrictionsItemContextsItem])
+    , _csriReason :: !(Maybe Text)
     , _csriDisApprovalReasons :: !(Maybe [CreativeServingRestrictionsItemDisApprovalReasonsItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5394,7 +5479,7 @@ data CreativeServingRestrictionsItem = CreativeServingRestrictionsItem'
 -- * 'csriDisApprovalReasons'
 creativeServingRestrictionsItem
     :: CreativeServingRestrictionsItem
-creativeServingRestrictionsItem =
+creativeServingRestrictionsItem = 
     CreativeServingRestrictionsItem'
     { _csriContexts = Nothing
     , _csriReason = Nothing
@@ -5447,7 +5532,7 @@ instance ToJSON CreativeServingRestrictionsItem where
 --
 -- /See:/ 'deleteOrderDealsResponse' smart constructor.
 data DeleteOrderDealsResponse = DeleteOrderDealsResponse'
-    { _dDeals                  :: !(Maybe [MarketplaceDeal])
+    { _dDeals :: !(Maybe [MarketplaceDeal])
     , _dProposalRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5460,7 +5545,7 @@ data DeleteOrderDealsResponse = DeleteOrderDealsResponse'
 -- * 'dProposalRevisionNumber'
 deleteOrderDealsResponse
     :: DeleteOrderDealsResponse
-deleteOrderDealsResponse =
+deleteOrderDealsResponse = 
     DeleteOrderDealsResponse'
     { _dDeals = Nothing
     , _dProposalRevisionNumber = Nothing
@@ -5499,7 +5584,7 @@ instance ToJSON DeleteOrderDealsResponse where
 -- /See:/ 'pretargetingConfigPlacementsItem' smart constructor.
 data PretargetingConfigPlacementsItem = PretargetingConfigPlacementsItem'
     { _pcpiToken :: !(Maybe Text)
-    , _pcpiType  :: !(Maybe Text)
+    , _pcpiType :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PretargetingConfigPlacementsItem' with the minimum fields required to make a request.
@@ -5511,7 +5596,7 @@ data PretargetingConfigPlacementsItem = PretargetingConfigPlacementsItem'
 -- * 'pcpiType'
 pretargetingConfigPlacementsItem
     :: PretargetingConfigPlacementsItem
-pretargetingConfigPlacementsItem =
+pretargetingConfigPlacementsItem = 
     PretargetingConfigPlacementsItem'
     { _pcpiToken = Nothing
     , _pcpiType = Nothing
@@ -5547,29 +5632,29 @@ instance ToJSON PretargetingConfigPlacementsItem
 --
 -- /See:/ 'publisherProFileAPIProto' smart constructor.
 data PublisherProFileAPIProto = PublisherProFileAPIProto'
-    { _ppfapAudience                  :: !(Maybe Text)
-    , _ppfapState                     :: !(Maybe Text)
-    , _ppfapMediaKitLink              :: !(Maybe Text)
-    , _ppfapDirectContact             :: !(Maybe Text)
-    , _ppfapSamplePageLink            :: !(Maybe Text)
-    , _ppfapLogoURL                   :: !(Maybe Text)
-    , _ppfapKind                      :: !Text
-    , _ppfapExchange                  :: !(Maybe Text)
-    , _ppfapOverview                  :: !(Maybe Text)
-    , _ppfapGooglePlusLink            :: !(Maybe Text)
-    , _ppfapProFileId                 :: !(Maybe (Textual Int32))
-    , _ppfapIsParent                  :: !(Maybe Bool)
-    , _ppfapSeller                    :: !(Maybe Seller)
-    , _ppfapAccountId                 :: !(Maybe Text)
-    , _ppfapName                      :: !(Maybe Text)
-    , _ppfapBuyerPitchStatement       :: !(Maybe Text)
+    { _ppfapAudience :: !(Maybe Text)
+    , _ppfapState :: !(Maybe Text)
+    , _ppfapMediaKitLink :: !(Maybe Text)
+    , _ppfapDirectContact :: !(Maybe Text)
+    , _ppfapSamplePageLink :: !(Maybe Text)
+    , _ppfapLogoURL :: !(Maybe Text)
+    , _ppfapKind :: !Text
+    , _ppfapExchange :: !(Maybe Text)
+    , _ppfapOverview :: !(Maybe Text)
+    , _ppfapGooglePlusLink :: !(Maybe Text)
+    , _ppfapProFileId :: !(Maybe (Textual Int32))
+    , _ppfapIsParent :: !(Maybe Bool)
+    , _ppfapSeller :: !(Maybe Seller)
+    , _ppfapAccountId :: !(Maybe Text)
+    , _ppfapName :: !(Maybe Text)
+    , _ppfapBuyerPitchStatement :: !(Maybe Text)
     , _ppfapPublisherProvidedForecast :: !(Maybe PublisherProvidedForecast)
-    , _ppfapIsPublished               :: !(Maybe Bool)
-    , _ppfapPublisherDomains          :: !(Maybe [Text])
-    , _ppfapPublisherProFileId        :: !(Maybe Text)
-    , _ppfapRateCardInfoLink          :: !(Maybe Text)
-    , _ppfapTopHeadlines              :: !(Maybe [Text])
-    , _ppfapProgrammaticContact       :: !(Maybe Text)
+    , _ppfapIsPublished :: !(Maybe Bool)
+    , _ppfapPublisherDomains :: !(Maybe [Text])
+    , _ppfapPublisherProFileId :: !(Maybe Text)
+    , _ppfapRateCardInfoLink :: !(Maybe Text)
+    , _ppfapTopHeadlines :: !(Maybe [Text])
+    , _ppfapProgrammaticContact :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PublisherProFileAPIProto' with the minimum fields required to make a request.
@@ -5623,7 +5708,7 @@ data PublisherProFileAPIProto = PublisherProFileAPIProto'
 -- * 'ppfapProgrammaticContact'
 publisherProFileAPIProto
     :: PublisherProFileAPIProto
-publisherProFileAPIProto =
+publisherProFileAPIProto = 
     PublisherProFileAPIProto'
     { _ppfapAudience = Nothing
     , _ppfapState = Nothing
@@ -5728,7 +5813,7 @@ ppfapSeller :: Lens' PublisherProFileAPIProto (Maybe Seller)
 ppfapSeller
   = lens _ppfapSeller (\ s a -> s{_ppfapSeller = a})
 
--- | The account id of the seller.
+-- | Deprecated: use the seller.account_id. The account id of the seller.
 ppfapAccountId :: Lens' PublisherProFileAPIProto (Maybe Text)
 ppfapAccountId
   = lens _ppfapAccountId
@@ -5858,29 +5943,30 @@ instance ToJSON PublisherProFileAPIProto where
 --
 -- /See:/ 'marketplaceDeal' smart constructor.
 data MarketplaceDeal = MarketplaceDeal'
-    { _mdExternalDealId                 :: !(Maybe Text)
-    , _mdBuyerPrivateData               :: !(Maybe PrivateData)
-    , _mdWebPropertyCode                :: !(Maybe Text)
-    , _mdCreationTimeMs                 :: !(Maybe (Textual Int64))
-    , _mdTerms                          :: !(Maybe DealTerms)
-    , _mdLastUpdateTimeMs               :: !(Maybe (Textual Int64))
-    , _mdKind                           :: !Text
-    , _mdDeliveryControl                :: !(Maybe DeliveryControl)
-    , _mdDealServingMetadata            :: !(Maybe DealServingMetadata)
-    , _mdFlightStartTimeMs              :: !(Maybe (Textual Int64))
-    , _mdSharedTargetings               :: !(Maybe [SharedTargeting])
-    , _mdIsRfpTemplate                  :: !(Maybe Bool)
-    , _mdProposalId                     :: !(Maybe Text)
-    , _mdDealId                         :: !(Maybe Text)
-    , _mdInventoryDescription           :: !(Maybe Text)
-    , _mdSyndicationProduct             :: !(Maybe Text)
-    , _mdFlightEndTimeMs                :: !(Maybe (Textual Int64))
-    , _mdName                           :: !(Maybe Text)
-    , _mdSellerContacts                 :: !(Maybe [ContactInformation])
-    , _mdProgrammaticCreativeSource     :: !(Maybe Text)
-    , _mdCreativePreApprovalPolicy      :: !(Maybe Text)
-    , _mdProductRevisionNumber          :: !(Maybe (Textual Int64))
-    , _mdProductId                      :: !(Maybe Text)
+    { _mdExternalDealId :: !(Maybe Text)
+    , _mdBuyerPrivateData :: !(Maybe PrivateData)
+    , _mdIsSetupComplete :: !(Maybe Bool)
+    , _mdWebPropertyCode :: !(Maybe Text)
+    , _mdCreationTimeMs :: !(Maybe (Textual Int64))
+    , _mdTerms :: !(Maybe DealTerms)
+    , _mdLastUpdateTimeMs :: !(Maybe (Textual Int64))
+    , _mdKind :: !Text
+    , _mdDeliveryControl :: !(Maybe DeliveryControl)
+    , _mdDealServingMetadata :: !(Maybe DealServingMetadata)
+    , _mdFlightStartTimeMs :: !(Maybe (Textual Int64))
+    , _mdSharedTargetings :: !(Maybe [SharedTargeting])
+    , _mdIsRfpTemplate :: !(Maybe Bool)
+    , _mdProposalId :: !(Maybe Text)
+    , _mdDealId :: !(Maybe Text)
+    , _mdInventoryDescription :: !(Maybe Text)
+    , _mdSyndicationProduct :: !(Maybe Text)
+    , _mdFlightEndTimeMs :: !(Maybe (Textual Int64))
+    , _mdName :: !(Maybe Text)
+    , _mdSellerContacts :: !(Maybe [ContactInformation])
+    , _mdProgrammaticCreativeSource :: !(Maybe Text)
+    , _mdCreativePreApprovalPolicy :: !(Maybe Text)
+    , _mdProductRevisionNumber :: !(Maybe (Textual Int64))
+    , _mdProductId :: !(Maybe Text)
     , _mdCreativeSafeFrameCompatibility :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5891,6 +5977,8 @@ data MarketplaceDeal = MarketplaceDeal'
 -- * 'mdExternalDealId'
 --
 -- * 'mdBuyerPrivateData'
+--
+-- * 'mdIsSetupComplete'
 --
 -- * 'mdWebPropertyCode'
 --
@@ -5937,10 +6025,11 @@ data MarketplaceDeal = MarketplaceDeal'
 -- * 'mdCreativeSafeFrameCompatibility'
 marketplaceDeal
     :: MarketplaceDeal
-marketplaceDeal =
+marketplaceDeal = 
     MarketplaceDeal'
     { _mdExternalDealId = Nothing
     , _mdBuyerPrivateData = Nothing
+    , _mdIsSetupComplete = Nothing
     , _mdWebPropertyCode = Nothing
     , _mdCreationTimeMs = Nothing
     , _mdTerms = Nothing
@@ -5977,6 +6066,13 @@ mdBuyerPrivateData :: Lens' MarketplaceDeal (Maybe PrivateData)
 mdBuyerPrivateData
   = lens _mdBuyerPrivateData
       (\ s a -> s{_mdBuyerPrivateData = a})
+
+-- | True, if the buyside inventory setup is complete for this deal.
+-- (readonly, except via OrderSetupCompleted action)
+mdIsSetupComplete :: Lens' MarketplaceDeal (Maybe Bool)
+mdIsSetupComplete
+  = lens _mdIsSetupComplete
+      (\ s a -> s{_mdIsSetupComplete = a})
 
 mdWebPropertyCode :: Lens' MarketplaceDeal (Maybe Text)
 mdWebPropertyCode
@@ -6128,6 +6224,7 @@ instance FromJSON MarketplaceDeal where
                  MarketplaceDeal' <$>
                    (o .:? "externalDealId") <*>
                      (o .:? "buyerPrivateData")
+                     <*> (o .:? "isSetupComplete")
                      <*> (o .:? "webPropertyCode")
                      <*> (o .:? "creationTimeMs")
                      <*> (o .:? "terms")
@@ -6158,6 +6255,7 @@ instance ToJSON MarketplaceDeal where
               (catMaybes
                  [("externalDealId" .=) <$> _mdExternalDealId,
                   ("buyerPrivateData" .=) <$> _mdBuyerPrivateData,
+                  ("isSetupComplete" .=) <$> _mdIsSetupComplete,
                   ("webPropertyCode" .=) <$> _mdWebPropertyCode,
                   ("creationTimeMs" .=) <$> _mdCreationTimeMs,
                   ("terms" .=) <$> _mdTerms,
@@ -6200,7 +6298,7 @@ newtype GetOffersResponse = GetOffersResponse'
 -- * 'gorProducts'
 getOffersResponse
     :: GetOffersResponse
-getOffersResponse =
+getOffersResponse = 
     GetOffersResponse'
     { _gorProducts = Nothing
     }
@@ -6226,7 +6324,7 @@ instance ToJSON GetOffersResponse where
 --
 -- /See:/ 'dealTermsNonGuaranteedAuctionTerms' smart constructor.
 data DealTermsNonGuaranteedAuctionTerms = DealTermsNonGuaranteedAuctionTerms'
-    { _dtngatReservePricePerBuyers      :: !(Maybe [PricePerBuyer])
+    { _dtngatReservePricePerBuyers :: !(Maybe [PricePerBuyer])
     , _dtngatAutoOptimizePrivateAuction :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6239,7 +6337,7 @@ data DealTermsNonGuaranteedAuctionTerms = DealTermsNonGuaranteedAuctionTerms'
 -- * 'dtngatAutoOptimizePrivateAuction'
 dealTermsNonGuaranteedAuctionTerms
     :: DealTermsNonGuaranteedAuctionTerms
-dealTermsNonGuaranteedAuctionTerms =
+dealTermsNonGuaranteedAuctionTerms = 
     DealTermsNonGuaranteedAuctionTerms'
     { _dtngatReservePricePerBuyers = Nothing
     , _dtngatAutoOptimizePrivateAuction = Nothing
@@ -6283,7 +6381,7 @@ instance ToJSON DealTermsNonGuaranteedAuctionTerms
 -- /See:/ 'creativeFilteringReasonsReasonsItem' smart constructor.
 data CreativeFilteringReasonsReasonsItem = CreativeFilteringReasonsReasonsItem'
     { _cfrriFilteringStatus :: !(Maybe (Textual Int32))
-    , _cfrriFilteringCount  :: !(Maybe (Textual Int64))
+    , _cfrriFilteringCount :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFilteringReasonsReasonsItem' with the minimum fields required to make a request.
@@ -6295,14 +6393,13 @@ data CreativeFilteringReasonsReasonsItem = CreativeFilteringReasonsReasonsItem'
 -- * 'cfrriFilteringCount'
 creativeFilteringReasonsReasonsItem
     :: CreativeFilteringReasonsReasonsItem
-creativeFilteringReasonsReasonsItem =
+creativeFilteringReasonsReasonsItem = 
     CreativeFilteringReasonsReasonsItem'
     { _cfrriFilteringStatus = Nothing
     , _cfrriFilteringCount = Nothing
     }
 
--- | The filtering status code. Please refer to the creative-status-codes.txt
--- file for different statuses.
+-- | The filtering status code as defined in creative-status-codes.txt.
 cfrriFilteringStatus :: Lens' CreativeFilteringReasonsReasonsItem (Maybe Int32)
 cfrriFilteringStatus
   = lens _cfrriFilteringStatus
@@ -6337,16 +6434,16 @@ instance ToJSON CreativeFilteringReasonsReasonsItem
 --
 -- /See:/ 'dealTerms' smart constructor.
 data DealTerms = DealTerms'
-    { _dtEstimatedGrossSpend           :: !(Maybe Price)
-    , _dtNonGuaranteedFixedPriceTerms  :: !(Maybe DealTermsNonGuaranteedFixedPriceTerms)
-    , _dtNonGuaranteedAuctionTerms     :: !(Maybe DealTermsNonGuaranteedAuctionTerms)
-    , _dtRubiconNonGuaranteedTerms     :: !(Maybe DealTermsRubiconNonGuaranteedTerms)
-    , _dtBrandingType                  :: !(Maybe Text)
+    { _dtEstimatedGrossSpend :: !(Maybe Price)
+    , _dtNonGuaranteedFixedPriceTerms :: !(Maybe DealTermsNonGuaranteedFixedPriceTerms)
+    , _dtNonGuaranteedAuctionTerms :: !(Maybe DealTermsNonGuaranteedAuctionTerms)
+    , _dtRubiconNonGuaranteedTerms :: !(Maybe DealTermsRubiconNonGuaranteedTerms)
+    , _dtBrandingType :: !(Maybe Text)
     , _dtCrossListedExternalDealIdType :: !(Maybe Text)
-    , _dtEstimatedImpressionsPerDay    :: !(Maybe (Textual Int64))
-    , _dtSellerTimeZone                :: !(Maybe Text)
-    , _dtGuaranteedFixedPriceTerms     :: !(Maybe DealTermsGuaranteedFixedPriceTerms)
-    , _dtDescription                   :: !(Maybe Text)
+    , _dtEstimatedImpressionsPerDay :: !(Maybe (Textual Int64))
+    , _dtSellerTimeZone :: !(Maybe Text)
+    , _dtGuaranteedFixedPriceTerms :: !(Maybe DealTermsGuaranteedFixedPriceTerms)
+    , _dtDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DealTerms' with the minimum fields required to make a request.
@@ -6374,7 +6471,7 @@ data DealTerms = DealTerms'
 -- * 'dtDescription'
 dealTerms
     :: DealTerms
-dealTerms =
+dealTerms = 
     DealTerms'
     { _dtEstimatedGrossSpend = Nothing
     , _dtNonGuaranteedFixedPriceTerms = Nothing
@@ -6496,7 +6593,7 @@ instance ToJSON DealTerms where
 --
 -- /See:/ 'creativeDealIds' smart constructor.
 data CreativeDealIds = CreativeDealIds'
-    { _cdiKind         :: !Text
+    { _cdiKind :: !Text
     , _cdiDealStatuses :: !(Maybe [CreativeDealIdsDealStatusesItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6509,7 +6606,7 @@ data CreativeDealIds = CreativeDealIds'
 -- * 'cdiDealStatuses'
 creativeDealIds
     :: CreativeDealIds
-creativeDealIds =
+creativeDealIds = 
     CreativeDealIds'
     { _cdiKind = "adexchangebuyer#creativeDealIds"
     , _cdiDealStatuses = Nothing
@@ -6546,9 +6643,9 @@ instance ToJSON CreativeDealIds where
 -- /See:/ 'marketplaceLabel' smart constructor.
 data MarketplaceLabel = MarketplaceLabel'
     { _mlDeprecatedMarketplaceDealParty :: !(Maybe MarketplaceDealParty)
-    , _mlAccountId                      :: !(Maybe Text)
-    , _mlCreateTimeMs                   :: !(Maybe (Textual Int64))
-    , _mlLabel                          :: !(Maybe Text)
+    , _mlAccountId :: !(Maybe Text)
+    , _mlCreateTimeMs :: !(Maybe (Textual Int64))
+    , _mlLabel :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceLabel' with the minimum fields required to make a request.
@@ -6564,7 +6661,7 @@ data MarketplaceLabel = MarketplaceLabel'
 -- * 'mlLabel'
 marketplaceLabel
     :: MarketplaceLabel
-marketplaceLabel =
+marketplaceLabel = 
     MarketplaceLabel'
     { _mlDeprecatedMarketplaceDealParty = Nothing
     , _mlAccountId = Nothing
@@ -6627,7 +6724,7 @@ newtype Buyer = Buyer'
 -- * 'buyAccountId'
 buyer
     :: Buyer
-buyer =
+buyer = 
     Buyer'
     { _buyAccountId = Nothing
     }
@@ -6650,8 +6747,8 @@ instance ToJSON Buyer where
 --
 -- /See:/ 'addOrderDealsRequest' smart constructor.
 data AddOrderDealsRequest = AddOrderDealsRequest'
-    { _aUpdateAction           :: !(Maybe Text)
-    , _aDeals                  :: !(Maybe [MarketplaceDeal])
+    { _aUpdateAction :: !(Maybe Text)
+    , _aDeals :: !(Maybe [MarketplaceDeal])
     , _aProposalRevisionNumber :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6666,7 +6763,7 @@ data AddOrderDealsRequest = AddOrderDealsRequest'
 -- * 'aProposalRevisionNumber'
 addOrderDealsRequest
     :: AddOrderDealsRequest
-addOrderDealsRequest =
+addOrderDealsRequest = 
     AddOrderDealsRequest'
     { _aUpdateAction = Nothing
     , _aDeals = Nothing
@@ -6715,11 +6812,11 @@ instance ToJSON AddOrderDealsRequest where
 --
 -- /See:/ 'dealServingMetadataDealPauseStatus' smart constructor.
 data DealServingMetadataDealPauseStatus = DealServingMetadataDealPauseStatus'
-    { _dsmdpsFirstPausedBy     :: !(Maybe Text)
-    , _dsmdpsBuyerPauseReason  :: !(Maybe Text)
-    , _dsmdpsHasBuyerPaused    :: !(Maybe Bool)
+    { _dsmdpsFirstPausedBy :: !(Maybe Text)
+    , _dsmdpsBuyerPauseReason :: !(Maybe Text)
+    , _dsmdpsHasBuyerPaused :: !(Maybe Bool)
     , _dsmdpsSellerPauseReason :: !(Maybe Text)
-    , _dsmdpsHasSellerPaused   :: !(Maybe Bool)
+    , _dsmdpsHasSellerPaused :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DealServingMetadataDealPauseStatus' with the minimum fields required to make a request.
@@ -6737,7 +6834,7 @@ data DealServingMetadataDealPauseStatus = DealServingMetadataDealPauseStatus'
 -- * 'dsmdpsHasSellerPaused'
 dealServingMetadataDealPauseStatus
     :: DealServingMetadataDealPauseStatus
-dealServingMetadataDealPauseStatus =
+dealServingMetadataDealPauseStatus = 
     DealServingMetadataDealPauseStatus'
     { _dsmdpsFirstPausedBy = Nothing
     , _dsmdpsBuyerPauseReason = Nothing
@@ -6799,11 +6896,11 @@ instance ToJSON DealServingMetadataDealPauseStatus
 --
 -- /See:/ 'dealTermsGuaranteedFixedPriceTerms' smart constructor.
 data DealTermsGuaranteedFixedPriceTerms = DealTermsGuaranteedFixedPriceTerms'
-    { _dtgfptGuaranteedLooks       :: !(Maybe (Textual Int64))
+    { _dtgfptGuaranteedLooks :: !(Maybe (Textual Int64))
     , _dtgfptGuaranteedImpressions :: !(Maybe (Textual Int64))
-    , _dtgfptBillingInfo           :: !(Maybe DealTermsGuaranteedFixedPriceTermsBillingInfo)
-    , _dtgfptFixedPrices           :: !(Maybe [PricePerBuyer])
-    , _dtgfptMinimumDailyLooks     :: !(Maybe (Textual Int64))
+    , _dtgfptBillingInfo :: !(Maybe DealTermsGuaranteedFixedPriceTermsBillingInfo)
+    , _dtgfptFixedPrices :: !(Maybe [PricePerBuyer])
+    , _dtgfptMinimumDailyLooks :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DealTermsGuaranteedFixedPriceTerms' with the minimum fields required to make a request.
@@ -6821,7 +6918,7 @@ data DealTermsGuaranteedFixedPriceTerms = DealTermsGuaranteedFixedPriceTerms'
 -- * 'dtgfptMinimumDailyLooks'
 dealTermsGuaranteedFixedPriceTerms
     :: DealTermsGuaranteedFixedPriceTerms
-dealTermsGuaranteedFixedPriceTerms =
+dealTermsGuaranteedFixedPriceTerms = 
     DealTermsGuaranteedFixedPriceTerms'
     { _dtgfptGuaranteedLooks = Nothing
     , _dtgfptGuaranteedImpressions = Nothing

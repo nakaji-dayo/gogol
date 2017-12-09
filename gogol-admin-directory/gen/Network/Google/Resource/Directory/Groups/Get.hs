@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.Groups.Get
 
     -- * Request Lenses
     , ggGroupKey
+    , ggFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.get@ method which the
 -- 'GroupsGet' request conforms to.
@@ -47,13 +48,15 @@ type GroupsGetResource =
          "v1" :>
            "groups" :>
              Capture "groupKey" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Group
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Group
 
 -- | Retrieve Group
 --
 -- /See:/ 'groupsGet' smart constructor.
-newtype GroupsGet = GroupsGet'
-    { _ggGroupKey :: Text
+data GroupsGet = GroupsGet'
+    { _ggGroupKey :: !Text
+    , _ggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsGet' with the minimum fields required to make a request.
@@ -61,18 +64,25 @@ newtype GroupsGet = GroupsGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ggGroupKey'
+--
+-- * 'ggFields'
 groupsGet
     :: Text -- ^ 'ggGroupKey'
     -> GroupsGet
-groupsGet pGgGroupKey_ =
+groupsGet pGgGroupKey_ = 
     GroupsGet'
     { _ggGroupKey = pGgGroupKey_
+    , _ggFields = Nothing
     }
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 ggGroupKey :: Lens' GroupsGet Text
 ggGroupKey
   = lens _ggGroupKey (\ s a -> s{_ggGroupKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ggFields :: Lens' GroupsGet (Maybe Text)
+ggFields = lens _ggFields (\ s a -> s{_ggFields = a})
 
 instance GoogleRequest GroupsGet where
         type Rs GroupsGet = Group
@@ -80,7 +90,8 @@ instance GoogleRequest GroupsGet where
              '["https://www.googleapis.com/auth/admin.directory.group",
                "https://www.googleapis.com/auth/admin.directory.group.readonly"]
         requestClient GroupsGet'{..}
-          = go _ggGroupKey (Just AltJSON) directoryService
+          = go _ggGroupKey _ggFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy GroupsGetResource)
                       mempty

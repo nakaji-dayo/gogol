@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.PostalCodes.List
 
     -- * Request Lenses
     , pclProFileId
+    , pclFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.postalCodes.list@ method which the
 -- 'PostalCodesList' request conforms to.
 type PostalCodesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "postalCodes" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] PostalCodesListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] PostalCodesListResponse
 
 -- | Retrieves a list of postal codes.
 --
 -- /See:/ 'postalCodesList' smart constructor.
-newtype PostalCodesList = PostalCodesList'
-    { _pclProFileId :: Textual Int64
+data PostalCodesList = PostalCodesList'
+    { _pclProFileId :: !(Textual Int64)
+    , _pclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostalCodesList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype PostalCodesList = PostalCodesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pclProFileId'
+--
+-- * 'pclFields'
 postalCodesList
     :: Int64 -- ^ 'pclProFileId'
     -> PostalCodesList
-postalCodesList pPclProFileId_ =
+postalCodesList pPclProFileId_ = 
     PostalCodesList'
     { _pclProFileId = _Coerce # pPclProFileId_
+    , _pclFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,18 @@ pclProFileId
   = lens _pclProFileId (\ s a -> s{_pclProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pclFields :: Lens' PostalCodesList (Maybe Text)
+pclFields
+  = lens _pclFields (\ s a -> s{_pclFields = a})
+
 instance GoogleRequest PostalCodesList where
         type Rs PostalCodesList = PostalCodesListResponse
         type Scopes PostalCodesList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PostalCodesList'{..}
-          = go _pclProFileId (Just AltJSON) dFAReportingService
+          = go _pclProFileId _pclFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient
                       (Proxy :: Proxy PostalCodesListResource)

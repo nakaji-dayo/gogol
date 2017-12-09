@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceDeals.Delete
     -- * Request Lenses
     , mddPayload
     , mddProposalId
+    , mddFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacedeals.delete@ method which the
 -- 'MarketplaceDealsDelete' request conforms to.
@@ -49,16 +50,18 @@ type MarketplaceDealsDeleteResource =
            Capture "proposalId" Text :>
              "deals" :>
                "delete" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DeleteOrderDealsRequest :>
-                     Post '[JSON] DeleteOrderDealsResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DeleteOrderDealsRequest :>
+                       Post '[JSON] DeleteOrderDealsResponse
 
 -- | Delete the specified deals from the proposal
 --
 -- /See:/ 'marketplaceDealsDelete' smart constructor.
 data MarketplaceDealsDelete = MarketplaceDealsDelete'
-    { _mddPayload    :: !DeleteOrderDealsRequest
+    { _mddPayload :: !DeleteOrderDealsRequest
     , _mddProposalId :: !Text
+    , _mddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceDealsDelete' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data MarketplaceDealsDelete = MarketplaceDealsDelete'
 -- * 'mddPayload'
 --
 -- * 'mddProposalId'
+--
+-- * 'mddFields'
 marketplaceDealsDelete
     :: DeleteOrderDealsRequest -- ^ 'mddPayload'
     -> Text -- ^ 'mddProposalId'
     -> MarketplaceDealsDelete
-marketplaceDealsDelete pMddPayload_ pMddProposalId_ =
+marketplaceDealsDelete pMddPayload_ pMddProposalId_ = 
     MarketplaceDealsDelete'
     { _mddPayload = pMddPayload_
     , _mddProposalId = pMddProposalId_
+    , _mddFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,13 +95,19 @@ mddProposalId
   = lens _mddProposalId
       (\ s a -> s{_mddProposalId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mddFields :: Lens' MarketplaceDealsDelete (Maybe Text)
+mddFields
+  = lens _mddFields (\ s a -> s{_mddFields = a})
+
 instance GoogleRequest MarketplaceDealsDelete where
         type Rs MarketplaceDealsDelete =
              DeleteOrderDealsResponse
         type Scopes MarketplaceDealsDelete =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceDealsDelete'{..}
-          = go _mddProposalId (Just AltJSON) _mddPayload
+          = go _mddProposalId _mddFields (Just AltJSON)
+              _mddPayload
               adExchangeBuyerService
           where go
                   = buildClient

@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Dismiss
     -- * Request Lenses
     , tbmdsConsistencyToken
     , tbmdsMatchId
+    , tbmdsFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.dismiss@ method which the
 -- 'TurnBasedMatchesDismiss' request conforms to.
@@ -50,7 +51,8 @@ type TurnBasedMatchesDismissResource =
            Capture "matchId" Text :>
              "dismiss" :>
                QueryParam "consistencyToken" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Put '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Put '[JSON] ()
 
 -- | Dismiss a turn-based match from the match list. The match will no longer
 -- show up in the list and will not generate notifications.
@@ -58,7 +60,8 @@ type TurnBasedMatchesDismissResource =
 -- /See:/ 'turnBasedMatchesDismiss' smart constructor.
 data TurnBasedMatchesDismiss = TurnBasedMatchesDismiss'
     { _tbmdsConsistencyToken :: !(Maybe (Textual Int64))
-    , _tbmdsMatchId          :: !Text
+    , _tbmdsMatchId :: !Text
+    , _tbmdsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesDismiss' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data TurnBasedMatchesDismiss = TurnBasedMatchesDismiss'
 -- * 'tbmdsConsistencyToken'
 --
 -- * 'tbmdsMatchId'
+--
+-- * 'tbmdsFields'
 turnBasedMatchesDismiss
     :: Text -- ^ 'tbmdsMatchId'
     -> TurnBasedMatchesDismiss
-turnBasedMatchesDismiss pTbmdsMatchId_ =
+turnBasedMatchesDismiss pTbmdsMatchId_ = 
     TurnBasedMatchesDismiss'
     { _tbmdsConsistencyToken = Nothing
     , _tbmdsMatchId = pTbmdsMatchId_
+    , _tbmdsFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -89,6 +95,11 @@ tbmdsMatchId :: Lens' TurnBasedMatchesDismiss Text
 tbmdsMatchId
   = lens _tbmdsMatchId (\ s a -> s{_tbmdsMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmdsFields :: Lens' TurnBasedMatchesDismiss (Maybe Text)
+tbmdsFields
+  = lens _tbmdsFields (\ s a -> s{_tbmdsFields = a})
+
 instance GoogleRequest TurnBasedMatchesDismiss where
         type Rs TurnBasedMatchesDismiss = ()
         type Scopes TurnBasedMatchesDismiss =
@@ -96,6 +107,7 @@ instance GoogleRequest TurnBasedMatchesDismiss where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient TurnBasedMatchesDismiss'{..}
           = go _tbmdsMatchId _tbmdsConsistencyToken
+              _tbmdsFields
               (Just AltJSON)
               gamesService
           where go

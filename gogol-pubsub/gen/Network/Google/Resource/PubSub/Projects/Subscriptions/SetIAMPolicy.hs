@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Subscriptions.SetIAMPolicy
     , pssipPayload
     , pssipBearerToken
     , pssipResource
+    , pssipFields
     , pssipCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.subscriptions.setIamPolicy@ method which the
 -- 'ProjectsSubscriptionsSetIAMPolicy' request conforms to.
@@ -60,24 +61,26 @@ type ProjectsSubscriptionsSetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Sets the access control policy on the specified resource. Replaces any
 -- existing policy.
 --
 -- /See:/ 'projectsSubscriptionsSetIAMPolicy' smart constructor.
 data ProjectsSubscriptionsSetIAMPolicy = ProjectsSubscriptionsSetIAMPolicy'
-    { _pssipXgafv          :: !(Maybe Xgafv)
+    { _pssipXgafv :: !(Maybe Xgafv)
     , _pssipUploadProtocol :: !(Maybe Text)
-    , _pssipPp             :: !Bool
-    , _pssipAccessToken    :: !(Maybe Text)
-    , _pssipUploadType     :: !(Maybe Text)
-    , _pssipPayload        :: !SetIAMPolicyRequest
-    , _pssipBearerToken    :: !(Maybe Text)
-    , _pssipResource       :: !Text
-    , _pssipCallback       :: !(Maybe Text)
+    , _pssipPp :: !Bool
+    , _pssipAccessToken :: !(Maybe Text)
+    , _pssipUploadType :: !(Maybe Text)
+    , _pssipPayload :: !SetIAMPolicyRequest
+    , _pssipBearerToken :: !(Maybe Text)
+    , _pssipResource :: !Text
+    , _pssipFields :: !(Maybe Text)
+    , _pssipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSubscriptionsSetIAMPolicy' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ProjectsSubscriptionsSetIAMPolicy = ProjectsSubscriptionsSetIAMPolicy'
 --
 -- * 'pssipResource'
 --
+-- * 'pssipFields'
+--
 -- * 'pssipCallback'
 projectsSubscriptionsSetIAMPolicy
     :: SetIAMPolicyRequest -- ^ 'pssipPayload'
     -> Text -- ^ 'pssipResource'
     -> ProjectsSubscriptionsSetIAMPolicy
-projectsSubscriptionsSetIAMPolicy pPssipPayload_ pPssipResource_ =
+projectsSubscriptionsSetIAMPolicy pPssipPayload_ pPssipResource_ = 
     ProjectsSubscriptionsSetIAMPolicy'
     { _pssipXgafv = Nothing
     , _pssipUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsSubscriptionsSetIAMPolicy pPssipPayload_ pPssipResource_ =
     , _pssipPayload = pPssipPayload_
     , _pssipBearerToken = Nothing
     , _pssipResource = pPssipResource_
+    , _pssipFields = Nothing
     , _pssipCallback = Nothing
     }
 
@@ -156,13 +162,17 @@ pssipBearerToken
   = lens _pssipBearerToken
       (\ s a -> s{_pssipBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being specified.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being specified. See the
+-- operation documentation for the appropriate value for this field.
 pssipResource :: Lens' ProjectsSubscriptionsSetIAMPolicy Text
 pssipResource
   = lens _pssipResource
       (\ s a -> s{_pssipResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pssipFields :: Lens' ProjectsSubscriptionsSetIAMPolicy (Maybe Text)
+pssipFields
+  = lens _pssipFields (\ s a -> s{_pssipFields = a})
 
 -- | JSONP
 pssipCallback :: Lens' ProjectsSubscriptionsSetIAMPolicy (Maybe Text)
@@ -183,6 +193,7 @@ instance GoogleRequest
               _pssipUploadType
               _pssipBearerToken
               _pssipCallback
+              _pssipFields
               (Just AltJSON)
               _pssipPayload
               pubSubService

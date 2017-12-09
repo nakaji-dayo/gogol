@@ -17,14 +17,14 @@
 --
 module Network.Google.PubSub.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types.Sum
+import Network.Google.Prelude
+import Network.Google.PubSub.Types.Sum
 
 -- | Configuration for a push delivery endpoint.
 --
 -- /See:/ 'pushConfig' smart constructor.
 data PushConfig = PushConfig'
-    { _pcAttributes   :: !(Maybe PushConfigAttributes)
+    { _pcAttributes :: !(Maybe PushConfigAttributes)
     , _pcPushEndpoint :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -37,7 +37,7 @@ data PushConfig = PushConfig'
 -- * 'pcPushEndpoint'
 pushConfig
     :: PushConfig
-pushConfig =
+pushConfig = 
     PushConfig'
     { _pcAttributes = Nothing
     , _pcPushEndpoint = Nothing
@@ -46,12 +46,12 @@ pushConfig =
 -- | Endpoint configuration attributes. Every endpoint has a set of API
 -- supported attributes that can be used to control different aspects of
 -- the message delivery. The currently supported attribute is
--- \`x-goog-version\`, which you can use to change the format of the push
+-- \`x-goog-version\`, which you can use to change the format of the pushed
 -- message. This attribute indicates the version of the data expected by
--- the endpoint. This controls the shape of the envelope (i.e. its fields
--- and metadata). The endpoint version is based on the version of the
--- Pub\/Sub API. If not present during the \`CreateSubscription\` call, it
--- will default to the version of the API used to make such call. If not
+-- the endpoint. This controls the shape of the pushed message (i.e., its
+-- fields and metadata). The endpoint version is based on the version of
+-- the Pub\/Sub API. If not present during the \`CreateSubscription\` call,
+-- it will default to the version of the API used to make such call. If not
 -- present during a \`ModifyPushConfig\` call, its value will not be
 -- changed. \`GetSubscription\` calls will always return a valid version,
 -- even if the subscription was created without this attribute. The
@@ -87,7 +87,7 @@ instance ToJSON PushConfig where
 --
 -- /See:/ 'receivedMessage' smart constructor.
 data ReceivedMessage = ReceivedMessage'
-    { _rmAckId   :: !(Maybe Text)
+    { _rmAckId :: !(Maybe Text)
     , _rmMessage :: !(Maybe PubsubMessage)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -100,7 +100,7 @@ data ReceivedMessage = ReceivedMessage'
 -- * 'rmMessage'
 receivedMessage
     :: ReceivedMessage
-receivedMessage =
+receivedMessage = 
     ReceivedMessage'
     { _rmAckId = Nothing
     , _rmMessage = Nothing
@@ -129,11 +129,130 @@ instance ToJSON ReceivedMessage where
                  [("ackId" .=) <$> _rmAckId,
                   ("message" .=) <$> _rmMessage])
 
+-- | A snapshot resource.
+--
+-- /See:/ 'snapshot' smart constructor.
+data Snapshot = Snapshot'
+    { _sTopic :: !(Maybe Text)
+    , _sName :: !(Maybe Text)
+    , _sExpireTime :: !(Maybe DateTime')
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Snapshot' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sTopic'
+--
+-- * 'sName'
+--
+-- * 'sExpireTime'
+snapshot
+    :: Snapshot
+snapshot = 
+    Snapshot'
+    { _sTopic = Nothing
+    , _sName = Nothing
+    , _sExpireTime = Nothing
+    }
+
+-- | The name of the topic from which this snapshot is retaining messages.
+sTopic :: Lens' Snapshot (Maybe Text)
+sTopic = lens _sTopic (\ s a -> s{_sTopic = a})
+
+-- | The name of the snapshot.
+sName :: Lens' Snapshot (Maybe Text)
+sName = lens _sName (\ s a -> s{_sName = a})
+
+-- | The snapshot is guaranteed to exist up until this time. A newly-created
+-- snapshot expires no later than 7 days from the time of its creation. Its
+-- exact lifetime is determined at creation by the existing backlog in the
+-- source subscription. Specifically, the lifetime of the snapshot is \`7
+-- days - (age of oldest unacked message in the subscription)\`. For
+-- example, consider a subscription whose oldest unacked message is 3 days
+-- old. If a snapshot is created from this subscription, the snapshot --
+-- which will always capture this 3-day-old backlog as long as the snapshot
+-- exists -- will expire in 4 days. The service will refuse to create a
+-- snapshot that would expire in less than 1 hour after creation.
+sExpireTime :: Lens' Snapshot (Maybe UTCTime)
+sExpireTime
+  = lens _sExpireTime (\ s a -> s{_sExpireTime = a}) .
+      mapping _DateTime
+
+instance FromJSON Snapshot where
+        parseJSON
+          = withObject "Snapshot"
+              (\ o ->
+                 Snapshot' <$>
+                   (o .:? "topic") <*> (o .:? "name") <*>
+                     (o .:? "expireTime"))
+
+instance ToJSON Snapshot where
+        toJSON Snapshot'{..}
+          = object
+              (catMaybes
+                 [("topic" .=) <$> _sTopic, ("name" .=) <$> _sName,
+                  ("expireTime" .=) <$> _sExpireTime])
+
+-- | Response for the \`ListTopicSnapshots\` method.
+--
+-- /See:/ 'listTopicSnapshotsResponse' smart constructor.
+data ListTopicSnapshotsResponse = ListTopicSnapshotsResponse'
+    { _ltsrNextPageToken :: !(Maybe Text)
+    , _ltsrSnapshots :: !(Maybe [Text])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ListTopicSnapshotsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltsrNextPageToken'
+--
+-- * 'ltsrSnapshots'
+listTopicSnapshotsResponse
+    :: ListTopicSnapshotsResponse
+listTopicSnapshotsResponse = 
+    ListTopicSnapshotsResponse'
+    { _ltsrNextPageToken = Nothing
+    , _ltsrSnapshots = Nothing
+    }
+
+-- | If not empty, indicates that there may be more snapshots that match the
+-- request; this value should be passed in a new
+-- \`ListTopicSnapshotsRequest\` to get more snapshots.
+ltsrNextPageToken :: Lens' ListTopicSnapshotsResponse (Maybe Text)
+ltsrNextPageToken
+  = lens _ltsrNextPageToken
+      (\ s a -> s{_ltsrNextPageToken = a})
+
+-- | The names of the snapshots that match the request.
+ltsrSnapshots :: Lens' ListTopicSnapshotsResponse [Text]
+ltsrSnapshots
+  = lens _ltsrSnapshots
+      (\ s a -> s{_ltsrSnapshots = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListTopicSnapshotsResponse where
+        parseJSON
+          = withObject "ListTopicSnapshotsResponse"
+              (\ o ->
+                 ListTopicSnapshotsResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "snapshots" .!= mempty))
+
+instance ToJSON ListTopicSnapshotsResponse where
+        toJSON ListTopicSnapshotsResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _ltsrNextPageToken,
+                  ("snapshots" .=) <$> _ltsrSnapshots])
+
 -- | Request for the ModifyAckDeadline method.
 --
 -- /See:/ 'modifyAckDeadlineRequest' smart constructor.
 data ModifyAckDeadlineRequest = ModifyAckDeadlineRequest'
-    { _madrAckIds             :: !(Maybe [Text])
+    { _madrAckIds :: !(Maybe [Text])
     , _madrAckDeadlineSeconds :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -146,7 +265,7 @@ data ModifyAckDeadlineRequest = ModifyAckDeadlineRequest'
 -- * 'madrAckDeadlineSeconds'
 modifyAckDeadlineRequest
     :: ModifyAckDeadlineRequest
-modifyAckDeadlineRequest =
+modifyAckDeadlineRequest = 
     ModifyAckDeadlineRequest'
     { _madrAckIds = Nothing
     , _madrAckDeadlineSeconds = Nothing
@@ -201,7 +320,7 @@ newtype ModifyPushConfigRequest = ModifyPushConfigRequest'
 -- * 'mpcrPushConfig'
 modifyPushConfigRequest
     :: ModifyPushConfigRequest
-modifyPushConfigRequest =
+modifyPushConfigRequest = 
     ModifyPushConfigRequest'
     { _mpcrPushConfig = Nothing
     }
@@ -209,7 +328,8 @@ modifyPushConfigRequest =
 -- | The push configuration for future deliveries. An empty \`pushConfig\`
 -- indicates that the Pub\/Sub system should stop pushing messages from the
 -- given subscription and allow messages to be pulled and acknowledged -
--- effectively pausing the subscription if \`Pull\` is not called.
+-- effectively pausing the subscription if \`Pull\` or \`StreamingPull\` is
+-- not called.
 mpcrPushConfig :: Lens' ModifyPushConfigRequest (Maybe PushConfig)
 mpcrPushConfig
   = lens _mpcrPushConfig
@@ -234,7 +354,7 @@ instance ToJSON ModifyPushConfigRequest where
 --
 -- /See:/ 'empty' smart constructor.
 data Empty =
-    Empty'
+    Empty' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Empty' with the minimum fields required to make a request.
@@ -255,10 +375,10 @@ instance ToJSON Empty where
 --
 -- /See:/ 'pubsubMessage' smart constructor.
 data PubsubMessage = PubsubMessage'
-    { _pmData        :: !(Maybe Bytes)
+    { _pmData :: !(Maybe Bytes)
     , _pmPublishTime :: !(Maybe DateTime')
-    , _pmAttributes  :: !(Maybe PubsubMessageAttributes)
-    , _pmMessageId   :: !(Maybe Text)
+    , _pmAttributes :: !(Maybe PubsubMessageAttributes)
+    , _pmMessageId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PubsubMessage' with the minimum fields required to make a request.
@@ -274,7 +394,7 @@ data PubsubMessage = PubsubMessage'
 -- * 'pmMessageId'
 pubsubMessage
     :: PubsubMessage
-pubsubMessage =
+pubsubMessage = 
     PubsubMessage'
     { _pmData = Nothing
     , _pmPublishTime = Nothing
@@ -333,38 +453,38 @@ instance ToJSON PubsubMessage where
 --
 -- /See:/ 'listTopicSubscriptionsResponse' smart constructor.
 data ListTopicSubscriptionsResponse = ListTopicSubscriptionsResponse'
-    { _ltsrNextPageToken :: !(Maybe Text)
-    , _ltsrSubscriptions :: !(Maybe [Text])
+    { _lNextPageToken :: !(Maybe Text)
+    , _lSubscriptions :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListTopicSubscriptionsResponse' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'ltsrNextPageToken'
+-- * 'lNextPageToken'
 --
--- * 'ltsrSubscriptions'
+-- * 'lSubscriptions'
 listTopicSubscriptionsResponse
     :: ListTopicSubscriptionsResponse
-listTopicSubscriptionsResponse =
+listTopicSubscriptionsResponse = 
     ListTopicSubscriptionsResponse'
-    { _ltsrNextPageToken = Nothing
-    , _ltsrSubscriptions = Nothing
+    { _lNextPageToken = Nothing
+    , _lSubscriptions = Nothing
     }
 
 -- | If not empty, indicates that there may be more subscriptions that match
 -- the request; this value should be passed in a new
 -- \`ListTopicSubscriptionsRequest\` to get more subscriptions.
-ltsrNextPageToken :: Lens' ListTopicSubscriptionsResponse (Maybe Text)
-ltsrNextPageToken
-  = lens _ltsrNextPageToken
-      (\ s a -> s{_ltsrNextPageToken = a})
+lNextPageToken :: Lens' ListTopicSubscriptionsResponse (Maybe Text)
+lNextPageToken
+  = lens _lNextPageToken
+      (\ s a -> s{_lNextPageToken = a})
 
 -- | The names of the subscriptions that match the request.
-ltsrSubscriptions :: Lens' ListTopicSubscriptionsResponse [Text]
-ltsrSubscriptions
-  = lens _ltsrSubscriptions
-      (\ s a -> s{_ltsrSubscriptions = a})
+lSubscriptions :: Lens' ListTopicSubscriptionsResponse [Text]
+lSubscriptions
+  = lens _lSubscriptions
+      (\ s a -> s{_lSubscriptions = a})
       . _Default
       . _Coerce
 
@@ -381,15 +501,15 @@ instance ToJSON ListTopicSubscriptionsResponse where
         toJSON ListTopicSubscriptionsResponse'{..}
           = object
               (catMaybes
-                 [("nextPageToken" .=) <$> _ltsrNextPageToken,
-                  ("subscriptions" .=) <$> _ltsrSubscriptions])
+                 [("nextPageToken" .=) <$> _lNextPageToken,
+                  ("subscriptions" .=) <$> _lSubscriptions])
 
 -- | Response for the \`ListTopics\` method.
 --
 -- /See:/ 'listTopicsResponse' smart constructor.
 data ListTopicsResponse = ListTopicsResponse'
     { _ltrNextPageToken :: !(Maybe Text)
-    , _ltrTopics        :: !(Maybe [Topic])
+    , _ltrTopics :: !(Maybe [Topic])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListTopicsResponse' with the minimum fields required to make a request.
@@ -401,7 +521,7 @@ data ListTopicsResponse = ListTopicsResponse'
 -- * 'ltrTopics'
 listTopicsResponse
     :: ListTopicsResponse
-listTopicsResponse =
+listTopicsResponse = 
     ListTopicsResponse'
     { _ltrNextPageToken = Nothing
     , _ltrTopics = Nothing
@@ -450,7 +570,7 @@ newtype PullResponse = PullResponse'
 -- * 'prReceivedMessages'
 pullResponse
     :: PullResponse
-pullResponse =
+pullResponse = 
     PullResponse'
     { _prReceivedMessages = Nothing
     }
@@ -479,6 +599,58 @@ instance ToJSON PullResponse where
               (catMaybes
                  [("receivedMessages" .=) <$> _prReceivedMessages])
 
+-- | Response for the \`ListSnapshots\` method.
+--
+-- /See:/ 'listSnapshotsResponse' smart constructor.
+data ListSnapshotsResponse = ListSnapshotsResponse'
+    { _lsrNextPageToken :: !(Maybe Text)
+    , _lsrSnapshots :: !(Maybe [Snapshot])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ListSnapshotsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'lsrNextPageToken'
+--
+-- * 'lsrSnapshots'
+listSnapshotsResponse
+    :: ListSnapshotsResponse
+listSnapshotsResponse = 
+    ListSnapshotsResponse'
+    { _lsrNextPageToken = Nothing
+    , _lsrSnapshots = Nothing
+    }
+
+-- | If not empty, indicates that there may be more snapshot that match the
+-- request; this value should be passed in a new \`ListSnapshotsRequest\`.
+lsrNextPageToken :: Lens' ListSnapshotsResponse (Maybe Text)
+lsrNextPageToken
+  = lens _lsrNextPageToken
+      (\ s a -> s{_lsrNextPageToken = a})
+
+-- | The resulting snapshots.
+lsrSnapshots :: Lens' ListSnapshotsResponse [Snapshot]
+lsrSnapshots
+  = lens _lsrSnapshots (\ s a -> s{_lsrSnapshots = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListSnapshotsResponse where
+        parseJSON
+          = withObject "ListSnapshotsResponse"
+              (\ o ->
+                 ListSnapshotsResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "snapshots" .!= mempty))
+
+instance ToJSON ListSnapshotsResponse where
+        toJSON ListSnapshotsResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _lsrNextPageToken,
+                  ("snapshots" .=) <$> _lsrSnapshots])
+
 -- | Request message for \`SetIamPolicy\` method.
 --
 -- /See:/ 'setIAMPolicyRequest' smart constructor.
@@ -493,7 +665,7 @@ newtype SetIAMPolicyRequest = SetIAMPolicyRequest'
 -- * 'siprPolicy'
 setIAMPolicyRequest
     :: SetIAMPolicyRequest
-setIAMPolicyRequest =
+setIAMPolicyRequest = 
     SetIAMPolicyRequest'
     { _siprPolicy = Nothing
     }
@@ -515,6 +687,109 @@ instance ToJSON SetIAMPolicyRequest where
         toJSON SetIAMPolicyRequest'{..}
           = object (catMaybes [("policy" .=) <$> _siprPolicy])
 
+-- | Request for the \`CreateSnapshot\` method.
+--
+-- /See:/ 'createSnapshotRequest' smart constructor.
+newtype CreateSnapshotRequest = CreateSnapshotRequest'
+    { _csrSubscription :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CreateSnapshotRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'csrSubscription'
+createSnapshotRequest
+    :: CreateSnapshotRequest
+createSnapshotRequest = 
+    CreateSnapshotRequest'
+    { _csrSubscription = Nothing
+    }
+
+-- | The subscription whose backlog the snapshot retains. Specifically, the
+-- created snapshot is guaranteed to retain: (a) The existing backlog on
+-- the subscription. More precisely, this is defined as the messages in the
+-- subscription\'s backlog that are unacknowledged upon the successful
+-- completion of the \`CreateSnapshot\` request; as well as: (b) Any
+-- messages published to the subscription\'s topic following the successful
+-- completion of the CreateSnapshot request. Format is
+-- \`projects\/{project}\/subscriptions\/{sub}\`.
+csrSubscription :: Lens' CreateSnapshotRequest (Maybe Text)
+csrSubscription
+  = lens _csrSubscription
+      (\ s a -> s{_csrSubscription = a})
+
+instance FromJSON CreateSnapshotRequest where
+        parseJSON
+          = withObject "CreateSnapshotRequest"
+              (\ o ->
+                 CreateSnapshotRequest' <$> (o .:? "subscription"))
+
+instance ToJSON CreateSnapshotRequest where
+        toJSON CreateSnapshotRequest'{..}
+          = object
+              (catMaybes
+                 [("subscription" .=) <$> _csrSubscription])
+
+-- | Request for the \`Seek\` method.
+--
+-- /See:/ 'seekRequest' smart constructor.
+data SeekRequest = SeekRequest'
+    { _srSnapshot :: !(Maybe Text)
+    , _srTime :: !(Maybe DateTime')
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SeekRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'srSnapshot'
+--
+-- * 'srTime'
+seekRequest
+    :: SeekRequest
+seekRequest = 
+    SeekRequest'
+    { _srSnapshot = Nothing
+    , _srTime = Nothing
+    }
+
+-- | The snapshot to seek to. The snapshot\'s topic must be the same as that
+-- of the provided subscription. Format is
+-- \`projects\/{project}\/snapshots\/{snap}\`.
+srSnapshot :: Lens' SeekRequest (Maybe Text)
+srSnapshot
+  = lens _srSnapshot (\ s a -> s{_srSnapshot = a})
+
+-- | The time to seek to. Messages retained in the subscription that were
+-- published before this time are marked as acknowledged, and messages
+-- retained in the subscription that were published after this time are
+-- marked as unacknowledged. Note that this operation affects only those
+-- messages retained in the subscription (configured by the combination of
+-- \`message_retention_duration\` and \`retain_acked_messages\`). For
+-- example, if \`time\` corresponds to a point before the message retention
+-- window (or to a point before the system\'s notion of the subscription
+-- creation time), only retained messages will be marked as unacknowledged,
+-- and already-expunged messages will not be restored.
+srTime :: Lens' SeekRequest (Maybe UTCTime)
+srTime
+  = lens _srTime (\ s a -> s{_srTime = a}) .
+      mapping _DateTime
+
+instance FromJSON SeekRequest where
+        parseJSON
+          = withObject "SeekRequest"
+              (\ o ->
+                 SeekRequest' <$>
+                   (o .:? "snapshot") <*> (o .:? "time"))
+
+instance ToJSON SeekRequest where
+        toJSON SeekRequest'{..}
+          = object
+              (catMaybes
+                 [("snapshot" .=) <$> _srSnapshot,
+                  ("time" .=) <$> _srTime])
+
 -- | A topic resource.
 --
 -- /See:/ 'topic' smart constructor.
@@ -529,7 +804,7 @@ newtype Topic = Topic'
 -- * 'tName'
 topic
     :: Topic
-topic =
+topic = 
     Topic'
     { _tName = Nothing
     }
@@ -553,11 +828,60 @@ instance ToJSON Topic where
         toJSON Topic'{..}
           = object (catMaybes [("name" .=) <$> _tName])
 
+-- | Request for the UpdateSnapshot method.
+--
+-- /See:/ 'updateSnapshotRequest' smart constructor.
+data UpdateSnapshotRequest = UpdateSnapshotRequest'
+    { _usrSnapshot :: !(Maybe Snapshot)
+    , _usrUpdateMask :: !(Maybe FieldMask)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UpdateSnapshotRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'usrSnapshot'
+--
+-- * 'usrUpdateMask'
+updateSnapshotRequest
+    :: UpdateSnapshotRequest
+updateSnapshotRequest = 
+    UpdateSnapshotRequest'
+    { _usrSnapshot = Nothing
+    , _usrUpdateMask = Nothing
+    }
+
+-- | The updated snpashot object.
+usrSnapshot :: Lens' UpdateSnapshotRequest (Maybe Snapshot)
+usrSnapshot
+  = lens _usrSnapshot (\ s a -> s{_usrSnapshot = a})
+
+-- | Indicates which fields in the provided snapshot to update. Must be
+-- specified and non-empty.
+usrUpdateMask :: Lens' UpdateSnapshotRequest (Maybe FieldMask)
+usrUpdateMask
+  = lens _usrUpdateMask
+      (\ s a -> s{_usrUpdateMask = a})
+
+instance FromJSON UpdateSnapshotRequest where
+        parseJSON
+          = withObject "UpdateSnapshotRequest"
+              (\ o ->
+                 UpdateSnapshotRequest' <$>
+                   (o .:? "snapshot") <*> (o .:? "updateMask"))
+
+instance ToJSON UpdateSnapshotRequest where
+        toJSON UpdateSnapshotRequest'{..}
+          = object
+              (catMaybes
+                 [("snapshot" .=) <$> _usrSnapshot,
+                  ("updateMask" .=) <$> _usrUpdateMask])
+
 -- | Request for the \`Pull\` method.
 --
 -- /See:/ 'pullRequest' smart constructor.
 data PullRequest = PullRequest'
-    { _prMaxMessages       :: !(Maybe (Textual Int32))
+    { _prMaxMessages :: !(Maybe (Textual Int32))
     , _prReturnImmediately :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -570,7 +894,7 @@ data PullRequest = PullRequest'
 -- * 'prReturnImmediately'
 pullRequest
     :: PullRequest
-pullRequest =
+pullRequest = 
     PullRequest'
     { _prMaxMessages = Nothing
     , _prReturnImmediately = Nothing
@@ -625,7 +949,7 @@ newtype PubsubMessageAttributes = PubsubMessageAttributes'
 pubsubMessageAttributes
     :: HashMap Text Text -- ^ 'pmaAddtional'
     -> PubsubMessageAttributes
-pubsubMessageAttributes pPmaAddtional_ =
+pubsubMessageAttributes pPmaAddtional_ = 
     PubsubMessageAttributes'
     { _pmaAddtional = _Coerce # pPmaAddtional_
     }
@@ -658,7 +982,7 @@ newtype TestIAMPermissionsRequest = TestIAMPermissionsRequest'
 -- * 'tiprPermissions'
 testIAMPermissionsRequest
     :: TestIAMPermissionsRequest
-testIAMPermissionsRequest =
+testIAMPermissionsRequest = 
     TestIAMPermissionsRequest'
     { _tiprPermissions = Nothing
     }
@@ -700,7 +1024,7 @@ newtype PublishResponse = PublishResponse'
 -- * 'prMessageIds'
 publishResponse
     :: PublishResponse
-publishResponse =
+publishResponse = 
     PublishResponse'
     { _prMessageIds = Nothing
     }
@@ -739,7 +1063,7 @@ newtype PublishRequest = PublishRequest'
 -- * 'prMessages'
 publishRequest
     :: PublishRequest
-publishRequest =
+publishRequest = 
     PublishRequest'
     { _prMessages = Nothing
     }
@@ -776,7 +1100,7 @@ newtype TestIAMPermissionsResponse = TestIAMPermissionsResponse'
 -- * 'tiamprPermissions'
 testIAMPermissionsResponse
     :: TestIAMPermissionsResponse
-testIAMPermissionsResponse =
+testIAMPermissionsResponse = 
     TestIAMPermissionsResponse'
     { _tiamprPermissions = Nothing
     }
@@ -819,8 +1143,8 @@ instance ToJSON TestIAMPermissionsResponse where
 --
 -- /See:/ 'policy' smart constructor.
 data Policy = Policy'
-    { _pEtag     :: !(Maybe Bytes)
-    , _pVersion  :: !(Maybe (Textual Int32))
+    { _pEtag :: !(Maybe Bytes)
+    , _pVersion :: !(Maybe (Textual Int32))
     , _pBindings :: !(Maybe [Binding])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -835,7 +1159,7 @@ data Policy = Policy'
 -- * 'pBindings'
 policy
     :: Policy
-policy =
+policy = 
     Policy'
     { _pEtag = Nothing
     , _pVersion = Nothing
@@ -862,8 +1186,7 @@ pVersion
   = lens _pVersion (\ s a -> s{_pVersion = a}) .
       mapping _Coerce
 
--- | Associates a list of \`members\` to a \`role\`. Multiple \`bindings\`
--- must not be specified for the same \`role\`. \`bindings\` with no
+-- | Associates a list of \`members\` to a \`role\`. \`bindings\` with no
 -- members will result in an error.
 pBindings :: Lens' Policy [Binding]
 pBindings
@@ -887,15 +1210,35 @@ instance ToJSON Policy where
                   ("version" .=) <$> _pVersion,
                   ("bindings" .=) <$> _pBindings])
 
+--
+-- /See:/ 'seekResponse' smart constructor.
+data SeekResponse =
+    SeekResponse' 
+    deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'SeekResponse' with the minimum fields required to make a request.
+--
+seekResponse
+    :: SeekResponse
+seekResponse = SeekResponse'
+
+instance FromJSON SeekResponse where
+        parseJSON
+          = withObject "SeekResponse"
+              (\ o -> pure SeekResponse')
+
+instance ToJSON SeekResponse where
+        toJSON = const emptyObject
+
 -- | Endpoint configuration attributes. Every endpoint has a set of API
 -- supported attributes that can be used to control different aspects of
 -- the message delivery. The currently supported attribute is
--- \`x-goog-version\`, which you can use to change the format of the push
+-- \`x-goog-version\`, which you can use to change the format of the pushed
 -- message. This attribute indicates the version of the data expected by
--- the endpoint. This controls the shape of the envelope (i.e. its fields
--- and metadata). The endpoint version is based on the version of the
--- Pub\/Sub API. If not present during the \`CreateSubscription\` call, it
--- will default to the version of the API used to make such call. If not
+-- the endpoint. This controls the shape of the pushed message (i.e., its
+-- fields and metadata). The endpoint version is based on the version of
+-- the Pub\/Sub API. If not present during the \`CreateSubscription\` call,
+-- it will default to the version of the API used to make such call. If not
 -- present during a \`ModifyPushConfig\` call, its value will not be
 -- changed. \`GetSubscription\` calls will always return a valid version,
 -- even if the subscription was created without this attribute. The
@@ -916,7 +1259,7 @@ newtype PushConfigAttributes = PushConfigAttributes'
 pushConfigAttributes
     :: HashMap Text Text -- ^ 'pcaAddtional'
     -> PushConfigAttributes
-pushConfigAttributes pPcaAddtional_ =
+pushConfigAttributes pPcaAddtional_ = 
     PushConfigAttributes'
     { _pcaAddtional = _Coerce # pPcaAddtional_
     }
@@ -939,45 +1282,66 @@ instance ToJSON PushConfigAttributes where
 --
 -- /See:/ 'subscription' smart constructor.
 data Subscription = Subscription'
-    { _sPushConfig         :: !(Maybe PushConfig)
-    , _sTopic              :: !(Maybe Text)
-    , _sName               :: !(Maybe Text)
-    , _sAckDeadlineSeconds :: !(Maybe (Textual Int32))
+    { _subPushConfig :: !(Maybe PushConfig)
+    , _subMessageRetentionDuration :: !(Maybe Duration)
+    , _subTopic :: !(Maybe Text)
+    , _subName :: !(Maybe Text)
+    , _subRetainAckedMessages :: !(Maybe Bool)
+    , _subAckDeadlineSeconds :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Subscription' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'sPushConfig'
+-- * 'subPushConfig'
 --
--- * 'sTopic'
+-- * 'subMessageRetentionDuration'
 --
--- * 'sName'
+-- * 'subTopic'
 --
--- * 'sAckDeadlineSeconds'
+-- * 'subName'
+--
+-- * 'subRetainAckedMessages'
+--
+-- * 'subAckDeadlineSeconds'
 subscription
     :: Subscription
-subscription =
+subscription = 
     Subscription'
-    { _sPushConfig = Nothing
-    , _sTopic = Nothing
-    , _sName = Nothing
-    , _sAckDeadlineSeconds = Nothing
+    { _subPushConfig = Nothing
+    , _subMessageRetentionDuration = Nothing
+    , _subTopic = Nothing
+    , _subName = Nothing
+    , _subRetainAckedMessages = Nothing
+    , _subAckDeadlineSeconds = Nothing
     }
 
 -- | If push delivery is used with this subscription, this field is used to
 -- configure it. An empty \`pushConfig\` signifies that the subscriber will
 -- pull and ack messages using API methods.
-sPushConfig :: Lens' Subscription (Maybe PushConfig)
-sPushConfig
-  = lens _sPushConfig (\ s a -> s{_sPushConfig = a})
+subPushConfig :: Lens' Subscription (Maybe PushConfig)
+subPushConfig
+  = lens _subPushConfig
+      (\ s a -> s{_subPushConfig = a})
+
+-- | How long to retain unacknowledged messages in the subscription\'s
+-- backlog, from the moment a message is published. If
+-- \`retain_acked_messages\` is true, then this also configures the
+-- retention of acknowledged messages, and thus configures how far back in
+-- time a \`Seek\` can be done. Defaults to 7 days. Cannot be more than 7
+-- days or less than 10 minutes.
+subMessageRetentionDuration :: Lens' Subscription (Maybe Scientific)
+subMessageRetentionDuration
+  = lens _subMessageRetentionDuration
+      (\ s a -> s{_subMessageRetentionDuration = a})
+      . mapping _Duration
 
 -- | The name of the topic from which this subscription is receiving
 -- messages. Format is \`projects\/{project}\/topics\/{topic}\`. The value
 -- of this field will be \`_deleted-topic_\` if the topic has been deleted.
-sTopic :: Lens' Subscription (Maybe Text)
-sTopic = lens _sTopic (\ s a -> s{_sTopic = a})
+subTopic :: Lens' Subscription (Maybe Text)
+subTopic = lens _subTopic (\ s a -> s{_subTopic = a})
 
 -- | The name of the subscription. It must have the format
 -- \`\"projects\/{project}\/subscriptions\/{subscription}\"\`.
@@ -986,8 +1350,17 @@ sTopic = lens _sTopic (\ s a -> s{_sTopic = a})
 -- (\`_\`), periods (\`.\`), tildes (\`~\`), plus (\`+\`) or percent signs
 -- (\`%\`). It must be between 3 and 255 characters in length, and it must
 -- not start with \`\"goog\"\`.
-sName :: Lens' Subscription (Maybe Text)
-sName = lens _sName (\ s a -> s{_sName = a})
+subName :: Lens' Subscription (Maybe Text)
+subName = lens _subName (\ s a -> s{_subName = a})
+
+-- | Indicates whether to retain acknowledged messages. If true, then
+-- messages are not expunged from the subscription\'s backlog, even if they
+-- are acknowledged, until they fall out of the
+-- \`message_retention_duration\` window.
+subRetainAckedMessages :: Lens' Subscription (Maybe Bool)
+subRetainAckedMessages
+  = lens _subRetainAckedMessages
+      (\ s a -> s{_subRetainAckedMessages = a})
 
 -- | This value is the maximum time after a subscriber receives a message
 -- before the subscriber should acknowledge the message. After message
@@ -996,17 +1369,18 @@ sName = lens _sName (\ s a -> s{_sName = a})
 -- again during that time (on a best-effort basis). For pull subscriptions,
 -- this value is used as the initial value for the ack deadline. To
 -- override this value for a given message, call \`ModifyAckDeadline\` with
--- the corresponding \`ack_id\` if using pull. The minimum custom deadline
--- you can specify is 10 seconds. The maximum custom deadline you can
--- specify is 600 seconds (10 minutes). If this parameter is 0, a default
--- value of 10 seconds is used. For push delivery, this value is also used
--- to set the request timeout for the call to the push endpoint. If the
--- subscriber never acknowledges the message, the Pub\/Sub system will
--- eventually redeliver the message.
-sAckDeadlineSeconds :: Lens' Subscription (Maybe Int32)
-sAckDeadlineSeconds
-  = lens _sAckDeadlineSeconds
-      (\ s a -> s{_sAckDeadlineSeconds = a})
+-- the corresponding \`ack_id\` if using non-streaming pull or send the
+-- \`ack_id\` in a \`StreamingModifyAckDeadlineRequest\` if using streaming
+-- pull. The minimum custom deadline you can specify is 10 seconds. The
+-- maximum custom deadline you can specify is 600 seconds (10 minutes). If
+-- this parameter is 0, a default value of 10 seconds is used. For push
+-- delivery, this value is also used to set the request timeout for the
+-- call to the push endpoint. If the subscriber never acknowledges the
+-- message, the Pub\/Sub system will eventually redeliver the message.
+subAckDeadlineSeconds :: Lens' Subscription (Maybe Int32)
+subAckDeadlineSeconds
+  = lens _subAckDeadlineSeconds
+      (\ s a -> s{_subAckDeadlineSeconds = a})
       . mapping _Coerce
 
 instance FromJSON Subscription where
@@ -1014,54 +1388,111 @@ instance FromJSON Subscription where
           = withObject "Subscription"
               (\ o ->
                  Subscription' <$>
-                   (o .:? "pushConfig") <*> (o .:? "topic") <*>
-                     (o .:? "name")
+                   (o .:? "pushConfig") <*>
+                     (o .:? "messageRetentionDuration")
+                     <*> (o .:? "topic")
+                     <*> (o .:? "name")
+                     <*> (o .:? "retainAckedMessages")
                      <*> (o .:? "ackDeadlineSeconds"))
 
 instance ToJSON Subscription where
         toJSON Subscription'{..}
           = object
               (catMaybes
-                 [("pushConfig" .=) <$> _sPushConfig,
-                  ("topic" .=) <$> _sTopic, ("name" .=) <$> _sName,
-                  ("ackDeadlineSeconds" .=) <$> _sAckDeadlineSeconds])
+                 [("pushConfig" .=) <$> _subPushConfig,
+                  ("messageRetentionDuration" .=) <$>
+                    _subMessageRetentionDuration,
+                  ("topic" .=) <$> _subTopic, ("name" .=) <$> _subName,
+                  ("retainAckedMessages" .=) <$>
+                    _subRetainAckedMessages,
+                  ("ackDeadlineSeconds" .=) <$>
+                    _subAckDeadlineSeconds])
+
+-- | Request for the UpdateSubscription method.
+--
+-- /See:/ 'updateSubscriptionRequest' smart constructor.
+data UpdateSubscriptionRequest = UpdateSubscriptionRequest'
+    { _uUpdateMask :: !(Maybe FieldMask)
+    , _uSubscription :: !(Maybe Subscription)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'UpdateSubscriptionRequest' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'uUpdateMask'
+--
+-- * 'uSubscription'
+updateSubscriptionRequest
+    :: UpdateSubscriptionRequest
+updateSubscriptionRequest = 
+    UpdateSubscriptionRequest'
+    { _uUpdateMask = Nothing
+    , _uSubscription = Nothing
+    }
+
+-- | Indicates which fields in the provided subscription to update. Must be
+-- specified and non-empty.
+uUpdateMask :: Lens' UpdateSubscriptionRequest (Maybe FieldMask)
+uUpdateMask
+  = lens _uUpdateMask (\ s a -> s{_uUpdateMask = a})
+
+-- | The updated subscription object.
+uSubscription :: Lens' UpdateSubscriptionRequest (Maybe Subscription)
+uSubscription
+  = lens _uSubscription
+      (\ s a -> s{_uSubscription = a})
+
+instance FromJSON UpdateSubscriptionRequest where
+        parseJSON
+          = withObject "UpdateSubscriptionRequest"
+              (\ o ->
+                 UpdateSubscriptionRequest' <$>
+                   (o .:? "updateMask") <*> (o .:? "subscription"))
+
+instance ToJSON UpdateSubscriptionRequest where
+        toJSON UpdateSubscriptionRequest'{..}
+          = object
+              (catMaybes
+                 [("updateMask" .=) <$> _uUpdateMask,
+                  ("subscription" .=) <$> _uSubscription])
 
 -- | Response for the \`ListSubscriptions\` method.
 --
 -- /See:/ 'listSubscriptionsResponse' smart constructor.
 data ListSubscriptionsResponse = ListSubscriptionsResponse'
-    { _lsrNextPageToken :: !(Maybe Text)
-    , _lsrSubscriptions :: !(Maybe [Subscription])
+    { _lisNextPageToken :: !(Maybe Text)
+    , _lisSubscriptions :: !(Maybe [Subscription])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListSubscriptionsResponse' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'lsrNextPageToken'
+-- * 'lisNextPageToken'
 --
--- * 'lsrSubscriptions'
+-- * 'lisSubscriptions'
 listSubscriptionsResponse
     :: ListSubscriptionsResponse
-listSubscriptionsResponse =
+listSubscriptionsResponse = 
     ListSubscriptionsResponse'
-    { _lsrNextPageToken = Nothing
-    , _lsrSubscriptions = Nothing
+    { _lisNextPageToken = Nothing
+    , _lisSubscriptions = Nothing
     }
 
 -- | If not empty, indicates that there may be more subscriptions that match
 -- the request; this value should be passed in a new
 -- \`ListSubscriptionsRequest\` to get more subscriptions.
-lsrNextPageToken :: Lens' ListSubscriptionsResponse (Maybe Text)
-lsrNextPageToken
-  = lens _lsrNextPageToken
-      (\ s a -> s{_lsrNextPageToken = a})
+lisNextPageToken :: Lens' ListSubscriptionsResponse (Maybe Text)
+lisNextPageToken
+  = lens _lisNextPageToken
+      (\ s a -> s{_lisNextPageToken = a})
 
 -- | The subscriptions that match the request.
-lsrSubscriptions :: Lens' ListSubscriptionsResponse [Subscription]
-lsrSubscriptions
-  = lens _lsrSubscriptions
-      (\ s a -> s{_lsrSubscriptions = a})
+lisSubscriptions :: Lens' ListSubscriptionsResponse [Subscription]
+lisSubscriptions
+  = lens _lisSubscriptions
+      (\ s a -> s{_lisSubscriptions = a})
       . _Default
       . _Coerce
 
@@ -1077,15 +1508,15 @@ instance ToJSON ListSubscriptionsResponse where
         toJSON ListSubscriptionsResponse'{..}
           = object
               (catMaybes
-                 [("nextPageToken" .=) <$> _lsrNextPageToken,
-                  ("subscriptions" .=) <$> _lsrSubscriptions])
+                 [("nextPageToken" .=) <$> _lisNextPageToken,
+                  ("subscriptions" .=) <$> _lisSubscriptions])
 
 -- | Associates \`members\` with a \`role\`.
 --
 -- /See:/ 'binding' smart constructor.
 data Binding = Binding'
     { _bMembers :: !(Maybe [Text])
-    , _bRole    :: !(Maybe Text)
+    , _bRole :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Binding' with the minimum fields required to make a request.
@@ -1097,7 +1528,7 @@ data Binding = Binding'
 -- * 'bRole'
 binding
     :: Binding
-binding =
+binding = 
     Binding'
     { _bMembers = Nothing
     , _bRole = Nothing
@@ -1156,7 +1587,7 @@ newtype AcknowledgeRequest = AcknowledgeRequest'
 -- * 'arAckIds'
 acknowledgeRequest
     :: AcknowledgeRequest
-acknowledgeRequest =
+acknowledgeRequest = 
     AcknowledgeRequest'
     { _arAckIds = Nothing
     }

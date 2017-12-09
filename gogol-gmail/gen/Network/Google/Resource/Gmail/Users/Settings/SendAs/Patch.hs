@@ -21,8 +21,10 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates a send-as alias. If a signature is provided, Gmail will sanitize
--- the HTML before saving it with the alias. This method supports patch
--- semantics.
+-- the HTML before saving it with the alias. Addresses other than the
+-- primary address for the account can only be updated by service account
+-- clients that have been delegated domain-wide authority. This method
+-- supports patch semantics.
 --
 -- /See:/ <https://developers.google.com/gmail/api/ Gmail API Reference> for @gmail.users.settings.sendAs.patch@.
 module Network.Google.Resource.Gmail.Users.Settings.SendAs.Patch
@@ -38,10 +40,11 @@ module Network.Google.Resource.Gmail.Users.Settings.SendAs.Patch
     , ussapPayload
     , ussapUserId
     , ussapSendAsEmail
+    , ussapFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.sendAs.patch@ method which the
 -- 'UsersSettingsSendAsPatch' request conforms to.
@@ -53,18 +56,22 @@ type UsersSettingsSendAsPatchResource =
              "settings" :>
                "sendAs" :>
                  Capture "sendAsEmail" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] SendAs :> Patch '[JSON] SendAs
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] SendAs :> Patch '[JSON] SendAs
 
 -- | Updates a send-as alias. If a signature is provided, Gmail will sanitize
--- the HTML before saving it with the alias. This method supports patch
--- semantics.
+-- the HTML before saving it with the alias. Addresses other than the
+-- primary address for the account can only be updated by service account
+-- clients that have been delegated domain-wide authority. This method
+-- supports patch semantics.
 --
 -- /See:/ 'usersSettingsSendAsPatch' smart constructor.
 data UsersSettingsSendAsPatch = UsersSettingsSendAsPatch'
-    { _ussapPayload     :: !SendAs
-    , _ussapUserId      :: !Text
+    { _ussapPayload :: !SendAs
+    , _ussapUserId :: !Text
     , _ussapSendAsEmail :: !Text
+    , _ussapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsSendAsPatch' with the minimum fields required to make a request.
@@ -76,15 +83,18 @@ data UsersSettingsSendAsPatch = UsersSettingsSendAsPatch'
 -- * 'ussapUserId'
 --
 -- * 'ussapSendAsEmail'
+--
+-- * 'ussapFields'
 usersSettingsSendAsPatch
     :: SendAs -- ^ 'ussapPayload'
     -> Text -- ^ 'ussapSendAsEmail'
     -> UsersSettingsSendAsPatch
-usersSettingsSendAsPatch pUssapPayload_ pUssapSendAsEmail_ =
+usersSettingsSendAsPatch pUssapPayload_ pUssapSendAsEmail_ = 
     UsersSettingsSendAsPatch'
     { _ussapPayload = pUssapPayload_
     , _ussapUserId = "me"
     , _ussapSendAsEmail = pUssapSendAsEmail_
+    , _ussapFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -104,13 +114,19 @@ ussapSendAsEmail
   = lens _ussapSendAsEmail
       (\ s a -> s{_ussapSendAsEmail = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ussapFields :: Lens' UsersSettingsSendAsPatch (Maybe Text)
+ussapFields
+  = lens _ussapFields (\ s a -> s{_ussapFields = a})
+
 instance GoogleRequest UsersSettingsSendAsPatch where
         type Rs UsersSettingsSendAsPatch = SendAs
         type Scopes UsersSettingsSendAsPatch =
              '["https://www.googleapis.com/auth/gmail.settings.basic",
                "https://www.googleapis.com/auth/gmail.settings.sharing"]
         requestClient UsersSettingsSendAsPatch'{..}
-          = go _ussapUserId _ussapSendAsEmail (Just AltJSON)
+          = go _ussapUserId _ussapSendAsEmail _ussapFields
+              (Just AltJSON)
               _ussapPayload
               gmailService
           where go

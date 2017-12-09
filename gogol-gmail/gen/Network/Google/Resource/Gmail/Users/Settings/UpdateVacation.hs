@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.UpdateVacation
     -- * Request Lenses
     , usuvPayload
     , usuvUserId
+    , usuvFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.updateVacation@ method which the
 -- 'UsersSettingsUpdateVacation' request conforms to.
@@ -49,16 +50,18 @@ type UsersSettingsUpdateVacationResource =
            Capture "userId" Text :>
              "settings" :>
                "vacation" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] VacationSettings :>
-                     Put '[JSON] VacationSettings
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] VacationSettings :>
+                       Put '[JSON] VacationSettings
 
 -- | Updates vacation responder settings.
 --
 -- /See:/ 'usersSettingsUpdateVacation' smart constructor.
 data UsersSettingsUpdateVacation = UsersSettingsUpdateVacation'
     { _usuvPayload :: !VacationSettings
-    , _usuvUserId  :: !Text
+    , _usuvUserId :: !Text
+    , _usuvFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsUpdateVacation' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersSettingsUpdateVacation = UsersSettingsUpdateVacation'
 -- * 'usuvPayload'
 --
 -- * 'usuvUserId'
+--
+-- * 'usuvFields'
 usersSettingsUpdateVacation
     :: VacationSettings -- ^ 'usuvPayload'
     -> UsersSettingsUpdateVacation
-usersSettingsUpdateVacation pUsuvPayload_ =
+usersSettingsUpdateVacation pUsuvPayload_ = 
     UsersSettingsUpdateVacation'
     { _usuvPayload = pUsuvPayload_
     , _usuvUserId = "me"
+    , _usuvFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,6 +94,11 @@ usuvUserId :: Lens' UsersSettingsUpdateVacation Text
 usuvUserId
   = lens _usuvUserId (\ s a -> s{_usuvUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usuvFields :: Lens' UsersSettingsUpdateVacation (Maybe Text)
+usuvFields
+  = lens _usuvFields (\ s a -> s{_usuvFields = a})
+
 instance GoogleRequest UsersSettingsUpdateVacation
          where
         type Rs UsersSettingsUpdateVacation =
@@ -95,7 +106,8 @@ instance GoogleRequest UsersSettingsUpdateVacation
         type Scopes UsersSettingsUpdateVacation =
              '["https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient UsersSettingsUpdateVacation'{..}
-          = go _usuvUserId (Just AltJSON) _usuvPayload
+          = go _usuvUserId _usuvFields (Just AltJSON)
+              _usuvPayload
               gmailService
           where go
                   = buildClient

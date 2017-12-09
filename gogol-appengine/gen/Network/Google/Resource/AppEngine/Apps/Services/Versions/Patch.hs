@@ -34,7 +34,20 @@
 -- Engine standard environment. automatic_scaling.max_idle_instances
 -- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
 -- For Version resources that use automatic scaling and run in the App
--- Engine standard environment.
+-- Engine standard environment. automatic_scaling.min_total_instances
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment. automatic_scaling.max_total_instances
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment. automatic_scaling.cool_down_period_sec
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment.
+-- automatic_scaling.cpu_utilization.target_utilization
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment.
 --
 -- /See:/ <https://cloud.google.com/appengine/docs/admin-api/ Google App Engine Admin API Reference> for @appengine.apps.services.versions.patch@.
 module Network.Google.Resource.AppEngine.Apps.Services.Versions.Patch
@@ -58,11 +71,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Patch
     , asvpBearerToken
     , asvpAppsId
     , asvpServicesId
+    , asvpFields
     , asvpCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.patch@ method which the
 -- 'AppsServicesVersionsPatch' request conforms to.
@@ -74,17 +88,18 @@ type AppsServicesVersionsPatchResource =
              Capture "servicesId" Text :>
                "versions" :>
                  Capture "versionsId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
-                       QueryParam "updateMask" Text :>
+                       QueryParam "updateMask" FieldMask :>
                          QueryParam "pp" Bool :>
                            QueryParam "access_token" Text :>
                              QueryParam "uploadType" Text :>
                                QueryParam "bearer_token" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     ReqBody '[JSON] Version :>
-                                       Patch '[JSON] Operation
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       ReqBody '[JSON] Version :>
+                                         Patch '[JSON] Operation
 
 -- | Updates the specified Version resource. You can specify the following
 -- fields depending on the App Engine environment and type of scaling that
@@ -100,22 +115,36 @@ type AppsServicesVersionsPatchResource =
 -- Engine standard environment. automatic_scaling.max_idle_instances
 -- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
 -- For Version resources that use automatic scaling and run in the App
--- Engine standard environment.
+-- Engine standard environment. automatic_scaling.min_total_instances
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment. automatic_scaling.max_total_instances
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment. automatic_scaling.cool_down_period_sec
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment.
+-- automatic_scaling.cpu_utilization.target_utilization
+-- (https:\/\/cloud.google.com\/appengine\/docs\/admin-api\/reference\/rest\/v1\/apps.services.versions#Version.FIELDS.automatic_scaling):
+-- For Version resources that use automatic scaling and run in the App
+-- Engine Flexible environment.
 --
 -- /See:/ 'appsServicesVersionsPatch' smart constructor.
 data AppsServicesVersionsPatch = AppsServicesVersionsPatch'
-    { _asvpXgafv          :: !(Maybe Text)
+    { _asvpXgafv :: !(Maybe Xgafv)
     , _asvpUploadProtocol :: !(Maybe Text)
-    , _asvpUpdateMask     :: !(Maybe Text)
-    , _asvpPp             :: !Bool
-    , _asvpAccessToken    :: !(Maybe Text)
-    , _asvpUploadType     :: !(Maybe Text)
-    , _asvpPayload        :: !Version
-    , _asvpVersionsId     :: !Text
-    , _asvpBearerToken    :: !(Maybe Text)
-    , _asvpAppsId         :: !Text
-    , _asvpServicesId     :: !Text
-    , _asvpCallback       :: !(Maybe Text)
+    , _asvpUpdateMask :: !(Maybe FieldMask)
+    , _asvpPp :: !Bool
+    , _asvpAccessToken :: !(Maybe Text)
+    , _asvpUploadType :: !(Maybe Text)
+    , _asvpPayload :: !Version
+    , _asvpVersionsId :: !Text
+    , _asvpBearerToken :: !(Maybe Text)
+    , _asvpAppsId :: !Text
+    , _asvpServicesId :: !Text
+    , _asvpFields :: !(Maybe Text)
+    , _asvpCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsPatch' with the minimum fields required to make a request.
@@ -144,6 +173,8 @@ data AppsServicesVersionsPatch = AppsServicesVersionsPatch'
 --
 -- * 'asvpServicesId'
 --
+-- * 'asvpFields'
+--
 -- * 'asvpCallback'
 appsServicesVersionsPatch
     :: Version -- ^ 'asvpPayload'
@@ -151,7 +182,7 @@ appsServicesVersionsPatch
     -> Text -- ^ 'asvpAppsId'
     -> Text -- ^ 'asvpServicesId'
     -> AppsServicesVersionsPatch
-appsServicesVersionsPatch pAsvpPayload_ pAsvpVersionsId_ pAsvpAppsId_ pAsvpServicesId_ =
+appsServicesVersionsPatch pAsvpPayload_ pAsvpVersionsId_ pAsvpAppsId_ pAsvpServicesId_ = 
     AppsServicesVersionsPatch'
     { _asvpXgafv = Nothing
     , _asvpUploadProtocol = Nothing
@@ -164,11 +195,12 @@ appsServicesVersionsPatch pAsvpPayload_ pAsvpVersionsId_ pAsvpAppsId_ pAsvpServi
     , _asvpBearerToken = Nothing
     , _asvpAppsId = pAsvpAppsId_
     , _asvpServicesId = pAsvpServicesId_
+    , _asvpFields = Nothing
     , _asvpCallback = Nothing
     }
 
 -- | V1 error format.
-asvpXgafv :: Lens' AppsServicesVersionsPatch (Maybe Text)
+asvpXgafv :: Lens' AppsServicesVersionsPatch (Maybe Xgafv)
 asvpXgafv
   = lens _asvpXgafv (\ s a -> s{_asvpXgafv = a})
 
@@ -179,7 +211,7 @@ asvpUploadProtocol
       (\ s a -> s{_asvpUploadProtocol = a})
 
 -- | Standard field mask for the set of fields to be updated.
-asvpUpdateMask :: Lens' AppsServicesVersionsPatch (Maybe Text)
+asvpUpdateMask :: Lens' AppsServicesVersionsPatch (Maybe FieldMask)
 asvpUpdateMask
   = lens _asvpUpdateMask
       (\ s a -> s{_asvpUpdateMask = a})
@@ -229,6 +261,11 @@ asvpServicesId
   = lens _asvpServicesId
       (\ s a -> s{_asvpServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asvpFields :: Lens' AppsServicesVersionsPatch (Maybe Text)
+asvpFields
+  = lens _asvpFields (\ s a -> s{_asvpFields = a})
+
 -- | JSONP
 asvpCallback :: Lens' AppsServicesVersionsPatch (Maybe Text)
 asvpCallback
@@ -249,6 +286,7 @@ instance GoogleRequest AppsServicesVersionsPatch
               _asvpUploadType
               _asvpBearerToken
               _asvpCallback
+              _asvpFields
               (Just AltJSON)
               _asvpPayload
               appEngineService

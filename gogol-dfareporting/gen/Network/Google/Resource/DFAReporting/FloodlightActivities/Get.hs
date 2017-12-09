@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.FloodlightActivities.Get
     -- * Request Lenses
     , fProFileId
     , fId
+    , fFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightActivities.get@ method which the
 -- 'FloodlightActivitiesGet' request conforms to.
 type FloodlightActivitiesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightActivities" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] FloodlightActivity
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] FloodlightActivity
 
 -- | Gets one floodlight activity by ID.
 --
 -- /See:/ 'floodlightActivitiesGet' smart constructor.
 data FloodlightActivitiesGet = FloodlightActivitiesGet'
     { _fProFileId :: !(Textual Int64)
-    , _fId        :: !(Textual Int64)
+    , _fId :: !(Textual Int64)
+    , _fFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightActivitiesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data FloodlightActivitiesGet = FloodlightActivitiesGet'
 -- * 'fProFileId'
 --
 -- * 'fId'
+--
+-- * 'fFields'
 floodlightActivitiesGet
     :: Int64 -- ^ 'fProFileId'
     -> Int64 -- ^ 'fId'
     -> FloodlightActivitiesGet
-floodlightActivitiesGet pFProFileId_ pFId_ =
+floodlightActivitiesGet pFProFileId_ pFId_ = 
     FloodlightActivitiesGet'
     { _fProFileId = _Coerce # pFProFileId_
     , _fId = _Coerce # pFId_
+    , _fFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ fProFileId
 fId :: Lens' FloodlightActivitiesGet Int64
 fId = lens _fId (\ s a -> s{_fId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fFields :: Lens' FloodlightActivitiesGet (Maybe Text)
+fFields = lens _fFields (\ s a -> s{_fFields = a})
+
 instance GoogleRequest FloodlightActivitiesGet where
         type Rs FloodlightActivitiesGet = FloodlightActivity
         type Scopes FloodlightActivitiesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightActivitiesGet'{..}
-          = go _fProFileId _fId (Just AltJSON)
+          = go _fProFileId _fId _fFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

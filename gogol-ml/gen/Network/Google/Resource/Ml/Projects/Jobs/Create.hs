@@ -22,7 +22,7 @@
 --
 -- Creates a training or a batch prediction job.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.jobs.create@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.jobs.create@.
 module Network.Google.Resource.Ml.Projects.Jobs.Create
     (
     -- * REST Resource
@@ -41,16 +41,17 @@ module Network.Google.Resource.Ml.Projects.Jobs.Create
     , pUploadType
     , pPayload
     , pBearerToken
+    , pFields
     , pCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.jobs.create@ method which the
 -- 'ProjectsJobsCreate' request conforms to.
 type ProjectsJobsCreateResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "parent" Text :>
          "jobs" :>
            QueryParam "$.xgafv" Xgafv :>
@@ -60,23 +61,25 @@ type ProjectsJobsCreateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] GoogleCloudMlV1beta1__Job :>
-                             Post '[JSON] GoogleCloudMlV1beta1__Job
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] GoogleCloudMlV1__Job :>
+                               Post '[JSON] GoogleCloudMlV1__Job
 
 -- | Creates a training or a batch prediction job.
 --
 -- /See:/ 'projectsJobsCreate' smart constructor.
 data ProjectsJobsCreate = ProjectsJobsCreate'
-    { _pParent         :: !Text
-    , _pXgafv          :: !(Maybe Xgafv)
+    { _pParent :: !Text
+    , _pXgafv :: !(Maybe Xgafv)
     , _pUploadProtocol :: !(Maybe Text)
-    , _pPp             :: !Bool
-    , _pAccessToken    :: !(Maybe Text)
-    , _pUploadType     :: !(Maybe Text)
-    , _pPayload        :: !GoogleCloudMlV1beta1__Job
-    , _pBearerToken    :: !(Maybe Text)
-    , _pCallback       :: !(Maybe Text)
+    , _pPp :: !Bool
+    , _pAccessToken :: !(Maybe Text)
+    , _pUploadType :: !(Maybe Text)
+    , _pPayload :: !GoogleCloudMlV1__Job
+    , _pBearerToken :: !(Maybe Text)
+    , _pFields :: !(Maybe Text)
+    , _pCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsJobsCreate' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsJobsCreate = ProjectsJobsCreate'
 --
 -- * 'pBearerToken'
 --
+-- * 'pFields'
+--
 -- * 'pCallback'
 projectsJobsCreate
     :: Text -- ^ 'pParent'
-    -> GoogleCloudMlV1beta1__Job -- ^ 'pPayload'
+    -> GoogleCloudMlV1__Job -- ^ 'pPayload'
     -> ProjectsJobsCreate
-projectsJobsCreate pPParent_ pPPayload_ =
+projectsJobsCreate pPParent_ pPPayload_ = 
     ProjectsJobsCreate'
     { _pParent = pPParent_
     , _pXgafv = Nothing
@@ -114,11 +119,11 @@ projectsJobsCreate pPParent_ pPPayload_ =
     , _pUploadType = Nothing
     , _pPayload = pPPayload_
     , _pBearerToken = Nothing
+    , _pFields = Nothing
     , _pCallback = Nothing
     }
 
--- | Required. The project name. Authorization: requires \`Editor\` role on
--- the specified project.
+-- | Required. The project name.
 pParent :: Lens' ProjectsJobsCreate Text
 pParent = lens _pParent (\ s a -> s{_pParent = a})
 
@@ -147,7 +152,7 @@ pUploadType
   = lens _pUploadType (\ s a -> s{_pUploadType = a})
 
 -- | Multipart request metadata.
-pPayload :: Lens' ProjectsJobsCreate GoogleCloudMlV1beta1__Job
+pPayload :: Lens' ProjectsJobsCreate GoogleCloudMlV1__Job
 pPayload = lens _pPayload (\ s a -> s{_pPayload = a})
 
 -- | OAuth bearer token.
@@ -155,14 +160,17 @@ pBearerToken :: Lens' ProjectsJobsCreate (Maybe Text)
 pBearerToken
   = lens _pBearerToken (\ s a -> s{_pBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pFields :: Lens' ProjectsJobsCreate (Maybe Text)
+pFields = lens _pFields (\ s a -> s{_pFields = a})
+
 -- | JSONP
 pCallback :: Lens' ProjectsJobsCreate (Maybe Text)
 pCallback
   = lens _pCallback (\ s a -> s{_pCallback = a})
 
 instance GoogleRequest ProjectsJobsCreate where
-        type Rs ProjectsJobsCreate =
-             GoogleCloudMlV1beta1__Job
+        type Rs ProjectsJobsCreate = GoogleCloudMlV1__Job
         type Scopes ProjectsJobsCreate =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient ProjectsJobsCreate'{..}
@@ -171,6 +179,7 @@ instance GoogleRequest ProjectsJobsCreate where
               _pUploadType
               _pBearerToken
               _pCallback
+              _pFields
               (Just AltJSON)
               _pPayload
               machineLearningService

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.ContentCategories.Update
     -- * Request Lenses
     , ccuProFileId
     , ccuPayload
+    , ccuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.contentCategories.update@ method which the
 -- 'ContentCategoriesUpdate' request conforms to.
 type ContentCategoriesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "contentCategories" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ContentCategory :>
-                   Put '[JSON] ContentCategory
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ContentCategory :>
+                     Put '[JSON] ContentCategory
 
 -- | Updates an existing content category.
 --
 -- /See:/ 'contentCategoriesUpdate' smart constructor.
 data ContentCategoriesUpdate = ContentCategoriesUpdate'
     { _ccuProFileId :: !(Textual Int64)
-    , _ccuPayload   :: !ContentCategory
+    , _ccuPayload :: !ContentCategory
+    , _ccuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ContentCategoriesUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ContentCategoriesUpdate = ContentCategoriesUpdate'
 -- * 'ccuProFileId'
 --
 -- * 'ccuPayload'
+--
+-- * 'ccuFields'
 contentCategoriesUpdate
     :: Int64 -- ^ 'ccuProFileId'
     -> ContentCategory -- ^ 'ccuPayload'
     -> ContentCategoriesUpdate
-contentCategoriesUpdate pCcuProFileId_ pCcuPayload_ =
+contentCategoriesUpdate pCcuProFileId_ pCcuPayload_ = 
     ContentCategoriesUpdate'
     { _ccuProFileId = _Coerce # pCcuProFileId_
     , _ccuPayload = pCcuPayload_
+    , _ccuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ ccuPayload :: Lens' ContentCategoriesUpdate ContentCategory
 ccuPayload
   = lens _ccuPayload (\ s a -> s{_ccuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccuFields :: Lens' ContentCategoriesUpdate (Maybe Text)
+ccuFields
+  = lens _ccuFields (\ s a -> s{_ccuFields = a})
+
 instance GoogleRequest ContentCategoriesUpdate where
         type Rs ContentCategoriesUpdate = ContentCategory
         type Scopes ContentCategoriesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient ContentCategoriesUpdate'{..}
-          = go _ccuProFileId (Just AltJSON) _ccuPayload
+          = go _ccuProFileId _ccuFields (Just AltJSON)
+              _ccuPayload
               dFAReportingService
           where go
                   = buildClient

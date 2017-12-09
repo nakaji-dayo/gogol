@@ -49,11 +49,12 @@ module Network.Google.Resource.ServiceManagement.Services.GenerateConfigReport
     , sgcrUploadType
     , sgcrPayload
     , sgcrBearerToken
+    , sgcrFields
     , sgcrCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.generateConfigReport@ method which the
 -- 'ServicesGenerateConfigReport' request conforms to.
@@ -67,9 +68,10 @@ type ServicesGenerateConfigReportResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] GenerateConfigReportRequest :>
-                           Post '[JSON] GenerateConfigReportResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] GenerateConfigReportRequest :>
+                             Post '[JSON] GenerateConfigReportResponse
 
 -- | Generates and returns a report (errors, warnings and changes from
 -- existing configurations) associated with
@@ -84,14 +86,15 @@ type ServicesGenerateConfigReportResource =
 --
 -- /See:/ 'servicesGenerateConfigReport' smart constructor.
 data ServicesGenerateConfigReport = ServicesGenerateConfigReport'
-    { _sgcrXgafv          :: !(Maybe Xgafv)
+    { _sgcrXgafv :: !(Maybe Xgafv)
     , _sgcrUploadProtocol :: !(Maybe Text)
-    , _sgcrPp             :: !Bool
-    , _sgcrAccessToken    :: !(Maybe Text)
-    , _sgcrUploadType     :: !(Maybe Text)
-    , _sgcrPayload        :: !GenerateConfigReportRequest
-    , _sgcrBearerToken    :: !(Maybe Text)
-    , _sgcrCallback       :: !(Maybe Text)
+    , _sgcrPp :: !Bool
+    , _sgcrAccessToken :: !(Maybe Text)
+    , _sgcrUploadType :: !(Maybe Text)
+    , _sgcrPayload :: !GenerateConfigReportRequest
+    , _sgcrBearerToken :: !(Maybe Text)
+    , _sgcrFields :: !(Maybe Text)
+    , _sgcrCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesGenerateConfigReport' with the minimum fields required to make a request.
@@ -112,11 +115,13 @@ data ServicesGenerateConfigReport = ServicesGenerateConfigReport'
 --
 -- * 'sgcrBearerToken'
 --
+-- * 'sgcrFields'
+--
 -- * 'sgcrCallback'
 servicesGenerateConfigReport
     :: GenerateConfigReportRequest -- ^ 'sgcrPayload'
     -> ServicesGenerateConfigReport
-servicesGenerateConfigReport pSgcrPayload_ =
+servicesGenerateConfigReport pSgcrPayload_ = 
     ServicesGenerateConfigReport'
     { _sgcrXgafv = Nothing
     , _sgcrUploadProtocol = Nothing
@@ -125,6 +130,7 @@ servicesGenerateConfigReport pSgcrPayload_ =
     , _sgcrUploadType = Nothing
     , _sgcrPayload = pSgcrPayload_
     , _sgcrBearerToken = Nothing
+    , _sgcrFields = Nothing
     , _sgcrCallback = Nothing
     }
 
@@ -166,6 +172,11 @@ sgcrBearerToken
   = lens _sgcrBearerToken
       (\ s a -> s{_sgcrBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sgcrFields :: Lens' ServicesGenerateConfigReport (Maybe Text)
+sgcrFields
+  = lens _sgcrFields (\ s a -> s{_sgcrFields = a})
+
 -- | JSONP
 sgcrCallback :: Lens' ServicesGenerateConfigReport (Maybe Text)
 sgcrCallback
@@ -184,6 +195,7 @@ instance GoogleRequest ServicesGenerateConfigReport
               _sgcrUploadType
               _sgcrBearerToken
               _sgcrCallback
+              _sgcrFields
               (Just AltJSON)
               _sgcrPayload
               serviceManagementService

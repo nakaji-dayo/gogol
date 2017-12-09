@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Queries.CreateQuery
 
     -- * Request Lenses
     , qcqPayload
+    , qcqFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.queries.createquery@ method which the
 -- 'QueriesCreateQuery' request conforms to.
@@ -45,14 +46,16 @@ type QueriesCreateQueryResource =
      "doubleclickbidmanager" :>
        "v1" :>
          "query" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] Query :> Post '[JSON] Query
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] Query :> Post '[JSON] Query
 
 -- | Creates a query.
 --
 -- /See:/ 'queriesCreateQuery' smart constructor.
-newtype QueriesCreateQuery = QueriesCreateQuery'
-    { _qcqPayload :: Query
+data QueriesCreateQuery = QueriesCreateQuery'
+    { _qcqPayload :: !Query
+    , _qcqFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueriesCreateQuery' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype QueriesCreateQuery = QueriesCreateQuery'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'qcqPayload'
+--
+-- * 'qcqFields'
 queriesCreateQuery
     :: Query -- ^ 'qcqPayload'
     -> QueriesCreateQuery
-queriesCreateQuery pQcqPayload_ =
+queriesCreateQuery pQcqPayload_ = 
     QueriesCreateQuery'
     { _qcqPayload = pQcqPayload_
+    , _qcqFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,11 +79,17 @@ qcqPayload :: Lens' QueriesCreateQuery Query
 qcqPayload
   = lens _qcqPayload (\ s a -> s{_qcqPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qcqFields :: Lens' QueriesCreateQuery (Maybe Text)
+qcqFields
+  = lens _qcqFields (\ s a -> s{_qcqFields = a})
+
 instance GoogleRequest QueriesCreateQuery where
         type Rs QueriesCreateQuery = Query
-        type Scopes QueriesCreateQuery = '[]
+        type Scopes QueriesCreateQuery =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient QueriesCreateQuery'{..}
-          = go (Just AltJSON) _qcqPayload
+          = go _qcqFields (Just AltJSON) _qcqPayload
               doubleClickBidsService
           where go
                   = buildClient

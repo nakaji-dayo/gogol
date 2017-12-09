@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Photos.Update
     -- * Request Lenses
     , upuPayload
     , upuUserKey
+    , upuFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.photos.update@ method which the
 -- 'UsersPhotosUpdate' request conforms to.
@@ -50,8 +51,9 @@ type UsersPhotosUpdateResource =
              Capture "userKey" Text :>
                "photos" :>
                  "thumbnail" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] UserPhoto :> Put '[JSON] UserPhoto
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] UserPhoto :> Put '[JSON] UserPhoto
 
 -- | Add a photo for the user
 --
@@ -59,6 +61,7 @@ type UsersPhotosUpdateResource =
 data UsersPhotosUpdate = UsersPhotosUpdate'
     { _upuPayload :: !UserPhoto
     , _upuUserKey :: !Text
+    , _upuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersPhotosUpdate' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data UsersPhotosUpdate = UsersPhotosUpdate'
 -- * 'upuPayload'
 --
 -- * 'upuUserKey'
+--
+-- * 'upuFields'
 usersPhotosUpdate
     :: UserPhoto -- ^ 'upuPayload'
     -> Text -- ^ 'upuUserKey'
     -> UsersPhotosUpdate
-usersPhotosUpdate pUpuPayload_ pUpuUserKey_ =
+usersPhotosUpdate pUpuPayload_ pUpuUserKey_ = 
     UsersPhotosUpdate'
     { _upuPayload = pUpuPayload_
     , _upuUserKey = pUpuUserKey_
+    , _upuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -83,17 +89,23 @@ upuPayload :: Lens' UsersPhotosUpdate UserPhoto
 upuPayload
   = lens _upuPayload (\ s a -> s{_upuPayload = a})
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 upuUserKey :: Lens' UsersPhotosUpdate Text
 upuUserKey
   = lens _upuUserKey (\ s a -> s{_upuUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+upuFields :: Lens' UsersPhotosUpdate (Maybe Text)
+upuFields
+  = lens _upuFields (\ s a -> s{_upuFields = a})
 
 instance GoogleRequest UsersPhotosUpdate where
         type Rs UsersPhotosUpdate = UserPhoto
         type Scopes UsersPhotosUpdate =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersPhotosUpdate'{..}
-          = go _upuUserKey (Just AltJSON) _upuPayload
+          = go _upuUserKey _upuFields (Just AltJSON)
+              _upuPayload
               directoryService
           where go
                   = buildClient

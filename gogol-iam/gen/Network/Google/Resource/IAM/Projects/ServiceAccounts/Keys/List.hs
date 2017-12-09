@@ -41,11 +41,12 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.List
     , psaklUploadType
     , psaklBearerToken
     , psaklName
+    , psaklFields
     , psaklCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.keys.list@ method which the
 -- 'ProjectsServiceAccountsKeysList' request conforms to.
@@ -54,29 +55,31 @@ type ProjectsServiceAccountsKeysListResource =
        Capture "name" Text :>
          "keys" :>
            QueryParams "keyTypes" Text :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] ListServiceAccountKeysResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] ListServiceAccountKeysResponse
 
 -- | Lists ServiceAccountKeys.
 --
 -- /See:/ 'projectsServiceAccountsKeysList' smart constructor.
 data ProjectsServiceAccountsKeysList = ProjectsServiceAccountsKeysList'
-    { _psaklKeyTypes       :: !(Maybe [Text])
-    , _psaklXgafv          :: !(Maybe Text)
+    { _psaklKeyTypes :: !(Maybe [Text])
+    , _psaklXgafv :: !(Maybe Xgafv)
     , _psaklUploadProtocol :: !(Maybe Text)
-    , _psaklPp             :: !Bool
-    , _psaklAccessToken    :: !(Maybe Text)
-    , _psaklUploadType     :: !(Maybe Text)
-    , _psaklBearerToken    :: !(Maybe Text)
-    , _psaklName           :: !Text
-    , _psaklCallback       :: !(Maybe Text)
+    , _psaklPp :: !Bool
+    , _psaklAccessToken :: !(Maybe Text)
+    , _psaklUploadType :: !(Maybe Text)
+    , _psaklBearerToken :: !(Maybe Text)
+    , _psaklName :: !Text
+    , _psaklFields :: !(Maybe Text)
+    , _psaklCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsKeysList' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data ProjectsServiceAccountsKeysList = ProjectsServiceAccountsKeysList'
 --
 -- * 'psaklName'
 --
+-- * 'psaklFields'
+--
 -- * 'psaklCallback'
 projectsServiceAccountsKeysList
     :: Text -- ^ 'psaklName'
     -> ProjectsServiceAccountsKeysList
-projectsServiceAccountsKeysList pPsaklName_ =
+projectsServiceAccountsKeysList pPsaklName_ = 
     ProjectsServiceAccountsKeysList'
     { _psaklKeyTypes = Nothing
     , _psaklXgafv = Nothing
@@ -113,6 +118,7 @@ projectsServiceAccountsKeysList pPsaklName_ =
     , _psaklUploadType = Nothing
     , _psaklBearerToken = Nothing
     , _psaklName = pPsaklName_
+    , _psaklFields = Nothing
     , _psaklCallback = Nothing
     }
 
@@ -127,7 +133,7 @@ psaklKeyTypes
       . _Coerce
 
 -- | V1 error format.
-psaklXgafv :: Lens' ProjectsServiceAccountsKeysList (Maybe Text)
+psaklXgafv :: Lens' ProjectsServiceAccountsKeysList (Maybe Xgafv)
 psaklXgafv
   = lens _psaklXgafv (\ s a -> s{_psaklXgafv = a})
 
@@ -160,13 +166,18 @@ psaklBearerToken
       (\ s a -> s{_psaklBearerToken = a})
 
 -- | The resource name of the service account in the following format:
--- \`projects\/{project}\/serviceAccounts\/{account}\`. Using \`-\` as a
--- wildcard for the project, will infer the project from the account. The
--- \`account\` value can be the \`email\` address or the \`unique_id\` of
--- the service account.
+-- \`projects\/{PROJECT_ID}\/serviceAccounts\/{ACCOUNT}\`. Using \`-\` as a
+-- wildcard for the \`PROJECT_ID\`, will infer the project from the
+-- account. The \`ACCOUNT\` value can be the \`email\` address or the
+-- \`unique_id\` of the service account.
 psaklName :: Lens' ProjectsServiceAccountsKeysList Text
 psaklName
   = lens _psaklName (\ s a -> s{_psaklName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psaklFields :: Lens' ProjectsServiceAccountsKeysList (Maybe Text)
+psaklFields
+  = lens _psaklFields (\ s a -> s{_psaklFields = a})
 
 -- | JSONP
 psaklCallback :: Lens' ProjectsServiceAccountsKeysList (Maybe Text)
@@ -189,6 +200,7 @@ instance GoogleRequest
               _psaklUploadType
               _psaklBearerToken
               _psaklCallback
+              _psaklFields
               (Just AltJSON)
               iAMService
           where go

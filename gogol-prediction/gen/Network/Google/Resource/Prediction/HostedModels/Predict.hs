@@ -35,11 +35,12 @@ module Network.Google.Resource.Prediction.HostedModels.Predict
     -- * Request Lenses
     , hmpProject
     , hmpPayload
+    , hmpFields
     , hmpHostedModelName
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.hostedmodels.predict@ method which the
 -- 'HostedModelsPredict' request conforms to.
@@ -51,15 +52,17 @@ type HostedModelsPredictResource =
              "hostedmodels" :>
                Capture "hostedModelName" Text :>
                  "predict" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Input :> Post '[JSON] Output
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Input :> Post '[JSON] Output
 
 -- | Submit input and request an output against a hosted model.
 --
 -- /See:/ 'hostedModelsPredict' smart constructor.
 data HostedModelsPredict = HostedModelsPredict'
-    { _hmpProject         :: !Text
-    , _hmpPayload         :: !Input
+    { _hmpProject :: !Text
+    , _hmpPayload :: !Input
+    , _hmpFields :: !(Maybe Text)
     , _hmpHostedModelName :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -71,16 +74,19 @@ data HostedModelsPredict = HostedModelsPredict'
 --
 -- * 'hmpPayload'
 --
+-- * 'hmpFields'
+--
 -- * 'hmpHostedModelName'
 hostedModelsPredict
     :: Text -- ^ 'hmpProject'
     -> Input -- ^ 'hmpPayload'
     -> Text -- ^ 'hmpHostedModelName'
     -> HostedModelsPredict
-hostedModelsPredict pHmpProject_ pHmpPayload_ pHmpHostedModelName_ =
+hostedModelsPredict pHmpProject_ pHmpPayload_ pHmpHostedModelName_ = 
     HostedModelsPredict'
     { _hmpProject = pHmpProject_
     , _hmpPayload = pHmpPayload_
+    , _hmpFields = Nothing
     , _hmpHostedModelName = pHmpHostedModelName_
     }
 
@@ -94,6 +100,11 @@ hmpPayload :: Lens' HostedModelsPredict Input
 hmpPayload
   = lens _hmpPayload (\ s a -> s{_hmpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+hmpFields :: Lens' HostedModelsPredict (Maybe Text)
+hmpFields
+  = lens _hmpFields (\ s a -> s{_hmpFields = a})
+
 -- | The name of a hosted model.
 hmpHostedModelName :: Lens' HostedModelsPredict Text
 hmpHostedModelName
@@ -106,7 +117,8 @@ instance GoogleRequest HostedModelsPredict where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/prediction"]
         requestClient HostedModelsPredict'{..}
-          = go _hmpProject _hmpHostedModelName (Just AltJSON)
+          = go _hmpProject _hmpHostedModelName _hmpFields
+              (Just AltJSON)
               _hmpPayload
               predictionService
           where go

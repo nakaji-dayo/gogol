@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.HTTPHealthChecks.Get
     -- * Request Lenses
     , httphcgProject
     , httphcgHTTPHealthCheck
+    , httphcgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.httpHealthChecks.get@ method which the
 -- 'HTTPHealthChecksGet' request conforms to.
@@ -51,16 +52,18 @@ type HTTPHealthChecksGetResource =
              "global" :>
                "httpHealthChecks" :>
                  Capture "httpHealthCheck" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] HTTPHealthCheck
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] HTTPHealthCheck
 
 -- | Returns the specified HttpHealthCheck resource. Get a list of available
 -- HTTP health checks by making a list() request.
 --
 -- /See:/ 'hTTPHealthChecksGet' smart constructor.
 data HTTPHealthChecksGet = HTTPHealthChecksGet'
-    { _httphcgProject         :: !Text
+    { _httphcgProject :: !Text
     , _httphcgHTTPHealthCheck :: !Text
+    , _httphcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HTTPHealthChecksGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data HTTPHealthChecksGet = HTTPHealthChecksGet'
 -- * 'httphcgProject'
 --
 -- * 'httphcgHTTPHealthCheck'
+--
+-- * 'httphcgFields'
 hTTPHealthChecksGet
     :: Text -- ^ 'httphcgProject'
     -> Text -- ^ 'httphcgHTTPHealthCheck'
     -> HTTPHealthChecksGet
-hTTPHealthChecksGet pHttphcgProject_ pHttphcgHTTPHealthCheck_ =
+hTTPHealthChecksGet pHttphcgProject_ pHttphcgHTTPHealthCheck_ = 
     HTTPHealthChecksGet'
     { _httphcgProject = pHttphcgProject_
     , _httphcgHTTPHealthCheck = pHttphcgHTTPHealthCheck_
+    , _httphcgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -92,6 +98,12 @@ httphcgHTTPHealthCheck
   = lens _httphcgHTTPHealthCheck
       (\ s a -> s{_httphcgHTTPHealthCheck = a})
 
+-- | Selector specifying which fields to include in a partial response.
+httphcgFields :: Lens' HTTPHealthChecksGet (Maybe Text)
+httphcgFields
+  = lens _httphcgFields
+      (\ s a -> s{_httphcgFields = a})
+
 instance GoogleRequest HTTPHealthChecksGet where
         type Rs HTTPHealthChecksGet = HTTPHealthCheck
         type Scopes HTTPHealthChecksGet =
@@ -100,6 +112,7 @@ instance GoogleRequest HTTPHealthChecksGet where
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient HTTPHealthChecksGet'{..}
           = go _httphcgProject _httphcgHTTPHealthCheck
+              _httphcgFields
               (Just AltJSON)
               computeService
           where go

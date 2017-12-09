@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTubeAnalytics.GroupItems.List
     -- * Request Lenses
     , gilOnBehalfOfContentOwner
     , gilGroupId
+    , gilFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeAnalytics.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeAnalytics.Types
 
 -- | A resource alias for @youtubeAnalytics.groupItems.list@ method which the
 -- 'GroupItemsList' request conforms to.
@@ -50,8 +51,9 @@ type GroupItemsListResource =
            "groupItems" :>
              QueryParam "groupId" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] GroupItemListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] GroupItemListResponse
 
 -- | Returns a collection of group items that match the API request
 -- parameters.
@@ -59,7 +61,8 @@ type GroupItemsListResource =
 -- /See:/ 'groupItemsList' smart constructor.
 data GroupItemsList = GroupItemsList'
     { _gilOnBehalfOfContentOwner :: !(Maybe Text)
-    , _gilGroupId                :: !Text
+    , _gilGroupId :: !Text
+    , _gilFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupItemsList' with the minimum fields required to make a request.
@@ -69,13 +72,16 @@ data GroupItemsList = GroupItemsList'
 -- * 'gilOnBehalfOfContentOwner'
 --
 -- * 'gilGroupId'
+--
+-- * 'gilFields'
 groupItemsList
     :: Text -- ^ 'gilGroupId'
     -> GroupItemsList
-groupItemsList pGilGroupId_ =
+groupItemsList pGilGroupId_ = 
     GroupItemsList'
     { _gilOnBehalfOfContentOwner = Nothing
     , _gilGroupId = pGilGroupId_
+    , _gilFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -99,6 +105,11 @@ gilGroupId :: Lens' GroupItemsList Text
 gilGroupId
   = lens _gilGroupId (\ s a -> s{_gilGroupId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gilFields :: Lens' GroupItemsList (Maybe Text)
+gilFields
+  = lens _gilFields (\ s a -> s{_gilFields = a})
+
 instance GoogleRequest GroupItemsList where
         type Rs GroupItemsList = GroupItemListResponse
         type Scopes GroupItemsList =
@@ -108,6 +119,7 @@ instance GoogleRequest GroupItemsList where
                "https://www.googleapis.com/auth/yt-analytics.readonly"]
         requestClient GroupItemsList'{..}
           = go (Just _gilGroupId) _gilOnBehalfOfContentOwner
+              _gilFields
               (Just AltJSON)
               youTubeAnalyticsService
           where go

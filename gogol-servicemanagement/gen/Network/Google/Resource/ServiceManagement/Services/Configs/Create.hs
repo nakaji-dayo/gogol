@@ -44,11 +44,12 @@ module Network.Google.Resource.ServiceManagement.Services.Configs.Create
     , sccPayload
     , sccBearerToken
     , sccServiceName
+    , sccFields
     , sccCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.configs.create@ method which the
 -- 'ServicesConfigsCreate' request conforms to.
@@ -64,8 +65,9 @@ type ServicesConfigsCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Service :> Post '[JSON] Service
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Service :> Post '[JSON] Service
 
 -- | Creates a new service configuration (version) for a managed service.
 -- This method only stores the service configuration. To roll out the
@@ -74,15 +76,16 @@ type ServicesConfigsCreateResource =
 --
 -- /See:/ 'servicesConfigsCreate' smart constructor.
 data ServicesConfigsCreate = ServicesConfigsCreate'
-    { _sccXgafv          :: !(Maybe Xgafv)
+    { _sccXgafv :: !(Maybe Xgafv)
     , _sccUploadProtocol :: !(Maybe Text)
-    , _sccPp             :: !Bool
-    , _sccAccessToken    :: !(Maybe Text)
-    , _sccUploadType     :: !(Maybe Text)
-    , _sccPayload        :: !Service
-    , _sccBearerToken    :: !(Maybe Text)
-    , _sccServiceName    :: !Text
-    , _sccCallback       :: !(Maybe Text)
+    , _sccPp :: !Bool
+    , _sccAccessToken :: !(Maybe Text)
+    , _sccUploadType :: !(Maybe Text)
+    , _sccPayload :: !Service
+    , _sccBearerToken :: !(Maybe Text)
+    , _sccServiceName :: !Text
+    , _sccFields :: !(Maybe Text)
+    , _sccCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesConfigsCreate' with the minimum fields required to make a request.
@@ -105,12 +108,14 @@ data ServicesConfigsCreate = ServicesConfigsCreate'
 --
 -- * 'sccServiceName'
 --
+-- * 'sccFields'
+--
 -- * 'sccCallback'
 servicesConfigsCreate
     :: Service -- ^ 'sccPayload'
     -> Text -- ^ 'sccServiceName'
     -> ServicesConfigsCreate
-servicesConfigsCreate pSccPayload_ pSccServiceName_ =
+servicesConfigsCreate pSccPayload_ pSccServiceName_ = 
     ServicesConfigsCreate'
     { _sccXgafv = Nothing
     , _sccUploadProtocol = Nothing
@@ -120,6 +125,7 @@ servicesConfigsCreate pSccPayload_ pSccServiceName_ =
     , _sccPayload = pSccPayload_
     , _sccBearerToken = Nothing
     , _sccServiceName = pSccServiceName_
+    , _sccFields = Nothing
     , _sccCallback = Nothing
     }
 
@@ -168,6 +174,11 @@ sccServiceName
   = lens _sccServiceName
       (\ s a -> s{_sccServiceName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sccFields :: Lens' ServicesConfigsCreate (Maybe Text)
+sccFields
+  = lens _sccFields (\ s a -> s{_sccFields = a})
+
 -- | JSONP
 sccCallback :: Lens' ServicesConfigsCreate (Maybe Text)
 sccCallback
@@ -185,6 +196,7 @@ instance GoogleRequest ServicesConfigsCreate where
               _sccUploadType
               _sccBearerToken
               _sccCallback
+              _sccFields
               (Just AltJSON)
               _sccPayload
               serviceManagementService

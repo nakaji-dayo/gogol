@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Devices.List
     -- * Request Lenses
     , dlEnterpriseId
     , dlUserId
+    , dlFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.devices.list@ method which the
 -- 'DevicesList' request conforms to.
@@ -50,15 +51,17 @@ type DevicesListResource =
              "users" :>
                Capture "userId" Text :>
                  "devices" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] DevicesListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] DevicesListResponse
 
 -- | Retrieves the IDs of all of a user\'s devices.
 --
 -- /See:/ 'devicesList' smart constructor.
 data DevicesList = DevicesList'
     { _dlEnterpriseId :: !Text
-    , _dlUserId       :: !Text
+    , _dlUserId :: !Text
+    , _dlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DevicesList' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data DevicesList = DevicesList'
 -- * 'dlEnterpriseId'
 --
 -- * 'dlUserId'
+--
+-- * 'dlFields'
 devicesList
     :: Text -- ^ 'dlEnterpriseId'
     -> Text -- ^ 'dlUserId'
     -> DevicesList
-devicesList pDlEnterpriseId_ pDlUserId_ =
+devicesList pDlEnterpriseId_ pDlUserId_ = 
     DevicesList'
     { _dlEnterpriseId = pDlEnterpriseId_
     , _dlUserId = pDlUserId_
+    , _dlFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -88,12 +94,17 @@ dlEnterpriseId
 dlUserId :: Lens' DevicesList Text
 dlUserId = lens _dlUserId (\ s a -> s{_dlUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dlFields :: Lens' DevicesList (Maybe Text)
+dlFields = lens _dlFields (\ s a -> s{_dlFields = a})
+
 instance GoogleRequest DevicesList where
         type Rs DevicesList = DevicesListResponse
         type Scopes DevicesList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient DevicesList'{..}
-          = go _dlEnterpriseId _dlUserId (Just AltJSON)
+          = go _dlEnterpriseId _dlUserId _dlFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient (Proxy :: Proxy DevicesListResource)

@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceDeals.List
     -- * Request Lenses
     , mdlProposalId
     , mdlPqlQuery
+    , mdlFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacedeals.list@ method which the
 -- 'MarketplaceDealsList' request conforms to.
@@ -49,15 +50,17 @@ type MarketplaceDealsListResource =
            Capture "proposalId" Text :>
              "deals" :>
                QueryParam "pqlQuery" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] GetOrderDealsResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] GetOrderDealsResponse
 
 -- | List all the deals for a given proposal
 --
 -- /See:/ 'marketplaceDealsList' smart constructor.
 data MarketplaceDealsList = MarketplaceDealsList'
     { _mdlProposalId :: !Text
-    , _mdlPqlQuery   :: !(Maybe Text)
+    , _mdlPqlQuery :: !(Maybe Text)
+    , _mdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceDealsList' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data MarketplaceDealsList = MarketplaceDealsList'
 -- * 'mdlProposalId'
 --
 -- * 'mdlPqlQuery'
+--
+-- * 'mdlFields'
 marketplaceDealsList
     :: Text -- ^ 'mdlProposalId'
     -> MarketplaceDealsList
-marketplaceDealsList pMdlProposalId_ =
+marketplaceDealsList pMdlProposalId_ = 
     MarketplaceDealsList'
     { _mdlProposalId = pMdlProposalId_
     , _mdlPqlQuery = Nothing
+    , _mdlFields = Nothing
     }
 
 -- | The proposalId to get deals for. To search across all proposals specify
@@ -88,12 +94,18 @@ mdlPqlQuery :: Lens' MarketplaceDealsList (Maybe Text)
 mdlPqlQuery
   = lens _mdlPqlQuery (\ s a -> s{_mdlPqlQuery = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mdlFields :: Lens' MarketplaceDealsList (Maybe Text)
+mdlFields
+  = lens _mdlFields (\ s a -> s{_mdlFields = a})
+
 instance GoogleRequest MarketplaceDealsList where
         type Rs MarketplaceDealsList = GetOrderDealsResponse
         type Scopes MarketplaceDealsList =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceDealsList'{..}
-          = go _mdlProposalId _mdlPqlQuery (Just AltJSON)
+          = go _mdlProposalId _mdlPqlQuery _mdlFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

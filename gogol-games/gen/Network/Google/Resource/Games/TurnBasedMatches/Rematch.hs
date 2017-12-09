@@ -40,10 +40,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Rematch
     , tbmrConsistencyToken
     , tbmrLanguage
     , tbmrMatchId
+    , tbmrFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.rematch@ method which the
 -- 'TurnBasedMatchesRematch' request conforms to.
@@ -56,8 +57,9 @@ type TurnBasedMatchesRematchResource =
                QueryParam "requestId" (Textual Int64) :>
                  QueryParam "consistencyToken" (Textual Int64) :>
                    QueryParam "language" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Post '[JSON] TurnBasedMatchRematch
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Post '[JSON] TurnBasedMatchRematch
 
 -- | Create a rematch of a match that was previously completed, with the same
 -- participants. This can be called by only one player on a match still in
@@ -66,10 +68,11 @@ type TurnBasedMatchesRematchResource =
 --
 -- /See:/ 'turnBasedMatchesRematch' smart constructor.
 data TurnBasedMatchesRematch = TurnBasedMatchesRematch'
-    { _tbmrRequestId        :: !(Maybe (Textual Int64))
+    { _tbmrRequestId :: !(Maybe (Textual Int64))
     , _tbmrConsistencyToken :: !(Maybe (Textual Int64))
-    , _tbmrLanguage         :: !(Maybe Text)
-    , _tbmrMatchId          :: !Text
+    , _tbmrLanguage :: !(Maybe Text)
+    , _tbmrMatchId :: !Text
+    , _tbmrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesRematch' with the minimum fields required to make a request.
@@ -83,15 +86,18 @@ data TurnBasedMatchesRematch = TurnBasedMatchesRematch'
 -- * 'tbmrLanguage'
 --
 -- * 'tbmrMatchId'
+--
+-- * 'tbmrFields'
 turnBasedMatchesRematch
     :: Text -- ^ 'tbmrMatchId'
     -> TurnBasedMatchesRematch
-turnBasedMatchesRematch pTbmrMatchId_ =
+turnBasedMatchesRematch pTbmrMatchId_ = 
     TurnBasedMatchesRematch'
     { _tbmrRequestId = Nothing
     , _tbmrConsistencyToken = Nothing
     , _tbmrLanguage = Nothing
     , _tbmrMatchId = pTbmrMatchId_
+    , _tbmrFields = Nothing
     }
 
 -- | A randomly generated numeric ID for each request specified by the
@@ -120,6 +126,11 @@ tbmrMatchId :: Lens' TurnBasedMatchesRematch Text
 tbmrMatchId
   = lens _tbmrMatchId (\ s a -> s{_tbmrMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmrFields :: Lens' TurnBasedMatchesRematch (Maybe Text)
+tbmrFields
+  = lens _tbmrFields (\ s a -> s{_tbmrFields = a})
+
 instance GoogleRequest TurnBasedMatchesRematch where
         type Rs TurnBasedMatchesRematch =
              TurnBasedMatchRematch
@@ -130,6 +141,7 @@ instance GoogleRequest TurnBasedMatchesRematch where
           = go _tbmrMatchId _tbmrRequestId
               _tbmrConsistencyToken
               _tbmrLanguage
+              _tbmrFields
               (Just AltJSON)
               gamesService
           where go

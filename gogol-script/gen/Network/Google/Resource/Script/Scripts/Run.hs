@@ -20,16 +20,16 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Runs a function in an Apps Script project that has been deployed for use
--- with the Apps Script Execution API. This method requires authorization
+-- Runs a function in an Apps Script project. The project must be deployed
+-- for use with the Apps Script API. This method requires authorization
 -- with an OAuth 2.0 token that includes at least one of the scopes listed
--- in the [Authentication](#authentication) section; script projects that
--- do not require authorization cannot be executed through this API. To
--- find the correct scopes to include in the authentication token, open the
+-- in the [Authorization](#authorization) section; script projects that do
+-- not require authorization cannot be executed through this API. To find
+-- the correct scopes to include in the authentication token, open the
 -- project in the script editor, then select **File > Project properties**
 -- and click the **Scopes** tab.
 --
--- /See:/ <https://developers.google.com/apps-script/execution/rest/v1/scripts/run Google Apps Script Execution API Reference> for @script.scripts.run@.
+-- /See:/ <https://developers.google.com/apps-script/execution/rest/v1/scripts/run Google Apps Script API Reference> for @script.scripts.run@.
 module Network.Google.Resource.Script.Scripts.Run
     (
     -- * REST Resource
@@ -48,11 +48,12 @@ module Network.Google.Resource.Script.Scripts.Run
     , srPayload
     , srBearerToken
     , srScriptId
+    , srFields
     , srCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Script.Types
+import Network.Google.Prelude
+import Network.Google.Script.Types
 
 -- | A resource alias for @script.scripts.run@ method which the
 -- 'ScriptsRun' request conforms to.
@@ -60,37 +61,39 @@ type ScriptsRunResource =
      "v1" :>
        "scripts" :>
          CaptureMode "scriptId" "run" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ExecutionRequest :>
-                             Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ExecutionRequest :>
+                               Post '[JSON] Operation
 
--- | Runs a function in an Apps Script project that has been deployed for use
--- with the Apps Script Execution API. This method requires authorization
+-- | Runs a function in an Apps Script project. The project must be deployed
+-- for use with the Apps Script API. This method requires authorization
 -- with an OAuth 2.0 token that includes at least one of the scopes listed
--- in the [Authentication](#authentication) section; script projects that
--- do not require authorization cannot be executed through this API. To
--- find the correct scopes to include in the authentication token, open the
+-- in the [Authorization](#authorization) section; script projects that do
+-- not require authorization cannot be executed through this API. To find
+-- the correct scopes to include in the authentication token, open the
 -- project in the script editor, then select **File > Project properties**
 -- and click the **Scopes** tab.
 --
 -- /See:/ 'scriptsRun' smart constructor.
 data ScriptsRun = ScriptsRun'
-    { _srXgafv          :: !(Maybe Text)
+    { _srXgafv :: !(Maybe Xgafv)
     , _srUploadProtocol :: !(Maybe Text)
-    , _srPp             :: !Bool
-    , _srAccessToken    :: !(Maybe Text)
-    , _srUploadType     :: !(Maybe Text)
-    , _srPayload        :: !ExecutionRequest
-    , _srBearerToken    :: !(Maybe Text)
-    , _srScriptId       :: !Text
-    , _srCallback       :: !(Maybe Text)
+    , _srPp :: !Bool
+    , _srAccessToken :: !(Maybe Text)
+    , _srUploadType :: !(Maybe Text)
+    , _srPayload :: !ExecutionRequest
+    , _srBearerToken :: !(Maybe Text)
+    , _srScriptId :: !Text
+    , _srFields :: !(Maybe Text)
+    , _srCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScriptsRun' with the minimum fields required to make a request.
@@ -113,12 +116,14 @@ data ScriptsRun = ScriptsRun'
 --
 -- * 'srScriptId'
 --
+-- * 'srFields'
+--
 -- * 'srCallback'
 scriptsRun
     :: ExecutionRequest -- ^ 'srPayload'
     -> Text -- ^ 'srScriptId'
     -> ScriptsRun
-scriptsRun pSrPayload_ pSrScriptId_ =
+scriptsRun pSrPayload_ pSrScriptId_ = 
     ScriptsRun'
     { _srXgafv = Nothing
     , _srUploadProtocol = Nothing
@@ -128,11 +133,12 @@ scriptsRun pSrPayload_ pSrScriptId_ =
     , _srPayload = pSrPayload_
     , _srBearerToken = Nothing
     , _srScriptId = pSrScriptId_
+    , _srFields = Nothing
     , _srCallback = Nothing
     }
 
 -- | V1 error format.
-srXgafv :: Lens' ScriptsRun (Maybe Text)
+srXgafv :: Lens' ScriptsRun (Maybe Xgafv)
 srXgafv = lens _srXgafv (\ s a -> s{_srXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -167,12 +173,16 @@ srBearerToken
   = lens _srBearerToken
       (\ s a -> s{_srBearerToken = a})
 
--- | The project key of the script to be executed. To find the project key,
--- open the project in the script editor, then select **File > Project
+-- | The script ID of the script to be executed. To find the script ID, open
+-- the project in the script editor and select **File > Project
 -- properties**.
 srScriptId :: Lens' ScriptsRun Text
 srScriptId
   = lens _srScriptId (\ s a -> s{_srScriptId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+srFields :: Lens' ScriptsRun (Maybe Text)
+srFields = lens _srFields (\ s a -> s{_srFields = a})
 
 -- | JSONP
 srCallback :: Lens' ScriptsRun (Maybe Text)
@@ -200,6 +210,7 @@ instance GoogleRequest ScriptsRun where
               _srUploadType
               _srBearerToken
               _srCallback
+              _srFields
               (Just AltJSON)
               _srPayload
               scriptService

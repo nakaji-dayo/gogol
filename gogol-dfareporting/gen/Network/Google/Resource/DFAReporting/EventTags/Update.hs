@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.EventTags.Update
     -- * Request Lenses
     , etuProFileId
     , etuPayload
+    , etuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.eventTags.update@ method which the
 -- 'EventTagsUpdate' request conforms to.
 type EventTagsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "eventTags" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] EventTag :> Put '[JSON] EventTag
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] EventTag :> Put '[JSON] EventTag
 
 -- | Updates an existing event tag.
 --
 -- /See:/ 'eventTagsUpdate' smart constructor.
 data EventTagsUpdate = EventTagsUpdate'
     { _etuProFileId :: !(Textual Int64)
-    , _etuPayload   :: !EventTag
+    , _etuPayload :: !EventTag
+    , _etuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTagsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data EventTagsUpdate = EventTagsUpdate'
 -- * 'etuProFileId'
 --
 -- * 'etuPayload'
+--
+-- * 'etuFields'
 eventTagsUpdate
     :: Int64 -- ^ 'etuProFileId'
     -> EventTag -- ^ 'etuPayload'
     -> EventTagsUpdate
-eventTagsUpdate pEtuProFileId_ pEtuPayload_ =
+eventTagsUpdate pEtuProFileId_ pEtuPayload_ = 
     EventTagsUpdate'
     { _etuProFileId = _Coerce # pEtuProFileId_
     , _etuPayload = pEtuPayload_
+    , _etuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ etuPayload :: Lens' EventTagsUpdate EventTag
 etuPayload
   = lens _etuPayload (\ s a -> s{_etuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etuFields :: Lens' EventTagsUpdate (Maybe Text)
+etuFields
+  = lens _etuFields (\ s a -> s{_etuFields = a})
+
 instance GoogleRequest EventTagsUpdate where
         type Rs EventTagsUpdate = EventTag
         type Scopes EventTagsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient EventTagsUpdate'{..}
-          = go _etuProFileId (Just AltJSON) _etuPayload
+          = go _etuProFileId _etuFields (Just AltJSON)
+              _etuPayload
               dFAReportingService
           where go
                   = buildClient

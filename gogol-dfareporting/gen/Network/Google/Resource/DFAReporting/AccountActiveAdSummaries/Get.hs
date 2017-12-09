@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AccountActiveAdSummaries.Get
     -- * Request Lenses
     , aaasgProFileId
     , aaasgSummaryAccountId
+    , aaasgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountActiveAdSummaries.get@ method which the
 -- 'AccountActiveAdSummariesGet' request conforms to.
 type AccountActiveAdSummariesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountActiveAdSummaries" :>
                Capture "summaryAccountId" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AccountActiveAdSummary
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AccountActiveAdSummary
 
 -- | Gets the account\'s active ad summary by account ID.
 --
 -- /See:/ 'accountActiveAdSummariesGet' smart constructor.
 data AccountActiveAdSummariesGet = AccountActiveAdSummariesGet'
-    { _aaasgProFileId        :: !(Textual Int64)
+    { _aaasgProFileId :: !(Textual Int64)
     , _aaasgSummaryAccountId :: !(Textual Int64)
+    , _aaasgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountActiveAdSummariesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AccountActiveAdSummariesGet = AccountActiveAdSummariesGet'
 -- * 'aaasgProFileId'
 --
 -- * 'aaasgSummaryAccountId'
+--
+-- * 'aaasgFields'
 accountActiveAdSummariesGet
     :: Int64 -- ^ 'aaasgProFileId'
     -> Int64 -- ^ 'aaasgSummaryAccountId'
     -> AccountActiveAdSummariesGet
-accountActiveAdSummariesGet pAaasgProFileId_ pAaasgSummaryAccountId_ =
+accountActiveAdSummariesGet pAaasgProFileId_ pAaasgSummaryAccountId_ = 
     AccountActiveAdSummariesGet'
     { _aaasgProFileId = _Coerce # pAaasgProFileId_
     , _aaasgSummaryAccountId = _Coerce # pAaasgSummaryAccountId_
+    , _aaasgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -91,6 +97,11 @@ aaasgSummaryAccountId
       (\ s a -> s{_aaasgSummaryAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aaasgFields :: Lens' AccountActiveAdSummariesGet (Maybe Text)
+aaasgFields
+  = lens _aaasgFields (\ s a -> s{_aaasgFields = a})
+
 instance GoogleRequest AccountActiveAdSummariesGet
          where
         type Rs AccountActiveAdSummariesGet =
@@ -99,6 +110,7 @@ instance GoogleRequest AccountActiveAdSummariesGet
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountActiveAdSummariesGet'{..}
           = go _aaasgProFileId _aaasgSummaryAccountId
+              _aaasgFields
               (Just AltJSON)
               dFAReportingService
           where go

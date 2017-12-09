@@ -40,10 +40,11 @@ module Network.Google.Resource.Books.Volumes.Mybooks.List
     , vmlSource
     , vmlStartIndex
     , vmlMaxResults
+    , vmlFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.volumes.mybooks.list@ method which the
 -- 'VolumesMybooksList' request conforms to.
@@ -63,19 +64,21 @@ type VolumesMybooksListResource =
                      QueryParam "source" Text :>
                        QueryParam "startIndex" (Textual Word32) :>
                          QueryParam "maxResults" (Textual Word32) :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Return a list of books in My Library.
 --
 -- /See:/ 'volumesMybooksList' smart constructor.
 data VolumesMybooksList = VolumesMybooksList'
     { _vmlProcessingState :: !(Maybe [VolumesMybooksListProcessingState])
-    , _vmlAcquireMethod   :: !(Maybe [VolumesMybooksListAcquireMethod])
-    , _vmlCountry         :: !(Maybe Text)
-    , _vmlLocale          :: !(Maybe Text)
-    , _vmlSource          :: !(Maybe Text)
-    , _vmlStartIndex      :: !(Maybe (Textual Word32))
-    , _vmlMaxResults      :: !(Maybe (Textual Word32))
+    , _vmlAcquireMethod :: !(Maybe [VolumesMybooksListAcquireMethod])
+    , _vmlCountry :: !(Maybe Text)
+    , _vmlLocale :: !(Maybe Text)
+    , _vmlSource :: !(Maybe Text)
+    , _vmlStartIndex :: !(Maybe (Textual Word32))
+    , _vmlMaxResults :: !(Maybe (Textual Word32))
+    , _vmlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VolumesMybooksList' with the minimum fields required to make a request.
@@ -95,9 +98,11 @@ data VolumesMybooksList = VolumesMybooksList'
 -- * 'vmlStartIndex'
 --
 -- * 'vmlMaxResults'
+--
+-- * 'vmlFields'
 volumesMybooksList
     :: VolumesMybooksList
-volumesMybooksList =
+volumesMybooksList = 
     VolumesMybooksList'
     { _vmlProcessingState = Nothing
     , _vmlAcquireMethod = Nothing
@@ -106,6 +111,7 @@ volumesMybooksList =
     , _vmlSource = Nothing
     , _vmlStartIndex = Nothing
     , _vmlMaxResults = Nothing
+    , _vmlFields = Nothing
     }
 
 -- | The processing state of the user uploaded volumes to be returned.
@@ -155,6 +161,11 @@ vmlMaxResults
       (\ s a -> s{_vmlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+vmlFields :: Lens' VolumesMybooksList (Maybe Text)
+vmlFields
+  = lens _vmlFields (\ s a -> s{_vmlFields = a})
+
 instance GoogleRequest VolumesMybooksList where
         type Rs VolumesMybooksList = Volumes
         type Scopes VolumesMybooksList =
@@ -167,6 +178,7 @@ instance GoogleRequest VolumesMybooksList where
               _vmlSource
               _vmlStartIndex
               _vmlMaxResults
+              _vmlFields
               (Just AltJSON)
               booksService
           where go

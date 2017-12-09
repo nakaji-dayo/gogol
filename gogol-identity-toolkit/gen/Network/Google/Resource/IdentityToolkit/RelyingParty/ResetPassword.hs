@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.ResetPassword
 
     -- * Request Lenses
     , rprpPayload
+    , rprpFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.resetPassword@ method which the
 -- 'RelyingPartyResetPassword' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyResetPasswordResource =
        "v3" :>
          "relyingparty" :>
            "resetPassword" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyResetPasswordRequest
-                 :> Post '[JSON] ResetPasswordResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyResetPasswordRequest
+                   :> Post '[JSON] ResetPasswordResponse
 
 -- | Reset password for a user.
 --
 -- /See:/ 'relyingPartyResetPassword' smart constructor.
-newtype RelyingPartyResetPassword = RelyingPartyResetPassword'
-    { _rprpPayload :: IdentitytoolkitRelyingPartyResetPasswordRequest
+data RelyingPartyResetPassword = RelyingPartyResetPassword'
+    { _rprpPayload :: !IdentitytoolkitRelyingPartyResetPasswordRequest
+    , _rprpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyResetPassword' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyResetPassword = RelyingPartyResetPassword'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rprpPayload'
+--
+-- * 'rprpFields'
 relyingPartyResetPassword
     :: IdentitytoolkitRelyingPartyResetPasswordRequest -- ^ 'rprpPayload'
     -> RelyingPartyResetPassword
-relyingPartyResetPassword pRprpPayload_ =
+relyingPartyResetPassword pRprpPayload_ = 
     RelyingPartyResetPassword'
     { _rprpPayload = pRprpPayload_
+    , _rprpFields = Nothing
     }
 
 -- | Multipart request metadata.
 rprpPayload :: Lens' RelyingPartyResetPassword IdentitytoolkitRelyingPartyResetPasswordRequest
 rprpPayload
   = lens _rprpPayload (\ s a -> s{_rprpPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rprpFields :: Lens' RelyingPartyResetPassword (Maybe Text)
+rprpFields
+  = lens _rprpFields (\ s a -> s{_rprpFields = a})
 
 instance GoogleRequest RelyingPartyResetPassword
          where
@@ -83,7 +94,7 @@ instance GoogleRequest RelyingPartyResetPassword
         type Scopes RelyingPartyResetPassword =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartyResetPassword'{..}
-          = go (Just AltJSON) _rprpPayload
+          = go _rprpFields (Just AltJSON) _rprpPayload
               identityToolkitService
           where go
                   = buildClient

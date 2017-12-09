@@ -16,7 +16,7 @@
 --
 module Network.Google.CloudMonitoring.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | The aggregation function that will reduce the data points in each window
 -- to a single point. This parameter is only valid for non-cumulative

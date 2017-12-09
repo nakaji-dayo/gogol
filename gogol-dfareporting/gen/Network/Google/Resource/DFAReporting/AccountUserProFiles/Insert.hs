@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AccountUserProFiles.Insert
     -- * Request Lenses
     , aupfiProFileId
     , aupfiPayload
+    , aupfiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountUserProfiles.insert@ method which the
 -- 'AccountUserProFilesInsert' request conforms to.
 type AccountUserProFilesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountUserProfiles" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AccountUserProFile :>
-                   Post '[JSON] AccountUserProFile
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AccountUserProFile :>
+                     Post '[JSON] AccountUserProFile
 
 -- | Inserts a new account user profile.
 --
 -- /See:/ 'accountUserProFilesInsert' smart constructor.
 data AccountUserProFilesInsert = AccountUserProFilesInsert'
     { _aupfiProFileId :: !(Textual Int64)
-    , _aupfiPayload   :: !AccountUserProFile
+    , _aupfiPayload :: !AccountUserProFile
+    , _aupfiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountUserProFilesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AccountUserProFilesInsert = AccountUserProFilesInsert'
 -- * 'aupfiProFileId'
 --
 -- * 'aupfiPayload'
+--
+-- * 'aupfiFields'
 accountUserProFilesInsert
     :: Int64 -- ^ 'aupfiProFileId'
     -> AccountUserProFile -- ^ 'aupfiPayload'
     -> AccountUserProFilesInsert
-accountUserProFilesInsert pAupfiProFileId_ pAupfiPayload_ =
+accountUserProFilesInsert pAupfiProFileId_ pAupfiPayload_ = 
     AccountUserProFilesInsert'
     { _aupfiProFileId = _Coerce # pAupfiProFileId_
     , _aupfiPayload = pAupfiPayload_
+    , _aupfiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,6 +95,11 @@ aupfiPayload :: Lens' AccountUserProFilesInsert AccountUserProFile
 aupfiPayload
   = lens _aupfiPayload (\ s a -> s{_aupfiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aupfiFields :: Lens' AccountUserProFilesInsert (Maybe Text)
+aupfiFields
+  = lens _aupfiFields (\ s a -> s{_aupfiFields = a})
+
 instance GoogleRequest AccountUserProFilesInsert
          where
         type Rs AccountUserProFilesInsert =
@@ -96,7 +107,8 @@ instance GoogleRequest AccountUserProFilesInsert
         type Scopes AccountUserProFilesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountUserProFilesInsert'{..}
-          = go _aupfiProFileId (Just AltJSON) _aupfiPayload
+          = go _aupfiProFileId _aupfiFields (Just AltJSON)
+              _aupfiPayload
               dFAReportingService
           where go
                   = buildClient

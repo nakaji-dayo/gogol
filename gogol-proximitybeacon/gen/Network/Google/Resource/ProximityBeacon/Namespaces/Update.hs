@@ -43,18 +43,19 @@ module Network.Google.Resource.ProximityBeacon.Namespaces.Update
     , nuNamespaceName
     , nuBearerToken
     , nuProjectId
+    , nuFields
     , nuCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.namespaces.update@ method which the
 -- 'NamespacesUpdate' request conforms to.
 type NamespacesUpdateResource =
      "v1beta1" :>
        Capture "namespaceName" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -62,24 +63,26 @@ type NamespacesUpdateResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Namespace :> Put '[JSON] Namespace
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Namespace :> Put '[JSON] Namespace
 
 -- | Updates the information about the specified namespace. Only the
 -- namespace visibility can be updated.
 --
 -- /See:/ 'namespacesUpdate' smart constructor.
 data NamespacesUpdate = NamespacesUpdate'
-    { _nuXgafv          :: !(Maybe Text)
+    { _nuXgafv :: !(Maybe Xgafv)
     , _nuUploadProtocol :: !(Maybe Text)
-    , _nuPp             :: !Bool
-    , _nuAccessToken    :: !(Maybe Text)
-    , _nuUploadType     :: !(Maybe Text)
-    , _nuPayload        :: !Namespace
-    , _nuNamespaceName  :: !Text
-    , _nuBearerToken    :: !(Maybe Text)
-    , _nuProjectId      :: !(Maybe Text)
-    , _nuCallback       :: !(Maybe Text)
+    , _nuPp :: !Bool
+    , _nuAccessToken :: !(Maybe Text)
+    , _nuUploadType :: !(Maybe Text)
+    , _nuPayload :: !Namespace
+    , _nuNamespaceName :: !Text
+    , _nuBearerToken :: !(Maybe Text)
+    , _nuProjectId :: !(Maybe Text)
+    , _nuFields :: !(Maybe Text)
+    , _nuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NamespacesUpdate' with the minimum fields required to make a request.
@@ -104,12 +107,14 @@ data NamespacesUpdate = NamespacesUpdate'
 --
 -- * 'nuProjectId'
 --
+-- * 'nuFields'
+--
 -- * 'nuCallback'
 namespacesUpdate
     :: Namespace -- ^ 'nuPayload'
     -> Text -- ^ 'nuNamespaceName'
     -> NamespacesUpdate
-namespacesUpdate pNuPayload_ pNuNamespaceName_ =
+namespacesUpdate pNuPayload_ pNuNamespaceName_ = 
     NamespacesUpdate'
     { _nuXgafv = Nothing
     , _nuUploadProtocol = Nothing
@@ -120,11 +125,12 @@ namespacesUpdate pNuPayload_ pNuNamespaceName_ =
     , _nuNamespaceName = pNuNamespaceName_
     , _nuBearerToken = Nothing
     , _nuProjectId = Nothing
+    , _nuFields = Nothing
     , _nuCallback = Nothing
     }
 
 -- | V1 error format.
-nuXgafv :: Lens' NamespacesUpdate (Maybe Text)
+nuXgafv :: Lens' NamespacesUpdate (Maybe Xgafv)
 nuXgafv = lens _nuXgafv (\ s a -> s{_nuXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -154,7 +160,7 @@ nuPayload
   = lens _nuPayload (\ s a -> s{_nuPayload = a})
 
 -- | Resource name of this namespace. Namespaces names have the format:
--- namespaces\/namespace.
+-- 'namespaces\/namespace'.
 nuNamespaceName :: Lens' NamespacesUpdate Text
 nuNamespaceName
   = lens _nuNamespaceName
@@ -173,6 +179,10 @@ nuProjectId :: Lens' NamespacesUpdate (Maybe Text)
 nuProjectId
   = lens _nuProjectId (\ s a -> s{_nuProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+nuFields :: Lens' NamespacesUpdate (Maybe Text)
+nuFields = lens _nuFields (\ s a -> s{_nuFields = a})
+
 -- | JSONP
 nuCallback :: Lens' NamespacesUpdate (Maybe Text)
 nuCallback
@@ -190,6 +200,7 @@ instance GoogleRequest NamespacesUpdate where
               _nuBearerToken
               _nuProjectId
               _nuCallback
+              _nuFields
               (Just AltJSON)
               _nuPayload
               proximityBeaconService

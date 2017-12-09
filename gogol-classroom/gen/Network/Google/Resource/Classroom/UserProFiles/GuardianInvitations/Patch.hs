@@ -56,11 +56,12 @@ module Network.Google.Resource.Classroom.UserProFiles.GuardianInvitations.Patch
     , upfgipPayload
     , upfgipInvitationId
     , upfgipBearerToken
+    , upfgipFields
     , upfgipCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.userProfiles.guardianInvitations.patch@ method which the
 -- 'UserProFilesGuardianInvitationsPatch' request conforms to.
@@ -70,17 +71,18 @@ type UserProFilesGuardianInvitationsPatchResource =
          Capture "studentId" Text :>
            "guardianInvitations" :>
              Capture "invitationId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
-                   QueryParam "updateMask" Text :>
+                   QueryParam "updateMask" FieldMask :>
                      QueryParam "pp" Bool :>
                        QueryParam "access_token" Text :>
                          QueryParam "uploadType" Text :>
                            QueryParam "bearer_token" Text :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 ReqBody '[JSON] GuardianInvitation :>
-                                   Patch '[JSON] GuardianInvitation
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   ReqBody '[JSON] GuardianInvitation :>
+                                     Patch '[JSON] GuardianInvitation
 
 -- | Modifies a guardian invitation. Currently, the only valid modification
 -- is to change the \`state\` from \`PENDING\` to \`COMPLETE\`. This has
@@ -99,17 +101,18 @@ type UserProFilesGuardianInvitationsPatchResource =
 --
 -- /See:/ 'userProFilesGuardianInvitationsPatch' smart constructor.
 data UserProFilesGuardianInvitationsPatch = UserProFilesGuardianInvitationsPatch'
-    { _upfgipStudentId      :: !Text
-    , _upfgipXgafv          :: !(Maybe Text)
+    { _upfgipStudentId :: !Text
+    , _upfgipXgafv :: !(Maybe Xgafv)
     , _upfgipUploadProtocol :: !(Maybe Text)
-    , _upfgipUpdateMask     :: !(Maybe Text)
-    , _upfgipPp             :: !Bool
-    , _upfgipAccessToken    :: !(Maybe Text)
-    , _upfgipUploadType     :: !(Maybe Text)
-    , _upfgipPayload        :: !GuardianInvitation
-    , _upfgipInvitationId   :: !Text
-    , _upfgipBearerToken    :: !(Maybe Text)
-    , _upfgipCallback       :: !(Maybe Text)
+    , _upfgipUpdateMask :: !(Maybe FieldMask)
+    , _upfgipPp :: !Bool
+    , _upfgipAccessToken :: !(Maybe Text)
+    , _upfgipUploadType :: !(Maybe Text)
+    , _upfgipPayload :: !GuardianInvitation
+    , _upfgipInvitationId :: !Text
+    , _upfgipBearerToken :: !(Maybe Text)
+    , _upfgipFields :: !(Maybe Text)
+    , _upfgipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserProFilesGuardianInvitationsPatch' with the minimum fields required to make a request.
@@ -136,13 +139,15 @@ data UserProFilesGuardianInvitationsPatch = UserProFilesGuardianInvitationsPatch
 --
 -- * 'upfgipBearerToken'
 --
+-- * 'upfgipFields'
+--
 -- * 'upfgipCallback'
 userProFilesGuardianInvitationsPatch
     :: Text -- ^ 'upfgipStudentId'
     -> GuardianInvitation -- ^ 'upfgipPayload'
     -> Text -- ^ 'upfgipInvitationId'
     -> UserProFilesGuardianInvitationsPatch
-userProFilesGuardianInvitationsPatch pUpfgipStudentId_ pUpfgipPayload_ pUpfgipInvitationId_ =
+userProFilesGuardianInvitationsPatch pUpfgipStudentId_ pUpfgipPayload_ pUpfgipInvitationId_ = 
     UserProFilesGuardianInvitationsPatch'
     { _upfgipStudentId = pUpfgipStudentId_
     , _upfgipXgafv = Nothing
@@ -154,6 +159,7 @@ userProFilesGuardianInvitationsPatch pUpfgipStudentId_ pUpfgipPayload_ pUpfgipIn
     , _upfgipPayload = pUpfgipPayload_
     , _upfgipInvitationId = pUpfgipInvitationId_
     , _upfgipBearerToken = Nothing
+    , _upfgipFields = Nothing
     , _upfgipCallback = Nothing
     }
 
@@ -164,7 +170,7 @@ upfgipStudentId
       (\ s a -> s{_upfgipStudentId = a})
 
 -- | V1 error format.
-upfgipXgafv :: Lens' UserProFilesGuardianInvitationsPatch (Maybe Text)
+upfgipXgafv :: Lens' UserProFilesGuardianInvitationsPatch (Maybe Xgafv)
 upfgipXgafv
   = lens _upfgipXgafv (\ s a -> s{_upfgipXgafv = a})
 
@@ -178,7 +184,7 @@ upfgipUploadProtocol
 -- required to do an update. The update will fail if invalid fields are
 -- specified. The following fields are valid: * \`state\` When set in a
 -- query parameter, this field should be specified as \`updateMask=,,...\`
-upfgipUpdateMask :: Lens' UserProFilesGuardianInvitationsPatch (Maybe Text)
+upfgipUpdateMask :: Lens' UserProFilesGuardianInvitationsPatch (Maybe FieldMask)
 upfgipUpdateMask
   = lens _upfgipUpdateMask
       (\ s a -> s{_upfgipUpdateMask = a})
@@ -217,6 +223,11 @@ upfgipBearerToken
   = lens _upfgipBearerToken
       (\ s a -> s{_upfgipBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+upfgipFields :: Lens' UserProFilesGuardianInvitationsPatch (Maybe Text)
+upfgipFields
+  = lens _upfgipFields (\ s a -> s{_upfgipFields = a})
+
 -- | JSONP
 upfgipCallback :: Lens' UserProFilesGuardianInvitationsPatch (Maybe Text)
 upfgipCallback
@@ -228,7 +239,7 @@ instance GoogleRequest
         type Rs UserProFilesGuardianInvitationsPatch =
              GuardianInvitation
         type Scopes UserProFilesGuardianInvitationsPatch =
-             '[]
+             '["https://www.googleapis.com/auth/classroom.guardianlinks.students"]
         requestClient
           UserProFilesGuardianInvitationsPatch'{..}
           = go _upfgipStudentId _upfgipInvitationId
@@ -240,6 +251,7 @@ instance GoogleRequest
               _upfgipUploadType
               _upfgipBearerToken
               _upfgipCallback
+              _upfgipFields
               (Just AltJSON)
               _upfgipPayload
               classroomService

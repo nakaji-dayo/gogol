@@ -33,11 +33,12 @@ module Network.Google.Resource.YouTube.LiveChatMessages.Delete
     , LiveChatMessagesDelete
 
     -- * Request Lenses
-    , lId
+    , lcmdcId
+    , lcmdcFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatMessages.delete@ method which the
 -- 'LiveChatMessagesDelete' request conforms to.
@@ -47,32 +48,42 @@ type LiveChatMessagesDeleteResource =
          "liveChat" :>
            "messages" :>
              QueryParam "id" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a chat message.
 --
 -- /See:/ 'liveChatMessagesDelete' smart constructor.
-newtype LiveChatMessagesDelete = LiveChatMessagesDelete'
-    { _lId :: Text
+data LiveChatMessagesDelete = LiveChatMessagesDelete'
+    { _lcmdcId :: !Text
+    , _lcmdcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatMessagesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'lId'
+-- * 'lcmdcId'
+--
+-- * 'lcmdcFields'
 liveChatMessagesDelete
-    :: Text -- ^ 'lId'
+    :: Text -- ^ 'lcmdcId'
     -> LiveChatMessagesDelete
-liveChatMessagesDelete pLId_ =
+liveChatMessagesDelete pLcmdcId_ = 
     LiveChatMessagesDelete'
-    { _lId = pLId_
+    { _lcmdcId = pLcmdcId_
+    , _lcmdcFields = Nothing
     }
 
 -- | The id parameter specifies the YouTube chat message ID of the resource
 -- that is being deleted.
-lId :: Lens' LiveChatMessagesDelete Text
-lId = lens _lId (\ s a -> s{_lId = a})
+lcmdcId :: Lens' LiveChatMessagesDelete Text
+lcmdcId = lens _lcmdcId (\ s a -> s{_lcmdcId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+lcmdcFields :: Lens' LiveChatMessagesDelete (Maybe Text)
+lcmdcFields
+  = lens _lcmdcFields (\ s a -> s{_lcmdcFields = a})
 
 instance GoogleRequest LiveChatMessagesDelete where
         type Rs LiveChatMessagesDelete = ()
@@ -80,7 +91,8 @@ instance GoogleRequest LiveChatMessagesDelete where
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatMessagesDelete'{..}
-          = go (Just _lId) (Just AltJSON) youTubeService
+          = go (Just _lcmdcId) _lcmdcFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient
                       (Proxy :: Proxy LiveChatMessagesDeleteResource)

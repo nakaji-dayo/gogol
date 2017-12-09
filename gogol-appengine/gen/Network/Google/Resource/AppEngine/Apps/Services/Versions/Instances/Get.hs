@@ -43,11 +43,12 @@ module Network.Google.Resource.AppEngine.Apps.Services.Versions.Instances.Get
     , asvigBearerToken
     , asvigAppsId
     , asvigServicesId
+    , asvigFields
     , asvigCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.services.versions.instances.get@ method which the
 -- 'AppsServicesVersionsInstancesGet' request conforms to.
@@ -61,31 +62,33 @@ type AppsServicesVersionsInstancesGetResource =
                  Capture "versionsId" Text :>
                    "instances" :>
                      Capture "instancesId" Text :>
-                       QueryParam "$.xgafv" Text :>
+                       QueryParam "$.xgafv" Xgafv :>
                          QueryParam "upload_protocol" Text :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] Instance
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] Instance
 
 -- | Gets instance information.
 --
 -- /See:/ 'appsServicesVersionsInstancesGet' smart constructor.
 data AppsServicesVersionsInstancesGet = AppsServicesVersionsInstancesGet'
-    { _asvigXgafv          :: !(Maybe Text)
-    , _asvigInstancesId    :: !Text
+    { _asvigXgafv :: !(Maybe Xgafv)
+    , _asvigInstancesId :: !Text
     , _asvigUploadProtocol :: !(Maybe Text)
-    , _asvigPp             :: !Bool
-    , _asvigAccessToken    :: !(Maybe Text)
-    , _asvigUploadType     :: !(Maybe Text)
-    , _asvigVersionsId     :: !Text
-    , _asvigBearerToken    :: !(Maybe Text)
-    , _asvigAppsId         :: !Text
-    , _asvigServicesId     :: !Text
-    , _asvigCallback       :: !(Maybe Text)
+    , _asvigPp :: !Bool
+    , _asvigAccessToken :: !(Maybe Text)
+    , _asvigUploadType :: !(Maybe Text)
+    , _asvigVersionsId :: !Text
+    , _asvigBearerToken :: !(Maybe Text)
+    , _asvigAppsId :: !Text
+    , _asvigServicesId :: !Text
+    , _asvigFields :: !(Maybe Text)
+    , _asvigCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsServicesVersionsInstancesGet' with the minimum fields required to make a request.
@@ -112,6 +115,8 @@ data AppsServicesVersionsInstancesGet = AppsServicesVersionsInstancesGet'
 --
 -- * 'asvigServicesId'
 --
+-- * 'asvigFields'
+--
 -- * 'asvigCallback'
 appsServicesVersionsInstancesGet
     :: Text -- ^ 'asvigInstancesId'
@@ -119,7 +124,7 @@ appsServicesVersionsInstancesGet
     -> Text -- ^ 'asvigAppsId'
     -> Text -- ^ 'asvigServicesId'
     -> AppsServicesVersionsInstancesGet
-appsServicesVersionsInstancesGet pAsvigInstancesId_ pAsvigVersionsId_ pAsvigAppsId_ pAsvigServicesId_ =
+appsServicesVersionsInstancesGet pAsvigInstancesId_ pAsvigVersionsId_ pAsvigAppsId_ pAsvigServicesId_ = 
     AppsServicesVersionsInstancesGet'
     { _asvigXgafv = Nothing
     , _asvigInstancesId = pAsvigInstancesId_
@@ -131,11 +136,12 @@ appsServicesVersionsInstancesGet pAsvigInstancesId_ pAsvigVersionsId_ pAsvigApps
     , _asvigBearerToken = Nothing
     , _asvigAppsId = pAsvigAppsId_
     , _asvigServicesId = pAsvigServicesId_
+    , _asvigFields = Nothing
     , _asvigCallback = Nothing
     }
 
 -- | V1 error format.
-asvigXgafv :: Lens' AppsServicesVersionsInstancesGet (Maybe Text)
+asvigXgafv :: Lens' AppsServicesVersionsInstancesGet (Maybe Xgafv)
 asvigXgafv
   = lens _asvigXgafv (\ s a -> s{_asvigXgafv = a})
 
@@ -191,6 +197,11 @@ asvigServicesId
   = lens _asvigServicesId
       (\ s a -> s{_asvigServicesId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asvigFields :: Lens' AppsServicesVersionsInstancesGet (Maybe Text)
+asvigFields
+  = lens _asvigFields (\ s a -> s{_asvigFields = a})
+
 -- | JSONP
 asvigCallback :: Lens' AppsServicesVersionsInstancesGet (Maybe Text)
 asvigCallback
@@ -214,6 +225,7 @@ instance GoogleRequest
               _asvigUploadType
               _asvigBearerToken
               _asvigCallback
+              _asvigFields
               (Just AltJSON)
               appEngineService
           where go

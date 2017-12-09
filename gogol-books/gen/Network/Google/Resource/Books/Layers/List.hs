@@ -38,10 +38,11 @@ module Network.Google.Resource.Books.Layers.List
     , llSource
     , llPageToken
     , llMaxResults
+    , llFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.layers.list@ method which the
 -- 'LayersList' request conforms to.
@@ -55,18 +56,20 @@ type LayersListResource =
                  QueryParam "source" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] Layersummaries
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] Layersummaries
 
 -- | List the layer summaries for a volume.
 --
 -- /See:/ 'layersList' smart constructor.
 data LayersList = LayersList'
     { _llContentVersion :: !(Maybe Text)
-    , _llVolumeId       :: !Text
-    , _llSource         :: !(Maybe Text)
-    , _llPageToken      :: !(Maybe Text)
-    , _llMaxResults     :: !(Maybe (Textual Word32))
+    , _llVolumeId :: !Text
+    , _llSource :: !(Maybe Text)
+    , _llPageToken :: !(Maybe Text)
+    , _llMaxResults :: !(Maybe (Textual Word32))
+    , _llFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LayersList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data LayersList = LayersList'
 -- * 'llPageToken'
 --
 -- * 'llMaxResults'
+--
+-- * 'llFields'
 layersList
     :: Text -- ^ 'llVolumeId'
     -> LayersList
-layersList pLlVolumeId_ =
+layersList pLlVolumeId_ = 
     LayersList'
     { _llContentVersion = Nothing
     , _llVolumeId = pLlVolumeId_
     , _llSource = Nothing
     , _llPageToken = Nothing
     , _llMaxResults = Nothing
+    , _llFields = Nothing
     }
 
 -- | The content version for the requested volume.
@@ -120,6 +126,10 @@ llMaxResults
   = lens _llMaxResults (\ s a -> s{_llMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+llFields :: Lens' LayersList (Maybe Text)
+llFields = lens _llFields (\ s a -> s{_llFields = a})
+
 instance GoogleRequest LayersList where
         type Rs LayersList = Layersummaries
         type Scopes LayersList =
@@ -128,6 +138,7 @@ instance GoogleRequest LayersList where
           = go _llVolumeId _llContentVersion _llSource
               _llPageToken
               _llMaxResults
+              _llFields
               (Just AltJSON)
               booksService
           where go

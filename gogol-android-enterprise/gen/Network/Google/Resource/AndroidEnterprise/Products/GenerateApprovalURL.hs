@@ -43,10 +43,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.GenerateApprovalURL
     , pgauLanguageCode
     , pgauEnterpriseId
     , pgauProductId
+    , pgauFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.generateApprovalUrl@ method which the
 -- 'ProductsGenerateApprovalURL' request conforms to.
@@ -59,8 +60,9 @@ type ProductsGenerateApprovalURLResource =
                Capture "productId" Text :>
                  "generateApprovalUrl" :>
                    QueryParam "languageCode" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Post '[JSON] ProductsGenerateApprovalURLResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Post '[JSON] ProductsGenerateApprovalURLResponse
 
 -- | Generates a URL that can be rendered in an iframe to display the
 -- permissions (if any) of a product. An enterprise admin must view these
@@ -75,7 +77,8 @@ type ProductsGenerateApprovalURLResource =
 data ProductsGenerateApprovalURL = ProductsGenerateApprovalURL'
     { _pgauLanguageCode :: !(Maybe Text)
     , _pgauEnterpriseId :: !Text
-    , _pgauProductId    :: !Text
+    , _pgauProductId :: !Text
+    , _pgauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsGenerateApprovalURL' with the minimum fields required to make a request.
@@ -87,15 +90,18 @@ data ProductsGenerateApprovalURL = ProductsGenerateApprovalURL'
 -- * 'pgauEnterpriseId'
 --
 -- * 'pgauProductId'
+--
+-- * 'pgauFields'
 productsGenerateApprovalURL
     :: Text -- ^ 'pgauEnterpriseId'
     -> Text -- ^ 'pgauProductId'
     -> ProductsGenerateApprovalURL
-productsGenerateApprovalURL pPgauEnterpriseId_ pPgauProductId_ =
+productsGenerateApprovalURL pPgauEnterpriseId_ pPgauProductId_ = 
     ProductsGenerateApprovalURL'
     { _pgauLanguageCode = Nothing
     , _pgauEnterpriseId = pPgauEnterpriseId_
     , _pgauProductId = pPgauProductId_
+    , _pgauFields = Nothing
     }
 
 -- | The BCP 47 language code used for permission names and descriptions in
@@ -117,6 +123,11 @@ pgauProductId
   = lens _pgauProductId
       (\ s a -> s{_pgauProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgauFields :: Lens' ProductsGenerateApprovalURL (Maybe Text)
+pgauFields
+  = lens _pgauFields (\ s a -> s{_pgauFields = a})
+
 instance GoogleRequest ProductsGenerateApprovalURL
          where
         type Rs ProductsGenerateApprovalURL =
@@ -126,6 +137,7 @@ instance GoogleRequest ProductsGenerateApprovalURL
         requestClient ProductsGenerateApprovalURL'{..}
           = go _pgauEnterpriseId _pgauProductId
               _pgauLanguageCode
+              _pgauFields
               (Just AltJSON)
               androidEnterpriseService
           where go

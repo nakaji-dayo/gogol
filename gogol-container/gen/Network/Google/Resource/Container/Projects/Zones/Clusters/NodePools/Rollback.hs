@@ -45,11 +45,12 @@ module Network.Google.Resource.Container.Projects.Zones.Clusters.NodePools.Rollb
     , pzcnprBearerToken
     , pzcnprClusterId
     , pzcnprProjectId
+    , pzcnprFields
     , pzcnprCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.clusters.nodePools.rollback@ method which the
 -- 'ProjectsZonesClustersNodePoolsRollback' request conforms to.
@@ -63,35 +64,37 @@ type ProjectsZonesClustersNodePoolsRollbackResource =
                  Capture "clusterId" Text :>
                    "nodePools" :>
                      CaptureMode "nodePoolId" "rollback" Text :>
-                       QueryParam "$.xgafv" Text :>
+                       QueryParam "$.xgafv" Xgafv :>
                          QueryParam "upload_protocol" Text :>
                            QueryParam "pp" Bool :>
                              QueryParam "access_token" Text :>
                                QueryParam "uploadType" Text :>
                                  QueryParam "bearer_token" Text :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       ReqBody '[JSON]
-                                         RollbackNodePoolUpgradeRequest
-                                         :> Post '[JSON] Operation
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         ReqBody '[JSON]
+                                           RollbackNodePoolUpgradeRequest
+                                           :> Post '[JSON] Operation
 
 -- | Roll back the previously Aborted or Failed NodePool upgrade. This will
 -- be an no-op if the last upgrade successfully completed.
 --
 -- /See:/ 'projectsZonesClustersNodePoolsRollback' smart constructor.
 data ProjectsZonesClustersNodePoolsRollback = ProjectsZonesClustersNodePoolsRollback'
-    { _pzcnprXgafv          :: !(Maybe Text)
+    { _pzcnprXgafv :: !(Maybe Xgafv)
     , _pzcnprUploadProtocol :: !(Maybe Text)
-    , _pzcnprPp             :: !Bool
-    , _pzcnprAccessToken    :: !(Maybe Text)
-    , _pzcnprUploadType     :: !(Maybe Text)
-    , _pzcnprZone           :: !Text
-    , _pzcnprPayload        :: !RollbackNodePoolUpgradeRequest
-    , _pzcnprNodePoolId     :: !Text
-    , _pzcnprBearerToken    :: !(Maybe Text)
-    , _pzcnprClusterId      :: !Text
-    , _pzcnprProjectId      :: !Text
-    , _pzcnprCallback       :: !(Maybe Text)
+    , _pzcnprPp :: !Bool
+    , _pzcnprAccessToken :: !(Maybe Text)
+    , _pzcnprUploadType :: !(Maybe Text)
+    , _pzcnprZone :: !Text
+    , _pzcnprPayload :: !RollbackNodePoolUpgradeRequest
+    , _pzcnprNodePoolId :: !Text
+    , _pzcnprBearerToken :: !(Maybe Text)
+    , _pzcnprClusterId :: !Text
+    , _pzcnprProjectId :: !Text
+    , _pzcnprFields :: !(Maybe Text)
+    , _pzcnprCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesClustersNodePoolsRollback' with the minimum fields required to make a request.
@@ -120,6 +123,8 @@ data ProjectsZonesClustersNodePoolsRollback = ProjectsZonesClustersNodePoolsRoll
 --
 -- * 'pzcnprProjectId'
 --
+-- * 'pzcnprFields'
+--
 -- * 'pzcnprCallback'
 projectsZonesClustersNodePoolsRollback
     :: Text -- ^ 'pzcnprZone'
@@ -128,7 +133,7 @@ projectsZonesClustersNodePoolsRollback
     -> Text -- ^ 'pzcnprClusterId'
     -> Text -- ^ 'pzcnprProjectId'
     -> ProjectsZonesClustersNodePoolsRollback
-projectsZonesClustersNodePoolsRollback pPzcnprZone_ pPzcnprPayload_ pPzcnprNodePoolId_ pPzcnprClusterId_ pPzcnprProjectId_ =
+projectsZonesClustersNodePoolsRollback pPzcnprZone_ pPzcnprPayload_ pPzcnprNodePoolId_ pPzcnprClusterId_ pPzcnprProjectId_ = 
     ProjectsZonesClustersNodePoolsRollback'
     { _pzcnprXgafv = Nothing
     , _pzcnprUploadProtocol = Nothing
@@ -141,11 +146,12 @@ projectsZonesClustersNodePoolsRollback pPzcnprZone_ pPzcnprPayload_ pPzcnprNodeP
     , _pzcnprBearerToken = Nothing
     , _pzcnprClusterId = pPzcnprClusterId_
     , _pzcnprProjectId = pPzcnprProjectId_
+    , _pzcnprFields = Nothing
     , _pzcnprCallback = Nothing
     }
 
 -- | V1 error format.
-pzcnprXgafv :: Lens' ProjectsZonesClustersNodePoolsRollback (Maybe Text)
+pzcnprXgafv :: Lens' ProjectsZonesClustersNodePoolsRollback (Maybe Xgafv)
 pzcnprXgafv
   = lens _pzcnprXgafv (\ s a -> s{_pzcnprXgafv = a})
 
@@ -208,6 +214,11 @@ pzcnprProjectId
   = lens _pzcnprProjectId
       (\ s a -> s{_pzcnprProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzcnprFields :: Lens' ProjectsZonesClustersNodePoolsRollback (Maybe Text)
+pzcnprFields
+  = lens _pzcnprFields (\ s a -> s{_pzcnprFields = a})
+
 -- | JSONP
 pzcnprCallback :: Lens' ProjectsZonesClustersNodePoolsRollback (Maybe Text)
 pzcnprCallback
@@ -231,6 +242,7 @@ instance GoogleRequest
               _pzcnprUploadType
               _pzcnprBearerToken
               _pzcnprCallback
+              _pzcnprFields
               (Just AltJSON)
               _pzcnprPayload
               containerService

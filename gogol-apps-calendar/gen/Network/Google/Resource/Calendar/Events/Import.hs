@@ -37,10 +37,11 @@ module Network.Google.Resource.Calendar.Events.Import
     , eiCalendarId
     , eiPayload
     , eiSupportsAttachments
+    , eiFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.import@ method which the
 -- 'EventsImport' request conforms to.
@@ -52,17 +53,19 @@ type EventsImportResource =
              "events" :>
                "import" :>
                  QueryParam "supportsAttachments" Bool :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Event :> Post '[JSON] Event
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Event :> Post '[JSON] Event
 
 -- | Imports an event. This operation is used to add a private copy of an
 -- existing event to a calendar.
 --
 -- /See:/ 'eventsImport' smart constructor.
 data EventsImport = EventsImport'
-    { _eiCalendarId          :: !Text
-    , _eiPayload             :: !Event
+    { _eiCalendarId :: !Text
+    , _eiPayload :: !Event
     , _eiSupportsAttachments :: !(Maybe Bool)
+    , _eiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsImport' with the minimum fields required to make a request.
@@ -74,15 +77,18 @@ data EventsImport = EventsImport'
 -- * 'eiPayload'
 --
 -- * 'eiSupportsAttachments'
+--
+-- * 'eiFields'
 eventsImport
     :: Text -- ^ 'eiCalendarId'
     -> Event -- ^ 'eiPayload'
     -> EventsImport
-eventsImport pEiCalendarId_ pEiPayload_ =
+eventsImport pEiCalendarId_ pEiPayload_ = 
     EventsImport'
     { _eiCalendarId = pEiCalendarId_
     , _eiPayload = pEiPayload_
     , _eiSupportsAttachments = Nothing
+    , _eiFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -104,12 +110,16 @@ eiSupportsAttachments
   = lens _eiSupportsAttachments
       (\ s a -> s{_eiSupportsAttachments = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eiFields :: Lens' EventsImport (Maybe Text)
+eiFields = lens _eiFields (\ s a -> s{_eiFields = a})
+
 instance GoogleRequest EventsImport where
         type Rs EventsImport = Event
         type Scopes EventsImport =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient EventsImport'{..}
-          = go _eiCalendarId _eiSupportsAttachments
+          = go _eiCalendarId _eiSupportsAttachments _eiFields
               (Just AltJSON)
               _eiPayload
               appsCalendarService

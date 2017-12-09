@@ -33,13 +33,15 @@ module Network.Google.Resource.Compute.Subnetworks.Delete
     , SubnetworksDelete
 
     -- * Request Lenses
+    , sdRequestId
     , sdProject
     , sdSubnetwork
     , sdRegion
+    , sdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.subnetworks.delete@ method which the
 -- 'SubnetworksDelete' request conforms to.
@@ -52,37 +54,61 @@ type SubnetworksDeleteResource =
                Capture "region" Text :>
                  "subnetworks" :>
                    Capture "subnetwork" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified subnetwork.
 --
 -- /See:/ 'subnetworksDelete' smart constructor.
 data SubnetworksDelete = SubnetworksDelete'
-    { _sdProject    :: !Text
+    { _sdRequestId :: !(Maybe Text)
+    , _sdProject :: !Text
     , _sdSubnetwork :: !Text
-    , _sdRegion     :: !Text
+    , _sdRegion :: !Text
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubnetworksDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'sdRequestId'
+--
 -- * 'sdProject'
 --
 -- * 'sdSubnetwork'
 --
 -- * 'sdRegion'
+--
+-- * 'sdFields'
 subnetworksDelete
     :: Text -- ^ 'sdProject'
     -> Text -- ^ 'sdSubnetwork'
     -> Text -- ^ 'sdRegion'
     -> SubnetworksDelete
-subnetworksDelete pSdProject_ pSdSubnetwork_ pSdRegion_ =
+subnetworksDelete pSdProject_ pSdSubnetwork_ pSdRegion_ = 
     SubnetworksDelete'
-    { _sdProject = pSdProject_
+    { _sdRequestId = Nothing
+    , _sdProject = pSdProject_
     , _sdSubnetwork = pSdSubnetwork_
     , _sdRegion = pSdRegion_
+    , _sdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+sdRequestId :: Lens' SubnetworksDelete (Maybe Text)
+sdRequestId
+  = lens _sdRequestId (\ s a -> s{_sdRequestId = a})
 
 -- | Project ID for this request.
 sdProject :: Lens' SubnetworksDelete Text
@@ -98,13 +124,18 @@ sdSubnetwork
 sdRegion :: Lens' SubnetworksDelete Text
 sdRegion = lens _sdRegion (\ s a -> s{_sdRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' SubnetworksDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest SubnetworksDelete where
         type Rs SubnetworksDelete = Operation
         type Scopes SubnetworksDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient SubnetworksDelete'{..}
-          = go _sdProject _sdRegion _sdSubnetwork
+          = go _sdProject _sdRegion _sdSubnetwork _sdRequestId
+              _sdFields
               (Just AltJSON)
               computeService
           where go

@@ -16,7 +16,7 @@
 --
 module Network.Google.Datastore.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | The direction to order by. Defaults to \`ASCENDING\`.
 data PropertyOrderDirection
@@ -120,6 +120,41 @@ instance FromJSON QueryResultBatchEntityResultType where
 instance ToJSON QueryResultBatchEntityResultType where
     toJSON = toJSONText
 
+-- | The type of the operation. Can be used as a filter in
+-- ListOperationsRequest.
+data GoogleDatastoreAdminV1beta1CommonMetadataOperationType
+    = OperationTypeUnspecified
+      -- ^ @OPERATION_TYPE_UNSPECIFIED@
+      -- Unspecified.
+    | ExportEntities
+      -- ^ @EXPORT_ENTITIES@
+      -- ExportEntities.
+    | ImportEntities
+      -- ^ @IMPORT_ENTITIES@
+      -- ImportEntities.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleDatastoreAdminV1beta1CommonMetadataOperationType
+
+instance FromHttpApiData GoogleDatastoreAdminV1beta1CommonMetadataOperationType where
+    parseQueryParam = \case
+        "OPERATION_TYPE_UNSPECIFIED" -> Right OperationTypeUnspecified
+        "EXPORT_ENTITIES" -> Right ExportEntities
+        "IMPORT_ENTITIES" -> Right ImportEntities
+        x -> Left ("Unable to parse GoogleDatastoreAdminV1beta1CommonMetadataOperationType from: " <> x)
+
+instance ToHttpApiData GoogleDatastoreAdminV1beta1CommonMetadataOperationType where
+    toQueryParam = \case
+        OperationTypeUnspecified -> "OPERATION_TYPE_UNSPECIFIED"
+        ExportEntities -> "EXPORT_ENTITIES"
+        ImportEntities -> "IMPORT_ENTITIES"
+
+instance FromJSON GoogleDatastoreAdminV1beta1CommonMetadataOperationType where
+    parseJSON = parseJSONText "GoogleDatastoreAdminV1beta1CommonMetadataOperationType"
+
+instance ToJSON GoogleDatastoreAdminV1beta1CommonMetadataOperationType where
+    toJSON = toJSONText
+
 -- | The state of the query after the current batch.
 data QueryResultBatchMoreResults
     = MoreResultsTypeUnspecified
@@ -137,7 +172,7 @@ data QueryResultBatchMoreResults
       -- cursor.
     | NoMoreResults
       -- ^ @NO_MORE_RESULTS@
-      -- The query has been exhausted.
+      -- The query is finished, and there are no more results.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable QueryResultBatchMoreResults
@@ -251,6 +286,67 @@ instance FromJSON Xgafv where
     parseJSON = parseJSONText "Xgafv"
 
 instance ToJSON Xgafv where
+    toJSON = toJSONText
+
+-- | The current state of the Operation.
+data GoogleDatastoreAdminV1beta1CommonMetadataState
+    = StateUnspecified
+      -- ^ @STATE_UNSPECIFIED@
+      -- Unspecified.
+    | Initializing
+      -- ^ @INITIALIZING@
+      -- Request is being prepared for processing.
+    | Processing
+      -- ^ @PROCESSING@
+      -- Request is actively being processed.
+    | Cancelling
+      -- ^ @CANCELLING@
+      -- Request is in the process of being cancelled after user called
+      -- google.longrunning.Operations.CancelOperation on the operation.
+    | Finalizing
+      -- ^ @FINALIZING@
+      -- Request has been processed and is in its finalization stage.
+    | Successful
+      -- ^ @SUCCESSFUL@
+      -- Request has completed successfully.
+    | Failed
+      -- ^ @FAILED@
+      -- Request has finished being processed, but encountered an error.
+    | Cancelled
+      -- ^ @CANCELLED@
+      -- Request has finished being cancelled after user called
+      -- google.longrunning.Operations.CancelOperation.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GoogleDatastoreAdminV1beta1CommonMetadataState
+
+instance FromHttpApiData GoogleDatastoreAdminV1beta1CommonMetadataState where
+    parseQueryParam = \case
+        "STATE_UNSPECIFIED" -> Right StateUnspecified
+        "INITIALIZING" -> Right Initializing
+        "PROCESSING" -> Right Processing
+        "CANCELLING" -> Right Cancelling
+        "FINALIZING" -> Right Finalizing
+        "SUCCESSFUL" -> Right Successful
+        "FAILED" -> Right Failed
+        "CANCELLED" -> Right Cancelled
+        x -> Left ("Unable to parse GoogleDatastoreAdminV1beta1CommonMetadataState from: " <> x)
+
+instance ToHttpApiData GoogleDatastoreAdminV1beta1CommonMetadataState where
+    toQueryParam = \case
+        StateUnspecified -> "STATE_UNSPECIFIED"
+        Initializing -> "INITIALIZING"
+        Processing -> "PROCESSING"
+        Cancelling -> "CANCELLING"
+        Finalizing -> "FINALIZING"
+        Successful -> "SUCCESSFUL"
+        Failed -> "FAILED"
+        Cancelled -> "CANCELLED"
+
+instance FromJSON GoogleDatastoreAdminV1beta1CommonMetadataState where
+    parseJSON = parseJSONText "GoogleDatastoreAdminV1beta1CommonMetadataState"
+
+instance ToJSON GoogleDatastoreAdminV1beta1CommonMetadataState where
     toJSON = toJSONText
 
 -- | The operator to filter by.

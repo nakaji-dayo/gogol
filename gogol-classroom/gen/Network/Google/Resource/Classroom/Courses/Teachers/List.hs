@@ -45,11 +45,12 @@ module Network.Google.Resource.Classroom.Courses.Teachers.List
     , ctlBearerToken
     , ctlPageToken
     , ctlPageSize
+    , ctlFields
     , ctlCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.teachers.list@ method which the
 -- 'CoursesTeachersList' request conforms to.
@@ -58,7 +59,7 @@ type CoursesTeachersListResource =
        "courses" :>
          Capture "courseId" Text :>
            "teachers" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
@@ -67,8 +68,9 @@ type CoursesTeachersListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListTeachersResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListTeachersResponse
 
 -- | Returns a list of teachers of this course that the requester is
 -- permitted to view. This method returns the following error codes: *
@@ -77,16 +79,17 @@ type CoursesTeachersListResource =
 --
 -- /See:/ 'coursesTeachersList' smart constructor.
 data CoursesTeachersList = CoursesTeachersList'
-    { _ctlXgafv          :: !(Maybe Text)
+    { _ctlXgafv :: !(Maybe Xgafv)
     , _ctlUploadProtocol :: !(Maybe Text)
-    , _ctlPp             :: !Bool
-    , _ctlCourseId       :: !Text
-    , _ctlAccessToken    :: !(Maybe Text)
-    , _ctlUploadType     :: !(Maybe Text)
-    , _ctlBearerToken    :: !(Maybe Text)
-    , _ctlPageToken      :: !(Maybe Text)
-    , _ctlPageSize       :: !(Maybe (Textual Int32))
-    , _ctlCallback       :: !(Maybe Text)
+    , _ctlPp :: !Bool
+    , _ctlCourseId :: !Text
+    , _ctlAccessToken :: !(Maybe Text)
+    , _ctlUploadType :: !(Maybe Text)
+    , _ctlBearerToken :: !(Maybe Text)
+    , _ctlPageToken :: !(Maybe Text)
+    , _ctlPageSize :: !(Maybe (Textual Int32))
+    , _ctlFields :: !(Maybe Text)
+    , _ctlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesTeachersList' with the minimum fields required to make a request.
@@ -111,11 +114,13 @@ data CoursesTeachersList = CoursesTeachersList'
 --
 -- * 'ctlPageSize'
 --
+-- * 'ctlFields'
+--
 -- * 'ctlCallback'
 coursesTeachersList
     :: Text -- ^ 'ctlCourseId'
     -> CoursesTeachersList
-coursesTeachersList pCtlCourseId_ =
+coursesTeachersList pCtlCourseId_ = 
     CoursesTeachersList'
     { _ctlXgafv = Nothing
     , _ctlUploadProtocol = Nothing
@@ -126,11 +131,12 @@ coursesTeachersList pCtlCourseId_ =
     , _ctlBearerToken = Nothing
     , _ctlPageToken = Nothing
     , _ctlPageSize = Nothing
+    , _ctlFields = Nothing
     , _ctlCallback = Nothing
     }
 
 -- | V1 error format.
-ctlXgafv :: Lens' CoursesTeachersList (Maybe Text)
+ctlXgafv :: Lens' CoursesTeachersList (Maybe Xgafv)
 ctlXgafv = lens _ctlXgafv (\ s a -> s{_ctlXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -181,6 +187,11 @@ ctlPageSize
   = lens _ctlPageSize (\ s a -> s{_ctlPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ctlFields :: Lens' CoursesTeachersList (Maybe Text)
+ctlFields
+  = lens _ctlFields (\ s a -> s{_ctlFields = a})
+
 -- | JSONP
 ctlCallback :: Lens' CoursesTeachersList (Maybe Text)
 ctlCallback
@@ -202,6 +213,7 @@ instance GoogleRequest CoursesTeachersList where
               _ctlPageToken
               _ctlPageSize
               _ctlCallback
+              _ctlFields
               (Just AltJSON)
               classroomService
           where go

@@ -35,10 +35,11 @@ module Network.Google.Resource.URLShortener.URL.Get
     -- * Request Lenses
     , ugProjection
     , ugShortURL
+    , ugFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.URLShortener.Types
+import Network.Google.Prelude
+import Network.Google.URLShortener.Types
 
 -- | A resource alias for @urlshortener.url.get@ method which the
 -- 'URLGet' request conforms to.
@@ -48,14 +49,16 @@ type URLGetResource =
          "url" :>
            QueryParam "shortUrl" Text :>
              QueryParam "projection" URLGetProjection :>
-               QueryParam "alt" AltJSON :> Get '[JSON] URL
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] URL
 
 -- | Expands a short URL or gets creation time and analytics.
 --
 -- /See:/ 'urlGet' smart constructor.
 data URLGet = URLGet'
     { _ugProjection :: !(Maybe URLGetProjection)
-    , _ugShortURL   :: !Text
+    , _ugShortURL :: !Text
+    , _ugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLGet' with the minimum fields required to make a request.
@@ -65,13 +68,16 @@ data URLGet = URLGet'
 -- * 'ugProjection'
 --
 -- * 'ugShortURL'
+--
+-- * 'ugFields'
 urlGet
     :: Text -- ^ 'ugShortURL'
     -> URLGet
-urlGet pUgShortURL_ =
+urlGet pUgShortURL_ = 
     URLGet'
     { _ugProjection = Nothing
     , _ugShortURL = pUgShortURL_
+    , _ugFields = Nothing
     }
 
 -- | Additional information to return.
@@ -84,12 +90,17 @@ ugShortURL :: Lens' URLGet Text
 ugShortURL
   = lens _ugShortURL (\ s a -> s{_ugShortURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugFields :: Lens' URLGet (Maybe Text)
+ugFields = lens _ugFields (\ s a -> s{_ugFields = a})
+
 instance GoogleRequest URLGet where
         type Rs URLGet = URL
         type Scopes URLGet =
              '["https://www.googleapis.com/auth/urlshortener"]
         requestClient URLGet'{..}
-          = go (Just _ugShortURL) _ugProjection (Just AltJSON)
+          = go (Just _ugShortURL) _ugProjection _ugFields
+              (Just AltJSON)
               uRLShortenerService
           where go
                   = buildClient (Proxy :: Proxy URLGetResource) mempty

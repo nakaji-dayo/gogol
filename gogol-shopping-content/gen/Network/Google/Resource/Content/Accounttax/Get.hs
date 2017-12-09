@@ -20,10 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves the tax settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- Retrieves the tax settings of the account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounttax.get@.
 module Network.Google.Resource.Content.Accounttax.Get
@@ -38,10 +35,11 @@ module Network.Google.Resource.Content.Accounttax.Get
     -- * Request Lenses
     , aggMerchantId
     , aggAccountId
+    , aggFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounttax.get@ method which the
 -- 'AccounttaxGet' request conforms to.
@@ -51,17 +49,16 @@ type AccounttaxGetResource =
          Capture "merchantId" (Textual Word64) :>
            "accounttax" :>
              Capture "accountId" (Textual Word64) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] AccountTax
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] AccountTax
 
--- | Retrieves the tax settings of the account. This method can only be
--- called for accounts to which the managing account has access: either the
--- managing account itself or sub-accounts if the managing account is a
--- multi-client account.
+-- | Retrieves the tax settings of the account.
 --
 -- /See:/ 'accounttaxGet' smart constructor.
 data AccounttaxGet = AccounttaxGet'
     { _aggMerchantId :: !(Textual Word64)
-    , _aggAccountId  :: !(Textual Word64)
+    , _aggAccountId :: !(Textual Word64)
+    , _aggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccounttaxGet' with the minimum fields required to make a request.
@@ -71,17 +68,22 @@ data AccounttaxGet = AccounttaxGet'
 -- * 'aggMerchantId'
 --
 -- * 'aggAccountId'
+--
+-- * 'aggFields'
 accounttaxGet
     :: Word64 -- ^ 'aggMerchantId'
     -> Word64 -- ^ 'aggAccountId'
     -> AccounttaxGet
-accounttaxGet pAggMerchantId_ pAggAccountId_ =
+accounttaxGet pAggMerchantId_ pAggAccountId_ = 
     AccounttaxGet'
     { _aggMerchantId = _Coerce # pAggMerchantId_
     , _aggAccountId = _Coerce # pAggAccountId_
+    , _aggFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
 aggMerchantId :: Lens' AccounttaxGet Word64
 aggMerchantId
   = lens _aggMerchantId
@@ -94,12 +96,18 @@ aggAccountId
   = lens _aggAccountId (\ s a -> s{_aggAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aggFields :: Lens' AccounttaxGet (Maybe Text)
+aggFields
+  = lens _aggFields (\ s a -> s{_aggFields = a})
+
 instance GoogleRequest AccounttaxGet where
         type Rs AccounttaxGet = AccountTax
         type Scopes AccounttaxGet =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccounttaxGet'{..}
-          = go _aggMerchantId _aggAccountId (Just AltJSON)
+          = go _aggMerchantId _aggAccountId _aggFields
+              (Just AltJSON)
               shoppingContentService
           where go
                   = buildClient (Proxy :: Proxy AccounttaxGetResource)

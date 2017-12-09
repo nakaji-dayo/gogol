@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.Filters.List
     , mflAccountId
     , mflStartIndex
     , mflMaxResults
+    , mflFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.filters.list@ method which the
 -- 'ManagementFiltersList' request conforms to.
@@ -52,15 +53,17 @@ type ManagementFiltersListResource =
                "filters" :>
                  QueryParam "start-index" (Textual Int32) :>
                    QueryParam "max-results" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Filters
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Filters
 
 -- | Lists all filters for an account
 --
 -- /See:/ 'managementFiltersList' smart constructor.
 data ManagementFiltersList = ManagementFiltersList'
-    { _mflAccountId  :: !Text
+    { _mflAccountId :: !Text
     , _mflStartIndex :: !(Maybe (Textual Int32))
     , _mflMaxResults :: !(Maybe (Textual Int32))
+    , _mflFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementFiltersList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data ManagementFiltersList = ManagementFiltersList'
 -- * 'mflStartIndex'
 --
 -- * 'mflMaxResults'
+--
+-- * 'mflFields'
 managementFiltersList
     :: Text -- ^ 'mflAccountId'
     -> ManagementFiltersList
-managementFiltersList pMflAccountId_ =
+managementFiltersList pMflAccountId_ = 
     ManagementFiltersList'
     { _mflAccountId = pMflAccountId_
     , _mflStartIndex = Nothing
     , _mflMaxResults = Nothing
+    , _mflFields = Nothing
     }
 
 -- | Account ID to retrieve filters for.
@@ -102,6 +108,11 @@ mflMaxResults
       (\ s a -> s{_mflMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mflFields :: Lens' ManagementFiltersList (Maybe Text)
+mflFields
+  = lens _mflFields (\ s a -> s{_mflFields = a})
+
 instance GoogleRequest ManagementFiltersList where
         type Rs ManagementFiltersList = Filters
         type Scopes ManagementFiltersList =
@@ -109,6 +120,7 @@ instance GoogleRequest ManagementFiltersList where
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementFiltersList'{..}
           = go _mflAccountId _mflStartIndex _mflMaxResults
+              _mflFields
               (Just AltJSON)
               analyticsService
           where go

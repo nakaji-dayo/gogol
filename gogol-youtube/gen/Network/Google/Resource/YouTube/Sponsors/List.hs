@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.Sponsors.List
     , sFilter
     , sPageToken
     , sMaxResults
+    , sFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.sponsors.list@ method which the
 -- 'SponsorsList' request conforms to.
@@ -52,17 +53,19 @@ type SponsorsListResource =
              QueryParam "filter" SponsorsListFilter :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] SponsorListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] SponsorListResponse
 
 -- | Lists sponsors for a channel.
 --
 -- /See:/ 'sponsorsList' smart constructor.
 data SponsorsList = SponsorsList'
-    { _sPart       :: !Text
-    , _sFilter     :: !SponsorsListFilter
-    , _sPageToken  :: !(Maybe Text)
+    { _sPart :: !Text
+    , _sFilter :: !SponsorsListFilter
+    , _sPageToken :: !(Maybe Text)
     , _sMaxResults :: !(Textual Word32)
+    , _sFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SponsorsList' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data SponsorsList = SponsorsList'
 -- * 'sPageToken'
 --
 -- * 'sMaxResults'
+--
+-- * 'sFields'
 sponsorsList
     :: Text -- ^ 'sPart'
     -> SponsorsList
-sponsorsList pSPart_ =
+sponsorsList pSPart_ = 
     SponsorsList'
     { _sPart = pSPart_
     , _sFilter = SLFNewest
     , _sPageToken = Nothing
     , _sMaxResults = 5
+    , _sFields = Nothing
     }
 
 -- | The part parameter specifies the sponsor resource parts that the API
@@ -110,6 +116,10 @@ sMaxResults
   = lens _sMaxResults (\ s a -> s{_sMaxResults = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' SponsorsList (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
+
 instance GoogleRequest SponsorsList where
         type Rs SponsorsList = SponsorListResponse
         type Scopes SponsorsList =
@@ -119,6 +129,7 @@ instance GoogleRequest SponsorsList where
         requestClient SponsorsList'{..}
           = go (Just _sPart) (Just _sFilter) _sPageToken
               (Just _sMaxResults)
+              _sFields
               (Just AltJSON)
               youTubeService
           where go

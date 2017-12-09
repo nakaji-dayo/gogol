@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.ChromeosDevices.Action
     , cdaResourceId
     , cdaPayload
     , cdaCustomerId
+    , cdaFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.chromeosdevices.action@ method which the
 -- 'ChromeosDevicesAction' request conforms to.
@@ -53,17 +54,19 @@ type ChromeosDevicesActionResource =
                  "chromeos" :>
                    Capture "resourceId" Text :>
                      "action" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ChromeOSDeviceAction :>
-                           Post '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ChromeOSDeviceAction :>
+                             Post '[JSON] ()
 
 -- | Take action on Chrome OS Device
 --
 -- /See:/ 'chromeosDevicesAction' smart constructor.
 data ChromeosDevicesAction = ChromeosDevicesAction'
     { _cdaResourceId :: !Text
-    , _cdaPayload    :: !ChromeOSDeviceAction
+    , _cdaPayload :: !ChromeOSDeviceAction
     , _cdaCustomerId :: !Text
+    , _cdaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeosDevicesAction' with the minimum fields required to make a request.
@@ -75,19 +78,22 @@ data ChromeosDevicesAction = ChromeosDevicesAction'
 -- * 'cdaPayload'
 --
 -- * 'cdaCustomerId'
+--
+-- * 'cdaFields'
 chromeosDevicesAction
     :: Text -- ^ 'cdaResourceId'
     -> ChromeOSDeviceAction -- ^ 'cdaPayload'
     -> Text -- ^ 'cdaCustomerId'
     -> ChromeosDevicesAction
-chromeosDevicesAction pCdaResourceId_ pCdaPayload_ pCdaCustomerId_ =
+chromeosDevicesAction pCdaResourceId_ pCdaPayload_ pCdaCustomerId_ = 
     ChromeosDevicesAction'
     { _cdaResourceId = pCdaResourceId_
     , _cdaPayload = pCdaPayload_
     , _cdaCustomerId = pCdaCustomerId_
+    , _cdaFields = Nothing
     }
 
--- | Immutable id of Chrome OS Device
+-- | Immutable ID of Chrome OS Device
 cdaResourceId :: Lens' ChromeosDevicesAction Text
 cdaResourceId
   = lens _cdaResourceId
@@ -98,18 +104,24 @@ cdaPayload :: Lens' ChromeosDevicesAction ChromeOSDeviceAction
 cdaPayload
   = lens _cdaPayload (\ s a -> s{_cdaPayload = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 cdaCustomerId :: Lens' ChromeosDevicesAction Text
 cdaCustomerId
   = lens _cdaCustomerId
       (\ s a -> s{_cdaCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+cdaFields :: Lens' ChromeosDevicesAction (Maybe Text)
+cdaFields
+  = lens _cdaFields (\ s a -> s{_cdaFields = a})
 
 instance GoogleRequest ChromeosDevicesAction where
         type Rs ChromeosDevicesAction = ()
         type Scopes ChromeosDevicesAction =
              '["https://www.googleapis.com/auth/admin.directory.device.chromeos"]
         requestClient ChromeosDevicesAction'{..}
-          = go _cdaCustomerId _cdaResourceId (Just AltJSON)
+          = go _cdaCustomerId _cdaResourceId _cdaFields
+              (Just AltJSON)
               _cdaPayload
               directoryService
           where go

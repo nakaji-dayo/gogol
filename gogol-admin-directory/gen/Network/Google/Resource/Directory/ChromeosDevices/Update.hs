@@ -37,10 +37,11 @@ module Network.Google.Resource.Directory.ChromeosDevices.Update
     , cduCustomerId
     , cduDeviceId
     , cduProjection
+    , cduFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.chromeosdevices.update@ method which the
 -- 'ChromeosDevicesUpdate' request conforms to.
@@ -56,18 +57,20 @@ type ChromeosDevicesUpdateResource =
                      QueryParam "projection"
                        ChromeosDevicesUpdateProjection
                        :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ChromeOSDevice :>
-                           Put '[JSON] ChromeOSDevice
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ChromeOSDevice :>
+                             Put '[JSON] ChromeOSDevice
 
 -- | Update Chrome OS Device
 --
 -- /See:/ 'chromeosDevicesUpdate' smart constructor.
 data ChromeosDevicesUpdate = ChromeosDevicesUpdate'
-    { _cduPayload    :: !ChromeOSDevice
+    { _cduPayload :: !ChromeOSDevice
     , _cduCustomerId :: !Text
-    , _cduDeviceId   :: !Text
+    , _cduDeviceId :: !Text
     , _cduProjection :: !(Maybe ChromeosDevicesUpdateProjection)
+    , _cduFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeosDevicesUpdate' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data ChromeosDevicesUpdate = ChromeosDevicesUpdate'
 -- * 'cduDeviceId'
 --
 -- * 'cduProjection'
+--
+-- * 'cduFields'
 chromeosDevicesUpdate
     :: ChromeOSDevice -- ^ 'cduPayload'
     -> Text -- ^ 'cduCustomerId'
     -> Text -- ^ 'cduDeviceId'
     -> ChromeosDevicesUpdate
-chromeosDevicesUpdate pCduPayload_ pCduCustomerId_ pCduDeviceId_ =
+chromeosDevicesUpdate pCduPayload_ pCduCustomerId_ pCduDeviceId_ = 
     ChromeosDevicesUpdate'
     { _cduPayload = pCduPayload_
     , _cduCustomerId = pCduCustomerId_
     , _cduDeviceId = pCduDeviceId_
     , _cduProjection = Nothing
+    , _cduFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -99,13 +105,13 @@ cduPayload :: Lens' ChromeosDevicesUpdate ChromeOSDevice
 cduPayload
   = lens _cduPayload (\ s a -> s{_cduPayload = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 cduCustomerId :: Lens' ChromeosDevicesUpdate Text
 cduCustomerId
   = lens _cduCustomerId
       (\ s a -> s{_cduCustomerId = a})
 
--- | Immutable id of Chrome OS Device
+-- | Immutable ID of Chrome OS Device
 cduDeviceId :: Lens' ChromeosDevicesUpdate Text
 cduDeviceId
   = lens _cduDeviceId (\ s a -> s{_cduDeviceId = a})
@@ -116,12 +122,18 @@ cduProjection
   = lens _cduProjection
       (\ s a -> s{_cduProjection = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cduFields :: Lens' ChromeosDevicesUpdate (Maybe Text)
+cduFields
+  = lens _cduFields (\ s a -> s{_cduFields = a})
+
 instance GoogleRequest ChromeosDevicesUpdate where
         type Rs ChromeosDevicesUpdate = ChromeOSDevice
         type Scopes ChromeosDevicesUpdate =
              '["https://www.googleapis.com/auth/admin.directory.device.chromeos"]
         requestClient ChromeosDevicesUpdate'{..}
           = go _cduCustomerId _cduDeviceId _cduProjection
+              _cduFields
               (Just AltJSON)
               _cduPayload
               directoryService

@@ -38,10 +38,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.List
     , ulFilter
     , ulPageToken
     , ulMaxResults
+    , ulFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.list@ method which the
 -- 'UsersList' request conforms to.
@@ -56,17 +57,19 @@ type UsersListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] UserList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] UserList
 
 -- | Retrieves a list of users contained within the specified project.
 --
 -- /See:/ 'usersList' smart constructor.
 data UsersList = UsersList'
-    { _ulOrderBy    :: !(Maybe Text)
-    , _ulProject    :: !Text
-    , _ulFilter     :: !(Maybe Text)
-    , _ulPageToken  :: !(Maybe Text)
+    { _ulOrderBy :: !(Maybe Text)
+    , _ulProject :: !Text
+    , _ulFilter :: !(Maybe Text)
+    , _ulPageToken :: !(Maybe Text)
     , _ulMaxResults :: !(Textual Word32)
+    , _ulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data UsersList = UsersList'
 -- * 'ulPageToken'
 --
 -- * 'ulMaxResults'
+--
+-- * 'ulFields'
 usersList
     :: Text -- ^ 'ulProject'
     -> UsersList
-usersList pUlProject_ =
+usersList pUlProject_ = 
     UsersList'
     { _ulOrderBy = Nothing
     , _ulProject = pUlProject_
     , _ulFilter = Nothing
     , _ulPageToken = Nothing
     , _ulMaxResults = 500
+    , _ulFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -151,6 +157,10 @@ ulMaxResults
   = lens _ulMaxResults (\ s a -> s{_ulMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ulFields :: Lens' UsersList (Maybe Text)
+ulFields = lens _ulFields (\ s a -> s{_ulFields = a})
+
 instance GoogleRequest UsersList where
         type Rs UsersList = UserList
         type Scopes UsersList =
@@ -161,6 +171,7 @@ instance GoogleRequest UsersList where
         requestClient UsersList'{..}
           = go _ulProject _ulOrderBy _ulFilter _ulPageToken
               (Just _ulMaxResults)
+              _ulFields
               (Just AltJSON)
               userAccountsService
           where go

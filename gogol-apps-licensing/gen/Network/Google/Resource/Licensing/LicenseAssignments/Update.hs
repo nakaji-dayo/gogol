@@ -37,10 +37,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.Update
     , lauPayload
     , lauUserId
     , lauProductId
+    , lauFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.update@ method which the
 -- 'LicenseAssignmentsUpdate' request conforms to.
@@ -54,18 +55,20 @@ type LicenseAssignmentsUpdateResource =
                  Capture "skuId" Text :>
                    "user" :>
                      Capture "userId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] LicenseAssignment :>
-                           Put '[JSON] LicenseAssignment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] LicenseAssignment :>
+                             Put '[JSON] LicenseAssignment
 
 -- | Assign License.
 --
 -- /See:/ 'licenseAssignmentsUpdate' smart constructor.
 data LicenseAssignmentsUpdate = LicenseAssignmentsUpdate'
-    { _lauSKUId     :: !Text
-    , _lauPayload   :: !LicenseAssignment
-    , _lauUserId    :: !Text
+    { _lauSKUId :: !Text
+    , _lauPayload :: !LicenseAssignment
+    , _lauUserId :: !Text
     , _lauProductId :: !Text
+    , _lauFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsUpdate' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data LicenseAssignmentsUpdate = LicenseAssignmentsUpdate'
 -- * 'lauUserId'
 --
 -- * 'lauProductId'
+--
+-- * 'lauFields'
 licenseAssignmentsUpdate
     :: Text -- ^ 'lauSKUId'
     -> LicenseAssignment -- ^ 'lauPayload'
     -> Text -- ^ 'lauUserId'
     -> Text -- ^ 'lauProductId'
     -> LicenseAssignmentsUpdate
-licenseAssignmentsUpdate pLauSKUId_ pLauPayload_ pLauUserId_ pLauProductId_ =
+licenseAssignmentsUpdate pLauSKUId_ pLauPayload_ pLauUserId_ pLauProductId_ = 
     LicenseAssignmentsUpdate'
     { _lauSKUId = pLauSKUId_
     , _lauPayload = pLauPayload_
     , _lauUserId = pLauUserId_
     , _lauProductId = pLauProductId_
+    , _lauFields = Nothing
     }
 
 -- | Name for sku for which license would be revoked
@@ -112,12 +118,17 @@ lauProductId :: Lens' LicenseAssignmentsUpdate Text
 lauProductId
   = lens _lauProductId (\ s a -> s{_lauProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lauFields :: Lens' LicenseAssignmentsUpdate (Maybe Text)
+lauFields
+  = lens _lauFields (\ s a -> s{_lauFields = a})
+
 instance GoogleRequest LicenseAssignmentsUpdate where
         type Rs LicenseAssignmentsUpdate = LicenseAssignment
         type Scopes LicenseAssignmentsUpdate =
              '["https://www.googleapis.com/auth/apps.licensing"]
         requestClient LicenseAssignmentsUpdate'{..}
-          = go _lauProductId _lauSKUId _lauUserId
+          = go _lauProductId _lauSKUId _lauUserId _lauFields
               (Just AltJSON)
               _lauPayload
               appsLicensingService

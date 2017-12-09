@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.Aliases.List
     -- * Request Lenses
     , ualEvent
     , ualUserKey
+    , ualFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.aliases.list@ method which the
 -- 'UsersAliasesList' request conforms to.
@@ -50,14 +51,16 @@ type UsersAliasesListResource =
              Capture "userKey" Text :>
                "aliases" :>
                  QueryParam "event" UsersAliasesListEvent :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Aliases
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Aliases
 
 -- | List all aliases for a user
 --
 -- /See:/ 'usersAliasesList' smart constructor.
 data UsersAliasesList = UsersAliasesList'
-    { _ualEvent   :: !(Maybe UsersAliasesListEvent)
+    { _ualEvent :: !(Maybe UsersAliasesListEvent)
     , _ualUserKey :: !Text
+    , _ualFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersAliasesList' with the minimum fields required to make a request.
@@ -67,23 +70,31 @@ data UsersAliasesList = UsersAliasesList'
 -- * 'ualEvent'
 --
 -- * 'ualUserKey'
+--
+-- * 'ualFields'
 usersAliasesList
     :: Text -- ^ 'ualUserKey'
     -> UsersAliasesList
-usersAliasesList pUalUserKey_ =
+usersAliasesList pUalUserKey_ = 
     UsersAliasesList'
     { _ualEvent = Nothing
     , _ualUserKey = pUalUserKey_
+    , _ualFields = Nothing
     }
 
 -- | Event on which subscription is intended (if subscribing)
 ualEvent :: Lens' UsersAliasesList (Maybe UsersAliasesListEvent)
 ualEvent = lens _ualEvent (\ s a -> s{_ualEvent = a})
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 ualUserKey :: Lens' UsersAliasesList Text
 ualUserKey
   = lens _ualUserKey (\ s a -> s{_ualUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ualFields :: Lens' UsersAliasesList (Maybe Text)
+ualFields
+  = lens _ualFields (\ s a -> s{_ualFields = a})
 
 instance GoogleRequest UsersAliasesList where
         type Rs UsersAliasesList = Aliases
@@ -93,7 +104,7 @@ instance GoogleRequest UsersAliasesList where
                "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
                "https://www.googleapis.com/auth/admin.directory.user.readonly"]
         requestClient UsersAliasesList'{..}
-          = go _ualUserKey _ualEvent (Just AltJSON)
+          = go _ualUserKey _ualEvent _ualFields (Just AltJSON)
               directoryService
           where go
                   = buildClient

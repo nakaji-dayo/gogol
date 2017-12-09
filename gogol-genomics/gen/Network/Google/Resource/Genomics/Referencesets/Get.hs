@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.Referencesets.Get
     , rgAccessToken
     , rgUploadType
     , rgBearerToken
+    , rgFields
     , rgCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.referencesets.get@ method which the
 -- 'ReferencesetsGet' request conforms to.
@@ -63,7 +64,8 @@ type ReferencesetsGetResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] ReferenceSet
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] ReferenceSet
 
 -- | Gets a reference set. For the definitions of references and other
 -- genomics resources, see [Fundamentals of Google
@@ -74,13 +76,14 @@ type ReferencesetsGetResource =
 -- /See:/ 'referencesetsGet' smart constructor.
 data ReferencesetsGet = ReferencesetsGet'
     { _rgReferenceSetId :: !Text
-    , _rgXgafv          :: !(Maybe Xgafv)
+    , _rgXgafv :: !(Maybe Xgafv)
     , _rgUploadProtocol :: !(Maybe Text)
-    , _rgPp             :: !Bool
-    , _rgAccessToken    :: !(Maybe Text)
-    , _rgUploadType     :: !(Maybe Text)
-    , _rgBearerToken    :: !(Maybe Text)
-    , _rgCallback       :: !(Maybe Text)
+    , _rgPp :: !Bool
+    , _rgAccessToken :: !(Maybe Text)
+    , _rgUploadType :: !(Maybe Text)
+    , _rgBearerToken :: !(Maybe Text)
+    , _rgFields :: !(Maybe Text)
+    , _rgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReferencesetsGet' with the minimum fields required to make a request.
@@ -101,11 +104,13 @@ data ReferencesetsGet = ReferencesetsGet'
 --
 -- * 'rgBearerToken'
 --
+-- * 'rgFields'
+--
 -- * 'rgCallback'
 referencesetsGet
     :: Text -- ^ 'rgReferenceSetId'
     -> ReferencesetsGet
-referencesetsGet pRgReferenceSetId_ =
+referencesetsGet pRgReferenceSetId_ = 
     ReferencesetsGet'
     { _rgReferenceSetId = pRgReferenceSetId_
     , _rgXgafv = Nothing
@@ -114,6 +119,7 @@ referencesetsGet pRgReferenceSetId_ =
     , _rgAccessToken = Nothing
     , _rgUploadType = Nothing
     , _rgBearerToken = Nothing
+    , _rgFields = Nothing
     , _rgCallback = Nothing
     }
 
@@ -154,6 +160,10 @@ rgBearerToken
   = lens _rgBearerToken
       (\ s a -> s{_rgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgFields :: Lens' ReferencesetsGet (Maybe Text)
+rgFields = lens _rgFields (\ s a -> s{_rgFields = a})
+
 -- | JSONP
 rgCallback :: Lens' ReferencesetsGet (Maybe Text)
 rgCallback
@@ -172,6 +182,7 @@ instance GoogleRequest ReferencesetsGet where
               _rgUploadType
               _rgBearerToken
               _rgCallback
+              _rgFields
               (Just AltJSON)
               genomicsService
           where go

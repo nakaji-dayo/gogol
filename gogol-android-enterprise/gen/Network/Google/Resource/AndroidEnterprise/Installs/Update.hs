@@ -21,7 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Requests to install the latest version of an app to a device. If the app
--- is already installed then it is updated to the latest version if
+-- is already installed, then it is updated to the latest version if
 -- necessary.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.installs.update@.
@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidEnterprise.Installs.Update
     , iuUserId
     , iuInstallId
     , iuDeviceId
+    , iuFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.installs.update@ method which the
 -- 'InstallsUpdate' request conforms to.
@@ -58,20 +59,22 @@ type InstallsUpdateResource =
                    Capture "deviceId" Text :>
                      "installs" :>
                        Capture "installId" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Install :> Put '[JSON] Install
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Install :> Put '[JSON] Install
 
 -- | Requests to install the latest version of an app to a device. If the app
--- is already installed then it is updated to the latest version if
+-- is already installed, then it is updated to the latest version if
 -- necessary.
 --
 -- /See:/ 'installsUpdate' smart constructor.
 data InstallsUpdate = InstallsUpdate'
     { _iuEnterpriseId :: !Text
-    , _iuPayload      :: !Install
-    , _iuUserId       :: !Text
-    , _iuInstallId    :: !Text
-    , _iuDeviceId     :: !Text
+    , _iuPayload :: !Install
+    , _iuUserId :: !Text
+    , _iuInstallId :: !Text
+    , _iuDeviceId :: !Text
+    , _iuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstallsUpdate' with the minimum fields required to make a request.
@@ -87,6 +90,8 @@ data InstallsUpdate = InstallsUpdate'
 -- * 'iuInstallId'
 --
 -- * 'iuDeviceId'
+--
+-- * 'iuFields'
 installsUpdate
     :: Text -- ^ 'iuEnterpriseId'
     -> Install -- ^ 'iuPayload'
@@ -94,13 +99,14 @@ installsUpdate
     -> Text -- ^ 'iuInstallId'
     -> Text -- ^ 'iuDeviceId'
     -> InstallsUpdate
-installsUpdate pIuEnterpriseId_ pIuPayload_ pIuUserId_ pIuInstallId_ pIuDeviceId_ =
+installsUpdate pIuEnterpriseId_ pIuPayload_ pIuUserId_ pIuInstallId_ pIuDeviceId_ = 
     InstallsUpdate'
     { _iuEnterpriseId = pIuEnterpriseId_
     , _iuPayload = pIuPayload_
     , _iuUserId = pIuUserId_
     , _iuInstallId = pIuInstallId_
     , _iuDeviceId = pIuDeviceId_
+    , _iuFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -129,6 +135,10 @@ iuDeviceId :: Lens' InstallsUpdate Text
 iuDeviceId
   = lens _iuDeviceId (\ s a -> s{_iuDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iuFields :: Lens' InstallsUpdate (Maybe Text)
+iuFields = lens _iuFields (\ s a -> s{_iuFields = a})
+
 instance GoogleRequest InstallsUpdate where
         type Rs InstallsUpdate = Install
         type Scopes InstallsUpdate =
@@ -136,6 +146,7 @@ instance GoogleRequest InstallsUpdate where
         requestClient InstallsUpdate'{..}
           = go _iuEnterpriseId _iuUserId _iuDeviceId
               _iuInstallId
+              _iuFields
               (Just AltJSON)
               _iuPayload
               androidEnterpriseService

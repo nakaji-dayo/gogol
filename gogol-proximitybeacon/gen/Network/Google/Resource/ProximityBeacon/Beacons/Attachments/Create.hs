@@ -21,13 +21,16 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Associates the given data with the specified beacon. Attachment data
--- must contain two parts: - A namespaced type. - The actual attachment
--- data itself. The namespaced type consists of two parts, the namespace
--- and the type. The namespace must be one of the values returned by the
--- \`namespaces\` endpoint, while the type can be a string of any
--- characters except for the forward slash (\`\/\`) up to 100 characters in
--- length. Attachment data can be up to 1024 bytes long. Authenticate using
--- an [OAuth access
+-- must contain two parts:
+--
+-- -   A namespaced type.
+-- -   The actual attachment data itself.
+--
+-- The namespaced type consists of two parts, the namespace and the type.
+-- The namespace must be one of the values returned by the \`namespaces\`
+-- endpoint, while the type can be a string of any characters except for
+-- the forward slash (\`\/\`) up to 100 characters in length. Attachment
+-- data can be up to 1024 bytes long. Authenticate using an [OAuth access
 -- token](https:\/\/developers.google.com\/identity\/protocols\/OAuth2)
 -- from a signed-in user with **Is owner** or **Can edit** permissions in
 -- the Google Developers Console project.
@@ -52,11 +55,12 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Create
     , bacPayload
     , bacBearerToken
     , bacProjectId
+    , bacFields
     , bacCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.attachments.create@ method which the
 -- 'BeaconsAttachmentsCreate' request conforms to.
@@ -64,7 +68,7 @@ type BeaconsAttachmentsCreateResource =
      "v1beta1" :>
        Capture "beaconName" Text :>
          "attachments" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -72,34 +76,39 @@ type BeaconsAttachmentsCreateResource =
                      QueryParam "bearer_token" Text :>
                        QueryParam "projectId" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] BeaconAttachment :>
-                               Post '[JSON] BeaconAttachment
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] BeaconAttachment :>
+                                 Post '[JSON] BeaconAttachment
 
 -- | Associates the given data with the specified beacon. Attachment data
--- must contain two parts: - A namespaced type. - The actual attachment
--- data itself. The namespaced type consists of two parts, the namespace
--- and the type. The namespace must be one of the values returned by the
--- \`namespaces\` endpoint, while the type can be a string of any
--- characters except for the forward slash (\`\/\`) up to 100 characters in
--- length. Attachment data can be up to 1024 bytes long. Authenticate using
--- an [OAuth access
+-- must contain two parts:
+--
+-- -   A namespaced type.
+-- -   The actual attachment data itself.
+--
+-- The namespaced type consists of two parts, the namespace and the type.
+-- The namespace must be one of the values returned by the \`namespaces\`
+-- endpoint, while the type can be a string of any characters except for
+-- the forward slash (\`\/\`) up to 100 characters in length. Attachment
+-- data can be up to 1024 bytes long. Authenticate using an [OAuth access
 -- token](https:\/\/developers.google.com\/identity\/protocols\/OAuth2)
 -- from a signed-in user with **Is owner** or **Can edit** permissions in
 -- the Google Developers Console project.
 --
 -- /See:/ 'beaconsAttachmentsCreate' smart constructor.
 data BeaconsAttachmentsCreate = BeaconsAttachmentsCreate'
-    { _bacXgafv          :: !(Maybe Text)
+    { _bacXgafv :: !(Maybe Xgafv)
     , _bacUploadProtocol :: !(Maybe Text)
-    , _bacPp             :: !Bool
-    , _bacAccessToken    :: !(Maybe Text)
-    , _bacBeaconName     :: !Text
-    , _bacUploadType     :: !(Maybe Text)
-    , _bacPayload        :: !BeaconAttachment
-    , _bacBearerToken    :: !(Maybe Text)
-    , _bacProjectId      :: !(Maybe Text)
-    , _bacCallback       :: !(Maybe Text)
+    , _bacPp :: !Bool
+    , _bacAccessToken :: !(Maybe Text)
+    , _bacBeaconName :: !Text
+    , _bacUploadType :: !(Maybe Text)
+    , _bacPayload :: !BeaconAttachment
+    , _bacBearerToken :: !(Maybe Text)
+    , _bacProjectId :: !(Maybe Text)
+    , _bacFields :: !(Maybe Text)
+    , _bacCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsAttachmentsCreate' with the minimum fields required to make a request.
@@ -124,12 +133,14 @@ data BeaconsAttachmentsCreate = BeaconsAttachmentsCreate'
 --
 -- * 'bacProjectId'
 --
+-- * 'bacFields'
+--
 -- * 'bacCallback'
 beaconsAttachmentsCreate
     :: Text -- ^ 'bacBeaconName'
     -> BeaconAttachment -- ^ 'bacPayload'
     -> BeaconsAttachmentsCreate
-beaconsAttachmentsCreate pBacBeaconName_ pBacPayload_ =
+beaconsAttachmentsCreate pBacBeaconName_ pBacPayload_ = 
     BeaconsAttachmentsCreate'
     { _bacXgafv = Nothing
     , _bacUploadProtocol = Nothing
@@ -140,11 +151,12 @@ beaconsAttachmentsCreate pBacBeaconName_ pBacPayload_ =
     , _bacPayload = pBacPayload_
     , _bacBearerToken = Nothing
     , _bacProjectId = Nothing
+    , _bacFields = Nothing
     , _bacCallback = Nothing
     }
 
 -- | V1 error format.
-bacXgafv :: Lens' BeaconsAttachmentsCreate (Maybe Text)
+bacXgafv :: Lens' BeaconsAttachmentsCreate (Maybe Xgafv)
 bacXgafv = lens _bacXgafv (\ s a -> s{_bacXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -198,6 +210,11 @@ bacProjectId :: Lens' BeaconsAttachmentsCreate (Maybe Text)
 bacProjectId
   = lens _bacProjectId (\ s a -> s{_bacProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bacFields :: Lens' BeaconsAttachmentsCreate (Maybe Text)
+bacFields
+  = lens _bacFields (\ s a -> s{_bacFields = a})
+
 -- | JSONP
 bacCallback :: Lens' BeaconsAttachmentsCreate (Maybe Text)
 bacCallback
@@ -215,6 +232,7 @@ instance GoogleRequest BeaconsAttachmentsCreate where
               _bacBearerToken
               _bacProjectId
               _bacCallback
+              _bacFields
               (Just AltJSON)
               _bacPayload
               proximityBeaconService

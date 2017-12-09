@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.Instances.SetMetadata
     , InstancesSetMetadata
 
     -- * Request Lenses
+    , ismRequestId
     , ismProject
     , ismZone
     , ismPayload
+    , ismFields
     , ismInstance
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instances.setMetadata@ method which the
 -- 'InstancesSetMetadata' request conforms to.
@@ -55,17 +57,21 @@ type InstancesSetMetadataResource =
                  "instances" :>
                    Capture "instance" Text :>
                      "setMetadata" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Metadata :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Metadata :> Post '[JSON] Operation
 
 -- | Sets metadata for the specified instance to the data included in the
 -- request.
 --
 -- /See:/ 'instancesSetMetadata' smart constructor.
 data InstancesSetMetadata = InstancesSetMetadata'
-    { _ismProject  :: !Text
-    , _ismZone     :: !Text
-    , _ismPayload  :: !Metadata
+    { _ismRequestId :: !(Maybe Text)
+    , _ismProject :: !Text
+    , _ismZone :: !Text
+    , _ismPayload :: !Metadata
+    , _ismFields :: !(Maybe Text)
     , _ismInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,11 +79,15 @@ data InstancesSetMetadata = InstancesSetMetadata'
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'ismRequestId'
+--
 -- * 'ismProject'
 --
 -- * 'ismZone'
 --
 -- * 'ismPayload'
+--
+-- * 'ismFields'
 --
 -- * 'ismInstance'
 instancesSetMetadata
@@ -86,13 +96,29 @@ instancesSetMetadata
     -> Metadata -- ^ 'ismPayload'
     -> Text -- ^ 'ismInstance'
     -> InstancesSetMetadata
-instancesSetMetadata pIsmProject_ pIsmZone_ pIsmPayload_ pIsmInstance_ =
+instancesSetMetadata pIsmProject_ pIsmZone_ pIsmPayload_ pIsmInstance_ = 
     InstancesSetMetadata'
-    { _ismProject = pIsmProject_
+    { _ismRequestId = Nothing
+    , _ismProject = pIsmProject_
     , _ismZone = pIsmZone_
     , _ismPayload = pIsmPayload_
+    , _ismFields = Nothing
     , _ismInstance = pIsmInstance_
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+ismRequestId :: Lens' InstancesSetMetadata (Maybe Text)
+ismRequestId
+  = lens _ismRequestId (\ s a -> s{_ismRequestId = a})
 
 -- | Project ID for this request.
 ismProject :: Lens' InstancesSetMetadata Text
@@ -108,6 +134,11 @@ ismPayload :: Lens' InstancesSetMetadata Metadata
 ismPayload
   = lens _ismPayload (\ s a -> s{_ismPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ismFields :: Lens' InstancesSetMetadata (Maybe Text)
+ismFields
+  = lens _ismFields (\ s a -> s{_ismFields = a})
+
 -- | Name of the instance scoping this request.
 ismInstance :: Lens' InstancesSetMetadata Text
 ismInstance
@@ -119,7 +150,9 @@ instance GoogleRequest InstancesSetMetadata where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient InstancesSetMetadata'{..}
-          = go _ismProject _ismZone _ismInstance (Just AltJSON)
+          = go _ismProject _ismZone _ismInstance _ismRequestId
+              _ismFields
+              (Just AltJSON)
               _ismPayload
               computeService
           where go

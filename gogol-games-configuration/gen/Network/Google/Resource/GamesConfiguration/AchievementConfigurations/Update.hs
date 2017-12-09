@@ -35,10 +35,11 @@ module Network.Google.Resource.GamesConfiguration.AchievementConfigurations.Upda
     -- * Request Lenses
     , acuAchievementId
     , acuPayload
+    , acuFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.achievementConfigurations.update@ method which the
 -- 'AchievementConfigurationsUpdate' request conforms to.
@@ -47,16 +48,18 @@ type AchievementConfigurationsUpdateResource =
        "v1configuration" :>
          "achievements" :>
            Capture "achievementId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] AchievementConfiguration :>
-                 Put '[JSON] AchievementConfiguration
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] AchievementConfiguration :>
+                   Put '[JSON] AchievementConfiguration
 
 -- | Update the metadata of the achievement configuration with the given ID.
 --
 -- /See:/ 'achievementConfigurationsUpdate' smart constructor.
 data AchievementConfigurationsUpdate = AchievementConfigurationsUpdate'
     { _acuAchievementId :: !Text
-    , _acuPayload       :: !AchievementConfiguration
+    , _acuPayload :: !AchievementConfiguration
+    , _acuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementConfigurationsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AchievementConfigurationsUpdate = AchievementConfigurationsUpdate'
 -- * 'acuAchievementId'
 --
 -- * 'acuPayload'
+--
+-- * 'acuFields'
 achievementConfigurationsUpdate
     :: Text -- ^ 'acuAchievementId'
     -> AchievementConfiguration -- ^ 'acuPayload'
     -> AchievementConfigurationsUpdate
-achievementConfigurationsUpdate pAcuAchievementId_ pAcuPayload_ =
+achievementConfigurationsUpdate pAcuAchievementId_ pAcuPayload_ = 
     AchievementConfigurationsUpdate'
     { _acuAchievementId = pAcuAchievementId_
     , _acuPayload = pAcuPayload_
+    , _acuFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -87,6 +93,11 @@ acuPayload :: Lens' AchievementConfigurationsUpdate AchievementConfiguration
 acuPayload
   = lens _acuPayload (\ s a -> s{_acuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acuFields :: Lens' AchievementConfigurationsUpdate (Maybe Text)
+acuFields
+  = lens _acuFields (\ s a -> s{_acuFields = a})
+
 instance GoogleRequest
          AchievementConfigurationsUpdate where
         type Rs AchievementConfigurationsUpdate =
@@ -94,7 +105,8 @@ instance GoogleRequest
         type Scopes AchievementConfigurationsUpdate =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient AchievementConfigurationsUpdate'{..}
-          = go _acuAchievementId (Just AltJSON) _acuPayload
+          = go _acuAchievementId _acuFields (Just AltJSON)
+              _acuPayload
               gamesConfigurationService
           where go
                   = buildClient

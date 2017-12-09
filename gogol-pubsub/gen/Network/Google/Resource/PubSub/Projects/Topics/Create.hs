@@ -41,11 +41,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.Create
     , ptcPayload
     , ptcBearerToken
     , ptcName
+    , ptcFields
     , ptcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.create@ method which the
 -- 'ProjectsTopicsCreate' request conforms to.
@@ -59,22 +60,24 @@ type ProjectsTopicsCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Topic :> Put '[JSON] Topic
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Topic :> Put '[JSON] Topic
 
 -- | Creates the given topic with the given name.
 --
 -- /See:/ 'projectsTopicsCreate' smart constructor.
 data ProjectsTopicsCreate = ProjectsTopicsCreate'
-    { _ptcXgafv          :: !(Maybe Xgafv)
+    { _ptcXgafv :: !(Maybe Xgafv)
     , _ptcUploadProtocol :: !(Maybe Text)
-    , _ptcPp             :: !Bool
-    , _ptcAccessToken    :: !(Maybe Text)
-    , _ptcUploadType     :: !(Maybe Text)
-    , _ptcPayload        :: !Topic
-    , _ptcBearerToken    :: !(Maybe Text)
-    , _ptcName           :: !Text
-    , _ptcCallback       :: !(Maybe Text)
+    , _ptcPp :: !Bool
+    , _ptcAccessToken :: !(Maybe Text)
+    , _ptcUploadType :: !(Maybe Text)
+    , _ptcPayload :: !Topic
+    , _ptcBearerToken :: !(Maybe Text)
+    , _ptcName :: !Text
+    , _ptcFields :: !(Maybe Text)
+    , _ptcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsCreate' with the minimum fields required to make a request.
@@ -97,12 +100,14 @@ data ProjectsTopicsCreate = ProjectsTopicsCreate'
 --
 -- * 'ptcName'
 --
+-- * 'ptcFields'
+--
 -- * 'ptcCallback'
 projectsTopicsCreate
     :: Topic -- ^ 'ptcPayload'
     -> Text -- ^ 'ptcName'
     -> ProjectsTopicsCreate
-projectsTopicsCreate pPtcPayload_ pPtcName_ =
+projectsTopicsCreate pPtcPayload_ pPtcName_ = 
     ProjectsTopicsCreate'
     { _ptcXgafv = Nothing
     , _ptcUploadProtocol = Nothing
@@ -112,6 +117,7 @@ projectsTopicsCreate pPtcPayload_ pPtcName_ =
     , _ptcPayload = pPtcPayload_
     , _ptcBearerToken = Nothing
     , _ptcName = pPtcName_
+    , _ptcFields = Nothing
     , _ptcCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ ptcBearerToken
 ptcName :: Lens' ProjectsTopicsCreate Text
 ptcName = lens _ptcName (\ s a -> s{_ptcName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptcFields :: Lens' ProjectsTopicsCreate (Maybe Text)
+ptcFields
+  = lens _ptcFields (\ s a -> s{_ptcFields = a})
+
 -- | JSONP
 ptcCallback :: Lens' ProjectsTopicsCreate (Maybe Text)
 ptcCallback
@@ -179,6 +190,7 @@ instance GoogleRequest ProjectsTopicsCreate where
               _ptcUploadType
               _ptcBearerToken
               _ptcCallback
+              _ptcFields
               (Just AltJSON)
               _ptcPayload
               pubSubService

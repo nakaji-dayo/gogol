@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Uploads.Get
     , mugCustomDataSourceId
     , mugAccountId
     , mugUploadId
+    , mugFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.uploads.get@ method which the
 -- 'ManagementUploadsGet' request conforms to.
@@ -56,16 +57,18 @@ type ManagementUploadsGetResource =
                      Capture "customDataSourceId" Text :>
                        "uploads" :>
                          Capture "uploadId" Text :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Upload
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Upload
 
 -- | List uploads to which the user has access.
 --
 -- /See:/ 'managementUploadsGet' smart constructor.
 data ManagementUploadsGet = ManagementUploadsGet'
-    { _mugWebPropertyId      :: !Text
+    { _mugWebPropertyId :: !Text
     , _mugCustomDataSourceId :: !Text
-    , _mugAccountId          :: !Text
-    , _mugUploadId           :: !Text
+    , _mugAccountId :: !Text
+    , _mugUploadId :: !Text
+    , _mugFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUploadsGet' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementUploadsGet = ManagementUploadsGet'
 -- * 'mugAccountId'
 --
 -- * 'mugUploadId'
+--
+-- * 'mugFields'
 managementUploadsGet
     :: Text -- ^ 'mugWebPropertyId'
     -> Text -- ^ 'mugCustomDataSourceId'
     -> Text -- ^ 'mugAccountId'
     -> Text -- ^ 'mugUploadId'
     -> ManagementUploadsGet
-managementUploadsGet pMugWebPropertyId_ pMugCustomDataSourceId_ pMugAccountId_ pMugUploadId_ =
+managementUploadsGet pMugWebPropertyId_ pMugCustomDataSourceId_ pMugAccountId_ pMugUploadId_ = 
     ManagementUploadsGet'
     { _mugWebPropertyId = pMugWebPropertyId_
     , _mugCustomDataSourceId = pMugCustomDataSourceId_
     , _mugAccountId = pMugAccountId_
     , _mugUploadId = pMugUploadId_
+    , _mugFields = Nothing
     }
 
 -- | Web property Id for the upload to retrieve.
@@ -115,6 +121,11 @@ mugUploadId :: Lens' ManagementUploadsGet Text
 mugUploadId
   = lens _mugUploadId (\ s a -> s{_mugUploadId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mugFields :: Lens' ManagementUploadsGet (Maybe Text)
+mugFields
+  = lens _mugFields (\ s a -> s{_mugFields = a})
+
 instance GoogleRequest ManagementUploadsGet where
         type Rs ManagementUploadsGet = Upload
         type Scopes ManagementUploadsGet =
@@ -125,6 +136,7 @@ instance GoogleRequest ManagementUploadsGet where
           = go _mugAccountId _mugWebPropertyId
               _mugCustomDataSourceId
               _mugUploadId
+              _mugFields
               (Just AltJSON)
               analyticsService
           where go

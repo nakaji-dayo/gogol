@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.APKListings.Delete
     , eapkldAPKVersionCode
     , eapkldLanguage
     , eapkldEditId
+    , eapkldFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.apklistings.delete@ method which the
 -- 'EditsAPKListingsDelete' request conforms to.
@@ -56,17 +57,19 @@ type EditsAPKListingsDeleteResource =
                    Capture "apkVersionCode" (Textual Int32) :>
                      "listings" :>
                        Capture "language" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the APK-specific localized listing for a specified APK and
 -- language code.
 --
 -- /See:/ 'editsAPKListingsDelete' smart constructor.
 data EditsAPKListingsDelete = EditsAPKListingsDelete'
-    { _eapkldPackageName    :: !Text
+    { _eapkldPackageName :: !Text
     , _eapkldAPKVersionCode :: !(Textual Int32)
-    , _eapkldLanguage       :: !Text
-    , _eapkldEditId         :: !Text
+    , _eapkldLanguage :: !Text
+    , _eapkldEditId :: !Text
+    , _eapkldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsAPKListingsDelete' with the minimum fields required to make a request.
@@ -80,18 +83,21 @@ data EditsAPKListingsDelete = EditsAPKListingsDelete'
 -- * 'eapkldLanguage'
 --
 -- * 'eapkldEditId'
+--
+-- * 'eapkldFields'
 editsAPKListingsDelete
     :: Text -- ^ 'eapkldPackageName'
     -> Int32 -- ^ 'eapkldAPKVersionCode'
     -> Text -- ^ 'eapkldLanguage'
     -> Text -- ^ 'eapkldEditId'
     -> EditsAPKListingsDelete
-editsAPKListingsDelete pEapkldPackageName_ pEapkldAPKVersionCode_ pEapkldLanguage_ pEapkldEditId_ =
+editsAPKListingsDelete pEapkldPackageName_ pEapkldAPKVersionCode_ pEapkldLanguage_ pEapkldEditId_ = 
     EditsAPKListingsDelete'
     { _eapkldPackageName = pEapkldPackageName_
     , _eapkldAPKVersionCode = _Coerce # pEapkldAPKVersionCode_
     , _eapkldLanguage = pEapkldLanguage_
     , _eapkldEditId = pEapkldEditId_
+    , _eapkldFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -122,6 +128,11 @@ eapkldEditId :: Lens' EditsAPKListingsDelete Text
 eapkldEditId
   = lens _eapkldEditId (\ s a -> s{_eapkldEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eapkldFields :: Lens' EditsAPKListingsDelete (Maybe Text)
+eapkldFields
+  = lens _eapkldFields (\ s a -> s{_eapkldFields = a})
+
 instance GoogleRequest EditsAPKListingsDelete where
         type Rs EditsAPKListingsDelete = ()
         type Scopes EditsAPKListingsDelete =
@@ -130,6 +141,7 @@ instance GoogleRequest EditsAPKListingsDelete where
           = go _eapkldPackageName _eapkldEditId
               _eapkldAPKVersionCode
               _eapkldLanguage
+              _eapkldFields
               (Just AltJSON)
               androidPublisherService
           where go

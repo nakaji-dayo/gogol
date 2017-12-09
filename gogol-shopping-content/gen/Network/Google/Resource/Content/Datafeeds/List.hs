@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists the datafeeds in your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- Lists the datafeeds in your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.datafeeds.list@.
 module Network.Google.Resource.Content.Datafeeds.List
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Datafeeds.List
     , datMerchantId
     , datPageToken
     , datMaxResults
+    , datFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.datafeeds.list@ method which the
 -- 'DatafeedsList' request conforms to.
@@ -51,17 +51,18 @@ type DatafeedsListResource =
            "datafeeds" :>
              QueryParam "pageToken" Text :>
                QueryParam "maxResults" (Textual Word32) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] DatafeedsListResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] DatafeedsListResponse
 
--- | Lists the datafeeds in your Merchant Center account. This method can
--- only be called for non-multi-client accounts.
+-- | Lists the datafeeds in your Merchant Center account.
 --
 -- /See:/ 'datafeedsList' smart constructor.
 data DatafeedsList = DatafeedsList'
     { _datMerchantId :: !(Textual Word64)
-    , _datPageToken  :: !(Maybe Text)
+    , _datPageToken :: !(Maybe Text)
     , _datMaxResults :: !(Maybe (Textual Word32))
+    , _datFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DatafeedsList' with the minimum fields required to make a request.
@@ -73,17 +74,21 @@ data DatafeedsList = DatafeedsList'
 -- * 'datPageToken'
 --
 -- * 'datMaxResults'
+--
+-- * 'datFields'
 datafeedsList
     :: Word64 -- ^ 'datMerchantId'
     -> DatafeedsList
-datafeedsList pDatMerchantId_ =
+datafeedsList pDatMerchantId_ = 
     DatafeedsList'
     { _datMerchantId = _Coerce # pDatMerchantId_
     , _datPageToken = Nothing
     , _datMaxResults = Nothing
+    , _datFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the datafeeds. This account cannot be
+-- a multi-client account.
 datMerchantId :: Lens' DatafeedsList Word64
 datMerchantId
   = lens _datMerchantId
@@ -103,12 +108,18 @@ datMaxResults
       (\ s a -> s{_datMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+datFields :: Lens' DatafeedsList (Maybe Text)
+datFields
+  = lens _datFields (\ s a -> s{_datFields = a})
+
 instance GoogleRequest DatafeedsList where
         type Rs DatafeedsList = DatafeedsListResponse
         type Scopes DatafeedsList =
              '["https://www.googleapis.com/auth/content"]
         requestClient DatafeedsList'{..}
           = go _datMerchantId _datPageToken _datMaxResults
+              _datFields
               (Just AltJSON)
               shoppingContentService
           where go

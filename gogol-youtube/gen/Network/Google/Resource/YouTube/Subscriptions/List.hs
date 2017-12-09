@@ -45,10 +45,11 @@ module Network.Google.Resource.YouTube.Subscriptions.List
     , subPageToken
     , subOrder
     , subMaxResults
+    , subFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.subscriptions.list@ method which the
 -- 'SubscriptionsList' request conforms to.
@@ -68,25 +69,27 @@ type SubscriptionsListResource =
                              QueryParam "pageToken" Text :>
                                QueryParam "order" SubscriptionsListOrder :>
                                  QueryParam "maxResults" (Textual Word32) :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] SubscriptionListResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] SubscriptionListResponse
 
 -- | Returns subscription resources that match the API request criteria.
 --
 -- /See:/ 'subscriptionsList' smart constructor.
 data SubscriptionsList = SubscriptionsList'
-    { _subPart                          :: !Text
-    , _subMine                          :: !(Maybe Bool)
-    , _subChannelId                     :: !(Maybe Text)
-    , _subMyRecentSubscribers           :: !(Maybe Bool)
-    , _subOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _subPart :: !Text
+    , _subMine :: !(Maybe Bool)
+    , _subChannelId :: !(Maybe Text)
+    , _subMyRecentSubscribers :: !(Maybe Bool)
+    , _subOnBehalfOfContentOwner :: !(Maybe Text)
     , _subOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _subId                            :: !(Maybe Text)
-    , _subMySubscribers                 :: !(Maybe Bool)
-    , _subForChannelId                  :: !(Maybe Text)
-    , _subPageToken                     :: !(Maybe Text)
-    , _subOrder                         :: !SubscriptionsListOrder
-    , _subMaxResults                    :: !(Textual Word32)
+    , _subId :: !(Maybe Text)
+    , _subMySubscribers :: !(Maybe Bool)
+    , _subForChannelId :: !(Maybe Text)
+    , _subPageToken :: !(Maybe Text)
+    , _subOrder :: !SubscriptionsListOrder
+    , _subMaxResults :: !(Textual Word32)
+    , _subFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsList' with the minimum fields required to make a request.
@@ -116,10 +119,12 @@ data SubscriptionsList = SubscriptionsList'
 -- * 'subOrder'
 --
 -- * 'subMaxResults'
+--
+-- * 'subFields'
 subscriptionsList
     :: Text -- ^ 'subPart'
     -> SubscriptionsList
-subscriptionsList pSubPart_ =
+subscriptionsList pSubPart_ = 
     SubscriptionsList'
     { _subPart = pSubPart_
     , _subMine = Nothing
@@ -133,6 +138,7 @@ subscriptionsList pSubPart_ =
     , _subPageToken = Nothing
     , _subOrder = SLORelevance
     , _subMaxResults = 5
+    , _subFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -242,6 +248,11 @@ subMaxResults
       (\ s a -> s{_subMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+subFields :: Lens' SubscriptionsList (Maybe Text)
+subFields
+  = lens _subFields (\ s a -> s{_subFields = a})
+
 instance GoogleRequest SubscriptionsList where
         type Rs SubscriptionsList = SubscriptionListResponse
         type Scopes SubscriptionsList =
@@ -260,6 +271,7 @@ instance GoogleRequest SubscriptionsList where
               _subPageToken
               (Just _subOrder)
               (Just _subMaxResults)
+              _subFields
               (Just AltJSON)
               youTubeService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Events.ResetForAllPlayers
 
     -- * Request Lenses
     , erfapEventId
+    , erfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.events.resetForAllPlayers@ method which the
 -- 'EventsResetForAllPlayers' request conforms to.
@@ -49,15 +50,17 @@ type EventsResetForAllPlayersResource =
          "events" :>
            Capture "eventId" Text :>
              "resetForAllPlayers" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets the event with the given ID for all players. This method is only
 -- available to user accounts for your developer console. Only draft events
 -- can be reset. All quests that use the event will also be reset.
 --
 -- /See:/ 'eventsResetForAllPlayers' smart constructor.
-newtype EventsResetForAllPlayers = EventsResetForAllPlayers'
-    { _erfapEventId :: Text
+data EventsResetForAllPlayers = EventsResetForAllPlayers'
+    { _erfapEventId :: !Text
+    , _erfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsResetForAllPlayers' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype EventsResetForAllPlayers = EventsResetForAllPlayers'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'erfapEventId'
+--
+-- * 'erfapFields'
 eventsResetForAllPlayers
     :: Text -- ^ 'erfapEventId'
     -> EventsResetForAllPlayers
-eventsResetForAllPlayers pErfapEventId_ =
+eventsResetForAllPlayers pErfapEventId_ = 
     EventsResetForAllPlayers'
     { _erfapEventId = pErfapEventId_
+    , _erfapFields = Nothing
     }
 
 -- | The ID of the event.
@@ -78,13 +84,18 @@ erfapEventId :: Lens' EventsResetForAllPlayers Text
 erfapEventId
   = lens _erfapEventId (\ s a -> s{_erfapEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+erfapFields :: Lens' EventsResetForAllPlayers (Maybe Text)
+erfapFields
+  = lens _erfapFields (\ s a -> s{_erfapFields = a})
+
 instance GoogleRequest EventsResetForAllPlayers where
         type Rs EventsResetForAllPlayers = ()
         type Scopes EventsResetForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient EventsResetForAllPlayers'{..}
-          = go _erfapEventId (Just AltJSON)
+          = go _erfapEventId _erfapFields (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient

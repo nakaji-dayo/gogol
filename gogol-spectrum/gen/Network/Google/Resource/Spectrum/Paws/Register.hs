@@ -35,10 +35,11 @@ module Network.Google.Resource.Spectrum.Paws.Register
 
     -- * Request Lenses
     , prPayload
+    , prFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Spectrum.Types
+import Network.Google.Prelude
+import Network.Google.Spectrum.Types
 
 -- | A resource alias for @spectrum.paws.register@ method which the
 -- 'PawsRegister' request conforms to.
@@ -47,16 +48,18 @@ type PawsRegisterResource =
        "v1explorer" :>
          "paws" :>
            "register" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] PawsRegisterRequest :>
-                 Post '[JSON] PawsRegisterResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] PawsRegisterRequest :>
+                   Post '[JSON] PawsRegisterResponse
 
 -- | The Google Spectrum Database implements registration in the getSpectrum
 -- method. As such this always returns an UNIMPLEMENTED error.
 --
 -- /See:/ 'pawsRegister' smart constructor.
-newtype PawsRegister = PawsRegister'
-    { _prPayload :: PawsRegisterRequest
+data PawsRegister = PawsRegister'
+    { _prPayload :: !PawsRegisterRequest
+    , _prFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PawsRegister' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype PawsRegister = PawsRegister'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'prPayload'
+--
+-- * 'prFields'
 pawsRegister
     :: PawsRegisterRequest -- ^ 'prPayload'
     -> PawsRegister
-pawsRegister pPrPayload_ =
+pawsRegister pPrPayload_ = 
     PawsRegister'
     { _prPayload = pPrPayload_
+    , _prFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -77,11 +83,16 @@ prPayload :: Lens' PawsRegister PawsRegisterRequest
 prPayload
   = lens _prPayload (\ s a -> s{_prPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prFields :: Lens' PawsRegister (Maybe Text)
+prFields = lens _prFields (\ s a -> s{_prFields = a})
+
 instance GoogleRequest PawsRegister where
         type Rs PawsRegister = PawsRegisterResponse
         type Scopes PawsRegister = '[]
         requestClient PawsRegister'{..}
-          = go (Just AltJSON) _prPayload spectrumService
+          = go _prFields (Just AltJSON) _prPayload
+              spectrumService
           where go
                   = buildClient (Proxy :: Proxy PawsRegisterResource)
                       mempty

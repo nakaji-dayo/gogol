@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Accounts.Update
     -- * Request Lenses
     , auuProFileId
     , auuPayload
+    , auuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accounts.update@ method which the
 -- 'AccountsUpdate' request conforms to.
 type AccountsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accounts" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Account :> Put '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Account :> Put '[JSON] Account
 
 -- | Updates an existing account.
 --
 -- /See:/ 'accountsUpdate' smart constructor.
 data AccountsUpdate = AccountsUpdate'
     { _auuProFileId :: !(Textual Int64)
-    , _auuPayload   :: !Account
+    , _auuPayload :: !Account
+    , _auuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AccountsUpdate = AccountsUpdate'
 -- * 'auuProFileId'
 --
 -- * 'auuPayload'
+--
+-- * 'auuFields'
 accountsUpdate
     :: Int64 -- ^ 'auuProFileId'
     -> Account -- ^ 'auuPayload'
     -> AccountsUpdate
-accountsUpdate pAuuProFileId_ pAuuPayload_ =
+accountsUpdate pAuuProFileId_ pAuuPayload_ = 
     AccountsUpdate'
     { _auuProFileId = _Coerce # pAuuProFileId_
     , _auuPayload = pAuuPayload_
+    , _auuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ auuPayload :: Lens' AccountsUpdate Account
 auuPayload
   = lens _auuPayload (\ s a -> s{_auuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+auuFields :: Lens' AccountsUpdate (Maybe Text)
+auuFields
+  = lens _auuFields (\ s a -> s{_auuFields = a})
+
 instance GoogleRequest AccountsUpdate where
         type Rs AccountsUpdate = Account
         type Scopes AccountsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountsUpdate'{..}
-          = go _auuProFileId (Just AltJSON) _auuPayload
+          = go _auuProFileId _auuFields (Just AltJSON)
+              _auuPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy AccountsUpdateResource)

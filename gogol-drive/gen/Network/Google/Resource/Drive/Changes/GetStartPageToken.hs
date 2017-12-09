@@ -32,10 +32,14 @@ module Network.Google.Resource.Drive.Changes.GetStartPageToken
     , changesGetStartPageToken
     , ChangesGetStartPageToken
 
+    -- * Request Lenses
+    , cgsptTeamDriveId
+    , cgsptSupportsTeamDrives
+    , cgsptFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.changes.getStartPageToken@ method which the
 -- 'ChangesGetStartPageToken' request conforms to.
@@ -44,21 +48,56 @@ type ChangesGetStartPageTokenResource =
        "v3" :>
          "changes" :>
            "startPageToken" :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] StartPageToken
+             QueryParam "teamDriveId" Text :>
+               QueryParam "supportsTeamDrives" Bool :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] StartPageToken
 
 -- | Gets the starting pageToken for listing future changes.
 --
 -- /See:/ 'changesGetStartPageToken' smart constructor.
-data ChangesGetStartPageToken =
-    ChangesGetStartPageToken'
-    deriving (Eq,Show,Data,Typeable,Generic)
+data ChangesGetStartPageToken = ChangesGetStartPageToken'
+    { _cgsptTeamDriveId :: !(Maybe Text)
+    , _cgsptSupportsTeamDrives :: !Bool
+    , _cgsptFields :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChangesGetStartPageToken' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cgsptTeamDriveId'
+--
+-- * 'cgsptSupportsTeamDrives'
+--
+-- * 'cgsptFields'
 changesGetStartPageToken
     :: ChangesGetStartPageToken
-changesGetStartPageToken = ChangesGetStartPageToken'
+changesGetStartPageToken = 
+    ChangesGetStartPageToken'
+    { _cgsptTeamDriveId = Nothing
+    , _cgsptSupportsTeamDrives = False
+    , _cgsptFields = Nothing
+    }
+
+-- | The ID of the Team Drive for which the starting pageToken for listing
+-- future changes from that Team Drive will be returned.
+cgsptTeamDriveId :: Lens' ChangesGetStartPageToken (Maybe Text)
+cgsptTeamDriveId
+  = lens _cgsptTeamDriveId
+      (\ s a -> s{_cgsptTeamDriveId = a})
+
+-- | Whether the requesting application supports Team Drives.
+cgsptSupportsTeamDrives :: Lens' ChangesGetStartPageToken Bool
+cgsptSupportsTeamDrives
+  = lens _cgsptSupportsTeamDrives
+      (\ s a -> s{_cgsptSupportsTeamDrives = a})
+
+-- | Selector specifying which fields to include in a partial response.
+cgsptFields :: Lens' ChangesGetStartPageToken (Maybe Text)
+cgsptFields
+  = lens _cgsptFields (\ s a -> s{_cgsptFields = a})
 
 instance GoogleRequest ChangesGetStartPageToken where
         type Rs ChangesGetStartPageToken = StartPageToken
@@ -70,8 +109,12 @@ instance GoogleRequest ChangesGetStartPageToken where
                "https://www.googleapis.com/auth/drive.metadata.readonly",
                "https://www.googleapis.com/auth/drive.photos.readonly",
                "https://www.googleapis.com/auth/drive.readonly"]
-        requestClient ChangesGetStartPageToken'{}
-          = go (Just AltJSON) driveService
+        requestClient ChangesGetStartPageToken'{..}
+          = go _cgsptTeamDriveId
+              (Just _cgsptSupportsTeamDrives)
+              _cgsptFields
+              (Just AltJSON)
+              driveService
           where go
                   = buildClient
                       (Proxy :: Proxy ChangesGetStartPageTokenResource)

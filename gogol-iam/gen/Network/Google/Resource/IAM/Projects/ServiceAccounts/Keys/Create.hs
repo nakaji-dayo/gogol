@@ -41,11 +41,12 @@ module Network.Google.Resource.IAM.Projects.ServiceAccounts.Keys.Create
     , psakcPayload
     , psakcBearerToken
     , psakcName
+    , psakcFields
     , psakcCallback
     ) where
 
-import           Network.Google.IAM.Types
-import           Network.Google.Prelude
+import Network.Google.IAM.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @iam.projects.serviceAccounts.keys.create@ method which the
 -- 'ProjectsServiceAccountsKeysCreate' request conforms to.
@@ -53,30 +54,32 @@ type ProjectsServiceAccountsKeysCreateResource =
      "v1" :>
        Capture "name" Text :>
          "keys" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CreateServiceAccountKeyRequest :>
-                             Post '[JSON] ServiceAccountKey
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CreateServiceAccountKeyRequest :>
+                               Post '[JSON] ServiceAccountKey
 
 -- | Creates a ServiceAccountKey and returns it.
 --
 -- /See:/ 'projectsServiceAccountsKeysCreate' smart constructor.
 data ProjectsServiceAccountsKeysCreate = ProjectsServiceAccountsKeysCreate'
-    { _psakcXgafv          :: !(Maybe Text)
+    { _psakcXgafv :: !(Maybe Xgafv)
     , _psakcUploadProtocol :: !(Maybe Text)
-    , _psakcPp             :: !Bool
-    , _psakcAccessToken    :: !(Maybe Text)
-    , _psakcUploadType     :: !(Maybe Text)
-    , _psakcPayload        :: !CreateServiceAccountKeyRequest
-    , _psakcBearerToken    :: !(Maybe Text)
-    , _psakcName           :: !Text
-    , _psakcCallback       :: !(Maybe Text)
+    , _psakcPp :: !Bool
+    , _psakcAccessToken :: !(Maybe Text)
+    , _psakcUploadType :: !(Maybe Text)
+    , _psakcPayload :: !CreateServiceAccountKeyRequest
+    , _psakcBearerToken :: !(Maybe Text)
+    , _psakcName :: !Text
+    , _psakcFields :: !(Maybe Text)
+    , _psakcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsServiceAccountsKeysCreate' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ProjectsServiceAccountsKeysCreate = ProjectsServiceAccountsKeysCreate'
 --
 -- * 'psakcName'
 --
+-- * 'psakcFields'
+--
 -- * 'psakcCallback'
 projectsServiceAccountsKeysCreate
     :: CreateServiceAccountKeyRequest -- ^ 'psakcPayload'
     -> Text -- ^ 'psakcName'
     -> ProjectsServiceAccountsKeysCreate
-projectsServiceAccountsKeysCreate pPsakcPayload_ pPsakcName_ =
+projectsServiceAccountsKeysCreate pPsakcPayload_ pPsakcName_ = 
     ProjectsServiceAccountsKeysCreate'
     { _psakcXgafv = Nothing
     , _psakcUploadProtocol = Nothing
@@ -114,11 +119,12 @@ projectsServiceAccountsKeysCreate pPsakcPayload_ pPsakcName_ =
     , _psakcPayload = pPsakcPayload_
     , _psakcBearerToken = Nothing
     , _psakcName = pPsakcName_
+    , _psakcFields = Nothing
     , _psakcCallback = Nothing
     }
 
 -- | V1 error format.
-psakcXgafv :: Lens' ProjectsServiceAccountsKeysCreate (Maybe Text)
+psakcXgafv :: Lens' ProjectsServiceAccountsKeysCreate (Maybe Xgafv)
 psakcXgafv
   = lens _psakcXgafv (\ s a -> s{_psakcXgafv = a})
 
@@ -156,13 +162,18 @@ psakcBearerToken
       (\ s a -> s{_psakcBearerToken = a})
 
 -- | The resource name of the service account in the following format:
--- \`projects\/{project}\/serviceAccounts\/{account}\`. Using \`-\` as a
--- wildcard for the project will infer the project from the account. The
--- \`account\` value can be the \`email\` address or the \`unique_id\` of
--- the service account.
+-- \`projects\/{PROJECT_ID}\/serviceAccounts\/{ACCOUNT}\`. Using \`-\` as a
+-- wildcard for the \`PROJECT_ID\` will infer the project from the account.
+-- The \`ACCOUNT\` value can be the \`email\` address or the \`unique_id\`
+-- of the service account.
 psakcName :: Lens' ProjectsServiceAccountsKeysCreate Text
 psakcName
   = lens _psakcName (\ s a -> s{_psakcName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+psakcFields :: Lens' ProjectsServiceAccountsKeysCreate (Maybe Text)
+psakcFields
+  = lens _psakcFields (\ s a -> s{_psakcFields = a})
 
 -- | JSONP
 psakcCallback :: Lens' ProjectsServiceAccountsKeysCreate (Maybe Text)
@@ -183,6 +194,7 @@ instance GoogleRequest
               _psakcUploadType
               _psakcBearerToken
               _psakcCallback
+              _psakcFields
               (Just AltJSON)
               _psakcPayload
               iAMService

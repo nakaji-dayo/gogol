@@ -37,10 +37,11 @@ module Network.Google.Resource.Games.AchievementDefinitions.List
     , adlLanguage
     , adlPageToken
     , adlMaxResults
+    , adlFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievementDefinitions.list@ method which the
 -- 'AchievementDefinitionsList' request conforms to.
@@ -52,17 +53,19 @@ type AchievementDefinitionsListResource =
              QueryParam "language" Text :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] AchievementDefinitionsListResponse
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] AchievementDefinitionsListResponse
 
 -- | Lists all the achievement definitions for your application.
 --
 -- /See:/ 'achievementDefinitionsList' smart constructor.
 data AchievementDefinitionsList = AchievementDefinitionsList'
     { _adlConsistencyToken :: !(Maybe (Textual Int64))
-    , _adlLanguage         :: !(Maybe Text)
-    , _adlPageToken        :: !(Maybe Text)
-    , _adlMaxResults       :: !(Maybe (Textual Int32))
+    , _adlLanguage :: !(Maybe Text)
+    , _adlPageToken :: !(Maybe Text)
+    , _adlMaxResults :: !(Maybe (Textual Int32))
+    , _adlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementDefinitionsList' with the minimum fields required to make a request.
@@ -76,14 +79,17 @@ data AchievementDefinitionsList = AchievementDefinitionsList'
 -- * 'adlPageToken'
 --
 -- * 'adlMaxResults'
+--
+-- * 'adlFields'
 achievementDefinitionsList
     :: AchievementDefinitionsList
-achievementDefinitionsList =
+achievementDefinitionsList = 
     AchievementDefinitionsList'
     { _adlConsistencyToken = Nothing
     , _adlLanguage = Nothing
     , _adlPageToken = Nothing
     , _adlMaxResults = Nothing
+    , _adlFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -112,6 +118,11 @@ adlMaxResults
       (\ s a -> s{_adlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+adlFields :: Lens' AchievementDefinitionsList (Maybe Text)
+adlFields
+  = lens _adlFields (\ s a -> s{_adlFields = a})
+
 instance GoogleRequest AchievementDefinitionsList
          where
         type Rs AchievementDefinitionsList =
@@ -122,6 +133,7 @@ instance GoogleRequest AchievementDefinitionsList
         requestClient AchievementDefinitionsList'{..}
           = go _adlConsistencyToken _adlLanguage _adlPageToken
               _adlMaxResults
+              _adlFields
               (Just AltJSON)
               gamesService
           where go

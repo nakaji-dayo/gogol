@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Cancels all line items in an order. This method can only be called for
--- non-multi-client accounts.
+-- Cancels all line items in an order, making a full refund.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.orders.cancel@.
 module Network.Google.Resource.Content.Orders.Cancel
@@ -37,10 +36,11 @@ module Network.Google.Resource.Content.Orders.Cancel
     , occMerchantId
     , occPayload
     , occOrderId
+    , occFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.orders.cancel@ method which the
 -- 'OrdersCancel' request conforms to.
@@ -51,18 +51,19 @@ type OrdersCancelResource =
            "orders" :>
              Capture "orderId" Text :>
                "cancel" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrdersCancelRequest :>
-                     Post '[JSON] OrdersCancelResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrdersCancelRequest :>
+                       Post '[JSON] OrdersCancelResponse
 
--- | Cancels all line items in an order. This method can only be called for
--- non-multi-client accounts.
+-- | Cancels all line items in an order, making a full refund.
 --
 -- /See:/ 'ordersCancel' smart constructor.
 data OrdersCancel = OrdersCancel'
     { _occMerchantId :: !(Textual Word64)
-    , _occPayload    :: !OrdersCancelRequest
-    , _occOrderId    :: !Text
+    , _occPayload :: !OrdersCancelRequest
+    , _occOrderId :: !Text
+    , _occFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersCancel' with the minimum fields required to make a request.
@@ -74,19 +75,23 @@ data OrdersCancel = OrdersCancel'
 -- * 'occPayload'
 --
 -- * 'occOrderId'
+--
+-- * 'occFields'
 ordersCancel
     :: Word64 -- ^ 'occMerchantId'
     -> OrdersCancelRequest -- ^ 'occPayload'
     -> Text -- ^ 'occOrderId'
     -> OrdersCancel
-ordersCancel pOccMerchantId_ pOccPayload_ pOccOrderId_ =
+ordersCancel pOccMerchantId_ pOccPayload_ pOccOrderId_ = 
     OrdersCancel'
     { _occMerchantId = _Coerce # pOccMerchantId_
     , _occPayload = pOccPayload_
     , _occOrderId = pOccOrderId_
+    , _occFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that manages the order. This cannot be a
+-- multi-client account.
 occMerchantId :: Lens' OrdersCancel Word64
 occMerchantId
   = lens _occMerchantId
@@ -103,12 +108,18 @@ occOrderId :: Lens' OrdersCancel Text
 occOrderId
   = lens _occOrderId (\ s a -> s{_occOrderId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+occFields :: Lens' OrdersCancel (Maybe Text)
+occFields
+  = lens _occFields (\ s a -> s{_occFields = a})
+
 instance GoogleRequest OrdersCancel where
         type Rs OrdersCancel = OrdersCancelResponse
         type Scopes OrdersCancel =
              '["https://www.googleapis.com/auth/content"]
         requestClient OrdersCancel'{..}
-          = go _occMerchantId _occOrderId (Just AltJSON)
+          = go _occMerchantId _occOrderId _occFields
+              (Just AltJSON)
               _occPayload
               shoppingContentService
           where go

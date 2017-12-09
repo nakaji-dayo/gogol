@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Reports.Insert
     -- * Request Lenses
     , riProFileId
     , riPayload
+    , riFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.insert@ method which the
 -- 'ReportsInsert' request conforms to.
 type ReportsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Report :> Post '[JSON] Report
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Report :> Post '[JSON] Report
 
 -- | Creates a report.
 --
 -- /See:/ 'reportsInsert' smart constructor.
 data ReportsInsert = ReportsInsert'
     { _riProFileId :: !(Textual Int64)
-    , _riPayload   :: !Report
+    , _riPayload :: !Report
+    , _riFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data ReportsInsert = ReportsInsert'
 -- * 'riProFileId'
 --
 -- * 'riPayload'
+--
+-- * 'riFields'
 reportsInsert
     :: Int64 -- ^ 'riProFileId'
     -> Report -- ^ 'riPayload'
     -> ReportsInsert
-reportsInsert pRiProFileId_ pRiPayload_ =
+reportsInsert pRiProFileId_ pRiPayload_ = 
     ReportsInsert'
     { _riProFileId = _Coerce # pRiProFileId_
     , _riPayload = pRiPayload_
+    , _riFields = Nothing
     }
 
 -- | The DFA user profile ID.
@@ -87,12 +93,16 @@ riPayload :: Lens' ReportsInsert Report
 riPayload
   = lens _riPayload (\ s a -> s{_riPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+riFields :: Lens' ReportsInsert (Maybe Text)
+riFields = lens _riFields (\ s a -> s{_riFields = a})
+
 instance GoogleRequest ReportsInsert where
         type Rs ReportsInsert = Report
         type Scopes ReportsInsert =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsInsert'{..}
-          = go _riProFileId (Just AltJSON) _riPayload
+          = go _riProFileId _riFields (Just AltJSON) _riPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy ReportsInsertResource)

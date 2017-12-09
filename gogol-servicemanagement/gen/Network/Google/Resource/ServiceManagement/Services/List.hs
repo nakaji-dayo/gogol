@@ -20,12 +20,12 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Lists managed services. If called without any authentication, it returns
--- only the public services. If called with authentication, it returns all
--- services that the caller has \"servicemanagement.services.get\"
--- permission for. **BETA:** If the caller specifies the \`consumer_id\`,
--- it returns only the services enabled on the consumer. The
--- \`consumer_id\` must have the format of \"project:{PROJECT-ID}\".
+-- Lists managed services. Returns all public services. For authenticated
+-- users, also returns all services the calling user has
+-- \"servicemanagement.services.get\" permission for. **BETA:** If the
+-- caller specifies the \`consumer_id\`, it returns only the services
+-- enabled on the consumer. The \`consumer_id\` must have the format of
+-- \"project:{PROJECT-ID}\".
 --
 -- /See:/ <https://cloud.google.com/service-management/ Google Service Management API Reference> for @servicemanagement.services.list@.
 module Network.Google.Resource.ServiceManagement.Services.List
@@ -48,11 +48,12 @@ module Network.Google.Resource.ServiceManagement.Services.List
     , slProducerProjectId
     , slConsumerId
     , slPageSize
+    , slFields
     , slCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.list@ method which the
 -- 'ServicesList' request conforms to.
@@ -70,29 +71,31 @@ type ServicesListResource =
                          QueryParam "consumerId" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListServicesResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListServicesResponse
 
--- | Lists managed services. If called without any authentication, it returns
--- only the public services. If called with authentication, it returns all
--- services that the caller has \"servicemanagement.services.get\"
--- permission for. **BETA:** If the caller specifies the \`consumer_id\`,
--- it returns only the services enabled on the consumer. The
--- \`consumer_id\` must have the format of \"project:{PROJECT-ID}\".
+-- | Lists managed services. Returns all public services. For authenticated
+-- users, also returns all services the calling user has
+-- \"servicemanagement.services.get\" permission for. **BETA:** If the
+-- caller specifies the \`consumer_id\`, it returns only the services
+-- enabled on the consumer. The \`consumer_id\` must have the format of
+-- \"project:{PROJECT-ID}\".
 --
 -- /See:/ 'servicesList' smart constructor.
 data ServicesList = ServicesList'
-    { _slXgafv             :: !(Maybe Xgafv)
-    , _slUploadProtocol    :: !(Maybe Text)
-    , _slPp                :: !Bool
-    , _slAccessToken       :: !(Maybe Text)
-    , _slUploadType        :: !(Maybe Text)
-    , _slBearerToken       :: !(Maybe Text)
-    , _slPageToken         :: !(Maybe Text)
+    { _slXgafv :: !(Maybe Xgafv)
+    , _slUploadProtocol :: !(Maybe Text)
+    , _slPp :: !Bool
+    , _slAccessToken :: !(Maybe Text)
+    , _slUploadType :: !(Maybe Text)
+    , _slBearerToken :: !(Maybe Text)
+    , _slPageToken :: !(Maybe Text)
     , _slProducerProjectId :: !(Maybe Text)
-    , _slConsumerId        :: !(Maybe Text)
-    , _slPageSize          :: !(Maybe (Textual Int32))
-    , _slCallback          :: !(Maybe Text)
+    , _slConsumerId :: !(Maybe Text)
+    , _slPageSize :: !(Maybe (Textual Int32))
+    , _slFields :: !(Maybe Text)
+    , _slCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesList' with the minimum fields required to make a request.
@@ -119,10 +122,12 @@ data ServicesList = ServicesList'
 --
 -- * 'slPageSize'
 --
+-- * 'slFields'
+--
 -- * 'slCallback'
 servicesList
     :: ServicesList
-servicesList =
+servicesList = 
     ServicesList'
     { _slXgafv = Nothing
     , _slUploadProtocol = Nothing
@@ -134,6 +139,7 @@ servicesList =
     , _slProducerProjectId = Nothing
     , _slConsumerId = Nothing
     , _slPageSize = Nothing
+    , _slFields = Nothing
     , _slCallback = Nothing
     }
 
@@ -192,6 +198,10 @@ slPageSize
   = lens _slPageSize (\ s a -> s{_slPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' ServicesList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 -- | JSONP
 slCallback :: Lens' ServicesList (Maybe Text)
 slCallback
@@ -214,6 +224,7 @@ instance GoogleRequest ServicesList where
               _slConsumerId
               _slPageSize
               _slCallback
+              _slFields
               (Just AltJSON)
               serviceManagementService
           where go

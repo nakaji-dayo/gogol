@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Patch
     , spEnterpriseId
     , spPageId
     , spPayload
+    , spFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutpages.patch@ method which the
 -- 'StorelayoutpagesPatch' request conforms to.
@@ -52,8 +53,9 @@ type StorelayoutpagesPatchResource =
              "storeLayout" :>
                "pages" :>
                  Capture "pageId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] StorePage :> Patch '[JSON] StorePage
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] StorePage :> Patch '[JSON] StorePage
 
 -- | Updates the content of a store page. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type StorelayoutpagesPatchResource =
 -- /See:/ 'storelayoutpagesPatch' smart constructor.
 data StorelayoutpagesPatch = StorelayoutpagesPatch'
     { _spEnterpriseId :: !Text
-    , _spPageId       :: !Text
-    , _spPayload      :: !StorePage
+    , _spPageId :: !Text
+    , _spPayload :: !StorePage
+    , _spFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutpagesPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data StorelayoutpagesPatch = StorelayoutpagesPatch'
 -- * 'spPageId'
 --
 -- * 'spPayload'
+--
+-- * 'spFields'
 storelayoutpagesPatch
     :: Text -- ^ 'spEnterpriseId'
     -> Text -- ^ 'spPageId'
     -> StorePage -- ^ 'spPayload'
     -> StorelayoutpagesPatch
-storelayoutpagesPatch pSpEnterpriseId_ pSpPageId_ pSpPayload_ =
+storelayoutpagesPatch pSpEnterpriseId_ pSpPageId_ pSpPayload_ = 
     StorelayoutpagesPatch'
     { _spEnterpriseId = pSpEnterpriseId_
     , _spPageId = pSpPageId_
     , _spPayload = pSpPayload_
+    , _spFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -101,12 +107,17 @@ spPayload :: Lens' StorelayoutpagesPatch StorePage
 spPayload
   = lens _spPayload (\ s a -> s{_spPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+spFields :: Lens' StorelayoutpagesPatch (Maybe Text)
+spFields = lens _spFields (\ s a -> s{_spFields = a})
+
 instance GoogleRequest StorelayoutpagesPatch where
         type Rs StorelayoutpagesPatch = StorePage
         type Scopes StorelayoutpagesPatch =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutpagesPatch'{..}
-          = go _spEnterpriseId _spPageId (Just AltJSON)
+          = go _spEnterpriseId _spPageId _spFields
+              (Just AltJSON)
               _spPayload
               androidEnterpriseService
           where go

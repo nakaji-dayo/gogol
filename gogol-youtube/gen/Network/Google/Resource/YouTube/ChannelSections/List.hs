@@ -39,10 +39,11 @@ module Network.Google.Resource.YouTube.ChannelSections.List
     , cslHl
     , cslOnBehalfOfContentOwner
     , cslId
+    , cslFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.channelSections.list@ method which the
 -- 'ChannelSectionsList' request conforms to.
@@ -56,19 +57,21 @@ type ChannelSectionsListResource =
                  QueryParam "hl" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "id" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] ChannelSectionListResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ChannelSectionListResponse
 
 -- | Returns channelSection resources that match the API request criteria.
 --
 -- /See:/ 'channelSectionsList' smart constructor.
 data ChannelSectionsList = ChannelSectionsList'
-    { _cslPart                   :: !Text
-    , _cslMine                   :: !(Maybe Bool)
-    , _cslChannelId              :: !(Maybe Text)
-    , _cslHl                     :: !(Maybe Text)
+    { _cslPart :: !Text
+    , _cslMine :: !(Maybe Bool)
+    , _cslChannelId :: !(Maybe Text)
+    , _cslHl :: !(Maybe Text)
     , _cslOnBehalfOfContentOwner :: !(Maybe Text)
-    , _cslId                     :: !(Maybe Text)
+    , _cslId :: !(Maybe Text)
+    , _cslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChannelSectionsList' with the minimum fields required to make a request.
@@ -86,10 +89,12 @@ data ChannelSectionsList = ChannelSectionsList'
 -- * 'cslOnBehalfOfContentOwner'
 --
 -- * 'cslId'
+--
+-- * 'cslFields'
 channelSectionsList
     :: Text -- ^ 'cslPart'
     -> ChannelSectionsList
-channelSectionsList pCslPart_ =
+channelSectionsList pCslPart_ = 
     ChannelSectionsList'
     { _cslPart = pCslPart_
     , _cslMine = Nothing
@@ -97,6 +102,7 @@ channelSectionsList pCslPart_ =
     , _cslHl = Nothing
     , _cslOnBehalfOfContentOwner = Nothing
     , _cslId = Nothing
+    , _cslFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -155,6 +161,11 @@ cslOnBehalfOfContentOwner
 cslId :: Lens' ChannelSectionsList (Maybe Text)
 cslId = lens _cslId (\ s a -> s{_cslId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cslFields :: Lens' ChannelSectionsList (Maybe Text)
+cslFields
+  = lens _cslFields (\ s a -> s{_cslFields = a})
+
 instance GoogleRequest ChannelSectionsList where
         type Rs ChannelSectionsList =
              ChannelSectionListResponse
@@ -167,6 +178,7 @@ instance GoogleRequest ChannelSectionsList where
           = go (Just _cslPart) _cslMine _cslChannelId _cslHl
               _cslOnBehalfOfContentOwner
               _cslId
+              _cslFields
               (Just AltJSON)
               youTubeService
           where go

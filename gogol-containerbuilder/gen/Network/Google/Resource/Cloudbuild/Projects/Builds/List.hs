@@ -44,11 +44,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Builds.List
     , pblPageToken
     , pblProjectId
     , pblPageSize
+    , pblFields
     , pblCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.builds.list@ method which the
 -- 'ProjectsBuildsList' request conforms to.
@@ -67,25 +68,27 @@ type ProjectsBuildsListResource =
                            QueryParam "pageToken" Text :>
                              QueryParam "pageSize" (Textual Int32) :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ListBuildsResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ListBuildsResponse
 
 -- | Lists previously requested builds. Previously requested builds may still
 -- be in-progress, or may have finished successfully or unsuccessfully.
 --
 -- /See:/ 'projectsBuildsList' smart constructor.
 data ProjectsBuildsList = ProjectsBuildsList'
-    { _pblXgafv          :: !(Maybe Xgafv)
+    { _pblXgafv :: !(Maybe Xgafv)
     , _pblUploadProtocol :: !(Maybe Text)
-    , _pblPp             :: !Bool
-    , _pblAccessToken    :: !(Maybe Text)
-    , _pblUploadType     :: !(Maybe Text)
-    , _pblBearerToken    :: !(Maybe Text)
-    , _pblFilter         :: !(Maybe Text)
-    , _pblPageToken      :: !(Maybe Text)
-    , _pblProjectId      :: !Text
-    , _pblPageSize       :: !(Maybe (Textual Int32))
-    , _pblCallback       :: !(Maybe Text)
+    , _pblPp :: !Bool
+    , _pblAccessToken :: !(Maybe Text)
+    , _pblUploadType :: !(Maybe Text)
+    , _pblBearerToken :: !(Maybe Text)
+    , _pblFilter :: !(Maybe Text)
+    , _pblPageToken :: !(Maybe Text)
+    , _pblProjectId :: !Text
+    , _pblPageSize :: !(Maybe (Textual Int32))
+    , _pblFields :: !(Maybe Text)
+    , _pblCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsBuildsList' with the minimum fields required to make a request.
@@ -112,11 +115,13 @@ data ProjectsBuildsList = ProjectsBuildsList'
 --
 -- * 'pblPageSize'
 --
+-- * 'pblFields'
+--
 -- * 'pblCallback'
 projectsBuildsList
     :: Text -- ^ 'pblProjectId'
     -> ProjectsBuildsList
-projectsBuildsList pPblProjectId_ =
+projectsBuildsList pPblProjectId_ = 
     ProjectsBuildsList'
     { _pblXgafv = Nothing
     , _pblUploadProtocol = Nothing
@@ -128,6 +133,7 @@ projectsBuildsList pPblProjectId_ =
     , _pblPageToken = Nothing
     , _pblProjectId = pPblProjectId_
     , _pblPageSize = Nothing
+    , _pblFields = Nothing
     , _pblCallback = Nothing
     }
 
@@ -184,6 +190,11 @@ pblPageSize
   = lens _pblPageSize (\ s a -> s{_pblPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pblFields :: Lens' ProjectsBuildsList (Maybe Text)
+pblFields
+  = lens _pblFields (\ s a -> s{_pblFields = a})
+
 -- | JSONP
 pblCallback :: Lens' ProjectsBuildsList (Maybe Text)
 pblCallback
@@ -203,6 +214,7 @@ instance GoogleRequest ProjectsBuildsList where
               _pblPageToken
               _pblPageSize
               _pblCallback
+              _pblFields
               (Just AltJSON)
               containerBuilderService
           where go

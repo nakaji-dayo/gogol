@@ -49,11 +49,12 @@ module Network.Google.Resource.Genomics.References.Bases.List
     , rblEnd
     , rblPageToken
     , rblPageSize
+    , rblFields
     , rblCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.references.bases.list@ method which the
 -- 'ReferencesBasesList' request conforms to.
@@ -73,8 +74,9 @@ type ReferencesBasesListResource =
                              QueryParam "pageToken" Text :>
                                QueryParam "pageSize" (Textual Int32) :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :>
-                                     Get '[JSON] ListBasesResponse
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] ListBasesResponse
 
 -- | Lists the bases in a reference, optionally restricted to a range. For
 -- the definitions of references and other genomics resources, see
@@ -85,18 +87,19 @@ type ReferencesBasesListResource =
 --
 -- /See:/ 'referencesBasesList' smart constructor.
 data ReferencesBasesList = ReferencesBasesList'
-    { _rblXgafv          :: !(Maybe Xgafv)
+    { _rblXgafv :: !(Maybe Xgafv)
     , _rblUploadProtocol :: !(Maybe Text)
-    , _rblPp             :: !Bool
-    , _rblAccessToken    :: !(Maybe Text)
-    , _rblStart          :: !(Maybe (Textual Int64))
-    , _rblUploadType     :: !(Maybe Text)
-    , _rblReferenceId    :: !Text
-    , _rblBearerToken    :: !(Maybe Text)
-    , _rblEnd            :: !(Maybe (Textual Int64))
-    , _rblPageToken      :: !(Maybe Text)
-    , _rblPageSize       :: !(Maybe (Textual Int32))
-    , _rblCallback       :: !(Maybe Text)
+    , _rblPp :: !Bool
+    , _rblAccessToken :: !(Maybe Text)
+    , _rblStart :: !(Maybe (Textual Int64))
+    , _rblUploadType :: !(Maybe Text)
+    , _rblReferenceId :: !Text
+    , _rblBearerToken :: !(Maybe Text)
+    , _rblEnd :: !(Maybe (Textual Int64))
+    , _rblPageToken :: !(Maybe Text)
+    , _rblPageSize :: !(Maybe (Textual Int32))
+    , _rblFields :: !(Maybe Text)
+    , _rblCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReferencesBasesList' with the minimum fields required to make a request.
@@ -125,11 +128,13 @@ data ReferencesBasesList = ReferencesBasesList'
 --
 -- * 'rblPageSize'
 --
+-- * 'rblFields'
+--
 -- * 'rblCallback'
 referencesBasesList
     :: Text -- ^ 'rblReferenceId'
     -> ReferencesBasesList
-referencesBasesList pRblReferenceId_ =
+referencesBasesList pRblReferenceId_ = 
     ReferencesBasesList'
     { _rblXgafv = Nothing
     , _rblUploadProtocol = Nothing
@@ -142,6 +147,7 @@ referencesBasesList pRblReferenceId_ =
     , _rblEnd = Nothing
     , _rblPageToken = Nothing
     , _rblPageSize = Nothing
+    , _rblFields = Nothing
     , _rblCallback = Nothing
     }
 
@@ -211,6 +217,11 @@ rblPageSize
   = lens _rblPageSize (\ s a -> s{_rblPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rblFields :: Lens' ReferencesBasesList (Maybe Text)
+rblFields
+  = lens _rblFields (\ s a -> s{_rblFields = a})
+
 -- | JSONP
 rblCallback :: Lens' ReferencesBasesList (Maybe Text)
 rblCallback
@@ -233,6 +244,7 @@ instance GoogleRequest ReferencesBasesList where
               _rblPageToken
               _rblPageSize
               _rblCallback
+              _rblFields
               (Just AltJSON)
               genomicsService
           where go

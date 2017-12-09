@@ -35,11 +35,13 @@ module Network.Google.Resource.Storage.Buckets.Delete
     -- * Request Lenses
     , bdIfMetagenerationMatch
     , bdBucket
+    , bdUserProject
     , bdIfMetagenerationNotMatch
+    , bdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.buckets.delete@ method which the
 -- 'BucketsDelete' request conforms to.
@@ -49,16 +51,21 @@ type BucketsDeleteResource =
          "b" :>
            Capture "bucket" Text :>
              QueryParam "ifMetagenerationMatch" (Textual Int64) :>
-               QueryParam "ifMetagenerationNotMatch" (Textual Int64)
-                 :> QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "userProject" Text :>
+                 QueryParam "ifMetagenerationNotMatch" (Textual Int64)
+                   :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Permanently deletes an empty bucket.
 --
 -- /See:/ 'bucketsDelete' smart constructor.
 data BucketsDelete = BucketsDelete'
-    { _bdIfMetagenerationMatch    :: !(Maybe (Textual Int64))
-    , _bdBucket                   :: !Text
+    { _bdIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _bdBucket :: !Text
+    , _bdUserProject :: !(Maybe Text)
     , _bdIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
+    , _bdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BucketsDelete' with the minimum fields required to make a request.
@@ -69,15 +76,21 @@ data BucketsDelete = BucketsDelete'
 --
 -- * 'bdBucket'
 --
+-- * 'bdUserProject'
+--
 -- * 'bdIfMetagenerationNotMatch'
+--
+-- * 'bdFields'
 bucketsDelete
     :: Text -- ^ 'bdBucket'
     -> BucketsDelete
-bucketsDelete pBdBucket_ =
+bucketsDelete pBdBucket_ = 
     BucketsDelete'
     { _bdIfMetagenerationMatch = Nothing
     , _bdBucket = pBdBucket_
+    , _bdUserProject = Nothing
     , _bdIfMetagenerationNotMatch = Nothing
+    , _bdFields = Nothing
     }
 
 -- | If set, only deletes the bucket if its metageneration matches this
@@ -92,6 +105,13 @@ bdIfMetagenerationMatch
 bdBucket :: Lens' BucketsDelete Text
 bdBucket = lens _bdBucket (\ s a -> s{_bdBucket = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+bdUserProject :: Lens' BucketsDelete (Maybe Text)
+bdUserProject
+  = lens _bdUserProject
+      (\ s a -> s{_bdUserProject = a})
+
 -- | If set, only deletes the bucket if its metageneration does not match
 -- this value.
 bdIfMetagenerationNotMatch :: Lens' BucketsDelete (Maybe Int64)
@@ -99,6 +119,10 @@ bdIfMetagenerationNotMatch
   = lens _bdIfMetagenerationNotMatch
       (\ s a -> s{_bdIfMetagenerationNotMatch = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+bdFields :: Lens' BucketsDelete (Maybe Text)
+bdFields = lens _bdFields (\ s a -> s{_bdFields = a})
 
 instance GoogleRequest BucketsDelete where
         type Rs BucketsDelete = ()
@@ -108,7 +132,9 @@ instance GoogleRequest BucketsDelete where
                "https://www.googleapis.com/auth/devstorage.read_write"]
         requestClient BucketsDelete'{..}
           = go _bdBucket _bdIfMetagenerationMatch
+              _bdUserProject
               _bdIfMetagenerationNotMatch
+              _bdFields
               (Just AltJSON)
               storageService
           where go

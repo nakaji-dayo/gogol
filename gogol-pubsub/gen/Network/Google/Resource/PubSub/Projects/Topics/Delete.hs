@@ -45,11 +45,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.Delete
     , ptdUploadType
     , ptdTopic
     , ptdBearerToken
+    , ptdFields
     , ptdCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.delete@ method which the
 -- 'ProjectsTopicsDelete' request conforms to.
@@ -63,7 +64,8 @@ type ProjectsTopicsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes the topic with the given name. Returns \`NOT_FOUND\` if the
 -- topic does not exist. After a topic is deleted, a new topic may be
@@ -74,14 +76,15 @@ type ProjectsTopicsDeleteResource =
 --
 -- /See:/ 'projectsTopicsDelete' smart constructor.
 data ProjectsTopicsDelete = ProjectsTopicsDelete'
-    { _ptdXgafv          :: !(Maybe Xgafv)
+    { _ptdXgafv :: !(Maybe Xgafv)
     , _ptdUploadProtocol :: !(Maybe Text)
-    , _ptdPp             :: !Bool
-    , _ptdAccessToken    :: !(Maybe Text)
-    , _ptdUploadType     :: !(Maybe Text)
-    , _ptdTopic          :: !Text
-    , _ptdBearerToken    :: !(Maybe Text)
-    , _ptdCallback       :: !(Maybe Text)
+    , _ptdPp :: !Bool
+    , _ptdAccessToken :: !(Maybe Text)
+    , _ptdUploadType :: !(Maybe Text)
+    , _ptdTopic :: !Text
+    , _ptdBearerToken :: !(Maybe Text)
+    , _ptdFields :: !(Maybe Text)
+    , _ptdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsDelete' with the minimum fields required to make a request.
@@ -102,11 +105,13 @@ data ProjectsTopicsDelete = ProjectsTopicsDelete'
 --
 -- * 'ptdBearerToken'
 --
+-- * 'ptdFields'
+--
 -- * 'ptdCallback'
 projectsTopicsDelete
     :: Text -- ^ 'ptdTopic'
     -> ProjectsTopicsDelete
-projectsTopicsDelete pPtdTopic_ =
+projectsTopicsDelete pPtdTopic_ = 
     ProjectsTopicsDelete'
     { _ptdXgafv = Nothing
     , _ptdUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsTopicsDelete pPtdTopic_ =
     , _ptdUploadType = Nothing
     , _ptdTopic = pPtdTopic_
     , _ptdBearerToken = Nothing
+    , _ptdFields = Nothing
     , _ptdCallback = Nothing
     }
 
@@ -155,6 +161,11 @@ ptdBearerToken
   = lens _ptdBearerToken
       (\ s a -> s{_ptdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptdFields :: Lens' ProjectsTopicsDelete (Maybe Text)
+ptdFields
+  = lens _ptdFields (\ s a -> s{_ptdFields = a})
+
 -- | JSONP
 ptdCallback :: Lens' ProjectsTopicsDelete (Maybe Text)
 ptdCallback
@@ -172,6 +183,7 @@ instance GoogleRequest ProjectsTopicsDelete where
               _ptdUploadType
               _ptdBearerToken
               _ptdCallback
+              _ptdFields
               (Just AltJSON)
               pubSubService
           where go

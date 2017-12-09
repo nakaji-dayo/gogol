@@ -38,10 +38,11 @@ module Network.Google.Resource.Fitness.Users.DataSet.Aggregate
     -- * Request Lenses
     , udsaPayload
     , udsaUserId
+    , udsaFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataset.aggregate@ method which the
 -- 'UsersDataSetAggregate' request conforms to.
@@ -51,9 +52,10 @@ type UsersDataSetAggregateResource =
          "users" :>
            Capture "userId" Text :>
              "dataset:aggregate" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] AggregateRequest :>
-                   Post '[JSON] AggregateResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] AggregateRequest :>
+                     Post '[JSON] AggregateResponse
 
 -- | Aggregates data of a certain type or stream into buckets divided by a
 -- given type of boundary. Multiple data sets of multiple types and from
@@ -63,7 +65,8 @@ type UsersDataSetAggregateResource =
 -- /See:/ 'usersDataSetAggregate' smart constructor.
 data UsersDataSetAggregate = UsersDataSetAggregate'
     { _udsaPayload :: !AggregateRequest
-    , _udsaUserId  :: !Text
+    , _udsaUserId :: !Text
+    , _udsaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSetAggregate' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data UsersDataSetAggregate = UsersDataSetAggregate'
 -- * 'udsaPayload'
 --
 -- * 'udsaUserId'
+--
+-- * 'udsaFields'
 usersDataSetAggregate
     :: AggregateRequest -- ^ 'udsaPayload'
     -> Text -- ^ 'udsaUserId'
     -> UsersDataSetAggregate
-usersDataSetAggregate pUdsaPayload_ pUdsaUserId_ =
+usersDataSetAggregate pUdsaPayload_ pUdsaUserId_ = 
     UsersDataSetAggregate'
     { _udsaPayload = pUdsaPayload_
     , _udsaUserId = pUdsaUserId_
+    , _udsaFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -93,6 +99,11 @@ udsaPayload
 udsaUserId :: Lens' UsersDataSetAggregate Text
 udsaUserId
   = lens _udsaUserId (\ s a -> s{_udsaUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+udsaFields :: Lens' UsersDataSetAggregate (Maybe Text)
+udsaFields
+  = lens _udsaFields (\ s a -> s{_udsaFields = a})
 
 instance GoogleRequest UsersDataSetAggregate where
         type Rs UsersDataSetAggregate = AggregateResponse
@@ -116,7 +127,8 @@ instance GoogleRequest UsersDataSetAggregate where
                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSetAggregate'{..}
-          = go _udsaUserId (Just AltJSON) _udsaPayload
+          = go _udsaUserId _udsaFields (Just AltJSON)
+              _udsaPayload
               fitnessService
           where go
                   = buildClient

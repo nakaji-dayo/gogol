@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidPublisher.Purchases.Subscriptions.Defer
     , psdToken
     , psdPayload
     , psdSubscriptionId
+    , psdFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.purchases.subscriptions.defer@ method which the
 -- 'PurchasesSubscriptionsDefer' request conforms to.
@@ -55,19 +56,21 @@ type PurchasesSubscriptionsDeferResource =
                  Capture "subscriptionId" Text :>
                    "tokens" :>
                      CaptureMode "token" "defer" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SubscriptionPurchasesDeferRequest :>
-                           Post '[JSON] SubscriptionPurchasesDeferResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SubscriptionPurchasesDeferRequest :>
+                             Post '[JSON] SubscriptionPurchasesDeferResponse
 
 -- | Defers a user\'s subscription purchase until a specified future
 -- expiration time.
 --
 -- /See:/ 'purchasesSubscriptionsDefer' smart constructor.
 data PurchasesSubscriptionsDefer = PurchasesSubscriptionsDefer'
-    { _psdPackageName    :: !Text
-    , _psdToken          :: !Text
-    , _psdPayload        :: !SubscriptionPurchasesDeferRequest
+    { _psdPackageName :: !Text
+    , _psdToken :: !Text
+    , _psdPayload :: !SubscriptionPurchasesDeferRequest
     , _psdSubscriptionId :: !Text
+    , _psdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PurchasesSubscriptionsDefer' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data PurchasesSubscriptionsDefer = PurchasesSubscriptionsDefer'
 -- * 'psdPayload'
 --
 -- * 'psdSubscriptionId'
+--
+-- * 'psdFields'
 purchasesSubscriptionsDefer
     :: Text -- ^ 'psdPackageName'
     -> Text -- ^ 'psdToken'
     -> SubscriptionPurchasesDeferRequest -- ^ 'psdPayload'
     -> Text -- ^ 'psdSubscriptionId'
     -> PurchasesSubscriptionsDefer
-purchasesSubscriptionsDefer pPsdPackageName_ pPsdToken_ pPsdPayload_ pPsdSubscriptionId_ =
+purchasesSubscriptionsDefer pPsdPackageName_ pPsdToken_ pPsdPayload_ pPsdSubscriptionId_ = 
     PurchasesSubscriptionsDefer'
     { _psdPackageName = pPsdPackageName_
     , _psdToken = pPsdToken_
     , _psdPayload = pPsdPayload_
     , _psdSubscriptionId = pPsdSubscriptionId_
+    , _psdFields = Nothing
     }
 
 -- | The package name of the application for which this subscription was
@@ -118,6 +124,11 @@ psdSubscriptionId
   = lens _psdSubscriptionId
       (\ s a -> s{_psdSubscriptionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psdFields :: Lens' PurchasesSubscriptionsDefer (Maybe Text)
+psdFields
+  = lens _psdFields (\ s a -> s{_psdFields = a})
+
 instance GoogleRequest PurchasesSubscriptionsDefer
          where
         type Rs PurchasesSubscriptionsDefer =
@@ -126,6 +137,7 @@ instance GoogleRequest PurchasesSubscriptionsDefer
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient PurchasesSubscriptionsDefer'{..}
           = go _psdPackageName _psdSubscriptionId _psdToken
+              _psdFields
               (Just AltJSON)
               _psdPayload
               androidPublisherService

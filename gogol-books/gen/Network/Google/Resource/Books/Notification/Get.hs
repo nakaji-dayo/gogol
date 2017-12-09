@@ -36,10 +36,11 @@ module Network.Google.Resource.Books.Notification.Get
     , ngLocale
     , ngNotificationId
     , ngSource
+    , ngFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.notification.get@ method which the
 -- 'NotificationGet' request conforms to.
@@ -51,15 +52,17 @@ type NotificationGetResource =
              QueryParam "notification_id" Text :>
                QueryParam "locale" Text :>
                  QueryParam "source" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Notification
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Notification
 
 -- | Returns notification details for a given notification id.
 --
 -- /See:/ 'notificationGet' smart constructor.
 data NotificationGet = NotificationGet'
-    { _ngLocale         :: !(Maybe Text)
+    { _ngLocale :: !(Maybe Text)
     , _ngNotificationId :: !Text
-    , _ngSource         :: !(Maybe Text)
+    , _ngSource :: !(Maybe Text)
+    , _ngFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationGet' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data NotificationGet = NotificationGet'
 -- * 'ngNotificationId'
 --
 -- * 'ngSource'
+--
+-- * 'ngFields'
 notificationGet
     :: Text -- ^ 'ngNotificationId'
     -> NotificationGet
-notificationGet pNgNotificationId_ =
+notificationGet pNgNotificationId_ = 
     NotificationGet'
     { _ngLocale = Nothing
     , _ngNotificationId = pNgNotificationId_
     , _ngSource = Nothing
+    , _ngFields = Nothing
     }
 
 -- | ISO-639-1 language and ISO-3166-1 country code. Ex: \'en_US\'. Used for
@@ -96,12 +102,17 @@ ngNotificationId
 ngSource :: Lens' NotificationGet (Maybe Text)
 ngSource = lens _ngSource (\ s a -> s{_ngSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ngFields :: Lens' NotificationGet (Maybe Text)
+ngFields = lens _ngFields (\ s a -> s{_ngFields = a})
+
 instance GoogleRequest NotificationGet where
         type Rs NotificationGet = Notification
         type Scopes NotificationGet =
              '["https://www.googleapis.com/auth/books"]
         requestClient NotificationGet'{..}
           = go (Just _ngNotificationId) _ngLocale _ngSource
+              _ngFields
               (Just AltJSON)
               booksService
           where go

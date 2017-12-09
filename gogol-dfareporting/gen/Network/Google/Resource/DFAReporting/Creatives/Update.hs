@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Creatives.Update
     -- * Request Lenses
     , creProFileId
     , crePayload
+    , creFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creatives.update@ method which the
 -- 'CreativesUpdate' request conforms to.
 type CreativesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creatives" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Creative :> Put '[JSON] Creative
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Creative :> Put '[JSON] Creative
 
 -- | Updates an existing creative.
 --
 -- /See:/ 'creativesUpdate' smart constructor.
 data CreativesUpdate = CreativesUpdate'
     { _creProFileId :: !(Textual Int64)
-    , _crePayload   :: !Creative
+    , _crePayload :: !Creative
+    , _creFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativesUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CreativesUpdate = CreativesUpdate'
 -- * 'creProFileId'
 --
 -- * 'crePayload'
+--
+-- * 'creFields'
 creativesUpdate
     :: Int64 -- ^ 'creProFileId'
     -> Creative -- ^ 'crePayload'
     -> CreativesUpdate
-creativesUpdate pCreProFileId_ pCrePayload_ =
+creativesUpdate pCreProFileId_ pCrePayload_ = 
     CreativesUpdate'
     { _creProFileId = _Coerce # pCreProFileId_
     , _crePayload = pCrePayload_
+    , _creFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,18 @@ crePayload :: Lens' CreativesUpdate Creative
 crePayload
   = lens _crePayload (\ s a -> s{_crePayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+creFields :: Lens' CreativesUpdate (Maybe Text)
+creFields
+  = lens _creFields (\ s a -> s{_creFields = a})
+
 instance GoogleRequest CreativesUpdate where
         type Rs CreativesUpdate = Creative
         type Scopes CreativesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativesUpdate'{..}
-          = go _creProFileId (Just AltJSON) _crePayload
+          = go _creProFileId _creFields (Just AltJSON)
+              _crePayload
               dFAReportingService
           where go
                   = buildClient

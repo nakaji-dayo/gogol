@@ -35,13 +35,15 @@ module Network.Google.Resource.Compute.InstanceGroupManagers.Delete
     , InstanceGroupManagersDelete
 
     -- * Request Lenses
+    , igmdRequestId
     , igmdProject
     , igmdInstanceGroupManager
     , igmdZone
+    , igmdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroupManagers.delete@ method which the
 -- 'InstanceGroupManagersDelete' request conforms to.
@@ -54,7 +56,9 @@ type InstanceGroupManagersDeleteResource =
                Capture "zone" Text :>
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified managed instance group and all of the instances in
 -- that group. Note that the instance group must not belong to a backend
@@ -62,31 +66,54 @@ type InstanceGroupManagersDeleteResource =
 --
 -- /See:/ 'instanceGroupManagersDelete' smart constructor.
 data InstanceGroupManagersDelete = InstanceGroupManagersDelete'
-    { _igmdProject              :: !Text
+    { _igmdRequestId :: !(Maybe Text)
+    , _igmdProject :: !Text
     , _igmdInstanceGroupManager :: !Text
-    , _igmdZone                 :: !Text
+    , _igmdZone :: !Text
+    , _igmdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'igmdRequestId'
+--
 -- * 'igmdProject'
 --
 -- * 'igmdInstanceGroupManager'
 --
 -- * 'igmdZone'
+--
+-- * 'igmdFields'
 instanceGroupManagersDelete
     :: Text -- ^ 'igmdProject'
     -> Text -- ^ 'igmdInstanceGroupManager'
     -> Text -- ^ 'igmdZone'
     -> InstanceGroupManagersDelete
-instanceGroupManagersDelete pIgmdProject_ pIgmdInstanceGroupManager_ pIgmdZone_ =
+instanceGroupManagersDelete pIgmdProject_ pIgmdInstanceGroupManager_ pIgmdZone_ = 
     InstanceGroupManagersDelete'
-    { _igmdProject = pIgmdProject_
+    { _igmdRequestId = Nothing
+    , _igmdProject = pIgmdProject_
     , _igmdInstanceGroupManager = pIgmdInstanceGroupManager_
     , _igmdZone = pIgmdZone_
+    , _igmdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igmdRequestId :: Lens' InstanceGroupManagersDelete (Maybe Text)
+igmdRequestId
+  = lens _igmdRequestId
+      (\ s a -> s{_igmdRequestId = a})
 
 -- | Project ID for this request.
 igmdProject :: Lens' InstanceGroupManagersDelete Text
@@ -103,6 +130,11 @@ igmdInstanceGroupManager
 igmdZone :: Lens' InstanceGroupManagersDelete Text
 igmdZone = lens _igmdZone (\ s a -> s{_igmdZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmdFields :: Lens' InstanceGroupManagersDelete (Maybe Text)
+igmdFields
+  = lens _igmdFields (\ s a -> s{_igmdFields = a})
+
 instance GoogleRequest InstanceGroupManagersDelete
          where
         type Rs InstanceGroupManagersDelete = Operation
@@ -111,6 +143,8 @@ instance GoogleRequest InstanceGroupManagersDelete
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupManagersDelete'{..}
           = go _igmdProject _igmdZone _igmdInstanceGroupManager
+              _igmdRequestId
+              _igmdFields
               (Just AltJSON)
               computeService
           where go

@@ -26,7 +26,7 @@
 -- automatically set as the default. You must make any subsequent changes
 -- to the default version setting manually using this method.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.models.versions.setDefault@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.models.versions.setDefault@.
 module Network.Google.Resource.Ml.Projects.Models.Versions.SetDefault
     (
     -- * REST Resource
@@ -45,16 +45,17 @@ module Network.Google.Resource.Ml.Projects.Models.Versions.SetDefault
     , pmvsdPayload
     , pmvsdBearerToken
     , pmvsdName
+    , pmvsdFields
     , pmvsdCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.models.versions.setDefault@ method which the
 -- 'ProjectsModelsVersionsSetDefault' request conforms to.
 type ProjectsModelsVersionsSetDefaultResource =
-     "v1beta1" :>
+     "v1" :>
        CaptureMode "name" "setDefault" Text :>
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
@@ -63,10 +64,11 @@ type ProjectsModelsVersionsSetDefaultResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           GoogleCloudMlV1beta1__SetDefaultVersionRequest
-                           :> Post '[JSON] GoogleCloudMlV1beta1__Version
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             GoogleCloudMlV1__SetDefaultVersionRequest
+                             :> Post '[JSON] GoogleCloudMlV1__Version
 
 -- | Designates a version to be the default for the model. The default
 -- version is used for prediction requests made against the model that
@@ -76,15 +78,16 @@ type ProjectsModelsVersionsSetDefaultResource =
 --
 -- /See:/ 'projectsModelsVersionsSetDefault' smart constructor.
 data ProjectsModelsVersionsSetDefault = ProjectsModelsVersionsSetDefault'
-    { _pmvsdXgafv          :: !(Maybe Xgafv)
+    { _pmvsdXgafv :: !(Maybe Xgafv)
     , _pmvsdUploadProtocol :: !(Maybe Text)
-    , _pmvsdPp             :: !Bool
-    , _pmvsdAccessToken    :: !(Maybe Text)
-    , _pmvsdUploadType     :: !(Maybe Text)
-    , _pmvsdPayload        :: !GoogleCloudMlV1beta1__SetDefaultVersionRequest
-    , _pmvsdBearerToken    :: !(Maybe Text)
-    , _pmvsdName           :: !Text
-    , _pmvsdCallback       :: !(Maybe Text)
+    , _pmvsdPp :: !Bool
+    , _pmvsdAccessToken :: !(Maybe Text)
+    , _pmvsdUploadType :: !(Maybe Text)
+    , _pmvsdPayload :: !GoogleCloudMlV1__SetDefaultVersionRequest
+    , _pmvsdBearerToken :: !(Maybe Text)
+    , _pmvsdName :: !Text
+    , _pmvsdFields :: !(Maybe Text)
+    , _pmvsdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsModelsVersionsSetDefault' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data ProjectsModelsVersionsSetDefault = ProjectsModelsVersionsSetDefault'
 --
 -- * 'pmvsdName'
 --
+-- * 'pmvsdFields'
+--
 -- * 'pmvsdCallback'
 projectsModelsVersionsSetDefault
-    :: GoogleCloudMlV1beta1__SetDefaultVersionRequest -- ^ 'pmvsdPayload'
+    :: GoogleCloudMlV1__SetDefaultVersionRequest -- ^ 'pmvsdPayload'
     -> Text -- ^ 'pmvsdName'
     -> ProjectsModelsVersionsSetDefault
-projectsModelsVersionsSetDefault pPmvsdPayload_ pPmvsdName_ =
+projectsModelsVersionsSetDefault pPmvsdPayload_ pPmvsdName_ = 
     ProjectsModelsVersionsSetDefault'
     { _pmvsdXgafv = Nothing
     , _pmvsdUploadProtocol = Nothing
@@ -122,6 +127,7 @@ projectsModelsVersionsSetDefault pPmvsdPayload_ pPmvsdName_ =
     , _pmvsdPayload = pPmvsdPayload_
     , _pmvsdBearerToken = Nothing
     , _pmvsdName = pPmvsdName_
+    , _pmvsdFields = Nothing
     , _pmvsdCallback = Nothing
     }
 
@@ -153,7 +159,7 @@ pmvsdUploadType
       (\ s a -> s{_pmvsdUploadType = a})
 
 -- | Multipart request metadata.
-pmvsdPayload :: Lens' ProjectsModelsVersionsSetDefault GoogleCloudMlV1beta1__SetDefaultVersionRequest
+pmvsdPayload :: Lens' ProjectsModelsVersionsSetDefault GoogleCloudMlV1__SetDefaultVersionRequest
 pmvsdPayload
   = lens _pmvsdPayload (\ s a -> s{_pmvsdPayload = a})
 
@@ -165,11 +171,15 @@ pmvsdBearerToken
 
 -- | Required. The name of the version to make the default for the model. You
 -- can get the names of all the versions of a model by calling
--- [projects.models.versions.list](\/ml\/reference\/rest\/v1beta1\/projects.models.versions\/list).
--- Authorization: requires \`Editor\` role on the parent project.
+-- [projects.models.versions.list](\/ml-engine\/reference\/rest\/v1\/projects.models.versions\/list).
 pmvsdName :: Lens' ProjectsModelsVersionsSetDefault Text
 pmvsdName
   = lens _pmvsdName (\ s a -> s{_pmvsdName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pmvsdFields :: Lens' ProjectsModelsVersionsSetDefault (Maybe Text)
+pmvsdFields
+  = lens _pmvsdFields (\ s a -> s{_pmvsdFields = a})
 
 -- | JSONP
 pmvsdCallback :: Lens' ProjectsModelsVersionsSetDefault (Maybe Text)
@@ -180,7 +190,7 @@ pmvsdCallback
 instance GoogleRequest
          ProjectsModelsVersionsSetDefault where
         type Rs ProjectsModelsVersionsSetDefault =
-             GoogleCloudMlV1beta1__Version
+             GoogleCloudMlV1__Version
         type Scopes ProjectsModelsVersionsSetDefault =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient ProjectsModelsVersionsSetDefault'{..}
@@ -190,6 +200,7 @@ instance GoogleRequest
               _pmvsdUploadType
               _pmvsdBearerToken
               _pmvsdCallback
+              _pmvsdFields
               (Just AltJSON)
               _pmvsdPayload
               machineLearningService

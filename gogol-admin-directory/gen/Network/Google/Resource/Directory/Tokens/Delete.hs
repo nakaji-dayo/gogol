@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Tokens.Delete
     -- * Request Lenses
     , tdClientId
     , tdUserKey
+    , tdFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.tokens.delete@ method which the
 -- 'TokensDelete' request conforms to.
@@ -50,14 +51,16 @@ type TokensDeleteResource =
              Capture "userKey" Text :>
                "tokens" :>
                  Capture "clientId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete all access tokens issued by a user for an application.
 --
 -- /See:/ 'tokensDelete' smart constructor.
 data TokensDelete = TokensDelete'
     { _tdClientId :: !Text
-    , _tdUserKey  :: !Text
+    , _tdUserKey :: !Text
+    , _tdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TokensDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TokensDelete = TokensDelete'
 -- * 'tdClientId'
 --
 -- * 'tdUserKey'
+--
+-- * 'tdFields'
 tokensDelete
     :: Text -- ^ 'tdClientId'
     -> Text -- ^ 'tdUserKey'
     -> TokensDelete
-tokensDelete pTdClientId_ pTdUserKey_ =
+tokensDelete pTdClientId_ pTdUserKey_ = 
     TokensDelete'
     { _tdClientId = pTdClientId_
     , _tdUserKey = pTdUserKey_
+    , _tdFields = Nothing
     }
 
 -- | The Client ID of the application the token is issued to.
@@ -88,12 +94,16 @@ tdUserKey :: Lens' TokensDelete Text
 tdUserKey
   = lens _tdUserKey (\ s a -> s{_tdUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdFields :: Lens' TokensDelete (Maybe Text)
+tdFields = lens _tdFields (\ s a -> s{_tdFields = a})
+
 instance GoogleRequest TokensDelete where
         type Rs TokensDelete = ()
         type Scopes TokensDelete =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient TokensDelete'{..}
-          = go _tdUserKey _tdClientId (Just AltJSON)
+          = go _tdUserKey _tdClientId _tdFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy TokensDeleteResource)

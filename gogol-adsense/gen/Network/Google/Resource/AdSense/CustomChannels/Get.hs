@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.CustomChannels.Get
     -- * Request Lenses
     , ccgCustomChannelId
     , ccgAdClientId
+    , ccgFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.customchannels.get@ method which the
 -- 'CustomChannelsGet' request conforms to.
@@ -49,14 +50,16 @@ type CustomChannelsGetResource =
            Capture "adClientId" Text :>
              "customchannels" :>
                Capture "customChannelId" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] CustomChannel
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] CustomChannel
 
 -- | Get the specified custom channel from the specified ad client.
 --
 -- /See:/ 'customChannelsGet' smart constructor.
 data CustomChannelsGet = CustomChannelsGet'
     { _ccgCustomChannelId :: !Text
-    , _ccgAdClientId      :: !Text
+    , _ccgAdClientId :: !Text
+    , _ccgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CustomChannelsGet = CustomChannelsGet'
 -- * 'ccgCustomChannelId'
 --
 -- * 'ccgAdClientId'
+--
+-- * 'ccgFields'
 customChannelsGet
     :: Text -- ^ 'ccgCustomChannelId'
     -> Text -- ^ 'ccgAdClientId'
     -> CustomChannelsGet
-customChannelsGet pCcgCustomChannelId_ pCcgAdClientId_ =
+customChannelsGet pCcgCustomChannelId_ pCcgAdClientId_ = 
     CustomChannelsGet'
     { _ccgCustomChannelId = pCcgCustomChannelId_
     , _ccgAdClientId = pCcgAdClientId_
+    , _ccgFields = Nothing
     }
 
 -- | Custom channel to retrieve.
@@ -88,13 +94,18 @@ ccgAdClientId
   = lens _ccgAdClientId
       (\ s a -> s{_ccgAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccgFields :: Lens' CustomChannelsGet (Maybe Text)
+ccgFields
+  = lens _ccgFields (\ s a -> s{_ccgFields = a})
+
 instance GoogleRequest CustomChannelsGet where
         type Rs CustomChannelsGet = CustomChannel
         type Scopes CustomChannelsGet =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient CustomChannelsGet'{..}
-          = go _ccgAdClientId _ccgCustomChannelId
+          = go _ccgAdClientId _ccgCustomChannelId _ccgFields
               (Just AltJSON)
               adSenseService
           where go

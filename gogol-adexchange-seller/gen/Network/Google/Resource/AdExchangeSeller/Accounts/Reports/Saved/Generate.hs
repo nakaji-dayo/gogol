@@ -39,10 +39,11 @@ module Network.Google.Resource.AdExchangeSeller.Accounts.Reports.Saved.Generate
     , arsgAccountId
     , arsgStartIndex
     , arsgMaxResults
+    , arsgFields
     ) where
 
-import           Network.Google.AdExchangeSeller.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeSeller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangeseller.accounts.reports.saved.generate@ method which the
 -- 'AccountsReportsSavedGenerate' request conforms to.
@@ -56,18 +57,20 @@ type AccountsReportsSavedGenerateResource =
                  QueryParam "locale" Text :>
                    QueryParam "startIndex" (Textual Int32) :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Report
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Report
 
 -- | Generate an Ad Exchange report based on the saved report ID sent in the
 -- query parameters.
 --
 -- /See:/ 'accountsReportsSavedGenerate' smart constructor.
 data AccountsReportsSavedGenerate = AccountsReportsSavedGenerate'
-    { _arsgLocale        :: !(Maybe Text)
+    { _arsgLocale :: !(Maybe Text)
     , _arsgSavedReportId :: !Text
-    , _arsgAccountId     :: !Text
-    , _arsgStartIndex    :: !(Maybe (Textual Int32))
-    , _arsgMaxResults    :: !(Maybe (Textual Int32))
+    , _arsgAccountId :: !Text
+    , _arsgStartIndex :: !(Maybe (Textual Int32))
+    , _arsgMaxResults :: !(Maybe (Textual Int32))
+    , _arsgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsReportsSavedGenerate' with the minimum fields required to make a request.
@@ -83,17 +86,20 @@ data AccountsReportsSavedGenerate = AccountsReportsSavedGenerate'
 -- * 'arsgStartIndex'
 --
 -- * 'arsgMaxResults'
+--
+-- * 'arsgFields'
 accountsReportsSavedGenerate
     :: Text -- ^ 'arsgSavedReportId'
     -> Text -- ^ 'arsgAccountId'
     -> AccountsReportsSavedGenerate
-accountsReportsSavedGenerate pArsgSavedReportId_ pArsgAccountId_ =
+accountsReportsSavedGenerate pArsgSavedReportId_ pArsgAccountId_ = 
     AccountsReportsSavedGenerate'
     { _arsgLocale = Nothing
     , _arsgSavedReportId = pArsgSavedReportId_
     , _arsgAccountId = pArsgAccountId_
     , _arsgStartIndex = Nothing
     , _arsgMaxResults = Nothing
+    , _arsgFields = Nothing
     }
 
 -- | Optional locale to use for translating report output to a local
@@ -128,6 +134,11 @@ arsgMaxResults
       (\ s a -> s{_arsgMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+arsgFields :: Lens' AccountsReportsSavedGenerate (Maybe Text)
+arsgFields
+  = lens _arsgFields (\ s a -> s{_arsgFields = a})
+
 instance GoogleRequest AccountsReportsSavedGenerate
          where
         type Rs AccountsReportsSavedGenerate = Report
@@ -138,6 +149,7 @@ instance GoogleRequest AccountsReportsSavedGenerate
           = go _arsgAccountId _arsgSavedReportId _arsgLocale
               _arsgStartIndex
               _arsgMaxResults
+              _arsgFields
               (Just AltJSON)
               adExchangeSellerService
           where go

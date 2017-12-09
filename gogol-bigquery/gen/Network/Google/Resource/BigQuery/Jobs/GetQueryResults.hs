@@ -39,10 +39,11 @@ module Network.Google.Resource.BigQuery.Jobs.GetQueryResults
     , jgqrProjectId
     , jgqrStartIndex
     , jgqrMaxResults
+    , jgqrFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.getQueryResults@ method which the
 -- 'JobsGetQueryResults' request conforms to.
@@ -57,19 +58,21 @@ type JobsGetQueryResultsResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "startIndex" (Textual Word64) :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] GetQueryResultsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] GetQueryResultsResponse
 
 -- | Retrieves the results of a query job.
 --
 -- /See:/ 'jobsGetQueryResults' smart constructor.
 data JobsGetQueryResults = JobsGetQueryResults'
-    { _jgqrJobId      :: !Text
-    , _jgqrTimeoutMs  :: !(Maybe (Textual Word32))
-    , _jgqrPageToken  :: !(Maybe Text)
-    , _jgqrProjectId  :: !Text
+    { _jgqrJobId :: !Text
+    , _jgqrTimeoutMs :: !(Maybe (Textual Word32))
+    , _jgqrPageToken :: !(Maybe Text)
+    , _jgqrProjectId :: !Text
     , _jgqrStartIndex :: !(Maybe (Textual Word64))
     , _jgqrMaxResults :: !(Maybe (Textual Word32))
+    , _jgqrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsGetQueryResults' with the minimum fields required to make a request.
@@ -87,11 +90,13 @@ data JobsGetQueryResults = JobsGetQueryResults'
 -- * 'jgqrStartIndex'
 --
 -- * 'jgqrMaxResults'
+--
+-- * 'jgqrFields'
 jobsGetQueryResults
     :: Text -- ^ 'jgqrJobId'
     -> Text -- ^ 'jgqrProjectId'
     -> JobsGetQueryResults
-jobsGetQueryResults pJgqrJobId_ pJgqrProjectId_ =
+jobsGetQueryResults pJgqrJobId_ pJgqrProjectId_ = 
     JobsGetQueryResults'
     { _jgqrJobId = pJgqrJobId_
     , _jgqrTimeoutMs = Nothing
@@ -99,6 +104,7 @@ jobsGetQueryResults pJgqrJobId_ pJgqrProjectId_ =
     , _jgqrProjectId = pJgqrProjectId_
     , _jgqrStartIndex = Nothing
     , _jgqrMaxResults = Nothing
+    , _jgqrFields = Nothing
     }
 
 -- | [Required] Job ID of the query job
@@ -142,6 +148,11 @@ jgqrMaxResults
       (\ s a -> s{_jgqrMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+jgqrFields :: Lens' JobsGetQueryResults (Maybe Text)
+jgqrFields
+  = lens _jgqrFields (\ s a -> s{_jgqrFields = a})
+
 instance GoogleRequest JobsGetQueryResults where
         type Rs JobsGetQueryResults = GetQueryResultsResponse
         type Scopes JobsGetQueryResults =
@@ -153,6 +164,7 @@ instance GoogleRequest JobsGetQueryResults where
               _jgqrPageToken
               _jgqrStartIndex
               _jgqrMaxResults
+              _jgqrFields
               (Just AltJSON)
               bigQueryService
           where go

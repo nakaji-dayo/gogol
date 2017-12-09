@@ -38,10 +38,11 @@ module Network.Google.Resource.AppState.States.Update
     , suCurrentStateVersion
     , suStateKey
     , suPayload
+    , suFields
     ) where
 
-import           Network.Google.AppState.Types
-import           Network.Google.Prelude
+import Network.Google.AppState.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appstate.states.update@ method which the
 -- 'StatesUpdate' request conforms to.
@@ -51,9 +52,10 @@ type StatesUpdateResource =
          "states" :>
            Capture "stateKey" (Textual Int32) :>
              QueryParam "currentStateVersion" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] UpdateRequest :>
-                   Put '[JSON] WriteResult
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] UpdateRequest :>
+                     Put '[JSON] WriteResult
 
 -- | Update the data associated with the input key if and only if the passed
 -- version matches the currently stored version. This method is safe in the
@@ -62,8 +64,9 @@ type StatesUpdateResource =
 -- /See:/ 'statesUpdate' smart constructor.
 data StatesUpdate = StatesUpdate'
     { _suCurrentStateVersion :: !(Maybe Text)
-    , _suStateKey            :: !(Textual Int32)
-    , _suPayload             :: !UpdateRequest
+    , _suStateKey :: !(Textual Int32)
+    , _suPayload :: !UpdateRequest
+    , _suFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StatesUpdate' with the minimum fields required to make a request.
@@ -75,15 +78,18 @@ data StatesUpdate = StatesUpdate'
 -- * 'suStateKey'
 --
 -- * 'suPayload'
+--
+-- * 'suFields'
 statesUpdate
     :: Int32 -- ^ 'suStateKey'
     -> UpdateRequest -- ^ 'suPayload'
     -> StatesUpdate
-statesUpdate pSuStateKey_ pSuPayload_ =
+statesUpdate pSuStateKey_ pSuPayload_ = 
     StatesUpdate'
     { _suCurrentStateVersion = Nothing
     , _suStateKey = _Coerce # pSuStateKey_
     , _suPayload = pSuPayload_
+    , _suFields = Nothing
     }
 
 -- | The version of the app state your application is attempting to update.
@@ -106,12 +112,16 @@ suPayload :: Lens' StatesUpdate UpdateRequest
 suPayload
   = lens _suPayload (\ s a -> s{_suPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' StatesUpdate (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 instance GoogleRequest StatesUpdate where
         type Rs StatesUpdate = WriteResult
         type Scopes StatesUpdate =
              '["https://www.googleapis.com/auth/appstate"]
         requestClient StatesUpdate'{..}
-          = go _suStateKey _suCurrentStateVersion
+          = go _suStateKey _suCurrentStateVersion _suFields
               (Just AltJSON)
               _suPayload
               appStateService

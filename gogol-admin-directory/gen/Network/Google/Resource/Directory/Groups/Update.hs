@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Groups.Update
     -- * Request Lenses
     , guGroupKey
     , guPayload
+    , guFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.update@ method which the
 -- 'GroupsUpdate' request conforms to.
@@ -48,15 +49,17 @@ type GroupsUpdateResource =
          "v1" :>
            "groups" :>
              Capture "groupKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Group :> Put '[JSON] Group
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Group :> Put '[JSON] Group
 
 -- | Update Group
 --
 -- /See:/ 'groupsUpdate' smart constructor.
 data GroupsUpdate = GroupsUpdate'
     { _guGroupKey :: !Text
-    , _guPayload  :: !Group
+    , _guPayload :: !Group
+    , _guFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsUpdate' with the minimum fields required to make a request.
@@ -66,17 +69,20 @@ data GroupsUpdate = GroupsUpdate'
 -- * 'guGroupKey'
 --
 -- * 'guPayload'
+--
+-- * 'guFields'
 groupsUpdate
     :: Text -- ^ 'guGroupKey'
     -> Group -- ^ 'guPayload'
     -> GroupsUpdate
-groupsUpdate pGuGroupKey_ pGuPayload_ =
+groupsUpdate pGuGroupKey_ pGuPayload_ = 
     GroupsUpdate'
     { _guGroupKey = pGuGroupKey_
     , _guPayload = pGuPayload_
+    , _guFields = Nothing
     }
 
--- | Email or immutable Id of the group. If Id, it should match with id of
+-- | Email or immutable ID of the group. If ID, it should match with id of
 -- group object
 guGroupKey :: Lens' GroupsUpdate Text
 guGroupKey
@@ -87,12 +93,16 @@ guPayload :: Lens' GroupsUpdate Group
 guPayload
   = lens _guPayload (\ s a -> s{_guPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+guFields :: Lens' GroupsUpdate (Maybe Text)
+guFields = lens _guFields (\ s a -> s{_guFields = a})
+
 instance GoogleRequest GroupsUpdate where
         type Rs GroupsUpdate = Group
         type Scopes GroupsUpdate =
              '["https://www.googleapis.com/auth/admin.directory.group"]
         requestClient GroupsUpdate'{..}
-          = go _guGroupKey (Just AltJSON) _guPayload
+          = go _guGroupKey _guFields (Just AltJSON) _guPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy GroupsUpdateResource)

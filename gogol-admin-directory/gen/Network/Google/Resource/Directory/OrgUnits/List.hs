@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieve all Organization Units
+-- Retrieve all organizational units
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.orgunits.list@.
 module Network.Google.Resource.Directory.OrgUnits.List
@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.OrgUnits.List
     , oulOrgUnitPath
     , oulCustomerId
     , oulType
+    , oulFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.orgunits.list@ method which the
 -- 'OrgUnitsList' request conforms to.
@@ -52,15 +53,17 @@ type OrgUnitsListResource =
                "orgunits" :>
                  QueryParam "orgUnitPath" Text :>
                    QueryParam "type" OrgUnitsListType :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] OrgUnits
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] OrgUnits
 
--- | Retrieve all Organization Units
+-- | Retrieve all organizational units
 --
 -- /See:/ 'orgUnitsList' smart constructor.
 data OrgUnitsList = OrgUnitsList'
     { _oulOrgUnitPath :: !Text
-    , _oulCustomerId  :: !Text
-    , _oulType        :: !(Maybe OrgUnitsListType)
+    , _oulCustomerId :: !Text
+    , _oulType :: !(Maybe OrgUnitsListType)
+    , _oulFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnitsList' with the minimum fields required to make a request.
@@ -72,23 +75,26 @@ data OrgUnitsList = OrgUnitsList'
 -- * 'oulCustomerId'
 --
 -- * 'oulType'
+--
+-- * 'oulFields'
 orgUnitsList
     :: Text -- ^ 'oulCustomerId'
     -> OrgUnitsList
-orgUnitsList pOulCustomerId_ =
+orgUnitsList pOulCustomerId_ = 
     OrgUnitsList'
     { _oulOrgUnitPath = ""
     , _oulCustomerId = pOulCustomerId_
     , _oulType = Nothing
+    , _oulFields = Nothing
     }
 
--- | the URL-encoded organization unit\'s path or its Id
+-- | the URL-encoded organizational unit\'s path or its ID
 oulOrgUnitPath :: Lens' OrgUnitsList Text
 oulOrgUnitPath
   = lens _oulOrgUnitPath
       (\ s a -> s{_oulOrgUnitPath = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 oulCustomerId :: Lens' OrgUnitsList Text
 oulCustomerId
   = lens _oulCustomerId
@@ -98,6 +104,11 @@ oulCustomerId
 oulType :: Lens' OrgUnitsList (Maybe OrgUnitsListType)
 oulType = lens _oulType (\ s a -> s{_oulType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+oulFields :: Lens' OrgUnitsList (Maybe Text)
+oulFields
+  = lens _oulFields (\ s a -> s{_oulFields = a})
+
 instance GoogleRequest OrgUnitsList where
         type Rs OrgUnitsList = OrgUnits
         type Scopes OrgUnitsList =
@@ -105,6 +116,7 @@ instance GoogleRequest OrgUnitsList where
                "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"]
         requestClient OrgUnitsList'{..}
           = go _oulCustomerId (Just _oulOrgUnitPath) _oulType
+              _oulFields
               (Just AltJSON)
               directoryService
           where go

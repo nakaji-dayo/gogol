@@ -127,22 +127,22 @@ module Network.Google.AppsTasks
     , ttPosition
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Tasks.TaskLists.Delete
-import           Network.Google.Resource.Tasks.TaskLists.Get
-import           Network.Google.Resource.Tasks.TaskLists.Insert
-import           Network.Google.Resource.Tasks.TaskLists.List
-import           Network.Google.Resource.Tasks.TaskLists.Patch
-import           Network.Google.Resource.Tasks.TaskLists.Update
-import           Network.Google.Resource.Tasks.Tasks.Clear
-import           Network.Google.Resource.Tasks.Tasks.Delete
-import           Network.Google.Resource.Tasks.Tasks.Get
-import           Network.Google.Resource.Tasks.Tasks.Insert
-import           Network.Google.Resource.Tasks.Tasks.List
-import           Network.Google.Resource.Tasks.Tasks.Move
-import           Network.Google.Resource.Tasks.Tasks.Patch
-import           Network.Google.Resource.Tasks.Tasks.Update
+import Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Resource.Tasks.TaskLists.Delete
+import Network.Google.Resource.Tasks.TaskLists.Get
+import Network.Google.Resource.Tasks.TaskLists.Insert
+import Network.Google.Resource.Tasks.TaskLists.List
+import Network.Google.Resource.Tasks.TaskLists.Patch
+import Network.Google.Resource.Tasks.TaskLists.Update
+import Network.Google.Resource.Tasks.Tasks.Clear
+import Network.Google.Resource.Tasks.Tasks.Delete
+import Network.Google.Resource.Tasks.Tasks.Get
+import Network.Google.Resource.Tasks.Tasks.Insert
+import Network.Google.Resource.Tasks.Tasks.List
+import Network.Google.Resource.Tasks.Tasks.Move
+import Network.Google.Resource.Tasks.Tasks.Patch
+import Network.Google.Resource.Tasks.Tasks.Update
 
 {- $resources
 TODO

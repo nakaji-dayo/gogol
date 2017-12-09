@@ -39,10 +39,11 @@ module Network.Google.Resource.Analytics.Management.CustomDimensions.Patch
     , mcdpPayload
     , mcdpAccountId
     , mcdpCustomDimensionId
+    , mcdpFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.customDimensions.patch@ method which the
 -- 'ManagementCustomDimensionsPatch' request conforms to.
@@ -57,20 +58,22 @@ type ManagementCustomDimensionsPatchResource =
                    "customDimensions" :>
                      Capture "customDimensionId" Text :>
                        QueryParam "ignoreCustomDataSourceLinks" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] CustomDimension :>
-                             Patch '[JSON] CustomDimension
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] CustomDimension :>
+                               Patch '[JSON] CustomDimension
 
 -- | Updates an existing custom dimension. This method supports patch
 -- semantics.
 --
 -- /See:/ 'managementCustomDimensionsPatch' smart constructor.
 data ManagementCustomDimensionsPatch = ManagementCustomDimensionsPatch'
-    { _mcdpWebPropertyId               :: !Text
+    { _mcdpWebPropertyId :: !Text
     , _mcdpIgnoreCustomDataSourceLinks :: !Bool
-    , _mcdpPayload                     :: !CustomDimension
-    , _mcdpAccountId                   :: !Text
-    , _mcdpCustomDimensionId           :: !Text
+    , _mcdpPayload :: !CustomDimension
+    , _mcdpAccountId :: !Text
+    , _mcdpCustomDimensionId :: !Text
+    , _mcdpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementCustomDimensionsPatch' with the minimum fields required to make a request.
@@ -86,19 +89,22 @@ data ManagementCustomDimensionsPatch = ManagementCustomDimensionsPatch'
 -- * 'mcdpAccountId'
 --
 -- * 'mcdpCustomDimensionId'
+--
+-- * 'mcdpFields'
 managementCustomDimensionsPatch
     :: Text -- ^ 'mcdpWebPropertyId'
     -> CustomDimension -- ^ 'mcdpPayload'
     -> Text -- ^ 'mcdpAccountId'
     -> Text -- ^ 'mcdpCustomDimensionId'
     -> ManagementCustomDimensionsPatch
-managementCustomDimensionsPatch pMcdpWebPropertyId_ pMcdpPayload_ pMcdpAccountId_ pMcdpCustomDimensionId_ =
+managementCustomDimensionsPatch pMcdpWebPropertyId_ pMcdpPayload_ pMcdpAccountId_ pMcdpCustomDimensionId_ = 
     ManagementCustomDimensionsPatch'
     { _mcdpWebPropertyId = pMcdpWebPropertyId_
     , _mcdpIgnoreCustomDataSourceLinks = False
     , _mcdpPayload = pMcdpPayload_
     , _mcdpAccountId = pMcdpAccountId_
     , _mcdpCustomDimensionId = pMcdpCustomDimensionId_
+    , _mcdpFields = Nothing
     }
 
 -- | Web property ID for the custom dimension to update.
@@ -131,6 +137,11 @@ mcdpCustomDimensionId
   = lens _mcdpCustomDimensionId
       (\ s a -> s{_mcdpCustomDimensionId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdpFields :: Lens' ManagementCustomDimensionsPatch (Maybe Text)
+mcdpFields
+  = lens _mcdpFields (\ s a -> s{_mcdpFields = a})
+
 instance GoogleRequest
          ManagementCustomDimensionsPatch where
         type Rs ManagementCustomDimensionsPatch =
@@ -141,6 +152,7 @@ instance GoogleRequest
           = go _mcdpAccountId _mcdpWebPropertyId
               _mcdpCustomDimensionId
               (Just _mcdpIgnoreCustomDataSourceLinks)
+              _mcdpFields
               (Just AltJSON)
               _mcdpPayload
               analyticsService

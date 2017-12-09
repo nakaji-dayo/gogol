@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Schemas.Get
     -- * Request Lenses
     , sgCustomerId
     , sgSchemaKey
+    , sgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.schemas.get@ method which the
 -- 'SchemasGet' request conforms to.
@@ -50,14 +51,16 @@ type SchemasGetResource =
              Capture "customerId" Text :>
                "schemas" :>
                  Capture "schemaKey" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Schema
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Schema
 
 -- | Retrieve schema
 --
 -- /See:/ 'schemasGet' smart constructor.
 data SchemasGet = SchemasGet'
     { _sgCustomerId :: !Text
-    , _sgSchemaKey  :: !Text
+    , _sgSchemaKey :: !Text
+    , _sgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SchemasGet' with the minimum fields required to make a request.
@@ -67,25 +70,32 @@ data SchemasGet = SchemasGet'
 -- * 'sgCustomerId'
 --
 -- * 'sgSchemaKey'
+--
+-- * 'sgFields'
 schemasGet
     :: Text -- ^ 'sgCustomerId'
     -> Text -- ^ 'sgSchemaKey'
     -> SchemasGet
-schemasGet pSgCustomerId_ pSgSchemaKey_ =
+schemasGet pSgCustomerId_ pSgSchemaKey_ = 
     SchemasGet'
     { _sgCustomerId = pSgCustomerId_
     , _sgSchemaKey = pSgSchemaKey_
+    , _sgFields = Nothing
     }
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 sgCustomerId :: Lens' SchemasGet Text
 sgCustomerId
   = lens _sgCustomerId (\ s a -> s{_sgCustomerId = a})
 
--- | Name or immutable Id of the schema
+-- | Name or immutable ID of the schema
 sgSchemaKey :: Lens' SchemasGet Text
 sgSchemaKey
   = lens _sgSchemaKey (\ s a -> s{_sgSchemaKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sgFields :: Lens' SchemasGet (Maybe Text)
+sgFields = lens _sgFields (\ s a -> s{_sgFields = a})
 
 instance GoogleRequest SchemasGet where
         type Rs SchemasGet = Schema
@@ -93,7 +103,8 @@ instance GoogleRequest SchemasGet where
              '["https://www.googleapis.com/auth/admin.directory.userschema",
                "https://www.googleapis.com/auth/admin.directory.userschema.readonly"]
         requestClient SchemasGet'{..}
-          = go _sgCustomerId _sgSchemaKey (Just AltJSON)
+          = go _sgCustomerId _sgSchemaKey _sgFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy SchemasGetResource)

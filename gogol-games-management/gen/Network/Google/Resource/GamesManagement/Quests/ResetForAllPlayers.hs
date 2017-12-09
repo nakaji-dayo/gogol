@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Quests.ResetForAllPlayers
 
     -- * Request Lenses
     , qrfapQuestId
+    , qrfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.quests.resetForAllPlayers@ method which the
 -- 'QuestsResetForAllPlayers' request conforms to.
@@ -49,15 +50,17 @@ type QuestsResetForAllPlayersResource =
          "quests" :>
            Capture "questId" Text :>
              "resetForAllPlayers" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets all player progress on the quest with the given ID for all
 -- players. This method is only available to user accounts for your
 -- developer console. Only draft quests can be reset.
 --
 -- /See:/ 'questsResetForAllPlayers' smart constructor.
-newtype QuestsResetForAllPlayers = QuestsResetForAllPlayers'
-    { _qrfapQuestId :: Text
+data QuestsResetForAllPlayers = QuestsResetForAllPlayers'
+    { _qrfapQuestId :: !Text
+    , _qrfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QuestsResetForAllPlayers' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype QuestsResetForAllPlayers = QuestsResetForAllPlayers'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'qrfapQuestId'
+--
+-- * 'qrfapFields'
 questsResetForAllPlayers
     :: Text -- ^ 'qrfapQuestId'
     -> QuestsResetForAllPlayers
-questsResetForAllPlayers pQrfapQuestId_ =
+questsResetForAllPlayers pQrfapQuestId_ = 
     QuestsResetForAllPlayers'
     { _qrfapQuestId = pQrfapQuestId_
+    , _qrfapFields = Nothing
     }
 
 -- | The ID of the quest.
@@ -78,13 +84,18 @@ qrfapQuestId :: Lens' QuestsResetForAllPlayers Text
 qrfapQuestId
   = lens _qrfapQuestId (\ s a -> s{_qrfapQuestId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+qrfapFields :: Lens' QuestsResetForAllPlayers (Maybe Text)
+qrfapFields
+  = lens _qrfapFields (\ s a -> s{_qrfapFields = a})
+
 instance GoogleRequest QuestsResetForAllPlayers where
         type Rs QuestsResetForAllPlayers = ()
         type Scopes QuestsResetForAllPlayers =
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient QuestsResetForAllPlayers'{..}
-          = go _qrfapQuestId (Just AltJSON)
+          = go _qrfapQuestId _qrfapFields (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient

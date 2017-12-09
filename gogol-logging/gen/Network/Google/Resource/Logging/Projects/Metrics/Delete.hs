@@ -40,11 +40,12 @@ module Network.Google.Resource.Logging.Projects.Metrics.Delete
     , pmdMetricName
     , pmdUploadType
     , pmdBearerToken
+    , pmdFields
     , pmdCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.metrics.delete@ method which the
 -- 'ProjectsMetricsDelete' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsMetricsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a logs-based metric.
 --
 -- /See:/ 'projectsMetricsDelete' smart constructor.
 data ProjectsMetricsDelete = ProjectsMetricsDelete'
-    { _pmdXgafv          :: !(Maybe Xgafv)
+    { _pmdXgafv :: !(Maybe Xgafv)
     , _pmdUploadProtocol :: !(Maybe Text)
-    , _pmdPp             :: !Bool
-    , _pmdAccessToken    :: !(Maybe Text)
-    , _pmdMetricName     :: !Text
-    , _pmdUploadType     :: !(Maybe Text)
-    , _pmdBearerToken    :: !(Maybe Text)
-    , _pmdCallback       :: !(Maybe Text)
+    , _pmdPp :: !Bool
+    , _pmdAccessToken :: !(Maybe Text)
+    , _pmdMetricName :: !Text
+    , _pmdUploadType :: !(Maybe Text)
+    , _pmdBearerToken :: !(Maybe Text)
+    , _pmdFields :: !(Maybe Text)
+    , _pmdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricsDelete' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsMetricsDelete = ProjectsMetricsDelete'
 --
 -- * 'pmdBearerToken'
 --
+-- * 'pmdFields'
+--
 -- * 'pmdCallback'
 projectsMetricsDelete
     :: Text -- ^ 'pmdMetricName'
     -> ProjectsMetricsDelete
-projectsMetricsDelete pPmdMetricName_ =
+projectsMetricsDelete pPmdMetricName_ = 
     ProjectsMetricsDelete'
     { _pmdXgafv = Nothing
     , _pmdUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsMetricsDelete pPmdMetricName_ =
     , _pmdMetricName = pPmdMetricName_
     , _pmdUploadType = Nothing
     , _pmdBearerToken = Nothing
+    , _pmdFields = Nothing
     , _pmdCallback = Nothing
     }
 
@@ -147,6 +153,11 @@ pmdBearerToken
   = lens _pmdBearerToken
       (\ s a -> s{_pmdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmdFields :: Lens' ProjectsMetricsDelete (Maybe Text)
+pmdFields
+  = lens _pmdFields (\ s a -> s{_pmdFields = a})
+
 -- | JSONP
 pmdCallback :: Lens' ProjectsMetricsDelete (Maybe Text)
 pmdCallback
@@ -165,6 +176,7 @@ instance GoogleRequest ProjectsMetricsDelete where
               _pmdUploadType
               _pmdBearerToken
               _pmdCallback
+              _pmdFields
               (Just AltJSON)
               loggingService
           where go

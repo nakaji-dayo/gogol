@@ -38,10 +38,11 @@ module Network.Google.Resource.Fitness.Users.Sessions.List
     , uslEndTime
     , uslPageToken
     , uslIncludeDeleted
+    , uslFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.sessions.list@ method which the
 -- 'UsersSessionsList' request conforms to.
@@ -55,18 +56,20 @@ type UsersSessionsListResource =
                  QueryParam "endTime" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "includeDeleted" Bool :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] ListSessionsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ListSessionsResponse
 
 -- | Lists sessions previously created.
 --
 -- /See:/ 'usersSessionsList' smart constructor.
 data UsersSessionsList = UsersSessionsList'
-    { _uslStartTime      :: !(Maybe Text)
-    , _uslUserId         :: !Text
-    , _uslEndTime        :: !(Maybe Text)
-    , _uslPageToken      :: !(Maybe Text)
+    { _uslStartTime :: !(Maybe Text)
+    , _uslUserId :: !Text
+    , _uslEndTime :: !(Maybe Text)
+    , _uslPageToken :: !(Maybe Text)
     , _uslIncludeDeleted :: !(Maybe Bool)
+    , _uslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSessionsList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data UsersSessionsList = UsersSessionsList'
 -- * 'uslPageToken'
 --
 -- * 'uslIncludeDeleted'
+--
+-- * 'uslFields'
 usersSessionsList
     :: Text -- ^ 'uslUserId'
     -> UsersSessionsList
-usersSessionsList pUslUserId_ =
+usersSessionsList pUslUserId_ = 
     UsersSessionsList'
     { _uslStartTime = Nothing
     , _uslUserId = pUslUserId_
     , _uslEndTime = Nothing
     , _uslPageToken = Nothing
     , _uslIncludeDeleted = Nothing
+    , _uslFields = Nothing
     }
 
 -- | An RFC3339 timestamp. Only sessions ending between the start and end
@@ -127,6 +133,11 @@ uslIncludeDeleted
   = lens _uslIncludeDeleted
       (\ s a -> s{_uslIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uslFields :: Lens' UsersSessionsList (Maybe Text)
+uslFields
+  = lens _uslFields (\ s a -> s{_uslFields = a})
+
 instance GoogleRequest UsersSessionsList where
         type Rs UsersSessionsList = ListSessionsResponse
         type Scopes UsersSessionsList =
@@ -152,6 +163,7 @@ instance GoogleRequest UsersSessionsList where
           = go _uslUserId _uslStartTime _uslEndTime
               _uslPageToken
               _uslIncludeDeleted
+              _uslFields
               (Just AltJSON)
               fitnessService
           where go

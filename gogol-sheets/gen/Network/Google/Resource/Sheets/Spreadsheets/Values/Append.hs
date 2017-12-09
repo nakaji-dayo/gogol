@@ -23,8 +23,9 @@
 -- Appends values to a spreadsheet. The input range is used to search for
 -- existing data and find a \"table\" within that range. Values will be
 -- appended to the next row of the table, starting with the first column of
--- the table. See the [guide](\/sheets\/guides\/values#appending_values)
--- and [sample code](\/sheets\/samples\/writing#append_values) for specific
+-- the table. See the
+-- [guide](\/sheets\/api\/guides\/values#appending_values) and [sample
+-- code](\/sheets\/api\/samples\/writing#append_values) for specific
 -- details of how tables are detected and data is appended. The caller must
 -- specify the spreadsheet ID, range, and a valueInputOption. The
 -- \`valueInputOption\` only controls how the input data will be added to
@@ -55,12 +56,13 @@ module Network.Google.Resource.Sheets.Spreadsheets.Values.Append
     , svaRange
     , svaIncludeValuesInResponse
     , svaResponseDateTimeRenderOption
+    , svaFields
     , svaCallback
     , svaResponseValueRenderOption
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Sheets.Types
+import Network.Google.Prelude
+import Network.Google.Sheets.Types
 
 -- | A resource alias for @sheets.spreadsheets.values.append@ method which the
 -- 'SpreadsheetsValuesAppend' request conforms to.
@@ -84,15 +86,17 @@ type SpreadsheetsValuesAppendResource =
                                    QueryParam "callback" Text :>
                                      QueryParam "responseValueRenderOption" Text
                                        :>
-                                       QueryParam "alt" AltJSON :>
-                                         ReqBody '[JSON] ValueRange :>
-                                           Post '[JSON] AppendValuesResponse
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           ReqBody '[JSON] ValueRange :>
+                                             Post '[JSON] AppendValuesResponse
 
 -- | Appends values to a spreadsheet. The input range is used to search for
 -- existing data and find a \"table\" within that range. Values will be
 -- appended to the next row of the table, starting with the first column of
--- the table. See the [guide](\/sheets\/guides\/values#appending_values)
--- and [sample code](\/sheets\/samples\/writing#append_values) for specific
+-- the table. See the
+-- [guide](\/sheets\/api\/guides\/values#appending_values) and [sample
+-- code](\/sheets\/api\/samples\/writing#append_values) for specific
 -- details of how tables are detected and data is appended. The caller must
 -- specify the spreadsheet ID, range, and a valueInputOption. The
 -- \`valueInputOption\` only controls how the input data will be added to
@@ -101,21 +105,22 @@ type SpreadsheetsValuesAppendResource =
 --
 -- /See:/ 'spreadsheetsValuesAppend' smart constructor.
 data SpreadsheetsValuesAppend = SpreadsheetsValuesAppend'
-    { _svaXgafv                        :: !(Maybe Xgafv)
-    , _svaUploadProtocol               :: !(Maybe Text)
-    , _svaPp                           :: !Bool
-    , _svaAccessToken                  :: !(Maybe Text)
-    , _svaSpreadsheetId                :: !Text
-    , _svaUploadType                   :: !(Maybe Text)
-    , _svaValueInputOption             :: !(Maybe Text)
-    , _svaPayload                      :: !ValueRange
-    , _svaInsertDataOption             :: !(Maybe Text)
-    , _svaBearerToken                  :: !(Maybe Text)
-    , _svaRange                        :: !Text
-    , _svaIncludeValuesInResponse      :: !(Maybe Bool)
+    { _svaXgafv :: !(Maybe Xgafv)
+    , _svaUploadProtocol :: !(Maybe Text)
+    , _svaPp :: !Bool
+    , _svaAccessToken :: !(Maybe Text)
+    , _svaSpreadsheetId :: !Text
+    , _svaUploadType :: !(Maybe Text)
+    , _svaValueInputOption :: !(Maybe Text)
+    , _svaPayload :: !ValueRange
+    , _svaInsertDataOption :: !(Maybe Text)
+    , _svaBearerToken :: !(Maybe Text)
+    , _svaRange :: !Text
+    , _svaIncludeValuesInResponse :: !(Maybe Bool)
     , _svaResponseDateTimeRenderOption :: !(Maybe Text)
-    , _svaCallback                     :: !(Maybe Text)
-    , _svaResponseValueRenderOption    :: !(Maybe Text)
+    , _svaFields :: !(Maybe Text)
+    , _svaCallback :: !(Maybe Text)
+    , _svaResponseValueRenderOption :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SpreadsheetsValuesAppend' with the minimum fields required to make a request.
@@ -148,6 +153,8 @@ data SpreadsheetsValuesAppend = SpreadsheetsValuesAppend'
 --
 -- * 'svaResponseDateTimeRenderOption'
 --
+-- * 'svaFields'
+--
 -- * 'svaCallback'
 --
 -- * 'svaResponseValueRenderOption'
@@ -156,7 +163,7 @@ spreadsheetsValuesAppend
     -> ValueRange -- ^ 'svaPayload'
     -> Text -- ^ 'svaRange'
     -> SpreadsheetsValuesAppend
-spreadsheetsValuesAppend pSvaSpreadsheetId_ pSvaPayload_ pSvaRange_ =
+spreadsheetsValuesAppend pSvaSpreadsheetId_ pSvaPayload_ pSvaRange_ = 
     SpreadsheetsValuesAppend'
     { _svaXgafv = Nothing
     , _svaUploadProtocol = Nothing
@@ -171,6 +178,7 @@ spreadsheetsValuesAppend pSvaSpreadsheetId_ pSvaPayload_ pSvaRange_ =
     , _svaRange = pSvaRange_
     , _svaIncludeValuesInResponse = Nothing
     , _svaResponseDateTimeRenderOption = Nothing
+    , _svaFields = Nothing
     , _svaCallback = Nothing
     , _svaResponseValueRenderOption = Nothing
     }
@@ -252,6 +260,11 @@ svaResponseDateTimeRenderOption
   = lens _svaResponseDateTimeRenderOption
       (\ s a -> s{_svaResponseDateTimeRenderOption = a})
 
+-- | Selector specifying which fields to include in a partial response.
+svaFields :: Lens' SpreadsheetsValuesAppend (Maybe Text)
+svaFields
+  = lens _svaFields (\ s a -> s{_svaFields = a})
+
 -- | JSONP
 svaCallback :: Lens' SpreadsheetsValuesAppend (Maybe Text)
 svaCallback
@@ -269,6 +282,7 @@ instance GoogleRequest SpreadsheetsValuesAppend where
              AppendValuesResponse
         type Scopes SpreadsheetsValuesAppend =
              '["https://www.googleapis.com/auth/drive",
+               "https://www.googleapis.com/auth/drive.file",
                "https://www.googleapis.com/auth/spreadsheets"]
         requestClient SpreadsheetsValuesAppend'{..}
           = go _svaSpreadsheetId _svaRange _svaXgafv
@@ -283,6 +297,7 @@ instance GoogleRequest SpreadsheetsValuesAppend where
               _svaResponseDateTimeRenderOption
               _svaCallback
               _svaResponseValueRenderOption
+              _svaFields
               (Just AltJSON)
               _svaPayload
               sheetsService

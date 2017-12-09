@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.DownloadAccount
 
     -- * Request Lenses
     , rpdaPayload
+    , rpdaFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.downloadAccount@ method which the
 -- 'RelyingPartyDownloadAccount' request conforms to.
@@ -46,16 +47,18 @@ type RelyingPartyDownloadAccountResource =
        "v3" :>
          "relyingparty" :>
            "downloadAccount" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartyDownloadAccountRequest
-                 :> Post '[JSON] DownloadAccountResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartyDownloadAccountRequest
+                   :> Post '[JSON] DownloadAccountResponse
 
 -- | Batch download user accounts.
 --
 -- /See:/ 'relyingPartyDownloadAccount' smart constructor.
-newtype RelyingPartyDownloadAccount = RelyingPartyDownloadAccount'
-    { _rpdaPayload :: IdentitytoolkitRelyingPartyDownloadAccountRequest
+data RelyingPartyDownloadAccount = RelyingPartyDownloadAccount'
+    { _rpdaPayload :: !IdentitytoolkitRelyingPartyDownloadAccountRequest
+    , _rpdaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyDownloadAccount' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype RelyingPartyDownloadAccount = RelyingPartyDownloadAccount'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpdaPayload'
+--
+-- * 'rpdaFields'
 relyingPartyDownloadAccount
     :: IdentitytoolkitRelyingPartyDownloadAccountRequest -- ^ 'rpdaPayload'
     -> RelyingPartyDownloadAccount
-relyingPartyDownloadAccount pRpdaPayload_ =
+relyingPartyDownloadAccount pRpdaPayload_ = 
     RelyingPartyDownloadAccount'
     { _rpdaPayload = pRpdaPayload_
+    , _rpdaFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpdaPayload :: Lens' RelyingPartyDownloadAccount IdentitytoolkitRelyingPartyDownloadAccountRequest
 rpdaPayload
   = lens _rpdaPayload (\ s a -> s{_rpdaPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpdaFields :: Lens' RelyingPartyDownloadAccount (Maybe Text)
+rpdaFields
+  = lens _rpdaFields (\ s a -> s{_rpdaFields = a})
 
 instance GoogleRequest RelyingPartyDownloadAccount
          where
@@ -84,7 +95,7 @@ instance GoogleRequest RelyingPartyDownloadAccount
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/firebase"]
         requestClient RelyingPartyDownloadAccount'{..}
-          = go (Just AltJSON) _rpdaPayload
+          = go _rpdaFields (Just AltJSON) _rpdaPayload
               identityToolkitService
           where go
                   = buildClient

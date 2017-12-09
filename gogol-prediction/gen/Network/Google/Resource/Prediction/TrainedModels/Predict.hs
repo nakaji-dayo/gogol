@@ -36,10 +36,11 @@ module Network.Google.Resource.Prediction.TrainedModels.Predict
     , tmpProject
     , tmpPayload
     , tmpId
+    , tmpFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.predict@ method which the
 -- 'TrainedModelsPredict' request conforms to.
@@ -51,8 +52,9 @@ type TrainedModelsPredictResource =
              "trainedmodels" :>
                Capture "id" Text :>
                  "predict" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Input :> Post '[JSON] Output
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Input :> Post '[JSON] Output
 
 -- | Submit model id and request a prediction.
 --
@@ -60,7 +62,8 @@ type TrainedModelsPredictResource =
 data TrainedModelsPredict = TrainedModelsPredict'
     { _tmpProject :: !Text
     , _tmpPayload :: !Input
-    , _tmpId      :: !Text
+    , _tmpId :: !Text
+    , _tmpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsPredict' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data TrainedModelsPredict = TrainedModelsPredict'
 -- * 'tmpPayload'
 --
 -- * 'tmpId'
+--
+-- * 'tmpFields'
 trainedModelsPredict
     :: Text -- ^ 'tmpProject'
     -> Input -- ^ 'tmpPayload'
     -> Text -- ^ 'tmpId'
     -> TrainedModelsPredict
-trainedModelsPredict pTmpProject_ pTmpPayload_ pTmpId_ =
+trainedModelsPredict pTmpProject_ pTmpPayload_ pTmpId_ = 
     TrainedModelsPredict'
     { _tmpProject = pTmpProject_
     , _tmpPayload = pTmpPayload_
     , _tmpId = pTmpId_
+    , _tmpFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -98,13 +104,19 @@ tmpPayload
 tmpId :: Lens' TrainedModelsPredict Text
 tmpId = lens _tmpId (\ s a -> s{_tmpId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tmpFields :: Lens' TrainedModelsPredict (Maybe Text)
+tmpFields
+  = lens _tmpFields (\ s a -> s{_tmpFields = a})
+
 instance GoogleRequest TrainedModelsPredict where
         type Rs TrainedModelsPredict = Output
         type Scopes TrainedModelsPredict =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsPredict'{..}
-          = go _tmpProject _tmpId (Just AltJSON) _tmpPayload
+          = go _tmpProject _tmpId _tmpFields (Just AltJSON)
+              _tmpPayload
               predictionService
           where go
                   = buildClient

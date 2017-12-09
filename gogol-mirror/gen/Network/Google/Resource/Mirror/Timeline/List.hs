@@ -40,10 +40,11 @@ module Network.Google.Resource.Mirror.Timeline.List
     , tlPageToken
     , tlMaxResults
     , tlIncludeDeleted
+    , tlFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.list@ method which the
 -- 'TimelineList' request conforms to.
@@ -58,20 +59,22 @@ type TimelineListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
                        QueryParam "includeDeleted" Bool :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] TimelineListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] TimelineListResponse
 
 -- | Retrieves a list of timeline items for the authenticated user.
 --
 -- /See:/ 'timelineList' smart constructor.
 data TimelineList = TimelineList'
-    { _tlPinnedOnly     :: !(Maybe Bool)
-    , _tlOrderBy        :: !(Maybe TimelineListOrderBy)
-    , _tlBundleId       :: !(Maybe Text)
-    , _tlSourceItemId   :: !(Maybe Text)
-    , _tlPageToken      :: !(Maybe Text)
-    , _tlMaxResults     :: !(Maybe (Textual Word32))
+    { _tlPinnedOnly :: !(Maybe Bool)
+    , _tlOrderBy :: !(Maybe TimelineListOrderBy)
+    , _tlBundleId :: !(Maybe Text)
+    , _tlSourceItemId :: !(Maybe Text)
+    , _tlPageToken :: !(Maybe Text)
+    , _tlMaxResults :: !(Maybe (Textual Word32))
     , _tlIncludeDeleted :: !(Maybe Bool)
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineList' with the minimum fields required to make a request.
@@ -91,9 +94,11 @@ data TimelineList = TimelineList'
 -- * 'tlMaxResults'
 --
 -- * 'tlIncludeDeleted'
+--
+-- * 'tlFields'
 timelineList
     :: TimelineList
-timelineList =
+timelineList = 
     TimelineList'
     { _tlPinnedOnly = Nothing
     , _tlOrderBy = Nothing
@@ -102,6 +107,7 @@ timelineList =
     , _tlPageToken = Nothing
     , _tlMaxResults = Nothing
     , _tlIncludeDeleted = Nothing
+    , _tlFields = Nothing
     }
 
 -- | If true, only pinned items will be returned.
@@ -142,6 +148,10 @@ tlIncludeDeleted
   = lens _tlIncludeDeleted
       (\ s a -> s{_tlIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TimelineList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TimelineList where
         type Rs TimelineList = TimelineListResponse
         type Scopes TimelineList =
@@ -153,6 +163,7 @@ instance GoogleRequest TimelineList where
               _tlPageToken
               _tlMaxResults
               _tlIncludeDeleted
+              _tlFields
               (Just AltJSON)
               mirrorService
           where go

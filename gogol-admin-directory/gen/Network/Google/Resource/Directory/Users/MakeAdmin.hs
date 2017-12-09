@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Users.MakeAdmin
     -- * Request Lenses
     , umaPayload
     , umaUserKey
+    , umaFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.makeAdmin@ method which the
 -- 'UsersMakeAdmin' request conforms to.
@@ -49,8 +50,9 @@ type UsersMakeAdminResource =
            "users" :>
              Capture "userKey" Text :>
                "makeAdmin" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] UserMakeAdmin :> Post '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] UserMakeAdmin :> Post '[JSON] ()
 
 -- | change admin status of a user
 --
@@ -58,6 +60,7 @@ type UsersMakeAdminResource =
 data UsersMakeAdmin = UsersMakeAdmin'
     { _umaPayload :: !UserMakeAdmin
     , _umaUserKey :: !Text
+    , _umaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMakeAdmin' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersMakeAdmin = UsersMakeAdmin'
 -- * 'umaPayload'
 --
 -- * 'umaUserKey'
+--
+-- * 'umaFields'
 usersMakeAdmin
     :: UserMakeAdmin -- ^ 'umaPayload'
     -> Text -- ^ 'umaUserKey'
     -> UsersMakeAdmin
-usersMakeAdmin pUmaPayload_ pUmaUserKey_ =
+usersMakeAdmin pUmaPayload_ pUmaUserKey_ = 
     UsersMakeAdmin'
     { _umaPayload = pUmaPayload_
     , _umaUserKey = pUmaUserKey_
+    , _umaFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -82,17 +88,23 @@ umaPayload :: Lens' UsersMakeAdmin UserMakeAdmin
 umaPayload
   = lens _umaPayload (\ s a -> s{_umaPayload = a})
 
--- | Email or immutable Id of the user as admin
+-- | Email or immutable ID of the user as admin
 umaUserKey :: Lens' UsersMakeAdmin Text
 umaUserKey
   = lens _umaUserKey (\ s a -> s{_umaUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+umaFields :: Lens' UsersMakeAdmin (Maybe Text)
+umaFields
+  = lens _umaFields (\ s a -> s{_umaFields = a})
 
 instance GoogleRequest UsersMakeAdmin where
         type Rs UsersMakeAdmin = ()
         type Scopes UsersMakeAdmin =
              '["https://www.googleapis.com/auth/admin.directory.user"]
         requestClient UsersMakeAdmin'{..}
-          = go _umaUserKey (Just AltJSON) _umaPayload
+          = go _umaUserKey _umaFields (Just AltJSON)
+              _umaPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy UsersMakeAdminResource)

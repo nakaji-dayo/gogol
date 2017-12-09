@@ -36,10 +36,12 @@ module Network.Google.Resource.Calendar.ACL.Update
     , auCalendarId
     , auRuleId
     , auPayload
+    , auSendNotifications
+    , auFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.acl.update@ method which the
 -- 'ACLUpdate' request conforms to.
@@ -50,16 +52,20 @@ type ACLUpdateResource =
            Capture "calendarId" Text :>
              "acl" :>
                Capture "ruleId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ACLRule :> Put '[JSON] ACLRule
+                 QueryParam "sendNotifications" Bool :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] ACLRule :> Put '[JSON] ACLRule
 
 -- | Updates an access control rule.
 --
 -- /See:/ 'aclUpdate' smart constructor.
 data ACLUpdate = ACLUpdate'
     { _auCalendarId :: !Text
-    , _auRuleId     :: !Text
-    , _auPayload    :: !ACLRule
+    , _auRuleId :: !Text
+    , _auPayload :: !ACLRule
+    , _auSendNotifications :: !(Maybe Bool)
+    , _auFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ACLUpdate' with the minimum fields required to make a request.
@@ -71,16 +77,22 @@ data ACLUpdate = ACLUpdate'
 -- * 'auRuleId'
 --
 -- * 'auPayload'
+--
+-- * 'auSendNotifications'
+--
+-- * 'auFields'
 aclUpdate
     :: Text -- ^ 'auCalendarId'
     -> Text -- ^ 'auRuleId'
     -> ACLRule -- ^ 'auPayload'
     -> ACLUpdate
-aclUpdate pAuCalendarId_ pAuRuleId_ pAuPayload_ =
+aclUpdate pAuCalendarId_ pAuRuleId_ pAuPayload_ = 
     ACLUpdate'
     { _auCalendarId = pAuCalendarId_
     , _auRuleId = pAuRuleId_
     , _auPayload = pAuPayload_
+    , _auSendNotifications = Nothing
+    , _auFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -99,12 +111,26 @@ auPayload :: Lens' ACLUpdate ACLRule
 auPayload
   = lens _auPayload (\ s a -> s{_auPayload = a})
 
+-- | Whether to send notifications about the calendar sharing change. Note
+-- that there are no notifications on access removal. Optional. The default
+-- is True.
+auSendNotifications :: Lens' ACLUpdate (Maybe Bool)
+auSendNotifications
+  = lens _auSendNotifications
+      (\ s a -> s{_auSendNotifications = a})
+
+-- | Selector specifying which fields to include in a partial response.
+auFields :: Lens' ACLUpdate (Maybe Text)
+auFields = lens _auFields (\ s a -> s{_auFields = a})
+
 instance GoogleRequest ACLUpdate where
         type Rs ACLUpdate = ACLRule
         type Scopes ACLUpdate =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient ACLUpdate'{..}
-          = go _auCalendarId _auRuleId (Just AltJSON)
+          = go _auCalendarId _auRuleId _auSendNotifications
+              _auFields
+              (Just AltJSON)
               _auPayload
               appsCalendarService
           where go

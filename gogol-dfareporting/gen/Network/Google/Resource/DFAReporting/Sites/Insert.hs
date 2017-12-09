@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Sites.Insert
     -- * Request Lenses
     , sProFileId
     , sPayload
+    , sFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sites.insert@ method which the
 -- 'SitesInsert' request conforms to.
 type SitesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sites" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Site :> Post '[JSON] Site
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Site :> Post '[JSON] Site
 
 -- | Inserts a new site.
 --
 -- /See:/ 'sitesInsert' smart constructor.
 data SitesInsert = SitesInsert'
     { _sProFileId :: !(Textual Int64)
-    , _sPayload   :: !Site
+    , _sPayload :: !Site
+    , _sFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitesInsert = SitesInsert'
 -- * 'sProFileId'
 --
 -- * 'sPayload'
+--
+-- * 'sFields'
 sitesInsert
     :: Int64 -- ^ 'sProFileId'
     -> Site -- ^ 'sPayload'
     -> SitesInsert
-sitesInsert pSProFileId_ pSPayload_ =
+sitesInsert pSProFileId_ pSPayload_ = 
     SitesInsert'
     { _sProFileId = _Coerce # pSProFileId_
     , _sPayload = pSPayload_
+    , _sFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -86,12 +92,16 @@ sProFileId
 sPayload :: Lens' SitesInsert Site
 sPayload = lens _sPayload (\ s a -> s{_sPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' SitesInsert (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
+
 instance GoogleRequest SitesInsert where
         type Rs SitesInsert = Site
         type Scopes SitesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SitesInsert'{..}
-          = go _sProFileId (Just AltJSON) _sPayload
+          = go _sProFileId _sFields (Just AltJSON) _sPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy SitesInsertResource)

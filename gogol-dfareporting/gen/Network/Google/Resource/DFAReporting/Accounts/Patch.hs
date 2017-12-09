@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.Accounts.Patch
     , appProFileId
     , appPayload
     , appId
+    , appFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accounts.patch@ method which the
 -- 'AccountsPatch' request conforms to.
 type AccountsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accounts" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Account :> Patch '[JSON] Account
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Account :> Patch '[JSON] Account
 
 -- | Updates an existing account. This method supports patch semantics.
 --
 -- /See:/ 'accountsPatch' smart constructor.
 data AccountsPatch = AccountsPatch'
     { _appProFileId :: !(Textual Int64)
-    , _appPayload   :: !Account
-    , _appId        :: !(Textual Int64)
+    , _appPayload :: !Account
+    , _appId :: !(Textual Int64)
+    , _appFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data AccountsPatch = AccountsPatch'
 -- * 'appPayload'
 --
 -- * 'appId'
+--
+-- * 'appFields'
 accountsPatch
     :: Int64 -- ^ 'appProFileId'
     -> Account -- ^ 'appPayload'
     -> Int64 -- ^ 'appId'
     -> AccountsPatch
-accountsPatch pAppProFileId_ pAppPayload_ pAppId_ =
+accountsPatch pAppProFileId_ pAppPayload_ pAppId_ = 
     AccountsPatch'
     { _appProFileId = _Coerce # pAppProFileId_
     , _appPayload = pAppPayload_
     , _appId = _Coerce # pAppId_
+    , _appFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -99,12 +105,18 @@ appId :: Lens' AccountsPatch Int64
 appId
   = lens _appId (\ s a -> s{_appId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+appFields :: Lens' AccountsPatch (Maybe Text)
+appFields
+  = lens _appFields (\ s a -> s{_appFields = a})
+
 instance GoogleRequest AccountsPatch where
         type Rs AccountsPatch = Account
         type Scopes AccountsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountsPatch'{..}
-          = go _appProFileId (Just _appId) (Just AltJSON)
+          = go _appProFileId (Just _appId) _appFields
+              (Just AltJSON)
               _appPayload
               dFAReportingService
           where go

@@ -35,10 +35,12 @@ module Network.Google.Resource.Drive.Files.Get
     -- * Request Lenses
     , fgAcknowledgeAbuse
     , fgFileId
+    , fgSupportsTeamDrives
+    , fgFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.get@ method which the
 -- 'FilesGet' request conforms to.
@@ -48,22 +50,28 @@ type FilesGetResource =
          "files" :>
            Capture "fileId" Text :>
              QueryParam "acknowledgeAbuse" Bool :>
-               QueryParam "alt" AltJSON :> Get '[JSON] File
+               QueryParam "supportsTeamDrives" Bool :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] File
        :<|>
        "drive" :>
          "v3" :>
            "files" :>
              Capture "fileId" Text :>
                QueryParam "acknowledgeAbuse" Bool :>
-                 QueryParam "alt" AltMedia :>
-                   Get '[OctetStream] Stream
+                 QueryParam "supportsTeamDrives" Bool :>
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltMedia :>
+                       Get '[OctetStream] Stream
 
 -- | Gets a file\'s metadata or content by ID.
 --
 -- /See:/ 'filesGet' smart constructor.
 data FilesGet = FilesGet'
     { _fgAcknowledgeAbuse :: !Bool
-    , _fgFileId           :: !Text
+    , _fgFileId :: !Text
+    , _fgSupportsTeamDrives :: !Bool
+    , _fgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesGet' with the minimum fields required to make a request.
@@ -73,13 +81,19 @@ data FilesGet = FilesGet'
 -- * 'fgAcknowledgeAbuse'
 --
 -- * 'fgFileId'
+--
+-- * 'fgSupportsTeamDrives'
+--
+-- * 'fgFields'
 filesGet
     :: Text -- ^ 'fgFileId'
     -> FilesGet
-filesGet pFgFileId_ =
+filesGet pFgFileId_ = 
     FilesGet'
     { _fgAcknowledgeAbuse = False
     , _fgFileId = pFgFileId_
+    , _fgSupportsTeamDrives = False
+    , _fgFields = Nothing
     }
 
 -- | Whether the user is acknowledging the risk of downloading known malware
@@ -93,6 +107,16 @@ fgAcknowledgeAbuse
 fgFileId :: Lens' FilesGet Text
 fgFileId = lens _fgFileId (\ s a -> s{_fgFileId = a})
 
+-- | Whether the requesting application supports Team Drives.
+fgSupportsTeamDrives :: Lens' FilesGet Bool
+fgSupportsTeamDrives
+  = lens _fgSupportsTeamDrives
+      (\ s a -> s{_fgSupportsTeamDrives = a})
+
+-- | Selector specifying which fields to include in a partial response.
+fgFields :: Lens' FilesGet (Maybe Text)
+fgFields = lens _fgFields (\ s a -> s{_fgFields = a})
+
 instance GoogleRequest FilesGet where
         type Rs FilesGet = File
         type Scopes FilesGet =
@@ -105,6 +129,8 @@ instance GoogleRequest FilesGet where
                "https://www.googleapis.com/auth/drive.readonly"]
         requestClient FilesGet'{..}
           = go _fgFileId (Just _fgAcknowledgeAbuse)
+              (Just _fgSupportsTeamDrives)
+              _fgFields
               (Just AltJSON)
               driveService
           where go :<|> _
@@ -117,6 +143,8 @@ instance GoogleRequest (MediaDownload FilesGet) where
              Scopes FilesGet
         requestClient (MediaDownload FilesGet'{..})
           = go _fgFileId (Just _fgAcknowledgeAbuse)
+              (Just _fgSupportsTeamDrives)
+              _fgFields
               (Just AltMedia)
               driveService
           where _ :<|> go

@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Instances.Failover
     -- * Request Lenses
     , ifProject
     , ifPayload
+    , ifFields
     , ifInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.failover@ method which the
 -- 'InstancesFailover' request conforms to.
@@ -51,16 +52,18 @@ type InstancesFailoverResource =
              "instances" :>
                Capture "instance" Text :>
                  "failover" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstancesFailoverRequest :>
-                       Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] InstancesFailoverRequest :>
+                         Post '[JSON] Operation
 
 -- | Failover the instance to its failover replica instance.
 --
 -- /See:/ 'instancesFailover' smart constructor.
 data InstancesFailover = InstancesFailover'
-    { _ifProject  :: !Text
-    , _ifPayload  :: !InstancesFailoverRequest
+    { _ifProject :: !Text
+    , _ifPayload :: !InstancesFailoverRequest
+    , _ifFields :: !(Maybe Text)
     , _ifInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -72,16 +75,19 @@ data InstancesFailover = InstancesFailover'
 --
 -- * 'ifPayload'
 --
+-- * 'ifFields'
+--
 -- * 'ifInstance'
 instancesFailover
     :: Text -- ^ 'ifProject'
     -> InstancesFailoverRequest -- ^ 'ifPayload'
     -> Text -- ^ 'ifInstance'
     -> InstancesFailover
-instancesFailover pIfProject_ pIfPayload_ pIfInstance_ =
+instancesFailover pIfProject_ pIfPayload_ pIfInstance_ = 
     InstancesFailover'
     { _ifProject = pIfProject_
     , _ifPayload = pIfPayload_
+    , _ifFields = Nothing
     , _ifInstance = pIfInstance_
     }
 
@@ -95,6 +101,10 @@ ifPayload :: Lens' InstancesFailover InstancesFailoverRequest
 ifPayload
   = lens _ifPayload (\ s a -> s{_ifPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ifFields :: Lens' InstancesFailover (Maybe Text)
+ifFields = lens _ifFields (\ s a -> s{_ifFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 ifInstance :: Lens' InstancesFailover Text
 ifInstance
@@ -106,7 +116,8 @@ instance GoogleRequest InstancesFailover where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesFailover'{..}
-          = go _ifProject _ifInstance (Just AltJSON) _ifPayload
+          = go _ifProject _ifInstance _ifFields (Just AltJSON)
+              _ifPayload
               sQLAdminService
           where go
                   = buildClient

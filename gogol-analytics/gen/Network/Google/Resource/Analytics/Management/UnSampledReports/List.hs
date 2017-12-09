@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.UnSampledReports.List
     , musrlAccountId
     , musrlStartIndex
     , musrlMaxResults
+    , musrlFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.unsampledReports.list@ method which the
 -- 'ManagementUnSampledReportsList' request conforms to.
@@ -58,18 +59,20 @@ type ManagementUnSampledReportsListResource =
                        "unsampledReports" :>
                          QueryParam "start-index" (Textual Int32) :>
                            QueryParam "max-results" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] UnSampledReports
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] UnSampledReports
 
 -- | Lists unsampled reports to which the user has access.
 --
 -- /See:/ 'managementUnSampledReportsList' smart constructor.
 data ManagementUnSampledReportsList = ManagementUnSampledReportsList'
     { _musrlWebPropertyId :: !Text
-    , _musrlProFileId     :: !Text
-    , _musrlAccountId     :: !Text
-    , _musrlStartIndex    :: !(Maybe (Textual Int32))
-    , _musrlMaxResults    :: !(Maybe (Textual Int32))
+    , _musrlProFileId :: !Text
+    , _musrlAccountId :: !Text
+    , _musrlStartIndex :: !(Maybe (Textual Int32))
+    , _musrlMaxResults :: !(Maybe (Textual Int32))
+    , _musrlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUnSampledReportsList' with the minimum fields required to make a request.
@@ -85,18 +88,21 @@ data ManagementUnSampledReportsList = ManagementUnSampledReportsList'
 -- * 'musrlStartIndex'
 --
 -- * 'musrlMaxResults'
+--
+-- * 'musrlFields'
 managementUnSampledReportsList
     :: Text -- ^ 'musrlWebPropertyId'
     -> Text -- ^ 'musrlProFileId'
     -> Text -- ^ 'musrlAccountId'
     -> ManagementUnSampledReportsList
-managementUnSampledReportsList pMusrlWebPropertyId_ pMusrlProFileId_ pMusrlAccountId_ =
+managementUnSampledReportsList pMusrlWebPropertyId_ pMusrlProFileId_ pMusrlAccountId_ = 
     ManagementUnSampledReportsList'
     { _musrlWebPropertyId = pMusrlWebPropertyId_
     , _musrlProFileId = pMusrlProFileId_
     , _musrlAccountId = pMusrlAccountId_
     , _musrlStartIndex = Nothing
     , _musrlMaxResults = Nothing
+    , _musrlFields = Nothing
     }
 
 -- | Web property ID to retrieve unsampled reports for. Must be a specific
@@ -135,6 +141,11 @@ musrlMaxResults
       (\ s a -> s{_musrlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+musrlFields :: Lens' ManagementUnSampledReportsList (Maybe Text)
+musrlFields
+  = lens _musrlFields (\ s a -> s{_musrlFields = a})
+
 instance GoogleRequest ManagementUnSampledReportsList
          where
         type Rs ManagementUnSampledReportsList =
@@ -148,6 +159,7 @@ instance GoogleRequest ManagementUnSampledReportsList
               _musrlProFileId
               _musrlStartIndex
               _musrlMaxResults
+              _musrlFields
               (Just AltJSON)
               analyticsService
           where go

@@ -44,11 +44,12 @@ module Network.Google.Resource.CloudBilling.BillingAccounts.Projects.List
     , baplName
     , baplPageToken
     , baplPageSize
+    , baplFields
     , baplCallback
     ) where
 
-import           Network.Google.Billing.Types
-import           Network.Google.Prelude
+import Network.Google.Billing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbilling.billingAccounts.projects.list@ method which the
 -- 'BillingAccountsProjectsList' request conforms to.
@@ -56,7 +57,7 @@ type BillingAccountsProjectsListResource =
      "v1" :>
        Capture "name" Text :>
          "projects" :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
@@ -65,8 +66,9 @@ type BillingAccountsProjectsListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListProjectBillingInfoResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListProjectBillingInfoResponse
 
 -- | Lists the projects associated with a billing account. The current
 -- authenticated user must be an [owner of the billing
@@ -74,16 +76,17 @@ type BillingAccountsProjectsListResource =
 --
 -- /See:/ 'billingAccountsProjectsList' smart constructor.
 data BillingAccountsProjectsList = BillingAccountsProjectsList'
-    { _baplXgafv          :: !(Maybe Text)
+    { _baplXgafv :: !(Maybe Xgafv)
     , _baplUploadProtocol :: !(Maybe Text)
-    , _baplPp             :: !Bool
-    , _baplAccessToken    :: !(Maybe Text)
-    , _baplUploadType     :: !(Maybe Text)
-    , _baplBearerToken    :: !(Maybe Text)
-    , _baplName           :: !Text
-    , _baplPageToken      :: !(Maybe Text)
-    , _baplPageSize       :: !(Maybe (Textual Int32))
-    , _baplCallback       :: !(Maybe Text)
+    , _baplPp :: !Bool
+    , _baplAccessToken :: !(Maybe Text)
+    , _baplUploadType :: !(Maybe Text)
+    , _baplBearerToken :: !(Maybe Text)
+    , _baplName :: !Text
+    , _baplPageToken :: !(Maybe Text)
+    , _baplPageSize :: !(Maybe (Textual Int32))
+    , _baplFields :: !(Maybe Text)
+    , _baplCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingAccountsProjectsList' with the minimum fields required to make a request.
@@ -108,11 +111,13 @@ data BillingAccountsProjectsList = BillingAccountsProjectsList'
 --
 -- * 'baplPageSize'
 --
+-- * 'baplFields'
+--
 -- * 'baplCallback'
 billingAccountsProjectsList
     :: Text -- ^ 'baplName'
     -> BillingAccountsProjectsList
-billingAccountsProjectsList pBaplName_ =
+billingAccountsProjectsList pBaplName_ = 
     BillingAccountsProjectsList'
     { _baplXgafv = Nothing
     , _baplUploadProtocol = Nothing
@@ -123,11 +128,12 @@ billingAccountsProjectsList pBaplName_ =
     , _baplName = pBaplName_
     , _baplPageToken = Nothing
     , _baplPageSize = Nothing
+    , _baplFields = Nothing
     , _baplCallback = Nothing
     }
 
 -- | V1 error format.
-baplXgafv :: Lens' BillingAccountsProjectsList (Maybe Text)
+baplXgafv :: Lens' BillingAccountsProjectsList (Maybe Xgafv)
 baplXgafv
   = lens _baplXgafv (\ s a -> s{_baplXgafv = a})
 
@@ -181,6 +187,11 @@ baplPageSize
   = lens _baplPageSize (\ s a -> s{_baplPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+baplFields :: Lens' BillingAccountsProjectsList (Maybe Text)
+baplFields
+  = lens _baplFields (\ s a -> s{_baplFields = a})
+
 -- | JSONP
 baplCallback :: Lens' BillingAccountsProjectsList (Maybe Text)
 baplCallback
@@ -201,6 +212,7 @@ instance GoogleRequest BillingAccountsProjectsList
               _baplPageToken
               _baplPageSize
               _baplCallback
+              _baplFields
               (Just AltJSON)
               billingService
           where go

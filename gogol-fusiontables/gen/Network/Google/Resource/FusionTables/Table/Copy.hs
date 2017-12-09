@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Table.Copy
     -- * Request Lenses
     , tcTableId
     , tcCopyPresentation
+    , tcFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.copy@ method which the
 -- 'TableCopy' request conforms to.
@@ -49,14 +50,16 @@ type TableCopyResource =
            Capture "tableId" Text :>
              "copy" :>
                QueryParam "copyPresentation" Bool :>
-                 QueryParam "alt" AltJSON :> Post '[JSON] Table
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Post '[JSON] Table
 
 -- | Copies a table.
 --
 -- /See:/ 'tableCopy' smart constructor.
 data TableCopy = TableCopy'
-    { _tcTableId          :: !Text
+    { _tcTableId :: !Text
     , _tcCopyPresentation :: !(Maybe Bool)
+    , _tcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableCopy' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data TableCopy = TableCopy'
 -- * 'tcTableId'
 --
 -- * 'tcCopyPresentation'
+--
+-- * 'tcFields'
 tableCopy
     :: Text -- ^ 'tcTableId'
     -> TableCopy
-tableCopy pTcTableId_ =
+tableCopy pTcTableId_ = 
     TableCopy'
     { _tcTableId = pTcTableId_
     , _tcCopyPresentation = Nothing
+    , _tcFields = Nothing
     }
 
 -- | ID of the table that is being copied.
@@ -86,13 +92,18 @@ tcCopyPresentation
   = lens _tcCopyPresentation
       (\ s a -> s{_tcCopyPresentation = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tcFields :: Lens' TableCopy (Maybe Text)
+tcFields = lens _tcFields (\ s a -> s{_tcFields = a})
+
 instance GoogleRequest TableCopy where
         type Rs TableCopy = Table
         type Scopes TableCopy =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient TableCopy'{..}
-          = go _tcTableId _tcCopyPresentation (Just AltJSON)
+          = go _tcTableId _tcCopyPresentation _tcFields
+              (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TableCopyResource)

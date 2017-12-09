@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.List
     , melAccountId
     , melStartIndex
     , melMaxResults
+    , melFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.list@ method which the
 -- 'ManagementExperimentsList' request conforms to.
@@ -58,17 +59,20 @@ type ManagementExperimentsListResource =
                        "experiments" :>
                          QueryParam "start-index" (Textual Int32) :>
                            QueryParam "max-results" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Experiments
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] Experiments
 
 -- | Lists experiments to which the user has access.
 --
 -- /See:/ 'managementExperimentsList' smart constructor.
 data ManagementExperimentsList = ManagementExperimentsList'
     { _melWebPropertyId :: !Text
-    , _melProFileId     :: !Text
-    , _melAccountId     :: !Text
-    , _melStartIndex    :: !(Maybe (Textual Int32))
-    , _melMaxResults    :: !(Maybe (Textual Int32))
+    , _melProFileId :: !Text
+    , _melAccountId :: !Text
+    , _melStartIndex :: !(Maybe (Textual Int32))
+    , _melMaxResults :: !(Maybe (Textual Int32))
+    , _melFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsList' with the minimum fields required to make a request.
@@ -84,18 +88,21 @@ data ManagementExperimentsList = ManagementExperimentsList'
 -- * 'melStartIndex'
 --
 -- * 'melMaxResults'
+--
+-- * 'melFields'
 managementExperimentsList
     :: Text -- ^ 'melWebPropertyId'
     -> Text -- ^ 'melProFileId'
     -> Text -- ^ 'melAccountId'
     -> ManagementExperimentsList
-managementExperimentsList pMelWebPropertyId_ pMelProFileId_ pMelAccountId_ =
+managementExperimentsList pMelWebPropertyId_ pMelProFileId_ pMelAccountId_ = 
     ManagementExperimentsList'
     { _melWebPropertyId = pMelWebPropertyId_
     , _melProFileId = pMelProFileId_
     , _melAccountId = pMelAccountId_
     , _melStartIndex = Nothing
     , _melMaxResults = Nothing
+    , _melFields = Nothing
     }
 
 -- | Web property ID to retrieve experiments for.
@@ -129,6 +136,11 @@ melMaxResults
       (\ s a -> s{_melMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+melFields :: Lens' ManagementExperimentsList (Maybe Text)
+melFields
+  = lens _melFields (\ s a -> s{_melFields = a})
+
 instance GoogleRequest ManagementExperimentsList
          where
         type Rs ManagementExperimentsList = Experiments
@@ -140,6 +152,7 @@ instance GoogleRequest ManagementExperimentsList
           = go _melAccountId _melWebPropertyId _melProFileId
               _melStartIndex
               _melMaxResults
+              _melFields
               (Just AltJSON)
               analyticsService
           where go

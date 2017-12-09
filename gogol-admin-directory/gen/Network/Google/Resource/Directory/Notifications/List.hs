@@ -37,10 +37,11 @@ module Network.Google.Resource.Directory.Notifications.List
     , nlLanguage
     , nlPageToken
     , nlMaxResults
+    , nlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.notifications.list@ method which the
 -- 'NotificationsList' request conforms to.
@@ -54,16 +55,18 @@ type NotificationsListResource =
                  QueryParam "language" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Notifications
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Notifications
 
 -- | Retrieves a list of notifications.
 --
 -- /See:/ 'notificationsList' smart constructor.
 data NotificationsList = NotificationsList'
-    { _nlCustomer   :: !Text
-    , _nlLanguage   :: !(Maybe Text)
-    , _nlPageToken  :: !(Maybe Text)
+    { _nlCustomer :: !Text
+    , _nlLanguage :: !(Maybe Text)
+    , _nlPageToken :: !(Maybe Text)
     , _nlMaxResults :: !(Maybe (Textual Word32))
+    , _nlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NotificationsList' with the minimum fields required to make a request.
@@ -77,18 +80,21 @@ data NotificationsList = NotificationsList'
 -- * 'nlPageToken'
 --
 -- * 'nlMaxResults'
+--
+-- * 'nlFields'
 notificationsList
     :: Text -- ^ 'nlCustomer'
     -> NotificationsList
-notificationsList pNlCustomer_ =
+notificationsList pNlCustomer_ = 
     NotificationsList'
     { _nlCustomer = pNlCustomer_
     , _nlLanguage = Nothing
     , _nlPageToken = Nothing
     , _nlMaxResults = Nothing
+    , _nlFields = Nothing
     }
 
--- | The unique ID for the customer\'s Google account.
+-- | The unique ID for the customer\'s G Suite account.
 nlCustomer :: Lens' NotificationsList Text
 nlCustomer
   = lens _nlCustomer (\ s a -> s{_nlCustomer = a})
@@ -110,6 +116,10 @@ nlMaxResults
   = lens _nlMaxResults (\ s a -> s{_nlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+nlFields :: Lens' NotificationsList (Maybe Text)
+nlFields = lens _nlFields (\ s a -> s{_nlFields = a})
+
 instance GoogleRequest NotificationsList where
         type Rs NotificationsList = Notifications
         type Scopes NotificationsList =
@@ -117,6 +127,7 @@ instance GoogleRequest NotificationsList where
         requestClient NotificationsList'{..}
           = go _nlCustomer _nlLanguage _nlPageToken
               _nlMaxResults
+              _nlFields
               (Just AltJSON)
               directoryService
           where go

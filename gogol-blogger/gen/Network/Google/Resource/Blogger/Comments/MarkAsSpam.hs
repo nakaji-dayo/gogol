@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Comments.MarkAsSpam
     , cmasBlogId
     , cmasPostId
     , cmasCommentId
+    , cmasFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.markAsSpam@ method which the
 -- 'CommentsMarkAsSpam' request conforms to.
@@ -53,15 +54,17 @@ type CommentsMarkAsSpamResource =
                  "comments" :>
                    Capture "commentId" Text :>
                      "spam" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Comment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Comment
 
 -- | Marks a comment as spam.
 --
 -- /See:/ 'commentsMarkAsSpam' smart constructor.
 data CommentsMarkAsSpam = CommentsMarkAsSpam'
-    { _cmasBlogId    :: !Text
-    , _cmasPostId    :: !Text
+    { _cmasBlogId :: !Text
+    , _cmasPostId :: !Text
     , _cmasCommentId :: !Text
+    , _cmasFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsMarkAsSpam' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CommentsMarkAsSpam = CommentsMarkAsSpam'
 -- * 'cmasPostId'
 --
 -- * 'cmasCommentId'
+--
+-- * 'cmasFields'
 commentsMarkAsSpam
     :: Text -- ^ 'cmasBlogId'
     -> Text -- ^ 'cmasPostId'
     -> Text -- ^ 'cmasCommentId'
     -> CommentsMarkAsSpam
-commentsMarkAsSpam pCmasBlogId_ pCmasPostId_ pCmasCommentId_ =
+commentsMarkAsSpam pCmasBlogId_ pCmasPostId_ pCmasCommentId_ = 
     CommentsMarkAsSpam'
     { _cmasBlogId = pCmasBlogId_
     , _cmasPostId = pCmasPostId_
     , _cmasCommentId = pCmasCommentId_
+    , _cmasFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -101,12 +107,18 @@ cmasCommentId
   = lens _cmasCommentId
       (\ s a -> s{_cmasCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cmasFields :: Lens' CommentsMarkAsSpam (Maybe Text)
+cmasFields
+  = lens _cmasFields (\ s a -> s{_cmasFields = a})
+
 instance GoogleRequest CommentsMarkAsSpam where
         type Rs CommentsMarkAsSpam = Comment
         type Scopes CommentsMarkAsSpam =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient CommentsMarkAsSpam'{..}
           = go _cmasBlogId _cmasPostId _cmasCommentId
+              _cmasFields
               (Just AltJSON)
               bloggerService
           where go

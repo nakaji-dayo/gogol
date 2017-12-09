@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -233,11 +233,6 @@ module Network.Google.YouTube.Types
     -- * LiveBroadcastStatusPrivacyStatus
     , LiveBroadcastStatusPrivacyStatus (..)
 
-    -- * LiveBroadcastTopicDetails
-    , LiveBroadcastTopicDetails
-    , liveBroadcastTopicDetails
-    , lbtdTopics
-
     -- * PlayListStatus
     , PlayListStatus
     , playListStatus
@@ -287,6 +282,18 @@ module Network.Google.YouTube.Types
     , cpfdDisplayName
     , cpfdChannelURL
 
+    -- * SuperChatEventListResponse
+    , SuperChatEventListResponse
+    , superChatEventListResponse
+    , scelrEtag
+    , scelrTokenPagination
+    , scelrNextPageToken
+    , scelrPageInfo
+    , scelrKind
+    , scelrItems
+    , scelrVisitorId
+    , scelrEventId
+
     -- * VideoAbuseReportReasonListResponse
     , VideoAbuseReportReasonListResponse
     , videoAbuseReportReasonListResponse
@@ -314,6 +321,7 @@ module Network.Google.YouTube.Types
     , liveBroadcastContentDetails
     , lbcdEnableContentEncryption
     , lbcdEnableLowLatency
+    , lbcdLatencyPreference
     , lbcdClosedCaptionsType
     , lbcdEnableEmbed
     , lbcdStartWithSlate
@@ -321,7 +329,9 @@ module Network.Google.YouTube.Types
     , lbcdMonitorStream
     , lbcdBoundStreamId
     , lbcdRecordFromStart
+    , lbcdMesh
     , lbcdEnableClosedCaptions
+    , lbcdEnableAutoStart
     , lbcdBoundStreamLastUpdateTimeMs
     , lbcdEnableDvr
 
@@ -418,6 +428,7 @@ module Network.Google.YouTube.Types
     , videoTopicDetails
     , vtdTopicIds
     , vtdRelevantTopicIds
+    , vtdTopicCategories
 
     -- * ActivityContentDetailsComment
     , ActivityContentDetailsComment
@@ -496,6 +507,15 @@ module Network.Google.YouTube.Types
 
     -- * ContentRatingSmsaRating
     , ContentRatingSmsaRating (..)
+
+    -- * LiveChatSuperChatDetails
+    , LiveChatSuperChatDetails
+    , liveChatSuperChatDetails
+    , lcscdUserComment
+    , lcscdAmountMicros
+    , lcscdAmountDisplayString
+    , lcscdCurrency
+    , lcscdTier
 
     -- * PageInfo
     , PageInfo
@@ -602,6 +622,9 @@ module Network.Google.YouTube.Types
     , vstsTag
     , vstsCategoryRestricts
 
+    -- * ContentRatingMpaatRating
+    , ContentRatingMpaatRating (..)
+
     -- * LiveChatModeratorListResponse
     , LiveChatModeratorListResponse
     , liveChatModeratorListResponse
@@ -631,6 +654,7 @@ module Network.Google.YouTube.Types
     , ChannelTopicDetails
     , channelTopicDetails
     , ctdTopicIds
+    , ctdTopicCategories
 
     -- * LiveChatBanSnippetType
     , LiveChatBanSnippetType (..)
@@ -644,9 +668,6 @@ module Network.Google.YouTube.Types
     , lcpedPrompt
     , lcpedItems
     , lcpedId
-
-    -- * LiveBroadcastTopicType
-    , LiveBroadcastTopicType (..)
 
     -- * VideoCategoryListResponse
     , VideoCategoryListResponse
@@ -703,6 +724,14 @@ module Network.Google.YouTube.Types
 
     -- * CommentSnippetViewerRating
     , CommentSnippetViewerRating (..)
+
+    -- * SuperChatEvent
+    , SuperChatEvent
+    , superChatEvent
+    , sceEtag
+    , sceSnippet
+    , sceKind
+    , sceId
 
     -- * VideoAbuseReportReason
     , VideoAbuseReportReason
@@ -809,6 +838,18 @@ module Network.Google.YouTube.Types
     , vgrrVisitorId
     , vgrrEventId
 
+    -- * SuperChatEventSnippet
+    , SuperChatEventSnippet
+    , superChatEventSnippet
+    , scesDisplayString
+    , scesSupporterDetails
+    , scesCreatedAt
+    , scesAmountMicros
+    , scesMessageType
+    , scesChannelId
+    , scesCommentText
+    , scesCurrency
+
     -- * VideoAbuseReportReasonSnippet
     , VideoAbuseReportReasonSnippet
     , videoAbuseReportReasonSnippet
@@ -894,6 +935,7 @@ module Network.Google.YouTube.Types
     , lcmsTextMessageDetails
     , lcmsPollClosedDetails
     , lcmsMessageRetractedDetails
+    , lcmsSuperChatDetails
     , lcmsPollEditedDetails
     , lcmsType
     , lcmsAuthorChannelId
@@ -962,6 +1004,9 @@ module Network.Google.YouTube.Types
     , acdLike
     , acdRecommendation
 
+    -- * LiveBroadcastContentDetailsLatencyPreference
+    , LiveBroadcastContentDetailsLatencyPreference (..)
+
     -- * VideoCategory
     , VideoCategory
     , videoCategory
@@ -996,6 +1041,7 @@ module Network.Google.YouTube.Types
     , vStatus
     , vEtag
     , vProjectDetails
+    , vAccessToken
     , vRecordingDetails
     , vSnippet
     , vKind
@@ -1019,7 +1065,6 @@ module Network.Google.YouTube.Types
     , lbEtag
     , lbSnippet
     , lbKind
-    , lbTopicDetails
     , lbContentDetails
     , lbId
     , lbStatistics
@@ -1482,12 +1527,6 @@ module Network.Google.YouTube.Types
     -- * SearchListVideoDimension
     , SearchListVideoDimension (..)
 
-    -- * LiveBroadcastTopicSnippet
-    , LiveBroadcastTopicSnippet
-    , liveBroadcastTopicSnippet
-    , lbtsName
-    , lbtsReleaseDate
-
     -- * ContentRatingNkclvRating
     , ContentRatingNkclvRating (..)
 
@@ -1609,13 +1648,6 @@ module Network.Google.YouTube.Types
     , scdTotalItemCount
     , scdNewItemCount
 
-    -- * LiveBroadcastTopic
-    , LiveBroadcastTopic
-    , liveBroadcastTopic
-    , lbtSnippet
-    , lbtUnmatched
-    , lbtType
-
     -- * ContentRatingCsaRating
     , ContentRatingCsaRating (..)
 
@@ -1719,6 +1751,9 @@ module Network.Google.YouTube.Types
     , pliKind
     , pliContentDetails
     , pliId
+
+    -- * ContentRatingMenaMpaaRating
+    , ContentRatingMenaMpaaRating (..)
 
     -- * ActivityContentDetailsRecommendationReason
     , ActivityContentDetailsRecommendationReason (..)
@@ -1936,6 +1971,7 @@ module Network.Google.YouTube.Types
     , crRtcRating
     , crYtRating
     , crBbfcRating
+    , crMenaMpaaRating
     , crKijkwijzerRating
     , crMtrcbRating
     , crFcoRating
@@ -1953,6 +1989,7 @@ module Network.Google.YouTube.Types
     , crFpbRating
     , crLsfRating
     , crBfvcRating
+    , crMpaatRating
     , crEcbmctRating
     , crCNCRating
     , crSkfilmRating
@@ -2111,9 +2148,9 @@ module Network.Google.YouTube.Types
     , lcpvdItemId
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types.Product
-import           Network.Google.YouTube.Types.Sum
+import Network.Google.Prelude
+import Network.Google.YouTube.Types.Product
+import Network.Google.YouTube.Types.Sum
 
 -- | Default request referring to version 'v3' of the YouTube Data API. This contains the host and root path used as a starting point for constructing service requests.
 youTubeService :: ServiceConfig

@@ -35,10 +35,11 @@ module Network.Google.Resource.Webmasters.Sitemaps.Delete
     -- * Request Lenses
     , sdFeedpath
     , sdSiteURL
+    , sdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sitemaps.delete@ method which the
 -- 'SitemapsDelete' request conforms to.
@@ -49,14 +50,16 @@ type SitemapsDeleteResource =
            Capture "siteUrl" Text :>
              "sitemaps" :>
                Capture "feedpath" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a sitemap from this site.
 --
 -- /See:/ 'sitemapsDelete' smart constructor.
 data SitemapsDelete = SitemapsDelete'
     { _sdFeedpath :: !Text
-    , _sdSiteURL  :: !Text
+    , _sdSiteURL :: !Text
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitemapsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitemapsDelete = SitemapsDelete'
 -- * 'sdFeedpath'
 --
 -- * 'sdSiteURL'
+--
+-- * 'sdFields'
 sitemapsDelete
     :: Text -- ^ 'sdFeedpath'
     -> Text -- ^ 'sdSiteURL'
     -> SitemapsDelete
-sitemapsDelete pSdFeedpath_ pSdSiteURL_ =
+sitemapsDelete pSdFeedpath_ pSdSiteURL_ = 
     SitemapsDelete'
     { _sdFeedpath = pSdFeedpath_
     , _sdSiteURL = pSdSiteURL_
+    , _sdFields = Nothing
     }
 
 -- | The URL of the actual sitemap. For example:
@@ -88,12 +94,16 @@ sdSiteURL :: Lens' SitemapsDelete Text
 sdSiteURL
   = lens _sdSiteURL (\ s a -> s{_sdSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' SitemapsDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest SitemapsDelete where
         type Rs SitemapsDelete = ()
         type Scopes SitemapsDelete =
              '["https://www.googleapis.com/auth/webmasters"]
         requestClient SitemapsDelete'{..}
-          = go _sdSiteURL _sdFeedpath (Just AltJSON)
+          = go _sdSiteURL _sdFeedpath _sdFields (Just AltJSON)
               webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitemapsDeleteResource)

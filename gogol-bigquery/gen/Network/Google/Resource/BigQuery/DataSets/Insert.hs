@@ -35,10 +35,11 @@ module Network.Google.Resource.BigQuery.DataSets.Insert
     -- * Request Lenses
     , dsiPayload
     , dsiProjectId
+    , dsiFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.insert@ method which the
 -- 'DataSetsInsert' request conforms to.
@@ -48,15 +49,17 @@ type DataSetsInsertResource =
          "projects" :>
            Capture "projectId" Text :>
              "datasets" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DataSet :> Post '[JSON] DataSet
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DataSet :> Post '[JSON] DataSet
 
 -- | Creates a new empty dataset.
 --
 -- /See:/ 'dataSetsInsert' smart constructor.
 data DataSetsInsert = DataSetsInsert'
-    { _dsiPayload   :: !DataSet
+    { _dsiPayload :: !DataSet
     , _dsiProjectId :: !Text
+    , _dsiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data DataSetsInsert = DataSetsInsert'
 -- * 'dsiPayload'
 --
 -- * 'dsiProjectId'
+--
+-- * 'dsiFields'
 dataSetsInsert
     :: DataSet -- ^ 'dsiPayload'
     -> Text -- ^ 'dsiProjectId'
     -> DataSetsInsert
-dataSetsInsert pDsiPayload_ pDsiProjectId_ =
+dataSetsInsert pDsiPayload_ pDsiProjectId_ = 
     DataSetsInsert'
     { _dsiPayload = pDsiPayload_
     , _dsiProjectId = pDsiProjectId_
+    , _dsiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,13 +92,19 @@ dsiProjectId :: Lens' DataSetsInsert Text
 dsiProjectId
   = lens _dsiProjectId (\ s a -> s{_dsiProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsiFields :: Lens' DataSetsInsert (Maybe Text)
+dsiFields
+  = lens _dsiFields (\ s a -> s{_dsiFields = a})
+
 instance GoogleRequest DataSetsInsert where
         type Rs DataSetsInsert = DataSet
         type Scopes DataSetsInsert =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DataSetsInsert'{..}
-          = go _dsiProjectId (Just AltJSON) _dsiPayload
+          = go _dsiProjectId _dsiFields (Just AltJSON)
+              _dsiPayload
               bigQueryService
           where go
                   = buildClient (Proxy :: Proxy DataSetsInsertResource)

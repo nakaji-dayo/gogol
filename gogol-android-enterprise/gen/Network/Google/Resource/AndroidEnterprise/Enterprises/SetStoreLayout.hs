@@ -26,7 +26,7 @@
 -- the available product set for a user (using the setAvailableProductSet
 -- call). Apps on the page are sorted in order of their product ID value.
 -- If you create a custom store layout (by setting storeLayoutType =
--- \"custom\"), the basic store layout is disabled.
+-- \"custom\" and setting a homepage), the basic store layout is disabled.
 --
 -- /See:/ <https://developers.google.com/android/work/play/emm-api Google Play EMM API Reference> for @androidenterprise.enterprises.setStoreLayout@.
 module Network.Google.Resource.AndroidEnterprise.Enterprises.SetStoreLayout
@@ -41,10 +41,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.SetStoreLayout
     -- * Request Lenses
     , esslEnterpriseId
     , esslPayload
+    , esslFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.setStoreLayout@ method which the
 -- 'EnterprisesSetStoreLayout' request conforms to.
@@ -54,9 +55,10 @@ type EnterprisesSetStoreLayoutResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "storeLayout" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] StoreLayout :>
-                   Put '[JSON] StoreLayout
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] StoreLayout :>
+                     Put '[JSON] StoreLayout
 
 -- | Sets the store layout for the enterprise. By default, storeLayoutType is
 -- set to \"basic\" and the basic store layout is enabled. The basic layout
@@ -64,12 +66,13 @@ type EnterprisesSetStoreLayoutResource =
 -- the available product set for a user (using the setAvailableProductSet
 -- call). Apps on the page are sorted in order of their product ID value.
 -- If you create a custom store layout (by setting storeLayoutType =
--- \"custom\"), the basic store layout is disabled.
+-- \"custom\" and setting a homepage), the basic store layout is disabled.
 --
 -- /See:/ 'enterprisesSetStoreLayout' smart constructor.
 data EnterprisesSetStoreLayout = EnterprisesSetStoreLayout'
     { _esslEnterpriseId :: !Text
-    , _esslPayload      :: !StoreLayout
+    , _esslPayload :: !StoreLayout
+    , _esslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesSetStoreLayout' with the minimum fields required to make a request.
@@ -79,14 +82,17 @@ data EnterprisesSetStoreLayout = EnterprisesSetStoreLayout'
 -- * 'esslEnterpriseId'
 --
 -- * 'esslPayload'
+--
+-- * 'esslFields'
 enterprisesSetStoreLayout
     :: Text -- ^ 'esslEnterpriseId'
     -> StoreLayout -- ^ 'esslPayload'
     -> EnterprisesSetStoreLayout
-enterprisesSetStoreLayout pEsslEnterpriseId_ pEsslPayload_ =
+enterprisesSetStoreLayout pEsslEnterpriseId_ pEsslPayload_ = 
     EnterprisesSetStoreLayout'
     { _esslEnterpriseId = pEsslEnterpriseId_
     , _esslPayload = pEsslPayload_
+    , _esslFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -100,13 +106,19 @@ esslPayload :: Lens' EnterprisesSetStoreLayout StoreLayout
 esslPayload
   = lens _esslPayload (\ s a -> s{_esslPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+esslFields :: Lens' EnterprisesSetStoreLayout (Maybe Text)
+esslFields
+  = lens _esslFields (\ s a -> s{_esslFields = a})
+
 instance GoogleRequest EnterprisesSetStoreLayout
          where
         type Rs EnterprisesSetStoreLayout = StoreLayout
         type Scopes EnterprisesSetStoreLayout =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient EnterprisesSetStoreLayout'{..}
-          = go _esslEnterpriseId (Just AltJSON) _esslPayload
+          = go _esslEnterpriseId _esslFields (Just AltJSON)
+              _esslPayload
               androidEnterpriseService
           where go
                   = buildClient

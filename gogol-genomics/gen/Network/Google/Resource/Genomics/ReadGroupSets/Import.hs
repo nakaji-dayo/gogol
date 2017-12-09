@@ -52,11 +52,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.Import
     , rgsiUploadType
     , rgsiPayload
     , rgsiBearerToken
+    , rgsiFields
     , rgsiCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.import@ method which the
 -- 'ReadGroupSetsImport' request conforms to.
@@ -70,9 +71,10 @@ type ReadGroupSetsImportResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ImportReadGroupSetsRequest :>
-                           Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ImportReadGroupSetsRequest :>
+                             Post '[JSON] Operation
 
 -- | Creates read group sets by asynchronously importing the provided
 -- information. For the definitions of read group sets and other genomics
@@ -90,14 +92,15 @@ type ReadGroupSetsImportResource =
 --
 -- /See:/ 'readGroupSetsImport' smart constructor.
 data ReadGroupSetsImport = ReadGroupSetsImport'
-    { _rgsiXgafv          :: !(Maybe Xgafv)
+    { _rgsiXgafv :: !(Maybe Xgafv)
     , _rgsiUploadProtocol :: !(Maybe Text)
-    , _rgsiPp             :: !Bool
-    , _rgsiAccessToken    :: !(Maybe Text)
-    , _rgsiUploadType     :: !(Maybe Text)
-    , _rgsiPayload        :: !ImportReadGroupSetsRequest
-    , _rgsiBearerToken    :: !(Maybe Text)
-    , _rgsiCallback       :: !(Maybe Text)
+    , _rgsiPp :: !Bool
+    , _rgsiAccessToken :: !(Maybe Text)
+    , _rgsiUploadType :: !(Maybe Text)
+    , _rgsiPayload :: !ImportReadGroupSetsRequest
+    , _rgsiBearerToken :: !(Maybe Text)
+    , _rgsiFields :: !(Maybe Text)
+    , _rgsiCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsImport' with the minimum fields required to make a request.
@@ -118,11 +121,13 @@ data ReadGroupSetsImport = ReadGroupSetsImport'
 --
 -- * 'rgsiBearerToken'
 --
+-- * 'rgsiFields'
+--
 -- * 'rgsiCallback'
 readGroupSetsImport
     :: ImportReadGroupSetsRequest -- ^ 'rgsiPayload'
     -> ReadGroupSetsImport
-readGroupSetsImport pRgsiPayload_ =
+readGroupSetsImport pRgsiPayload_ = 
     ReadGroupSetsImport'
     { _rgsiXgafv = Nothing
     , _rgsiUploadProtocol = Nothing
@@ -131,6 +136,7 @@ readGroupSetsImport pRgsiPayload_ =
     , _rgsiUploadType = Nothing
     , _rgsiPayload = pRgsiPayload_
     , _rgsiBearerToken = Nothing
+    , _rgsiFields = Nothing
     , _rgsiCallback = Nothing
     }
 
@@ -172,6 +178,11 @@ rgsiBearerToken
   = lens _rgsiBearerToken
       (\ s a -> s{_rgsiBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgsiFields :: Lens' ReadGroupSetsImport (Maybe Text)
+rgsiFields
+  = lens _rgsiFields (\ s a -> s{_rgsiFields = a})
+
 -- | JSONP
 rgsiCallback :: Lens' ReadGroupSetsImport (Maybe Text)
 rgsiCallback
@@ -189,6 +200,7 @@ instance GoogleRequest ReadGroupSetsImport where
               _rgsiUploadType
               _rgsiBearerToken
               _rgsiCallback
+              _rgsiFields
               (Just AltJSON)
               _rgsiPayload
               genomicsService

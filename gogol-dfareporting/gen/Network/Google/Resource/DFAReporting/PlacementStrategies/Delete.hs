@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.PlacementStrategies.Delete
     -- * Request Lenses
     , psdProFileId
     , psdId
+    , psdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementStrategies.delete@ method which the
 -- 'PlacementStrategiesDelete' request conforms to.
 type PlacementStrategiesDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementStrategies" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing placement strategy.
 --
 -- /See:/ 'placementStrategiesDelete' smart constructor.
 data PlacementStrategiesDelete = PlacementStrategiesDelete'
     { _psdProFileId :: !(Textual Int64)
-    , _psdId        :: !(Textual Int64)
+    , _psdId :: !(Textual Int64)
+    , _psdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementStrategiesDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PlacementStrategiesDelete = PlacementStrategiesDelete'
 -- * 'psdProFileId'
 --
 -- * 'psdId'
+--
+-- * 'psdFields'
 placementStrategiesDelete
     :: Int64 -- ^ 'psdProFileId'
     -> Int64 -- ^ 'psdId'
     -> PlacementStrategiesDelete
-placementStrategiesDelete pPsdProFileId_ pPsdId_ =
+placementStrategiesDelete pPsdProFileId_ pPsdId_ = 
     PlacementStrategiesDelete'
     { _psdProFileId = _Coerce # pPsdProFileId_
     , _psdId = _Coerce # pPsdId_
+    , _psdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,13 +93,18 @@ psdId :: Lens' PlacementStrategiesDelete Int64
 psdId
   = lens _psdId (\ s a -> s{_psdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+psdFields :: Lens' PlacementStrategiesDelete (Maybe Text)
+psdFields
+  = lens _psdFields (\ s a -> s{_psdFields = a})
+
 instance GoogleRequest PlacementStrategiesDelete
          where
         type Rs PlacementStrategiesDelete = ()
         type Scopes PlacementStrategiesDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementStrategiesDelete'{..}
-          = go _psdProFileId _psdId (Just AltJSON)
+          = go _psdProFileId _psdId _psdFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

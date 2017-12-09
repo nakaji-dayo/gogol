@@ -37,10 +37,11 @@ module Network.Google.Resource.AdSenseHost.CustomChannels.Patch
     , ccpCustomChannelId
     , ccpPayload
     , ccpAdClientId
+    , ccpFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.customchannels.patch@ method which the
 -- 'CustomChannelsPatch' request conforms to.
@@ -51,9 +52,10 @@ type CustomChannelsPatchResource =
            Capture "adClientId" Text :>
              "customchannels" :>
                QueryParam "customChannelId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] CustomChannel :>
-                     Patch '[JSON] CustomChannel
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] CustomChannel :>
+                       Patch '[JSON] CustomChannel
 
 -- | Update a custom channel in the host AdSense account. This method
 -- supports patch semantics.
@@ -61,8 +63,9 @@ type CustomChannelsPatchResource =
 -- /See:/ 'customChannelsPatch' smart constructor.
 data CustomChannelsPatch = CustomChannelsPatch'
     { _ccpCustomChannelId :: !Text
-    , _ccpPayload         :: !CustomChannel
-    , _ccpAdClientId      :: !Text
+    , _ccpPayload :: !CustomChannel
+    , _ccpAdClientId :: !Text
+    , _ccpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomChannelsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data CustomChannelsPatch = CustomChannelsPatch'
 -- * 'ccpPayload'
 --
 -- * 'ccpAdClientId'
+--
+-- * 'ccpFields'
 customChannelsPatch
     :: Text -- ^ 'ccpCustomChannelId'
     -> CustomChannel -- ^ 'ccpPayload'
     -> Text -- ^ 'ccpAdClientId'
     -> CustomChannelsPatch
-customChannelsPatch pCcpCustomChannelId_ pCcpPayload_ pCcpAdClientId_ =
+customChannelsPatch pCcpCustomChannelId_ pCcpPayload_ pCcpAdClientId_ = 
     CustomChannelsPatch'
     { _ccpCustomChannelId = pCcpCustomChannelId_
     , _ccpPayload = pCcpPayload_
     , _ccpAdClientId = pCcpAdClientId_
+    , _ccpFields = Nothing
     }
 
 -- | Custom channel to get.
@@ -103,12 +109,18 @@ ccpAdClientId
   = lens _ccpAdClientId
       (\ s a -> s{_ccpAdClientId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ccpFields :: Lens' CustomChannelsPatch (Maybe Text)
+ccpFields
+  = lens _ccpFields (\ s a -> s{_ccpFields = a})
+
 instance GoogleRequest CustomChannelsPatch where
         type Rs CustomChannelsPatch = CustomChannel
         type Scopes CustomChannelsPatch =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient CustomChannelsPatch'{..}
           = go _ccpAdClientId (Just _ccpCustomChannelId)
+              _ccpFields
               (Just AltJSON)
               _ccpPayload
               adSenseHostService

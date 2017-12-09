@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Listings.Deleteall
     -- * Request Lenses
     , eldlPackageName
     , eldlEditId
+    , eldlFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.listings.deleteall@ method which the
 -- 'EditsListingsDeleteall' request conforms to.
@@ -50,14 +51,16 @@ type EditsListingsDeleteallResource =
              "edits" :>
                Capture "editId" Text :>
                  "listings" :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes all localized listings from an edit.
 --
 -- /See:/ 'editsListingsDeleteall' smart constructor.
 data EditsListingsDeleteall = EditsListingsDeleteall'
     { _eldlPackageName :: !Text
-    , _eldlEditId      :: !Text
+    , _eldlEditId :: !Text
+    , _eldlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsListingsDeleteall' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data EditsListingsDeleteall = EditsListingsDeleteall'
 -- * 'eldlPackageName'
 --
 -- * 'eldlEditId'
+--
+-- * 'eldlFields'
 editsListingsDeleteall
     :: Text -- ^ 'eldlPackageName'
     -> Text -- ^ 'eldlEditId'
     -> EditsListingsDeleteall
-editsListingsDeleteall pEldlPackageName_ pEldlEditId_ =
+editsListingsDeleteall pEldlPackageName_ pEldlEditId_ = 
     EditsListingsDeleteall'
     { _eldlPackageName = pEldlPackageName_
     , _eldlEditId = pEldlEditId_
+    , _eldlFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -89,12 +95,18 @@ eldlEditId :: Lens' EditsListingsDeleteall Text
 eldlEditId
   = lens _eldlEditId (\ s a -> s{_eldlEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eldlFields :: Lens' EditsListingsDeleteall (Maybe Text)
+eldlFields
+  = lens _eldlFields (\ s a -> s{_eldlFields = a})
+
 instance GoogleRequest EditsListingsDeleteall where
         type Rs EditsListingsDeleteall = ()
         type Scopes EditsListingsDeleteall =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsListingsDeleteall'{..}
-          = go _eldlPackageName _eldlEditId (Just AltJSON)
+          = go _eldlPackageName _eldlEditId _eldlFields
+              (Just AltJSON)
               androidPublisherService
           where go
                   = buildClient

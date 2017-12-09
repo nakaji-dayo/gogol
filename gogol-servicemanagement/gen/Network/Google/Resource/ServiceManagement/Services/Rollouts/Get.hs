@@ -41,11 +41,12 @@ module Network.Google.Resource.ServiceManagement.Services.Rollouts.Get
     , srgBearerToken
     , srgServiceName
     , srgRolloutId
+    , srgFields
     , srgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.rollouts.get@ method which the
 -- 'ServicesRolloutsGet' request conforms to.
@@ -62,21 +63,23 @@ type ServicesRolloutsGetResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Rollout
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Get '[JSON] Rollout
 
 -- | Gets a service configuration rollout.
 --
 -- /See:/ 'servicesRolloutsGet' smart constructor.
 data ServicesRolloutsGet = ServicesRolloutsGet'
-    { _srgXgafv          :: !(Maybe Xgafv)
+    { _srgXgafv :: !(Maybe Xgafv)
     , _srgUploadProtocol :: !(Maybe Text)
-    , _srgPp             :: !Bool
-    , _srgAccessToken    :: !(Maybe Text)
-    , _srgUploadType     :: !(Maybe Text)
-    , _srgBearerToken    :: !(Maybe Text)
-    , _srgServiceName    :: !Text
-    , _srgRolloutId      :: !Text
-    , _srgCallback       :: !(Maybe Text)
+    , _srgPp :: !Bool
+    , _srgAccessToken :: !(Maybe Text)
+    , _srgUploadType :: !(Maybe Text)
+    , _srgBearerToken :: !(Maybe Text)
+    , _srgServiceName :: !Text
+    , _srgRolloutId :: !Text
+    , _srgFields :: !(Maybe Text)
+    , _srgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesRolloutsGet' with the minimum fields required to make a request.
@@ -99,12 +102,14 @@ data ServicesRolloutsGet = ServicesRolloutsGet'
 --
 -- * 'srgRolloutId'
 --
+-- * 'srgFields'
+--
 -- * 'srgCallback'
 servicesRolloutsGet
     :: Text -- ^ 'srgServiceName'
     -> Text -- ^ 'srgRolloutId'
     -> ServicesRolloutsGet
-servicesRolloutsGet pSrgServiceName_ pSrgRolloutId_ =
+servicesRolloutsGet pSrgServiceName_ pSrgRolloutId_ = 
     ServicesRolloutsGet'
     { _srgXgafv = Nothing
     , _srgUploadProtocol = Nothing
@@ -114,6 +119,7 @@ servicesRolloutsGet pSrgServiceName_ pSrgRolloutId_ =
     , _srgBearerToken = Nothing
     , _srgServiceName = pSrgServiceName_
     , _srgRolloutId = pSrgRolloutId_
+    , _srgFields = Nothing
     , _srgCallback = Nothing
     }
 
@@ -162,6 +168,11 @@ srgRolloutId :: Lens' ServicesRolloutsGet Text
 srgRolloutId
   = lens _srgRolloutId (\ s a -> s{_srgRolloutId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+srgFields :: Lens' ServicesRolloutsGet (Maybe Text)
+srgFields
+  = lens _srgFields (\ s a -> s{_srgFields = a})
+
 -- | JSONP
 srgCallback :: Lens' ServicesRolloutsGet (Maybe Text)
 srgCallback
@@ -182,6 +193,7 @@ instance GoogleRequest ServicesRolloutsGet where
               _srgUploadType
               _srgBearerToken
               _srgCallback
+              _srgFields
               (Just AltJSON)
               serviceManagementService
           where go

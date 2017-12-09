@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.Delete
     -- * Request Lenses
     , agdProFileId
     , agdId
+    , agdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.delete@ method which the
 -- 'AdvertiserGroupsDelete' request conforms to.
 type AdvertiserGroupsDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing advertiser group.
 --
 -- /See:/ 'advertiserGroupsDelete' smart constructor.
 data AdvertiserGroupsDelete = AdvertiserGroupsDelete'
     { _agdProFileId :: !(Textual Int64)
-    , _agdId        :: !(Textual Int64)
+    , _agdId :: !(Textual Int64)
+    , _agdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdvertiserGroupsDelete = AdvertiserGroupsDelete'
 -- * 'agdProFileId'
 --
 -- * 'agdId'
+--
+-- * 'agdFields'
 advertiserGroupsDelete
     :: Int64 -- ^ 'agdProFileId'
     -> Int64 -- ^ 'agdId'
     -> AdvertiserGroupsDelete
-advertiserGroupsDelete pAgdProFileId_ pAgdId_ =
+advertiserGroupsDelete pAgdProFileId_ pAgdId_ = 
     AdvertiserGroupsDelete'
     { _agdProFileId = _Coerce # pAgdProFileId_
     , _agdId = _Coerce # pAgdId_
+    , _agdFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ agdId :: Lens' AdvertiserGroupsDelete Int64
 agdId
   = lens _agdId (\ s a -> s{_agdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agdFields :: Lens' AdvertiserGroupsDelete (Maybe Text)
+agdFields
+  = lens _agdFields (\ s a -> s{_agdFields = a})
+
 instance GoogleRequest AdvertiserGroupsDelete where
         type Rs AdvertiserGroupsDelete = ()
         type Scopes AdvertiserGroupsDelete =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertiserGroupsDelete'{..}
-          = go _agdProFileId _agdId (Just AltJSON)
+          = go _agdProFileId _agdId _agdFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

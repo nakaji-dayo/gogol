@@ -36,10 +36,11 @@ module Network.Google.Resource.GamesManagement.Achievements.ResetForAllPlayers
 
     -- * Request Lenses
     , arfapAchievementId
+    , arfapFields
     ) where
 
-import           Network.Google.GamesManagement.Types
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesManagement.achievements.resetForAllPlayers@ method which the
 -- 'AchievementsResetForAllPlayers' request conforms to.
@@ -49,15 +50,17 @@ type AchievementsResetForAllPlayersResource =
          "achievements" :>
            Capture "achievementId" Text :>
              "resetForAllPlayers" :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Resets the achievement with the given ID for all players. This method is
 -- only available to user accounts for your developer console. Only draft
 -- achievements can be reset.
 --
 -- /See:/ 'achievementsResetForAllPlayers' smart constructor.
-newtype AchievementsResetForAllPlayers = AchievementsResetForAllPlayers'
-    { _arfapAchievementId :: Text
+data AchievementsResetForAllPlayers = AchievementsResetForAllPlayers'
+    { _arfapAchievementId :: !Text
+    , _arfapFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsResetForAllPlayers' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ newtype AchievementsResetForAllPlayers = AchievementsResetForAllPlayers'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'arfapAchievementId'
+--
+-- * 'arfapFields'
 achievementsResetForAllPlayers
     :: Text -- ^ 'arfapAchievementId'
     -> AchievementsResetForAllPlayers
-achievementsResetForAllPlayers pArfapAchievementId_ =
+achievementsResetForAllPlayers pArfapAchievementId_ = 
     AchievementsResetForAllPlayers'
     { _arfapAchievementId = pArfapAchievementId_
+    , _arfapFields = Nothing
     }
 
 -- | The ID of the achievement used by this method.
@@ -79,6 +85,11 @@ arfapAchievementId
   = lens _arfapAchievementId
       (\ s a -> s{_arfapAchievementId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+arfapFields :: Lens' AchievementsResetForAllPlayers (Maybe Text)
+arfapFields
+  = lens _arfapFields (\ s a -> s{_arfapFields = a})
+
 instance GoogleRequest AchievementsResetForAllPlayers
          where
         type Rs AchievementsResetForAllPlayers = ()
@@ -86,7 +97,7 @@ instance GoogleRequest AchievementsResetForAllPlayers
              '["https://www.googleapis.com/auth/games",
                "https://www.googleapis.com/auth/plus.login"]
         requestClient AchievementsResetForAllPlayers'{..}
-          = go _arfapAchievementId (Just AltJSON)
+          = go _arfapAchievementId _arfapFields (Just AltJSON)
               gamesManagementService
           where go
                   = buildClient

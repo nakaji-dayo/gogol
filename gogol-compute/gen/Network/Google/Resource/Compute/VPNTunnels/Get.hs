@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.VPNTunnels.Get
     , vtgProject
     , vtgVPNTunnel
     , vtgRegion
+    , vtgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.vpnTunnels.get@ method which the
 -- 'VPNTunnelsGet' request conforms to.
@@ -53,16 +54,18 @@ type VPNTunnelsGetResource =
                Capture "region" Text :>
                  "vpnTunnels" :>
                    Capture "vpnTunnel" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] VPNTunnel
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] VPNTunnel
 
 -- | Returns the specified VpnTunnel resource. Get a list of available VPN
 -- tunnels by making a list() request.
 --
 -- /See:/ 'vpnTunnelsGet' smart constructor.
 data VPNTunnelsGet = VPNTunnelsGet'
-    { _vtgProject   :: !Text
+    { _vtgProject :: !Text
     , _vtgVPNTunnel :: !Text
-    , _vtgRegion    :: !Text
+    , _vtgRegion :: !Text
+    , _vtgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VPNTunnelsGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data VPNTunnelsGet = VPNTunnelsGet'
 -- * 'vtgVPNTunnel'
 --
 -- * 'vtgRegion'
+--
+-- * 'vtgFields'
 vpnTunnelsGet
     :: Text -- ^ 'vtgProject'
     -> Text -- ^ 'vtgVPNTunnel'
     -> Text -- ^ 'vtgRegion'
     -> VPNTunnelsGet
-vpnTunnelsGet pVtgProject_ pVtgVPNTunnel_ pVtgRegion_ =
+vpnTunnelsGet pVtgProject_ pVtgVPNTunnel_ pVtgRegion_ = 
     VPNTunnelsGet'
     { _vtgProject = pVtgProject_
     , _vtgVPNTunnel = pVtgVPNTunnel_
     , _vtgRegion = pVtgRegion_
+    , _vtgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ vtgRegion :: Lens' VPNTunnelsGet Text
 vtgRegion
   = lens _vtgRegion (\ s a -> s{_vtgRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vtgFields :: Lens' VPNTunnelsGet (Maybe Text)
+vtgFields
+  = lens _vtgFields (\ s a -> s{_vtgFields = a})
+
 instance GoogleRequest VPNTunnelsGet where
         type Rs VPNTunnelsGet = VPNTunnel
         type Scopes VPNTunnelsGet =
@@ -108,7 +119,7 @@ instance GoogleRequest VPNTunnelsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient VPNTunnelsGet'{..}
-          = go _vtgProject _vtgRegion _vtgVPNTunnel
+          = go _vtgProject _vtgRegion _vtgVPNTunnel _vtgFields
               (Just AltJSON)
               computeService
           where go

@@ -42,11 +42,12 @@ module Network.Google.Resource.Datastore.Projects.AllocateIds
     , paiPayload
     , paiBearerToken
     , paiProjectId
+    , paiFields
     , paiCallback
     ) where
 
-import           Network.Google.Datastore.Types
-import           Network.Google.Prelude
+import Network.Google.Datastore.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datastore.projects.allocateIds@ method which the
 -- 'ProjectsAllocateIds' request conforms to.
@@ -61,24 +62,26 @@ type ProjectsAllocateIdsResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] AllocateIdsRequest :>
-                             Post '[JSON] AllocateIdsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] AllocateIdsRequest :>
+                               Post '[JSON] AllocateIdsResponse
 
 -- | Allocates IDs for the given keys, which is useful for referencing an
 -- entity before it is inserted.
 --
 -- /See:/ 'projectsAllocateIds' smart constructor.
 data ProjectsAllocateIds = ProjectsAllocateIds'
-    { _paiXgafv          :: !(Maybe Xgafv)
+    { _paiXgafv :: !(Maybe Xgafv)
     , _paiUploadProtocol :: !(Maybe Text)
-    , _paiPp             :: !Bool
-    , _paiAccessToken    :: !(Maybe Text)
-    , _paiUploadType     :: !(Maybe Text)
-    , _paiPayload        :: !AllocateIdsRequest
-    , _paiBearerToken    :: !(Maybe Text)
-    , _paiProjectId      :: !Text
-    , _paiCallback       :: !(Maybe Text)
+    , _paiPp :: !Bool
+    , _paiAccessToken :: !(Maybe Text)
+    , _paiUploadType :: !(Maybe Text)
+    , _paiPayload :: !AllocateIdsRequest
+    , _paiBearerToken :: !(Maybe Text)
+    , _paiProjectId :: !Text
+    , _paiFields :: !(Maybe Text)
+    , _paiCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsAllocateIds' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsAllocateIds = ProjectsAllocateIds'
 --
 -- * 'paiProjectId'
 --
+-- * 'paiFields'
+--
 -- * 'paiCallback'
 projectsAllocateIds
     :: AllocateIdsRequest -- ^ 'paiPayload'
     -> Text -- ^ 'paiProjectId'
     -> ProjectsAllocateIds
-projectsAllocateIds pPaiPayload_ pPaiProjectId_ =
+projectsAllocateIds pPaiPayload_ pPaiProjectId_ = 
     ProjectsAllocateIds'
     { _paiXgafv = Nothing
     , _paiUploadProtocol = Nothing
@@ -116,6 +121,7 @@ projectsAllocateIds pPaiPayload_ pPaiProjectId_ =
     , _paiPayload = pPaiPayload_
     , _paiBearerToken = Nothing
     , _paiProjectId = pPaiProjectId_
+    , _paiFields = Nothing
     , _paiCallback = Nothing
     }
 
@@ -161,6 +167,11 @@ paiProjectId :: Lens' ProjectsAllocateIds Text
 paiProjectId
   = lens _paiProjectId (\ s a -> s{_paiProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+paiFields :: Lens' ProjectsAllocateIds (Maybe Text)
+paiFields
+  = lens _paiFields (\ s a -> s{_paiFields = a})
+
 -- | JSONP
 paiCallback :: Lens' ProjectsAllocateIds (Maybe Text)
 paiCallback
@@ -178,6 +189,7 @@ instance GoogleRequest ProjectsAllocateIds where
               _paiUploadType
               _paiBearerToken
               _paiCallback
+              _paiFields
               (Just AltJSON)
               _paiPayload
               datastoreService

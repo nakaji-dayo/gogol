@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.CommentThreads.Update
     -- * Request Lenses
     , ctuPart
     , ctuPayload
+    , ctuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.commentThreads.update@ method which the
 -- 'CommentThreadsUpdate' request conforms to.
@@ -47,16 +48,18 @@ type CommentThreadsUpdateResource =
        "v3" :>
          "commentThreads" :>
            QueryParam "part" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] CommentThread :>
-                 Put '[JSON] CommentThread
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] CommentThread :>
+                   Put '[JSON] CommentThread
 
 -- | Modifies the top-level comment in a comment thread.
 --
 -- /See:/ 'commentThreadsUpdate' smart constructor.
 data CommentThreadsUpdate = CommentThreadsUpdate'
-    { _ctuPart    :: !Text
+    { _ctuPart :: !Text
     , _ctuPayload :: !CommentThread
+    , _ctuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentThreadsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data CommentThreadsUpdate = CommentThreadsUpdate'
 -- * 'ctuPart'
 --
 -- * 'ctuPayload'
+--
+-- * 'ctuFields'
 commentThreadsUpdate
     :: Text -- ^ 'ctuPart'
     -> CommentThread -- ^ 'ctuPayload'
     -> CommentThreadsUpdate
-commentThreadsUpdate pCtuPart_ pCtuPayload_ =
+commentThreadsUpdate pCtuPart_ pCtuPayload_ = 
     CommentThreadsUpdate'
     { _ctuPart = pCtuPart_
     , _ctuPayload = pCtuPayload_
+    , _ctuFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of commentThread
@@ -88,12 +94,18 @@ ctuPayload :: Lens' CommentThreadsUpdate CommentThread
 ctuPayload
   = lens _ctuPayload (\ s a -> s{_ctuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ctuFields :: Lens' CommentThreadsUpdate (Maybe Text)
+ctuFields
+  = lens _ctuFields (\ s a -> s{_ctuFields = a})
+
 instance GoogleRequest CommentThreadsUpdate where
         type Rs CommentThreadsUpdate = CommentThread
         type Scopes CommentThreadsUpdate =
              '["https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient CommentThreadsUpdate'{..}
-          = go (Just _ctuPart) (Just AltJSON) _ctuPayload
+          = go (Just _ctuPart) _ctuFields (Just AltJSON)
+              _ctuPayload
               youTubeService
           where go
                   = buildClient

@@ -16,11 +16,67 @@
 --
 module Network.Google.Logging.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
--- | Output only. The API version that created or updated this metric. The
--- version also dictates the syntax of the filter expression. When a value
--- for this field is missing, the default value of V2 should be assumed.
+-- | Whether the measurement is an integer, a floating-point number, etc.
+-- Some combinations of metric_kind and value_type might not be supported.
+data MetricDescriptorValueType
+    = ValueTypeUnspecified
+      -- ^ @VALUE_TYPE_UNSPECIFIED@
+      -- Do not use this default value.
+    | Bool
+      -- ^ @BOOL@
+      -- The value is a boolean. This value type can be used only if the metric
+      -- kind is GAUGE.
+    | INT64
+      -- ^ @INT64@
+      -- The value is a signed 64-bit integer.
+    | Double
+      -- ^ @DOUBLE@
+      -- The value is a double precision floating point number.
+    | String
+      -- ^ @STRING@
+      -- The value is a text string. This value type can be used only if the
+      -- metric kind is GAUGE.
+    | Distribution
+      -- ^ @DISTRIBUTION@
+      -- The value is a Distribution.
+    | Money
+      -- ^ @MONEY@
+      -- The value is money.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable MetricDescriptorValueType
+
+instance FromHttpApiData MetricDescriptorValueType where
+    parseQueryParam = \case
+        "VALUE_TYPE_UNSPECIFIED" -> Right ValueTypeUnspecified
+        "BOOL" -> Right Bool
+        "INT64" -> Right INT64
+        "DOUBLE" -> Right Double
+        "STRING" -> Right String
+        "DISTRIBUTION" -> Right Distribution
+        "MONEY" -> Right Money
+        x -> Left ("Unable to parse MetricDescriptorValueType from: " <> x)
+
+instance ToHttpApiData MetricDescriptorValueType where
+    toQueryParam = \case
+        ValueTypeUnspecified -> "VALUE_TYPE_UNSPECIFIED"
+        Bool -> "BOOL"
+        INT64 -> "INT64"
+        Double -> "DOUBLE"
+        String -> "STRING"
+        Distribution -> "DISTRIBUTION"
+        Money -> "MONEY"
+
+instance FromJSON MetricDescriptorValueType where
+    parseJSON = parseJSONText "MetricDescriptorValueType"
+
+instance ToJSON MetricDescriptorValueType where
+    toJSON = toJSONText
+
+-- | Deprecated. The API version that created or updated this metric. The v2
+-- format is used by default and cannot be changed.
 data LogMetricVersion
     = V2
       -- ^ @V2@
@@ -49,10 +105,8 @@ instance FromJSON LogMetricVersion where
 instance ToJSON LogMetricVersion where
     toJSON = toJSONText
 
--- | Optional. The log entry format to use for this sink\'s exported log
--- entries. The v2 format is used by default. The v1 format is deprecated
--- and should be used only as part of a migration effort to v2. See
--- Migration to the v2 API.
+-- | Deprecated. The log entry format to use for this sink\'s exported log
+-- entries. The v2 format is used by default and cannot be changed.
 data LogSinkOutputVersionFormat
     = LSOVFVersionFormatUnspecified
       -- ^ @VERSION_FORMAT_UNSPECIFIED@
@@ -88,13 +142,13 @@ instance ToJSON LogSinkOutputVersionFormat where
 
 -- | The type of data that can be assigned to the label.
 data LabelDescriptorValueType
-    = String
+    = LDVTString
       -- ^ @STRING@
       -- A variable-length string. This is the default.
-    | Bool
+    | LDVTBool
       -- ^ @BOOL@
       -- Boolean; true or false.
-    | INT64
+    | LDVTINT64
       -- ^ @INT64@
       -- A 64-bit signed integer.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
@@ -103,16 +157,16 @@ instance Hashable LabelDescriptorValueType
 
 instance FromHttpApiData LabelDescriptorValueType where
     parseQueryParam = \case
-        "STRING" -> Right String
-        "BOOL" -> Right Bool
-        "INT64" -> Right INT64
+        "STRING" -> Right LDVTString
+        "BOOL" -> Right LDVTBool
+        "INT64" -> Right LDVTINT64
         x -> Left ("Unable to parse LabelDescriptorValueType from: " <> x)
 
 instance ToHttpApiData LabelDescriptorValueType where
     toQueryParam = \case
-        String -> "STRING"
-        Bool -> "BOOL"
-        INT64 -> "INT64"
+        LDVTString -> "STRING"
+        LDVTBool -> "BOOL"
+        LDVTINT64 -> "INT64"
 
 instance FromJSON LabelDescriptorValueType where
     parseJSON = parseJSONText "LabelDescriptorValueType"
@@ -147,6 +201,50 @@ instance FromJSON Xgafv where
     parseJSON = parseJSONText "Xgafv"
 
 instance ToJSON Xgafv where
+    toJSON = toJSONText
+
+-- | Whether the metric records instantaneous values, changes to a value,
+-- etc. Some combinations of metric_kind and value_type might not be
+-- supported.
+data MetricDescriptorMetricKind
+    = MetricKindUnspecified
+      -- ^ @METRIC_KIND_UNSPECIFIED@
+      -- Do not use this default value.
+    | Gauge
+      -- ^ @GAUGE@
+      -- An instantaneous measurement of a value.
+    | Delta
+      -- ^ @DELTA@
+      -- The change in a value during a time interval.
+    | Cumulative
+      -- ^ @CUMULATIVE@
+      -- A value accumulated over a time interval. Cumulative measurements in a
+      -- time series should have the same start time and increasing end times,
+      -- until an event resets the cumulative value to zero and sets a new start
+      -- time for the following points.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable MetricDescriptorMetricKind
+
+instance FromHttpApiData MetricDescriptorMetricKind where
+    parseQueryParam = \case
+        "METRIC_KIND_UNSPECIFIED" -> Right MetricKindUnspecified
+        "GAUGE" -> Right Gauge
+        "DELTA" -> Right Delta
+        "CUMULATIVE" -> Right Cumulative
+        x -> Left ("Unable to parse MetricDescriptorMetricKind from: " <> x)
+
+instance ToHttpApiData MetricDescriptorMetricKind where
+    toQueryParam = \case
+        MetricKindUnspecified -> "METRIC_KIND_UNSPECIFIED"
+        Gauge -> "GAUGE"
+        Delta -> "DELTA"
+        Cumulative -> "CUMULATIVE"
+
+instance FromJSON MetricDescriptorMetricKind where
+    parseJSON = parseJSONText "MetricDescriptorMetricKind"
+
+instance ToJSON MetricDescriptorMetricKind where
     toJSON = toJSONText
 
 -- | Optional. The severity of the log entry. The default value is

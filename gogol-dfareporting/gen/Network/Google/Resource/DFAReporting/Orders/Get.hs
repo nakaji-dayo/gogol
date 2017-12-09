@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.Orders.Get
     , ogProFileId
     , ogId
     , ogProjectId
+    , ogFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.orders.get@ method which the
 -- 'OrdersGet' request conforms to.
 type OrdersGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "projects" :>
                Capture "projectId" (Textual Int64) :>
                  "orders" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Order
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Order
 
 -- | Gets one order by ID.
 --
 -- /See:/ 'ordersGet' smart constructor.
 data OrdersGet = OrdersGet'
     { _ogProFileId :: !(Textual Int64)
-    , _ogId        :: !(Textual Int64)
+    , _ogId :: !(Textual Int64)
     , _ogProjectId :: !(Textual Int64)
+    , _ogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrdersGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data OrdersGet = OrdersGet'
 -- * 'ogId'
 --
 -- * 'ogProjectId'
+--
+-- * 'ogFields'
 ordersGet
     :: Int64 -- ^ 'ogProFileId'
     -> Int64 -- ^ 'ogId'
     -> Int64 -- ^ 'ogProjectId'
     -> OrdersGet
-ordersGet pOgProFileId_ pOgId_ pOgProjectId_ =
+ordersGet pOgProFileId_ pOgId_ pOgProjectId_ = 
     OrdersGet'
     { _ogProFileId = _Coerce # pOgProFileId_
     , _ogId = _Coerce # pOgId_
     , _ogProjectId = _Coerce # pOgProjectId_
+    , _ogFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -100,12 +106,17 @@ ogProjectId
   = lens _ogProjectId (\ s a -> s{_ogProjectId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+ogFields :: Lens' OrdersGet (Maybe Text)
+ogFields = lens _ogFields (\ s a -> s{_ogFields = a})
+
 instance GoogleRequest OrdersGet where
         type Rs OrdersGet = Order
         type Scopes OrdersGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient OrdersGet'{..}
-          = go _ogProFileId _ogProjectId _ogId (Just AltJSON)
+          = go _ogProFileId _ogProjectId _ogId _ogFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy OrdersGetResource)

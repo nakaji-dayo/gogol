@@ -30,7 +30,7 @@
 -- instead, it becomes an operation with an Operation.error value with a
 -- google.rpc.Status.code of 1, corresponding to \`Code.CANCELLED\`.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.operations.cancel@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.operations.cancel@.
 module Network.Google.Resource.Ml.Projects.Operations.Cancel
     (
     -- * REST Resource
@@ -48,16 +48,17 @@ module Network.Google.Resource.Ml.Projects.Operations.Cancel
     , pocUploadType
     , pocBearerToken
     , pocName
+    , pocFields
     , pocCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.operations.cancel@ method which the
 -- 'ProjectsOperationsCancel' request conforms to.
 type ProjectsOperationsCancelResource =
-     "v1beta1" :>
+     "v1" :>
        CaptureMode "name" "cancel" Text :>
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
@@ -66,8 +67,9 @@ type ProjectsOperationsCancelResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] GoogleProtobuf__Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] GoogleProtobuf__Empty
 
 -- | Starts asynchronous cancellation on a long-running operation. The server
 -- makes a best effort to cancel the operation, but success is not
@@ -81,14 +83,15 @@ type ProjectsOperationsCancelResource =
 --
 -- /See:/ 'projectsOperationsCancel' smart constructor.
 data ProjectsOperationsCancel = ProjectsOperationsCancel'
-    { _pocXgafv          :: !(Maybe Xgafv)
+    { _pocXgafv :: !(Maybe Xgafv)
     , _pocUploadProtocol :: !(Maybe Text)
-    , _pocPp             :: !Bool
-    , _pocAccessToken    :: !(Maybe Text)
-    , _pocUploadType     :: !(Maybe Text)
-    , _pocBearerToken    :: !(Maybe Text)
-    , _pocName           :: !Text
-    , _pocCallback       :: !(Maybe Text)
+    , _pocPp :: !Bool
+    , _pocAccessToken :: !(Maybe Text)
+    , _pocUploadType :: !(Maybe Text)
+    , _pocBearerToken :: !(Maybe Text)
+    , _pocName :: !Text
+    , _pocFields :: !(Maybe Text)
+    , _pocCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsOperationsCancel' with the minimum fields required to make a request.
@@ -109,11 +112,13 @@ data ProjectsOperationsCancel = ProjectsOperationsCancel'
 --
 -- * 'pocName'
 --
+-- * 'pocFields'
+--
 -- * 'pocCallback'
 projectsOperationsCancel
     :: Text -- ^ 'pocName'
     -> ProjectsOperationsCancel
-projectsOperationsCancel pPocName_ =
+projectsOperationsCancel pPocName_ = 
     ProjectsOperationsCancel'
     { _pocXgafv = Nothing
     , _pocUploadProtocol = Nothing
@@ -122,6 +127,7 @@ projectsOperationsCancel pPocName_ =
     , _pocUploadType = Nothing
     , _pocBearerToken = Nothing
     , _pocName = pPocName_
+    , _pocFields = Nothing
     , _pocCallback = Nothing
     }
 
@@ -161,6 +167,11 @@ pocBearerToken
 pocName :: Lens' ProjectsOperationsCancel Text
 pocName = lens _pocName (\ s a -> s{_pocName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pocFields :: Lens' ProjectsOperationsCancel (Maybe Text)
+pocFields
+  = lens _pocFields (\ s a -> s{_pocFields = a})
+
 -- | JSONP
 pocCallback :: Lens' ProjectsOperationsCancel (Maybe Text)
 pocCallback
@@ -178,6 +189,7 @@ instance GoogleRequest ProjectsOperationsCancel where
               _pocUploadType
               _pocBearerToken
               _pocCallback
+              _pocFields
               (Just AltJSON)
               machineLearningService
           where go

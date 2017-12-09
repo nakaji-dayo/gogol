@@ -49,11 +49,12 @@ module Network.Google.Resource.Cloudbuild.Operations.Cancel
     , ocPayload
     , ocBearerToken
     , ocName
+    , ocFields
     , ocCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.operations.cancel@ method which the
 -- 'OperationsCancel' request conforms to.
@@ -67,9 +68,10 @@ type OperationsCancelResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] CancelOperationRequest :>
-                           Post '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] CancelOperationRequest :>
+                             Post '[JSON] Empty
 
 -- | Starts asynchronous cancellation on a long-running operation. The server
 -- makes a best effort to cancel the operation, but success is not
@@ -83,15 +85,16 @@ type OperationsCancelResource =
 --
 -- /See:/ 'operationsCancel' smart constructor.
 data OperationsCancel = OperationsCancel'
-    { _ocXgafv          :: !(Maybe Xgafv)
+    { _ocXgafv :: !(Maybe Xgafv)
     , _ocUploadProtocol :: !(Maybe Text)
-    , _ocPp             :: !Bool
-    , _ocAccessToken    :: !(Maybe Text)
-    , _ocUploadType     :: !(Maybe Text)
-    , _ocPayload        :: !CancelOperationRequest
-    , _ocBearerToken    :: !(Maybe Text)
-    , _ocName           :: !Text
-    , _ocCallback       :: !(Maybe Text)
+    , _ocPp :: !Bool
+    , _ocAccessToken :: !(Maybe Text)
+    , _ocUploadType :: !(Maybe Text)
+    , _ocPayload :: !CancelOperationRequest
+    , _ocBearerToken :: !(Maybe Text)
+    , _ocName :: !Text
+    , _ocFields :: !(Maybe Text)
+    , _ocCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationsCancel' with the minimum fields required to make a request.
@@ -114,12 +117,14 @@ data OperationsCancel = OperationsCancel'
 --
 -- * 'ocName'
 --
+-- * 'ocFields'
+--
 -- * 'ocCallback'
 operationsCancel
     :: CancelOperationRequest -- ^ 'ocPayload'
     -> Text -- ^ 'ocName'
     -> OperationsCancel
-operationsCancel pOcPayload_ pOcName_ =
+operationsCancel pOcPayload_ pOcName_ = 
     OperationsCancel'
     { _ocXgafv = Nothing
     , _ocUploadProtocol = Nothing
@@ -129,6 +134,7 @@ operationsCancel pOcPayload_ pOcName_ =
     , _ocPayload = pOcPayload_
     , _ocBearerToken = Nothing
     , _ocName = pOcName_
+    , _ocFields = Nothing
     , _ocCallback = Nothing
     }
 
@@ -172,6 +178,10 @@ ocBearerToken
 ocName :: Lens' OperationsCancel Text
 ocName = lens _ocName (\ s a -> s{_ocName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ocFields :: Lens' OperationsCancel (Maybe Text)
+ocFields = lens _ocFields (\ s a -> s{_ocFields = a})
+
 -- | JSONP
 ocCallback :: Lens' OperationsCancel (Maybe Text)
 ocCallback
@@ -187,6 +197,7 @@ instance GoogleRequest OperationsCancel where
               _ocUploadType
               _ocBearerToken
               _ocCallback
+              _ocFields
               (Just AltJSON)
               _ocPayload
               containerBuilderService

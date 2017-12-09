@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Style.Delete
     -- * Request Lenses
     , sdStyleId
     , sdTableId
+    , sdFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.delete@ method which the
 -- 'StyleDelete' request conforms to.
@@ -49,7 +50,8 @@ type StyleDeleteResource =
            Capture "tableId" Text :>
              "styles" :>
                Capture "styleId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a style.
 --
@@ -57,6 +59,7 @@ type StyleDeleteResource =
 data StyleDelete = StyleDelete'
     { _sdStyleId :: !(Textual Int32)
     , _sdTableId :: !Text
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StyleDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data StyleDelete = StyleDelete'
 -- * 'sdStyleId'
 --
 -- * 'sdTableId'
+--
+-- * 'sdFields'
 styleDelete
     :: Int32 -- ^ 'sdStyleId'
     -> Text -- ^ 'sdTableId'
     -> StyleDelete
-styleDelete pSdStyleId_ pSdTableId_ =
+styleDelete pSdStyleId_ pSdTableId_ = 
     StyleDelete'
     { _sdStyleId = _Coerce # pSdStyleId_
     , _sdTableId = pSdTableId_
+    , _sdFields = Nothing
     }
 
 -- | Identifier (within a table) for the style being deleted
@@ -87,12 +93,16 @@ sdTableId :: Lens' StyleDelete Text
 sdTableId
   = lens _sdTableId (\ s a -> s{_sdTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' StyleDelete (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest StyleDelete where
         type Rs StyleDelete = ()
         type Scopes StyleDelete =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient StyleDelete'{..}
-          = go _sdTableId _sdStyleId (Just AltJSON)
+          = go _sdTableId _sdStyleId _sdFields (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy StyleDeleteResource)

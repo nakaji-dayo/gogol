@@ -110,6 +110,14 @@ module Network.Google.DeploymentManager
     -- ** DeploymentsUpdateCreatePolicy
     , DeploymentsUpdateCreatePolicy (..)
 
+    -- ** Expr
+    , Expr
+    , expr
+    , eLocation
+    , eExpression
+    , eTitle
+    , eDescription
+
     -- ** OperationsListResponse
     , OperationsListResponse
     , operationsListResponse
@@ -189,6 +197,7 @@ module Network.Google.DeploymentManager
     , deploymentUpdate
     , duManifest
     , duLabels
+    , duDescription
 
     -- ** ResourceUpdate
     , ResourceUpdate
@@ -248,6 +257,12 @@ module Network.Google.DeploymentManager
     , deploymentsCancelPreviewRequest
     , dcprFingerprint
 
+    -- ** LogConfigCloudAuditOptions
+    , LogConfigCloudAuditOptions
+    , logConfigCloudAuditOptions
+    , lccaoAuthorizationLoggingOptions
+    , lccaoLogName
+
     -- ** Resource
     , Resource
     , resource
@@ -263,6 +278,11 @@ module Network.Google.DeploymentManager
     , rType
     , rUpdate
     , rProperties
+
+    -- ** LogConfigDataAccessOptions
+    , LogConfigDataAccessOptions
+    , logConfigDataAccessOptions
+    , lcdaoLogMode
 
     -- ** DeploymentUpdateLabelEntry
     , DeploymentUpdateLabelEntry
@@ -287,6 +307,11 @@ module Network.Google.DeploymentManager
     , OperationError
     , operationError
     , oeErrors
+
+    -- ** AuthorizationLoggingOptions
+    , AuthorizationLoggingOptions
+    , authorizationLoggingOptions
+    , aloPermissionType
 
     -- ** Policy
     , Policy
@@ -368,6 +393,8 @@ module Network.Google.DeploymentManager
     -- ** LogConfig
     , LogConfig
     , logConfig
+    , lcCloudAudit
+    , lcDataAccess
     , lcCounter
 
     -- ** ResourceAccessControl
@@ -393,6 +420,7 @@ module Network.Google.DeploymentManager
     , binding
     , bMembers
     , bRole
+    , bCondition
 
     -- ** Deployment
     , Deployment
@@ -410,26 +438,26 @@ module Network.Google.DeploymentManager
     , dTarget
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.DeploymentManager.Deployments.CancelPreview
-import           Network.Google.Resource.DeploymentManager.Deployments.Delete
-import           Network.Google.Resource.DeploymentManager.Deployments.Get
-import           Network.Google.Resource.DeploymentManager.Deployments.GetIAMPolicy
-import           Network.Google.Resource.DeploymentManager.Deployments.Insert
-import           Network.Google.Resource.DeploymentManager.Deployments.List
-import           Network.Google.Resource.DeploymentManager.Deployments.Patch
-import           Network.Google.Resource.DeploymentManager.Deployments.SetIAMPolicy
-import           Network.Google.Resource.DeploymentManager.Deployments.Stop
-import           Network.Google.Resource.DeploymentManager.Deployments.TestIAMPermissions
-import           Network.Google.Resource.DeploymentManager.Deployments.Update
-import           Network.Google.Resource.DeploymentManager.Manifests.Get
-import           Network.Google.Resource.DeploymentManager.Manifests.List
-import           Network.Google.Resource.DeploymentManager.Operations.Get
-import           Network.Google.Resource.DeploymentManager.Operations.List
-import           Network.Google.Resource.DeploymentManager.Resources.Get
-import           Network.Google.Resource.DeploymentManager.Resources.List
-import           Network.Google.Resource.DeploymentManager.Types.List
+import Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Resource.DeploymentManager.Deployments.CancelPreview
+import Network.Google.Resource.DeploymentManager.Deployments.Delete
+import Network.Google.Resource.DeploymentManager.Deployments.Get
+import Network.Google.Resource.DeploymentManager.Deployments.GetIAMPolicy
+import Network.Google.Resource.DeploymentManager.Deployments.Insert
+import Network.Google.Resource.DeploymentManager.Deployments.List
+import Network.Google.Resource.DeploymentManager.Deployments.Patch
+import Network.Google.Resource.DeploymentManager.Deployments.SetIAMPolicy
+import Network.Google.Resource.DeploymentManager.Deployments.Stop
+import Network.Google.Resource.DeploymentManager.Deployments.TestIAMPermissions
+import Network.Google.Resource.DeploymentManager.Deployments.Update
+import Network.Google.Resource.DeploymentManager.Manifests.Get
+import Network.Google.Resource.DeploymentManager.Manifests.List
+import Network.Google.Resource.DeploymentManager.Operations.Get
+import Network.Google.Resource.DeploymentManager.Operations.List
+import Network.Google.Resource.DeploymentManager.Resources.Get
+import Network.Google.Resource.DeploymentManager.Resources.List
+import Network.Google.Resource.DeploymentManager.Types.List
 
 {- $resources
 TODO

@@ -48,11 +48,12 @@ module Network.Google.Resource.Kgsearch.Entities.Search
     , esBearerToken
     , esQuery
     , esLimit
+    , esFields
     , esCallback
     ) where
 
-import           Network.Google.KnowledgeGraphSearch.Types
-import           Network.Google.Prelude
+import Network.Google.KnowledgeGraphSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @kgsearch.entities.search@ method which the
 -- 'EntitiesSearch' request conforms to.
@@ -73,8 +74,9 @@ type EntitiesSearchResource =
                                QueryParam "query" Text :>
                                  QueryParam "limit" (Textual Int32) :>
                                    QueryParam "callback" Text :>
-                                     QueryParam "alt" AltJSON :>
-                                       Get '[JSON] SearchResponse
+                                     QueryParam "fields" Text :>
+                                       QueryParam "alt" AltJSON :>
+                                         Get '[JSON] SearchResponse
 
 -- | Searches Knowledge Graph for entities that match the constraints. A list
 -- of matched entities will be returned in response, which will be in
@@ -82,20 +84,21 @@ type EntitiesSearchResource =
 --
 -- /See:/ 'entitiesSearch' smart constructor.
 data EntitiesSearch = EntitiesSearch'
-    { _esXgafv          :: !(Maybe Xgafv)
+    { _esXgafv :: !(Maybe Xgafv)
     , _esUploadProtocol :: !(Maybe Text)
-    , _esPrefix         :: !(Maybe Bool)
-    , _esPp             :: !Bool
-    , _esAccessToken    :: !(Maybe Text)
-    , _esUploadType     :: !(Maybe Text)
-    , _esTypes          :: !(Maybe [Text])
-    , _esIds            :: !(Maybe [Text])
-    , _esLanguages      :: !(Maybe [Text])
-    , _esIndent         :: !(Maybe Bool)
-    , _esBearerToken    :: !(Maybe Text)
-    , _esQuery          :: !(Maybe Text)
-    , _esLimit          :: !(Maybe (Textual Int32))
-    , _esCallback       :: !(Maybe Text)
+    , _esPrefix :: !(Maybe Bool)
+    , _esPp :: !Bool
+    , _esAccessToken :: !(Maybe Text)
+    , _esUploadType :: !(Maybe Text)
+    , _esTypes :: !(Maybe [Text])
+    , _esIds :: !(Maybe [Text])
+    , _esLanguages :: !(Maybe [Text])
+    , _esIndent :: !(Maybe Bool)
+    , _esBearerToken :: !(Maybe Text)
+    , _esQuery :: !(Maybe Text)
+    , _esLimit :: !(Maybe (Textual Int32))
+    , _esFields :: !(Maybe Text)
+    , _esCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EntitiesSearch' with the minimum fields required to make a request.
@@ -128,10 +131,12 @@ data EntitiesSearch = EntitiesSearch'
 --
 -- * 'esLimit'
 --
+-- * 'esFields'
+--
 -- * 'esCallback'
 entitiesSearch
     :: EntitiesSearch
-entitiesSearch =
+entitiesSearch = 
     EntitiesSearch'
     { _esXgafv = Nothing
     , _esUploadProtocol = Nothing
@@ -146,6 +151,7 @@ entitiesSearch =
     , _esBearerToken = Nothing
     , _esQuery = Nothing
     , _esLimit = Nothing
+    , _esFields = Nothing
     , _esCallback = Nothing
     }
 
@@ -222,6 +228,10 @@ esLimit
   = lens _esLimit (\ s a -> s{_esLimit = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+esFields :: Lens' EntitiesSearch (Maybe Text)
+esFields = lens _esFields (\ s a -> s{_esFields = a})
+
 -- | JSONP
 esCallback :: Lens' EntitiesSearch (Maybe Text)
 esCallback
@@ -243,6 +253,7 @@ instance GoogleRequest EntitiesSearch where
               _esQuery
               _esLimit
               _esCallback
+              _esFields
               (Just AltJSON)
               knowledgeGraphSearchService
           where go

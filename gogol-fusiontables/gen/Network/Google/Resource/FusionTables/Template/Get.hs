@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Template.Get
     -- * Request Lenses
     , temeTemplateId
     , temeTableId
+    , temeFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.template.get@ method which the
 -- 'TemplateGet' request conforms to.
@@ -49,14 +50,16 @@ type TemplateGetResource =
            Capture "tableId" Text :>
              "templates" :>
                Capture "templateId" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Template
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Template
 
 -- | Retrieves a specific template by its id
 --
 -- /See:/ 'templateGet' smart constructor.
 data TemplateGet = TemplateGet'
     { _temeTemplateId :: !(Textual Int32)
-    , _temeTableId    :: !Text
+    , _temeTableId :: !Text
+    , _temeFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TemplateGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data TemplateGet = TemplateGet'
 -- * 'temeTemplateId'
 --
 -- * 'temeTableId'
+--
+-- * 'temeFields'
 templateGet
     :: Int32 -- ^ 'temeTemplateId'
     -> Text -- ^ 'temeTableId'
     -> TemplateGet
-templateGet pTemeTemplateId_ pTemeTableId_ =
+templateGet pTemeTemplateId_ pTemeTableId_ = 
     TemplateGet'
     { _temeTemplateId = _Coerce # pTemeTemplateId_
     , _temeTableId = pTemeTableId_
+    , _temeFields = Nothing
     }
 
 -- | Identifier for the template that is being requested
@@ -88,13 +94,19 @@ temeTableId :: Lens' TemplateGet Text
 temeTableId
   = lens _temeTableId (\ s a -> s{_temeTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+temeFields :: Lens' TemplateGet (Maybe Text)
+temeFields
+  = lens _temeFields (\ s a -> s{_temeFields = a})
+
 instance GoogleRequest TemplateGet where
         type Rs TemplateGet = Template
         type Scopes TemplateGet =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient TemplateGet'{..}
-          = go _temeTableId _temeTemplateId (Just AltJSON)
+          = go _temeTableId _temeTemplateId _temeFields
+              (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TemplateGetResource)

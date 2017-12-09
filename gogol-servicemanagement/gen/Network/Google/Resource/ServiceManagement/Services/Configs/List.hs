@@ -43,11 +43,12 @@ module Network.Google.Resource.ServiceManagement.Services.Configs.List
     , sclServiceName
     , sclPageToken
     , sclPageSize
+    , sclFields
     , sclCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.configs.list@ method which the
 -- 'ServicesConfigsList' request conforms to.
@@ -65,24 +66,26 @@ type ServicesConfigsListResource =
                          QueryParam "pageToken" Text :>
                            QueryParam "pageSize" (Textual Int32) :>
                              QueryParam "callback" Text :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ListServiceConfigsResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] ListServiceConfigsResponse
 
 -- | Lists the history of the service configuration for a managed service,
 -- from the newest to the oldest.
 --
 -- /See:/ 'servicesConfigsList' smart constructor.
 data ServicesConfigsList = ServicesConfigsList'
-    { _sclXgafv          :: !(Maybe Xgafv)
+    { _sclXgafv :: !(Maybe Xgafv)
     , _sclUploadProtocol :: !(Maybe Text)
-    , _sclPp             :: !Bool
-    , _sclAccessToken    :: !(Maybe Text)
-    , _sclUploadType     :: !(Maybe Text)
-    , _sclBearerToken    :: !(Maybe Text)
-    , _sclServiceName    :: !Text
-    , _sclPageToken      :: !(Maybe Text)
-    , _sclPageSize       :: !(Maybe (Textual Int32))
-    , _sclCallback       :: !(Maybe Text)
+    , _sclPp :: !Bool
+    , _sclAccessToken :: !(Maybe Text)
+    , _sclUploadType :: !(Maybe Text)
+    , _sclBearerToken :: !(Maybe Text)
+    , _sclServiceName :: !Text
+    , _sclPageToken :: !(Maybe Text)
+    , _sclPageSize :: !(Maybe (Textual Int32))
+    , _sclFields :: !(Maybe Text)
+    , _sclCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesConfigsList' with the minimum fields required to make a request.
@@ -107,11 +110,13 @@ data ServicesConfigsList = ServicesConfigsList'
 --
 -- * 'sclPageSize'
 --
+-- * 'sclFields'
+--
 -- * 'sclCallback'
 servicesConfigsList
     :: Text -- ^ 'sclServiceName'
     -> ServicesConfigsList
-servicesConfigsList pSclServiceName_ =
+servicesConfigsList pSclServiceName_ = 
     ServicesConfigsList'
     { _sclXgafv = Nothing
     , _sclUploadProtocol = Nothing
@@ -122,6 +127,7 @@ servicesConfigsList pSclServiceName_ =
     , _sclServiceName = pSclServiceName_
     , _sclPageToken = Nothing
     , _sclPageSize = Nothing
+    , _sclFields = Nothing
     , _sclCallback = Nothing
     }
 
@@ -176,6 +182,11 @@ sclPageSize
   = lens _sclPageSize (\ s a -> s{_sclPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sclFields :: Lens' ServicesConfigsList (Maybe Text)
+sclFields
+  = lens _sclFields (\ s a -> s{_sclFields = a})
+
 -- | JSONP
 sclCallback :: Lens' ServicesConfigsList (Maybe Text)
 sclCallback
@@ -198,6 +209,7 @@ instance GoogleRequest ServicesConfigsList where
               _sclPageToken
               _sclPageSize
               _sclCallback
+              _sclFields
               (Just AltJSON)
               serviceManagementService
           where go

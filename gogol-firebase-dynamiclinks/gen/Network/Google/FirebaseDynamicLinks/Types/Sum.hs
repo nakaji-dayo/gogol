@@ -16,7 +16,84 @@
 --
 module Network.Google.FirebaseDynamicLinks.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
+
+-- | Requested platform.
+data DynamicLinkEventStatPlatform
+    = DynamicLinkPlatformUnspecified
+      -- ^ @DYNAMIC_LINK_PLATFORM_UNSPECIFIED@
+      -- Unspecified platform.
+    | Android
+      -- ^ @ANDROID@
+      -- Represents Android platform. All apps and browsers on Android are
+      -- classfied in this category.
+    | Ios
+      -- ^ @IOS@
+      -- Represents iOS platform. All apps and browsers on iOS are classfied in
+      -- this category.
+    | Desktop
+      -- ^ @DESKTOP@
+      -- Represents desktop. Note: other platforms like Windows, Blackberry,
+      -- Amazon fall into this category.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DynamicLinkEventStatPlatform
+
+instance FromHttpApiData DynamicLinkEventStatPlatform where
+    parseQueryParam = \case
+        "DYNAMIC_LINK_PLATFORM_UNSPECIFIED" -> Right DynamicLinkPlatformUnspecified
+        "ANDROID" -> Right Android
+        "IOS" -> Right Ios
+        "DESKTOP" -> Right Desktop
+        x -> Left ("Unable to parse DynamicLinkEventStatPlatform from: " <> x)
+
+instance ToHttpApiData DynamicLinkEventStatPlatform where
+    toQueryParam = \case
+        DynamicLinkPlatformUnspecified -> "DYNAMIC_LINK_PLATFORM_UNSPECIFIED"
+        Android -> "ANDROID"
+        Ios -> "IOS"
+        Desktop -> "DESKTOP"
+
+instance FromJSON DynamicLinkEventStatPlatform where
+    parseJSON = parseJSONText "DynamicLinkEventStatPlatform"
+
+instance ToJSON DynamicLinkEventStatPlatform where
+    toJSON = toJSONText
+
+-- | Strong match page information. Disambiguates between default UI and
+-- custom page to present when strong match succeeds\/fails to find cookie.
+data GetIosPostInstallAttributionRequestVisualStyle
+    = UnknownVisualStyle
+      -- ^ @UNKNOWN_VISUAL_STYLE@
+      -- Unknown style.
+    | DefaultStyle
+      -- ^ @DEFAULT_STYLE@
+      -- Default style.
+    | CustomStyle
+      -- ^ @CUSTOM_STYLE@
+      -- Custom style.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GetIosPostInstallAttributionRequestVisualStyle
+
+instance FromHttpApiData GetIosPostInstallAttributionRequestVisualStyle where
+    parseQueryParam = \case
+        "UNKNOWN_VISUAL_STYLE" -> Right UnknownVisualStyle
+        "DEFAULT_STYLE" -> Right DefaultStyle
+        "CUSTOM_STYLE" -> Right CustomStyle
+        x -> Left ("Unable to parse GetIosPostInstallAttributionRequestVisualStyle from: " <> x)
+
+instance ToHttpApiData GetIosPostInstallAttributionRequestVisualStyle where
+    toQueryParam = \case
+        UnknownVisualStyle -> "UNKNOWN_VISUAL_STYLE"
+        DefaultStyle -> "DEFAULT_STYLE"
+        CustomStyle -> "CUSTOM_STYLE"
+
+instance FromJSON GetIosPostInstallAttributionRequestVisualStyle where
+    parseJSON = parseJSONText "GetIosPostInstallAttributionRequestVisualStyle"
+
+instance ToJSON GetIosPostInstallAttributionRequestVisualStyle where
+    toJSON = toJSONText
 
 -- | Suffix option.
 data SuffixOption
@@ -58,6 +135,57 @@ instance FromJSON SuffixOption where
 instance ToJSON SuffixOption where
     toJSON = toJSONText
 
+-- | Link event.
+data DynamicLinkEventStatEvent
+    = DynamicLinkEventUnspecified
+      -- ^ @DYNAMIC_LINK_EVENT_UNSPECIFIED@
+      -- Unspecified type.
+    | Click
+      -- ^ @CLICK@
+      -- Indicates that an FDL is clicked by users.
+    | Redirect
+      -- ^ @REDIRECT@
+      -- Indicates that an FDL redirects users to fallback link.
+    | AppInstall
+      -- ^ @APP_INSTALL@
+      -- Indicates that an FDL triggers an app install from Play store, currently
+      -- it\'s impossible to get stats from App store.
+    | AppFirstOpen
+      -- ^ @APP_FIRST_OPEN@
+      -- Indicates that the app is opened for the first time after an install
+      -- triggered by FDLs
+    | AppReOpen
+      -- ^ @APP_RE_OPEN@
+      -- Indicates that the app is opened via an FDL for non-first time.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DynamicLinkEventStatEvent
+
+instance FromHttpApiData DynamicLinkEventStatEvent where
+    parseQueryParam = \case
+        "DYNAMIC_LINK_EVENT_UNSPECIFIED" -> Right DynamicLinkEventUnspecified
+        "CLICK" -> Right Click
+        "REDIRECT" -> Right Redirect
+        "APP_INSTALL" -> Right AppInstall
+        "APP_FIRST_OPEN" -> Right AppFirstOpen
+        "APP_RE_OPEN" -> Right AppReOpen
+        x -> Left ("Unable to parse DynamicLinkEventStatEvent from: " <> x)
+
+instance ToHttpApiData DynamicLinkEventStatEvent where
+    toQueryParam = \case
+        DynamicLinkEventUnspecified -> "DYNAMIC_LINK_EVENT_UNSPECIFIED"
+        Click -> "CLICK"
+        Redirect -> "REDIRECT"
+        AppInstall -> "APP_INSTALL"
+        AppFirstOpen -> "APP_FIRST_OPEN"
+        AppReOpen -> "APP_RE_OPEN"
+
+instance FromJSON DynamicLinkEventStatEvent where
+    parseJSON = parseJSONText "DynamicLinkEventStatEvent"
+
+instance ToJSON DynamicLinkEventStatEvent where
+    toJSON = toJSONText
+
 -- | V1 error format.
 data Xgafv
     = X1
@@ -85,6 +213,47 @@ instance FromJSON Xgafv where
     parseJSON = parseJSONText "Xgafv"
 
 instance ToJSON Xgafv where
+    toJSON = toJSONText
+
+-- | The confidence of the returned attribution.
+data GetIosPostInstallAttributionResponseAttributionConfidence
+    = UnknownAttributionConfidence
+      -- ^ @UNKNOWN_ATTRIBUTION_CONFIDENCE@
+      -- Unset.
+    | Weak
+      -- ^ @WEAK@
+      -- Weak confidence, more than one matching link found or link suspected to
+      -- be false positive
+    | Default
+      -- ^ @DEFAULT@
+      -- Default confidence, match based on fingerprint
+    | Unique
+      -- ^ @UNIQUE@
+      -- Unique confidence, match based on \"unique match link to check\" or
+      -- other means
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GetIosPostInstallAttributionResponseAttributionConfidence
+
+instance FromHttpApiData GetIosPostInstallAttributionResponseAttributionConfidence where
+    parseQueryParam = \case
+        "UNKNOWN_ATTRIBUTION_CONFIDENCE" -> Right UnknownAttributionConfidence
+        "WEAK" -> Right Weak
+        "DEFAULT" -> Right Default
+        "UNIQUE" -> Right Unique
+        x -> Left ("Unable to parse GetIosPostInstallAttributionResponseAttributionConfidence from: " <> x)
+
+instance ToHttpApiData GetIosPostInstallAttributionResponseAttributionConfidence where
+    toQueryParam = \case
+        UnknownAttributionConfidence -> "UNKNOWN_ATTRIBUTION_CONFIDENCE"
+        Weak -> "WEAK"
+        Default -> "DEFAULT"
+        Unique -> "UNIQUE"
+
+instance FromJSON GetIosPostInstallAttributionResponseAttributionConfidence where
+    parseJSON = parseJSONText "GetIosPostInstallAttributionResponseAttributionConfidence"
+
+instance ToJSON GetIosPostInstallAttributionResponseAttributionConfidence where
     toJSON = toJSONText
 
 -- | The warning code.
@@ -252,4 +421,47 @@ instance FromJSON DynamicLinkWarningWarningCode where
     parseJSON = parseJSONText "DynamicLinkWarningWarningCode"
 
 instance ToJSON DynamicLinkWarningWarningCode where
+    toJSON = toJSONText
+
+-- | App post install attribution retrieval information. Disambiguates
+-- mechanism (iSDK or developer invoked) to retrieve payload from clicked
+-- link.
+data GetIosPostInstallAttributionRequestRetrievalMethod
+    = UnknownPayloadRetrievalMethod
+      -- ^ @UNKNOWN_PAYLOAD_RETRIEVAL_METHOD@
+      -- Unknown method.
+    | ImplicitWeakMatch
+      -- ^ @IMPLICIT_WEAK_MATCH@
+      -- iSDK performs a server lookup by device fingerprint in the background
+      -- when app is first-opened; no API called by developer.
+    | ExplicitWeakMatch
+      -- ^ @EXPLICIT_WEAK_MATCH@
+      -- iSDK performs a server lookup by device fingerprint upon a dev API call.
+    | ExplicitStrongAfterWeakMatch
+      -- ^ @EXPLICIT_STRONG_AFTER_WEAK_MATCH@
+      -- iSDK performs a strong match only if weak match is found upon a dev API
+      -- call.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable GetIosPostInstallAttributionRequestRetrievalMethod
+
+instance FromHttpApiData GetIosPostInstallAttributionRequestRetrievalMethod where
+    parseQueryParam = \case
+        "UNKNOWN_PAYLOAD_RETRIEVAL_METHOD" -> Right UnknownPayloadRetrievalMethod
+        "IMPLICIT_WEAK_MATCH" -> Right ImplicitWeakMatch
+        "EXPLICIT_WEAK_MATCH" -> Right ExplicitWeakMatch
+        "EXPLICIT_STRONG_AFTER_WEAK_MATCH" -> Right ExplicitStrongAfterWeakMatch
+        x -> Left ("Unable to parse GetIosPostInstallAttributionRequestRetrievalMethod from: " <> x)
+
+instance ToHttpApiData GetIosPostInstallAttributionRequestRetrievalMethod where
+    toQueryParam = \case
+        UnknownPayloadRetrievalMethod -> "UNKNOWN_PAYLOAD_RETRIEVAL_METHOD"
+        ImplicitWeakMatch -> "IMPLICIT_WEAK_MATCH"
+        ExplicitWeakMatch -> "EXPLICIT_WEAK_MATCH"
+        ExplicitStrongAfterWeakMatch -> "EXPLICIT_STRONG_AFTER_WEAK_MATCH"
+
+instance FromJSON GetIosPostInstallAttributionRequestRetrievalMethod where
+    parseJSON = parseJSONText "GetIosPostInstallAttributionRequestRetrievalMethod"
+
+instance ToJSON GetIosPostInstallAttributionRequestRetrievalMethod where
     toJSON = toJSONText

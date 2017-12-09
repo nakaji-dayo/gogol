@@ -42,11 +42,12 @@ module Network.Google.Resource.Container.Projects.Zones.Operations.Get
     , pzogBearerToken
     , pzogProjectId
     , pzogOperationId
+    , pzogFields
     , pzogCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.operations.get@ method which the
 -- 'ProjectsZonesOperationsGet' request conforms to.
@@ -58,30 +59,32 @@ type ProjectsZonesOperationsGetResource =
              Capture "zone" Text :>
                "operations" :>
                  Capture "operationId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] Operation
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] Operation
 
 -- | Gets the specified operation.
 --
 -- /See:/ 'projectsZonesOperationsGet' smart constructor.
 data ProjectsZonesOperationsGet = ProjectsZonesOperationsGet'
-    { _pzogXgafv          :: !(Maybe Text)
+    { _pzogXgafv :: !(Maybe Xgafv)
     , _pzogUploadProtocol :: !(Maybe Text)
-    , _pzogPp             :: !Bool
-    , _pzogAccessToken    :: !(Maybe Text)
-    , _pzogUploadType     :: !(Maybe Text)
-    , _pzogZone           :: !Text
-    , _pzogBearerToken    :: !(Maybe Text)
-    , _pzogProjectId      :: !Text
-    , _pzogOperationId    :: !Text
-    , _pzogCallback       :: !(Maybe Text)
+    , _pzogPp :: !Bool
+    , _pzogAccessToken :: !(Maybe Text)
+    , _pzogUploadType :: !(Maybe Text)
+    , _pzogZone :: !Text
+    , _pzogBearerToken :: !(Maybe Text)
+    , _pzogProjectId :: !Text
+    , _pzogOperationId :: !Text
+    , _pzogFields :: !(Maybe Text)
+    , _pzogCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesOperationsGet' with the minimum fields required to make a request.
@@ -106,13 +109,15 @@ data ProjectsZonesOperationsGet = ProjectsZonesOperationsGet'
 --
 -- * 'pzogOperationId'
 --
+-- * 'pzogFields'
+--
 -- * 'pzogCallback'
 projectsZonesOperationsGet
     :: Text -- ^ 'pzogZone'
     -> Text -- ^ 'pzogProjectId'
     -> Text -- ^ 'pzogOperationId'
     -> ProjectsZonesOperationsGet
-projectsZonesOperationsGet pPzogZone_ pPzogProjectId_ pPzogOperationId_ =
+projectsZonesOperationsGet pPzogZone_ pPzogProjectId_ pPzogOperationId_ = 
     ProjectsZonesOperationsGet'
     { _pzogXgafv = Nothing
     , _pzogUploadProtocol = Nothing
@@ -123,11 +128,12 @@ projectsZonesOperationsGet pPzogZone_ pPzogProjectId_ pPzogOperationId_ =
     , _pzogBearerToken = Nothing
     , _pzogProjectId = pPzogProjectId_
     , _pzogOperationId = pPzogOperationId_
+    , _pzogFields = Nothing
     , _pzogCallback = Nothing
     }
 
 -- | V1 error format.
-pzogXgafv :: Lens' ProjectsZonesOperationsGet (Maybe Text)
+pzogXgafv :: Lens' ProjectsZonesOperationsGet (Maybe Xgafv)
 pzogXgafv
   = lens _pzogXgafv (\ s a -> s{_pzogXgafv = a})
 
@@ -177,6 +183,11 @@ pzogOperationId
   = lens _pzogOperationId
       (\ s a -> s{_pzogOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzogFields :: Lens' ProjectsZonesOperationsGet (Maybe Text)
+pzogFields
+  = lens _pzogFields (\ s a -> s{_pzogFields = a})
+
 -- | JSONP
 pzogCallback :: Lens' ProjectsZonesOperationsGet (Maybe Text)
 pzogCallback
@@ -196,6 +207,7 @@ instance GoogleRequest ProjectsZonesOperationsGet
               _pzogUploadType
               _pzogBearerToken
               _pzogCallback
+              _pzogFields
               (Just AltJSON)
               containerService
           where go

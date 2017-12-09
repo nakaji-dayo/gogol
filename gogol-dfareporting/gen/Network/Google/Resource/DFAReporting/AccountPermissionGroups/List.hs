@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.AccountPermissionGroups.List
 
     -- * Request Lenses
     , apglProFileId
+    , apglFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.accountPermissionGroups.list@ method which the
 -- 'AccountPermissionGroupsList' request conforms to.
 type AccountPermissionGroupsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "accountPermissionGroups" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] AccountPermissionGroupsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] AccountPermissionGroupsListResponse
 
 -- | Retrieves the list of account permission groups.
 --
 -- /See:/ 'accountPermissionGroupsList' smart constructor.
-newtype AccountPermissionGroupsList = AccountPermissionGroupsList'
-    { _apglProFileId :: Textual Int64
+data AccountPermissionGroupsList = AccountPermissionGroupsList'
+    { _apglProFileId :: !(Textual Int64)
+    , _apglFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountPermissionGroupsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype AccountPermissionGroupsList = AccountPermissionGroupsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'apglProFileId'
+--
+-- * 'apglFields'
 accountPermissionGroupsList
     :: Int64 -- ^ 'apglProFileId'
     -> AccountPermissionGroupsList
-accountPermissionGroupsList pApglProFileId_ =
+accountPermissionGroupsList pApglProFileId_ = 
     AccountPermissionGroupsList'
     { _apglProFileId = _Coerce # pApglProFileId_
+    , _apglFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -77,6 +83,11 @@ apglProFileId
       (\ s a -> s{_apglProFileId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+apglFields :: Lens' AccountPermissionGroupsList (Maybe Text)
+apglFields
+  = lens _apglFields (\ s a -> s{_apglFields = a})
+
 instance GoogleRequest AccountPermissionGroupsList
          where
         type Rs AccountPermissionGroupsList =
@@ -84,7 +95,7 @@ instance GoogleRequest AccountPermissionGroupsList
         type Scopes AccountPermissionGroupsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AccountPermissionGroupsList'{..}
-          = go _apglProFileId (Just AltJSON)
+          = go _apglProFileId _apglFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

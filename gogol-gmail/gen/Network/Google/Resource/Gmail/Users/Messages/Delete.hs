@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Delete
     -- * Request Lenses
     , umdUserId
     , umdId
+    , umdFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.delete@ method which the
 -- 'UsersMessagesDelete' request conforms to.
@@ -50,7 +51,8 @@ type UsersMessagesDeleteResource =
            Capture "userId" Text :>
              "messages" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Immediately and permanently deletes the specified message. This
 -- operation cannot be undone. Prefer messages.trash instead.
@@ -58,7 +60,8 @@ type UsersMessagesDeleteResource =
 -- /See:/ 'usersMessagesDelete' smart constructor.
 data UsersMessagesDelete = UsersMessagesDelete'
     { _umdUserId :: !Text
-    , _umdId     :: !Text
+    , _umdId :: !Text
+    , _umdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesDelete' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersMessagesDelete = UsersMessagesDelete'
 -- * 'umdUserId'
 --
 -- * 'umdId'
+--
+-- * 'umdFields'
 usersMessagesDelete
     :: Text -- ^ 'umdId'
     -> UsersMessagesDelete
-usersMessagesDelete pUmdId_ =
+usersMessagesDelete pUmdId_ = 
     UsersMessagesDelete'
     { _umdUserId = "me"
     , _umdId = pUmdId_
+    , _umdFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -87,12 +93,18 @@ umdUserId
 umdId :: Lens' UsersMessagesDelete Text
 umdId = lens _umdId (\ s a -> s{_umdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umdFields :: Lens' UsersMessagesDelete (Maybe Text)
+umdFields
+  = lens _umdFields (\ s a -> s{_umdFields = a})
+
 instance GoogleRequest UsersMessagesDelete where
         type Rs UsersMessagesDelete = ()
         type Scopes UsersMessagesDelete =
              '["https://mail.google.com/"]
         requestClient UsersMessagesDelete'{..}
-          = go _umdUserId _umdId (Just AltJSON) gmailService
+          = go _umdUserId _umdId _umdFields (Just AltJSON)
+              gmailService
           where go
                   = buildClient
                       (Proxy :: Proxy UsersMessagesDeleteResource)

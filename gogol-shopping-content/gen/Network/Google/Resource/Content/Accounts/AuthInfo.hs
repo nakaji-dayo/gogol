@@ -32,10 +32,12 @@ module Network.Google.Resource.Content.Accounts.AuthInfo
     , accountsAuthInfo
     , AccountsAuthInfo
 
+    -- * Request Lenses
+    , aaiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounts.authinfo@ method which the
 -- 'AccountsAuthInfo' request conforms to.
@@ -44,28 +46,40 @@ type AccountsAuthInfoResource =
        "v2" :>
          "accounts" :>
            "authinfo" :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] AccountsAuthInfoResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] AccountsAuthInfoResponse
 
 -- | Returns information about the authenticated user.
 --
 -- /See:/ 'accountsAuthInfo' smart constructor.
-data AccountsAuthInfo =
-    AccountsAuthInfo'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype AccountsAuthInfo = AccountsAuthInfo'
+    { _aaiFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAuthInfo' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'aaiFields'
 accountsAuthInfo
     :: AccountsAuthInfo
-accountsAuthInfo = AccountsAuthInfo'
+accountsAuthInfo = 
+    AccountsAuthInfo'
+    { _aaiFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+aaiFields :: Lens' AccountsAuthInfo (Maybe Text)
+aaiFields
+  = lens _aaiFields (\ s a -> s{_aaiFields = a})
 
 instance GoogleRequest AccountsAuthInfo where
         type Rs AccountsAuthInfo = AccountsAuthInfoResponse
         type Scopes AccountsAuthInfo =
              '["https://www.googleapis.com/auth/content"]
-        requestClient AccountsAuthInfo'{}
-          = go (Just AltJSON) shoppingContentService
+        requestClient AccountsAuthInfo'{..}
+          = go _aaiFields (Just AltJSON) shoppingContentService
           where go
                   = buildClient
                       (Proxy :: Proxy AccountsAuthInfoResource)

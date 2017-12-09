@@ -42,11 +42,12 @@ module Network.Google.Resource.ServiceManagement.Services.GetIAMPolicy
     , sgipPayload
     , sgipBearerToken
     , sgipResource
+    , sgipFields
     , sgipCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.getIamPolicy@ method which the
 -- 'ServicesGetIAMPolicy' request conforms to.
@@ -60,24 +61,26 @@ type ServicesGetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] GetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] GetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Gets the access control policy for a resource. Returns an empty policy
 -- if the resource exists and does not have a policy set.
 --
 -- /See:/ 'servicesGetIAMPolicy' smart constructor.
 data ServicesGetIAMPolicy = ServicesGetIAMPolicy'
-    { _sgipXgafv          :: !(Maybe Xgafv)
+    { _sgipXgafv :: !(Maybe Xgafv)
     , _sgipUploadProtocol :: !(Maybe Text)
-    , _sgipPp             :: !Bool
-    , _sgipAccessToken    :: !(Maybe Text)
-    , _sgipUploadType     :: !(Maybe Text)
-    , _sgipPayload        :: !GetIAMPolicyRequest
-    , _sgipBearerToken    :: !(Maybe Text)
-    , _sgipResource       :: !Text
-    , _sgipCallback       :: !(Maybe Text)
+    , _sgipPp :: !Bool
+    , _sgipAccessToken :: !(Maybe Text)
+    , _sgipUploadType :: !(Maybe Text)
+    , _sgipPayload :: !GetIAMPolicyRequest
+    , _sgipBearerToken :: !(Maybe Text)
+    , _sgipResource :: !Text
+    , _sgipFields :: !(Maybe Text)
+    , _sgipCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesGetIAMPolicy' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ServicesGetIAMPolicy = ServicesGetIAMPolicy'
 --
 -- * 'sgipResource'
 --
+-- * 'sgipFields'
+--
 -- * 'sgipCallback'
 servicesGetIAMPolicy
     :: GetIAMPolicyRequest -- ^ 'sgipPayload'
     -> Text -- ^ 'sgipResource'
     -> ServicesGetIAMPolicy
-servicesGetIAMPolicy pSgipPayload_ pSgipResource_ =
+servicesGetIAMPolicy pSgipPayload_ pSgipResource_ = 
     ServicesGetIAMPolicy'
     { _sgipXgafv = Nothing
     , _sgipUploadProtocol = Nothing
@@ -115,6 +120,7 @@ servicesGetIAMPolicy pSgipPayload_ pSgipResource_ =
     , _sgipPayload = pSgipPayload_
     , _sgipBearerToken = Nothing
     , _sgipResource = pSgipResource_
+    , _sgipFields = Nothing
     , _sgipCallback = Nothing
     }
 
@@ -156,12 +162,16 @@ sgipBearerToken
   = lens _sgipBearerToken
       (\ s a -> s{_sgipBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being requested.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being requested. See the
+-- operation documentation for the appropriate value for this field.
 sgipResource :: Lens' ServicesGetIAMPolicy Text
 sgipResource
   = lens _sgipResource (\ s a -> s{_sgipResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sgipFields :: Lens' ServicesGetIAMPolicy (Maybe Text)
+sgipFields
+  = lens _sgipFields (\ s a -> s{_sgipFields = a})
 
 -- | JSONP
 sgipCallback :: Lens' ServicesGetIAMPolicy (Maybe Text)
@@ -172,7 +182,9 @@ instance GoogleRequest ServicesGetIAMPolicy where
         type Rs ServicesGetIAMPolicy = Policy
         type Scopes ServicesGetIAMPolicy =
              '["https://www.googleapis.com/auth/cloud-platform",
-               "https://www.googleapis.com/auth/service.management"]
+               "https://www.googleapis.com/auth/cloud-platform.read-only",
+               "https://www.googleapis.com/auth/service.management",
+               "https://www.googleapis.com/auth/service.management.readonly"]
         requestClient ServicesGetIAMPolicy'{..}
           = go _sgipResource _sgipXgafv _sgipUploadProtocol
               (Just _sgipPp)
@@ -180,6 +192,7 @@ instance GoogleRequest ServicesGetIAMPolicy where
               _sgipUploadType
               _sgipBearerToken
               _sgipCallback
+              _sgipFields
               (Just AltJSON)
               _sgipPayload
               serviceManagementService

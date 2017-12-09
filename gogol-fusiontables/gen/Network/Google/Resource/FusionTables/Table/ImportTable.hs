@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Table.ImportTable
     , titName
     , titDelimiter
     , titEncoding
+    , titFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.importTable@ method which the
 -- 'TableImportTable' request conforms to.
@@ -51,7 +52,8 @@ type TableImportTableResource =
              QueryParam "name" Text :>
                QueryParam "delimiter" Text :>
                  QueryParam "encoding" Text :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Table
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Table
        :<|>
        "upload" :>
          "fusiontables" :>
@@ -61,17 +63,19 @@ type TableImportTableResource =
                  QueryParam "name" Text :>
                    QueryParam "delimiter" Text :>
                      QueryParam "encoding" Text :>
-                       QueryParam "alt" AltJSON :>
-                         QueryParam "uploadType" AltMedia :>
-                           AltMedia :> Post '[JSON] Table
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           QueryParam "uploadType" AltMedia :>
+                             AltMedia :> Post '[JSON] Table
 
 -- | Imports a new table.
 --
 -- /See:/ 'tableImportTable' smart constructor.
 data TableImportTable = TableImportTable'
-    { _titName      :: !Text
+    { _titName :: !Text
     , _titDelimiter :: !(Maybe Text)
-    , _titEncoding  :: !(Maybe Text)
+    , _titEncoding :: !(Maybe Text)
+    , _titFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableImportTable' with the minimum fields required to make a request.
@@ -83,14 +87,17 @@ data TableImportTable = TableImportTable'
 -- * 'titDelimiter'
 --
 -- * 'titEncoding'
+--
+-- * 'titFields'
 tableImportTable
     :: Text -- ^ 'titName'
     -> TableImportTable
-tableImportTable pTitName_ =
+tableImportTable pTitName_ = 
     TableImportTable'
     { _titName = pTitName_
     , _titDelimiter = Nothing
     , _titEncoding = Nothing
+    , _titFields = Nothing
     }
 
 -- | The name to be assigned to the new table.
@@ -109,12 +116,18 @@ titEncoding :: Lens' TableImportTable (Maybe Text)
 titEncoding
   = lens _titEncoding (\ s a -> s{_titEncoding = a})
 
+-- | Selector specifying which fields to include in a partial response.
+titFields :: Lens' TableImportTable (Maybe Text)
+titFields
+  = lens _titFields (\ s a -> s{_titFields = a})
+
 instance GoogleRequest TableImportTable where
         type Rs TableImportTable = Table
         type Scopes TableImportTable =
              '["https://www.googleapis.com/auth/fusiontables"]
         requestClient TableImportTable'{..}
           = go (Just _titName) _titDelimiter _titEncoding
+              _titFields
               (Just AltJSON)
               fusionTablesService
           where go :<|> _
@@ -130,6 +143,7 @@ instance GoogleRequest (MediaUpload TableImportTable)
         requestClient
           (MediaUpload TableImportTable'{..} body)
           = go (Just _titName) _titDelimiter _titEncoding
+              _titFields
               (Just AltJSON)
               (Just AltMedia)
               body

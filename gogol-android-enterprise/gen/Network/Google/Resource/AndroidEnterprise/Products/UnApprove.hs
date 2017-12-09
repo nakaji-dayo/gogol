@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Products.UnApprove
     -- * Request Lenses
     , puaEnterpriseId
     , puaProductId
+    , puaFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.products.unapprove@ method which the
 -- 'ProductsUnApprove' request conforms to.
@@ -51,7 +52,8 @@ type ProductsUnApproveResource =
              "products" :>
                Capture "productId" Text :>
                  "unapprove" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Unapproves the specified product (and the relevant app permissions, if
 -- any)
@@ -59,7 +61,8 @@ type ProductsUnApproveResource =
 -- /See:/ 'productsUnApprove' smart constructor.
 data ProductsUnApprove = ProductsUnApprove'
     { _puaEnterpriseId :: !Text
-    , _puaProductId    :: !Text
+    , _puaProductId :: !Text
+    , _puaFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProductsUnApprove' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data ProductsUnApprove = ProductsUnApprove'
 -- * 'puaEnterpriseId'
 --
 -- * 'puaProductId'
+--
+-- * 'puaFields'
 productsUnApprove
     :: Text -- ^ 'puaEnterpriseId'
     -> Text -- ^ 'puaProductId'
     -> ProductsUnApprove
-productsUnApprove pPuaEnterpriseId_ pPuaProductId_ =
+productsUnApprove pPuaEnterpriseId_ pPuaProductId_ = 
     ProductsUnApprove'
     { _puaEnterpriseId = pPuaEnterpriseId_
     , _puaProductId = pPuaProductId_
+    , _puaFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -90,12 +96,18 @@ puaProductId :: Lens' ProductsUnApprove Text
 puaProductId
   = lens _puaProductId (\ s a -> s{_puaProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puaFields :: Lens' ProductsUnApprove (Maybe Text)
+puaFields
+  = lens _puaFields (\ s a -> s{_puaFields = a})
+
 instance GoogleRequest ProductsUnApprove where
         type Rs ProductsUnApprove = ()
         type Scopes ProductsUnApprove =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ProductsUnApprove'{..}
-          = go _puaEnterpriseId _puaProductId (Just AltJSON)
+          = go _puaEnterpriseId _puaProductId _puaFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

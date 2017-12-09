@@ -33,12 +33,14 @@ module Network.Google.Resource.Compute.TargetSSLProxies.Delete
     , TargetSSLProxiesDelete
 
     -- * Request Lenses
+    , tspdRequestId
     , tspdProject
     , tspdTargetSSLProxy
+    , tspdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetSslProxies.delete@ method which the
 -- 'TargetSSLProxiesDelete' request conforms to.
@@ -50,32 +52,57 @@ type TargetSSLProxiesDeleteResource =
              "global" :>
                "targetSslProxies" :>
                  Capture "targetSslProxy" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified TargetSslProxy resource.
 --
 -- /See:/ 'targetSSLProxiesDelete' smart constructor.
 data TargetSSLProxiesDelete = TargetSSLProxiesDelete'
-    { _tspdProject        :: !Text
+    { _tspdRequestId :: !(Maybe Text)
+    , _tspdProject :: !Text
     , _tspdTargetSSLProxy :: !Text
+    , _tspdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetSSLProxiesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'tspdRequestId'
+--
 -- * 'tspdProject'
 --
 -- * 'tspdTargetSSLProxy'
+--
+-- * 'tspdFields'
 targetSSLProxiesDelete
     :: Text -- ^ 'tspdProject'
     -> Text -- ^ 'tspdTargetSSLProxy'
     -> TargetSSLProxiesDelete
-targetSSLProxiesDelete pTspdProject_ pTspdTargetSSLProxy_ =
+targetSSLProxiesDelete pTspdProject_ pTspdTargetSSLProxy_ = 
     TargetSSLProxiesDelete'
-    { _tspdProject = pTspdProject_
+    { _tspdRequestId = Nothing
+    , _tspdProject = pTspdProject_
     , _tspdTargetSSLProxy = pTspdTargetSSLProxy_
+    , _tspdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tspdRequestId :: Lens' TargetSSLProxiesDelete (Maybe Text)
+tspdRequestId
+  = lens _tspdRequestId
+      (\ s a -> s{_tspdRequestId = a})
 
 -- | Project ID for this request.
 tspdProject :: Lens' TargetSSLProxiesDelete Text
@@ -88,13 +115,20 @@ tspdTargetSSLProxy
   = lens _tspdTargetSSLProxy
       (\ s a -> s{_tspdTargetSSLProxy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tspdFields :: Lens' TargetSSLProxiesDelete (Maybe Text)
+tspdFields
+  = lens _tspdFields (\ s a -> s{_tspdFields = a})
+
 instance GoogleRequest TargetSSLProxiesDelete where
         type Rs TargetSSLProxiesDelete = Operation
         type Scopes TargetSSLProxiesDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetSSLProxiesDelete'{..}
-          = go _tspdProject _tspdTargetSSLProxy (Just AltJSON)
+          = go _tspdProject _tspdTargetSSLProxy _tspdRequestId
+              _tspdFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

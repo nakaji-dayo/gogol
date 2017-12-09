@@ -37,10 +37,11 @@ module Network.Google.Resource.AdSense.AdUnits.CustomChannels.List
     , aucclAdClientId
     , aucclPageToken
     , aucclMaxResults
+    , aucclFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.adunits.customchannels.list@ method which the
 -- 'AdUnitsCustomChannelsList' request conforms to.
@@ -54,17 +55,19 @@ type AdUnitsCustomChannelsListResource =
                  "customchannels" :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] CustomChannels
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] CustomChannels
 
 -- | List all custom channels which the specified ad unit belongs to.
 --
 -- /See:/ 'adUnitsCustomChannelsList' smart constructor.
 data AdUnitsCustomChannelsList = AdUnitsCustomChannelsList'
-    { _aucclAdUnitId   :: !Text
+    { _aucclAdUnitId :: !Text
     , _aucclAdClientId :: !Text
-    , _aucclPageToken  :: !(Maybe Text)
+    , _aucclPageToken :: !(Maybe Text)
     , _aucclMaxResults :: !(Maybe (Textual Int32))
+    , _aucclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdUnitsCustomChannelsList' with the minimum fields required to make a request.
@@ -78,16 +81,19 @@ data AdUnitsCustomChannelsList = AdUnitsCustomChannelsList'
 -- * 'aucclPageToken'
 --
 -- * 'aucclMaxResults'
+--
+-- * 'aucclFields'
 adUnitsCustomChannelsList
     :: Text -- ^ 'aucclAdUnitId'
     -> Text -- ^ 'aucclAdClientId'
     -> AdUnitsCustomChannelsList
-adUnitsCustomChannelsList pAucclAdUnitId_ pAucclAdClientId_ =
+adUnitsCustomChannelsList pAucclAdUnitId_ pAucclAdClientId_ = 
     AdUnitsCustomChannelsList'
     { _aucclAdUnitId = pAucclAdUnitId_
     , _aucclAdClientId = pAucclAdClientId_
     , _aucclPageToken = Nothing
     , _aucclMaxResults = Nothing
+    , _aucclFields = Nothing
     }
 
 -- | Ad unit for which to list custom channels.
@@ -118,6 +124,11 @@ aucclMaxResults
       (\ s a -> s{_aucclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aucclFields :: Lens' AdUnitsCustomChannelsList (Maybe Text)
+aucclFields
+  = lens _aucclFields (\ s a -> s{_aucclFields = a})
+
 instance GoogleRequest AdUnitsCustomChannelsList
          where
         type Rs AdUnitsCustomChannelsList = CustomChannels
@@ -127,6 +138,7 @@ instance GoogleRequest AdUnitsCustomChannelsList
         requestClient AdUnitsCustomChannelsList'{..}
           = go _aucclAdClientId _aucclAdUnitId _aucclPageToken
               _aucclMaxResults
+              _aucclFields
               (Just AltJSON)
               adSenseService
           where go

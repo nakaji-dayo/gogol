@@ -38,10 +38,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.List
     , glFilter
     , glPageToken
     , glMaxResults
+    , glFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.list@ method which the
 -- 'GroupsList' request conforms to.
@@ -56,17 +57,19 @@ type GroupsListResource =
                    QueryParam "filter" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] GroupList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] GroupList
 
 -- | Retrieves the list of groups contained within the specified project.
 --
 -- /See:/ 'groupsList' smart constructor.
 data GroupsList = GroupsList'
-    { _glOrderBy    :: !(Maybe Text)
-    , _glProject    :: !Text
-    , _glFilter     :: !(Maybe Text)
-    , _glPageToken  :: !(Maybe Text)
+    { _glOrderBy :: !(Maybe Text)
+    , _glProject :: !Text
+    , _glFilter :: !(Maybe Text)
+    , _glPageToken :: !(Maybe Text)
     , _glMaxResults :: !(Textual Word32)
+    , _glFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsList' with the minimum fields required to make a request.
@@ -82,16 +85,19 @@ data GroupsList = GroupsList'
 -- * 'glPageToken'
 --
 -- * 'glMaxResults'
+--
+-- * 'glFields'
 groupsList
     :: Text -- ^ 'glProject'
     -> GroupsList
-groupsList pGlProject_ =
+groupsList pGlProject_ = 
     GroupsList'
     { _glOrderBy = Nothing
     , _glProject = pGlProject_
     , _glFilter = Nothing
     , _glPageToken = Nothing
     , _glMaxResults = 500
+    , _glFields = Nothing
     }
 
 -- | Sorts list results by a certain order. By default, results are returned
@@ -151,6 +157,10 @@ glMaxResults
   = lens _glMaxResults (\ s a -> s{_glMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+glFields :: Lens' GroupsList (Maybe Text)
+glFields = lens _glFields (\ s a -> s{_glFields = a})
+
 instance GoogleRequest GroupsList where
         type Rs GroupsList = GroupList
         type Scopes GroupsList =
@@ -161,6 +171,7 @@ instance GoogleRequest GroupsList where
         requestClient GroupsList'{..}
           = go _glProject _glOrderBy _glFilter _glPageToken
               (Just _glMaxResults)
+              _glFields
               (Just AltJSON)
               userAccountsService
           where go

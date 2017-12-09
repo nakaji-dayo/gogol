@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Gets a customer resource if one exists and is owned by the reseller.
+-- Get a customer account.
 --
 -- /See:/ <https://developers.google.com/google-apps/reseller/ Enterprise Apps Reseller API Reference> for @reseller.customers.get@.
 module Network.Google.Resource.Reseller.Customers.Get
@@ -34,10 +34,11 @@ module Network.Google.Resource.Reseller.Customers.Get
 
     -- * Request Lenses
     , cgCustomerId
+    , cgFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.customers.get@ method which the
 -- 'CustomersGet' request conforms to.
@@ -47,13 +48,15 @@ type CustomersGetResource =
          "v1" :>
            "customers" :>
              Capture "customerId" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Customer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Customer
 
--- | Gets a customer resource if one exists and is owned by the reseller.
+-- | Get a customer account.
 --
 -- /See:/ 'customersGet' smart constructor.
-newtype CustomersGet = CustomersGet'
-    { _cgCustomerId :: Text
+data CustomersGet = CustomersGet'
+    { _cgCustomerId :: !Text
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CustomersGet' with the minimum fields required to make a request.
@@ -61,18 +64,28 @@ newtype CustomersGet = CustomersGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cgCustomerId'
+--
+-- * 'cgFields'
 customersGet
     :: Text -- ^ 'cgCustomerId'
     -> CustomersGet
-customersGet pCgCustomerId_ =
+customersGet pCgCustomerId_ = 
     CustomersGet'
     { _cgCustomerId = pCgCustomerId_
+    , _cgFields = Nothing
     }
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 cgCustomerId :: Lens' CustomersGet Text
 cgCustomerId
   = lens _cgCustomerId (\ s a -> s{_cgCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CustomersGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
 
 instance GoogleRequest CustomersGet where
         type Rs CustomersGet = Customer
@@ -80,7 +93,8 @@ instance GoogleRequest CustomersGet where
              '["https://www.googleapis.com/auth/apps.order",
                "https://www.googleapis.com/auth/apps.order.readonly"]
         requestClient CustomersGet'{..}
-          = go _cgCustomerId (Just AltJSON) appsResellerService
+          = go _cgCustomerId _cgFields (Just AltJSON)
+              appsResellerService
           where go
                   = buildClient (Proxy :: Proxy CustomersGetResource)
                       mempty

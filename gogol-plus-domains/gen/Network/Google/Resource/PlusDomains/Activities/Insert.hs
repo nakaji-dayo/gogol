@@ -36,10 +36,11 @@ module Network.Google.Resource.PlusDomains.Activities.Insert
     , aiPayload
     , aiUserId
     , aiPreview
+    , aiFields
     ) where
 
-import           Network.Google.PlusDomains.Types
-import           Network.Google.Prelude
+import Network.Google.PlusDomains.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plusDomains.activities.insert@ method which the
 -- 'ActivitiesInsert' request conforms to.
@@ -50,16 +51,18 @@ type ActivitiesInsertResource =
            Capture "userId" Text :>
              "activities" :>
                QueryParam "preview" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Activity :> Post '[JSON] Activity
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Activity :> Post '[JSON] Activity
 
 -- | Create a new activity for the authenticated user.
 --
 -- /See:/ 'activitiesInsert' smart constructor.
 data ActivitiesInsert = ActivitiesInsert'
     { _aiPayload :: !Activity
-    , _aiUserId  :: !Text
+    , _aiUserId :: !Text
     , _aiPreview :: !(Maybe Bool)
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesInsert' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data ActivitiesInsert = ActivitiesInsert'
 -- * 'aiUserId'
 --
 -- * 'aiPreview'
+--
+-- * 'aiFields'
 activitiesInsert
     :: Activity -- ^ 'aiPayload'
     -> Text -- ^ 'aiUserId'
     -> ActivitiesInsert
-activitiesInsert pAiPayload_ pAiUserId_ =
+activitiesInsert pAiPayload_ pAiUserId_ = 
     ActivitiesInsert'
     { _aiPayload = pAiPayload_
     , _aiUserId = pAiUserId_
     , _aiPreview = Nothing
+    , _aiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -99,6 +105,10 @@ aiPreview :: Lens' ActivitiesInsert (Maybe Bool)
 aiPreview
   = lens _aiPreview (\ s a -> s{_aiPreview = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' ActivitiesInsert (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest ActivitiesInsert where
         type Rs ActivitiesInsert = Activity
         type Scopes ActivitiesInsert =
@@ -106,7 +116,8 @@ instance GoogleRequest ActivitiesInsert where
                "https://www.googleapis.com/auth/plus.me",
                "https://www.googleapis.com/auth/plus.stream.write"]
         requestClient ActivitiesInsert'{..}
-          = go _aiUserId _aiPreview (Just AltJSON) _aiPayload
+          = go _aiUserId _aiPreview _aiFields (Just AltJSON)
+              _aiPayload
               plusDomainsService
           where go
                   = buildClient

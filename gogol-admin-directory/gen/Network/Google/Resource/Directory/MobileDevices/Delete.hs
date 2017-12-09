@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.MobileDevices.Delete
     -- * Request Lenses
     , mddResourceId
     , mddCustomerId
+    , mddFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.mobiledevices.delete@ method which the
 -- 'MobileDevicesDelete' request conforms to.
@@ -51,7 +52,8 @@ type MobileDevicesDeleteResource =
                "devices" :>
                  "mobile" :>
                    Capture "resourceId" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete Mobile Device
 --
@@ -59,6 +61,7 @@ type MobileDevicesDeleteResource =
 data MobileDevicesDelete = MobileDevicesDelete'
     { _mddResourceId :: !Text
     , _mddCustomerId :: !Text
+    , _mddFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MobileDevicesDelete' with the minimum fields required to make a request.
@@ -68,34 +71,43 @@ data MobileDevicesDelete = MobileDevicesDelete'
 -- * 'mddResourceId'
 --
 -- * 'mddCustomerId'
+--
+-- * 'mddFields'
 mobileDevicesDelete
     :: Text -- ^ 'mddResourceId'
     -> Text -- ^ 'mddCustomerId'
     -> MobileDevicesDelete
-mobileDevicesDelete pMddResourceId_ pMddCustomerId_ =
+mobileDevicesDelete pMddResourceId_ pMddCustomerId_ = 
     MobileDevicesDelete'
     { _mddResourceId = pMddResourceId_
     , _mddCustomerId = pMddCustomerId_
+    , _mddFields = Nothing
     }
 
--- | Immutable id of Mobile Device
+-- | Immutable ID of Mobile Device
 mddResourceId :: Lens' MobileDevicesDelete Text
 mddResourceId
   = lens _mddResourceId
       (\ s a -> s{_mddResourceId = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 mddCustomerId :: Lens' MobileDevicesDelete Text
 mddCustomerId
   = lens _mddCustomerId
       (\ s a -> s{_mddCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+mddFields :: Lens' MobileDevicesDelete (Maybe Text)
+mddFields
+  = lens _mddFields (\ s a -> s{_mddFields = a})
 
 instance GoogleRequest MobileDevicesDelete where
         type Rs MobileDevicesDelete = ()
         type Scopes MobileDevicesDelete =
              '["https://www.googleapis.com/auth/admin.directory.device.mobile"]
         requestClient MobileDevicesDelete'{..}
-          = go _mddCustomerId _mddResourceId (Just AltJSON)
+          = go _mddCustomerId _mddResourceId _mddFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

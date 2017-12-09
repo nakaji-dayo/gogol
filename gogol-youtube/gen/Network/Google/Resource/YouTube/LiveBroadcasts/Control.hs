@@ -41,10 +41,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Control
     , lbcDisplaySlate
     , lbcWalltime
     , lbcOffSetTimeMs
+    , lbcFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.control@ method which the
 -- 'LiveBroadcastsControl' request conforms to.
@@ -60,21 +61,23 @@ type LiveBroadcastsControlResource =
                      QueryParam "displaySlate" Bool :>
                        QueryParam "walltime" DateTime' :>
                          QueryParam "offsetTimeMs" (Textual Word64) :>
-                           QueryParam "alt" AltJSON :>
-                             Post '[JSON] LiveBroadcast
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Post '[JSON] LiveBroadcast
 
 -- | Controls the settings for a slate that can be displayed in the broadcast
 -- stream.
 --
 -- /See:/ 'liveBroadcastsControl' smart constructor.
 data LiveBroadcastsControl = LiveBroadcastsControl'
-    { _lbcPart                          :: !Text
-    , _lbcOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbcPart :: !Text
+    , _lbcOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbcOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lbcId                            :: !Text
-    , _lbcDisplaySlate                  :: !(Maybe Bool)
-    , _lbcWalltime                      :: !(Maybe DateTime')
-    , _lbcOffSetTimeMs                  :: !(Maybe (Textual Word64))
+    , _lbcId :: !Text
+    , _lbcDisplaySlate :: !(Maybe Bool)
+    , _lbcWalltime :: !(Maybe DateTime')
+    , _lbcOffSetTimeMs :: !(Maybe (Textual Word64))
+    , _lbcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsControl' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data LiveBroadcastsControl = LiveBroadcastsControl'
 -- * 'lbcWalltime'
 --
 -- * 'lbcOffSetTimeMs'
+--
+-- * 'lbcFields'
 liveBroadcastsControl
     :: Text -- ^ 'lbcPart'
     -> Text -- ^ 'lbcId'
     -> LiveBroadcastsControl
-liveBroadcastsControl pLbcPart_ pLbcId_ =
+liveBroadcastsControl pLbcPart_ pLbcId_ = 
     LiveBroadcastsControl'
     { _lbcPart = pLbcPart_
     , _lbcOnBehalfOfContentOwner = Nothing
@@ -107,6 +112,7 @@ liveBroadcastsControl pLbcPart_ pLbcId_ =
     , _lbcDisplaySlate = Nothing
     , _lbcWalltime = Nothing
     , _lbcOffSetTimeMs = Nothing
+    , _lbcFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -188,6 +194,11 @@ lbcOffSetTimeMs
       (\ s a -> s{_lbcOffSetTimeMs = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lbcFields :: Lens' LiveBroadcastsControl (Maybe Text)
+lbcFields
+  = lens _lbcFields (\ s a -> s{_lbcFields = a})
+
 instance GoogleRequest LiveBroadcastsControl where
         type Rs LiveBroadcastsControl = LiveBroadcast
         type Scopes LiveBroadcastsControl =
@@ -200,6 +211,7 @@ instance GoogleRequest LiveBroadcastsControl where
               _lbcDisplaySlate
               _lbcWalltime
               _lbcOffSetTimeMs
+              _lbcFields
               (Just AltJSON)
               youTubeService
           where go

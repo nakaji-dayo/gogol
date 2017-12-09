@@ -27,7 +27,7 @@
 -- similar. A request is scoped to activities from a given Google service
 -- using the source parameter.
 --
--- /See:/ <https://developers.google.com/google-apps/activity/ Google Apps Activity API Reference> for @appsactivity.activities.list@.
+-- /See:/ <https://developers.google.com/google-apps/activity/ G Suite Activity API Reference> for @appsactivity.activities.list@.
 module Network.Google.Resource.AppsActivity.Activities.List
     (
     -- * REST Resource
@@ -45,10 +45,11 @@ module Network.Google.Resource.AppsActivity.Activities.List
     , alSource
     , alPageToken
     , alPageSize
+    , alFields
     ) where
 
-import           Network.Google.AppsActivity.Types
-import           Network.Google.Prelude
+import Network.Google.AppsActivity.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appsactivity.activities.list@ method which the
 -- 'ActivitiesList' request conforms to.
@@ -65,8 +66,9 @@ type ActivitiesListResource =
                    QueryParam "source" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "pageSize" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] ListActivitiesResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] ListActivitiesResponse
 
 -- | Returns a list of activities visible to the current logged in user.
 -- Visible activities are determined by the visiblity settings of the
@@ -77,13 +79,14 @@ type ActivitiesListResource =
 --
 -- /See:/ 'activitiesList' smart constructor.
 data ActivitiesList = ActivitiesList'
-    { _alDriveFileId      :: !(Maybe Text)
-    , _alDriveAncestorId  :: !(Maybe Text)
+    { _alDriveFileId :: !(Maybe Text)
+    , _alDriveAncestorId :: !(Maybe Text)
     , _alGroupingStrategy :: !ActivitiesListGroupingStrategy
-    , _alUserId           :: !Text
-    , _alSource           :: !(Maybe Text)
-    , _alPageToken        :: !(Maybe Text)
-    , _alPageSize         :: !(Textual Int32)
+    , _alUserId :: !Text
+    , _alSource :: !(Maybe Text)
+    , _alPageToken :: !(Maybe Text)
+    , _alPageSize :: !(Textual Int32)
+    , _alFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesList' with the minimum fields required to make a request.
@@ -103,9 +106,11 @@ data ActivitiesList = ActivitiesList'
 -- * 'alPageToken'
 --
 -- * 'alPageSize'
+--
+-- * 'alFields'
 activitiesList
     :: ActivitiesList
-activitiesList =
+activitiesList = 
     ActivitiesList'
     { _alDriveFileId = Nothing
     , _alDriveAncestorId = Nothing
@@ -114,6 +119,7 @@ activitiesList =
     , _alSource = Nothing
     , _alPageToken = Nothing
     , _alPageSize = 50
+    , _alFields = Nothing
     }
 
 -- | Identifies the Drive item to return activities for.
@@ -158,6 +164,10 @@ alPageSize
   = lens _alPageSize (\ s a -> s{_alPageSize = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+alFields :: Lens' ActivitiesList (Maybe Text)
+alFields = lens _alFields (\ s a -> s{_alFields = a})
+
 instance GoogleRequest ActivitiesList where
         type Rs ActivitiesList = ListActivitiesResponse
         type Scopes ActivitiesList =
@@ -173,6 +183,7 @@ instance GoogleRequest ActivitiesList where
               _alSource
               _alPageToken
               (Just _alPageSize)
+              _alFields
               (Just AltJSON)
               appsActivityService
           where go

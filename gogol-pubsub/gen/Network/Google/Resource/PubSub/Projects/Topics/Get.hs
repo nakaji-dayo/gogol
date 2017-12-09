@@ -40,11 +40,12 @@ module Network.Google.Resource.PubSub.Projects.Topics.Get
     , ptgUploadType
     , ptgTopic
     , ptgBearerToken
+    , ptgFields
     , ptgCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.topics.get@ method which the
 -- 'ProjectsTopicsGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsTopicsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Topic
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Topic
 
 -- | Gets the configuration of a topic.
 --
 -- /See:/ 'projectsTopicsGet' smart constructor.
 data ProjectsTopicsGet = ProjectsTopicsGet'
-    { _ptgXgafv          :: !(Maybe Xgafv)
+    { _ptgXgafv :: !(Maybe Xgafv)
     , _ptgUploadProtocol :: !(Maybe Text)
-    , _ptgPp             :: !Bool
-    , _ptgAccessToken    :: !(Maybe Text)
-    , _ptgUploadType     :: !(Maybe Text)
-    , _ptgTopic          :: !Text
-    , _ptgBearerToken    :: !(Maybe Text)
-    , _ptgCallback       :: !(Maybe Text)
+    , _ptgPp :: !Bool
+    , _ptgAccessToken :: !(Maybe Text)
+    , _ptgUploadType :: !(Maybe Text)
+    , _ptgTopic :: !Text
+    , _ptgBearerToken :: !(Maybe Text)
+    , _ptgFields :: !(Maybe Text)
+    , _ptgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTopicsGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsTopicsGet = ProjectsTopicsGet'
 --
 -- * 'ptgBearerToken'
 --
+-- * 'ptgFields'
+--
 -- * 'ptgCallback'
 projectsTopicsGet
     :: Text -- ^ 'ptgTopic'
     -> ProjectsTopicsGet
-projectsTopicsGet pPtgTopic_ =
+projectsTopicsGet pPtgTopic_ = 
     ProjectsTopicsGet'
     { _ptgXgafv = Nothing
     , _ptgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsTopicsGet pPtgTopic_ =
     , _ptgUploadType = Nothing
     , _ptgTopic = pPtgTopic_
     , _ptgBearerToken = Nothing
+    , _ptgFields = Nothing
     , _ptgCallback = Nothing
     }
 
@@ -145,6 +151,11 @@ ptgBearerToken
   = lens _ptgBearerToken
       (\ s a -> s{_ptgBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptgFields :: Lens' ProjectsTopicsGet (Maybe Text)
+ptgFields
+  = lens _ptgFields (\ s a -> s{_ptgFields = a})
+
 -- | JSONP
 ptgCallback :: Lens' ProjectsTopicsGet (Maybe Text)
 ptgCallback
@@ -162,6 +173,7 @@ instance GoogleRequest ProjectsTopicsGet where
               _ptgUploadType
               _ptgBearerToken
               _ptgCallback
+              _ptgFields
               (Just AltJSON)
               pubSubService
           where go

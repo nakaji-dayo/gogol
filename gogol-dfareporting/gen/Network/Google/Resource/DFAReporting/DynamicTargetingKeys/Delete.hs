@@ -37,16 +37,17 @@ module Network.Google.Resource.DFAReporting.DynamicTargetingKeys.Delete
     , dtkdObjectId
     , dtkdProFileId
     , dtkdName
+    , dtkdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.dynamicTargetingKeys.delete@ method which the
 -- 'DynamicTargetingKeysDelete' request conforms to.
 type DynamicTargetingKeysDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "dynamicTargetingKeys" :>
@@ -54,16 +55,19 @@ type DynamicTargetingKeysDeleteResource =
                  QueryParam "name" Text :>
                    QueryParam "objectType"
                      DynamicTargetingKeysDeleteObjectType
-                     :> QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing dynamic targeting key.
 --
 -- /See:/ 'dynamicTargetingKeysDelete' smart constructor.
 data DynamicTargetingKeysDelete = DynamicTargetingKeysDelete'
     { _dtkdObjectType :: !DynamicTargetingKeysDeleteObjectType
-    , _dtkdObjectId   :: !(Textual Int64)
-    , _dtkdProFileId  :: !(Textual Int64)
-    , _dtkdName       :: !Text
+    , _dtkdObjectId :: !(Textual Int64)
+    , _dtkdProFileId :: !(Textual Int64)
+    , _dtkdName :: !Text
+    , _dtkdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DynamicTargetingKeysDelete' with the minimum fields required to make a request.
@@ -77,18 +81,21 @@ data DynamicTargetingKeysDelete = DynamicTargetingKeysDelete'
 -- * 'dtkdProFileId'
 --
 -- * 'dtkdName'
+--
+-- * 'dtkdFields'
 dynamicTargetingKeysDelete
     :: DynamicTargetingKeysDeleteObjectType -- ^ 'dtkdObjectType'
     -> Int64 -- ^ 'dtkdObjectId'
     -> Int64 -- ^ 'dtkdProFileId'
     -> Text -- ^ 'dtkdName'
     -> DynamicTargetingKeysDelete
-dynamicTargetingKeysDelete pDtkdObjectType_ pDtkdObjectId_ pDtkdProFileId_ pDtkdName_ =
+dynamicTargetingKeysDelete pDtkdObjectType_ pDtkdObjectId_ pDtkdProFileId_ pDtkdName_ = 
     DynamicTargetingKeysDelete'
     { _dtkdObjectType = pDtkdObjectType_
     , _dtkdObjectId = _Coerce # pDtkdObjectId_
     , _dtkdProFileId = _Coerce # pDtkdProFileId_
     , _dtkdName = pDtkdName_
+    , _dtkdFields = Nothing
     }
 
 -- | Type of the object of this dynamic targeting key. This is a required
@@ -118,6 +125,11 @@ dtkdProFileId
 dtkdName :: Lens' DynamicTargetingKeysDelete Text
 dtkdName = lens _dtkdName (\ s a -> s{_dtkdName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dtkdFields :: Lens' DynamicTargetingKeysDelete (Maybe Text)
+dtkdFields
+  = lens _dtkdFields (\ s a -> s{_dtkdFields = a})
+
 instance GoogleRequest DynamicTargetingKeysDelete
          where
         type Rs DynamicTargetingKeysDelete = ()
@@ -126,6 +138,7 @@ instance GoogleRequest DynamicTargetingKeysDelete
         requestClient DynamicTargetingKeysDelete'{..}
           = go _dtkdProFileId _dtkdObjectId (Just _dtkdName)
               (Just _dtkdObjectType)
+              _dtkdFields
               (Just AltJSON)
               dFAReportingService
           where go

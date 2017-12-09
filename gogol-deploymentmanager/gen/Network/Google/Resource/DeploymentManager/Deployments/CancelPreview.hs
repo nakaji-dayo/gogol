@@ -36,11 +36,12 @@ module Network.Google.Resource.DeploymentManager.Deployments.CancelPreview
     -- * Request Lenses
     , dcpProject
     , dcpPayload
+    , dcpFields
     , dcpDeployment
     ) where
 
-import           Network.Google.DeploymentManager.Types
-import           Network.Google.Prelude
+import Network.Google.DeploymentManager.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @deploymentmanager.deployments.cancelPreview@ method which the
 -- 'DeploymentsCancelPreview' request conforms to.
@@ -53,17 +54,19 @@ type DeploymentsCancelPreviewResource =
                "deployments" :>
                  Capture "deployment" Text :>
                    "cancelPreview" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] DeploymentsCancelPreviewRequest :>
-                         Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] DeploymentsCancelPreviewRequest :>
+                           Post '[JSON] Operation
 
 -- | Cancels and removes the preview currently associated with the
 -- deployment.
 --
 -- /See:/ 'deploymentsCancelPreview' smart constructor.
 data DeploymentsCancelPreview = DeploymentsCancelPreview'
-    { _dcpProject    :: !Text
-    , _dcpPayload    :: !DeploymentsCancelPreviewRequest
+    { _dcpProject :: !Text
+    , _dcpPayload :: !DeploymentsCancelPreviewRequest
+    , _dcpFields :: !(Maybe Text)
     , _dcpDeployment :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -75,16 +78,19 @@ data DeploymentsCancelPreview = DeploymentsCancelPreview'
 --
 -- * 'dcpPayload'
 --
+-- * 'dcpFields'
+--
 -- * 'dcpDeployment'
 deploymentsCancelPreview
     :: Text -- ^ 'dcpProject'
     -> DeploymentsCancelPreviewRequest -- ^ 'dcpPayload'
     -> Text -- ^ 'dcpDeployment'
     -> DeploymentsCancelPreview
-deploymentsCancelPreview pDcpProject_ pDcpPayload_ pDcpDeployment_ =
+deploymentsCancelPreview pDcpProject_ pDcpPayload_ pDcpDeployment_ = 
     DeploymentsCancelPreview'
     { _dcpProject = pDcpProject_
     , _dcpPayload = pDcpPayload_
+    , _dcpFields = Nothing
     , _dcpDeployment = pDcpDeployment_
     }
 
@@ -98,6 +104,11 @@ dcpPayload :: Lens' DeploymentsCancelPreview DeploymentsCancelPreviewRequest
 dcpPayload
   = lens _dcpPayload (\ s a -> s{_dcpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dcpFields :: Lens' DeploymentsCancelPreview (Maybe Text)
+dcpFields
+  = lens _dcpFields (\ s a -> s{_dcpFields = a})
+
 -- | The name of the deployment for this request.
 dcpDeployment :: Lens' DeploymentsCancelPreview Text
 dcpDeployment
@@ -110,7 +121,8 @@ instance GoogleRequest DeploymentsCancelPreview where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/ndev.cloudman"]
         requestClient DeploymentsCancelPreview'{..}
-          = go _dcpProject _dcpDeployment (Just AltJSON)
+          = go _dcpProject _dcpDeployment _dcpFields
+              (Just AltJSON)
               _dcpPayload
               deploymentManagerService
           where go

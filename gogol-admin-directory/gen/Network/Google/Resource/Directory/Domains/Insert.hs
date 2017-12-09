@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Domains.Insert
     -- * Request Lenses
     , diPayload
     , diCustomer
+    , diFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.domains.insert@ method which the
 -- 'DomainsInsert' request conforms to.
@@ -49,15 +50,17 @@ type DomainsInsertResource =
            "customer" :>
              Capture "customer" Text :>
                "domains" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Domains :> Post '[JSON] Domains
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Domains :> Post '[JSON] Domains
 
 -- | Inserts a domain of the customer.
 --
 -- /See:/ 'domainsInsert' smart constructor.
 data DomainsInsert = DomainsInsert'
-    { _diPayload  :: !Domains
+    { _diPayload :: !Domains
     , _diCustomer :: !Text
+    , _diFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DomainsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data DomainsInsert = DomainsInsert'
 -- * 'diPayload'
 --
 -- * 'diCustomer'
+--
+-- * 'diFields'
 domainsInsert
     :: Domains -- ^ 'diPayload'
     -> Text -- ^ 'diCustomer'
     -> DomainsInsert
-domainsInsert pDiPayload_ pDiCustomer_ =
+domainsInsert pDiPayload_ pDiCustomer_ = 
     DomainsInsert'
     { _diPayload = pDiPayload_
     , _diCustomer = pDiCustomer_
+    , _diFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -82,17 +88,21 @@ diPayload :: Lens' DomainsInsert Domains
 diPayload
   = lens _diPayload (\ s a -> s{_diPayload = a})
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 diCustomer :: Lens' DomainsInsert Text
 diCustomer
   = lens _diCustomer (\ s a -> s{_diCustomer = a})
+
+-- | Selector specifying which fields to include in a partial response.
+diFields :: Lens' DomainsInsert (Maybe Text)
+diFields = lens _diFields (\ s a -> s{_diFields = a})
 
 instance GoogleRequest DomainsInsert where
         type Rs DomainsInsert = Domains
         type Scopes DomainsInsert =
              '["https://www.googleapis.com/auth/admin.directory.domain"]
         requestClient DomainsInsert'{..}
-          = go _diCustomer (Just AltJSON) _diPayload
+          = go _diCustomer _diFields (Just AltJSON) _diPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy DomainsInsertResource)

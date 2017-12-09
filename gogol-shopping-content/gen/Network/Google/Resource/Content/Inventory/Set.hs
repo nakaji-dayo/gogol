@@ -21,8 +21,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Updates price and availability of a product in your Merchant Center
--- account. This operation does not update the expiration date of the
--- product. This method can only be called for non-multi-client accounts.
+-- account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.inventory.set@.
 module Network.Google.Resource.Content.Inventory.Set
@@ -40,10 +39,11 @@ module Network.Google.Resource.Content.Inventory.Set
     , isPayload
     , isProductId
     , isDryRun
+    , isFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.inventory.set@ method which the
 -- 'InventorySet' request conforms to.
@@ -56,21 +56,22 @@ type InventorySetResource =
                "products" :>
                  Capture "productId" Text :>
                    QueryParam "dryRun" Bool :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] InventorySetRequest :>
-                         Post '[JSON] InventorySetResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] InventorySetRequest :>
+                           Post '[JSON] InventorySetResponse
 
 -- | Updates price and availability of a product in your Merchant Center
--- account. This operation does not update the expiration date of the
--- product. This method can only be called for non-multi-client accounts.
+-- account.
 --
 -- /See:/ 'inventorySet' smart constructor.
 data InventorySet = InventorySet'
     { _isMerchantId :: !(Textual Word64)
-    , _isStoreCode  :: !Text
-    , _isPayload    :: !InventorySetRequest
-    , _isProductId  :: !Text
-    , _isDryRun     :: !(Maybe Bool)
+    , _isStoreCode :: !Text
+    , _isPayload :: !InventorySetRequest
+    , _isProductId :: !Text
+    , _isDryRun :: !(Maybe Bool)
+    , _isFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InventorySet' with the minimum fields required to make a request.
@@ -86,22 +87,26 @@ data InventorySet = InventorySet'
 -- * 'isProductId'
 --
 -- * 'isDryRun'
+--
+-- * 'isFields'
 inventorySet
     :: Word64 -- ^ 'isMerchantId'
     -> Text -- ^ 'isStoreCode'
     -> InventorySetRequest -- ^ 'isPayload'
     -> Text -- ^ 'isProductId'
     -> InventorySet
-inventorySet pIsMerchantId_ pIsStoreCode_ pIsPayload_ pIsProductId_ =
+inventorySet pIsMerchantId_ pIsStoreCode_ pIsPayload_ pIsProductId_ = 
     InventorySet'
     { _isMerchantId = _Coerce # pIsMerchantId_
     , _isStoreCode = pIsStoreCode_
     , _isPayload = pIsPayload_
     , _isProductId = pIsProductId_
     , _isDryRun = Nothing
+    , _isFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the account that contains the product. This account cannot be
+-- a multi-client account.
 isMerchantId :: Lens' InventorySet Word64
 isMerchantId
   = lens _isMerchantId (\ s a -> s{_isMerchantId = a})
@@ -118,7 +123,7 @@ isPayload :: Lens' InventorySet InventorySetRequest
 isPayload
   = lens _isPayload (\ s a -> s{_isPayload = a})
 
--- | The ID of the product for which to update price and availability.
+-- | The REST id of the product for which to update price and availability.
 isProductId :: Lens' InventorySet Text
 isProductId
   = lens _isProductId (\ s a -> s{_isProductId = a})
@@ -127,6 +132,10 @@ isProductId
 isDryRun :: Lens' InventorySet (Maybe Bool)
 isDryRun = lens _isDryRun (\ s a -> s{_isDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+isFields :: Lens' InventorySet (Maybe Text)
+isFields = lens _isFields (\ s a -> s{_isFields = a})
+
 instance GoogleRequest InventorySet where
         type Rs InventorySet = InventorySetResponse
         type Scopes InventorySet =
@@ -134,6 +143,7 @@ instance GoogleRequest InventorySet where
         requestClient InventorySet'{..}
           = go _isMerchantId _isStoreCode _isProductId
               _isDryRun
+              _isFields
               (Just AltJSON)
               _isPayload
               shoppingContentService

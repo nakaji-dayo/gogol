@@ -96,6 +96,9 @@ module Network.Google.FusionTables
     -- ** fusiontables.table.patch
     , module Network.Google.Resource.FusionTables.Table.Patch
 
+    -- ** fusiontables.table.refetchSheet
+    , module Network.Google.Resource.FusionTables.Table.RefetchSheet
+
     -- ** fusiontables.table.replaceRows
     , module Network.Google.Resource.FusionTables.Table.ReplaceRows
 
@@ -336,41 +339,42 @@ module Network.Google.FusionTables
     , lsStrokeColor
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.FusionTables.Column.Delete
-import           Network.Google.Resource.FusionTables.Column.Get
-import           Network.Google.Resource.FusionTables.Column.Insert
-import           Network.Google.Resource.FusionTables.Column.List
-import           Network.Google.Resource.FusionTables.Column.Patch
-import           Network.Google.Resource.FusionTables.Column.Update
-import           Network.Google.Resource.FusionTables.Query.SQL
-import           Network.Google.Resource.FusionTables.Query.SQLGet
-import           Network.Google.Resource.FusionTables.Style.Delete
-import           Network.Google.Resource.FusionTables.Style.Get
-import           Network.Google.Resource.FusionTables.Style.Insert
-import           Network.Google.Resource.FusionTables.Style.List
-import           Network.Google.Resource.FusionTables.Style.Patch
-import           Network.Google.Resource.FusionTables.Style.Update
-import           Network.Google.Resource.FusionTables.Table.Copy
-import           Network.Google.Resource.FusionTables.Table.Delete
-import           Network.Google.Resource.FusionTables.Table.Get
-import           Network.Google.Resource.FusionTables.Table.ImportRows
-import           Network.Google.Resource.FusionTables.Table.ImportTable
-import           Network.Google.Resource.FusionTables.Table.Insert
-import           Network.Google.Resource.FusionTables.Table.List
-import           Network.Google.Resource.FusionTables.Table.Patch
-import           Network.Google.Resource.FusionTables.Table.ReplaceRows
-import           Network.Google.Resource.FusionTables.Table.Update
-import           Network.Google.Resource.FusionTables.Task.Delete
-import           Network.Google.Resource.FusionTables.Task.Get
-import           Network.Google.Resource.FusionTables.Task.List
-import           Network.Google.Resource.FusionTables.Template.Delete
-import           Network.Google.Resource.FusionTables.Template.Get
-import           Network.Google.Resource.FusionTables.Template.Insert
-import           Network.Google.Resource.FusionTables.Template.List
-import           Network.Google.Resource.FusionTables.Template.Patch
-import           Network.Google.Resource.FusionTables.Template.Update
+import Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Resource.FusionTables.Column.Delete
+import Network.Google.Resource.FusionTables.Column.Get
+import Network.Google.Resource.FusionTables.Column.Insert
+import Network.Google.Resource.FusionTables.Column.List
+import Network.Google.Resource.FusionTables.Column.Patch
+import Network.Google.Resource.FusionTables.Column.Update
+import Network.Google.Resource.FusionTables.Query.SQL
+import Network.Google.Resource.FusionTables.Query.SQLGet
+import Network.Google.Resource.FusionTables.Style.Delete
+import Network.Google.Resource.FusionTables.Style.Get
+import Network.Google.Resource.FusionTables.Style.Insert
+import Network.Google.Resource.FusionTables.Style.List
+import Network.Google.Resource.FusionTables.Style.Patch
+import Network.Google.Resource.FusionTables.Style.Update
+import Network.Google.Resource.FusionTables.Table.Copy
+import Network.Google.Resource.FusionTables.Table.Delete
+import Network.Google.Resource.FusionTables.Table.Get
+import Network.Google.Resource.FusionTables.Table.ImportRows
+import Network.Google.Resource.FusionTables.Table.ImportTable
+import Network.Google.Resource.FusionTables.Table.Insert
+import Network.Google.Resource.FusionTables.Table.List
+import Network.Google.Resource.FusionTables.Table.Patch
+import Network.Google.Resource.FusionTables.Table.RefetchSheet
+import Network.Google.Resource.FusionTables.Table.ReplaceRows
+import Network.Google.Resource.FusionTables.Table.Update
+import Network.Google.Resource.FusionTables.Task.Delete
+import Network.Google.Resource.FusionTables.Task.Get
+import Network.Google.Resource.FusionTables.Task.List
+import Network.Google.Resource.FusionTables.Template.Delete
+import Network.Google.Resource.FusionTables.Template.Get
+import Network.Google.Resource.FusionTables.Template.Insert
+import Network.Google.Resource.FusionTables.Template.List
+import Network.Google.Resource.FusionTables.Template.Patch
+import Network.Google.Resource.FusionTables.Template.Update
 
 {- $resources
 TODO
@@ -400,6 +404,7 @@ type FusionTablesAPI =
        :<|> ColumnGetResource
        :<|> ColumnDeleteResource
        :<|> ColumnUpdateResource
+       :<|> TableRefetchSheetResource
        :<|> TableInsertResource
        :<|> TableListResource
        :<|> TableCopyResource

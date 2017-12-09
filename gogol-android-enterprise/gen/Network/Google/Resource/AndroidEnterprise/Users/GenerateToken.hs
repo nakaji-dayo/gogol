@@ -38,10 +38,11 @@ module Network.Google.Resource.AndroidEnterprise.Users.GenerateToken
     -- * Request Lenses
     , ugtEnterpriseId
     , ugtUserId
+    , ugtFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.users.generateToken@ method which the
 -- 'UsersGenerateToken' request conforms to.
@@ -53,7 +54,8 @@ type UsersGenerateTokenResource =
              "users" :>
                Capture "userId" Text :>
                  "token" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] UserToken
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] UserToken
 
 -- | Generates a token (activation code) to allow this user to configure
 -- their managed account in the Android Setup Wizard. Revokes any
@@ -63,7 +65,8 @@ type UsersGenerateTokenResource =
 -- /See:/ 'usersGenerateToken' smart constructor.
 data UsersGenerateToken = UsersGenerateToken'
     { _ugtEnterpriseId :: !Text
-    , _ugtUserId       :: !Text
+    , _ugtUserId :: !Text
+    , _ugtFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersGenerateToken' with the minimum fields required to make a request.
@@ -73,14 +76,17 @@ data UsersGenerateToken = UsersGenerateToken'
 -- * 'ugtEnterpriseId'
 --
 -- * 'ugtUserId'
+--
+-- * 'ugtFields'
 usersGenerateToken
     :: Text -- ^ 'ugtEnterpriseId'
     -> Text -- ^ 'ugtUserId'
     -> UsersGenerateToken
-usersGenerateToken pUgtEnterpriseId_ pUgtUserId_ =
+usersGenerateToken pUgtEnterpriseId_ pUgtUserId_ = 
     UsersGenerateToken'
     { _ugtEnterpriseId = pUgtEnterpriseId_
     , _ugtUserId = pUgtUserId_
+    , _ugtFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -94,12 +100,18 @@ ugtUserId :: Lens' UsersGenerateToken Text
 ugtUserId
   = lens _ugtUserId (\ s a -> s{_ugtUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ugtFields :: Lens' UsersGenerateToken (Maybe Text)
+ugtFields
+  = lens _ugtFields (\ s a -> s{_ugtFields = a})
+
 instance GoogleRequest UsersGenerateToken where
         type Rs UsersGenerateToken = UserToken
         type Scopes UsersGenerateToken =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient UsersGenerateToken'{..}
-          = go _ugtEnterpriseId _ugtUserId (Just AltJSON)
+          = go _ugtEnterpriseId _ugtUserId _ugtFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

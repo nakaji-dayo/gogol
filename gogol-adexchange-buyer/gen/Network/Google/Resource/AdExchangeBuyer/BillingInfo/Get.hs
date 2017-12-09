@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.BillingInfo.Get
 
     -- * Request Lenses
     , bigAccountId
+    , bigFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.billingInfo.get@ method which the
 -- 'BillingInfoGet' request conforms to.
@@ -46,13 +47,15 @@ type BillingInfoGetResource =
        "v1.4" :>
          "billinginfo" :>
            Capture "accountId" (Textual Int32) :>
-             QueryParam "alt" AltJSON :> Get '[JSON] BillingInfo
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] BillingInfo
 
 -- | Returns the billing information for one account specified by account ID.
 --
 -- /See:/ 'billingInfoGet' smart constructor.
-newtype BillingInfoGet = BillingInfoGet'
-    { _bigAccountId :: Textual Int32
+data BillingInfoGet = BillingInfoGet'
+    { _bigAccountId :: !(Textual Int32)
+    , _bigFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingInfoGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype BillingInfoGet = BillingInfoGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'bigAccountId'
+--
+-- * 'bigFields'
 billingInfoGet
     :: Int32 -- ^ 'bigAccountId'
     -> BillingInfoGet
-billingInfoGet pBigAccountId_ =
+billingInfoGet pBigAccountId_ = 
     BillingInfoGet'
     { _bigAccountId = _Coerce # pBigAccountId_
+    , _bigFields = Nothing
     }
 
 -- | The account id.
@@ -74,12 +80,17 @@ bigAccountId
   = lens _bigAccountId (\ s a -> s{_bigAccountId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+bigFields :: Lens' BillingInfoGet (Maybe Text)
+bigFields
+  = lens _bigFields (\ s a -> s{_bigFields = a})
+
 instance GoogleRequest BillingInfoGet where
         type Rs BillingInfoGet = BillingInfo
         type Scopes BillingInfoGet =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient BillingInfoGet'{..}
-          = go _bigAccountId (Just AltJSON)
+          = go _bigAccountId _bigFields (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient (Proxy :: Proxy BillingInfoGetResource)

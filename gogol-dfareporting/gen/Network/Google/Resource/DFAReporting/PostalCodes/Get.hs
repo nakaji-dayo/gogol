@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.PostalCodes.Get
     -- * Request Lenses
     , pcgProFileId
     , pcgCode
+    , pcgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.postalCodes.get@ method which the
 -- 'PostalCodesGet' request conforms to.
 type PostalCodesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "postalCodes" :>
                Capture "code" Text :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] PostalCode
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] PostalCode
 
 -- | Gets one postal code by ID.
 --
 -- /See:/ 'postalCodesGet' smart constructor.
 data PostalCodesGet = PostalCodesGet'
     { _pcgProFileId :: !(Textual Int64)
-    , _pcgCode      :: !Text
+    , _pcgCode :: !Text
+    , _pcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostalCodesGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PostalCodesGet = PostalCodesGet'
 -- * 'pcgProFileId'
 --
 -- * 'pcgCode'
+--
+-- * 'pcgFields'
 postalCodesGet
     :: Int64 -- ^ 'pcgProFileId'
     -> Text -- ^ 'pcgCode'
     -> PostalCodesGet
-postalCodesGet pPcgProFileId_ pPcgCode_ =
+postalCodesGet pPcgProFileId_ pPcgCode_ = 
     PostalCodesGet'
     { _pcgProFileId = _Coerce # pPcgProFileId_
     , _pcgCode = pPcgCode_
+    , _pcgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -86,12 +92,17 @@ pcgProFileId
 pcgCode :: Lens' PostalCodesGet Text
 pcgCode = lens _pcgCode (\ s a -> s{_pcgCode = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pcgFields :: Lens' PostalCodesGet (Maybe Text)
+pcgFields
+  = lens _pcgFields (\ s a -> s{_pcgFields = a})
+
 instance GoogleRequest PostalCodesGet where
         type Rs PostalCodesGet = PostalCode
         type Scopes PostalCodesGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PostalCodesGet'{..}
-          = go _pcgProFileId _pcgCode (Just AltJSON)
+          = go _pcgProFileId _pcgCode _pcgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy PostalCodesGetResource)

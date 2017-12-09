@@ -34,10 +34,11 @@ module Network.Google.Resource.Books.CloudLoading.UpdateBook
 
     -- * Request Lenses
     , clubPayload
+    , clubFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.cloudloading.updateBook@ method which the
 -- 'CloudLoadingUpdateBook' request conforms to.
@@ -46,15 +47,17 @@ type CloudLoadingUpdateBookResource =
        "v1" :>
          "cloudloading" :>
            "updateBook" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] BooksCloudLoadingResource :>
-                 Post '[JSON] BooksCloudLoadingResource
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] BooksCloudLoadingResource :>
+                   Post '[JSON] BooksCloudLoadingResource
 
 -- |
 --
 -- /See:/ 'cloudLoadingUpdateBook' smart constructor.
-newtype CloudLoadingUpdateBook = CloudLoadingUpdateBook'
-    { _clubPayload :: BooksCloudLoadingResource
+data CloudLoadingUpdateBook = CloudLoadingUpdateBook'
+    { _clubPayload :: !BooksCloudLoadingResource
+    , _clubFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CloudLoadingUpdateBook' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype CloudLoadingUpdateBook = CloudLoadingUpdateBook'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'clubPayload'
+--
+-- * 'clubFields'
 cloudLoadingUpdateBook
     :: BooksCloudLoadingResource -- ^ 'clubPayload'
     -> CloudLoadingUpdateBook
-cloudLoadingUpdateBook pClubPayload_ =
+cloudLoadingUpdateBook pClubPayload_ = 
     CloudLoadingUpdateBook'
     { _clubPayload = pClubPayload_
+    , _clubFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,13 +81,19 @@ clubPayload :: Lens' CloudLoadingUpdateBook BooksCloudLoadingResource
 clubPayload
   = lens _clubPayload (\ s a -> s{_clubPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+clubFields :: Lens' CloudLoadingUpdateBook (Maybe Text)
+clubFields
+  = lens _clubFields (\ s a -> s{_clubFields = a})
+
 instance GoogleRequest CloudLoadingUpdateBook where
         type Rs CloudLoadingUpdateBook =
              BooksCloudLoadingResource
         type Scopes CloudLoadingUpdateBook =
              '["https://www.googleapis.com/auth/books"]
         requestClient CloudLoadingUpdateBook'{..}
-          = go (Just AltJSON) _clubPayload booksService
+          = go _clubFields (Just AltJSON) _clubPayload
+              booksService
           where go
                   = buildClient
                       (Proxy :: Proxy CloudLoadingUpdateBookResource)

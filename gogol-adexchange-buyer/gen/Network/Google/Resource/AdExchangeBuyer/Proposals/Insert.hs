@@ -34,10 +34,11 @@ module Network.Google.Resource.AdExchangeBuyer.Proposals.Insert
 
     -- * Request Lenses
     , piPayload
+    , piFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.proposals.insert@ method which the
 -- 'ProposalsInsert' request conforms to.
@@ -46,15 +47,17 @@ type ProposalsInsertResource =
        "v1.4" :>
          "proposals" :>
            "insert" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] CreateOrdersRequest :>
-                 Post '[JSON] CreateOrdersResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] CreateOrdersRequest :>
+                   Post '[JSON] CreateOrdersResponse
 
 -- | Create the given list of proposals
 --
 -- /See:/ 'proposalsInsert' smart constructor.
-newtype ProposalsInsert = ProposalsInsert'
-    { _piPayload :: CreateOrdersRequest
+data ProposalsInsert = ProposalsInsert'
+    { _piPayload :: !CreateOrdersRequest
+    , _piFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProposalsInsert' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype ProposalsInsert = ProposalsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'piPayload'
+--
+-- * 'piFields'
 proposalsInsert
     :: CreateOrdersRequest -- ^ 'piPayload'
     -> ProposalsInsert
-proposalsInsert pPiPayload_ =
+proposalsInsert pPiPayload_ = 
     ProposalsInsert'
     { _piPayload = pPiPayload_
+    , _piFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,12 +81,17 @@ piPayload :: Lens' ProposalsInsert CreateOrdersRequest
 piPayload
   = lens _piPayload (\ s a -> s{_piPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+piFields :: Lens' ProposalsInsert (Maybe Text)
+piFields = lens _piFields (\ s a -> s{_piFields = a})
+
 instance GoogleRequest ProposalsInsert where
         type Rs ProposalsInsert = CreateOrdersResponse
         type Scopes ProposalsInsert =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient ProposalsInsert'{..}
-          = go (Just AltJSON) _piPayload adExchangeBuyerService
+          = go _piFields (Just AltJSON) _piPayload
+              adExchangeBuyerService
           where go
                   = buildClient
                       (Proxy :: Proxy ProposalsInsertResource)

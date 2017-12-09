@@ -38,10 +38,11 @@ module Network.Google.Resource.AdSense.Accounts.AdUnits.CustomChannels.List
     , aaucclAccountId
     , aaucclPageToken
     , aaucclMaxResults
+    , aaucclFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.adunits.customchannels.list@ method which the
 -- 'AccountsAdUnitsCustomChannelsList' request conforms to.
@@ -57,18 +58,20 @@ type AccountsAdUnitsCustomChannelsListResource =
                      "customchannels" :>
                        QueryParam "pageToken" Text :>
                          QueryParam "maxResults" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] CustomChannels
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] CustomChannels
 
 -- | List all custom channels which the specified ad unit belongs to.
 --
 -- /See:/ 'accountsAdUnitsCustomChannelsList' smart constructor.
 data AccountsAdUnitsCustomChannelsList = AccountsAdUnitsCustomChannelsList'
-    { _aaucclAdUnitId   :: !Text
+    { _aaucclAdUnitId :: !Text
     , _aaucclAdClientId :: !Text
-    , _aaucclAccountId  :: !Text
-    , _aaucclPageToken  :: !(Maybe Text)
+    , _aaucclAccountId :: !Text
+    , _aaucclPageToken :: !(Maybe Text)
     , _aaucclMaxResults :: !(Maybe (Textual Int32))
+    , _aaucclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsCustomChannelsList' with the minimum fields required to make a request.
@@ -84,18 +87,21 @@ data AccountsAdUnitsCustomChannelsList = AccountsAdUnitsCustomChannelsList'
 -- * 'aaucclPageToken'
 --
 -- * 'aaucclMaxResults'
+--
+-- * 'aaucclFields'
 accountsAdUnitsCustomChannelsList
     :: Text -- ^ 'aaucclAdUnitId'
     -> Text -- ^ 'aaucclAdClientId'
     -> Text -- ^ 'aaucclAccountId'
     -> AccountsAdUnitsCustomChannelsList
-accountsAdUnitsCustomChannelsList pAaucclAdUnitId_ pAaucclAdClientId_ pAaucclAccountId_ =
+accountsAdUnitsCustomChannelsList pAaucclAdUnitId_ pAaucclAdClientId_ pAaucclAccountId_ = 
     AccountsAdUnitsCustomChannelsList'
     { _aaucclAdUnitId = pAaucclAdUnitId_
     , _aaucclAdClientId = pAaucclAdClientId_
     , _aaucclAccountId = pAaucclAccountId_
     , _aaucclPageToken = Nothing
     , _aaucclMaxResults = Nothing
+    , _aaucclFields = Nothing
     }
 
 -- | Ad unit for which to list custom channels.
@@ -132,6 +138,11 @@ aaucclMaxResults
       (\ s a -> s{_aaucclMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aaucclFields :: Lens' AccountsAdUnitsCustomChannelsList (Maybe Text)
+aaucclFields
+  = lens _aaucclFields (\ s a -> s{_aaucclFields = a})
+
 instance GoogleRequest
          AccountsAdUnitsCustomChannelsList where
         type Rs AccountsAdUnitsCustomChannelsList =
@@ -144,6 +155,7 @@ instance GoogleRequest
               _aaucclAdUnitId
               _aaucclPageToken
               _aaucclMaxResults
+              _aaucclFields
               (Just AltJSON)
               adSenseService
           where go

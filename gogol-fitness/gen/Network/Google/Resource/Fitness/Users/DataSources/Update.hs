@@ -38,10 +38,11 @@ module Network.Google.Resource.Fitness.Users.DataSources.Update
     , udsuDataSourceId
     , udsuPayload
     , udsuUserId
+    , udsuFields
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.update@ method which the
 -- 'UsersDataSourcesUpdate' request conforms to.
@@ -52,8 +53,9 @@ type UsersDataSourcesUpdateResource =
            Capture "userId" Text :>
              "dataSources" :>
                Capture "dataSourceId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DataSource :> Put '[JSON] DataSource
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DataSource :> Put '[JSON] DataSource
 
 -- | Updates the specified data source. The dataStreamId, dataType, type,
 -- dataStreamName, and device properties with the exception of version,
@@ -62,8 +64,9 @@ type UsersDataSourcesUpdateResource =
 -- /See:/ 'usersDataSourcesUpdate' smart constructor.
 data UsersDataSourcesUpdate = UsersDataSourcesUpdate'
     { _udsuDataSourceId :: !Text
-    , _udsuPayload      :: !DataSource
-    , _udsuUserId       :: !Text
+    , _udsuPayload :: !DataSource
+    , _udsuUserId :: !Text
+    , _udsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDataSourcesUpdate' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data UsersDataSourcesUpdate = UsersDataSourcesUpdate'
 -- * 'udsuPayload'
 --
 -- * 'udsuUserId'
+--
+-- * 'udsuFields'
 usersDataSourcesUpdate
     :: Text -- ^ 'udsuDataSourceId'
     -> DataSource -- ^ 'udsuPayload'
     -> Text -- ^ 'udsuUserId'
     -> UsersDataSourcesUpdate
-usersDataSourcesUpdate pUdsuDataSourceId_ pUdsuPayload_ pUdsuUserId_ =
+usersDataSourcesUpdate pUdsuDataSourceId_ pUdsuPayload_ pUdsuUserId_ = 
     UsersDataSourcesUpdate'
     { _udsuDataSourceId = pUdsuDataSourceId_
     , _udsuPayload = pUdsuPayload_
     , _udsuUserId = pUdsuUserId_
+    , _udsuFields = Nothing
     }
 
 -- | The data stream ID of the data source to update.
@@ -104,6 +110,11 @@ udsuUserId :: Lens' UsersDataSourcesUpdate Text
 udsuUserId
   = lens _udsuUserId (\ s a -> s{_udsuUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udsuFields :: Lens' UsersDataSourcesUpdate (Maybe Text)
+udsuFields
+  = lens _udsuFields (\ s a -> s{_udsuFields = a})
+
 instance GoogleRequest UsersDataSourcesUpdate where
         type Rs UsersDataSourcesUpdate = DataSource
         type Scopes UsersDataSourcesUpdate =
@@ -117,7 +128,8 @@ instance GoogleRequest UsersDataSourcesUpdate where
                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
                "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
         requestClient UsersDataSourcesUpdate'{..}
-          = go _udsuUserId _udsuDataSourceId (Just AltJSON)
+          = go _udsuUserId _udsuDataSourceId _udsuFields
+              (Just AltJSON)
               _udsuPayload
               fitnessService
           where go

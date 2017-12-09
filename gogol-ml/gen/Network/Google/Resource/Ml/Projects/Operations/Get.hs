@@ -24,7 +24,7 @@
 -- method to poll the operation result at intervals as recommended by the
 -- API service.
 --
--- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Reference> for @ml.projects.operations.get@.
+-- /See:/ <https://cloud.google.com/ml/ Google Cloud Machine Learning Engine Reference> for @ml.projects.operations.get@.
 module Network.Google.Resource.Ml.Projects.Operations.Get
     (
     -- * REST Resource
@@ -42,16 +42,17 @@ module Network.Google.Resource.Ml.Projects.Operations.Get
     , pogUploadType
     , pogBearerToken
     , pogName
+    , pogFields
     , pogCallback
     ) where
 
-import           Network.Google.MachineLearning.Types
-import           Network.Google.Prelude
+import Network.Google.MachineLearning.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @ml.projects.operations.get@ method which the
 -- 'ProjectsOperationsGet' request conforms to.
 type ProjectsOperationsGetResource =
-     "v1beta1" :>
+     "v1" :>
        Capture "name" Text :>
          QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
@@ -60,8 +61,9 @@ type ProjectsOperationsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] GoogleLongrunning__Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] GoogleLongrunning__Operation
 
 -- | Gets the latest state of a long-running operation. Clients can use this
 -- method to poll the operation result at intervals as recommended by the
@@ -69,14 +71,15 @@ type ProjectsOperationsGetResource =
 --
 -- /See:/ 'projectsOperationsGet' smart constructor.
 data ProjectsOperationsGet = ProjectsOperationsGet'
-    { _pogXgafv          :: !(Maybe Xgafv)
+    { _pogXgafv :: !(Maybe Xgafv)
     , _pogUploadProtocol :: !(Maybe Text)
-    , _pogPp             :: !Bool
-    , _pogAccessToken    :: !(Maybe Text)
-    , _pogUploadType     :: !(Maybe Text)
-    , _pogBearerToken    :: !(Maybe Text)
-    , _pogName           :: !Text
-    , _pogCallback       :: !(Maybe Text)
+    , _pogPp :: !Bool
+    , _pogAccessToken :: !(Maybe Text)
+    , _pogUploadType :: !(Maybe Text)
+    , _pogBearerToken :: !(Maybe Text)
+    , _pogName :: !Text
+    , _pogFields :: !(Maybe Text)
+    , _pogCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsOperationsGet' with the minimum fields required to make a request.
@@ -97,11 +100,13 @@ data ProjectsOperationsGet = ProjectsOperationsGet'
 --
 -- * 'pogName'
 --
+-- * 'pogFields'
+--
 -- * 'pogCallback'
 projectsOperationsGet
     :: Text -- ^ 'pogName'
     -> ProjectsOperationsGet
-projectsOperationsGet pPogName_ =
+projectsOperationsGet pPogName_ = 
     ProjectsOperationsGet'
     { _pogXgafv = Nothing
     , _pogUploadProtocol = Nothing
@@ -110,6 +115,7 @@ projectsOperationsGet pPogName_ =
     , _pogUploadType = Nothing
     , _pogBearerToken = Nothing
     , _pogName = pPogName_
+    , _pogFields = Nothing
     , _pogCallback = Nothing
     }
 
@@ -149,6 +155,11 @@ pogBearerToken
 pogName :: Lens' ProjectsOperationsGet Text
 pogName = lens _pogName (\ s a -> s{_pogName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pogFields :: Lens' ProjectsOperationsGet (Maybe Text)
+pogFields
+  = lens _pogFields (\ s a -> s{_pogFields = a})
+
 -- | JSONP
 pogCallback :: Lens' ProjectsOperationsGet (Maybe Text)
 pogCallback
@@ -166,6 +177,7 @@ instance GoogleRequest ProjectsOperationsGet where
               _pogUploadType
               _pogBearerToken
               _pogCallback
+              _pogFields
               (Just AltJSON)
               machineLearningService
           where go

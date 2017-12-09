@@ -26,7 +26,9 @@
 -- This operation is marked as DONE when the group is created even if the
 -- instances in the group have not yet been created. You must separately
 -- verify the status of the individual instances with the
--- listmanagedinstances method.
+-- listmanagedinstances method. A managed instance group can have up to
+-- 1000 VM instances per group. Please contact Cloud Support if you need an
+-- increase in this limit.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.instanceGroupManagers.insert@.
 module Network.Google.Resource.Compute.InstanceGroupManagers.Insert
@@ -39,13 +41,15 @@ module Network.Google.Resource.Compute.InstanceGroupManagers.Insert
     , InstanceGroupManagersInsert
 
     -- * Request Lenses
+    , igmiRequestId
     , igmiProject
     , igmiZone
     , igmiPayload
+    , igmiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceGroupManagers.insert@ method which the
 -- 'InstanceGroupManagersInsert' request conforms to.
@@ -57,9 +61,11 @@ type InstanceGroupManagersInsertResource =
              "zones" :>
                Capture "zone" Text :>
                  "instanceGroupManagers" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] InstanceGroupManager :>
-                       Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] InstanceGroupManager :>
+                           Post '[JSON] Operation
 
 -- | Creates a managed instance group using the information that you specify
 -- in the request. After the group is created, it schedules an action to
@@ -67,35 +73,60 @@ type InstanceGroupManagersInsertResource =
 -- This operation is marked as DONE when the group is created even if the
 -- instances in the group have not yet been created. You must separately
 -- verify the status of the individual instances with the
--- listmanagedinstances method.
+-- listmanagedinstances method. A managed instance group can have up to
+-- 1000 VM instances per group. Please contact Cloud Support if you need an
+-- increase in this limit.
 --
 -- /See:/ 'instanceGroupManagersInsert' smart constructor.
 data InstanceGroupManagersInsert = InstanceGroupManagersInsert'
-    { _igmiProject :: !Text
-    , _igmiZone    :: !Text
+    { _igmiRequestId :: !(Maybe Text)
+    , _igmiProject :: !Text
+    , _igmiZone :: !Text
     , _igmiPayload :: !InstanceGroupManager
+    , _igmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceGroupManagersInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'igmiRequestId'
+--
 -- * 'igmiProject'
 --
 -- * 'igmiZone'
 --
 -- * 'igmiPayload'
+--
+-- * 'igmiFields'
 instanceGroupManagersInsert
     :: Text -- ^ 'igmiProject'
     -> Text -- ^ 'igmiZone'
     -> InstanceGroupManager -- ^ 'igmiPayload'
     -> InstanceGroupManagersInsert
-instanceGroupManagersInsert pIgmiProject_ pIgmiZone_ pIgmiPayload_ =
+instanceGroupManagersInsert pIgmiProject_ pIgmiZone_ pIgmiPayload_ = 
     InstanceGroupManagersInsert'
-    { _igmiProject = pIgmiProject_
+    { _igmiRequestId = Nothing
+    , _igmiProject = pIgmiProject_
     , _igmiZone = pIgmiZone_
     , _igmiPayload = pIgmiPayload_
+    , _igmiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+igmiRequestId :: Lens' InstanceGroupManagersInsert (Maybe Text)
+igmiRequestId
+  = lens _igmiRequestId
+      (\ s a -> s{_igmiRequestId = a})
 
 -- | Project ID for this request.
 igmiProject :: Lens' InstanceGroupManagersInsert Text
@@ -112,6 +143,11 @@ igmiPayload :: Lens' InstanceGroupManagersInsert InstanceGroupManager
 igmiPayload
   = lens _igmiPayload (\ s a -> s{_igmiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+igmiFields :: Lens' InstanceGroupManagersInsert (Maybe Text)
+igmiFields
+  = lens _igmiFields (\ s a -> s{_igmiFields = a})
+
 instance GoogleRequest InstanceGroupManagersInsert
          where
         type Rs InstanceGroupManagersInsert = Operation
@@ -119,7 +155,9 @@ instance GoogleRequest InstanceGroupManagersInsert
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceGroupManagersInsert'{..}
-          = go _igmiProject _igmiZone (Just AltJSON)
+          = go _igmiProject _igmiZone _igmiRequestId
+              _igmiFields
+              (Just AltJSON)
               _igmiPayload
               computeService
           where go

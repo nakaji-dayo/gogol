@@ -36,10 +36,11 @@ module Network.Google.Resource.Books.Personalizedstream.Get
     , pgLocale
     , pgMaxAllowedMaturityRating
     , pgSource
+    , pgFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.personalizedstream.get@ method which the
 -- 'PersonalizedstreamGet' request conforms to.
@@ -53,16 +54,18 @@ type PersonalizedstreamGetResource =
                  PersonalizedstreamGetMaxAllowedMaturityRating
                  :>
                  QueryParam "source" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] Discoveryclusters
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] Discoveryclusters
 
 -- | Returns a stream of personalized book clusters
 --
 -- /See:/ 'personalizedstreamGet' smart constructor.
 data PersonalizedstreamGet = PersonalizedstreamGet'
-    { _pgLocale                   :: !(Maybe Text)
+    { _pgLocale :: !(Maybe Text)
     , _pgMaxAllowedMaturityRating :: !(Maybe PersonalizedstreamGetMaxAllowedMaturityRating)
-    , _pgSource                   :: !(Maybe Text)
+    , _pgSource :: !(Maybe Text)
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PersonalizedstreamGet' with the minimum fields required to make a request.
@@ -74,13 +77,16 @@ data PersonalizedstreamGet = PersonalizedstreamGet'
 -- * 'pgMaxAllowedMaturityRating'
 --
 -- * 'pgSource'
+--
+-- * 'pgFields'
 personalizedstreamGet
     :: PersonalizedstreamGet
-personalizedstreamGet =
+personalizedstreamGet = 
     PersonalizedstreamGet'
     { _pgLocale = Nothing
     , _pgMaxAllowedMaturityRating = Nothing
     , _pgSource = Nothing
+    , _pgFields = Nothing
     }
 
 -- | ISO-639-1 language and ISO-3166-1 country code. Ex: \'en_US\'. Used for
@@ -99,12 +105,17 @@ pgMaxAllowedMaturityRating
 pgSource :: Lens' PersonalizedstreamGet (Maybe Text)
 pgSource = lens _pgSource (\ s a -> s{_pgSource = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' PersonalizedstreamGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
+
 instance GoogleRequest PersonalizedstreamGet where
         type Rs PersonalizedstreamGet = Discoveryclusters
         type Scopes PersonalizedstreamGet =
              '["https://www.googleapis.com/auth/books"]
         requestClient PersonalizedstreamGet'{..}
           = go _pgLocale _pgMaxAllowedMaturityRating _pgSource
+              _pgFields
               (Just AltJSON)
               booksService
           where go

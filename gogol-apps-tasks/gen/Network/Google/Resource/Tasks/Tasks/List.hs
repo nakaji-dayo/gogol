@@ -44,10 +44,11 @@ module Network.Google.Resource.Tasks.Tasks.List
     , tlCompletedMin
     , tlPageToken
     , tlMaxResults
+    , tlFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.list@ method which the
 -- 'TasksList' request conforms to.
@@ -67,23 +68,26 @@ type TasksListResource =
                              QueryParam "completedMin" Text :>
                                QueryParam "pageToken" Text :>
                                  QueryParam "maxResults" (Textual Int64) :>
-                                   QueryParam "alt" AltJSON :> Get '[JSON] Tasks
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :>
+                                       Get '[JSON] Tasks
 
 -- | Returns all tasks in the specified task list.
 --
 -- /See:/ 'tasksList' smart constructor.
 data TasksList = TasksList'
-    { _tlDueMax        :: !(Maybe Text)
-    , _tlShowDeleted   :: !(Maybe Bool)
+    { _tlDueMax :: !(Maybe Text)
+    , _tlShowDeleted :: !(Maybe Bool)
     , _tlShowCompleted :: !(Maybe Bool)
-    , _tlDueMin        :: !(Maybe Text)
-    , _tlShowHidden    :: !(Maybe Bool)
-    , _tlCompletedMax  :: !(Maybe Text)
-    , _tlUpdatedMin    :: !(Maybe Text)
-    , _tlTaskList      :: !Text
-    , _tlCompletedMin  :: !(Maybe Text)
-    , _tlPageToken     :: !(Maybe Text)
-    , _tlMaxResults    :: !(Maybe (Textual Int64))
+    , _tlDueMin :: !(Maybe Text)
+    , _tlShowHidden :: !(Maybe Bool)
+    , _tlCompletedMax :: !(Maybe Text)
+    , _tlUpdatedMin :: !(Maybe Text)
+    , _tlTaskList :: !Text
+    , _tlCompletedMin :: !(Maybe Text)
+    , _tlPageToken :: !(Maybe Text)
+    , _tlMaxResults :: !(Maybe (Textual Int64))
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksList' with the minimum fields required to make a request.
@@ -111,10 +115,12 @@ data TasksList = TasksList'
 -- * 'tlPageToken'
 --
 -- * 'tlMaxResults'
+--
+-- * 'tlFields'
 tasksList
     :: Text -- ^ 'tlTaskList'
     -> TasksList
-tasksList pTlTaskList_ =
+tasksList pTlTaskList_ = 
     TasksList'
     { _tlDueMax = Nothing
     , _tlShowDeleted = Nothing
@@ -127,6 +133,7 @@ tasksList pTlTaskList_ =
     , _tlCompletedMin = Nothing
     , _tlPageToken = Nothing
     , _tlMaxResults = Nothing
+    , _tlFields = Nothing
     }
 
 -- | Upper bound for a task\'s due date (as a RFC 3339 timestamp) to filter
@@ -197,6 +204,10 @@ tlMaxResults
   = lens _tlMaxResults (\ s a -> s{_tlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TasksList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TasksList where
         type Rs TasksList = Tasks
         type Scopes TasksList =
@@ -212,6 +223,7 @@ instance GoogleRequest TasksList where
               _tlCompletedMin
               _tlPageToken
               _tlMaxResults
+              _tlFields
               (Just AltJSON)
               appsTasksService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Schemas.Patch
     , spPayload
     , spCustomerId
     , spSchemaKey
+    , spFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.schemas.patch@ method which the
 -- 'SchemasPatch' request conforms to.
@@ -51,16 +52,18 @@ type SchemasPatchResource =
              Capture "customerId" Text :>
                "schemas" :>
                  Capture "schemaKey" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Schema :> Patch '[JSON] Schema
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Schema :> Patch '[JSON] Schema
 
 -- | Update schema. This method supports patch semantics.
 --
 -- /See:/ 'schemasPatch' smart constructor.
 data SchemasPatch = SchemasPatch'
-    { _spPayload    :: !Schema
+    { _spPayload :: !Schema
     , _spCustomerId :: !Text
-    , _spSchemaKey  :: !Text
+    , _spSchemaKey :: !Text
+    , _spFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SchemasPatch' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data SchemasPatch = SchemasPatch'
 -- * 'spCustomerId'
 --
 -- * 'spSchemaKey'
+--
+-- * 'spFields'
 schemasPatch
     :: Schema -- ^ 'spPayload'
     -> Text -- ^ 'spCustomerId'
     -> Text -- ^ 'spSchemaKey'
     -> SchemasPatch
-schemasPatch pSpPayload_ pSpCustomerId_ pSpSchemaKey_ =
+schemasPatch pSpPayload_ pSpCustomerId_ pSpSchemaKey_ = 
     SchemasPatch'
     { _spPayload = pSpPayload_
     , _spCustomerId = pSpCustomerId_
     , _spSchemaKey = pSpSchemaKey_
+    , _spFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -89,22 +95,27 @@ spPayload :: Lens' SchemasPatch Schema
 spPayload
   = lens _spPayload (\ s a -> s{_spPayload = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 spCustomerId :: Lens' SchemasPatch Text
 spCustomerId
   = lens _spCustomerId (\ s a -> s{_spCustomerId = a})
 
--- | Name or immutable Id of the schema.
+-- | Name or immutable ID of the schema.
 spSchemaKey :: Lens' SchemasPatch Text
 spSchemaKey
   = lens _spSchemaKey (\ s a -> s{_spSchemaKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+spFields :: Lens' SchemasPatch (Maybe Text)
+spFields = lens _spFields (\ s a -> s{_spFields = a})
 
 instance GoogleRequest SchemasPatch where
         type Rs SchemasPatch = Schema
         type Scopes SchemasPatch =
              '["https://www.googleapis.com/auth/admin.directory.userschema"]
         requestClient SchemasPatch'{..}
-          = go _spCustomerId _spSchemaKey (Just AltJSON)
+          = go _spCustomerId _spSchemaKey _spFields
+              (Just AltJSON)
               _spPayload
               directoryService
           where go

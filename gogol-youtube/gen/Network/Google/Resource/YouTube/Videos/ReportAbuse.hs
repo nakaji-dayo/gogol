@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Videos.ReportAbuse
     -- * Request Lenses
     , vraPayload
     , vraOnBehalfOfContentOwner
+    , vraFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.videos.reportAbuse@ method which the
 -- 'VideosReportAbuse' request conforms to.
@@ -48,15 +49,17 @@ type VideosReportAbuseResource =
          "videos" :>
            "reportAbuse" :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] VideoAbuseReport :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] VideoAbuseReport :> Post '[JSON] ()
 
 -- | Report abuse for a video.
 --
 -- /See:/ 'videosReportAbuse' smart constructor.
 data VideosReportAbuse = VideosReportAbuse'
-    { _vraPayload                :: !VideoAbuseReport
+    { _vraPayload :: !VideoAbuseReport
     , _vraOnBehalfOfContentOwner :: !(Maybe Text)
+    , _vraFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VideosReportAbuse' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data VideosReportAbuse = VideosReportAbuse'
 -- * 'vraPayload'
 --
 -- * 'vraOnBehalfOfContentOwner'
+--
+-- * 'vraFields'
 videosReportAbuse
     :: VideoAbuseReport -- ^ 'vraPayload'
     -> VideosReportAbuse
-videosReportAbuse pVraPayload_ =
+videosReportAbuse pVraPayload_ = 
     VideosReportAbuse'
     { _vraPayload = pVraPayload_
     , _vraOnBehalfOfContentOwner = Nothing
+    , _vraFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -95,6 +101,11 @@ vraOnBehalfOfContentOwner
   = lens _vraOnBehalfOfContentOwner
       (\ s a -> s{_vraOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+vraFields :: Lens' VideosReportAbuse (Maybe Text)
+vraFields
+  = lens _vraFields (\ s a -> s{_vraFields = a})
+
 instance GoogleRequest VideosReportAbuse where
         type Rs VideosReportAbuse = ()
         type Scopes VideosReportAbuse =
@@ -102,7 +113,8 @@ instance GoogleRequest VideosReportAbuse where
                "https://www.googleapis.com/auth/youtube.force-ssl",
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient VideosReportAbuse'{..}
-          = go _vraOnBehalfOfContentOwner (Just AltJSON)
+          = go _vraOnBehalfOfContentOwner _vraFields
+              (Just AltJSON)
               _vraPayload
               youTubeService
           where go

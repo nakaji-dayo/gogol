@@ -42,10 +42,11 @@ module Network.Google.Resource.Blogger.Comments.List
     , clPostId
     , clPageToken
     , clMaxResults
+    , clFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.list@ method which the
 -- 'CommentsList' request conforms to.
@@ -64,22 +65,24 @@ type CommentsListResource =
                            QueryParam "view" CommentsListView :>
                              QueryParam "pageToken" Text :>
                                QueryParam "maxResults" (Textual Word32) :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] CommentList
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] CommentList
 
 -- | Retrieves the comments for a post, possibly filtered.
 --
 -- /See:/ 'commentsList' smart constructor.
 data CommentsList = CommentsList'
-    { _clStatus      :: !(Maybe [CommentsListStatus])
-    , _clEndDate     :: !(Maybe DateTime')
-    , _clBlogId      :: !Text
-    , _clStartDate   :: !(Maybe DateTime')
+    { _clStatus :: !(Maybe [CommentsListStatus])
+    , _clEndDate :: !(Maybe DateTime')
+    , _clBlogId :: !Text
+    , _clStartDate :: !(Maybe DateTime')
     , _clFetchBodies :: !(Maybe Bool)
-    , _clView        :: !(Maybe CommentsListView)
-    , _clPostId      :: !Text
-    , _clPageToken   :: !(Maybe Text)
-    , _clMaxResults  :: !(Maybe (Textual Word32))
+    , _clView :: !(Maybe CommentsListView)
+    , _clPostId :: !Text
+    , _clPageToken :: !(Maybe Text)
+    , _clMaxResults :: !(Maybe (Textual Word32))
+    , _clFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsList' with the minimum fields required to make a request.
@@ -103,11 +106,13 @@ data CommentsList = CommentsList'
 -- * 'clPageToken'
 --
 -- * 'clMaxResults'
+--
+-- * 'clFields'
 commentsList
     :: Text -- ^ 'clBlogId'
     -> Text -- ^ 'clPostId'
     -> CommentsList
-commentsList pClBlogId_ pClPostId_ =
+commentsList pClBlogId_ pClPostId_ = 
     CommentsList'
     { _clStatus = Nothing
     , _clEndDate = Nothing
@@ -118,6 +123,7 @@ commentsList pClBlogId_ pClPostId_ =
     , _clPostId = pClPostId_
     , _clPageToken = Nothing
     , _clMaxResults = Nothing
+    , _clFields = Nothing
     }
 
 clStatus :: Lens' CommentsList [CommentsListStatus]
@@ -168,6 +174,10 @@ clMaxResults
   = lens _clMaxResults (\ s a -> s{_clMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+clFields :: Lens' CommentsList (Maybe Text)
+clFields = lens _clFields (\ s a -> s{_clFields = a})
+
 instance GoogleRequest CommentsList where
         type Rs CommentsList = CommentList
         type Scopes CommentsList =
@@ -181,6 +191,7 @@ instance GoogleRequest CommentsList where
               _clView
               _clPageToken
               _clMaxResults
+              _clFields
               (Just AltJSON)
               bloggerService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.AdSense.Accounts.Savedadstyles.List
     , aslAccountId
     , aslPageToken
     , aslMaxResults
+    , aslFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.savedadstyles.list@ method which the
 -- 'AccountsSavedadstylesList' request conforms to.
@@ -51,15 +52,17 @@ type AccountsSavedadstylesListResource =
              "savedadstyles" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Int32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyles
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyles
 
 -- | List all saved ad styles in the specified account.
 --
 -- /See:/ 'accountsSavedadstylesList' smart constructor.
 data AccountsSavedadstylesList = AccountsSavedadstylesList'
-    { _aslAccountId  :: !Text
-    , _aslPageToken  :: !(Maybe Text)
+    { _aslAccountId :: !Text
+    , _aslPageToken :: !(Maybe Text)
     , _aslMaxResults :: !(Maybe (Textual Int32))
+    , _aslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsSavedadstylesList' with the minimum fields required to make a request.
@@ -71,14 +74,17 @@ data AccountsSavedadstylesList = AccountsSavedadstylesList'
 -- * 'aslPageToken'
 --
 -- * 'aslMaxResults'
+--
+-- * 'aslFields'
 accountsSavedadstylesList
     :: Text -- ^ 'aslAccountId'
     -> AccountsSavedadstylesList
-accountsSavedadstylesList pAslAccountId_ =
+accountsSavedadstylesList pAslAccountId_ = 
     AccountsSavedadstylesList'
     { _aslAccountId = pAslAccountId_
     , _aslPageToken = Nothing
     , _aslMaxResults = Nothing
+    , _aslFields = Nothing
     }
 
 -- | Account for which to list saved ad styles.
@@ -101,6 +107,11 @@ aslMaxResults
       (\ s a -> s{_aslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aslFields :: Lens' AccountsSavedadstylesList (Maybe Text)
+aslFields
+  = lens _aslFields (\ s a -> s{_aslFields = a})
+
 instance GoogleRequest AccountsSavedadstylesList
          where
         type Rs AccountsSavedadstylesList = SavedAdStyles
@@ -109,6 +120,7 @@ instance GoogleRequest AccountsSavedadstylesList
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsSavedadstylesList'{..}
           = go _aslAccountId _aslPageToken _aslMaxResults
+              _aslFields
               (Just AltJSON)
               adSenseService
           where go

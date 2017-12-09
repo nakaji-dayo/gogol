@@ -37,13 +37,15 @@ module Network.Google.Resource.BigQuery.TableData.List
     , tDataSetId
     , tPageToken
     , tProjectId
+    , tSelectedFields
     , tTableId
     , tStartIndex
     , tMaxResults
+    , tFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tabledata.list@ method which the
 -- 'TableDataList'' request conforms to.
@@ -58,22 +60,26 @@ type TableDataListResource =
                    Capture "tableId" Text :>
                      "data" :>
                        QueryParam "pageToken" Text :>
-                         QueryParam "startIndex" (Textual Word64) :>
-                           QueryParam "maxResults" (Textual Word32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] TableDataList
+                         QueryParam "selectedFields" Text :>
+                           QueryParam "startIndex" (Textual Word64) :>
+                             QueryParam "maxResults" (Textual Word32) :>
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] TableDataList
 
 -- | Retrieves table data from a specified set of rows. Requires the READER
 -- dataset role.
 --
 -- /See:/ 'tableDataList'' smart constructor.
 data TableDataList' = TableDataList''
-    { _tDataSetId  :: !Text
-    , _tPageToken  :: !(Maybe Text)
-    , _tProjectId  :: !Text
-    , _tTableId    :: !Text
+    { _tDataSetId :: !Text
+    , _tPageToken :: !(Maybe Text)
+    , _tProjectId :: !Text
+    , _tSelectedFields :: !(Maybe Text)
+    , _tTableId :: !Text
     , _tStartIndex :: !(Maybe (Textual Word64))
     , _tMaxResults :: !(Maybe (Textual Word32))
+    , _tFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableDataList'' with the minimum fields required to make a request.
@@ -86,24 +92,30 @@ data TableDataList' = TableDataList''
 --
 -- * 'tProjectId'
 --
+-- * 'tSelectedFields'
+--
 -- * 'tTableId'
 --
 -- * 'tStartIndex'
 --
 -- * 'tMaxResults'
+--
+-- * 'tFields'
 tableDataList'
     :: Text -- ^ 'tDataSetId'
     -> Text -- ^ 'tProjectId'
     -> Text -- ^ 'tTableId'
     -> TableDataList'
-tableDataList' pTDataSetId_ pTProjectId_ pTTableId_ =
+tableDataList' pTDataSetId_ pTProjectId_ pTTableId_ = 
     TableDataList''
     { _tDataSetId = pTDataSetId_
     , _tPageToken = Nothing
     , _tProjectId = pTProjectId_
+    , _tSelectedFields = Nothing
     , _tTableId = pTTableId_
     , _tStartIndex = Nothing
     , _tMaxResults = Nothing
+    , _tFields = Nothing
     }
 
 -- | Dataset ID of the table to read
@@ -123,6 +135,13 @@ tProjectId :: Lens' TableDataList' Text
 tProjectId
   = lens _tProjectId (\ s a -> s{_tProjectId = a})
 
+-- | List of fields to return (comma-separated). If unspecified, all fields
+-- are returned
+tSelectedFields :: Lens' TableDataList' (Maybe Text)
+tSelectedFields
+  = lens _tSelectedFields
+      (\ s a -> s{_tSelectedFields = a})
+
 -- | Table ID of the table to read
 tTableId :: Lens' TableDataList' Text
 tTableId = lens _tTableId (\ s a -> s{_tTableId = a})
@@ -139,6 +158,10 @@ tMaxResults
   = lens _tMaxResults (\ s a -> s{_tMaxResults = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tFields :: Lens' TableDataList' (Maybe Text)
+tFields = lens _tFields (\ s a -> s{_tFields = a})
+
 instance GoogleRequest TableDataList' where
         type Rs TableDataList' = TableDataList
         type Scopes TableDataList' =
@@ -147,8 +170,10 @@ instance GoogleRequest TableDataList' where
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient TableDataList''{..}
           = go _tProjectId _tDataSetId _tTableId _tPageToken
+              _tSelectedFields
               _tStartIndex
               _tMaxResults
+              _tFields
               (Just AltJSON)
               bigQueryService
           where go

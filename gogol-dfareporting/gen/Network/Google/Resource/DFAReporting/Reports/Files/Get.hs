@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves a report file.
+-- Retrieves a report file. This method supports media download.
 --
 -- /See:/ <https://developers.google.com/doubleclick-advertisers/ DCM/DFA Reporting And Trafficking API Reference> for @dfareporting.reports.files.get@.
 module Network.Google.Resource.DFAReporting.Reports.Files.Get
@@ -36,42 +36,46 @@ module Network.Google.Resource.DFAReporting.Reports.Files.Get
     , rfgReportId
     , rfgProFileId
     , rfgFileId
+    , rfgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.reports.files.get@ method which the
 -- 'ReportsFilesGet' request conforms to.
 type ReportsFilesGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "reports" :>
                Capture "reportId" (Textual Int64) :>
                  "files" :>
                    Capture "fileId" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] File
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] File
        :<|>
        "dfareporting" :>
-         "v2.7" :>
+         "v3.0" :>
            "userprofiles" :>
              Capture "profileId" (Textual Int64) :>
                "reports" :>
                  Capture "reportId" (Textual Int64) :>
                    "files" :>
                      Capture "fileId" (Textual Int64) :>
-                       QueryParam "alt" AltMedia :>
-                         Get '[OctetStream] Stream
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltMedia :>
+                           Get '[OctetStream] Stream
 
--- | Retrieves a report file.
+-- | Retrieves a report file. This method supports media download.
 --
 -- /See:/ 'reportsFilesGet' smart constructor.
 data ReportsFilesGet = ReportsFilesGet'
-    { _rfgReportId  :: !(Textual Int64)
+    { _rfgReportId :: !(Textual Int64)
     , _rfgProFileId :: !(Textual Int64)
-    , _rfgFileId    :: !(Textual Int64)
+    , _rfgFileId :: !(Textual Int64)
+    , _rfgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportsFilesGet' with the minimum fields required to make a request.
@@ -83,16 +87,19 @@ data ReportsFilesGet = ReportsFilesGet'
 -- * 'rfgProFileId'
 --
 -- * 'rfgFileId'
+--
+-- * 'rfgFields'
 reportsFilesGet
     :: Int64 -- ^ 'rfgReportId'
     -> Int64 -- ^ 'rfgProFileId'
     -> Int64 -- ^ 'rfgFileId'
     -> ReportsFilesGet
-reportsFilesGet pRfgReportId_ pRfgProFileId_ pRfgFileId_ =
+reportsFilesGet pRfgReportId_ pRfgProFileId_ pRfgFileId_ = 
     ReportsFilesGet'
     { _rfgReportId = _Coerce # pRfgReportId_
     , _rfgProFileId = _Coerce # pRfgProFileId_
     , _rfgFileId = _Coerce # pRfgFileId_
+    , _rfgFields = Nothing
     }
 
 -- | The ID of the report.
@@ -113,12 +120,17 @@ rfgFileId
   = lens _rfgFileId (\ s a -> s{_rfgFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rfgFields :: Lens' ReportsFilesGet (Maybe Text)
+rfgFields
+  = lens _rfgFields (\ s a -> s{_rfgFields = a})
+
 instance GoogleRequest ReportsFilesGet where
         type Rs ReportsFilesGet = File
         type Scopes ReportsFilesGet =
              '["https://www.googleapis.com/auth/dfareporting"]
         requestClient ReportsFilesGet'{..}
-          = go _rfgProFileId _rfgReportId _rfgFileId
+          = go _rfgProFileId _rfgReportId _rfgFileId _rfgFields
               (Just AltJSON)
               dFAReportingService
           where go :<|> _
@@ -132,7 +144,7 @@ instance GoogleRequest
         type Scopes (MediaDownload ReportsFilesGet) =
              Scopes ReportsFilesGet
         requestClient (MediaDownload ReportsFilesGet'{..})
-          = go _rfgProFileId _rfgReportId _rfgFileId
+          = go _rfgProFileId _rfgReportId _rfgFileId _rfgFields
               (Just AltMedia)
               dFAReportingService
           where _ :<|> go

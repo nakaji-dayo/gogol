@@ -39,16 +39,17 @@ module Network.Google.Resource.DFAReporting.Files.List
     , flPageToken
     , flSortField
     , flMaxResults
+    , flFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.files.list@ method which the
 -- 'FilesList' request conforms to.
 type FilesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "files" :>
@@ -57,18 +58,20 @@ type FilesListResource =
                    QueryParam "pageToken" Text :>
                      QueryParam "sortField" FilesListSortField :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :> Get '[JSON] FileList
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] FileList
 
 -- | Lists files for a user profile.
 --
 -- /See:/ 'filesList' smart constructor.
 data FilesList = FilesList'
-    { _flProFileId  :: !(Textual Int64)
-    , _flSortOrder  :: !FilesListSortOrder
-    , _flScope      :: !FilesListScope
-    , _flPageToken  :: !(Maybe Text)
-    , _flSortField  :: !FilesListSortField
-    , _flMaxResults :: !(Maybe (Textual Int32))
+    { _flProFileId :: !(Textual Int64)
+    , _flSortOrder :: !FilesListSortOrder
+    , _flScope :: !FilesListScope
+    , _flPageToken :: !(Maybe Text)
+    , _flSortField :: !FilesListSortField
+    , _flMaxResults :: !(Textual Int32)
+    , _flFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FilesList' with the minimum fields required to make a request.
@@ -86,17 +89,20 @@ data FilesList = FilesList'
 -- * 'flSortField'
 --
 -- * 'flMaxResults'
+--
+-- * 'flFields'
 filesList
     :: Int64 -- ^ 'flProFileId'
     -> FilesList
-filesList pFlProFileId_ =
+filesList pFlProFileId_ = 
     FilesList'
     { _flProFileId = _Coerce # pFlProFileId_
     , _flSortOrder = FLSODescending
     , _flScope = FLSMine
     , _flPageToken = Nothing
     , _flSortField = FLSFLastModifiedTime
-    , _flMaxResults = Nothing
+    , _flMaxResults = 10
+    , _flFields = Nothing
     }
 
 -- | The DFA profile ID.
@@ -105,12 +111,12 @@ flProFileId
   = lens _flProFileId (\ s a -> s{_flProFileId = a}) .
       _Coerce
 
--- | Order of sorted results, default is \'DESCENDING\'.
+-- | Order of sorted results.
 flSortOrder :: Lens' FilesList FilesListSortOrder
 flSortOrder
   = lens _flSortOrder (\ s a -> s{_flSortOrder = a})
 
--- | The scope that defines which results are returned, default is \'MINE\'.
+-- | The scope that defines which results are returned.
 flScope :: Lens' FilesList FilesListScope
 flScope = lens _flScope (\ s a -> s{_flScope = a})
 
@@ -125,10 +131,14 @@ flSortField
   = lens _flSortField (\ s a -> s{_flSortField = a})
 
 -- | Maximum number of results to return.
-flMaxResults :: Lens' FilesList (Maybe Int32)
+flMaxResults :: Lens' FilesList Int32
 flMaxResults
   = lens _flMaxResults (\ s a -> s{_flMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+flFields :: Lens' FilesList (Maybe Text)
+flFields = lens _flFields (\ s a -> s{_flFields = a})
 
 instance GoogleRequest FilesList where
         type Rs FilesList = FileList
@@ -138,7 +148,8 @@ instance GoogleRequest FilesList where
           = go _flProFileId (Just _flSortOrder) (Just _flScope)
               _flPageToken
               (Just _flSortField)
-              _flMaxResults
+              (Just _flMaxResults)
+              _flFields
               (Just AltJSON)
               dFAReportingService
           where go

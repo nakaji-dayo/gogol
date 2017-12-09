@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.CreativeFieldValues.Delete
     , cfvdCreativeFieldId
     , cfvdProFileId
     , cfvdId
+    , cfvdFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.creativeFieldValues.delete@ method which the
 -- 'CreativeFieldValuesDelete' request conforms to.
 type CreativeFieldValuesDeleteResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "creativeFields" :>
                Capture "creativeFieldId" (Textual Int64) :>
                  "creativeFieldValues" :>
                    Capture "id" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an existing creative field value.
 --
 -- /See:/ 'creativeFieldValuesDelete' smart constructor.
 data CreativeFieldValuesDelete = CreativeFieldValuesDelete'
     { _cfvdCreativeFieldId :: !(Textual Int64)
-    , _cfvdProFileId       :: !(Textual Int64)
-    , _cfvdId              :: !(Textual Int64)
+    , _cfvdProFileId :: !(Textual Int64)
+    , _cfvdId :: !(Textual Int64)
+    , _cfvdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreativeFieldValuesDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data CreativeFieldValuesDelete = CreativeFieldValuesDelete'
 -- * 'cfvdProFileId'
 --
 -- * 'cfvdId'
+--
+-- * 'cfvdFields'
 creativeFieldValuesDelete
     :: Int64 -- ^ 'cfvdCreativeFieldId'
     -> Int64 -- ^ 'cfvdProFileId'
     -> Int64 -- ^ 'cfvdId'
     -> CreativeFieldValuesDelete
-creativeFieldValuesDelete pCfvdCreativeFieldId_ pCfvdProFileId_ pCfvdId_ =
+creativeFieldValuesDelete pCfvdCreativeFieldId_ pCfvdProFileId_ pCfvdId_ = 
     CreativeFieldValuesDelete'
     { _cfvdCreativeFieldId = _Coerce # pCfvdCreativeFieldId_
     , _cfvdProFileId = _Coerce # pCfvdProFileId_
     , _cfvdId = _Coerce # pCfvdId_
+    , _cfvdFields = Nothing
     }
 
 -- | Creative field ID for this creative field value.
@@ -103,6 +109,11 @@ cfvdId :: Lens' CreativeFieldValuesDelete Int64
 cfvdId
   = lens _cfvdId (\ s a -> s{_cfvdId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cfvdFields :: Lens' CreativeFieldValuesDelete (Maybe Text)
+cfvdFields
+  = lens _cfvdFields (\ s a -> s{_cfvdFields = a})
+
 instance GoogleRequest CreativeFieldValuesDelete
          where
         type Rs CreativeFieldValuesDelete = ()
@@ -110,6 +121,7 @@ instance GoogleRequest CreativeFieldValuesDelete
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient CreativeFieldValuesDelete'{..}
           = go _cfvdProFileId _cfvdCreativeFieldId _cfvdId
+              _cfvdFields
               (Just AltJSON)
               dFAReportingService
           where go

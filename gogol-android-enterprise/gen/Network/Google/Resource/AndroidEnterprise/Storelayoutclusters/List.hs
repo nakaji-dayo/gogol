@@ -35,10 +35,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.List
     -- * Request Lenses
     , sllEnterpriseId
     , sllPageId
+    , sllFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.list@ method which the
 -- 'StorelayoutclustersList' request conforms to.
@@ -51,15 +52,17 @@ type StorelayoutclustersListResource =
                "pages" :>
                  Capture "pageId" Text :>
                    "clusters" :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] StoreLayoutClustersListResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] StoreLayoutClustersListResponse
 
 -- | Retrieves the details of all clusters on the specified page.
 --
 -- /See:/ 'storelayoutclustersList' smart constructor.
 data StorelayoutclustersList = StorelayoutclustersList'
     { _sllEnterpriseId :: !Text
-    , _sllPageId       :: !Text
+    , _sllPageId :: !Text
+    , _sllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersList' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data StorelayoutclustersList = StorelayoutclustersList'
 -- * 'sllEnterpriseId'
 --
 -- * 'sllPageId'
+--
+-- * 'sllFields'
 storelayoutclustersList
     :: Text -- ^ 'sllEnterpriseId'
     -> Text -- ^ 'sllPageId'
     -> StorelayoutclustersList
-storelayoutclustersList pSllEnterpriseId_ pSllPageId_ =
+storelayoutclustersList pSllEnterpriseId_ pSllPageId_ = 
     StorelayoutclustersList'
     { _sllEnterpriseId = pSllEnterpriseId_
     , _sllPageId = pSllPageId_
+    , _sllFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -90,13 +96,19 @@ sllPageId :: Lens' StorelayoutclustersList Text
 sllPageId
   = lens _sllPageId (\ s a -> s{_sllPageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sllFields :: Lens' StorelayoutclustersList (Maybe Text)
+sllFields
+  = lens _sllFields (\ s a -> s{_sllFields = a})
+
 instance GoogleRequest StorelayoutclustersList where
         type Rs StorelayoutclustersList =
              StoreLayoutClustersListResponse
         type Scopes StorelayoutclustersList =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersList'{..}
-          = go _sllEnterpriseId _sllPageId (Just AltJSON)
+          = go _sllEnterpriseId _sllPageId _sllFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

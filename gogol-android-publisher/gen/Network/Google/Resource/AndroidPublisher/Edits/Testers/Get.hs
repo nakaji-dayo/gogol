@@ -34,10 +34,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Testers.Get
     , etgTrack
     , etgPackageName
     , etgEditId
+    , etgFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.testers.get@ method which the
 -- 'EditsTestersGet' request conforms to.
@@ -50,14 +51,16 @@ type EditsTestersGetResource =
                Capture "editId" Text :>
                  "testers" :>
                    Capture "track" EditsTestersGetTrack :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Testers
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Testers
 
 --
 -- /See:/ 'editsTestersGet' smart constructor.
 data EditsTestersGet = EditsTestersGet'
-    { _etgTrack       :: !EditsTestersGetTrack
+    { _etgTrack :: !EditsTestersGetTrack
     , _etgPackageName :: !Text
-    , _etgEditId      :: !Text
+    , _etgEditId :: !Text
+    , _etgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsTestersGet' with the minimum fields required to make a request.
@@ -69,16 +72,19 @@ data EditsTestersGet = EditsTestersGet'
 -- * 'etgPackageName'
 --
 -- * 'etgEditId'
+--
+-- * 'etgFields'
 editsTestersGet
     :: EditsTestersGetTrack -- ^ 'etgTrack'
     -> Text -- ^ 'etgPackageName'
     -> Text -- ^ 'etgEditId'
     -> EditsTestersGet
-editsTestersGet pEtgTrack_ pEtgPackageName_ pEtgEditId_ =
+editsTestersGet pEtgTrack_ pEtgPackageName_ pEtgEditId_ = 
     EditsTestersGet'
     { _etgTrack = pEtgTrack_
     , _etgPackageName = pEtgPackageName_
     , _etgEditId = pEtgEditId_
+    , _etgFields = Nothing
     }
 
 etgTrack :: Lens' EditsTestersGet EditsTestersGetTrack
@@ -96,12 +102,17 @@ etgEditId :: Lens' EditsTestersGet Text
 etgEditId
   = lens _etgEditId (\ s a -> s{_etgEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+etgFields :: Lens' EditsTestersGet (Maybe Text)
+etgFields
+  = lens _etgFields (\ s a -> s{_etgFields = a})
+
 instance GoogleRequest EditsTestersGet where
         type Rs EditsTestersGet = Testers
         type Scopes EditsTestersGet =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsTestersGet'{..}
-          = go _etgPackageName _etgEditId _etgTrack
+          = go _etgPackageName _etgEditId _etgTrack _etgFields
               (Just AltJSON)
               androidPublisherService
           where go

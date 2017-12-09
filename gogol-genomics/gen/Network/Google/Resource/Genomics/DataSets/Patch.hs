@@ -45,11 +45,12 @@ module Network.Google.Resource.Genomics.DataSets.Patch
     , dspPayload
     , dspBearerToken
     , dspDataSetId
+    , dspFields
     , dspCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.datasets.patch@ method which the
 -- 'DataSetsPatch' request conforms to.
@@ -65,8 +66,9 @@ type DataSetsPatchResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
 
 -- | Updates a dataset. For the definitions of datasets and other genomics
 -- resources, see [Fundamentals of Google
@@ -75,16 +77,17 @@ type DataSetsPatchResource =
 --
 -- /See:/ 'dataSetsPatch' smart constructor.
 data DataSetsPatch = DataSetsPatch'
-    { _dspXgafv          :: !(Maybe Xgafv)
+    { _dspXgafv :: !(Maybe Xgafv)
     , _dspUploadProtocol :: !(Maybe Text)
-    , _dspUpdateMask     :: !(Maybe FieldMask)
-    , _dspPp             :: !Bool
-    , _dspAccessToken    :: !(Maybe Text)
-    , _dspUploadType     :: !(Maybe Text)
-    , _dspPayload        :: !DataSet
-    , _dspBearerToken    :: !(Maybe Text)
-    , _dspDataSetId      :: !Text
-    , _dspCallback       :: !(Maybe Text)
+    , _dspUpdateMask :: !(Maybe FieldMask)
+    , _dspPp :: !Bool
+    , _dspAccessToken :: !(Maybe Text)
+    , _dspUploadType :: !(Maybe Text)
+    , _dspPayload :: !DataSet
+    , _dspBearerToken :: !(Maybe Text)
+    , _dspDataSetId :: !Text
+    , _dspFields :: !(Maybe Text)
+    , _dspCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsPatch' with the minimum fields required to make a request.
@@ -109,12 +112,14 @@ data DataSetsPatch = DataSetsPatch'
 --
 -- * 'dspDataSetId'
 --
+-- * 'dspFields'
+--
 -- * 'dspCallback'
 dataSetsPatch
     :: DataSet -- ^ 'dspPayload'
     -> Text -- ^ 'dspDataSetId'
     -> DataSetsPatch
-dataSetsPatch pDspPayload_ pDspDataSetId_ =
+dataSetsPatch pDspPayload_ pDspDataSetId_ = 
     DataSetsPatch'
     { _dspXgafv = Nothing
     , _dspUploadProtocol = Nothing
@@ -125,6 +130,7 @@ dataSetsPatch pDspPayload_ pDspDataSetId_ =
     , _dspPayload = pDspPayload_
     , _dspBearerToken = Nothing
     , _dspDataSetId = pDspDataSetId_
+    , _dspFields = Nothing
     , _dspCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ dspDataSetId :: Lens' DataSetsPatch Text
 dspDataSetId
   = lens _dspDataSetId (\ s a -> s{_dspDataSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dspFields :: Lens' DataSetsPatch (Maybe Text)
+dspFields
+  = lens _dspFields (\ s a -> s{_dspFields = a})
+
 -- | JSONP
 dspCallback :: Lens' DataSetsPatch (Maybe Text)
 dspCallback
@@ -196,6 +207,7 @@ instance GoogleRequest DataSetsPatch where
               _dspUploadType
               _dspBearerToken
               _dspCallback
+              _dspFields
               (Just AltJSON)
               _dspPayload
               genomicsService

@@ -36,10 +36,11 @@ module Network.Google.Resource.Calendar.Events.Delete
     , edCalendarId
     , edSendNotifications
     , edEventId
+    , edFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.events.delete@ method which the
 -- 'EventsDelete' request conforms to.
@@ -51,15 +52,17 @@ type EventsDeleteResource =
              "events" :>
                Capture "eventId" Text :>
                  QueryParam "sendNotifications" Bool :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes an event.
 --
 -- /See:/ 'eventsDelete' smart constructor.
 data EventsDelete = EventsDelete'
-    { _edCalendarId        :: !Text
+    { _edCalendarId :: !Text
     , _edSendNotifications :: !(Maybe Bool)
-    , _edEventId           :: !Text
+    , _edEventId :: !Text
+    , _edFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventsDelete' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data EventsDelete = EventsDelete'
 -- * 'edSendNotifications'
 --
 -- * 'edEventId'
+--
+-- * 'edFields'
 eventsDelete
     :: Text -- ^ 'edCalendarId'
     -> Text -- ^ 'edEventId'
     -> EventsDelete
-eventsDelete pEdCalendarId_ pEdEventId_ =
+eventsDelete pEdCalendarId_ pEdEventId_ = 
     EventsDelete'
     { _edCalendarId = pEdCalendarId_
     , _edSendNotifications = Nothing
     , _edEventId = pEdEventId_
+    , _edFields = Nothing
     }
 
 -- | Calendar identifier. To retrieve calendar IDs call the calendarList.list
@@ -101,12 +107,17 @@ edEventId :: Lens' EventsDelete Text
 edEventId
   = lens _edEventId (\ s a -> s{_edEventId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+edFields :: Lens' EventsDelete (Maybe Text)
+edFields = lens _edFields (\ s a -> s{_edFields = a})
+
 instance GoogleRequest EventsDelete where
         type Rs EventsDelete = ()
         type Scopes EventsDelete =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient EventsDelete'{..}
           = go _edCalendarId _edEventId _edSendNotifications
+              _edFields
               (Just AltJSON)
               appsCalendarService
           where go

@@ -32,10 +32,12 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.GetRecaptchaParam
     , relyingPartyGetRecaptchaParam
     , RelyingPartyGetRecaptchaParam
 
+    -- * Request Lenses
+    , rpgrpFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.getRecaptchaParam@ method which the
 -- 'RelyingPartyGetRecaptchaParam' request conforms to.
@@ -44,21 +46,33 @@ type RelyingPartyGetRecaptchaParamResource =
        "v3" :>
          "relyingparty" :>
            "getRecaptchaParam" :>
-             QueryParam "alt" AltJSON :>
-               Get '[JSON] GetRecaptchaParamResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 Get '[JSON] GetRecaptchaParamResponse
 
 -- | Get recaptcha secure param.
 --
 -- /See:/ 'relyingPartyGetRecaptchaParam' smart constructor.
-data RelyingPartyGetRecaptchaParam =
-    RelyingPartyGetRecaptchaParam'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype RelyingPartyGetRecaptchaParam = RelyingPartyGetRecaptchaParam'
+    { _rpgrpFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartyGetRecaptchaParam' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rpgrpFields'
 relyingPartyGetRecaptchaParam
     :: RelyingPartyGetRecaptchaParam
-relyingPartyGetRecaptchaParam = RelyingPartyGetRecaptchaParam'
+relyingPartyGetRecaptchaParam = 
+    RelyingPartyGetRecaptchaParam'
+    { _rpgrpFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+rpgrpFields :: Lens' RelyingPartyGetRecaptchaParam (Maybe Text)
+rpgrpFields
+  = lens _rpgrpFields (\ s a -> s{_rpgrpFields = a})
 
 instance GoogleRequest RelyingPartyGetRecaptchaParam
          where
@@ -66,8 +80,9 @@ instance GoogleRequest RelyingPartyGetRecaptchaParam
              GetRecaptchaParamResponse
         type Scopes RelyingPartyGetRecaptchaParam =
              '["https://www.googleapis.com/auth/cloud-platform"]
-        requestClient RelyingPartyGetRecaptchaParam'{}
-          = go (Just AltJSON) identityToolkitService
+        requestClient RelyingPartyGetRecaptchaParam'{..}
+          = go _rpgrpFields (Just AltJSON)
+              identityToolkitService
           where go
                   = buildClient
                       (Proxy ::

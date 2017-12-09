@@ -40,11 +40,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Rulesets.Get
     , prgUploadType
     , prgBearerToken
     , prgName
+    , prgFields
     , prgCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.rulesets.get@ method which the
 -- 'ProjectsRulesetsGet' request conforms to.
@@ -58,20 +59,22 @@ type ProjectsRulesetsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Ruleset
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Ruleset
 
 -- | Get a \`Ruleset\` by name including the full \`Source\` contents.
 --
 -- /See:/ 'projectsRulesetsGet' smart constructor.
 data ProjectsRulesetsGet = ProjectsRulesetsGet'
-    { _prgXgafv          :: !(Maybe Xgafv)
+    { _prgXgafv :: !(Maybe Xgafv)
     , _prgUploadProtocol :: !(Maybe Text)
-    , _prgPp             :: !Bool
-    , _prgAccessToken    :: !(Maybe Text)
-    , _prgUploadType     :: !(Maybe Text)
-    , _prgBearerToken    :: !(Maybe Text)
-    , _prgName           :: !Text
-    , _prgCallback       :: !(Maybe Text)
+    , _prgPp :: !Bool
+    , _prgAccessToken :: !(Maybe Text)
+    , _prgUploadType :: !(Maybe Text)
+    , _prgBearerToken :: !(Maybe Text)
+    , _prgName :: !Text
+    , _prgFields :: !(Maybe Text)
+    , _prgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsRulesetsGet' with the minimum fields required to make a request.
@@ -92,11 +95,13 @@ data ProjectsRulesetsGet = ProjectsRulesetsGet'
 --
 -- * 'prgName'
 --
+-- * 'prgFields'
+--
 -- * 'prgCallback'
 projectsRulesetsGet
     :: Text -- ^ 'prgName'
     -> ProjectsRulesetsGet
-projectsRulesetsGet pPrgName_ =
+projectsRulesetsGet pPrgName_ = 
     ProjectsRulesetsGet'
     { _prgXgafv = Nothing
     , _prgUploadProtocol = Nothing
@@ -105,6 +110,7 @@ projectsRulesetsGet pPrgName_ =
     , _prgUploadType = Nothing
     , _prgBearerToken = Nothing
     , _prgName = pPrgName_
+    , _prgFields = Nothing
     , _prgCallback = Nothing
     }
 
@@ -145,6 +151,11 @@ prgBearerToken
 prgName :: Lens' ProjectsRulesetsGet Text
 prgName = lens _prgName (\ s a -> s{_prgName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+prgFields :: Lens' ProjectsRulesetsGet (Maybe Text)
+prgFields
+  = lens _prgFields (\ s a -> s{_prgFields = a})
+
 -- | JSONP
 prgCallback :: Lens' ProjectsRulesetsGet (Maybe Text)
 prgCallback
@@ -163,6 +174,7 @@ instance GoogleRequest ProjectsRulesetsGet where
               _prgUploadType
               _prgBearerToken
               _prgCallback
+              _prgFields
               (Just AltJSON)
               firebaseRulesService
           where go

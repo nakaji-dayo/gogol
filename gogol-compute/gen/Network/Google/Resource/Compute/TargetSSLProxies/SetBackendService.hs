@@ -33,13 +33,15 @@ module Network.Google.Resource.Compute.TargetSSLProxies.SetBackendService
     , TargetSSLProxiesSetBackendService
 
     -- * Request Lenses
+    , tspsbsRequestId
     , tspsbsProject
     , tspsbsPayload
     , tspsbsTargetSSLProxy
+    , tspsbsFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetSslProxies.setBackendService@ method which the
 -- 'TargetSSLProxiesSetBackendService' request conforms to.
@@ -52,40 +54,65 @@ type TargetSSLProxiesSetBackendServiceResource =
                "targetSslProxies" :>
                  Capture "targetSslProxy" Text :>
                    "setBackendService" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON]
-                         TargetSSLProxiesSetBackendServiceRequest
-                         :> Post '[JSON] Operation
+                     QueryParam "requestId" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON]
+                             TargetSSLProxiesSetBackendServiceRequest
+                             :> Post '[JSON] Operation
 
 -- | Changes the BackendService for TargetSslProxy.
 --
 -- /See:/ 'targetSSLProxiesSetBackendService' smart constructor.
 data TargetSSLProxiesSetBackendService = TargetSSLProxiesSetBackendService'
-    { _tspsbsProject        :: !Text
-    , _tspsbsPayload        :: !TargetSSLProxiesSetBackendServiceRequest
+    { _tspsbsRequestId :: !(Maybe Text)
+    , _tspsbsProject :: !Text
+    , _tspsbsPayload :: !TargetSSLProxiesSetBackendServiceRequest
     , _tspsbsTargetSSLProxy :: !Text
+    , _tspsbsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetSSLProxiesSetBackendService' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'tspsbsRequestId'
+--
 -- * 'tspsbsProject'
 --
 -- * 'tspsbsPayload'
 --
 -- * 'tspsbsTargetSSLProxy'
+--
+-- * 'tspsbsFields'
 targetSSLProxiesSetBackendService
     :: Text -- ^ 'tspsbsProject'
     -> TargetSSLProxiesSetBackendServiceRequest -- ^ 'tspsbsPayload'
     -> Text -- ^ 'tspsbsTargetSSLProxy'
     -> TargetSSLProxiesSetBackendService
-targetSSLProxiesSetBackendService pTspsbsProject_ pTspsbsPayload_ pTspsbsTargetSSLProxy_ =
+targetSSLProxiesSetBackendService pTspsbsProject_ pTspsbsPayload_ pTspsbsTargetSSLProxy_ = 
     TargetSSLProxiesSetBackendService'
-    { _tspsbsProject = pTspsbsProject_
+    { _tspsbsRequestId = Nothing
+    , _tspsbsProject = pTspsbsProject_
     , _tspsbsPayload = pTspsbsPayload_
     , _tspsbsTargetSSLProxy = pTspsbsTargetSSLProxy_
+    , _tspsbsFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tspsbsRequestId :: Lens' TargetSSLProxiesSetBackendService (Maybe Text)
+tspsbsRequestId
+  = lens _tspsbsRequestId
+      (\ s a -> s{_tspsbsRequestId = a})
 
 -- | Project ID for this request.
 tspsbsProject :: Lens' TargetSSLProxiesSetBackendService Text
@@ -106,6 +133,11 @@ tspsbsTargetSSLProxy
   = lens _tspsbsTargetSSLProxy
       (\ s a -> s{_tspsbsTargetSSLProxy = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tspsbsFields :: Lens' TargetSSLProxiesSetBackendService (Maybe Text)
+tspsbsFields
+  = lens _tspsbsFields (\ s a -> s{_tspsbsFields = a})
+
 instance GoogleRequest
          TargetSSLProxiesSetBackendService where
         type Rs TargetSSLProxiesSetBackendService = Operation
@@ -114,6 +146,8 @@ instance GoogleRequest
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetSSLProxiesSetBackendService'{..}
           = go _tspsbsProject _tspsbsTargetSSLProxy
+              _tspsbsRequestId
+              _tspsbsFields
               (Just AltJSON)
               _tspsbsPayload
               computeService

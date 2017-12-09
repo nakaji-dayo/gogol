@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.DirectorySites.Insert
     -- * Request Lenses
     , dsiProFileId
     , dsiPayload
+    , dsiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.directorySites.insert@ method which the
 -- 'DirectorySitesInsert' request conforms to.
 type DirectorySitesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "directorySites" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DirectorySite :>
-                   Post '[JSON] DirectorySite
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DirectorySite :>
+                     Post '[JSON] DirectorySite
 
 -- | Inserts a new directory site.
 --
 -- /See:/ 'directorySitesInsert' smart constructor.
 data DirectorySitesInsert = DirectorySitesInsert'
     { _dsiProFileId :: !(Textual Int64)
-    , _dsiPayload   :: !DirectorySite
+    , _dsiPayload :: !DirectorySite
+    , _dsiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectorySitesInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data DirectorySitesInsert = DirectorySitesInsert'
 -- * 'dsiProFileId'
 --
 -- * 'dsiPayload'
+--
+-- * 'dsiFields'
 directorySitesInsert
     :: Int64 -- ^ 'dsiProFileId'
     -> DirectorySite -- ^ 'dsiPayload'
     -> DirectorySitesInsert
-directorySitesInsert pDsiProFileId_ pDsiPayload_ =
+directorySitesInsert pDsiProFileId_ pDsiPayload_ = 
     DirectorySitesInsert'
     { _dsiProFileId = _Coerce # pDsiProFileId_
     , _dsiPayload = pDsiPayload_
+    , _dsiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ dsiPayload :: Lens' DirectorySitesInsert DirectorySite
 dsiPayload
   = lens _dsiPayload (\ s a -> s{_dsiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsiFields :: Lens' DirectorySitesInsert (Maybe Text)
+dsiFields
+  = lens _dsiFields (\ s a -> s{_dsiFields = a})
+
 instance GoogleRequest DirectorySitesInsert where
         type Rs DirectorySitesInsert = DirectorySite
         type Scopes DirectorySitesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient DirectorySitesInsert'{..}
-          = go _dsiProFileId (Just AltJSON) _dsiPayload
+          = go _dsiProFileId _dsiFields (Just AltJSON)
+              _dsiPayload
               dFAReportingService
           where go
                   = buildClient

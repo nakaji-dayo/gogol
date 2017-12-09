@@ -35,10 +35,11 @@ module Network.Google.Resource.DoubleClickSearch.SavedColumns.List
     -- * Request Lenses
     , sclAgencyId
     , sclAdvertiserId
+    , sclFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.savedColumns.list@ method which the
 -- 'SavedColumnsList' request conforms to.
@@ -50,15 +51,17 @@ type SavedColumnsListResource =
              "advertiser" :>
                Capture "advertiserId" (Textual Int64) :>
                  "savedcolumns" :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] SavedColumnList
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] SavedColumnList
 
 -- | Retrieve the list of saved columns for a specified advertiser.
 --
 -- /See:/ 'savedColumnsList' smart constructor.
 data SavedColumnsList = SavedColumnsList'
-    { _sclAgencyId     :: !(Textual Int64)
+    { _sclAgencyId :: !(Textual Int64)
     , _sclAdvertiserId :: !(Textual Int64)
+    , _sclFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SavedColumnsList' with the minimum fields required to make a request.
@@ -68,14 +71,17 @@ data SavedColumnsList = SavedColumnsList'
 -- * 'sclAgencyId'
 --
 -- * 'sclAdvertiserId'
+--
+-- * 'sclFields'
 savedColumnsList
     :: Int64 -- ^ 'sclAgencyId'
     -> Int64 -- ^ 'sclAdvertiserId'
     -> SavedColumnsList
-savedColumnsList pSclAgencyId_ pSclAdvertiserId_ =
+savedColumnsList pSclAgencyId_ pSclAdvertiserId_ = 
     SavedColumnsList'
     { _sclAgencyId = _Coerce # pSclAgencyId_
     , _sclAdvertiserId = _Coerce # pSclAdvertiserId_
+    , _sclFields = Nothing
     }
 
 -- | DS ID of the agency.
@@ -91,12 +97,18 @@ sclAdvertiserId
       (\ s a -> s{_sclAdvertiserId = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+sclFields :: Lens' SavedColumnsList (Maybe Text)
+sclFields
+  = lens _sclFields (\ s a -> s{_sclFields = a})
+
 instance GoogleRequest SavedColumnsList where
         type Rs SavedColumnsList = SavedColumnList
         type Scopes SavedColumnsList =
              '["https://www.googleapis.com/auth/doubleclicksearch"]
         requestClient SavedColumnsList'{..}
-          = go _sclAgencyId _sclAdvertiserId (Just AltJSON)
+          = go _sclAgencyId _sclAdvertiserId _sclFields
+              (Just AltJSON)
               doubleClickSearchService
           where go
                   = buildClient

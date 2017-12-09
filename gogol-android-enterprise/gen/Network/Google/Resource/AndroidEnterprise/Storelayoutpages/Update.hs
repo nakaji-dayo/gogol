@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutpages.Update
     , suEnterpriseId
     , suPageId
     , suPayload
+    , suFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutpages.update@ method which the
 -- 'StorelayoutpagesUpdate' request conforms to.
@@ -51,16 +52,18 @@ type StorelayoutpagesUpdateResource =
              "storeLayout" :>
                "pages" :>
                  Capture "pageId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] StorePage :> Put '[JSON] StorePage
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] StorePage :> Put '[JSON] StorePage
 
 -- | Updates the content of a store page.
 --
 -- /See:/ 'storelayoutpagesUpdate' smart constructor.
 data StorelayoutpagesUpdate = StorelayoutpagesUpdate'
     { _suEnterpriseId :: !Text
-    , _suPageId       :: !Text
-    , _suPayload      :: !StorePage
+    , _suPageId :: !Text
+    , _suPayload :: !StorePage
+    , _suFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutpagesUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data StorelayoutpagesUpdate = StorelayoutpagesUpdate'
 -- * 'suPageId'
 --
 -- * 'suPayload'
+--
+-- * 'suFields'
 storelayoutpagesUpdate
     :: Text -- ^ 'suEnterpriseId'
     -> Text -- ^ 'suPageId'
     -> StorePage -- ^ 'suPayload'
     -> StorelayoutpagesUpdate
-storelayoutpagesUpdate pSuEnterpriseId_ pSuPageId_ pSuPayload_ =
+storelayoutpagesUpdate pSuEnterpriseId_ pSuPageId_ pSuPayload_ = 
     StorelayoutpagesUpdate'
     { _suEnterpriseId = pSuEnterpriseId_
     , _suPageId = pSuPageId_
     , _suPayload = pSuPayload_
+    , _suFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -99,12 +105,17 @@ suPayload :: Lens' StorelayoutpagesUpdate StorePage
 suPayload
   = lens _suPayload (\ s a -> s{_suPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' StorelayoutpagesUpdate (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 instance GoogleRequest StorelayoutpagesUpdate where
         type Rs StorelayoutpagesUpdate = StorePage
         type Scopes StorelayoutpagesUpdate =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutpagesUpdate'{..}
-          = go _suEnterpriseId _suPageId (Just AltJSON)
+          = go _suEnterpriseId _suPageId _suFields
+              (Just AltJSON)
               _suPayload
               androidEnterpriseService
           where go

@@ -41,11 +41,13 @@ module Network.Google.Resource.ServiceManagement.Services.GetConfig
     , sgcBearerToken
     , sgcConfigId
     , sgcServiceName
+    , sgcView
+    , sgcFields
     , sgcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.getConfig@ method which the
 -- 'ServicesGetConfig' request conforms to.
@@ -61,22 +63,26 @@ type ServicesGetConfigResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "configId" Text :>
-                           QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Get '[JSON] Service
+                           QueryParam "view" Text :>
+                             QueryParam "callback" Text :>
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :> Get '[JSON] Service
 
 -- | Gets a service configuration (version) for a managed service.
 --
 -- /See:/ 'servicesGetConfig' smart constructor.
 data ServicesGetConfig = ServicesGetConfig'
-    { _sgcXgafv          :: !(Maybe Xgafv)
+    { _sgcXgafv :: !(Maybe Xgafv)
     , _sgcUploadProtocol :: !(Maybe Text)
-    , _sgcPp             :: !Bool
-    , _sgcAccessToken    :: !(Maybe Text)
-    , _sgcUploadType     :: !(Maybe Text)
-    , _sgcBearerToken    :: !(Maybe Text)
-    , _sgcConfigId       :: !(Maybe Text)
-    , _sgcServiceName    :: !Text
-    , _sgcCallback       :: !(Maybe Text)
+    , _sgcPp :: !Bool
+    , _sgcAccessToken :: !(Maybe Text)
+    , _sgcUploadType :: !(Maybe Text)
+    , _sgcBearerToken :: !(Maybe Text)
+    , _sgcConfigId :: !(Maybe Text)
+    , _sgcServiceName :: !Text
+    , _sgcView :: !(Maybe Text)
+    , _sgcFields :: !(Maybe Text)
+    , _sgcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesGetConfig' with the minimum fields required to make a request.
@@ -99,11 +105,15 @@ data ServicesGetConfig = ServicesGetConfig'
 --
 -- * 'sgcServiceName'
 --
+-- * 'sgcView'
+--
+-- * 'sgcFields'
+--
 -- * 'sgcCallback'
 servicesGetConfig
     :: Text -- ^ 'sgcServiceName'
     -> ServicesGetConfig
-servicesGetConfig pSgcServiceName_ =
+servicesGetConfig pSgcServiceName_ = 
     ServicesGetConfig'
     { _sgcXgafv = Nothing
     , _sgcUploadProtocol = Nothing
@@ -113,6 +123,8 @@ servicesGetConfig pSgcServiceName_ =
     , _sgcBearerToken = Nothing
     , _sgcConfigId = Nothing
     , _sgcServiceName = pSgcServiceName_
+    , _sgcView = Nothing
+    , _sgcFields = Nothing
     , _sgcCallback = Nothing
     }
 
@@ -161,6 +173,16 @@ sgcServiceName
   = lens _sgcServiceName
       (\ s a -> s{_sgcServiceName = a})
 
+-- | Specifies which parts of the Service Config should be returned in the
+-- response.
+sgcView :: Lens' ServicesGetConfig (Maybe Text)
+sgcView = lens _sgcView (\ s a -> s{_sgcView = a})
+
+-- | Selector specifying which fields to include in a partial response.
+sgcFields :: Lens' ServicesGetConfig (Maybe Text)
+sgcFields
+  = lens _sgcFields (\ s a -> s{_sgcFields = a})
+
 -- | JSONP
 sgcCallback :: Lens' ServicesGetConfig (Maybe Text)
 sgcCallback
@@ -180,7 +202,9 @@ instance GoogleRequest ServicesGetConfig where
               _sgcUploadType
               _sgcBearerToken
               _sgcConfigId
+              _sgcView
               _sgcCallback
+              _sgcFields
               (Just AltJSON)
               serviceManagementService
           where go

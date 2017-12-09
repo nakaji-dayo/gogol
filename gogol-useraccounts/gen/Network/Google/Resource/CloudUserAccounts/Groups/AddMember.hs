@@ -36,10 +36,11 @@ module Network.Google.Resource.CloudUserAccounts.Groups.AddMember
     , gamProject
     , gamPayload
     , gamGroupName
+    , gamFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.groups.addMember@ method which the
 -- 'GroupsAddMember' request conforms to.
@@ -52,17 +53,19 @@ type GroupsAddMemberResource =
                "groups" :>
                  Capture "groupName" Text :>
                    "addMember" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] GroupsAddMemberRequest :>
-                         Post '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] GroupsAddMemberRequest :>
+                           Post '[JSON] Operation
 
 -- | Adds users to the specified group.
 --
 -- /See:/ 'groupsAddMember' smart constructor.
 data GroupsAddMember = GroupsAddMember'
-    { _gamProject   :: !Text
-    , _gamPayload   :: !GroupsAddMemberRequest
+    { _gamProject :: !Text
+    , _gamPayload :: !GroupsAddMemberRequest
     , _gamGroupName :: !Text
+    , _gamFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsAddMember' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data GroupsAddMember = GroupsAddMember'
 -- * 'gamPayload'
 --
 -- * 'gamGroupName'
+--
+-- * 'gamFields'
 groupsAddMember
     :: Text -- ^ 'gamProject'
     -> GroupsAddMemberRequest -- ^ 'gamPayload'
     -> Text -- ^ 'gamGroupName'
     -> GroupsAddMember
-groupsAddMember pGamProject_ pGamPayload_ pGamGroupName_ =
+groupsAddMember pGamProject_ pGamPayload_ pGamGroupName_ = 
     GroupsAddMember'
     { _gamProject = pGamProject_
     , _gamPayload = pGamPayload_
     , _gamGroupName = pGamGroupName_
+    , _gamFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,13 +107,19 @@ gamGroupName :: Lens' GroupsAddMember Text
 gamGroupName
   = lens _gamGroupName (\ s a -> s{_gamGroupName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gamFields :: Lens' GroupsAddMember (Maybe Text)
+gamFields
+  = lens _gamFields (\ s a -> s{_gamFields = a})
+
 instance GoogleRequest GroupsAddMember where
         type Rs GroupsAddMember = Operation
         type Scopes GroupsAddMember =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient GroupsAddMember'{..}
-          = go _gamProject _gamGroupName (Just AltJSON)
+          = go _gamProject _gamGroupName _gamFields
+              (Just AltJSON)
               _gamPayload
               userAccountsService
           where go

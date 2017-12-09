@@ -41,10 +41,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Bind
     , lbbOnBehalfOfContentOwnerChannel
     , lbbId
     , lbbStreamId
+    , lbbFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.bind@ method which the
 -- 'LiveBroadcastsBind' request conforms to.
@@ -58,8 +59,9 @@ type LiveBroadcastsBindResource =
                  QueryParam "onBehalfOfContentOwner" Text :>
                    QueryParam "onBehalfOfContentOwnerChannel" Text :>
                      QueryParam "streamId" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] LiveBroadcast
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] LiveBroadcast
 
 -- | Binds a YouTube broadcast to a stream or removes an existing binding
 -- between a broadcast and a stream. A broadcast can only be bound to one
@@ -68,11 +70,12 @@ type LiveBroadcastsBindResource =
 --
 -- /See:/ 'liveBroadcastsBind' smart constructor.
 data LiveBroadcastsBind = LiveBroadcastsBind'
-    { _lbbPart                          :: !Text
-    , _lbbOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbbPart :: !Text
+    , _lbbOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbbOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lbbId                            :: !Text
-    , _lbbStreamId                      :: !(Maybe Text)
+    , _lbbId :: !Text
+    , _lbbStreamId :: !(Maybe Text)
+    , _lbbFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsBind' with the minimum fields required to make a request.
@@ -88,17 +91,20 @@ data LiveBroadcastsBind = LiveBroadcastsBind'
 -- * 'lbbId'
 --
 -- * 'lbbStreamId'
+--
+-- * 'lbbFields'
 liveBroadcastsBind
     :: Text -- ^ 'lbbPart'
     -> Text -- ^ 'lbbId'
     -> LiveBroadcastsBind
-liveBroadcastsBind pLbbPart_ pLbbId_ =
+liveBroadcastsBind pLbbPart_ pLbbId_ = 
     LiveBroadcastsBind'
     { _lbbPart = pLbbPart_
     , _lbbOnBehalfOfContentOwner = Nothing
     , _lbbOnBehalfOfContentOwnerChannel = Nothing
     , _lbbId = pLbbId_
     , _lbbStreamId = Nothing
+    , _lbbFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -157,6 +163,11 @@ lbbStreamId :: Lens' LiveBroadcastsBind (Maybe Text)
 lbbStreamId
   = lens _lbbStreamId (\ s a -> s{_lbbStreamId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lbbFields :: Lens' LiveBroadcastsBind (Maybe Text)
+lbbFields
+  = lens _lbbFields (\ s a -> s{_lbbFields = a})
+
 instance GoogleRequest LiveBroadcastsBind where
         type Rs LiveBroadcastsBind = LiveBroadcast
         type Scopes LiveBroadcastsBind =
@@ -167,6 +178,7 @@ instance GoogleRequest LiveBroadcastsBind where
               _lbbOnBehalfOfContentOwner
               _lbbOnBehalfOfContentOwnerChannel
               _lbbStreamId
+              _lbbFields
               (Just AltJSON)
               youTubeService
           where go

@@ -36,10 +36,11 @@ module Network.Google.Resource.YouTube.LiveBroadcasts.Delete
     , lbdOnBehalfOfContentOwner
     , lbdOnBehalfOfContentOwnerChannel
     , lbdId
+    , lbdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveBroadcasts.delete@ method which the
 -- 'LiveBroadcastsDelete' request conforms to.
@@ -50,15 +51,17 @@ type LiveBroadcastsDeleteResource =
            QueryParam "id" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
                QueryParam "onBehalfOfContentOwnerChannel" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a broadcast.
 --
 -- /See:/ 'liveBroadcastsDelete' smart constructor.
 data LiveBroadcastsDelete = LiveBroadcastsDelete'
-    { _lbdOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lbdOnBehalfOfContentOwner :: !(Maybe Text)
     , _lbdOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lbdId                            :: !Text
+    , _lbdId :: !Text
+    , _lbdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveBroadcastsDelete' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data LiveBroadcastsDelete = LiveBroadcastsDelete'
 -- * 'lbdOnBehalfOfContentOwnerChannel'
 --
 -- * 'lbdId'
+--
+-- * 'lbdFields'
 liveBroadcastsDelete
     :: Text -- ^ 'lbdId'
     -> LiveBroadcastsDelete
-liveBroadcastsDelete pLbdId_ =
+liveBroadcastsDelete pLbdId_ = 
     LiveBroadcastsDelete'
     { _lbdOnBehalfOfContentOwner = Nothing
     , _lbdOnBehalfOfContentOwnerChannel = Nothing
     , _lbdId = pLbdId_
+    , _lbdFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -121,6 +127,11 @@ lbdOnBehalfOfContentOwnerChannel
 lbdId :: Lens' LiveBroadcastsDelete Text
 lbdId = lens _lbdId (\ s a -> s{_lbdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lbdFields :: Lens' LiveBroadcastsDelete (Maybe Text)
+lbdFields
+  = lens _lbdFields (\ s a -> s{_lbdFields = a})
+
 instance GoogleRequest LiveBroadcastsDelete where
         type Rs LiveBroadcastsDelete = ()
         type Scopes LiveBroadcastsDelete =
@@ -129,6 +140,7 @@ instance GoogleRequest LiveBroadcastsDelete where
         requestClient LiveBroadcastsDelete'{..}
           = go (Just _lbdId) _lbdOnBehalfOfContentOwner
               _lbdOnBehalfOfContentOwnerChannel
+              _lbdFields
               (Just AltJSON)
               youTubeService
           where go

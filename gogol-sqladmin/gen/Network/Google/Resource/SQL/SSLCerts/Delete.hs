@@ -36,11 +36,12 @@ module Network.Google.Resource.SQL.SSLCerts.Delete
     -- * Request Lenses
     , scdProject
     , scdSha1Fingerprint
+    , scdFields
     , scdInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.sslCerts.delete@ method which the
 -- 'SSLCertsDelete' request conforms to.
@@ -53,16 +54,18 @@ type SSLCertsDeleteResource =
                Capture "instance" Text :>
                  "sslCerts" :>
                    Capture "sha1Fingerprint" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the SSL certificate. The change will not take effect until the
 -- instance is restarted.
 --
 -- /See:/ 'sslCertsDelete' smart constructor.
 data SSLCertsDelete = SSLCertsDelete'
-    { _scdProject         :: !Text
+    { _scdProject :: !Text
     , _scdSha1Fingerprint :: !Text
-    , _scdInstance        :: !Text
+    , _scdFields :: !(Maybe Text)
+    , _scdInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SSLCertsDelete' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data SSLCertsDelete = SSLCertsDelete'
 --
 -- * 'scdSha1Fingerprint'
 --
+-- * 'scdFields'
+--
 -- * 'scdInstance'
 sslCertsDelete
     :: Text -- ^ 'scdProject'
     -> Text -- ^ 'scdSha1Fingerprint'
     -> Text -- ^ 'scdInstance'
     -> SSLCertsDelete
-sslCertsDelete pScdProject_ pScdSha1Fingerprint_ pScdInstance_ =
+sslCertsDelete pScdProject_ pScdSha1Fingerprint_ pScdInstance_ = 
     SSLCertsDelete'
     { _scdProject = pScdProject_
     , _scdSha1Fingerprint = pScdSha1Fingerprint_
+    , _scdFields = Nothing
     , _scdInstance = pScdInstance_
     }
 
@@ -97,6 +103,11 @@ scdSha1Fingerprint
   = lens _scdSha1Fingerprint
       (\ s a -> s{_scdSha1Fingerprint = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scdFields :: Lens' SSLCertsDelete (Maybe Text)
+scdFields
+  = lens _scdFields (\ s a -> s{_scdFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 scdInstance :: Lens' SSLCertsDelete Text
 scdInstance
@@ -109,6 +120,7 @@ instance GoogleRequest SSLCertsDelete where
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient SSLCertsDelete'{..}
           = go _scdProject _scdInstance _scdSha1Fingerprint
+              _scdFields
               (Just AltJSON)
               sQLAdminService
           where go

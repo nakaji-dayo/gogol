@@ -37,10 +37,11 @@ module Network.Google.Resource.AdSenseHost.Accounts.AdUnits.Insert
     , aauiPayload
     , aauiAdClientId
     , aauiAccountId
+    , aauiFields
     ) where
 
-import           Network.Google.AdSenseHost.Types
-import           Network.Google.Prelude
+import Network.Google.AdSenseHost.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsensehost.accounts.adunits.insert@ method which the
 -- 'AccountsAdUnitsInsert' request conforms to.
@@ -52,17 +53,19 @@ type AccountsAdUnitsInsertResource =
              "adclients" :>
                Capture "adClientId" Text :>
                  "adunits" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] AdUnit :> Post '[JSON] AdUnit
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] AdUnit :> Post '[JSON] AdUnit
 
 -- | Insert the supplied ad unit into the specified publisher AdSense
 -- account.
 --
 -- /See:/ 'accountsAdUnitsInsert' smart constructor.
 data AccountsAdUnitsInsert = AccountsAdUnitsInsert'
-    { _aauiPayload    :: !AdUnit
+    { _aauiPayload :: !AdUnit
     , _aauiAdClientId :: !Text
-    , _aauiAccountId  :: !Text
+    , _aauiAccountId :: !Text
+    , _aauiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsAdUnitsInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data AccountsAdUnitsInsert = AccountsAdUnitsInsert'
 -- * 'aauiAdClientId'
 --
 -- * 'aauiAccountId'
+--
+-- * 'aauiFields'
 accountsAdUnitsInsert
     :: AdUnit -- ^ 'aauiPayload'
     -> Text -- ^ 'aauiAdClientId'
     -> Text -- ^ 'aauiAccountId'
     -> AccountsAdUnitsInsert
-accountsAdUnitsInsert pAauiPayload_ pAauiAdClientId_ pAauiAccountId_ =
+accountsAdUnitsInsert pAauiPayload_ pAauiAdClientId_ pAauiAccountId_ = 
     AccountsAdUnitsInsert'
     { _aauiPayload = pAauiPayload_
     , _aauiAdClientId = pAauiAdClientId_
     , _aauiAccountId = pAauiAccountId_
+    , _aauiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -103,12 +109,18 @@ aauiAccountId
   = lens _aauiAccountId
       (\ s a -> s{_aauiAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aauiFields :: Lens' AccountsAdUnitsInsert (Maybe Text)
+aauiFields
+  = lens _aauiFields (\ s a -> s{_aauiFields = a})
+
 instance GoogleRequest AccountsAdUnitsInsert where
         type Rs AccountsAdUnitsInsert = AdUnit
         type Scopes AccountsAdUnitsInsert =
              '["https://www.googleapis.com/auth/adsensehost"]
         requestClient AccountsAdUnitsInsert'{..}
-          = go _aauiAccountId _aauiAdClientId (Just AltJSON)
+          = go _aauiAccountId _aauiAdClientId _aauiFields
+              (Just AltJSON)
               _aauiPayload
               adSenseHostService
           where go

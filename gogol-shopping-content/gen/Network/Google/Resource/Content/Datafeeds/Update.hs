@@ -20,8 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates a datafeed of your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- Updates a datafeed configuration of your Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.datafeeds.update@.
 module Network.Google.Resource.Content.Datafeeds.Update
@@ -38,10 +37,11 @@ module Network.Google.Resource.Content.Datafeeds.Update
     , duPayload
     , duDatafeedId
     , duDryRun
+    , duFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.datafeeds.update@ method which the
 -- 'DatafeedsUpdate' request conforms to.
@@ -52,18 +52,19 @@ type DatafeedsUpdateResource =
            "datafeeds" :>
              Capture "datafeedId" (Textual Word64) :>
                QueryParam "dryRun" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Datafeed :> Put '[JSON] Datafeed
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Datafeed :> Put '[JSON] Datafeed
 
--- | Updates a datafeed of your Merchant Center account. This method can only
--- be called for non-multi-client accounts.
+-- | Updates a datafeed configuration of your Merchant Center account.
 --
 -- /See:/ 'datafeedsUpdate' smart constructor.
 data DatafeedsUpdate = DatafeedsUpdate'
     { _duMerchantId :: !(Textual Word64)
-    , _duPayload    :: !Datafeed
+    , _duPayload :: !Datafeed
     , _duDatafeedId :: !(Textual Word64)
-    , _duDryRun     :: !(Maybe Bool)
+    , _duDryRun :: !(Maybe Bool)
+    , _duFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DatafeedsUpdate' with the minimum fields required to make a request.
@@ -77,19 +78,24 @@ data DatafeedsUpdate = DatafeedsUpdate'
 -- * 'duDatafeedId'
 --
 -- * 'duDryRun'
+--
+-- * 'duFields'
 datafeedsUpdate
     :: Word64 -- ^ 'duMerchantId'
     -> Datafeed -- ^ 'duPayload'
     -> Word64 -- ^ 'duDatafeedId'
     -> DatafeedsUpdate
-datafeedsUpdate pDuMerchantId_ pDuPayload_ pDuDatafeedId_ =
+datafeedsUpdate pDuMerchantId_ pDuPayload_ pDuDatafeedId_ = 
     DatafeedsUpdate'
     { _duMerchantId = _Coerce # pDuMerchantId_
     , _duPayload = pDuPayload_
     , _duDatafeedId = _Coerce # pDuDatafeedId_
     , _duDryRun = Nothing
+    , _duFields = Nothing
     }
 
+-- | The ID of the account that manages the datafeed. This account cannot be
+-- a multi-client account.
 duMerchantId :: Lens' DatafeedsUpdate Word64
 duMerchantId
   = lens _duMerchantId (\ s a -> s{_duMerchantId = a})
@@ -100,6 +106,7 @@ duPayload :: Lens' DatafeedsUpdate Datafeed
 duPayload
   = lens _duPayload (\ s a -> s{_duPayload = a})
 
+-- | The ID of the datafeed.
 duDatafeedId :: Lens' DatafeedsUpdate Word64
 duDatafeedId
   = lens _duDatafeedId (\ s a -> s{_duDatafeedId = a})
@@ -109,12 +116,16 @@ duDatafeedId
 duDryRun :: Lens' DatafeedsUpdate (Maybe Bool)
 duDryRun = lens _duDryRun (\ s a -> s{_duDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+duFields :: Lens' DatafeedsUpdate (Maybe Text)
+duFields = lens _duFields (\ s a -> s{_duFields = a})
+
 instance GoogleRequest DatafeedsUpdate where
         type Rs DatafeedsUpdate = Datafeed
         type Scopes DatafeedsUpdate =
              '["https://www.googleapis.com/auth/content"]
         requestClient DatafeedsUpdate'{..}
-          = go _duMerchantId _duDatafeedId _duDryRun
+          = go _duMerchantId _duDatafeedId _duDryRun _duFields
               (Just AltJSON)
               _duPayload
               shoppingContentService

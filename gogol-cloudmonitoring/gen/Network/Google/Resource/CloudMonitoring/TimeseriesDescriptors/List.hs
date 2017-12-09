@@ -48,10 +48,11 @@ module Network.Google.Resource.CloudMonitoring.TimeseriesDescriptors.List
     , tdlLabels
     , tdlPageToken
     , tdlYoungest
+    , tdlFields
     ) where
 
-import           Network.Google.CloudMonitoring.Types
-import           Network.Google.Prelude
+import Network.Google.CloudMonitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudmonitoring.timeseriesDescriptors.list@ method which the
 -- 'TimeseriesDescriptorsList' request conforms to.
@@ -72,12 +73,13 @@ type TimeseriesDescriptorsListResource =
                            QueryParam "oldest" Text :>
                              QueryParams "labels" Text :>
                                QueryParam "pageToken" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON]
-                                     ListTimeseriesDescriptorsRequest
-                                     :>
-                                     Get '[JSON]
-                                       ListTimeseriesDescriptorsResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON]
+                                       ListTimeseriesDescriptorsRequest
+                                       :>
+                                       Get '[JSON]
+                                         ListTimeseriesDescriptorsResponse
 
 -- | List the descriptors of the time series that match the metric and labels
 -- values and that have data points in the interval. Large responses are
@@ -87,17 +89,18 @@ type TimeseriesDescriptorsListResource =
 --
 -- /See:/ 'timeseriesDescriptorsList' smart constructor.
 data TimeseriesDescriptorsList = TimeseriesDescriptorsList'
-    { _tdlWindow     :: !(Maybe Text)
-    , _tdlProject    :: !Text
-    , _tdlCount      :: !(Textual Int32)
-    , _tdlPayload    :: !ListTimeseriesDescriptorsRequest
+    { _tdlWindow :: !(Maybe Text)
+    , _tdlProject :: !Text
+    , _tdlCount :: !(Textual Int32)
+    , _tdlPayload :: !ListTimeseriesDescriptorsRequest
     , _tdlAggregator :: !(Maybe TimeseriesDescriptorsListAggregator)
-    , _tdlTimespan   :: !(Maybe Text)
-    , _tdlMetric     :: !Text
-    , _tdlOldest     :: !(Maybe Text)
-    , _tdlLabels     :: !(Maybe [Text])
-    , _tdlPageToken  :: !(Maybe Text)
-    , _tdlYoungest   :: !Text
+    , _tdlTimespan :: !(Maybe Text)
+    , _tdlMetric :: !Text
+    , _tdlOldest :: !(Maybe Text)
+    , _tdlLabels :: !(Maybe [Text])
+    , _tdlPageToken :: !(Maybe Text)
+    , _tdlYoungest :: !Text
+    , _tdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimeseriesDescriptorsList' with the minimum fields required to make a request.
@@ -125,13 +128,15 @@ data TimeseriesDescriptorsList = TimeseriesDescriptorsList'
 -- * 'tdlPageToken'
 --
 -- * 'tdlYoungest'
+--
+-- * 'tdlFields'
 timeseriesDescriptorsList
     :: Text -- ^ 'tdlProject'
     -> ListTimeseriesDescriptorsRequest -- ^ 'tdlPayload'
     -> Text -- ^ 'tdlMetric'
     -> Text -- ^ 'tdlYoungest'
     -> TimeseriesDescriptorsList
-timeseriesDescriptorsList pTdlProject_ pTdlPayload_ pTdlMetric_ pTdlYoungest_ =
+timeseriesDescriptorsList pTdlProject_ pTdlPayload_ pTdlMetric_ pTdlYoungest_ = 
     TimeseriesDescriptorsList'
     { _tdlWindow = Nothing
     , _tdlProject = pTdlProject_
@@ -144,6 +149,7 @@ timeseriesDescriptorsList pTdlProject_ pTdlPayload_ pTdlMetric_ pTdlYoungest_ =
     , _tdlLabels = Nothing
     , _tdlPageToken = Nothing
     , _tdlYoungest = pTdlYoungest_
+    , _tdlFields = Nothing
     }
 
 -- | The sampling window. At most one data point will be returned for each
@@ -231,6 +237,11 @@ tdlYoungest :: Lens' TimeseriesDescriptorsList Text
 tdlYoungest
   = lens _tdlYoungest (\ s a -> s{_tdlYoungest = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tdlFields :: Lens' TimeseriesDescriptorsList (Maybe Text)
+tdlFields
+  = lens _tdlFields (\ s a -> s{_tdlFields = a})
+
 instance GoogleRequest TimeseriesDescriptorsList
          where
         type Rs TimeseriesDescriptorsList =
@@ -247,6 +258,7 @@ instance GoogleRequest TimeseriesDescriptorsList
               _tdlOldest
               (_tdlLabels ^. _Default)
               _tdlPageToken
+              _tdlFields
               (Just AltJSON)
               _tdlPayload
               cloudMonitoringService

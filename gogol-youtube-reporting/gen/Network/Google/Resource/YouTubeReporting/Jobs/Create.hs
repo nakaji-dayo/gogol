@@ -41,11 +41,12 @@ module Network.Google.Resource.YouTubeReporting.Jobs.Create
     , jcPayload
     , jcOnBehalfOfContentOwner
     , jcBearerToken
+    , jcFields
     , jcCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTubeReporting.Types
+import Network.Google.Prelude
+import Network.Google.YouTubeReporting.Types
 
 -- | A resource alias for @youtubereporting.jobs.create@ method which the
 -- 'JobsCreate' request conforms to.
@@ -60,22 +61,24 @@ type JobsCreateResource =
                    QueryParam "onBehalfOfContentOwner" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Job :> Post '[JSON] Job
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Job :> Post '[JSON] Job
 
 -- | Creates a job and returns it.
 --
 -- /See:/ 'jobsCreate' smart constructor.
 data JobsCreate = JobsCreate'
-    { _jcXgafv                  :: !(Maybe Xgafv)
-    , _jcUploadProtocol         :: !(Maybe Text)
-    , _jcPp                     :: !Bool
-    , _jcAccessToken            :: !(Maybe Text)
-    , _jcUploadType             :: !(Maybe Text)
-    , _jcPayload                :: !Job
+    { _jcXgafv :: !(Maybe Xgafv)
+    , _jcUploadProtocol :: !(Maybe Text)
+    , _jcPp :: !Bool
+    , _jcAccessToken :: !(Maybe Text)
+    , _jcUploadType :: !(Maybe Text)
+    , _jcPayload :: !Job
     , _jcOnBehalfOfContentOwner :: !(Maybe Text)
-    , _jcBearerToken            :: !(Maybe Text)
-    , _jcCallback               :: !(Maybe Text)
+    , _jcBearerToken :: !(Maybe Text)
+    , _jcFields :: !(Maybe Text)
+    , _jcCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobsCreate' with the minimum fields required to make a request.
@@ -98,11 +101,13 @@ data JobsCreate = JobsCreate'
 --
 -- * 'jcBearerToken'
 --
+-- * 'jcFields'
+--
 -- * 'jcCallback'
 jobsCreate
     :: Job -- ^ 'jcPayload'
     -> JobsCreate
-jobsCreate pJcPayload_ =
+jobsCreate pJcPayload_ = 
     JobsCreate'
     { _jcXgafv = Nothing
     , _jcUploadProtocol = Nothing
@@ -112,6 +117,7 @@ jobsCreate pJcPayload_ =
     , _jcPayload = pJcPayload_
     , _jcOnBehalfOfContentOwner = Nothing
     , _jcBearerToken = Nothing
+    , _jcFields = Nothing
     , _jcCallback = Nothing
     }
 
@@ -158,6 +164,10 @@ jcBearerToken
   = lens _jcBearerToken
       (\ s a -> s{_jcBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+jcFields :: Lens' JobsCreate (Maybe Text)
+jcFields = lens _jcFields (\ s a -> s{_jcFields = a})
+
 -- | JSONP
 jcCallback :: Lens' JobsCreate (Maybe Text)
 jcCallback
@@ -175,6 +185,7 @@ instance GoogleRequest JobsCreate where
               _jcOnBehalfOfContentOwner
               _jcBearerToken
               _jcCallback
+              _jcFields
               (Just AltJSON)
               _jcPayload
               youTubeReportingService

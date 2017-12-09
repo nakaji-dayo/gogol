@@ -41,10 +41,11 @@ module Network.Google.Resource.Blogger.Posts.Patch
     , posoRevert
     , posoPostId
     , posoPublish
+    , posoFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.patch@ method which the
 -- 'PostsPatch' request conforms to.
@@ -60,21 +61,23 @@ type PostsPatchResource =
                      QueryParam "maxComments" (Textual Word32) :>
                        QueryParam "revert" Bool :>
                          QueryParam "publish" Bool :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] Post' :> Patch '[JSON] Post'
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] Post' :> Patch '[JSON] Post'
 
 -- | Update a post. This method supports patch semantics.
 --
 -- /See:/ 'postsPatch' smart constructor.
 data PostsPatch = PostsPatch'
-    { _posoFetchBody   :: !Bool
+    { _posoFetchBody :: !Bool
     , _posoFetchImages :: !(Maybe Bool)
-    , _posoBlogId      :: !Text
-    , _posoPayload     :: !Post'
+    , _posoBlogId :: !Text
+    , _posoPayload :: !Post'
     , _posoMaxComments :: !(Maybe (Textual Word32))
-    , _posoRevert      :: !(Maybe Bool)
-    , _posoPostId      :: !Text
-    , _posoPublish     :: !(Maybe Bool)
+    , _posoRevert :: !(Maybe Bool)
+    , _posoPostId :: !Text
+    , _posoPublish :: !(Maybe Bool)
+    , _posoFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsPatch' with the minimum fields required to make a request.
@@ -96,12 +99,14 @@ data PostsPatch = PostsPatch'
 -- * 'posoPostId'
 --
 -- * 'posoPublish'
+--
+-- * 'posoFields'
 postsPatch
     :: Text -- ^ 'posoBlogId'
     -> Post' -- ^ 'posoPayload'
     -> Text -- ^ 'posoPostId'
     -> PostsPatch
-postsPatch pPosoBlogId_ pPosoPayload_ pPosoPostId_ =
+postsPatch pPosoBlogId_ pPosoPayload_ pPosoPostId_ = 
     PostsPatch'
     { _posoFetchBody = True
     , _posoFetchImages = Nothing
@@ -111,6 +116,7 @@ postsPatch pPosoBlogId_ pPosoPayload_ pPosoPostId_ =
     , _posoRevert = Nothing
     , _posoPostId = pPosoPostId_
     , _posoPublish = Nothing
+    , _posoFields = Nothing
     }
 
 -- | Whether the body content of the post is included with the result
@@ -161,6 +167,11 @@ posoPublish :: Lens' PostsPatch (Maybe Bool)
 posoPublish
   = lens _posoPublish (\ s a -> s{_posoPublish = a})
 
+-- | Selector specifying which fields to include in a partial response.
+posoFields :: Lens' PostsPatch (Maybe Text)
+posoFields
+  = lens _posoFields (\ s a -> s{_posoFields = a})
+
 instance GoogleRequest PostsPatch where
         type Rs PostsPatch = Post'
         type Scopes PostsPatch =
@@ -171,6 +182,7 @@ instance GoogleRequest PostsPatch where
               _posoMaxComments
               _posoRevert
               _posoPublish
+              _posoFields
               (Just AltJSON)
               _posoPayload
               bloggerService

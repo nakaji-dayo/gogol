@@ -34,10 +34,11 @@ module Network.Google.Resource.YouTube.LiveChatBans.Delete
 
     -- * Request Lenses
     , lcbdId
+    , lcbdFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveChatBans.delete@ method which the
 -- 'LiveChatBansDelete' request conforms to.
@@ -47,13 +48,15 @@ type LiveChatBansDeleteResource =
          "liveChat" :>
            "bans" :>
              QueryParam "id" Text :>
-               QueryParam "alt" AltJSON :> Delete '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a chat ban.
 --
 -- /See:/ 'liveChatBansDelete' smart constructor.
-newtype LiveChatBansDelete = LiveChatBansDelete'
-    { _lcbdId :: Text
+data LiveChatBansDelete = LiveChatBansDelete'
+    { _lcbdId :: !Text
+    , _lcbdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveChatBansDelete' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype LiveChatBansDelete = LiveChatBansDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'lcbdId'
+--
+-- * 'lcbdFields'
 liveChatBansDelete
     :: Text -- ^ 'lcbdId'
     -> LiveChatBansDelete
-liveChatBansDelete pLcbdId_ =
+liveChatBansDelete pLcbdId_ = 
     LiveChatBansDelete'
     { _lcbdId = pLcbdId_
+    , _lcbdFields = Nothing
     }
 
 -- | The id parameter identifies the chat ban to remove. The value uniquely
@@ -74,13 +80,19 @@ liveChatBansDelete pLcbdId_ =
 lcbdId :: Lens' LiveChatBansDelete Text
 lcbdId = lens _lcbdId (\ s a -> s{_lcbdId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcbdFields :: Lens' LiveChatBansDelete (Maybe Text)
+lcbdFields
+  = lens _lcbdFields (\ s a -> s{_lcbdFields = a})
+
 instance GoogleRequest LiveChatBansDelete where
         type Rs LiveChatBansDelete = ()
         type Scopes LiveChatBansDelete =
              '["https://www.googleapis.com/auth/youtube",
                "https://www.googleapis.com/auth/youtube.force-ssl"]
         requestClient LiveChatBansDelete'{..}
-          = go (Just _lcbdId) (Just AltJSON) youTubeService
+          = go (Just _lcbdId) _lcbdFields (Just AltJSON)
+              youTubeService
           where go
                   = buildClient
                       (Proxy :: Proxy LiveChatBansDeleteResource)

@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.ProFileUserLinks.List
     , mpfullAccountId
     , mpfullStartIndex
     , mpfullMaxResults
+    , mpfullFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileUserLinks.list@ method which the
 -- 'ManagementProFileUserLinksList' request conforms to.
@@ -58,18 +59,20 @@ type ManagementProFileUserLinksListResource =
                        "entityUserLinks" :>
                          QueryParam "start-index" (Textual Int32) :>
                            QueryParam "max-results" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] EntityUserLinks
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] EntityUserLinks
 
 -- | Lists profile-user links for a given view (profile).
 --
 -- /See:/ 'managementProFileUserLinksList' smart constructor.
 data ManagementProFileUserLinksList = ManagementProFileUserLinksList'
     { _mpfullWebPropertyId :: !Text
-    , _mpfullProFileId     :: !Text
-    , _mpfullAccountId     :: !Text
-    , _mpfullStartIndex    :: !(Maybe (Textual Int32))
-    , _mpfullMaxResults    :: !(Maybe (Textual Int32))
+    , _mpfullProFileId :: !Text
+    , _mpfullAccountId :: !Text
+    , _mpfullStartIndex :: !(Maybe (Textual Int32))
+    , _mpfullMaxResults :: !(Maybe (Textual Int32))
+    , _mpfullFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileUserLinksList' with the minimum fields required to make a request.
@@ -85,18 +88,21 @@ data ManagementProFileUserLinksList = ManagementProFileUserLinksList'
 -- * 'mpfullStartIndex'
 --
 -- * 'mpfullMaxResults'
+--
+-- * 'mpfullFields'
 managementProFileUserLinksList
     :: Text -- ^ 'mpfullWebPropertyId'
     -> Text -- ^ 'mpfullProFileId'
     -> Text -- ^ 'mpfullAccountId'
     -> ManagementProFileUserLinksList
-managementProFileUserLinksList pMpfullWebPropertyId_ pMpfullProFileId_ pMpfullAccountId_ =
+managementProFileUserLinksList pMpfullWebPropertyId_ pMpfullProFileId_ pMpfullAccountId_ = 
     ManagementProFileUserLinksList'
     { _mpfullWebPropertyId = pMpfullWebPropertyId_
     , _mpfullProFileId = pMpfullProFileId_
     , _mpfullAccountId = pMpfullAccountId_
     , _mpfullStartIndex = Nothing
     , _mpfullMaxResults = Nothing
+    , _mpfullFields = Nothing
     }
 
 -- | Web Property ID which the given view (profile) belongs to. Can either be
@@ -136,6 +142,11 @@ mpfullMaxResults
       (\ s a -> s{_mpfullMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mpfullFields :: Lens' ManagementProFileUserLinksList (Maybe Text)
+mpfullFields
+  = lens _mpfullFields (\ s a -> s{_mpfullFields = a})
+
 instance GoogleRequest ManagementProFileUserLinksList
          where
         type Rs ManagementProFileUserLinksList =
@@ -148,6 +159,7 @@ instance GoogleRequest ManagementProFileUserLinksList
               _mpfullProFileId
               _mpfullStartIndex
               _mpfullMaxResults
+              _mpfullFields
               (Just AltJSON)
               analyticsService
           where go

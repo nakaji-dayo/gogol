@@ -48,18 +48,19 @@ module Network.Google.Resource.ProximityBeacon.Beacons.Attachments.Delete
     , badAttachmentName
     , badBearerToken
     , badProjectId
+    , badFields
     , badCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beacons.attachments.delete@ method which the
 -- 'BeaconsAttachmentsDelete' request conforms to.
 type BeaconsAttachmentsDeleteResource =
      "v1beta1" :>
        Capture "attachmentName" Text :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
@@ -67,7 +68,8 @@ type BeaconsAttachmentsDeleteResource =
                    QueryParam "bearer_token" Text :>
                      QueryParam "projectId" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes the specified attachment for the given beacon. Each attachment
 -- has a unique attachment name (\`attachmentName\`) which is returned when
@@ -80,15 +82,16 @@ type BeaconsAttachmentsDeleteResource =
 --
 -- /See:/ 'beaconsAttachmentsDelete' smart constructor.
 data BeaconsAttachmentsDelete = BeaconsAttachmentsDelete'
-    { _badXgafv          :: !(Maybe Text)
+    { _badXgafv :: !(Maybe Xgafv)
     , _badUploadProtocol :: !(Maybe Text)
-    , _badPp             :: !Bool
-    , _badAccessToken    :: !(Maybe Text)
-    , _badUploadType     :: !(Maybe Text)
+    , _badPp :: !Bool
+    , _badAccessToken :: !(Maybe Text)
+    , _badUploadType :: !(Maybe Text)
     , _badAttachmentName :: !Text
-    , _badBearerToken    :: !(Maybe Text)
-    , _badProjectId      :: !(Maybe Text)
-    , _badCallback       :: !(Maybe Text)
+    , _badBearerToken :: !(Maybe Text)
+    , _badProjectId :: !(Maybe Text)
+    , _badFields :: !(Maybe Text)
+    , _badCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconsAttachmentsDelete' with the minimum fields required to make a request.
@@ -111,11 +114,13 @@ data BeaconsAttachmentsDelete = BeaconsAttachmentsDelete'
 --
 -- * 'badProjectId'
 --
+-- * 'badFields'
+--
 -- * 'badCallback'
 beaconsAttachmentsDelete
     :: Text -- ^ 'badAttachmentName'
     -> BeaconsAttachmentsDelete
-beaconsAttachmentsDelete pBadAttachmentName_ =
+beaconsAttachmentsDelete pBadAttachmentName_ = 
     BeaconsAttachmentsDelete'
     { _badXgafv = Nothing
     , _badUploadProtocol = Nothing
@@ -125,11 +130,12 @@ beaconsAttachmentsDelete pBadAttachmentName_ =
     , _badAttachmentName = pBadAttachmentName_
     , _badBearerToken = Nothing
     , _badProjectId = Nothing
+    , _badFields = Nothing
     , _badCallback = Nothing
     }
 
 -- | V1 error format.
-badXgafv :: Lens' BeaconsAttachmentsDelete (Maybe Text)
+badXgafv :: Lens' BeaconsAttachmentsDelete (Maybe Xgafv)
 badXgafv = lens _badXgafv (\ s a -> s{_badXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -176,6 +182,11 @@ badProjectId :: Lens' BeaconsAttachmentsDelete (Maybe Text)
 badProjectId
   = lens _badProjectId (\ s a -> s{_badProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+badFields :: Lens' BeaconsAttachmentsDelete (Maybe Text)
+badFields
+  = lens _badFields (\ s a -> s{_badFields = a})
+
 -- | JSONP
 badCallback :: Lens' BeaconsAttachmentsDelete (Maybe Text)
 badCallback
@@ -193,6 +204,7 @@ instance GoogleRequest BeaconsAttachmentsDelete where
               _badBearerToken
               _badProjectId
               _badCallback
+              _badFields
               (Just AltJSON)
               proximityBeaconService
           where go

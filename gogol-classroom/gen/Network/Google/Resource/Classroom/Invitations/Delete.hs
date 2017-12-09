@@ -43,11 +43,12 @@ module Network.Google.Resource.Classroom.Invitations.Delete
     , idUploadType
     , idBearerToken
     , idId
+    , idFields
     , idCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.invitations.delete@ method which the
 -- 'InvitationsDelete' request conforms to.
@@ -55,14 +56,15 @@ type InvitationsDeleteResource =
      "v1" :>
        "invitations" :>
          Capture "id" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes an invitation. This method returns the following error codes: *
 -- \`PERMISSION_DENIED\` if the requesting user is not permitted to delete
@@ -71,14 +73,15 @@ type InvitationsDeleteResource =
 --
 -- /See:/ 'invitationsDelete' smart constructor.
 data InvitationsDelete = InvitationsDelete'
-    { _idXgafv          :: !(Maybe Text)
+    { _idXgafv :: !(Maybe Xgafv)
     , _idUploadProtocol :: !(Maybe Text)
-    , _idPp             :: !Bool
-    , _idAccessToken    :: !(Maybe Text)
-    , _idUploadType     :: !(Maybe Text)
-    , _idBearerToken    :: !(Maybe Text)
-    , _idId             :: !Text
-    , _idCallback       :: !(Maybe Text)
+    , _idPp :: !Bool
+    , _idAccessToken :: !(Maybe Text)
+    , _idUploadType :: !(Maybe Text)
+    , _idBearerToken :: !(Maybe Text)
+    , _idId :: !Text
+    , _idFields :: !(Maybe Text)
+    , _idCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InvitationsDelete' with the minimum fields required to make a request.
@@ -99,11 +102,13 @@ data InvitationsDelete = InvitationsDelete'
 --
 -- * 'idId'
 --
+-- * 'idFields'
+--
 -- * 'idCallback'
 invitationsDelete
     :: Text -- ^ 'idId'
     -> InvitationsDelete
-invitationsDelete pIdId_ =
+invitationsDelete pIdId_ = 
     InvitationsDelete'
     { _idXgafv = Nothing
     , _idUploadProtocol = Nothing
@@ -112,11 +117,12 @@ invitationsDelete pIdId_ =
     , _idUploadType = Nothing
     , _idBearerToken = Nothing
     , _idId = pIdId_
+    , _idFields = Nothing
     , _idCallback = Nothing
     }
 
 -- | V1 error format.
-idXgafv :: Lens' InvitationsDelete (Maybe Text)
+idXgafv :: Lens' InvitationsDelete (Maybe Xgafv)
 idXgafv = lens _idXgafv (\ s a -> s{_idXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -150,6 +156,10 @@ idBearerToken
 idId :: Lens' InvitationsDelete Text
 idId = lens _idId (\ s a -> s{_idId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+idFields :: Lens' InvitationsDelete (Maybe Text)
+idFields = lens _idFields (\ s a -> s{_idFields = a})
+
 -- | JSONP
 idCallback :: Lens' InvitationsDelete (Maybe Text)
 idCallback
@@ -165,6 +175,7 @@ instance GoogleRequest InvitationsDelete where
               _idUploadType
               _idBearerToken
               _idCallback
+              _idFields
               (Just AltJSON)
               classroomService
           where go

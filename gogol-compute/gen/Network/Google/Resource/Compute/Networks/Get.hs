@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.Networks.Get
     -- * Request Lenses
     , ngProject
     , ngNetwork
+    , ngFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.networks.get@ method which the
 -- 'NetworksGet' request conforms to.
@@ -51,7 +52,8 @@ type NetworksGetResource =
              "global" :>
                "networks" :>
                  Capture "network" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Network
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Network
 
 -- | Returns the specified network. Get a list of available networks by
 -- making a list() request.
@@ -60,6 +62,7 @@ type NetworksGetResource =
 data NetworksGet = NetworksGet'
     { _ngProject :: !Text
     , _ngNetwork :: !Text
+    , _ngFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'NetworksGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data NetworksGet = NetworksGet'
 -- * 'ngProject'
 --
 -- * 'ngNetwork'
+--
+-- * 'ngFields'
 networksGet
     :: Text -- ^ 'ngProject'
     -> Text -- ^ 'ngNetwork'
     -> NetworksGet
-networksGet pNgProject_ pNgNetwork_ =
+networksGet pNgProject_ pNgNetwork_ = 
     NetworksGet'
     { _ngProject = pNgProject_
     , _ngNetwork = pNgNetwork_
+    , _ngFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,6 +95,10 @@ ngNetwork :: Lens' NetworksGet Text
 ngNetwork
   = lens _ngNetwork (\ s a -> s{_ngNetwork = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ngFields :: Lens' NetworksGet (Maybe Text)
+ngFields = lens _ngFields (\ s a -> s{_ngFields = a})
+
 instance GoogleRequest NetworksGet where
         type Rs NetworksGet = Network
         type Scopes NetworksGet =
@@ -96,7 +106,7 @@ instance GoogleRequest NetworksGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient NetworksGet'{..}
-          = go _ngProject _ngNetwork (Just AltJSON)
+          = go _ngProject _ngNetwork _ngFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy NetworksGetResource)

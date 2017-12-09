@@ -42,11 +42,12 @@ module Network.Google.Resource.ServiceManagement.Operations.Get
     , ogUploadType
     , ogBearerToken
     , ogName
+    , ogFields
     , ogCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.operations.get@ method which the
 -- 'OperationsGet' request conforms to.
@@ -60,7 +61,8 @@ type OperationsGetResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Gets the latest state of a long-running operation. Clients can use this
 -- method to poll the operation result at intervals as recommended by the
@@ -68,14 +70,15 @@ type OperationsGetResource =
 --
 -- /See:/ 'operationsGet' smart constructor.
 data OperationsGet = OperationsGet'
-    { _ogXgafv          :: !(Maybe Xgafv)
+    { _ogXgafv :: !(Maybe Xgafv)
     , _ogUploadProtocol :: !(Maybe Text)
-    , _ogPp             :: !Bool
-    , _ogAccessToken    :: !(Maybe Text)
-    , _ogUploadType     :: !(Maybe Text)
-    , _ogBearerToken    :: !(Maybe Text)
-    , _ogName           :: !Text
-    , _ogCallback       :: !(Maybe Text)
+    , _ogPp :: !Bool
+    , _ogAccessToken :: !(Maybe Text)
+    , _ogUploadType :: !(Maybe Text)
+    , _ogBearerToken :: !(Maybe Text)
+    , _ogName :: !Text
+    , _ogFields :: !(Maybe Text)
+    , _ogCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OperationsGet' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data OperationsGet = OperationsGet'
 --
 -- * 'ogName'
 --
+-- * 'ogFields'
+--
 -- * 'ogCallback'
 operationsGet
     :: Text -- ^ 'ogName'
     -> OperationsGet
-operationsGet pOgName_ =
+operationsGet pOgName_ = 
     OperationsGet'
     { _ogXgafv = Nothing
     , _ogUploadProtocol = Nothing
@@ -109,6 +114,7 @@ operationsGet pOgName_ =
     , _ogUploadType = Nothing
     , _ogBearerToken = Nothing
     , _ogName = pOgName_
+    , _ogFields = Nothing
     , _ogCallback = Nothing
     }
 
@@ -147,6 +153,10 @@ ogBearerToken
 ogName :: Lens' OperationsGet Text
 ogName = lens _ogName (\ s a -> s{_ogName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ogFields :: Lens' OperationsGet (Maybe Text)
+ogFields = lens _ogFields (\ s a -> s{_ogFields = a})
+
 -- | JSONP
 ogCallback :: Lens' OperationsGet (Maybe Text)
 ogCallback
@@ -163,6 +173,7 @@ instance GoogleRequest OperationsGet where
               _ogUploadType
               _ogBearerToken
               _ogCallback
+              _ogFields
               (Just AltJSON)
               serviceManagementService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.Games.Scores.Submit
     , ssScore
     , ssLeaderboardId
     , ssLanguage
+    , ssFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.scores.submit@ method which the
 -- 'ScoresSubmit' request conforms to.
@@ -55,18 +56,20 @@ type ScoresSubmitResource =
                  QueryParam "scoreTag" Text :>
                    QueryParam "consistencyToken" (Textual Int64) :>
                      QueryParam "language" Text :>
-                       QueryParam "alt" AltJSON :>
-                         Post '[JSON] PlayerScoreResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Post '[JSON] PlayerScoreResponse
 
 -- | Submits a score to the specified leaderboard.
 --
 -- /See:/ 'scoresSubmit' smart constructor.
 data ScoresSubmit = ScoresSubmit'
-    { _ssScoreTag         :: !(Maybe Text)
+    { _ssScoreTag :: !(Maybe Text)
     , _ssConsistencyToken :: !(Maybe (Textual Int64))
-    , _ssScore            :: !(Textual Int64)
-    , _ssLeaderboardId    :: !Text
-    , _ssLanguage         :: !(Maybe Text)
+    , _ssScore :: !(Textual Int64)
+    , _ssLeaderboardId :: !Text
+    , _ssLanguage :: !(Maybe Text)
+    , _ssFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ScoresSubmit' with the minimum fields required to make a request.
@@ -82,17 +85,20 @@ data ScoresSubmit = ScoresSubmit'
 -- * 'ssLeaderboardId'
 --
 -- * 'ssLanguage'
+--
+-- * 'ssFields'
 scoresSubmit
     :: Int64 -- ^ 'ssScore'
     -> Text -- ^ 'ssLeaderboardId'
     -> ScoresSubmit
-scoresSubmit pSsScore_ pSsLeaderboardId_ =
+scoresSubmit pSsScore_ pSsLeaderboardId_ = 
     ScoresSubmit'
     { _ssScoreTag = Nothing
     , _ssConsistencyToken = Nothing
     , _ssScore = _Coerce # pSsScore_
     , _ssLeaderboardId = pSsLeaderboardId_
     , _ssLanguage = Nothing
+    , _ssFields = Nothing
     }
 
 -- | Additional information about the score you\'re submitting. Values must
@@ -130,6 +136,10 @@ ssLanguage :: Lens' ScoresSubmit (Maybe Text)
 ssLanguage
   = lens _ssLanguage (\ s a -> s{_ssLanguage = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ssFields :: Lens' ScoresSubmit (Maybe Text)
+ssFields = lens _ssFields (\ s a -> s{_ssFields = a})
+
 instance GoogleRequest ScoresSubmit where
         type Rs ScoresSubmit = PlayerScoreResponse
         type Scopes ScoresSubmit =
@@ -139,6 +149,7 @@ instance GoogleRequest ScoresSubmit where
           = go _ssLeaderboardId (Just _ssScore) _ssScoreTag
               _ssConsistencyToken
               _ssLanguage
+              _ssFields
               (Just AltJSON)
               gamesService
           where go

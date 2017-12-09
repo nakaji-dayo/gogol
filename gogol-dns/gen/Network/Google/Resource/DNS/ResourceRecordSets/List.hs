@@ -39,10 +39,11 @@ module Network.Google.Resource.DNS.ResourceRecordSets.List
     , rrslType
     , rrslManagedZone
     , rrslMaxResults
+    , rrslFields
     ) where
 
-import           Network.Google.DNS.Types
-import           Network.Google.Prelude
+import Network.Google.DNS.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dns.resourceRecordSets.list@ method which the
 -- 'ResourceRecordSetsList' request conforms to.
@@ -58,19 +59,21 @@ type ResourceRecordSetsListResource =
                      QueryParam "pageToken" Text :>
                        QueryParam "type" Text :>
                          QueryParam "maxResults" (Textual Int32) :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON] ResourceRecordSetsListResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON] ResourceRecordSetsListResponse
 
 -- | Enumerate ResourceRecordSets that have been created but not yet deleted.
 --
 -- /See:/ 'resourceRecordSetsList' smart constructor.
 data ResourceRecordSetsList = ResourceRecordSetsList'
-    { _rrslProject     :: !Text
-    , _rrslName        :: !(Maybe Text)
-    , _rrslPageToken   :: !(Maybe Text)
-    , _rrslType        :: !(Maybe Text)
+    { _rrslProject :: !Text
+    , _rrslName :: !(Maybe Text)
+    , _rrslPageToken :: !(Maybe Text)
+    , _rrslType :: !(Maybe Text)
     , _rrslManagedZone :: !Text
-    , _rrslMaxResults  :: !(Maybe (Textual Int32))
+    , _rrslMaxResults :: !(Maybe (Textual Int32))
+    , _rrslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourceRecordSetsList' with the minimum fields required to make a request.
@@ -88,11 +91,13 @@ data ResourceRecordSetsList = ResourceRecordSetsList'
 -- * 'rrslManagedZone'
 --
 -- * 'rrslMaxResults'
+--
+-- * 'rrslFields'
 resourceRecordSetsList
     :: Text -- ^ 'rrslProject'
     -> Text -- ^ 'rrslManagedZone'
     -> ResourceRecordSetsList
-resourceRecordSetsList pRrslProject_ pRrslManagedZone_ =
+resourceRecordSetsList pRrslProject_ pRrslManagedZone_ = 
     ResourceRecordSetsList'
     { _rrslProject = pRrslProject_
     , _rrslName = Nothing
@@ -100,6 +105,7 @@ resourceRecordSetsList pRrslProject_ pRrslManagedZone_ =
     , _rrslType = Nothing
     , _rrslManagedZone = pRrslManagedZone_
     , _rrslMaxResults = Nothing
+    , _rrslFields = Nothing
     }
 
 -- | Identifies the project addressed by this request.
@@ -139,6 +145,11 @@ rrslMaxResults
       (\ s a -> s{_rrslMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rrslFields :: Lens' ResourceRecordSetsList (Maybe Text)
+rrslFields
+  = lens _rrslFields (\ s a -> s{_rrslFields = a})
+
 instance GoogleRequest ResourceRecordSetsList where
         type Rs ResourceRecordSetsList =
              ResourceRecordSetsListResponse
@@ -152,6 +163,7 @@ instance GoogleRequest ResourceRecordSetsList where
               _rrslPageToken
               _rrslType
               _rrslMaxResults
+              _rrslFields
               (Just AltJSON)
               dNSService
           where go

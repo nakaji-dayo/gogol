@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Storelayoutclusters.Insert
     , sEnterpriseId
     , sPageId
     , sPayload
+    , sFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.storelayoutclusters.insert@ method which the
 -- 'StorelayoutclustersInsert' request conforms to.
@@ -52,17 +53,19 @@ type StorelayoutclustersInsertResource =
                "pages" :>
                  Capture "pageId" Text :>
                    "clusters" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] StoreCluster :>
-                         Post '[JSON] StoreCluster
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] StoreCluster :>
+                           Post '[JSON] StoreCluster
 
 -- | Inserts a new cluster in a page.
 --
 -- /See:/ 'storelayoutclustersInsert' smart constructor.
 data StorelayoutclustersInsert = StorelayoutclustersInsert'
     { _sEnterpriseId :: !Text
-    , _sPageId       :: !Text
-    , _sPayload      :: !StoreCluster
+    , _sPageId :: !Text
+    , _sPayload :: !StoreCluster
+    , _sFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StorelayoutclustersInsert' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data StorelayoutclustersInsert = StorelayoutclustersInsert'
 -- * 'sPageId'
 --
 -- * 'sPayload'
+--
+-- * 'sFields'
 storelayoutclustersInsert
     :: Text -- ^ 'sEnterpriseId'
     -> Text -- ^ 'sPageId'
     -> StoreCluster -- ^ 'sPayload'
     -> StorelayoutclustersInsert
-storelayoutclustersInsert pSEnterpriseId_ pSPageId_ pSPayload_ =
+storelayoutclustersInsert pSEnterpriseId_ pSPageId_ pSPayload_ = 
     StorelayoutclustersInsert'
     { _sEnterpriseId = pSEnterpriseId_
     , _sPageId = pSPageId_
     , _sPayload = pSPayload_
+    , _sFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -100,13 +106,18 @@ sPageId = lens _sPageId (\ s a -> s{_sPageId = a})
 sPayload :: Lens' StorelayoutclustersInsert StoreCluster
 sPayload = lens _sPayload (\ s a -> s{_sPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' StorelayoutclustersInsert (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
+
 instance GoogleRequest StorelayoutclustersInsert
          where
         type Rs StorelayoutclustersInsert = StoreCluster
         type Scopes StorelayoutclustersInsert =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient StorelayoutclustersInsert'{..}
-          = go _sEnterpriseId _sPageId (Just AltJSON) _sPayload
+          = go _sEnterpriseId _sPageId _sFields (Just AltJSON)
+              _sPayload
               androidEnterpriseService
           where go
                   = buildClient

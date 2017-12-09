@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Reviews.Reply
     , rrReviewId
     , rrPackageName
     , rrPayload
+    , rrFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.reviews.reply@ method which the
 -- 'ReviewsReply' request conforms to.
@@ -50,17 +51,19 @@ type ReviewsReplyResource =
            Capture "packageName" Text :>
              "reviews" :>
                CaptureMode "reviewId" "reply" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] ReviewsReplyRequest :>
-                     Post '[JSON] ReviewsReplyResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] ReviewsReplyRequest :>
+                       Post '[JSON] ReviewsReplyResponse
 
 -- | Reply to a single review, or update an existing reply.
 --
 -- /See:/ 'reviewsReply' smart constructor.
 data ReviewsReply = ReviewsReply'
-    { _rrReviewId    :: !Text
+    { _rrReviewId :: !Text
     , _rrPackageName :: !Text
-    , _rrPayload     :: !ReviewsReplyRequest
+    , _rrPayload :: !ReviewsReplyRequest
+    , _rrFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReviewsReply' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data ReviewsReply = ReviewsReply'
 -- * 'rrPackageName'
 --
 -- * 'rrPayload'
+--
+-- * 'rrFields'
 reviewsReply
     :: Text -- ^ 'rrReviewId'
     -> Text -- ^ 'rrPackageName'
     -> ReviewsReplyRequest -- ^ 'rrPayload'
     -> ReviewsReply
-reviewsReply pRrReviewId_ pRrPackageName_ pRrPayload_ =
+reviewsReply pRrReviewId_ pRrPackageName_ pRrPayload_ = 
     ReviewsReply'
     { _rrReviewId = pRrReviewId_
     , _rrPackageName = pRrPackageName_
     , _rrPayload = pRrPayload_
+    , _rrFields = Nothing
     }
 
 rrReviewId :: Lens' ReviewsReply Text
@@ -100,12 +106,17 @@ rrPayload :: Lens' ReviewsReply ReviewsReplyRequest
 rrPayload
   = lens _rrPayload (\ s a -> s{_rrPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rrFields :: Lens' ReviewsReply (Maybe Text)
+rrFields = lens _rrFields (\ s a -> s{_rrFields = a})
+
 instance GoogleRequest ReviewsReply where
         type Rs ReviewsReply = ReviewsReplyResponse
         type Scopes ReviewsReply =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient ReviewsReply'{..}
-          = go _rrPackageName _rrReviewId (Just AltJSON)
+          = go _rrPackageName _rrReviewId _rrFields
+              (Just AltJSON)
               _rrPayload
               androidPublisherService
           where go

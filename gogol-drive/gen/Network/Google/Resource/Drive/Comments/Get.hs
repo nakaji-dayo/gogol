@@ -36,10 +36,11 @@ module Network.Google.Resource.Drive.Comments.Get
     , cgFileId
     , cgCommentId
     , cgIncludeDeleted
+    , cgFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.comments.get@ method which the
 -- 'CommentsGet' request conforms to.
@@ -51,15 +52,17 @@ type CommentsGetResource =
              "comments" :>
                Capture "commentId" Text :>
                  QueryParam "includeDeleted" Bool :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Comment
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Comment
 
 -- | Gets a comment by ID.
 --
 -- /See:/ 'commentsGet' smart constructor.
 data CommentsGet = CommentsGet'
-    { _cgFileId         :: !Text
-    , _cgCommentId      :: !Text
+    { _cgFileId :: !Text
+    , _cgCommentId :: !Text
     , _cgIncludeDeleted :: !Bool
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data CommentsGet = CommentsGet'
 -- * 'cgCommentId'
 --
 -- * 'cgIncludeDeleted'
+--
+-- * 'cgFields'
 commentsGet
     :: Text -- ^ 'cgFileId'
     -> Text -- ^ 'cgCommentId'
     -> CommentsGet
-commentsGet pCgFileId_ pCgCommentId_ =
+commentsGet pCgFileId_ pCgCommentId_ = 
     CommentsGet'
     { _cgFileId = pCgFileId_
     , _cgCommentId = pCgCommentId_
     , _cgIncludeDeleted = False
+    , _cgFields = Nothing
     }
 
 -- | The ID of the file.
@@ -98,6 +104,10 @@ cgIncludeDeleted
   = lens _cgIncludeDeleted
       (\ s a -> s{_cgIncludeDeleted = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' CommentsGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest CommentsGet where
         type Rs CommentsGet = Comment
         type Scopes CommentsGet =
@@ -106,6 +116,7 @@ instance GoogleRequest CommentsGet where
                "https://www.googleapis.com/auth/drive.readonly"]
         requestClient CommentsGet'{..}
           = go _cgFileId _cgCommentId (Just _cgIncludeDeleted)
+              _cgFields
               (Just AltJSON)
               driveService
           where go

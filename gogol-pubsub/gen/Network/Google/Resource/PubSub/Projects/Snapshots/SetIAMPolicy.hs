@@ -42,11 +42,12 @@ module Network.Google.Resource.PubSub.Projects.Snapshots.SetIAMPolicy
     , pssiampPayload
     , pssiampBearerToken
     , pssiampResource
+    , pssiampFields
     , pssiampCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.PubSub.Types
+import Network.Google.Prelude
+import Network.Google.PubSub.Types
 
 -- | A resource alias for @pubsub.projects.snapshots.setIamPolicy@ method which the
 -- 'ProjectsSnapshotsSetIAMPolicy' request conforms to.
@@ -60,24 +61,26 @@ type ProjectsSnapshotsSetIAMPolicyResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] SetIAMPolicyRequest :>
-                           Post '[JSON] Policy
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] SetIAMPolicyRequest :>
+                             Post '[JSON] Policy
 
 -- | Sets the access control policy on the specified resource. Replaces any
 -- existing policy.
 --
 -- /See:/ 'projectsSnapshotsSetIAMPolicy' smart constructor.
 data ProjectsSnapshotsSetIAMPolicy = ProjectsSnapshotsSetIAMPolicy'
-    { _pssiampXgafv          :: !(Maybe Xgafv)
+    { _pssiampXgafv :: !(Maybe Xgafv)
     , _pssiampUploadProtocol :: !(Maybe Text)
-    , _pssiampPp             :: !Bool
-    , _pssiampAccessToken    :: !(Maybe Text)
-    , _pssiampUploadType     :: !(Maybe Text)
-    , _pssiampPayload        :: !SetIAMPolicyRequest
-    , _pssiampBearerToken    :: !(Maybe Text)
-    , _pssiampResource       :: !Text
-    , _pssiampCallback       :: !(Maybe Text)
+    , _pssiampPp :: !Bool
+    , _pssiampAccessToken :: !(Maybe Text)
+    , _pssiampUploadType :: !(Maybe Text)
+    , _pssiampPayload :: !SetIAMPolicyRequest
+    , _pssiampBearerToken :: !(Maybe Text)
+    , _pssiampResource :: !Text
+    , _pssiampFields :: !(Maybe Text)
+    , _pssiampCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSnapshotsSetIAMPolicy' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ProjectsSnapshotsSetIAMPolicy = ProjectsSnapshotsSetIAMPolicy'
 --
 -- * 'pssiampResource'
 --
+-- * 'pssiampFields'
+--
 -- * 'pssiampCallback'
 projectsSnapshotsSetIAMPolicy
     :: SetIAMPolicyRequest -- ^ 'pssiampPayload'
     -> Text -- ^ 'pssiampResource'
     -> ProjectsSnapshotsSetIAMPolicy
-projectsSnapshotsSetIAMPolicy pPssiampPayload_ pPssiampResource_ =
+projectsSnapshotsSetIAMPolicy pPssiampPayload_ pPssiampResource_ = 
     ProjectsSnapshotsSetIAMPolicy'
     { _pssiampXgafv = Nothing
     , _pssiampUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsSnapshotsSetIAMPolicy pPssiampPayload_ pPssiampResource_ =
     , _pssiampPayload = pPssiampPayload_
     , _pssiampBearerToken = Nothing
     , _pssiampResource = pPssiampResource_
+    , _pssiampFields = Nothing
     , _pssiampCallback = Nothing
     }
 
@@ -158,13 +164,18 @@ pssiampBearerToken
   = lens _pssiampBearerToken
       (\ s a -> s{_pssiampBearerToken = a})
 
--- | REQUIRED: The resource for which the policy is being specified.
--- \`resource\` is usually specified as a path. For example, a Project
--- resource is specified as \`projects\/{project}\`.
+-- | REQUIRED: The resource for which the policy is being specified. See the
+-- operation documentation for the appropriate value for this field.
 pssiampResource :: Lens' ProjectsSnapshotsSetIAMPolicy Text
 pssiampResource
   = lens _pssiampResource
       (\ s a -> s{_pssiampResource = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pssiampFields :: Lens' ProjectsSnapshotsSetIAMPolicy (Maybe Text)
+pssiampFields
+  = lens _pssiampFields
+      (\ s a -> s{_pssiampFields = a})
 
 -- | JSONP
 pssiampCallback :: Lens' ProjectsSnapshotsSetIAMPolicy (Maybe Text)
@@ -186,6 +197,7 @@ instance GoogleRequest ProjectsSnapshotsSetIAMPolicy
               _pssiampUploadType
               _pssiampBearerToken
               _pssiampCallback
+              _pssiampFields
               (Just AltJSON)
               _pssiampPayload
               pubSubService

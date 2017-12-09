@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Groups.Patch
     -- * Request Lenses
     , gpGroupKey
     , gpPayload
+    , gpFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.groups.patch@ method which the
 -- 'GroupsPatch' request conforms to.
@@ -48,15 +49,17 @@ type GroupsPatchResource =
          "v1" :>
            "groups" :>
              Capture "groupKey" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Group :> Patch '[JSON] Group
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Group :> Patch '[JSON] Group
 
 -- | Update Group. This method supports patch semantics.
 --
 -- /See:/ 'groupsPatch' smart constructor.
 data GroupsPatch = GroupsPatch'
     { _gpGroupKey :: !Text
-    , _gpPayload  :: !Group
+    , _gpPayload :: !Group
+    , _gpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsPatch' with the minimum fields required to make a request.
@@ -66,17 +69,20 @@ data GroupsPatch = GroupsPatch'
 -- * 'gpGroupKey'
 --
 -- * 'gpPayload'
+--
+-- * 'gpFields'
 groupsPatch
     :: Text -- ^ 'gpGroupKey'
     -> Group -- ^ 'gpPayload'
     -> GroupsPatch
-groupsPatch pGpGroupKey_ pGpPayload_ =
+groupsPatch pGpGroupKey_ pGpPayload_ = 
     GroupsPatch'
     { _gpGroupKey = pGpGroupKey_
     , _gpPayload = pGpPayload_
+    , _gpFields = Nothing
     }
 
--- | Email or immutable Id of the group. If Id, it should match with id of
+-- | Email or immutable ID of the group. If ID, it should match with id of
 -- group object
 gpGroupKey :: Lens' GroupsPatch Text
 gpGroupKey
@@ -87,12 +93,16 @@ gpPayload :: Lens' GroupsPatch Group
 gpPayload
   = lens _gpPayload (\ s a -> s{_gpPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gpFields :: Lens' GroupsPatch (Maybe Text)
+gpFields = lens _gpFields (\ s a -> s{_gpFields = a})
+
 instance GoogleRequest GroupsPatch where
         type Rs GroupsPatch = Group
         type Scopes GroupsPatch =
              '["https://www.googleapis.com/auth/admin.directory.group"]
         requestClient GroupsPatch'{..}
-          = go _gpGroupKey (Just AltJSON) _gpPayload
+          = go _gpGroupKey _gpFields (Just AltJSON) _gpPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy GroupsPatchResource)

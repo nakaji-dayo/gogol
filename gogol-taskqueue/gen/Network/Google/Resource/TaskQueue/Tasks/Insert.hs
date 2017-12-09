@@ -36,10 +36,11 @@ module Network.Google.Resource.TaskQueue.Tasks.Insert
     , tiTaskQueue
     , tiProject
     , tiPayload
+    , tiFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TaskQueue.Types
+import Network.Google.Prelude
+import Network.Google.TaskQueue.Types
 
 -- | A resource alias for @taskqueue.tasks.insert@ method which the
 -- 'TasksInsert' request conforms to.
@@ -51,16 +52,18 @@ type TasksInsertResource =
              "taskqueues" :>
                Capture "taskqueue" Text :>
                  "tasks" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Task :> Post '[JSON] Task
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Task :> Post '[JSON] Task
 
 -- | Insert a new task in a TaskQueue
 --
 -- /See:/ 'tasksInsert' smart constructor.
 data TasksInsert = TasksInsert'
     { _tiTaskQueue :: !Text
-    , _tiProject   :: !Text
-    , _tiPayload   :: !Task
+    , _tiProject :: !Text
+    , _tiPayload :: !Task
+    , _tiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksInsert' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data TasksInsert = TasksInsert'
 -- * 'tiProject'
 --
 -- * 'tiPayload'
+--
+-- * 'tiFields'
 tasksInsert
     :: Text -- ^ 'tiTaskQueue'
     -> Text -- ^ 'tiProject'
     -> Task -- ^ 'tiPayload'
     -> TasksInsert
-tasksInsert pTiTaskQueue_ pTiProject_ pTiPayload_ =
+tasksInsert pTiTaskQueue_ pTiProject_ pTiPayload_ = 
     TasksInsert'
     { _tiTaskQueue = pTiTaskQueue_
     , _tiProject = pTiProject_
     , _tiPayload = pTiPayload_
+    , _tiFields = Nothing
     }
 
 -- | The taskqueue to insert the task into
@@ -99,13 +105,17 @@ tiPayload :: Lens' TasksInsert Task
 tiPayload
   = lens _tiPayload (\ s a -> s{_tiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiFields :: Lens' TasksInsert (Maybe Text)
+tiFields = lens _tiFields (\ s a -> s{_tiFields = a})
+
 instance GoogleRequest TasksInsert where
         type Rs TasksInsert = Task
         type Scopes TasksInsert =
              '["https://www.googleapis.com/auth/taskqueue",
                "https://www.googleapis.com/auth/taskqueue.consumer"]
         requestClient TasksInsert'{..}
-          = go _tiProject _tiTaskQueue (Just AltJSON)
+          = go _tiProject _tiTaskQueue _tiFields (Just AltJSON)
               _tiPayload
               taskQueueService
           where go

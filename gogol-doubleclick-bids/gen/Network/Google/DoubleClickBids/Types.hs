@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -18,6 +18,9 @@ module Network.Google.DoubleClickBids.Types
     (
     -- * Service Configuration
       doubleClickBidsService
+
+    -- * OAuth Scopes
+    , doubleClickBidManagerScope
 
     -- * ListReportsResponse
     , ListReportsResponse
@@ -232,9 +235,9 @@ module Network.Google.DoubleClickBids.Types
     , ReportStatusFormat (..)
     ) where
 
-import           Network.Google.DoubleClickBids.Types.Product
-import           Network.Google.DoubleClickBids.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types.Product
+import Network.Google.DoubleClickBids.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the DoubleClick Bid Manager API. This contains the host and root path used as a starting point for constructing service requests.
 doubleClickBidsService :: ServiceConfig
@@ -242,3 +245,7 @@ doubleClickBidsService
   = defaultService
       (ServiceId "doubleclickbidmanager:v1")
       "www.googleapis.com"
+
+-- | View and manage your reports in DoubleClick Bid Manager
+doubleClickBidManagerScope :: Proxy '["https://www.googleapis.com/auth/doubleclickbidmanager"]
+doubleClickBidManagerScope = Proxy;

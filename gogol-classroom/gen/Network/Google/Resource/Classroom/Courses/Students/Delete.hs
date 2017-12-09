@@ -45,11 +45,12 @@ module Network.Google.Resource.Classroom.Courses.Students.Delete
     , csdUploadType
     , csdUserId
     , csdBearerToken
+    , csdFields
     , csdCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.students.delete@ method which the
 -- 'CoursesStudentsDelete' request conforms to.
@@ -59,14 +60,15 @@ type CoursesStudentsDeleteResource =
          Capture "courseId" Text :>
            "students" :>
              Capture "userId" Text :>
-               QueryParam "$.xgafv" Text :>
+               QueryParam "$.xgafv" Xgafv :>
                  QueryParam "upload_protocol" Text :>
                    QueryParam "pp" Bool :>
                      QueryParam "access_token" Text :>
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a student of a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
@@ -76,15 +78,16 @@ type CoursesStudentsDeleteResource =
 --
 -- /See:/ 'coursesStudentsDelete' smart constructor.
 data CoursesStudentsDelete = CoursesStudentsDelete'
-    { _csdXgafv          :: !(Maybe Text)
+    { _csdXgafv :: !(Maybe Xgafv)
     , _csdUploadProtocol :: !(Maybe Text)
-    , _csdPp             :: !Bool
-    , _csdCourseId       :: !Text
-    , _csdAccessToken    :: !(Maybe Text)
-    , _csdUploadType     :: !(Maybe Text)
-    , _csdUserId         :: !Text
-    , _csdBearerToken    :: !(Maybe Text)
-    , _csdCallback       :: !(Maybe Text)
+    , _csdPp :: !Bool
+    , _csdCourseId :: !Text
+    , _csdAccessToken :: !(Maybe Text)
+    , _csdUploadType :: !(Maybe Text)
+    , _csdUserId :: !Text
+    , _csdBearerToken :: !(Maybe Text)
+    , _csdFields :: !(Maybe Text)
+    , _csdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesStudentsDelete' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data CoursesStudentsDelete = CoursesStudentsDelete'
 --
 -- * 'csdBearerToken'
 --
+-- * 'csdFields'
+--
 -- * 'csdCallback'
 coursesStudentsDelete
     :: Text -- ^ 'csdCourseId'
     -> Text -- ^ 'csdUserId'
     -> CoursesStudentsDelete
-coursesStudentsDelete pCsdCourseId_ pCsdUserId_ =
+coursesStudentsDelete pCsdCourseId_ pCsdUserId_ = 
     CoursesStudentsDelete'
     { _csdXgafv = Nothing
     , _csdUploadProtocol = Nothing
@@ -122,11 +127,12 @@ coursesStudentsDelete pCsdCourseId_ pCsdUserId_ =
     , _csdUploadType = Nothing
     , _csdUserId = pCsdUserId_
     , _csdBearerToken = Nothing
+    , _csdFields = Nothing
     , _csdCallback = Nothing
     }
 
 -- | V1 error format.
-csdXgafv :: Lens' CoursesStudentsDelete (Maybe Text)
+csdXgafv :: Lens' CoursesStudentsDelete (Maybe Xgafv)
 csdXgafv = lens _csdXgafv (\ s a -> s{_csdXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -170,6 +176,11 @@ csdBearerToken
   = lens _csdBearerToken
       (\ s a -> s{_csdBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+csdFields :: Lens' CoursesStudentsDelete (Maybe Text)
+csdFields
+  = lens _csdFields (\ s a -> s{_csdFields = a})
+
 -- | JSONP
 csdCallback :: Lens' CoursesStudentsDelete (Maybe Text)
 csdCallback
@@ -187,6 +198,7 @@ instance GoogleRequest CoursesStudentsDelete where
               _csdUploadType
               _csdBearerToken
               _csdCallback
+              _csdFields
               (Just AltJSON)
               classroomService
           where go

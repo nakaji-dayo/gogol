@@ -41,11 +41,12 @@ module Network.Google.Resource.Logging.Folders.Sinks.Delete
     , fsdUploadType
     , fsdBearerToken
     , fsdSinkName
+    , fsdFields
     , fsdCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.folders.sinks.delete@ method which the
 -- 'FoldersSinksDelete' request conforms to.
@@ -59,21 +60,23 @@ type FoldersSinksDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a sink. If the sink has a unique writer_identity, then that
 -- service account is also deleted.
 --
 -- /See:/ 'foldersSinksDelete' smart constructor.
 data FoldersSinksDelete = FoldersSinksDelete'
-    { _fsdXgafv          :: !(Maybe Xgafv)
+    { _fsdXgafv :: !(Maybe Xgafv)
     , _fsdUploadProtocol :: !(Maybe Text)
-    , _fsdPp             :: !Bool
-    , _fsdAccessToken    :: !(Maybe Text)
-    , _fsdUploadType     :: !(Maybe Text)
-    , _fsdBearerToken    :: !(Maybe Text)
-    , _fsdSinkName       :: !Text
-    , _fsdCallback       :: !(Maybe Text)
+    , _fsdPp :: !Bool
+    , _fsdAccessToken :: !(Maybe Text)
+    , _fsdUploadType :: !(Maybe Text)
+    , _fsdBearerToken :: !(Maybe Text)
+    , _fsdSinkName :: !Text
+    , _fsdFields :: !(Maybe Text)
+    , _fsdCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FoldersSinksDelete' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data FoldersSinksDelete = FoldersSinksDelete'
 --
 -- * 'fsdSinkName'
 --
+-- * 'fsdFields'
+--
 -- * 'fsdCallback'
 foldersSinksDelete
     :: Text -- ^ 'fsdSinkName'
     -> FoldersSinksDelete
-foldersSinksDelete pFsdSinkName_ =
+foldersSinksDelete pFsdSinkName_ = 
     FoldersSinksDelete'
     { _fsdXgafv = Nothing
     , _fsdUploadProtocol = Nothing
@@ -107,6 +112,7 @@ foldersSinksDelete pFsdSinkName_ =
     , _fsdUploadType = Nothing
     , _fsdBearerToken = Nothing
     , _fsdSinkName = pFsdSinkName_
+    , _fsdFields = Nothing
     , _fsdCallback = Nothing
     }
 
@@ -145,13 +151,18 @@ fsdBearerToken
 -- | Required. The full resource name of the sink to delete, including the
 -- parent resource and the sink identifier:
 -- \"projects\/[PROJECT_ID]\/sinks\/[SINK_ID]\"
--- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\" It is an error if
--- the sink does not exist. Example:
--- \"projects\/my-project-id\/sinks\/my-sink-id\". It is an error if the
--- sink does not exist.
+-- \"organizations\/[ORGANIZATION_ID]\/sinks\/[SINK_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\/sinks\/[SINK_ID]\"
+-- \"folders\/[FOLDER_ID]\/sinks\/[SINK_ID]\" Example:
+-- \"projects\/my-project-id\/sinks\/my-sink-id\".
 fsdSinkName :: Lens' FoldersSinksDelete Text
 fsdSinkName
   = lens _fsdSinkName (\ s a -> s{_fsdSinkName = a})
+
+-- | Selector specifying which fields to include in a partial response.
+fsdFields :: Lens' FoldersSinksDelete (Maybe Text)
+fsdFields
+  = lens _fsdFields (\ s a -> s{_fsdFields = a})
 
 -- | JSONP
 fsdCallback :: Lens' FoldersSinksDelete (Maybe Text)
@@ -170,6 +181,7 @@ instance GoogleRequest FoldersSinksDelete where
               _fsdUploadType
               _fsdBearerToken
               _fsdCallback
+              _fsdFields
               (Just AltJSON)
               loggingService
           where go

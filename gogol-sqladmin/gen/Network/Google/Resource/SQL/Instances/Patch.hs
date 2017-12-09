@@ -38,11 +38,12 @@ module Network.Google.Resource.SQL.Instances.Patch
     -- * Request Lenses
     , ipProject
     , ipPayload
+    , ipFields
     , ipInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.patch@ method which the
 -- 'InstancesPatch' request conforms to.
@@ -53,9 +54,10 @@ type InstancesPatchResource =
            Capture "project" Text :>
              "instances" :>
                Capture "instance" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DatabaseInstance :>
-                     Patch '[JSON] Operation
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DatabaseInstance :>
+                       Patch '[JSON] Operation
 
 -- | Updates settings of a Cloud SQL instance. Caution: This is not a partial
 -- update, so you must include values for all the settings that you want to
@@ -64,8 +66,9 @@ type InstancesPatchResource =
 --
 -- /See:/ 'instancesPatch' smart constructor.
 data InstancesPatch = InstancesPatch'
-    { _ipProject  :: !Text
-    , _ipPayload  :: !DatabaseInstance
+    { _ipProject :: !Text
+    , _ipPayload :: !DatabaseInstance
+    , _ipFields :: !(Maybe Text)
     , _ipInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -77,16 +80,19 @@ data InstancesPatch = InstancesPatch'
 --
 -- * 'ipPayload'
 --
+-- * 'ipFields'
+--
 -- * 'ipInstance'
 instancesPatch
     :: Text -- ^ 'ipProject'
     -> DatabaseInstance -- ^ 'ipPayload'
     -> Text -- ^ 'ipInstance'
     -> InstancesPatch
-instancesPatch pIpProject_ pIpPayload_ pIpInstance_ =
+instancesPatch pIpProject_ pIpPayload_ pIpInstance_ = 
     InstancesPatch'
     { _ipProject = pIpProject_
     , _ipPayload = pIpPayload_
+    , _ipFields = Nothing
     , _ipInstance = pIpInstance_
     }
 
@@ -100,6 +106,10 @@ ipPayload :: Lens' InstancesPatch DatabaseInstance
 ipPayload
   = lens _ipPayload (\ s a -> s{_ipPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ipFields :: Lens' InstancesPatch (Maybe Text)
+ipFields = lens _ipFields (\ s a -> s{_ipFields = a})
+
 -- | Cloud SQL instance ID. This does not include the project ID.
 ipInstance :: Lens' InstancesPatch Text
 ipInstance
@@ -111,7 +121,8 @@ instance GoogleRequest InstancesPatch where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesPatch'{..}
-          = go _ipProject _ipInstance (Just AltJSON) _ipPayload
+          = go _ipProject _ipInstance _ipFields (Just AltJSON)
+              _ipPayload
               sQLAdminService
           where go
                   = buildClient (Proxy :: Proxy InstancesPatchResource)

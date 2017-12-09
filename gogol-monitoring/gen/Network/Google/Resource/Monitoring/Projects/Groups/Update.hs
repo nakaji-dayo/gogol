@@ -43,11 +43,12 @@ module Network.Google.Resource.Monitoring.Projects.Groups.Update
     , pguPayload
     , pguBearerToken
     , pguName
+    , pguFields
     , pguCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.groups.update@ method which the
 -- 'ProjectsGroupsUpdate' request conforms to.
@@ -62,24 +63,26 @@ type ProjectsGroupsUpdateResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] Group :> Put '[JSON] Group
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] Group :> Put '[JSON] Group
 
 -- | Updates an existing group. You can change any group attributes except
 -- name.
 --
 -- /See:/ 'projectsGroupsUpdate' smart constructor.
 data ProjectsGroupsUpdate = ProjectsGroupsUpdate'
-    { _pguXgafv          :: !(Maybe Xgafv)
-    , _pguValidateOnly   :: !(Maybe Bool)
+    { _pguXgafv :: !(Maybe Xgafv)
+    , _pguValidateOnly :: !(Maybe Bool)
     , _pguUploadProtocol :: !(Maybe Text)
-    , _pguPp             :: !Bool
-    , _pguAccessToken    :: !(Maybe Text)
-    , _pguUploadType     :: !(Maybe Text)
-    , _pguPayload        :: !Group
-    , _pguBearerToken    :: !(Maybe Text)
-    , _pguName           :: !Text
-    , _pguCallback       :: !(Maybe Text)
+    , _pguPp :: !Bool
+    , _pguAccessToken :: !(Maybe Text)
+    , _pguUploadType :: !(Maybe Text)
+    , _pguPayload :: !Group
+    , _pguBearerToken :: !(Maybe Text)
+    , _pguName :: !Text
+    , _pguFields :: !(Maybe Text)
+    , _pguCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsGroupsUpdate' with the minimum fields required to make a request.
@@ -104,12 +107,14 @@ data ProjectsGroupsUpdate = ProjectsGroupsUpdate'
 --
 -- * 'pguName'
 --
+-- * 'pguFields'
+--
 -- * 'pguCallback'
 projectsGroupsUpdate
     :: Group -- ^ 'pguPayload'
     -> Text -- ^ 'pguName'
     -> ProjectsGroupsUpdate
-projectsGroupsUpdate pPguPayload_ pPguName_ =
+projectsGroupsUpdate pPguPayload_ pPguName_ = 
     ProjectsGroupsUpdate'
     { _pguXgafv = Nothing
     , _pguValidateOnly = Nothing
@@ -120,6 +125,7 @@ projectsGroupsUpdate pPguPayload_ pPguName_ =
     , _pguPayload = pPguPayload_
     , _pguBearerToken = Nothing
     , _pguName = pPguName_
+    , _pguFields = Nothing
     , _pguCallback = Nothing
     }
 
@@ -174,6 +180,11 @@ pguBearerToken
 pguName :: Lens' ProjectsGroupsUpdate Text
 pguName = lens _pguName (\ s a -> s{_pguName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pguFields :: Lens' ProjectsGroupsUpdate (Maybe Text)
+pguFields
+  = lens _pguFields (\ s a -> s{_pguFields = a})
+
 -- | JSONP
 pguCallback :: Lens' ProjectsGroupsUpdate (Maybe Text)
 pguCallback
@@ -192,6 +203,7 @@ instance GoogleRequest ProjectsGroupsUpdate where
               _pguUploadType
               _pguBearerToken
               _pguCallback
+              _pguFields
               (Just AltJSON)
               _pguPayload
               monitoringService

@@ -20,10 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Retrieves a Merchant Center account. This method can only be called for
--- accounts to which the managing account has access: either the managing
--- account itself or sub-accounts if the managing account is a multi-client
--- account.
+-- Retrieves a Merchant Center account.
 --
 -- /See:/ <https://developers.google.com/shopping-content Content API for Shopping Reference> for @content.accounts.get@.
 module Network.Google.Resource.Content.Accounts.Get
@@ -38,10 +35,11 @@ module Network.Google.Resource.Content.Accounts.Get
     -- * Request Lenses
     , agMerchantId
     , agAccountId
+    , agFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
@@ -51,17 +49,16 @@ type AccountsGetResource =
          Capture "merchantId" (Textual Word64) :>
            "accounts" :>
              Capture "accountId" (Textual Word64) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Account
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Account
 
--- | Retrieves a Merchant Center account. This method can only be called for
--- accounts to which the managing account has access: either the managing
--- account itself or sub-accounts if the managing account is a multi-client
--- account.
+-- | Retrieves a Merchant Center account.
 --
 -- /See:/ 'accountsGet' smart constructor.
 data AccountsGet = AccountsGet'
     { _agMerchantId :: !(Textual Word64)
-    , _agAccountId  :: !(Textual Word64)
+    , _agAccountId :: !(Textual Word64)
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
@@ -71,17 +68,22 @@ data AccountsGet = AccountsGet'
 -- * 'agMerchantId'
 --
 -- * 'agAccountId'
+--
+-- * 'agFields'
 accountsGet
     :: Word64 -- ^ 'agMerchantId'
     -> Word64 -- ^ 'agAccountId'
     -> AccountsGet
-accountsGet pAgMerchantId_ pAgAccountId_ =
+accountsGet pAgMerchantId_ pAgAccountId_ = 
     AccountsGet'
     { _agMerchantId = _Coerce # pAgMerchantId_
     , _agAccountId = _Coerce # pAgAccountId_
+    , _agFields = Nothing
     }
 
--- | The ID of the managing account.
+-- | The ID of the managing account. If this parameter is not the same as
+-- accountId, then this account must be a multi-client account and
+-- accountId must be the ID of a sub-account of this account.
 agMerchantId :: Lens' AccountsGet Word64
 agMerchantId
   = lens _agMerchantId (\ s a -> s{_agMerchantId = a})
@@ -93,12 +95,17 @@ agAccountId
   = lens _agAccountId (\ s a -> s{_agAccountId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AccountsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
         type Scopes AccountsGet =
              '["https://www.googleapis.com/auth/content"]
         requestClient AccountsGet'{..}
-          = go _agMerchantId _agAccountId (Just AltJSON)
+          = go _agMerchantId _agAccountId _agFields
+              (Just AltJSON)
               shoppingContentService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)

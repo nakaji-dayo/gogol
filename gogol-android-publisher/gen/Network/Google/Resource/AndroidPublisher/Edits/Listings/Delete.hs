@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.Listings.Delete
     , eldPackageName
     , eldLanguage
     , eldEditId
+    , eldFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.listings.delete@ method which the
 -- 'EditsListingsDelete' request conforms to.
@@ -52,15 +53,17 @@ type EditsListingsDeleteResource =
                Capture "editId" Text :>
                  "listings" :>
                    Capture "language" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified localized store listing from an edit.
 --
 -- /See:/ 'editsListingsDelete' smart constructor.
 data EditsListingsDelete = EditsListingsDelete'
     { _eldPackageName :: !Text
-    , _eldLanguage    :: !Text
-    , _eldEditId      :: !Text
+    , _eldLanguage :: !Text
+    , _eldEditId :: !Text
+    , _eldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsListingsDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data EditsListingsDelete = EditsListingsDelete'
 -- * 'eldLanguage'
 --
 -- * 'eldEditId'
+--
+-- * 'eldFields'
 editsListingsDelete
     :: Text -- ^ 'eldPackageName'
     -> Text -- ^ 'eldLanguage'
     -> Text -- ^ 'eldEditId'
     -> EditsListingsDelete
-editsListingsDelete pEldPackageName_ pEldLanguage_ pEldEditId_ =
+editsListingsDelete pEldPackageName_ pEldLanguage_ pEldEditId_ = 
     EditsListingsDelete'
     { _eldPackageName = pEldPackageName_
     , _eldLanguage = pEldLanguage_
     , _eldEditId = pEldEditId_
+    , _eldFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -102,12 +108,18 @@ eldEditId :: Lens' EditsListingsDelete Text
 eldEditId
   = lens _eldEditId (\ s a -> s{_eldEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eldFields :: Lens' EditsListingsDelete (Maybe Text)
+eldFields
+  = lens _eldFields (\ s a -> s{_eldFields = a})
+
 instance GoogleRequest EditsListingsDelete where
         type Rs EditsListingsDelete = ()
         type Scopes EditsListingsDelete =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient EditsListingsDelete'{..}
           = go _eldPackageName _eldEditId _eldLanguage
+              _eldFields
               (Just AltJSON)
               androidPublisherService
           where go

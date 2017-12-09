@@ -20,8 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Returns the specified ForwardingRule resource. Get a list of available
--- forwarding rules by making a list() request.
+-- Returns the specified GlobalForwardingRule resource. Get a list of
+-- available forwarding rules by making a list() request.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.globalForwardingRules.get@.
 module Network.Google.Resource.Compute.GlobalForwardingRules.Get
@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.GlobalForwardingRules.Get
     -- * Request Lenses
     , gfrgProject
     , gfrgForwardingRule
+    , gfrgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalForwardingRules.get@ method which the
 -- 'GlobalForwardingRulesGet' request conforms to.
@@ -51,16 +52,18 @@ type GlobalForwardingRulesGetResource =
              "global" :>
                "forwardingRules" :>
                  Capture "forwardingRule" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ForwardingRule
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ForwardingRule
 
--- | Returns the specified ForwardingRule resource. Get a list of available
--- forwarding rules by making a list() request.
+-- | Returns the specified GlobalForwardingRule resource. Get a list of
+-- available forwarding rules by making a list() request.
 --
 -- /See:/ 'globalForwardingRulesGet' smart constructor.
 data GlobalForwardingRulesGet = GlobalForwardingRulesGet'
-    { _gfrgProject        :: !Text
+    { _gfrgProject :: !Text
     , _gfrgForwardingRule :: !Text
+    , _gfrgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalForwardingRulesGet' with the minimum fields required to make a request.
@@ -70,14 +73,17 @@ data GlobalForwardingRulesGet = GlobalForwardingRulesGet'
 -- * 'gfrgProject'
 --
 -- * 'gfrgForwardingRule'
+--
+-- * 'gfrgFields'
 globalForwardingRulesGet
     :: Text -- ^ 'gfrgProject'
     -> Text -- ^ 'gfrgForwardingRule'
     -> GlobalForwardingRulesGet
-globalForwardingRulesGet pGfrgProject_ pGfrgForwardingRule_ =
+globalForwardingRulesGet pGfrgProject_ pGfrgForwardingRule_ = 
     GlobalForwardingRulesGet'
     { _gfrgProject = pGfrgProject_
     , _gfrgForwardingRule = pGfrgForwardingRule_
+    , _gfrgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -91,6 +97,11 @@ gfrgForwardingRule
   = lens _gfrgForwardingRule
       (\ s a -> s{_gfrgForwardingRule = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gfrgFields :: Lens' GlobalForwardingRulesGet (Maybe Text)
+gfrgFields
+  = lens _gfrgFields (\ s a -> s{_gfrgFields = a})
+
 instance GoogleRequest GlobalForwardingRulesGet where
         type Rs GlobalForwardingRulesGet = ForwardingRule
         type Scopes GlobalForwardingRulesGet =
@@ -98,7 +109,8 @@ instance GoogleRequest GlobalForwardingRulesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient GlobalForwardingRulesGet'{..}
-          = go _gfrgProject _gfrgForwardingRule (Just AltJSON)
+          = go _gfrgProject _gfrgForwardingRule _gfrgFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

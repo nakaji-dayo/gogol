@@ -36,10 +36,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Decline
     , tbmdConsistencyToken
     , tbmdLanguage
     , tbmdMatchId
+    , tbmdFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.decline@ method which the
 -- 'TurnBasedMatchesDecline' request conforms to.
@@ -51,16 +52,18 @@ type TurnBasedMatchesDeclineResource =
              "decline" :>
                QueryParam "consistencyToken" (Textual Int64) :>
                  QueryParam "language" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Put '[JSON] TurnBasedMatch
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Put '[JSON] TurnBasedMatch
 
 -- | Decline an invitation to play a turn-based match.
 --
 -- /See:/ 'turnBasedMatchesDecline' smart constructor.
 data TurnBasedMatchesDecline = TurnBasedMatchesDecline'
     { _tbmdConsistencyToken :: !(Maybe (Textual Int64))
-    , _tbmdLanguage         :: !(Maybe Text)
-    , _tbmdMatchId          :: !Text
+    , _tbmdLanguage :: !(Maybe Text)
+    , _tbmdMatchId :: !Text
+    , _tbmdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesDecline' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data TurnBasedMatchesDecline = TurnBasedMatchesDecline'
 -- * 'tbmdLanguage'
 --
 -- * 'tbmdMatchId'
+--
+-- * 'tbmdFields'
 turnBasedMatchesDecline
     :: Text -- ^ 'tbmdMatchId'
     -> TurnBasedMatchesDecline
-turnBasedMatchesDecline pTbmdMatchId_ =
+turnBasedMatchesDecline pTbmdMatchId_ = 
     TurnBasedMatchesDecline'
     { _tbmdConsistencyToken = Nothing
     , _tbmdLanguage = Nothing
     , _tbmdMatchId = pTbmdMatchId_
+    , _tbmdFields = Nothing
     }
 
 -- | The last-seen mutation timestamp.
@@ -99,6 +105,11 @@ tbmdMatchId :: Lens' TurnBasedMatchesDecline Text
 tbmdMatchId
   = lens _tbmdMatchId (\ s a -> s{_tbmdMatchId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tbmdFields :: Lens' TurnBasedMatchesDecline (Maybe Text)
+tbmdFields
+  = lens _tbmdFields (\ s a -> s{_tbmdFields = a})
+
 instance GoogleRequest TurnBasedMatchesDecline where
         type Rs TurnBasedMatchesDecline = TurnBasedMatch
         type Scopes TurnBasedMatchesDecline =
@@ -106,6 +117,7 @@ instance GoogleRequest TurnBasedMatchesDecline where
                "https://www.googleapis.com/auth/plus.login"]
         requestClient TurnBasedMatchesDecline'{..}
           = go _tbmdMatchId _tbmdConsistencyToken _tbmdLanguage
+              _tbmdFields
               (Just AltJSON)
               gamesService
           where go

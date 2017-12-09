@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Members.Get
     -- * Request Lenses
     , mgMemberKey
     , mgGroupKey
+    , mgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.members.get@ method which the
 -- 'MembersGet' request conforms to.
@@ -50,14 +51,16 @@ type MembersGetResource =
              Capture "groupKey" Text :>
                "members" :>
                  Capture "memberKey" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Member
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Member
 
 -- | Retrieve Group Member
 --
 -- /See:/ 'membersGet' smart constructor.
 data MembersGet = MembersGet'
     { _mgMemberKey :: !Text
-    , _mgGroupKey  :: !Text
+    , _mgGroupKey :: !Text
+    , _mgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MembersGet' with the minimum fields required to make a request.
@@ -67,25 +70,32 @@ data MembersGet = MembersGet'
 -- * 'mgMemberKey'
 --
 -- * 'mgGroupKey'
+--
+-- * 'mgFields'
 membersGet
     :: Text -- ^ 'mgMemberKey'
     -> Text -- ^ 'mgGroupKey'
     -> MembersGet
-membersGet pMgMemberKey_ pMgGroupKey_ =
+membersGet pMgMemberKey_ pMgGroupKey_ = 
     MembersGet'
     { _mgMemberKey = pMgMemberKey_
     , _mgGroupKey = pMgGroupKey_
+    , _mgFields = Nothing
     }
 
--- | Email or immutable Id of the member
+-- | Email or immutable ID of the member
 mgMemberKey :: Lens' MembersGet Text
 mgMemberKey
   = lens _mgMemberKey (\ s a -> s{_mgMemberKey = a})
 
--- | Email or immutable Id of the group
+-- | Email or immutable ID of the group
 mgGroupKey :: Lens' MembersGet Text
 mgGroupKey
   = lens _mgGroupKey (\ s a -> s{_mgGroupKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+mgFields :: Lens' MembersGet (Maybe Text)
+mgFields = lens _mgFields (\ s a -> s{_mgFields = a})
 
 instance GoogleRequest MembersGet where
         type Rs MembersGet = Member
@@ -95,7 +105,8 @@ instance GoogleRequest MembersGet where
                "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
                "https://www.googleapis.com/auth/admin.directory.group.readonly"]
         requestClient MembersGet'{..}
-          = go _mgGroupKey _mgMemberKey (Just AltJSON)
+          = go _mgGroupKey _mgMemberKey _mgFields
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy MembersGetResource)

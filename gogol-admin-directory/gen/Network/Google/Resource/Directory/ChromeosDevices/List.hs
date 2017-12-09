@@ -34,16 +34,18 @@ module Network.Google.Resource.Directory.ChromeosDevices.List
 
     -- * Request Lenses
     , cdlOrderBy
+    , cdlOrgUnitPath
     , cdlCustomerId
     , cdlSortOrder
     , cdlQuery
     , cdlProjection
     , cdlPageToken
     , cdlMaxResults
+    , cdlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.chromeosdevices.list@ method which the
 -- 'ChromeosDevicesList' request conforms to.
@@ -56,27 +58,31 @@ type ChromeosDevicesListResource =
                "devices" :>
                  "chromeos" :>
                    QueryParam "orderBy" ChromeosDevicesListOrderBy :>
-                     QueryParam "sortOrder" ChromeosDevicesListSortOrder
-                       :>
-                       QueryParam "query" Text :>
-                         QueryParam "projection" ChromeosDevicesListProjection
-                           :>
-                           QueryParam "pageToken" Text :>
-                             QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] ChromeOSDevices
+                     QueryParam "orgUnitPath" Text :>
+                       QueryParam "sortOrder" ChromeosDevicesListSortOrder
+                         :>
+                         QueryParam "query" Text :>
+                           QueryParam "projection" ChromeosDevicesListProjection
+                             :>
+                             QueryParam "pageToken" Text :>
+                               QueryParam "maxResults" (Textual Int32) :>
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ChromeOSDevices
 
 -- | Retrieve all Chrome OS Devices of a customer (paginated)
 --
 -- /See:/ 'chromeosDevicesList' smart constructor.
 data ChromeosDevicesList = ChromeosDevicesList'
-    { _cdlOrderBy    :: !(Maybe ChromeosDevicesListOrderBy)
+    { _cdlOrderBy :: !(Maybe ChromeosDevicesListOrderBy)
+    , _cdlOrgUnitPath :: !(Maybe Text)
     , _cdlCustomerId :: !Text
-    , _cdlSortOrder  :: !(Maybe ChromeosDevicesListSortOrder)
-    , _cdlQuery      :: !(Maybe Text)
+    , _cdlSortOrder :: !(Maybe ChromeosDevicesListSortOrder)
+    , _cdlQuery :: !(Maybe Text)
     , _cdlProjection :: !(Maybe ChromeosDevicesListProjection)
-    , _cdlPageToken  :: !(Maybe Text)
+    , _cdlPageToken :: !(Maybe Text)
     , _cdlMaxResults :: !(Maybe (Textual Int32))
+    , _cdlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ChromeosDevicesList' with the minimum fields required to make a request.
@@ -84,6 +90,8 @@ data ChromeosDevicesList = ChromeosDevicesList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'cdlOrderBy'
+--
+-- * 'cdlOrgUnitPath'
 --
 -- * 'cdlCustomerId'
 --
@@ -96,18 +104,22 @@ data ChromeosDevicesList = ChromeosDevicesList'
 -- * 'cdlPageToken'
 --
 -- * 'cdlMaxResults'
+--
+-- * 'cdlFields'
 chromeosDevicesList
     :: Text -- ^ 'cdlCustomerId'
     -> ChromeosDevicesList
-chromeosDevicesList pCdlCustomerId_ =
+chromeosDevicesList pCdlCustomerId_ = 
     ChromeosDevicesList'
     { _cdlOrderBy = Nothing
+    , _cdlOrgUnitPath = Nothing
     , _cdlCustomerId = pCdlCustomerId_
     , _cdlSortOrder = Nothing
     , _cdlQuery = Nothing
     , _cdlProjection = Nothing
     , _cdlPageToken = Nothing
     , _cdlMaxResults = Nothing
+    , _cdlFields = Nothing
     }
 
 -- | Column to use for sorting results
@@ -115,7 +127,13 @@ cdlOrderBy :: Lens' ChromeosDevicesList (Maybe ChromeosDevicesListOrderBy)
 cdlOrderBy
   = lens _cdlOrderBy (\ s a -> s{_cdlOrderBy = a})
 
--- | Immutable id of the Google Apps account
+-- | Full path of the organizational unit or its ID
+cdlOrgUnitPath :: Lens' ChromeosDevicesList (Maybe Text)
+cdlOrgUnitPath
+  = lens _cdlOrgUnitPath
+      (\ s a -> s{_cdlOrgUnitPath = a})
+
+-- | Immutable ID of the G Suite account
 cdlCustomerId :: Lens' ChromeosDevicesList Text
 cdlCustomerId
   = lens _cdlCustomerId
@@ -150,17 +168,24 @@ cdlMaxResults
       (\ s a -> s{_cdlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cdlFields :: Lens' ChromeosDevicesList (Maybe Text)
+cdlFields
+  = lens _cdlFields (\ s a -> s{_cdlFields = a})
+
 instance GoogleRequest ChromeosDevicesList where
         type Rs ChromeosDevicesList = ChromeOSDevices
         type Scopes ChromeosDevicesList =
              '["https://www.googleapis.com/auth/admin.directory.device.chromeos",
                "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly"]
         requestClient ChromeosDevicesList'{..}
-          = go _cdlCustomerId _cdlOrderBy _cdlSortOrder
+          = go _cdlCustomerId _cdlOrderBy _cdlOrgUnitPath
+              _cdlSortOrder
               _cdlQuery
               _cdlProjection
               _cdlPageToken
               _cdlMaxResults
+              _cdlFields
               (Just AltJSON)
               directoryService
           where go

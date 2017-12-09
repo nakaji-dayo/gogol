@@ -34,14 +34,16 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.SetInstanceTe
     , RegionInstanceGroupManagersSetInstanceTemplate
 
     -- * Request Lenses
+    , rigmsitRequestId
     , rigmsitProject
     , rigmsitInstanceGroupManager
     , rigmsitPayload
     , rigmsitRegion
+    , rigmsitFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.setInstanceTemplate@ method which the
 -- 'RegionInstanceGroupManagersSetInstanceTemplate' request conforms to.
@@ -56,25 +58,31 @@ type RegionInstanceGroupManagersSetInstanceTemplateResource
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "setInstanceTemplate" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           RegionInstanceGroupManagersSetTemplateRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON]
+                               RegionInstanceGroupManagersSetTemplateRequest
+                               :> Post '[JSON] Operation
 
 -- | Sets the instance template to use when creating new instances or
 -- recreating instances in this group. Existing instances are not affected.
 --
 -- /See:/ 'regionInstanceGroupManagersSetInstanceTemplate' smart constructor.
 data RegionInstanceGroupManagersSetInstanceTemplate = RegionInstanceGroupManagersSetInstanceTemplate'
-    { _rigmsitProject              :: !Text
+    { _rigmsitRequestId :: !(Maybe Text)
+    , _rigmsitProject :: !Text
     , _rigmsitInstanceGroupManager :: !Text
-    , _rigmsitPayload              :: !RegionInstanceGroupManagersSetTemplateRequest
-    , _rigmsitRegion               :: !Text
+    , _rigmsitPayload :: !RegionInstanceGroupManagersSetTemplateRequest
+    , _rigmsitRegion :: !Text
+    , _rigmsitFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersSetInstanceTemplate' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rigmsitRequestId'
 --
 -- * 'rigmsitProject'
 --
@@ -83,19 +91,38 @@ data RegionInstanceGroupManagersSetInstanceTemplate = RegionInstanceGroupManager
 -- * 'rigmsitPayload'
 --
 -- * 'rigmsitRegion'
+--
+-- * 'rigmsitFields'
 regionInstanceGroupManagersSetInstanceTemplate
     :: Text -- ^ 'rigmsitProject'
     -> Text -- ^ 'rigmsitInstanceGroupManager'
     -> RegionInstanceGroupManagersSetTemplateRequest -- ^ 'rigmsitPayload'
     -> Text -- ^ 'rigmsitRegion'
     -> RegionInstanceGroupManagersSetInstanceTemplate
-regionInstanceGroupManagersSetInstanceTemplate pRigmsitProject_ pRigmsitInstanceGroupManager_ pRigmsitPayload_ pRigmsitRegion_ =
+regionInstanceGroupManagersSetInstanceTemplate pRigmsitProject_ pRigmsitInstanceGroupManager_ pRigmsitPayload_ pRigmsitRegion_ = 
     RegionInstanceGroupManagersSetInstanceTemplate'
-    { _rigmsitProject = pRigmsitProject_
+    { _rigmsitRequestId = Nothing
+    , _rigmsitProject = pRigmsitProject_
     , _rigmsitInstanceGroupManager = pRigmsitInstanceGroupManager_
     , _rigmsitPayload = pRigmsitPayload_
     , _rigmsitRegion = pRigmsitRegion_
+    , _rigmsitFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rigmsitRequestId :: Lens' RegionInstanceGroupManagersSetInstanceTemplate (Maybe Text)
+rigmsitRequestId
+  = lens _rigmsitRequestId
+      (\ s a -> s{_rigmsitRequestId = a})
 
 -- | Project ID for this request.
 rigmsitProject :: Lens' RegionInstanceGroupManagersSetInstanceTemplate Text
@@ -121,6 +148,12 @@ rigmsitRegion
   = lens _rigmsitRegion
       (\ s a -> s{_rigmsitRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmsitFields :: Lens' RegionInstanceGroupManagersSetInstanceTemplate (Maybe Text)
+rigmsitFields
+  = lens _rigmsitFields
+      (\ s a -> s{_rigmsitFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersSetInstanceTemplate where
         type Rs
@@ -135,6 +168,8 @@ instance GoogleRequest
           RegionInstanceGroupManagersSetInstanceTemplate'{..}
           = go _rigmsitProject _rigmsitRegion
               _rigmsitInstanceGroupManager
+              _rigmsitRequestId
+              _rigmsitFields
               (Just AltJSON)
               _rigmsitPayload
               computeService

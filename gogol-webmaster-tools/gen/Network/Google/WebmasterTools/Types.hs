@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -162,9 +162,9 @@ module Network.Google.WebmasterTools.Types
     , URLCrawlErrorscountsQueryCategory (..)
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types.Product
-import           Network.Google.WebmasterTools.Types.Sum
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types.Product
+import Network.Google.WebmasterTools.Types.Sum
 
 -- | Default request referring to version 'v3' of the Search Console API. This contains the host and root path used as a starting point for constructing service requests.
 webmasterToolsService :: ServiceConfig

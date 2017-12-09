@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.WebPropertyAdWordsLinks.Inse
     , mwpawliWebPropertyId
     , mwpawliPayload
     , mwpawliAccountId
+    , mwpawliFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webPropertyAdWordsLinks.insert@ method which the
 -- 'ManagementWebPropertyAdWordsLinksInsert' request conforms to.
@@ -53,17 +54,19 @@ type ManagementWebPropertyAdWordsLinksInsertResource
                "webproperties" :>
                  Capture "webPropertyId" Text :>
                    "entityAdWordsLinks" :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] EntityAdWordsLink :>
-                         Post '[JSON] EntityAdWordsLink
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] EntityAdWordsLink :>
+                           Post '[JSON] EntityAdWordsLink
 
 -- | Creates a webProperty-AdWords link.
 --
 -- /See:/ 'managementWebPropertyAdWordsLinksInsert' smart constructor.
 data ManagementWebPropertyAdWordsLinksInsert = ManagementWebPropertyAdWordsLinksInsert'
     { _mwpawliWebPropertyId :: !Text
-    , _mwpawliPayload       :: !EntityAdWordsLink
-    , _mwpawliAccountId     :: !Text
+    , _mwpawliPayload :: !EntityAdWordsLink
+    , _mwpawliAccountId :: !Text
+    , _mwpawliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertyAdWordsLinksInsert' with the minimum fields required to make a request.
@@ -75,16 +78,19 @@ data ManagementWebPropertyAdWordsLinksInsert = ManagementWebPropertyAdWordsLinks
 -- * 'mwpawliPayload'
 --
 -- * 'mwpawliAccountId'
+--
+-- * 'mwpawliFields'
 managementWebPropertyAdWordsLinksInsert
     :: Text -- ^ 'mwpawliWebPropertyId'
     -> EntityAdWordsLink -- ^ 'mwpawliPayload'
     -> Text -- ^ 'mwpawliAccountId'
     -> ManagementWebPropertyAdWordsLinksInsert
-managementWebPropertyAdWordsLinksInsert pMwpawliWebPropertyId_ pMwpawliPayload_ pMwpawliAccountId_ =
+managementWebPropertyAdWordsLinksInsert pMwpawliWebPropertyId_ pMwpawliPayload_ pMwpawliAccountId_ = 
     ManagementWebPropertyAdWordsLinksInsert'
     { _mwpawliWebPropertyId = pMwpawliWebPropertyId_
     , _mwpawliPayload = pMwpawliPayload_
     , _mwpawliAccountId = pMwpawliAccountId_
+    , _mwpawliFields = Nothing
     }
 
 -- | Web property ID to create the link for.
@@ -105,6 +111,12 @@ mwpawliAccountId
   = lens _mwpawliAccountId
       (\ s a -> s{_mwpawliAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwpawliFields :: Lens' ManagementWebPropertyAdWordsLinksInsert (Maybe Text)
+mwpawliFields
+  = lens _mwpawliFields
+      (\ s a -> s{_mwpawliFields = a})
+
 instance GoogleRequest
          ManagementWebPropertyAdWordsLinksInsert where
         type Rs ManagementWebPropertyAdWordsLinksInsert =
@@ -114,6 +126,7 @@ instance GoogleRequest
         requestClient
           ManagementWebPropertyAdWordsLinksInsert'{..}
           = go _mwpawliAccountId _mwpawliWebPropertyId
+              _mwpawliFields
               (Just AltJSON)
               _mwpawliPayload
               analyticsService

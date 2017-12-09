@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.Filters.Update
     , mfuFilterId
     , mfuPayload
     , mfuAccountId
+    , mfuFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.filters.update@ method which the
 -- 'ManagementFiltersUpdate' request conforms to.
@@ -51,16 +52,18 @@ type ManagementFiltersUpdateResource =
              Capture "accountId" Text :>
                "filters" :>
                  Capture "filterId" Text :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] Filter :> Put '[JSON] Filter
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       ReqBody '[JSON] Filter :> Put '[JSON] Filter
 
 -- | Updates an existing filter.
 --
 -- /See:/ 'managementFiltersUpdate' smart constructor.
 data ManagementFiltersUpdate = ManagementFiltersUpdate'
-    { _mfuFilterId  :: !Text
-    , _mfuPayload   :: !Filter
+    { _mfuFilterId :: !Text
+    , _mfuPayload :: !Filter
     , _mfuAccountId :: !Text
+    , _mfuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementFiltersUpdate' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data ManagementFiltersUpdate = ManagementFiltersUpdate'
 -- * 'mfuPayload'
 --
 -- * 'mfuAccountId'
+--
+-- * 'mfuFields'
 managementFiltersUpdate
     :: Text -- ^ 'mfuFilterId'
     -> Filter -- ^ 'mfuPayload'
     -> Text -- ^ 'mfuAccountId'
     -> ManagementFiltersUpdate
-managementFiltersUpdate pMfuFilterId_ pMfuPayload_ pMfuAccountId_ =
+managementFiltersUpdate pMfuFilterId_ pMfuPayload_ pMfuAccountId_ = 
     ManagementFiltersUpdate'
     { _mfuFilterId = pMfuFilterId_
     , _mfuPayload = pMfuPayload_
     , _mfuAccountId = pMfuAccountId_
+    , _mfuFields = Nothing
     }
 
 -- | ID of the filter to be updated.
@@ -99,12 +105,18 @@ mfuAccountId :: Lens' ManagementFiltersUpdate Text
 mfuAccountId
   = lens _mfuAccountId (\ s a -> s{_mfuAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mfuFields :: Lens' ManagementFiltersUpdate (Maybe Text)
+mfuFields
+  = lens _mfuFields (\ s a -> s{_mfuFields = a})
+
 instance GoogleRequest ManagementFiltersUpdate where
         type Rs ManagementFiltersUpdate = Filter
         type Scopes ManagementFiltersUpdate =
              '["https://www.googleapis.com/auth/analytics.edit"]
         requestClient ManagementFiltersUpdate'{..}
-          = go _mfuAccountId _mfuFilterId (Just AltJSON)
+          = go _mfuAccountId _mfuFilterId _mfuFields
+              (Just AltJSON)
               _mfuPayload
               analyticsService
           where go

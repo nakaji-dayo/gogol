@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -206,6 +206,14 @@ module Network.Google.Fitness.Types
     , dtField
     , dtName
 
+    -- * ListDataPointChangesResponse
+    , ListDataPointChangesResponse
+    , listDataPointChangesResponse
+    , ldpcrNextPageToken
+    , ldpcrInsertedDataPoint
+    , ldpcrDataSourceId
+    , ldpcrDeletedDataPoint
+
     -- * Session
     , Session
     , session
@@ -226,9 +234,9 @@ module Network.Google.Fitness.Types
     , DataTypeFieldFormat (..)
     ) where
 
-import           Network.Google.Fitness.Types.Product
-import           Network.Google.Fitness.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types.Product
+import Network.Google.Fitness.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Fitness. This contains the host and root path used as a starting point for constructing service requests.
 fitnessService :: ServiceConfig

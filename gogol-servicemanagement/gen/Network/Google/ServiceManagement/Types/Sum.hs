@@ -16,7 +16,7 @@
 --
 module Network.Google.ServiceManagement.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Whether the measurement is an integer, a floating-point number, etc.
 -- Some combinations of \`metric_kind\` and \`value_type\` might not be
@@ -76,49 +76,39 @@ instance FromJSON MetricDescriptorValueType where
 instance ToJSON MetricDescriptorValueType where
     toJSON = toJSONText
 
--- | Trusted attributes supplied by any service that owns resources and uses
--- the IAM system for access control.
-data ConditionSys
-    = CSNoAttr
-      -- ^ @NO_ATTR@
-      -- Default non-attribute type
-    | CSRegion
-      -- ^ @REGION@
-      -- Region of the resource
-    | CSService
-      -- ^ @SERVICE@
-      -- Service name
-    | CSName
-      -- ^ @NAME@
-      -- Resource name
-    | CSIP
-      -- ^ @IP@
-      -- IP address of the caller
+data FlowOperationMetadataSurface
+    = UnspecifiedOpService
+      -- ^ @UNSPECIFIED_OP_SERVICE@
+    | ServiceManagement
+      -- ^ @SERVICE_MANAGEMENT@
+    | ServiceUsage
+      -- ^ @SERVICE_USAGE@
+    | ServiceConsumerManagement
+      -- ^ @SERVICE_CONSUMER_MANAGEMENT@
+      -- TenancyUnit, ServiceNetworking fall under this
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
-instance Hashable ConditionSys
+instance Hashable FlowOperationMetadataSurface
 
-instance FromHttpApiData ConditionSys where
+instance FromHttpApiData FlowOperationMetadataSurface where
     parseQueryParam = \case
-        "NO_ATTR" -> Right CSNoAttr
-        "REGION" -> Right CSRegion
-        "SERVICE" -> Right CSService
-        "NAME" -> Right CSName
-        "IP" -> Right CSIP
-        x -> Left ("Unable to parse ConditionSys from: " <> x)
+        "UNSPECIFIED_OP_SERVICE" -> Right UnspecifiedOpService
+        "SERVICE_MANAGEMENT" -> Right ServiceManagement
+        "SERVICE_USAGE" -> Right ServiceUsage
+        "SERVICE_CONSUMER_MANAGEMENT" -> Right ServiceConsumerManagement
+        x -> Left ("Unable to parse FlowOperationMetadataSurface from: " <> x)
 
-instance ToHttpApiData ConditionSys where
+instance ToHttpApiData FlowOperationMetadataSurface where
     toQueryParam = \case
-        CSNoAttr -> "NO_ATTR"
-        CSRegion -> "REGION"
-        CSService -> "SERVICE"
-        CSName -> "NAME"
-        CSIP -> "IP"
+        UnspecifiedOpService -> "UNSPECIFIED_OP_SERVICE"
+        ServiceManagement -> "SERVICE_MANAGEMENT"
+        ServiceUsage -> "SERVICE_USAGE"
+        ServiceConsumerManagement -> "SERVICE_CONSUMER_MANAGEMENT"
 
-instance FromJSON ConditionSys where
-    parseJSON = parseJSONText "ConditionSys"
+instance FromJSON FlowOperationMetadataSurface where
+    parseJSON = parseJSONText "FlowOperationMetadataSurface"
 
-instance ToJSON ConditionSys where
+instance ToJSON FlowOperationMetadataSurface where
     toJSON = toJSONText
 
 -- | The field type.
@@ -264,57 +254,6 @@ instance FromJSON EnumSyntax where
 instance ToJSON EnumSyntax where
     toJSON = toJSONText
 
--- | Required
-data RuleAction
-    = NoAction
-      -- ^ @NO_ACTION@
-      -- Default no action.
-    | Allow
-      -- ^ @ALLOW@
-      -- Matching \'Entries\' grant access.
-    | AllowWithLog
-      -- ^ @ALLOW_WITH_LOG@
-      -- Matching \'Entries\' grant access and the caller promises to log the
-      -- request per the returned log_configs.
-    | Deny
-      -- ^ @DENY@
-      -- Matching \'Entries\' deny access.
-    | DenyWithLog
-      -- ^ @DENY_WITH_LOG@
-      -- Matching \'Entries\' deny access and the caller promises to log the
-      -- request per the returned log_configs.
-    | Log
-      -- ^ @LOG@
-      -- Matching \'Entries\' tell IAM.Check callers to generate logs.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable RuleAction
-
-instance FromHttpApiData RuleAction where
-    parseQueryParam = \case
-        "NO_ACTION" -> Right NoAction
-        "ALLOW" -> Right Allow
-        "ALLOW_WITH_LOG" -> Right AllowWithLog
-        "DENY" -> Right Deny
-        "DENY_WITH_LOG" -> Right DenyWithLog
-        "LOG" -> Right Log
-        x -> Left ("Unable to parse RuleAction from: " <> x)
-
-instance ToHttpApiData RuleAction where
-    toQueryParam = \case
-        NoAction -> "NO_ACTION"
-        Allow -> "ALLOW"
-        AllowWithLog -> "ALLOW_WITH_LOG"
-        Deny -> "DENY"
-        DenyWithLog -> "DENY_WITH_LOG"
-        Log -> "LOG"
-
-instance FromJSON RuleAction where
-    parseJSON = parseJSONText "RuleAction"
-
-instance ToJSON RuleAction where
-    toJSON = toJSONText
-
 -- | The status code.
 data StepStatus
     = StatusUnspecified
@@ -322,19 +261,20 @@ data StepStatus
       -- Unspecifed code.
     | Done
       -- ^ @DONE@
-      -- The step has completed without errors.
+      -- The operation or step has completed without errors.
     | NotStarted
       -- ^ @NOT_STARTED@
-      -- The step has not started yet.
+      -- The operation or step has not started yet.
     | InProgress
       -- ^ @IN_PROGRESS@
-      -- The step is in progress.
+      -- The operation or step is in progress.
     | Failed
       -- ^ @FAILED@
-      -- The step has completed with errors.
+      -- The operation or step has completed with errors. If the operation is
+      -- rollbackable, the rollback completed with errors too.
     | Cancelled
       -- ^ @CANCELLED@
-      -- The step has completed with cancellation.
+      -- The operation or step has completed with cancellation.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable StepStatus
@@ -456,55 +396,6 @@ instance FromJSON TypeSyntax where
 instance ToJSON TypeSyntax where
     toJSON = toJSONText
 
--- | An operator to apply the subject with.
-data ConditionOp
-    = NoOp
-      -- ^ @NO_OP@
-      -- Default no-op.
-    | Equals
-      -- ^ @EQUALS@
-      -- DEPRECATED. Use IN instead.
-    | NotEquals
-      -- ^ @NOT_EQUALS@
-      -- DEPRECATED. Use NOT_IN instead.
-    | IN
-      -- ^ @IN@
-      -- Set-inclusion check.
-    | NotIn
-      -- ^ @NOT_IN@
-      -- Set-exclusion check.
-    | Discharged
-      -- ^ @DISCHARGED@
-      -- Subject is discharged
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable ConditionOp
-
-instance FromHttpApiData ConditionOp where
-    parseQueryParam = \case
-        "NO_OP" -> Right NoOp
-        "EQUALS" -> Right Equals
-        "NOT_EQUALS" -> Right NotEquals
-        "IN" -> Right IN
-        "NOT_IN" -> Right NotIn
-        "DISCHARGED" -> Right Discharged
-        x -> Left ("Unable to parse ConditionOp from: " <> x)
-
-instance ToHttpApiData ConditionOp where
-    toQueryParam = \case
-        NoOp -> "NO_OP"
-        Equals -> "EQUALS"
-        NotEquals -> "NOT_EQUALS"
-        IN -> "IN"
-        NotIn -> "NOT_IN"
-        Discharged -> "DISCHARGED"
-
-instance FromJSON ConditionOp where
-    parseJSON = parseJSONText "ConditionOp"
-
-instance ToJSON ConditionOp where
-    toJSON = toJSONText
-
 -- | The status of this rollout. Readonly. In case of a failed rollout, the
 -- system will automatically rollback to the current Rollout version.
 -- Readonly.
@@ -524,10 +415,14 @@ data RolloutStatus
       -- Rollout pushes, and the previous ones will be cancelled.
     | RSFailed
       -- ^ @FAILED@
-      -- The Rollout has failed. It is typically caused by configuration errors.
+      -- The Rollout has failed and the rollback attempt has failed too.
     | RSPending
       -- ^ @PENDING@
       -- The Rollout has not started yet and is pending for execution.
+    | RSFailedRolledBack
+      -- ^ @FAILED_ROLLED_BACK@
+      -- The Rollout has failed and rolled back to the previous successful
+      -- Rollout.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable RolloutStatus
@@ -540,6 +435,7 @@ instance FromHttpApiData RolloutStatus where
         "CANCELLED" -> Right RSCancelled
         "FAILED" -> Right RSFailed
         "PENDING" -> Right RSPending
+        "FAILED_ROLLED_BACK" -> Right RSFailedRolledBack
         x -> Left ("Unable to parse RolloutStatus from: " <> x)
 
 instance ToHttpApiData RolloutStatus where
@@ -550,6 +446,7 @@ instance ToHttpApiData RolloutStatus where
         RSCancelled -> "CANCELLED"
         RSFailed -> "FAILED"
         RSPending -> "PENDING"
+        RSFailedRolledBack -> "FAILED_ROLLED_BACK"
 
 instance FromJSON RolloutStatus where
     parseJSON = parseJSONText "RolloutStatus"
@@ -674,6 +571,13 @@ data ConfigFileFileType
       -- imports and source info included. For an example test.proto file, the
       -- following command would put the value in a new file named out.pb.
       -- $protoc --include_imports --include_source_info test.proto -o out.pb
+    | ProtoFile
+      -- ^ @PROTO_FILE@
+      -- Uncompiled Proto file. Used for storage and display purposes only,
+      -- currently server-side compilation is not supported. Should match the
+      -- inputs to \'protoc\' command used to generated
+      -- FILE_DESCRIPTOR_SET_PROTO. A file of this type can only be included if
+      -- at least one file of type FILE_DESCRIPTOR_SET_PROTO is included.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable ConfigFileFileType
@@ -685,6 +589,7 @@ instance FromHttpApiData ConfigFileFileType where
         "OPEN_API_JSON" -> Right OpenAPIJSON
         "OPEN_API_YAML" -> Right OpenAPIYaml
         "FILE_DESCRIPTOR_SET_PROTO" -> Right FileDescriptorSetProto
+        "PROTO_FILE" -> Right ProtoFile
         x -> Left ("Unable to parse ConfigFileFileType from: " <> x)
 
 instance ToHttpApiData ConfigFileFileType where
@@ -694,6 +599,7 @@ instance ToHttpApiData ConfigFileFileType where
         OpenAPIJSON -> "OPEN_API_JSON"
         OpenAPIYaml -> "OPEN_API_YAML"
         FileDescriptorSetProto -> "FILE_DESCRIPTOR_SET_PROTO"
+        ProtoFile -> "PROTO_FILE"
 
 instance FromJSON ConfigFileFileType where
     parseJSON = parseJSONText "ConfigFileFileType"
@@ -826,6 +732,42 @@ instance FromJSON MetricDescriptorMetricKind where
 instance ToJSON MetricDescriptorMetricKind where
     toJSON = toJSONText
 
+-- | The state of the operation with respect to cancellation.
+data FlowOperationMetadataCancelState
+    = FOMCSRunning
+      -- ^ @RUNNING@
+      -- Default state, cancellable but not cancelled.
+    | FOMCSUncancellable
+      -- ^ @UNCANCELLABLE@
+      -- The operation has proceeded past the point of no return and cannot be
+      -- cancelled.
+    | FOMCSCancelled
+      -- ^ @CANCELLED@
+      -- The operation has been cancelled, work should cease and any needed
+      -- rollback steps executed.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable FlowOperationMetadataCancelState
+
+instance FromHttpApiData FlowOperationMetadataCancelState where
+    parseQueryParam = \case
+        "RUNNING" -> Right FOMCSRunning
+        "UNCANCELLABLE" -> Right FOMCSUncancellable
+        "CANCELLED" -> Right FOMCSCancelled
+        x -> Left ("Unable to parse FlowOperationMetadataCancelState from: " <> x)
+
+instance ToHttpApiData FlowOperationMetadataCancelState where
+    toQueryParam = \case
+        FOMCSRunning -> "RUNNING"
+        FOMCSUncancellable -> "UNCANCELLABLE"
+        FOMCSCancelled -> "CANCELLED"
+
+instance FromJSON FlowOperationMetadataCancelState where
+    parseJSON = parseJSONText "FlowOperationMetadataCancelState"
+
+instance ToJSON FlowOperationMetadataCancelState where
+    toJSON = toJSONText
+
 -- | The source syntax of this method.
 data MethodSyntax
     = MSSyntaxPROTO2
@@ -853,39 +795,4 @@ instance FromJSON MethodSyntax where
     parseJSON = parseJSONText "MethodSyntax"
 
 instance ToJSON MethodSyntax where
-    toJSON = toJSONText
-
--- | Trusted attributes supplied by the IAM system.
-data ConditionIAM
-    = NoAttr
-      -- ^ @NO_ATTR@
-      -- Default non-attribute.
-    | Authority
-      -- ^ @AUTHORITY@
-      -- Either principal or (if present) authority selector.
-    | Attribution
-      -- ^ @ATTRIBUTION@
-      -- The principal (even if an authority selector is present), which must
-      -- only be used for attribution, not authorization.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable ConditionIAM
-
-instance FromHttpApiData ConditionIAM where
-    parseQueryParam = \case
-        "NO_ATTR" -> Right NoAttr
-        "AUTHORITY" -> Right Authority
-        "ATTRIBUTION" -> Right Attribution
-        x -> Left ("Unable to parse ConditionIAM from: " <> x)
-
-instance ToHttpApiData ConditionIAM where
-    toQueryParam = \case
-        NoAttr -> "NO_ATTR"
-        Authority -> "AUTHORITY"
-        Attribution -> "ATTRIBUTION"
-
-instance FromJSON ConditionIAM where
-    parseJSON = parseJSONText "ConditionIAM"
-
-instance ToJSON ConditionIAM where
     toJSON = toJSONText

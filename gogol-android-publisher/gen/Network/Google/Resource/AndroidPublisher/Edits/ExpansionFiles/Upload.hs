@@ -37,10 +37,11 @@ module Network.Google.Resource.AndroidPublisher.Edits.ExpansionFiles.Upload
     , eAPKVersionCode
     , eExpansionFileType
     , eEditId
+    , eFields
     ) where
 
-import           Network.Google.AndroidPublisher.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidPublisher.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidpublisher.edits.expansionfiles.upload@ method which the
 -- 'EditsExpansionFilesUpload' request conforms to.
@@ -57,8 +58,9 @@ type EditsExpansionFilesUploadResource =
                        Capture "expansionFileType"
                          EditsExpansionFilesUploadExpansionFileType
                          :>
-                         QueryParam "alt" AltJSON :>
-                           Post '[JSON] ExpansionFilesUploadResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Post '[JSON] ExpansionFilesUploadResponse
        :<|>
        "upload" :>
          "androidpublisher" :>
@@ -73,19 +75,21 @@ type EditsExpansionFilesUploadResource =
                            Capture "expansionFileType"
                              EditsExpansionFilesUploadExpansionFileType
                              :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" AltMedia :>
-                                 AltMedia :>
-                                   Post '[JSON] ExpansionFilesUploadResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" AltMedia :>
+                                   AltMedia :>
+                                     Post '[JSON] ExpansionFilesUploadResponse
 
 -- | Uploads and attaches a new Expansion File to the APK specified.
 --
 -- /See:/ 'editsExpansionFilesUpload' smart constructor.
 data EditsExpansionFilesUpload = EditsExpansionFilesUpload'
-    { _ePackageName       :: !Text
-    , _eAPKVersionCode    :: !(Textual Int32)
+    { _ePackageName :: !Text
+    , _eAPKVersionCode :: !(Textual Int32)
     , _eExpansionFileType :: !EditsExpansionFilesUploadExpansionFileType
-    , _eEditId            :: !Text
+    , _eEditId :: !Text
+    , _eFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EditsExpansionFilesUpload' with the minimum fields required to make a request.
@@ -99,18 +103,21 @@ data EditsExpansionFilesUpload = EditsExpansionFilesUpload'
 -- * 'eExpansionFileType'
 --
 -- * 'eEditId'
+--
+-- * 'eFields'
 editsExpansionFilesUpload
     :: Text -- ^ 'ePackageName'
     -> Int32 -- ^ 'eAPKVersionCode'
     -> EditsExpansionFilesUploadExpansionFileType -- ^ 'eExpansionFileType'
     -> Text -- ^ 'eEditId'
     -> EditsExpansionFilesUpload
-editsExpansionFilesUpload pEPackageName_ pEAPKVersionCode_ pEExpansionFileType_ pEEditId_ =
+editsExpansionFilesUpload pEPackageName_ pEAPKVersionCode_ pEExpansionFileType_ pEEditId_ = 
     EditsExpansionFilesUpload'
     { _ePackageName = pEPackageName_
     , _eAPKVersionCode = _Coerce # pEAPKVersionCode_
     , _eExpansionFileType = pEExpansionFileType_
     , _eEditId = pEEditId_
+    , _eFields = Nothing
     }
 
 -- | Unique identifier for the Android app that is being updated; for
@@ -136,6 +143,10 @@ eExpansionFileType
 eEditId :: Lens' EditsExpansionFilesUpload Text
 eEditId = lens _eEditId (\ s a -> s{_eEditId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eFields :: Lens' EditsExpansionFilesUpload (Maybe Text)
+eFields = lens _eFields (\ s a -> s{_eFields = a})
+
 instance GoogleRequest EditsExpansionFilesUpload
          where
         type Rs EditsExpansionFilesUpload =
@@ -145,6 +156,7 @@ instance GoogleRequest EditsExpansionFilesUpload
         requestClient EditsExpansionFilesUpload'{..}
           = go _ePackageName _eEditId _eAPKVersionCode
               _eExpansionFileType
+              _eFields
               (Just AltJSON)
               androidPublisherService
           where go :<|> _
@@ -162,6 +174,7 @@ instance GoogleRequest
           (MediaUpload EditsExpansionFilesUpload'{..} body)
           = go _ePackageName _eEditId _eAPKVersionCode
               _eExpansionFileType
+              _eFields
               (Just AltJSON)
               (Just AltMedia)
               body

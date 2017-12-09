@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.AdvertiserGroups.Get
     -- * Request Lenses
     , agggProFileId
     , agggId
+    , agggFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertiserGroups.get@ method which the
 -- 'AdvertiserGroupsGet' request conforms to.
 type AdvertiserGroupsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertiserGroups" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] AdvertiserGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] AdvertiserGroup
 
 -- | Gets one advertiser group by ID.
 --
 -- /See:/ 'advertiserGroupsGet' smart constructor.
 data AdvertiserGroupsGet = AdvertiserGroupsGet'
     { _agggProFileId :: !(Textual Int64)
-    , _agggId        :: !(Textual Int64)
+    , _agggId :: !(Textual Int64)
+    , _agggFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertiserGroupsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data AdvertiserGroupsGet = AdvertiserGroupsGet'
 -- * 'agggProFileId'
 --
 -- * 'agggId'
+--
+-- * 'agggFields'
 advertiserGroupsGet
     :: Int64 -- ^ 'agggProFileId'
     -> Int64 -- ^ 'agggId'
     -> AdvertiserGroupsGet
-advertiserGroupsGet pAgggProFileId_ pAgggId_ =
+advertiserGroupsGet pAgggProFileId_ pAgggId_ = 
     AdvertiserGroupsGet'
     { _agggProFileId = _Coerce # pAgggProFileId_
     , _agggId = _Coerce # pAgggId_
+    , _agggFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,12 +95,18 @@ agggId :: Lens' AdvertiserGroupsGet Int64
 agggId
   = lens _agggId (\ s a -> s{_agggId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+agggFields :: Lens' AdvertiserGroupsGet (Maybe Text)
+agggFields
+  = lens _agggFields (\ s a -> s{_agggFields = a})
+
 instance GoogleRequest AdvertiserGroupsGet where
         type Rs AdvertiserGroupsGet = AdvertiserGroup
         type Scopes AdvertiserGroupsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertiserGroupsGet'{..}
-          = go _agggProFileId _agggId (Just AltJSON)
+          = go _agggProFileId _agggId _agggFields
+              (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

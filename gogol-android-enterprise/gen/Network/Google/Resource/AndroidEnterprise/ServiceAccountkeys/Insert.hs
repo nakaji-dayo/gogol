@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.ServiceAccountkeys.Insert
     -- * Request Lenses
     , saiEnterpriseId
     , saiPayload
+    , saiFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.serviceaccountkeys.insert@ method which the
 -- 'ServiceAccountkeysInsert' request conforms to.
@@ -52,9 +53,10 @@ type ServiceAccountkeysInsertResource =
          "enterprises" :>
            Capture "enterpriseId" Text :>
              "serviceAccountKeys" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] ServiceAccountKey :>
-                   Post '[JSON] ServiceAccountKey
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] ServiceAccountKey :>
+                     Post '[JSON] ServiceAccountKey
 
 -- | Generates new credentials for the service account associated with this
 -- enterprise. The calling service account must have been retrieved by
@@ -65,7 +67,8 @@ type ServiceAccountkeysInsertResource =
 -- /See:/ 'serviceAccountkeysInsert' smart constructor.
 data ServiceAccountkeysInsert = ServiceAccountkeysInsert'
     { _saiEnterpriseId :: !Text
-    , _saiPayload      :: !ServiceAccountKey
+    , _saiPayload :: !ServiceAccountKey
+    , _saiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServiceAccountkeysInsert' with the minimum fields required to make a request.
@@ -75,14 +78,17 @@ data ServiceAccountkeysInsert = ServiceAccountkeysInsert'
 -- * 'saiEnterpriseId'
 --
 -- * 'saiPayload'
+--
+-- * 'saiFields'
 serviceAccountkeysInsert
     :: Text -- ^ 'saiEnterpriseId'
     -> ServiceAccountKey -- ^ 'saiPayload'
     -> ServiceAccountkeysInsert
-serviceAccountkeysInsert pSaiEnterpriseId_ pSaiPayload_ =
+serviceAccountkeysInsert pSaiEnterpriseId_ pSaiPayload_ = 
     ServiceAccountkeysInsert'
     { _saiEnterpriseId = pSaiEnterpriseId_
     , _saiPayload = pSaiPayload_
+    , _saiFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -96,12 +102,18 @@ saiPayload :: Lens' ServiceAccountkeysInsert ServiceAccountKey
 saiPayload
   = lens _saiPayload (\ s a -> s{_saiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+saiFields :: Lens' ServiceAccountkeysInsert (Maybe Text)
+saiFields
+  = lens _saiFields (\ s a -> s{_saiFields = a})
+
 instance GoogleRequest ServiceAccountkeysInsert where
         type Rs ServiceAccountkeysInsert = ServiceAccountKey
         type Scopes ServiceAccountkeysInsert =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient ServiceAccountkeysInsert'{..}
-          = go _saiEnterpriseId (Just AltJSON) _saiPayload
+          = go _saiEnterpriseId _saiFields (Just AltJSON)
+              _saiPayload
               androidEnterpriseService
           where go
                   = buildClient

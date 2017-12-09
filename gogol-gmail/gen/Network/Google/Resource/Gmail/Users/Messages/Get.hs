@@ -37,10 +37,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Get
     , umgUserId
     , umgId
     , umgMetadataHeaders
+    , umgFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.get@ method which the
 -- 'UsersMessagesGet' request conforms to.
@@ -53,16 +54,18 @@ type UsersMessagesGetResource =
                Capture "id" Text :>
                  QueryParam "format" UsersMessagesGetFormat :>
                    QueryParams "metadataHeaders" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Message
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Message
 
 -- | Gets the specified message.
 --
 -- /See:/ 'usersMessagesGet' smart constructor.
 data UsersMessagesGet = UsersMessagesGet'
-    { _umgFormat          :: !UsersMessagesGetFormat
-    , _umgUserId          :: !Text
-    , _umgId              :: !Text
+    { _umgFormat :: !UsersMessagesGetFormat
+    , _umgUserId :: !Text
+    , _umgId :: !Text
     , _umgMetadataHeaders :: !(Maybe [Text])
+    , _umgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesGet' with the minimum fields required to make a request.
@@ -76,15 +79,18 @@ data UsersMessagesGet = UsersMessagesGet'
 -- * 'umgId'
 --
 -- * 'umgMetadataHeaders'
+--
+-- * 'umgFields'
 usersMessagesGet
     :: Text -- ^ 'umgId'
     -> UsersMessagesGet
-usersMessagesGet pUmgId_ =
+usersMessagesGet pUmgId_ = 
     UsersMessagesGet'
     { _umgFormat = Full
     , _umgUserId = "me"
     , _umgId = pUmgId_
     , _umgMetadataHeaders = Nothing
+    , _umgFields = Nothing
     }
 
 -- | The format to return the message in.
@@ -110,6 +116,11 @@ umgMetadataHeaders
       . _Default
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+umgFields :: Lens' UsersMessagesGet (Maybe Text)
+umgFields
+  = lens _umgFields (\ s a -> s{_umgFields = a})
+
 instance GoogleRequest UsersMessagesGet where
         type Rs UsersMessagesGet = Message
         type Scopes UsersMessagesGet =
@@ -120,6 +131,7 @@ instance GoogleRequest UsersMessagesGet where
         requestClient UsersMessagesGet'{..}
           = go _umgUserId _umgId (Just _umgFormat)
               (_umgMetadataHeaders ^. _Default)
+              _umgFields
               (Just AltJSON)
               gmailService
           where go

@@ -38,10 +38,11 @@ module Network.Google.Resource.Gmail.Users.Drafts.List
     , udlIncludeSpamTrash
     , udlPageToken
     , udlMaxResults
+    , udlFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.drafts.list@ method which the
 -- 'UsersDraftsList' request conforms to.
@@ -55,18 +56,20 @@ type UsersDraftsListResource =
                  QueryParam "includeSpamTrash" Bool :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] ListDraftsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] ListDraftsResponse
 
 -- | Lists the drafts in the user\'s mailbox.
 --
 -- /See:/ 'usersDraftsList' smart constructor.
 data UsersDraftsList = UsersDraftsList'
-    { _udlQ                :: !(Maybe Text)
-    , _udlUserId           :: !Text
+    { _udlQ :: !(Maybe Text)
+    , _udlUserId :: !Text
     , _udlIncludeSpamTrash :: !Bool
-    , _udlPageToken        :: !(Maybe Text)
-    , _udlMaxResults       :: !(Textual Word32)
+    , _udlPageToken :: !(Maybe Text)
+    , _udlMaxResults :: !(Textual Word32)
+    , _udlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDraftsList' with the minimum fields required to make a request.
@@ -82,15 +85,18 @@ data UsersDraftsList = UsersDraftsList'
 -- * 'udlPageToken'
 --
 -- * 'udlMaxResults'
+--
+-- * 'udlFields'
 usersDraftsList
     :: UsersDraftsList
-usersDraftsList =
+usersDraftsList = 
     UsersDraftsList'
     { _udlQ = Nothing
     , _udlUserId = "me"
     , _udlIncludeSpamTrash = False
     , _udlPageToken = Nothing
     , _udlMaxResults = 100
+    , _udlFields = Nothing
     }
 
 -- | Only return draft messages matching the specified query. Supports the
@@ -123,6 +129,11 @@ udlMaxResults
       (\ s a -> s{_udlMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+udlFields :: Lens' UsersDraftsList (Maybe Text)
+udlFields
+  = lens _udlFields (\ s a -> s{_udlFields = a})
+
 instance GoogleRequest UsersDraftsList where
         type Rs UsersDraftsList = ListDraftsResponse
         type Scopes UsersDraftsList =
@@ -134,6 +145,7 @@ instance GoogleRequest UsersDraftsList where
           = go _udlUserId _udlQ (Just _udlIncludeSpamTrash)
               _udlPageToken
               (Just _udlMaxResults)
+              _udlFields
               (Just AltJSON)
               gmailService
           where go

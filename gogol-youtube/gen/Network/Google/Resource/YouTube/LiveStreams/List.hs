@@ -40,10 +40,11 @@ module Network.Google.Resource.YouTube.LiveStreams.List
     , lslId
     , lslPageToken
     , lslMaxResults
+    , lslFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.liveStreams.list@ method which the
 -- 'LiveStreamsList' request conforms to.
@@ -58,20 +59,22 @@ type LiveStreamsListResource =
                    QueryParam "id" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Word32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] LiveStreamListResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] LiveStreamListResponse
 
 -- | Returns a list of video streams that match the API request parameters.
 --
 -- /See:/ 'liveStreamsList' smart constructor.
 data LiveStreamsList = LiveStreamsList'
-    { _lslPart                          :: !Text
-    , _lslMine                          :: !(Maybe Bool)
-    , _lslOnBehalfOfContentOwner        :: !(Maybe Text)
+    { _lslPart :: !Text
+    , _lslMine :: !(Maybe Bool)
+    , _lslOnBehalfOfContentOwner :: !(Maybe Text)
     , _lslOnBehalfOfContentOwnerChannel :: !(Maybe Text)
-    , _lslId                            :: !(Maybe Text)
-    , _lslPageToken                     :: !(Maybe Text)
-    , _lslMaxResults                    :: !(Textual Word32)
+    , _lslId :: !(Maybe Text)
+    , _lslPageToken :: !(Maybe Text)
+    , _lslMaxResults :: !(Textual Word32)
+    , _lslFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LiveStreamsList' with the minimum fields required to make a request.
@@ -91,10 +94,12 @@ data LiveStreamsList = LiveStreamsList'
 -- * 'lslPageToken'
 --
 -- * 'lslMaxResults'
+--
+-- * 'lslFields'
 liveStreamsList
     :: Text -- ^ 'lslPart'
     -> LiveStreamsList
-liveStreamsList pLslPart_ =
+liveStreamsList pLslPart_ = 
     LiveStreamsList'
     { _lslPart = pLslPart_
     , _lslMine = Nothing
@@ -103,6 +108,7 @@ liveStreamsList pLslPart_ =
     , _lslId = Nothing
     , _lslPageToken = Nothing
     , _lslMaxResults = 5
+    , _lslFields = Nothing
     }
 
 -- | The part parameter specifies a comma-separated list of one or more
@@ -175,6 +181,11 @@ lslMaxResults
       (\ s a -> s{_lslMaxResults = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+lslFields :: Lens' LiveStreamsList (Maybe Text)
+lslFields
+  = lens _lslFields (\ s a -> s{_lslFields = a})
+
 instance GoogleRequest LiveStreamsList where
         type Rs LiveStreamsList = LiveStreamListResponse
         type Scopes LiveStreamsList =
@@ -188,6 +199,7 @@ instance GoogleRequest LiveStreamsList where
               _lslId
               _lslPageToken
               (Just _lslMaxResults)
+              _lslFields
               (Just AltJSON)
               youTubeService
           where go

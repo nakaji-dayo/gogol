@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Suspends an active subscription
+-- Suspends an active subscription.
 --
 -- /See:/ <https://developers.google.com/google-apps/reseller/ Enterprise Apps Reseller API Reference> for @reseller.subscriptions.suspend@.
 module Network.Google.Resource.Reseller.Subscriptions.Suspend
@@ -35,10 +35,11 @@ module Network.Google.Resource.Reseller.Subscriptions.Suspend
     -- * Request Lenses
     , ssCustomerId
     , ssSubscriptionId
+    , ssFields
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @reseller.subscriptions.suspend@ method which the
 -- 'SubscriptionsSuspend' request conforms to.
@@ -51,14 +52,16 @@ type SubscriptionsSuspendResource =
                "subscriptions" :>
                  Capture "subscriptionId" Text :>
                    "suspend" :>
-                     QueryParam "alt" AltJSON :> Post '[JSON] Subscription
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Post '[JSON] Subscription
 
--- | Suspends an active subscription
+-- | Suspends an active subscription.
 --
 -- /See:/ 'subscriptionsSuspend' smart constructor.
 data SubscriptionsSuspend = SubscriptionsSuspend'
-    { _ssCustomerId     :: !Text
+    { _ssCustomerId :: !Text
     , _ssSubscriptionId :: !Text
+    , _ssFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SubscriptionsSuspend' with the minimum fields required to make a request.
@@ -68,33 +71,48 @@ data SubscriptionsSuspend = SubscriptionsSuspend'
 -- * 'ssCustomerId'
 --
 -- * 'ssSubscriptionId'
+--
+-- * 'ssFields'
 subscriptionsSuspend
     :: Text -- ^ 'ssCustomerId'
     -> Text -- ^ 'ssSubscriptionId'
     -> SubscriptionsSuspend
-subscriptionsSuspend pSsCustomerId_ pSsSubscriptionId_ =
+subscriptionsSuspend pSsCustomerId_ pSsSubscriptionId_ = 
     SubscriptionsSuspend'
     { _ssCustomerId = pSsCustomerId_
     , _ssSubscriptionId = pSsSubscriptionId_
+    , _ssFields = Nothing
     }
 
--- | Id of the Customer
+-- | Either the customer\'s primary domain name or the customer\'s unique
+-- identifier. If using the domain name, we do not recommend using a
+-- customerId as a key for persistent data. If the domain name for a
+-- customerId is changed, the Google system automatically updates.
 ssCustomerId :: Lens' SubscriptionsSuspend Text
 ssCustomerId
   = lens _ssCustomerId (\ s a -> s{_ssCustomerId = a})
 
--- | Id of the subscription, which is unique for a customer
+-- | This is a required property. The subscriptionId is the subscription
+-- identifier and is unique for each customer. Since a subscriptionId
+-- changes when a subscription is updated, we recommend to not use this ID
+-- as a key for persistent data. And the subscriptionId can be found using
+-- the retrieve all reseller subscriptions method.
 ssSubscriptionId :: Lens' SubscriptionsSuspend Text
 ssSubscriptionId
   = lens _ssSubscriptionId
       (\ s a -> s{_ssSubscriptionId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ssFields :: Lens' SubscriptionsSuspend (Maybe Text)
+ssFields = lens _ssFields (\ s a -> s{_ssFields = a})
 
 instance GoogleRequest SubscriptionsSuspend where
         type Rs SubscriptionsSuspend = Subscription
         type Scopes SubscriptionsSuspend =
              '["https://www.googleapis.com/auth/apps.order"]
         requestClient SubscriptionsSuspend'{..}
-          = go _ssCustomerId _ssSubscriptionId (Just AltJSON)
+          = go _ssCustomerId _ssSubscriptionId _ssFields
+              (Just AltJSON)
               appsResellerService
           where go
                   = buildClient

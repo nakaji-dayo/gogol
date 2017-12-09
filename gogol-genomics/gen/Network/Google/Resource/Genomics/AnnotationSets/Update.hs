@@ -44,11 +44,12 @@ module Network.Google.Resource.Genomics.AnnotationSets.Update
     , asuUploadType
     , asuPayload
     , asuBearerToken
+    , asuFields
     , asuCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotationsets.update@ method which the
 -- 'AnnotationSetsUpdate' request conforms to.
@@ -64,9 +65,10 @@ type AnnotationSetsUpdateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] AnnotationSet :>
-                               Put '[JSON] AnnotationSet
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] AnnotationSet :>
+                                 Put '[JSON] AnnotationSet
 
 -- | Updates an annotation set. The update must respect all mutability
 -- restrictions and other invariants described on the annotation set
@@ -74,16 +76,17 @@ type AnnotationSetsUpdateResource =
 --
 -- /See:/ 'annotationSetsUpdate' smart constructor.
 data AnnotationSetsUpdate = AnnotationSetsUpdate'
-    { _asuXgafv           :: !(Maybe Xgafv)
-    , _asuUploadProtocol  :: !(Maybe Text)
-    , _asuUpdateMask      :: !(Maybe FieldMask)
+    { _asuXgafv :: !(Maybe Xgafv)
+    , _asuUploadProtocol :: !(Maybe Text)
+    , _asuUpdateMask :: !(Maybe FieldMask)
     , _asuAnnotationSetId :: !Text
-    , _asuPp              :: !Bool
-    , _asuAccessToken     :: !(Maybe Text)
-    , _asuUploadType      :: !(Maybe Text)
-    , _asuPayload         :: !AnnotationSet
-    , _asuBearerToken     :: !(Maybe Text)
-    , _asuCallback        :: !(Maybe Text)
+    , _asuPp :: !Bool
+    , _asuAccessToken :: !(Maybe Text)
+    , _asuUploadType :: !(Maybe Text)
+    , _asuPayload :: !AnnotationSet
+    , _asuBearerToken :: !(Maybe Text)
+    , _asuFields :: !(Maybe Text)
+    , _asuCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationSetsUpdate' with the minimum fields required to make a request.
@@ -108,12 +111,14 @@ data AnnotationSetsUpdate = AnnotationSetsUpdate'
 --
 -- * 'asuBearerToken'
 --
+-- * 'asuFields'
+--
 -- * 'asuCallback'
 annotationSetsUpdate
     :: Text -- ^ 'asuAnnotationSetId'
     -> AnnotationSet -- ^ 'asuPayload'
     -> AnnotationSetsUpdate
-annotationSetsUpdate pAsuAnnotationSetId_ pAsuPayload_ =
+annotationSetsUpdate pAsuAnnotationSetId_ pAsuPayload_ = 
     AnnotationSetsUpdate'
     { _asuXgafv = Nothing
     , _asuUploadProtocol = Nothing
@@ -124,6 +129,7 @@ annotationSetsUpdate pAsuAnnotationSetId_ pAsuPayload_ =
     , _asuUploadType = Nothing
     , _asuPayload = pAsuPayload_
     , _asuBearerToken = Nothing
+    , _asuFields = Nothing
     , _asuCallback = Nothing
     }
 
@@ -178,6 +184,11 @@ asuBearerToken
   = lens _asuBearerToken
       (\ s a -> s{_asuBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asuFields :: Lens' AnnotationSetsUpdate (Maybe Text)
+asuFields
+  = lens _asuFields (\ s a -> s{_asuFields = a})
+
 -- | JSONP
 asuCallback :: Lens' AnnotationSetsUpdate (Maybe Text)
 asuCallback
@@ -196,6 +207,7 @@ instance GoogleRequest AnnotationSetsUpdate where
               _asuUploadType
               _asuBearerToken
               _asuCallback
+              _asuFields
               (Just AltJSON)
               _asuPayload
               genomicsService

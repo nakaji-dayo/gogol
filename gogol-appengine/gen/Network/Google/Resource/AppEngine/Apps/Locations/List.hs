@@ -43,11 +43,12 @@ module Network.Google.Resource.AppEngine.Apps.Locations.List
     , allFilter
     , allPageToken
     , allPageSize
+    , allFields
     , allCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.locations.list@ method which the
 -- 'AppsLocationsList' request conforms to.
@@ -56,7 +57,7 @@ type AppsLocationsListResource =
        "apps" :>
          Capture "appsId" Text :>
            "locations" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
@@ -66,24 +67,26 @@ type AppsLocationsListResource =
                            QueryParam "pageToken" Text :>
                              QueryParam "pageSize" (Textual Int32) :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   Get '[JSON] ListLocationsResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     Get '[JSON] ListLocationsResponse
 
 -- | Lists information about the supported locations for this service.
 --
 -- /See:/ 'appsLocationsList' smart constructor.
 data AppsLocationsList = AppsLocationsList'
-    { _allXgafv          :: !(Maybe Text)
+    { _allXgafv :: !(Maybe Xgafv)
     , _allUploadProtocol :: !(Maybe Text)
-    , _allPp             :: !Bool
-    , _allAccessToken    :: !(Maybe Text)
-    , _allUploadType     :: !(Maybe Text)
-    , _allBearerToken    :: !(Maybe Text)
-    , _allAppsId         :: !Text
-    , _allFilter         :: !(Maybe Text)
-    , _allPageToken      :: !(Maybe Text)
-    , _allPageSize       :: !(Maybe (Textual Int32))
-    , _allCallback       :: !(Maybe Text)
+    , _allPp :: !Bool
+    , _allAccessToken :: !(Maybe Text)
+    , _allUploadType :: !(Maybe Text)
+    , _allBearerToken :: !(Maybe Text)
+    , _allAppsId :: !Text
+    , _allFilter :: !(Maybe Text)
+    , _allPageToken :: !(Maybe Text)
+    , _allPageSize :: !(Maybe (Textual Int32))
+    , _allFields :: !(Maybe Text)
+    , _allCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsLocationsList' with the minimum fields required to make a request.
@@ -110,11 +113,13 @@ data AppsLocationsList = AppsLocationsList'
 --
 -- * 'allPageSize'
 --
+-- * 'allFields'
+--
 -- * 'allCallback'
 appsLocationsList
     :: Text -- ^ 'allAppsId'
     -> AppsLocationsList
-appsLocationsList pAllAppsId_ =
+appsLocationsList pAllAppsId_ = 
     AppsLocationsList'
     { _allXgafv = Nothing
     , _allUploadProtocol = Nothing
@@ -126,11 +131,12 @@ appsLocationsList pAllAppsId_ =
     , _allFilter = Nothing
     , _allPageToken = Nothing
     , _allPageSize = Nothing
+    , _allFields = Nothing
     , _allCallback = Nothing
     }
 
 -- | V1 error format.
-allXgafv :: Lens' AppsLocationsList (Maybe Text)
+allXgafv :: Lens' AppsLocationsList (Maybe Xgafv)
 allXgafv = lens _allXgafv (\ s a -> s{_allXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -183,6 +189,11 @@ allPageSize
   = lens _allPageSize (\ s a -> s{_allPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+allFields :: Lens' AppsLocationsList (Maybe Text)
+allFields
+  = lens _allFields (\ s a -> s{_allFields = a})
+
 -- | JSONP
 allCallback :: Lens' AppsLocationsList (Maybe Text)
 allCallback
@@ -204,6 +215,7 @@ instance GoogleRequest AppsLocationsList where
               _allPageToken
               _allPageSize
               _allCallback
+              _allFields
               (Just AltJSON)
               appEngineService
           where go

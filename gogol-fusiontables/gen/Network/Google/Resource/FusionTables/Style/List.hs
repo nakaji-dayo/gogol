@@ -36,10 +36,11 @@ module Network.Google.Resource.FusionTables.Style.List
     , slPageToken
     , slTableId
     , slMaxResults
+    , slFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.style.list@ method which the
 -- 'StyleList' request conforms to.
@@ -51,16 +52,18 @@ type StyleListResource =
              "styles" :>
                QueryParam "pageToken" Text :>
                  QueryParam "maxResults" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] StyleSettingList
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] StyleSettingList
 
 -- | Retrieves a list of styles.
 --
 -- /See:/ 'styleList' smart constructor.
 data StyleList = StyleList'
-    { _slPageToken  :: !(Maybe Text)
-    , _slTableId    :: !Text
+    { _slPageToken :: !(Maybe Text)
+    , _slTableId :: !Text
     , _slMaxResults :: !(Maybe (Textual Word32))
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StyleList' with the minimum fields required to make a request.
@@ -72,14 +75,17 @@ data StyleList = StyleList'
 -- * 'slTableId'
 --
 -- * 'slMaxResults'
+--
+-- * 'slFields'
 styleList
     :: Text -- ^ 'slTableId'
     -> StyleList
-styleList pSlTableId_ =
+styleList pSlTableId_ = 
     StyleList'
     { _slPageToken = Nothing
     , _slTableId = pSlTableId_
     , _slMaxResults = Nothing
+    , _slFields = Nothing
     }
 
 -- | Continuation token specifying which result page to return. Optional.
@@ -98,13 +104,17 @@ slMaxResults
   = lens _slMaxResults (\ s a -> s{_slMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' StyleList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest StyleList where
         type Rs StyleList = StyleSettingList
         type Scopes StyleList =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient StyleList'{..}
-          = go _slTableId _slPageToken _slMaxResults
+          = go _slTableId _slPageToken _slMaxResults _slFields
               (Just AltJSON)
               fusionTablesService
           where go

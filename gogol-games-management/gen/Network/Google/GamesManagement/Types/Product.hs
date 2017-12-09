@@ -17,17 +17,17 @@
 --
 module Network.Google.GamesManagement.Types.Product where
 
-import           Network.Google.GamesManagement.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.GamesManagement.Types.Sum
+import Network.Google.Prelude
 
 -- | This is a JSON template for 1P\/3P metadata about the player\'s
 -- experience.
 --
 -- /See:/ 'gamesPlayerExperienceInfoResource' smart constructor.
 data GamesPlayerExperienceInfoResource = GamesPlayerExperienceInfoResource'
-    { _gpeirCurrentExperiencePoints    :: !(Maybe (Textual Int64))
-    , _gpeirCurrentLevel               :: !(Maybe GamesPlayerLevelResource)
-    , _gpeirNextLevel                  :: !(Maybe GamesPlayerLevelResource)
+    { _gpeirCurrentExperiencePoints :: !(Maybe (Textual Int64))
+    , _gpeirCurrentLevel :: !(Maybe GamesPlayerLevelResource)
+    , _gpeirNextLevel :: !(Maybe GamesPlayerLevelResource)
     , _gpeirLastLevelUpTimestampMillis :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -44,7 +44,7 @@ data GamesPlayerExperienceInfoResource = GamesPlayerExperienceInfoResource'
 -- * 'gpeirLastLevelUpTimestampMillis'
 gamesPlayerExperienceInfoResource
     :: GamesPlayerExperienceInfoResource
-gamesPlayerExperienceInfoResource =
+gamesPlayerExperienceInfoResource = 
     GamesPlayerExperienceInfoResource'
     { _gpeirCurrentExperiencePoints = Nothing
     , _gpeirCurrentLevel = Nothing
@@ -108,7 +108,7 @@ instance ToJSON GamesPlayerExperienceInfoResource
 --
 -- /See:/ 'playerName' smart constructor.
 data PlayerName = PlayerName'
-    { _pnGivenName  :: !(Maybe Text)
+    { _pnGivenName :: !(Maybe Text)
     , _pnFamilyName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -121,7 +121,7 @@ data PlayerName = PlayerName'
 -- * 'pnFamilyName'
 playerName
     :: PlayerName
-playerName =
+playerName = 
     PlayerName'
     { _pnGivenName = Nothing
     , _pnFamilyName = Nothing
@@ -158,7 +158,7 @@ instance ToJSON PlayerName where
 -- /See:/ 'playerScoreResetAllResponse' smart constructor.
 data PlayerScoreResetAllResponse = PlayerScoreResetAllResponse'
     { _psrarResults :: !(Maybe [PlayerScoreResetResponse])
-    , _psrarKind    :: !Text
+    , _psrarKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayerScoreResetAllResponse' with the minimum fields required to make a request.
@@ -170,7 +170,7 @@ data PlayerScoreResetAllResponse = PlayerScoreResetAllResponse'
 -- * 'psrarKind'
 playerScoreResetAllResponse
     :: PlayerScoreResetAllResponse
-playerScoreResetAllResponse =
+playerScoreResetAllResponse = 
     PlayerScoreResetAllResponse'
     { _psrarResults = Nothing
     , _psrarKind = "gamesManagement#playerScoreResetAllResponse"
@@ -211,7 +211,7 @@ instance ToJSON PlayerScoreResetAllResponse where
 -- /See:/ 'gamesPlayedResource' smart constructor.
 data GamesPlayedResource = GamesPlayedResource'
     { _gprAutoMatched :: !(Maybe Bool)
-    , _gprTimeMillis  :: !(Maybe (Textual Int64))
+    , _gprTimeMillis :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GamesPlayedResource' with the minimum fields required to make a request.
@@ -223,7 +223,7 @@ data GamesPlayedResource = GamesPlayedResource'
 -- * 'gprTimeMillis'
 gamesPlayedResource
     :: GamesPlayedResource
-gamesPlayedResource =
+gamesPlayedResource = 
     GamesPlayedResource'
     { _gprAutoMatched = Nothing
     , _gprTimeMillis = Nothing
@@ -264,7 +264,7 @@ instance ToJSON GamesPlayedResource where
 data GamesPlayerLevelResource = GamesPlayerLevelResource'
     { _gplrMaxExperiencePoints :: !(Maybe (Textual Int64))
     , _gplrMinExperiencePoints :: !(Maybe (Textual Int64))
-    , _gplrLevel               :: !(Maybe (Textual Int32))
+    , _gplrLevel :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GamesPlayerLevelResource' with the minimum fields required to make a request.
@@ -278,7 +278,7 @@ data GamesPlayerLevelResource = GamesPlayerLevelResource'
 -- * 'gplrLevel'
 gamesPlayerLevelResource
     :: GamesPlayerLevelResource
-gamesPlayerLevelResource =
+gamesPlayerLevelResource = 
     GamesPlayerLevelResource'
     { _gplrMaxExperiencePoints = Nothing
     , _gplrMinExperiencePoints = Nothing
@@ -328,9 +328,9 @@ instance ToJSON GamesPlayerLevelResource where
 --
 -- /See:/ 'playerScoreResetResponse' smart constructor.
 data PlayerScoreResetResponse = PlayerScoreResetResponse'
-    { _psrrKind                :: !Text
+    { _psrrKind :: !Text
     , _psrrResetScoreTimeSpans :: !(Maybe [Text])
-    , _psrrDefinitionId        :: !(Maybe Text)
+    , _psrrDefinitionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayerScoreResetResponse' with the minimum fields required to make a request.
@@ -344,7 +344,7 @@ data PlayerScoreResetResponse = PlayerScoreResetResponse'
 -- * 'psrrDefinitionId'
 playerScoreResetResponse
     :: PlayerScoreResetResponse
-playerScoreResetResponse =
+playerScoreResetResponse = 
     PlayerScoreResetResponse'
     { _psrrKind = "gamesManagement#playerScoreResetResponse"
     , _psrrResetScoreTimeSpans = Nothing
@@ -395,7 +395,7 @@ instance ToJSON PlayerScoreResetResponse where
 --
 -- /See:/ 'scoresResetMultipleForAllRequest' smart constructor.
 data ScoresResetMultipleForAllRequest = ScoresResetMultipleForAllRequest'
-    { _srmfarKind           :: !Text
+    { _srmfarKind :: !Text
     , _srmfarLeaderboardIds :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -408,7 +408,7 @@ data ScoresResetMultipleForAllRequest = ScoresResetMultipleForAllRequest'
 -- * 'srmfarLeaderboardIds'
 scoresResetMultipleForAllRequest
     :: ScoresResetMultipleForAllRequest
-scoresResetMultipleForAllRequest =
+scoresResetMultipleForAllRequest = 
     ScoresResetMultipleForAllRequest'
     { _srmfarKind = "gamesManagement#scoresResetMultipleForAllRequest"
     , _srmfarLeaderboardIds = Nothing
@@ -450,7 +450,7 @@ instance ToJSON ScoresResetMultipleForAllRequest
 --
 -- /See:/ 'questsResetMultipleForAllRequest' smart constructor.
 data QuestsResetMultipleForAllRequest = QuestsResetMultipleForAllRequest'
-    { _qrmfarKind     :: !Text
+    { _qrmfarKind :: !Text
     , _qrmfarQuestIds :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -463,7 +463,7 @@ data QuestsResetMultipleForAllRequest = QuestsResetMultipleForAllRequest'
 -- * 'qrmfarQuestIds'
 questsResetMultipleForAllRequest
     :: QuestsResetMultipleForAllRequest
-questsResetMultipleForAllRequest =
+questsResetMultipleForAllRequest = 
     QuestsResetMultipleForAllRequest'
     { _qrmfarKind = "gamesManagement#questsResetMultipleForAllRequest"
     , _qrmfarQuestIds = Nothing
@@ -506,8 +506,8 @@ instance ToJSON QuestsResetMultipleForAllRequest
 -- /See:/ 'hiddenPlayerList' smart constructor.
 data HiddenPlayerList = HiddenPlayerList'
     { _hplNextPageToken :: !(Maybe Text)
-    , _hplKind          :: !Text
-    , _hplItems         :: !(Maybe [HiddenPlayer])
+    , _hplKind :: !Text
+    , _hplItems :: !(Maybe [HiddenPlayer])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HiddenPlayerList' with the minimum fields required to make a request.
@@ -521,7 +521,7 @@ data HiddenPlayerList = HiddenPlayerList'
 -- * 'hplItems'
 hiddenPlayerList
     :: HiddenPlayerList
-hiddenPlayerList =
+hiddenPlayerList = 
     HiddenPlayerList'
     { _hplNextPageToken = Nothing
     , _hplKind = "gamesManagement#hiddenPlayerList"
@@ -567,7 +567,7 @@ instance ToJSON HiddenPlayerList where
 --
 -- /See:/ 'eventsResetMultipleForAllRequest' smart constructor.
 data EventsResetMultipleForAllRequest = EventsResetMultipleForAllRequest'
-    { _ermfarKind     :: !Text
+    { _ermfarKind :: !Text
     , _ermfarEventIds :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -580,7 +580,7 @@ data EventsResetMultipleForAllRequest = EventsResetMultipleForAllRequest'
 -- * 'ermfarEventIds'
 eventsResetMultipleForAllRequest
     :: EventsResetMultipleForAllRequest
-eventsResetMultipleForAllRequest =
+eventsResetMultipleForAllRequest = 
     EventsResetMultipleForAllRequest'
     { _ermfarKind = "gamesManagement#eventsResetMultipleForAllRequest"
     , _ermfarEventIds = Nothing
@@ -622,7 +622,7 @@ instance ToJSON EventsResetMultipleForAllRequest
 --
 -- /See:/ 'achievementResetMultipleForAllRequest' smart constructor.
 data AchievementResetMultipleForAllRequest = AchievementResetMultipleForAllRequest'
-    { _armfarKind           :: !Text
+    { _armfarKind :: !Text
     , _armfarAchievementIds :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -635,7 +635,7 @@ data AchievementResetMultipleForAllRequest = AchievementResetMultipleForAllReque
 -- * 'armfarAchievementIds'
 achievementResetMultipleForAllRequest
     :: AchievementResetMultipleForAllRequest
-achievementResetMultipleForAllRequest =
+achievementResetMultipleForAllRequest = 
     AchievementResetMultipleForAllRequest'
     { _armfarKind = "gamesManagement#achievementResetMultipleForAllRequest"
     , _armfarAchievementIds = Nothing
@@ -677,9 +677,9 @@ instance ToJSON AchievementResetMultipleForAllRequest
 --
 -- /See:/ 'hiddenPlayer' smart constructor.
 data HiddenPlayer = HiddenPlayer'
-    { _hpKind             :: !Text
+    { _hpKind :: !Text
     , _hpHiddenTimeMillis :: !(Maybe (Textual Int64))
-    , _hpPlayer           :: !(Maybe Player)
+    , _hpPlayer :: !(Maybe Player)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'HiddenPlayer' with the minimum fields required to make a request.
@@ -693,7 +693,7 @@ data HiddenPlayer = HiddenPlayer'
 -- * 'hpPlayer'
 hiddenPlayer
     :: HiddenPlayer
-hiddenPlayer =
+hiddenPlayer = 
     HiddenPlayer'
     { _hpKind = "gamesManagement#hiddenPlayer"
     , _hpHiddenTimeMillis = Nothing
@@ -738,7 +738,7 @@ instance ToJSON HiddenPlayer where
 -- /See:/ 'achievementResetAllResponse' smart constructor.
 data AchievementResetAllResponse = AchievementResetAllResponse'
     { _ararResults :: !(Maybe [AchievementResetResponse])
-    , _ararKind    :: !Text
+    , _ararKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementResetAllResponse' with the minimum fields required to make a request.
@@ -750,7 +750,7 @@ data AchievementResetAllResponse = AchievementResetAllResponse'
 -- * 'ararKind'
 achievementResetAllResponse
     :: AchievementResetAllResponse
-achievementResetAllResponse =
+achievementResetAllResponse = 
     AchievementResetAllResponse'
     { _ararResults = Nothing
     , _ararKind = "gamesManagement#achievementResetAllResponse"
@@ -789,17 +789,17 @@ instance ToJSON AchievementResetAllResponse where
 -- /See:/ 'player' smart constructor.
 data Player = Player'
     { _pBannerURLLandscape :: !(Maybe Text)
-    , _pLastPlayedWith     :: !(Maybe GamesPlayedResource)
-    , _pAvatarImageURL     :: !(Maybe Text)
-    , _pKind               :: !Text
-    , _pExperienceInfo     :: !(Maybe GamesPlayerExperienceInfoResource)
-    , _pName               :: !(Maybe PlayerName)
-    , _pOriginalPlayerId   :: !(Maybe Text)
-    , _pDisplayName        :: !(Maybe Text)
-    , _pTitle              :: !(Maybe Text)
-    , _pBannerURLPortrait  :: !(Maybe Text)
-    , _pPlayerId           :: !(Maybe Text)
-    , _pProFileSettings    :: !(Maybe ProFileSettings)
+    , _pLastPlayedWith :: !(Maybe GamesPlayedResource)
+    , _pAvatarImageURL :: !(Maybe Text)
+    , _pKind :: !Text
+    , _pExperienceInfo :: !(Maybe GamesPlayerExperienceInfoResource)
+    , _pName :: !(Maybe PlayerName)
+    , _pOriginalPlayerId :: !(Maybe Text)
+    , _pDisplayName :: !(Maybe Text)
+    , _pTitle :: !(Maybe Text)
+    , _pBannerURLPortrait :: !(Maybe Text)
+    , _pPlayerId :: !(Maybe Text)
+    , _pProFileSettings :: !(Maybe ProFileSettings)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Player' with the minimum fields required to make a request.
@@ -831,7 +831,7 @@ data Player = Player'
 -- * 'pProFileSettings'
 player
     :: Player
-player =
+player = 
     Player'
     { _pBannerURLLandscape = Nothing
     , _pLastPlayedWith = Nothing
@@ -960,7 +960,7 @@ instance ToJSON Player where
 -- /See:/ 'proFileSettings' smart constructor.
 data ProFileSettings = ProFileSettings'
     { _pfsProFileVisible :: !(Maybe Bool)
-    , _pfsKind           :: !Text
+    , _pfsKind :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProFileSettings' with the minimum fields required to make a request.
@@ -972,7 +972,7 @@ data ProFileSettings = ProFileSettings'
 -- * 'pfsKind'
 proFileSettings
     :: ProFileSettings
-proFileSettings =
+proFileSettings = 
     ProFileSettings'
     { _pfsProFileVisible = Nothing
     , _pfsKind = "gamesManagement#profileSettings"
@@ -1010,9 +1010,9 @@ instance ToJSON ProFileSettings where
 -- /See:/ 'achievementResetResponse' smart constructor.
 data AchievementResetResponse = AchievementResetResponse'
     { _arrUpdateOccurred :: !(Maybe Bool)
-    , _arrKind           :: !Text
-    , _arrCurrentState   :: !(Maybe Text)
-    , _arrDefinitionId   :: !(Maybe Text)
+    , _arrKind :: !Text
+    , _arrCurrentState :: !(Maybe Text)
+    , _arrDefinitionId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementResetResponse' with the minimum fields required to make a request.
@@ -1028,7 +1028,7 @@ data AchievementResetResponse = AchievementResetResponse'
 -- * 'arrDefinitionId'
 achievementResetResponse
     :: AchievementResetResponse
-achievementResetResponse =
+achievementResetResponse = 
     AchievementResetResponse'
     { _arrUpdateOccurred = Nothing
     , _arrKind = "gamesManagement#achievementResetResponse"

@@ -28,7 +28,11 @@
 -- you abandon. This operation is marked as DONE when the action is
 -- scheduled even if the instances have not yet been removed from the
 -- group. You must separately verify the status of the abandoning action
--- with the listmanagedinstances method.
+-- with the listmanagedinstances method. If the group is part of a backend
+-- service that has enabled connection draining, it can take up to 60
+-- seconds after the connection draining duration has elapsed before the VM
+-- instance is removed or deleted. You can specify a maximum of 1000
+-- instances with this method per request.
 --
 -- /See:/ <https://developers.google.com/compute/docs/reference/latest/ Compute Engine API Reference> for @compute.regionInstanceGroupManagers.abandonInstances@.
 module Network.Google.Resource.Compute.RegionInstanceGroupManagers.AbandonInstances
@@ -41,14 +45,16 @@ module Network.Google.Resource.Compute.RegionInstanceGroupManagers.AbandonInstan
     , RegionInstanceGroupManagersAbandonInstances
 
     -- * Request Lenses
+    , rigmaiRequestId
     , rigmaiProject
     , rigmaiInstanceGroupManager
     , rigmaiPayload
     , rigmaiRegion
+    , rigmaiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionInstanceGroupManagers.abandonInstances@ method which the
 -- 'RegionInstanceGroupManagersAbandonInstances' request conforms to.
@@ -63,10 +69,12 @@ type RegionInstanceGroupManagersAbandonInstancesResource
                  "instanceGroupManagers" :>
                    Capture "instanceGroupManager" Text :>
                      "abandonInstances" :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON]
-                           RegionInstanceGroupManagersAbandonInstancesRequest
-                           :> Post '[JSON] Operation
+                       QueryParam "requestId" Text :>
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON]
+                               RegionInstanceGroupManagersAbandonInstancesRequest
+                               :> Post '[JSON] Operation
 
 -- | Schedules a group action to remove the specified instances from the
 -- managed instance group. Abandoning an instance does not delete the
@@ -76,19 +84,27 @@ type RegionInstanceGroupManagersAbandonInstancesResource
 -- you abandon. This operation is marked as DONE when the action is
 -- scheduled even if the instances have not yet been removed from the
 -- group. You must separately verify the status of the abandoning action
--- with the listmanagedinstances method.
+-- with the listmanagedinstances method. If the group is part of a backend
+-- service that has enabled connection draining, it can take up to 60
+-- seconds after the connection draining duration has elapsed before the VM
+-- instance is removed or deleted. You can specify a maximum of 1000
+-- instances with this method per request.
 --
 -- /See:/ 'regionInstanceGroupManagersAbandonInstances' smart constructor.
 data RegionInstanceGroupManagersAbandonInstances = RegionInstanceGroupManagersAbandonInstances'
-    { _rigmaiProject              :: !Text
+    { _rigmaiRequestId :: !(Maybe Text)
+    , _rigmaiProject :: !Text
     , _rigmaiInstanceGroupManager :: !Text
-    , _rigmaiPayload              :: !RegionInstanceGroupManagersAbandonInstancesRequest
-    , _rigmaiRegion               :: !Text
+    , _rigmaiPayload :: !RegionInstanceGroupManagersAbandonInstancesRequest
+    , _rigmaiRegion :: !Text
+    , _rigmaiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionInstanceGroupManagersAbandonInstances' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'rigmaiRequestId'
 --
 -- * 'rigmaiProject'
 --
@@ -97,19 +113,38 @@ data RegionInstanceGroupManagersAbandonInstances = RegionInstanceGroupManagersAb
 -- * 'rigmaiPayload'
 --
 -- * 'rigmaiRegion'
+--
+-- * 'rigmaiFields'
 regionInstanceGroupManagersAbandonInstances
     :: Text -- ^ 'rigmaiProject'
     -> Text -- ^ 'rigmaiInstanceGroupManager'
     -> RegionInstanceGroupManagersAbandonInstancesRequest -- ^ 'rigmaiPayload'
     -> Text -- ^ 'rigmaiRegion'
     -> RegionInstanceGroupManagersAbandonInstances
-regionInstanceGroupManagersAbandonInstances pRigmaiProject_ pRigmaiInstanceGroupManager_ pRigmaiPayload_ pRigmaiRegion_ =
+regionInstanceGroupManagersAbandonInstances pRigmaiProject_ pRigmaiInstanceGroupManager_ pRigmaiPayload_ pRigmaiRegion_ = 
     RegionInstanceGroupManagersAbandonInstances'
-    { _rigmaiProject = pRigmaiProject_
+    { _rigmaiRequestId = Nothing
+    , _rigmaiProject = pRigmaiProject_
     , _rigmaiInstanceGroupManager = pRigmaiInstanceGroupManager_
     , _rigmaiPayload = pRigmaiPayload_
     , _rigmaiRegion = pRigmaiRegion_
+    , _rigmaiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+rigmaiRequestId :: Lens' RegionInstanceGroupManagersAbandonInstances (Maybe Text)
+rigmaiRequestId
+  = lens _rigmaiRequestId
+      (\ s a -> s{_rigmaiRequestId = a})
 
 -- | Project ID for this request.
 rigmaiProject :: Lens' RegionInstanceGroupManagersAbandonInstances Text
@@ -134,6 +169,11 @@ rigmaiRegion :: Lens' RegionInstanceGroupManagersAbandonInstances Text
 rigmaiRegion
   = lens _rigmaiRegion (\ s a -> s{_rigmaiRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rigmaiFields :: Lens' RegionInstanceGroupManagersAbandonInstances (Maybe Text)
+rigmaiFields
+  = lens _rigmaiFields (\ s a -> s{_rigmaiFields = a})
+
 instance GoogleRequest
          RegionInstanceGroupManagersAbandonInstances where
         type Rs RegionInstanceGroupManagersAbandonInstances =
@@ -147,6 +187,8 @@ instance GoogleRequest
           RegionInstanceGroupManagersAbandonInstances'{..}
           = go _rigmaiProject _rigmaiRegion
               _rigmaiInstanceGroupManager
+              _rigmaiRequestId
+              _rigmaiFields
               (Just AltJSON)
               _rigmaiPayload
               computeService

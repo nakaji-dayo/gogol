@@ -42,6 +42,15 @@ module Network.Google.AppsReseller
     -- ** reseller.customers.update
     , module Network.Google.Resource.Reseller.Customers.Update
 
+    -- ** reseller.resellernotify.getwatchdetails
+    , module Network.Google.Resource.Reseller.Resellernotify.Getwatchdetails
+
+    -- ** reseller.resellernotify.register
+    , module Network.Google.Resource.Reseller.Resellernotify.Register
+
+    -- ** reseller.resellernotify.unregister
+    , module Network.Google.Resource.Reseller.Resellernotify.Unregister
+
     -- ** reseller.subscriptions.activate
     , module Network.Google.Resource.Reseller.Subscriptions.Activate
 
@@ -79,6 +88,17 @@ module Network.Google.AppsReseller
     , subscriptionTrialSettings
     , stsIsInTrial
     , stsTrialEndTime
+
+    -- ** ResellernotifyResource
+    , ResellernotifyResource
+    , resellernotifyResource
+    , rrTopicName
+
+    -- ** ResellernotifyGetwatchdetailsResponse
+    , ResellernotifyGetwatchdetailsResponse
+    , resellernotifyGetwatchdetailsResponse
+    , rgrTopicName
+    , rgrServiceAccountEmailAddresses
 
     -- ** Address
     , Address
@@ -159,6 +179,7 @@ module Network.Google.AppsReseller
     , subBillingMethod
     , subStatus
     , subTrialSettings
+    , subSKUName
     , subResourceUiURL
     , subKind
     , subSKUId
@@ -180,22 +201,25 @@ module Network.Google.AppsReseller
     , stiMinimumTransferableSeats
     ) where
 
-import           Network.Google.AppsReseller.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.Reseller.Customers.Get
-import           Network.Google.Resource.Reseller.Customers.Insert
-import           Network.Google.Resource.Reseller.Customers.Patch
-import           Network.Google.Resource.Reseller.Customers.Update
-import           Network.Google.Resource.Reseller.Subscriptions.Activate
-import           Network.Google.Resource.Reseller.Subscriptions.ChangePlan
-import           Network.Google.Resource.Reseller.Subscriptions.ChangeRenewalSettings
-import           Network.Google.Resource.Reseller.Subscriptions.ChangeSeats
-import           Network.Google.Resource.Reseller.Subscriptions.Delete
-import           Network.Google.Resource.Reseller.Subscriptions.Get
-import           Network.Google.Resource.Reseller.Subscriptions.Insert
-import           Network.Google.Resource.Reseller.Subscriptions.List
-import           Network.Google.Resource.Reseller.Subscriptions.StartPaidService
-import           Network.Google.Resource.Reseller.Subscriptions.Suspend
+import Network.Google.Prelude
+import Network.Google.AppsReseller.Types
+import Network.Google.Resource.Reseller.Customers.Get
+import Network.Google.Resource.Reseller.Customers.Insert
+import Network.Google.Resource.Reseller.Customers.Patch
+import Network.Google.Resource.Reseller.Customers.Update
+import Network.Google.Resource.Reseller.Resellernotify.Getwatchdetails
+import Network.Google.Resource.Reseller.Resellernotify.Register
+import Network.Google.Resource.Reseller.Resellernotify.Unregister
+import Network.Google.Resource.Reseller.Subscriptions.Activate
+import Network.Google.Resource.Reseller.Subscriptions.ChangePlan
+import Network.Google.Resource.Reseller.Subscriptions.ChangeRenewalSettings
+import Network.Google.Resource.Reseller.Subscriptions.ChangeSeats
+import Network.Google.Resource.Reseller.Subscriptions.Delete
+import Network.Google.Resource.Reseller.Subscriptions.Get
+import Network.Google.Resource.Reseller.Subscriptions.Insert
+import Network.Google.Resource.Reseller.Subscriptions.List
+import Network.Google.Resource.Reseller.Subscriptions.StartPaidService
+import Network.Google.Resource.Reseller.Subscriptions.Suspend
 
 {- $resources
 TODO
@@ -206,6 +230,9 @@ type AppsResellerAPI =
      CustomersInsertResource :<|> CustomersPatchResource
        :<|> CustomersGetResource
        :<|> CustomersUpdateResource
+       :<|> ResellernotifyGetwatchdetailsResource
+       :<|> ResellernotifyRegisterResource
+       :<|> ResellernotifyUnregisterResource
        :<|> SubscriptionsInsertResource
        :<|> SubscriptionsListResource
        :<|> SubscriptionsChangeRenewalSettingsResource

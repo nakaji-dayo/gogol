@@ -35,10 +35,11 @@ module Network.Google.Resource.CivicInfo.Divisions.Search
     -- * Request Lenses
     , dsPayload
     , dsQuery
+    , dsFields
     ) where
 
-import           Network.Google.CivicInfo.Types
-import           Network.Google.Prelude
+import Network.Google.CivicInfo.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @civicinfo.divisions.search@ method which the
 -- 'DivisionsSearch' request conforms to.
@@ -47,16 +48,18 @@ type DivisionsSearchResource =
        "v2" :>
          "divisions" :>
            QueryParam "query" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] DivisionSearchRequest :>
-                 Get '[JSON] DivisionSearchResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] DivisionSearchRequest :>
+                   Get '[JSON] DivisionSearchResponse
 
 -- | Searches for political divisions by their natural name or OCD ID.
 --
 -- /See:/ 'divisionsSearch' smart constructor.
 data DivisionsSearch = DivisionsSearch'
     { _dsPayload :: !DivisionSearchRequest
-    , _dsQuery   :: !(Maybe Text)
+    , _dsQuery :: !(Maybe Text)
+    , _dsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DivisionsSearch' with the minimum fields required to make a request.
@@ -66,13 +69,16 @@ data DivisionsSearch = DivisionsSearch'
 -- * 'dsPayload'
 --
 -- * 'dsQuery'
+--
+-- * 'dsFields'
 divisionsSearch
     :: DivisionSearchRequest -- ^ 'dsPayload'
     -> DivisionsSearch
-divisionsSearch pDsPayload_ =
+divisionsSearch pDsPayload_ = 
     DivisionsSearch'
     { _dsPayload = pDsPayload_
     , _dsQuery = Nothing
+    , _dsFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -88,11 +94,15 @@ dsPayload
 dsQuery :: Lens' DivisionsSearch (Maybe Text)
 dsQuery = lens _dsQuery (\ s a -> s{_dsQuery = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dsFields :: Lens' DivisionsSearch (Maybe Text)
+dsFields = lens _dsFields (\ s a -> s{_dsFields = a})
+
 instance GoogleRequest DivisionsSearch where
         type Rs DivisionsSearch = DivisionSearchResponse
         type Scopes DivisionsSearch = '[]
         requestClient DivisionsSearch'{..}
-          = go _dsQuery (Just AltJSON) _dsPayload
+          = go _dsQuery _dsFields (Just AltJSON) _dsPayload
               civicInfoService
           where go
                   = buildClient

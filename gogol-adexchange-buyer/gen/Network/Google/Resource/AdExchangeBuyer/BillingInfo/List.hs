@@ -33,10 +33,12 @@ module Network.Google.Resource.AdExchangeBuyer.BillingInfo.List
     , billingInfoList'
     , BillingInfoList'
 
+    -- * Request Lenses
+    , bilFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.billingInfo.list@ method which the
 -- 'BillingInfoList'' request conforms to.
@@ -44,29 +46,41 @@ type BillingInfoListResource =
      "adexchangebuyer" :>
        "v1.4" :>
          "billinginfo" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] BillingInfoList
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] BillingInfoList
 
 -- | Retrieves a list of billing information for all accounts of the
 -- authenticated user.
 --
 -- /See:/ 'billingInfoList'' smart constructor.
-data BillingInfoList' =
-    BillingInfoList''
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype BillingInfoList' = BillingInfoList''
+    { _bilFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BillingInfoList'' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'bilFields'
 billingInfoList'
     :: BillingInfoList'
-billingInfoList' = BillingInfoList''
+billingInfoList' = 
+    BillingInfoList''
+    { _bilFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+bilFields :: Lens' BillingInfoList' (Maybe Text)
+bilFields
+  = lens _bilFields (\ s a -> s{_bilFields = a})
 
 instance GoogleRequest BillingInfoList' where
         type Rs BillingInfoList' = BillingInfoList
         type Scopes BillingInfoList' =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
-        requestClient BillingInfoList''{}
-          = go (Just AltJSON) adExchangeBuyerService
+        requestClient BillingInfoList''{..}
+          = go _bilFields (Just AltJSON) adExchangeBuyerService
           where go
                   = buildClient
                       (Proxy :: Proxy BillingInfoListResource)

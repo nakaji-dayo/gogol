@@ -39,10 +39,11 @@ module Network.Google.Resource.Blogger.PostUserInfos.Get
     , puigMaxComments
     , puigUserId
     , puigPostId
+    , puigFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.postUserInfos.get@ method which the
 -- 'PostUserInfosGet' request conforms to.
@@ -56,7 +57,8 @@ type PostUserInfosGetResource =
                  "posts" :>
                    Capture "postId" Text :>
                      QueryParam "maxComments" (Textual Word32) :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] PostUserInfo
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] PostUserInfo
 
 -- | Gets one post and user info pair, by post ID and user ID. The post user
 -- info contains per-user information about the post, such as access
@@ -64,10 +66,11 @@ type PostUserInfosGetResource =
 --
 -- /See:/ 'postUserInfosGet' smart constructor.
 data PostUserInfosGet = PostUserInfosGet'
-    { _puigBlogId      :: !Text
+    { _puigBlogId :: !Text
     , _puigMaxComments :: !(Maybe (Textual Word32))
-    , _puigUserId      :: !Text
-    , _puigPostId      :: !Text
+    , _puigUserId :: !Text
+    , _puigPostId :: !Text
+    , _puigFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostUserInfosGet' with the minimum fields required to make a request.
@@ -81,17 +84,20 @@ data PostUserInfosGet = PostUserInfosGet'
 -- * 'puigUserId'
 --
 -- * 'puigPostId'
+--
+-- * 'puigFields'
 postUserInfosGet
     :: Text -- ^ 'puigBlogId'
     -> Text -- ^ 'puigUserId'
     -> Text -- ^ 'puigPostId'
     -> PostUserInfosGet
-postUserInfosGet pPuigBlogId_ pPuigUserId_ pPuigPostId_ =
+postUserInfosGet pPuigBlogId_ pPuigUserId_ pPuigPostId_ = 
     PostUserInfosGet'
     { _puigBlogId = pPuigBlogId_
     , _puigMaxComments = Nothing
     , _puigUserId = pPuigUserId_
     , _puigPostId = pPuigPostId_
+    , _puigFields = Nothing
     }
 
 -- | The ID of the blog.
@@ -117,6 +123,11 @@ puigPostId :: Lens' PostUserInfosGet Text
 puigPostId
   = lens _puigPostId (\ s a -> s{_puigPostId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puigFields :: Lens' PostUserInfosGet (Maybe Text)
+puigFields
+  = lens _puigFields (\ s a -> s{_puigFields = a})
+
 instance GoogleRequest PostUserInfosGet where
         type Rs PostUserInfosGet = PostUserInfo
         type Scopes PostUserInfosGet =
@@ -125,6 +136,7 @@ instance GoogleRequest PostUserInfosGet where
         requestClient PostUserInfosGet'{..}
           = go _puigUserId _puigBlogId _puigPostId
               _puigMaxComments
+              _puigFields
               (Just AltJSON)
               bloggerService
           where go

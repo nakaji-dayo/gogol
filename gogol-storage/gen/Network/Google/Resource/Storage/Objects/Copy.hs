@@ -44,16 +44,18 @@ module Network.Google.Resource.Storage.Objects.Copy
     , ocSourceObject
     , ocSourceBucket
     , ocPayload
+    , ocUserProject
     , ocDestinationBucket
     , ocIfMetagenerationNotMatch
     , ocIfSourceGenerationNotMatch
     , ocProjection
     , ocSourceGeneration
+    , ocFields
     , ocDestinationObject
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Storage.Types
+import Network.Google.Prelude
+import Network.Google.Storage.Types
 
 -- | A resource alias for @storage.objects.copy@ method which the
 -- 'ObjectsCopy' request conforms to.
@@ -90,55 +92,7 @@ type ObjectsCopyResource =
                                        QueryParam "ifGenerationMatch"
                                          (Textual Int64)
                                          :>
-                                         QueryParam "ifMetagenerationNotMatch"
-                                           (Textual Int64)
-                                           :>
-                                           QueryParam
-                                             "ifSourceGenerationNotMatch"
-                                             (Textual Int64)
-                                             :>
-                                             QueryParam "projection"
-                                               ObjectsCopyProjection
-                                               :>
-                                               QueryParam "sourceGeneration"
-                                                 (Textual Int64)
-                                                 :>
-                                                 QueryParam "alt" AltJSON :>
-                                                   ReqBody '[JSON] Object :>
-                                                     Post '[JSON] Object
-       :<|>
-       "storage" :>
-         "v1" :>
-           "b" :>
-             Capture "sourceBucket" Text :>
-               "o" :>
-                 Capture "sourceObject" Text :>
-                   "copyTo" :>
-                     "b" :>
-                       Capture "destinationBucket" Text :>
-                         "o" :>
-                           Capture "destinationObject" Text :>
-                             QueryParam "destinationPredefinedAcl"
-                               ObjectsCopyDestinationPredefinedACL
-                               :>
-                               QueryParam "ifSourceGenerationMatch"
-                                 (Textual Int64)
-                                 :>
-                                 QueryParam "ifMetagenerationMatch"
-                                   (Textual Int64)
-                                   :>
-                                   QueryParam "ifGenerationNotMatch"
-                                     (Textual Int64)
-                                     :>
-                                     QueryParam "ifSourceMetagenerationNotMatch"
-                                       (Textual Int64)
-                                       :>
-                                       QueryParam "ifSourceMetagenerationMatch"
-                                         (Textual Int64)
-                                         :>
-                                         QueryParam "ifGenerationMatch"
-                                           (Textual Int64)
-                                           :>
+                                         QueryParam "userProject" Text :>
                                            QueryParam "ifMetagenerationNotMatch"
                                              (Textual Int64)
                                              :>
@@ -152,30 +106,34 @@ type ObjectsCopyResource =
                                                  QueryParam "sourceGeneration"
                                                    (Textual Int64)
                                                    :>
-                                                   QueryParam "alt" AltMedia :>
-                                                     Post '[OctetStream] Stream
+                                                   QueryParam "fields" Text :>
+                                                     QueryParam "alt" AltJSON :>
+                                                       ReqBody '[JSON] Object :>
+                                                         Post '[JSON] Object
 
 -- | Copies a source object to a destination object. Optionally overrides
 -- metadata.
 --
 -- /See:/ 'objectsCopy' smart constructor.
 data ObjectsCopy = ObjectsCopy'
-    { _ocDestinationPredefinedACL       :: !(Maybe ObjectsCopyDestinationPredefinedACL)
-    , _ocIfSourceGenerationMatch        :: !(Maybe (Textual Int64))
-    , _ocIfMetagenerationMatch          :: !(Maybe (Textual Int64))
-    , _ocIfGenerationNotMatch           :: !(Maybe (Textual Int64))
+    { _ocDestinationPredefinedACL :: !(Maybe ObjectsCopyDestinationPredefinedACL)
+    , _ocIfSourceGenerationMatch :: !(Maybe (Textual Int64))
+    , _ocIfMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _ocIfGenerationNotMatch :: !(Maybe (Textual Int64))
     , _ocIfSourceMetagenerationNotMatch :: !(Maybe (Textual Int64))
-    , _ocIfSourceMetagenerationMatch    :: !(Maybe (Textual Int64))
-    , _ocIfGenerationMatch              :: !(Maybe (Textual Int64))
-    , _ocSourceObject                   :: !Text
-    , _ocSourceBucket                   :: !Text
-    , _ocPayload                        :: !Object
-    , _ocDestinationBucket              :: !Text
-    , _ocIfMetagenerationNotMatch       :: !(Maybe (Textual Int64))
-    , _ocIfSourceGenerationNotMatch     :: !(Maybe (Textual Int64))
-    , _ocProjection                     :: !(Maybe ObjectsCopyProjection)
-    , _ocSourceGeneration               :: !(Maybe (Textual Int64))
-    , _ocDestinationObject              :: !Text
+    , _ocIfSourceMetagenerationMatch :: !(Maybe (Textual Int64))
+    , _ocIfGenerationMatch :: !(Maybe (Textual Int64))
+    , _ocSourceObject :: !Text
+    , _ocSourceBucket :: !Text
+    , _ocPayload :: !Object
+    , _ocUserProject :: !(Maybe Text)
+    , _ocDestinationBucket :: !Text
+    , _ocIfMetagenerationNotMatch :: !(Maybe (Textual Int64))
+    , _ocIfSourceGenerationNotMatch :: !(Maybe (Textual Int64))
+    , _ocProjection :: !(Maybe ObjectsCopyProjection)
+    , _ocSourceGeneration :: !(Maybe (Textual Int64))
+    , _ocFields :: !(Maybe Text)
+    , _ocDestinationObject :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ObjectsCopy' with the minimum fields required to make a request.
@@ -202,6 +160,8 @@ data ObjectsCopy = ObjectsCopy'
 --
 -- * 'ocPayload'
 --
+-- * 'ocUserProject'
+--
 -- * 'ocDestinationBucket'
 --
 -- * 'ocIfMetagenerationNotMatch'
@@ -212,6 +172,8 @@ data ObjectsCopy = ObjectsCopy'
 --
 -- * 'ocSourceGeneration'
 --
+-- * 'ocFields'
+--
 -- * 'ocDestinationObject'
 objectsCopy
     :: Text -- ^ 'ocSourceObject'
@@ -220,7 +182,7 @@ objectsCopy
     -> Text -- ^ 'ocDestinationBucket'
     -> Text -- ^ 'ocDestinationObject'
     -> ObjectsCopy
-objectsCopy pOcSourceObject_ pOcSourceBucket_ pOcPayload_ pOcDestinationBucket_ pOcDestinationObject_ =
+objectsCopy pOcSourceObject_ pOcSourceBucket_ pOcPayload_ pOcDestinationBucket_ pOcDestinationObject_ = 
     ObjectsCopy'
     { _ocDestinationPredefinedACL = Nothing
     , _ocIfSourceGenerationMatch = Nothing
@@ -232,11 +194,13 @@ objectsCopy pOcSourceObject_ pOcSourceBucket_ pOcPayload_ pOcDestinationBucket_ 
     , _ocSourceObject = pOcSourceObject_
     , _ocSourceBucket = pOcSourceBucket_
     , _ocPayload = pOcPayload_
+    , _ocUserProject = Nothing
     , _ocDestinationBucket = pOcDestinationBucket_
     , _ocIfMetagenerationNotMatch = Nothing
     , _ocIfSourceGenerationNotMatch = Nothing
     , _ocProjection = Nothing
     , _ocSourceGeneration = Nothing
+    , _ocFields = Nothing
     , _ocDestinationObject = pOcDestinationObject_
     }
 
@@ -246,7 +210,7 @@ ocDestinationPredefinedACL
   = lens _ocDestinationPredefinedACL
       (\ s a -> s{_ocDestinationPredefinedACL = a})
 
--- | Makes the operation conditional on whether the source object\'s
+-- | Makes the operation conditional on whether the source object\'s current
 -- generation matches the given value.
 ocIfSourceGenerationMatch :: Lens' ObjectsCopy (Maybe Int64)
 ocIfSourceGenerationMatch
@@ -263,7 +227,9 @@ ocIfMetagenerationMatch
       . mapping _Coerce
 
 -- | Makes the operation conditional on whether the destination object\'s
--- current generation does not match the given value.
+-- current generation does not match the given value. If no live object
+-- exists, the precondition fails. Setting to 0 makes the operation succeed
+-- only if there is a live version of the object.
 ocIfGenerationNotMatch :: Lens' ObjectsCopy (Maybe Int64)
 ocIfGenerationNotMatch
   = lens _ocIfGenerationNotMatch
@@ -287,7 +253,8 @@ ocIfSourceMetagenerationMatch
       . mapping _Coerce
 
 -- | Makes the operation conditional on whether the destination object\'s
--- current generation matches the given value.
+-- current generation matches the given value. Setting to 0 makes the
+-- operation succeed only if there are no live versions of the object.
 ocIfGenerationMatch :: Lens' ObjectsCopy (Maybe Int64)
 ocIfGenerationMatch
   = lens _ocIfGenerationMatch
@@ -312,6 +279,13 @@ ocPayload :: Lens' ObjectsCopy Object
 ocPayload
   = lens _ocPayload (\ s a -> s{_ocPayload = a})
 
+-- | The project to be billed for this request. Required for Requester Pays
+-- buckets.
+ocUserProject :: Lens' ObjectsCopy (Maybe Text)
+ocUserProject
+  = lens _ocUserProject
+      (\ s a -> s{_ocUserProject = a})
+
 -- | Name of the bucket in which to store the new object. Overrides the
 -- provided object metadata\'s bucket value, if any.For information about
 -- how to URL encode object names to be path safe, see Encoding URI Path
@@ -329,7 +303,7 @@ ocIfMetagenerationNotMatch
       (\ s a -> s{_ocIfMetagenerationNotMatch = a})
       . mapping _Coerce
 
--- | Makes the operation conditional on whether the source object\'s
+-- | Makes the operation conditional on whether the source object\'s current
 -- generation does not match the given value.
 ocIfSourceGenerationNotMatch :: Lens' ObjectsCopy (Maybe Int64)
 ocIfSourceGenerationNotMatch
@@ -350,6 +324,10 @@ ocSourceGeneration
   = lens _ocSourceGeneration
       (\ s a -> s{_ocSourceGeneration = a})
       . mapping _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+ocFields :: Lens' ObjectsCopy (Maybe Text)
+ocFields = lens _ocFields (\ s a -> s{_ocFields = a})
 
 -- | Name of the new object. Required when the object metadata is not
 -- otherwise provided. Overrides the object metadata\'s name value, if any.
@@ -375,39 +353,15 @@ instance GoogleRequest ObjectsCopy where
               _ocIfSourceMetagenerationNotMatch
               _ocIfSourceMetagenerationMatch
               _ocIfGenerationMatch
+              _ocUserProject
               _ocIfMetagenerationNotMatch
               _ocIfSourceGenerationNotMatch
               _ocProjection
               _ocSourceGeneration
+              _ocFields
               (Just AltJSON)
               _ocPayload
               storageService
-          where go :<|> _
-                  = buildClient (Proxy :: Proxy ObjectsCopyResource)
-                      mempty
-
-instance GoogleRequest (MediaDownload ObjectsCopy)
-         where
-        type Rs (MediaDownload ObjectsCopy) = Stream
-        type Scopes (MediaDownload ObjectsCopy) =
-             Scopes ObjectsCopy
-        requestClient (MediaDownload ObjectsCopy'{..})
-          = go _ocSourceBucket _ocSourceObject
-              _ocDestinationBucket
-              _ocDestinationObject
-              _ocDestinationPredefinedACL
-              _ocIfSourceGenerationMatch
-              _ocIfMetagenerationMatch
-              _ocIfGenerationNotMatch
-              _ocIfSourceMetagenerationNotMatch
-              _ocIfSourceMetagenerationMatch
-              _ocIfGenerationMatch
-              _ocIfMetagenerationNotMatch
-              _ocIfSourceGenerationNotMatch
-              _ocProjection
-              _ocSourceGeneration
-              (Just AltMedia)
-              storageService
-          where _ :<|> go
+          where go
                   = buildClient (Proxy :: Proxy ObjectsCopyResource)
                       mempty

@@ -22,9 +22,8 @@
 --
 -- Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.projects.sinks.create@.
 module Network.Google.Resource.Logging.Projects.Sinks.Create
@@ -46,11 +45,12 @@ module Network.Google.Resource.Logging.Projects.Sinks.Create
     , pscUploadType
     , pscPayload
     , pscBearerToken
+    , pscFields
     , pscCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.projects.sinks.create@ method which the
 -- 'ProjectsSinksCreate' request conforms to.
@@ -66,27 +66,28 @@ type ProjectsSinksCreateResource =
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] LogSink :> Post '[JSON] LogSink
 
 -- | Creates a sink that exports specified log entries to a destination. The
 -- export of newly-ingested log entries begins immediately, unless the
--- current time is outside the sink\'s start and end times or the sink\'s
--- writer_identity is not permitted to write to the destination. A sink can
--- export log entries only from the resource owning the sink.
+-- sink\'s writer_identity is not permitted to write to the destination. A
+-- sink can export log entries only from the resource owning the sink.
 --
 -- /See:/ 'projectsSinksCreate' smart constructor.
 data ProjectsSinksCreate = ProjectsSinksCreate'
-    { _pscParent               :: !Text
-    , _pscXgafv                :: !(Maybe Xgafv)
+    { _pscParent :: !Text
+    , _pscXgafv :: !(Maybe Xgafv)
     , _pscUniqueWriterIdentity :: !(Maybe Bool)
-    , _pscUploadProtocol       :: !(Maybe Text)
-    , _pscPp                   :: !Bool
-    , _pscAccessToken          :: !(Maybe Text)
-    , _pscUploadType           :: !(Maybe Text)
-    , _pscPayload              :: !LogSink
-    , _pscBearerToken          :: !(Maybe Text)
-    , _pscCallback             :: !(Maybe Text)
+    , _pscUploadProtocol :: !(Maybe Text)
+    , _pscPp :: !Bool
+    , _pscAccessToken :: !(Maybe Text)
+    , _pscUploadType :: !(Maybe Text)
+    , _pscPayload :: !LogSink
+    , _pscBearerToken :: !(Maybe Text)
+    , _pscFields :: !(Maybe Text)
+    , _pscCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSinksCreate' with the minimum fields required to make a request.
@@ -111,12 +112,14 @@ data ProjectsSinksCreate = ProjectsSinksCreate'
 --
 -- * 'pscBearerToken'
 --
+-- * 'pscFields'
+--
 -- * 'pscCallback'
 projectsSinksCreate
     :: Text -- ^ 'pscParent'
     -> LogSink -- ^ 'pscPayload'
     -> ProjectsSinksCreate
-projectsSinksCreate pPscParent_ pPscPayload_ =
+projectsSinksCreate pPscParent_ pPscPayload_ = 
     ProjectsSinksCreate'
     { _pscParent = pPscParent_
     , _pscXgafv = Nothing
@@ -127,11 +130,13 @@ projectsSinksCreate pPscParent_ pPscPayload_ =
     , _pscUploadType = Nothing
     , _pscPayload = pPscPayload_
     , _pscBearerToken = Nothing
+    , _pscFields = Nothing
     , _pscCallback = Nothing
     }
 
 -- | Required. The resource in which to create the sink:
 -- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 -- Examples: \"projects\/my-logging-project\",
 -- \"organizations\/123456789\".
 pscParent :: Lens' ProjectsSinksCreate Text
@@ -145,13 +150,13 @@ pscXgafv = lens _pscXgafv (\ s a -> s{_pscXgafv = a})
 -- | Optional. Determines the kind of IAM identity returned as
 -- writer_identity in the new sink. If this value is omitted or set to
 -- false, and if the sink\'s parent is a project, then the value returned
--- as writer_identity is cloud-logs\'google.com, the same identity used
--- before the addition of writer identities to this API. The sink\'s
--- destination must be in the same project as the sink itself.If this field
--- is set to true, or if the sink is owned by a non-project resource such
--- as an organization, then the value of writer_identity will be a unique
--- service account used only for exports from the new sink. For more
--- information, see writer_identity in LogSink.
+-- as writer_identity is the same group or service account used by
+-- Stackdriver Logging before the addition of writer identities to this
+-- API. The sink\'s destination must be in the same project as the sink
+-- itself.If this field is set to true, or if the sink is owned by a
+-- non-project resource such as an organization, then the value of
+-- writer_identity will be a unique service account used only for exports
+-- from the new sink. For more information, see writer_identity in LogSink.
 pscUniqueWriterIdentity :: Lens' ProjectsSinksCreate (Maybe Bool)
 pscUniqueWriterIdentity
   = lens _pscUniqueWriterIdentity
@@ -190,6 +195,11 @@ pscBearerToken
   = lens _pscBearerToken
       (\ s a -> s{_pscBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pscFields :: Lens' ProjectsSinksCreate (Maybe Text)
+pscFields
+  = lens _pscFields (\ s a -> s{_pscFields = a})
+
 -- | JSONP
 pscCallback :: Lens' ProjectsSinksCreate (Maybe Text)
 pscCallback
@@ -208,6 +218,7 @@ instance GoogleRequest ProjectsSinksCreate where
               _pscUploadType
               _pscBearerToken
               _pscCallback
+              _pscFields
               (Just AltJSON)
               _pscPayload
               loggingService

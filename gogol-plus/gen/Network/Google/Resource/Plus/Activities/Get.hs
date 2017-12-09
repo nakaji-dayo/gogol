@@ -34,10 +34,11 @@ module Network.Google.Resource.Plus.Activities.Get
 
     -- * Request Lenses
     , agActivityId
+    , agFields
     ) where
 
-import           Network.Google.Plus.Types
-import           Network.Google.Prelude
+import Network.Google.Plus.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plus.activities.get@ method which the
 -- 'ActivitiesGet' request conforms to.
@@ -46,13 +47,15 @@ type ActivitiesGetResource =
        "v1" :>
          "activities" :>
            Capture "activityId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Activity
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Activity
 
 -- | Get an activity.
 --
 -- /See:/ 'activitiesGet' smart constructor.
-newtype ActivitiesGet = ActivitiesGet'
-    { _agActivityId :: Text
+data ActivitiesGet = ActivitiesGet'
+    { _agActivityId :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ActivitiesGet' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype ActivitiesGet = ActivitiesGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'agActivityId'
+--
+-- * 'agFields'
 activitiesGet
     :: Text -- ^ 'agActivityId'
     -> ActivitiesGet
-activitiesGet pAgActivityId_ =
+activitiesGet pAgActivityId_ = 
     ActivitiesGet'
     { _agActivityId = pAgActivityId_
+    , _agFields = Nothing
     }
 
 -- | The ID of the activity to get.
@@ -73,13 +79,18 @@ agActivityId :: Lens' ActivitiesGet Text
 agActivityId
   = lens _agActivityId (\ s a -> s{_agActivityId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' ActivitiesGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
+
 instance GoogleRequest ActivitiesGet where
         type Rs ActivitiesGet = Activity
         type Scopes ActivitiesGet =
              '["https://www.googleapis.com/auth/plus.login",
                "https://www.googleapis.com/auth/plus.me"]
         requestClient ActivitiesGet'{..}
-          = go _agActivityId (Just AltJSON) plusService
+          = go _agActivityId _agFields (Just AltJSON)
+              plusService
           where go
                   = buildClient (Proxy :: Proxy ActivitiesGetResource)
                       mempty

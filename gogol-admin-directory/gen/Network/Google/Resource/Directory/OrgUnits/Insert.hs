@@ -20,7 +20,7 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Add Organization Unit
+-- Add organizational unit
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.orgunits.insert@.
 module Network.Google.Resource.Directory.OrgUnits.Insert
@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.OrgUnits.Insert
     -- * Request Lenses
     , ouiPayload
     , ouiCustomerId
+    , ouiFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.orgunits.insert@ method which the
 -- 'OrgUnitsInsert' request conforms to.
@@ -49,15 +50,17 @@ type OrgUnitsInsertResource =
            "customer" :>
              Capture "customerId" Text :>
                "orgunits" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] OrgUnit :> Post '[JSON] OrgUnit
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] OrgUnit :> Post '[JSON] OrgUnit
 
--- | Add Organization Unit
+-- | Add organizational unit
 --
 -- /See:/ 'orgUnitsInsert' smart constructor.
 data OrgUnitsInsert = OrgUnitsInsert'
-    { _ouiPayload    :: !OrgUnit
+    { _ouiPayload :: !OrgUnit
     , _ouiCustomerId :: !Text
+    , _ouiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'OrgUnitsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data OrgUnitsInsert = OrgUnitsInsert'
 -- * 'ouiPayload'
 --
 -- * 'ouiCustomerId'
+--
+-- * 'ouiFields'
 orgUnitsInsert
     :: OrgUnit -- ^ 'ouiPayload'
     -> Text -- ^ 'ouiCustomerId'
     -> OrgUnitsInsert
-orgUnitsInsert pOuiPayload_ pOuiCustomerId_ =
+orgUnitsInsert pOuiPayload_ pOuiCustomerId_ = 
     OrgUnitsInsert'
     { _ouiPayload = pOuiPayload_
     , _ouiCustomerId = pOuiCustomerId_
+    , _ouiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -82,18 +88,24 @@ ouiPayload :: Lens' OrgUnitsInsert OrgUnit
 ouiPayload
   = lens _ouiPayload (\ s a -> s{_ouiPayload = a})
 
--- | Immutable id of the Google Apps account
+-- | Immutable ID of the G Suite account
 ouiCustomerId :: Lens' OrgUnitsInsert Text
 ouiCustomerId
   = lens _ouiCustomerId
       (\ s a -> s{_ouiCustomerId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ouiFields :: Lens' OrgUnitsInsert (Maybe Text)
+ouiFields
+  = lens _ouiFields (\ s a -> s{_ouiFields = a})
 
 instance GoogleRequest OrgUnitsInsert where
         type Rs OrgUnitsInsert = OrgUnit
         type Scopes OrgUnitsInsert =
              '["https://www.googleapis.com/auth/admin.directory.orgunit"]
         requestClient OrgUnitsInsert'{..}
-          = go _ouiCustomerId (Just AltJSON) _ouiPayload
+          = go _ouiCustomerId _ouiFields (Just AltJSON)
+              _ouiPayload
               directoryService
           where go
                   = buildClient (Proxy :: Proxy OrgUnitsInsertResource)

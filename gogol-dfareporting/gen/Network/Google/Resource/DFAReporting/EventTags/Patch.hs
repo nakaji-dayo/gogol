@@ -36,30 +36,33 @@ module Network.Google.Resource.DFAReporting.EventTags.Patch
     , etpProFileId
     , etpPayload
     , etpId
+    , etpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.eventTags.patch@ method which the
 -- 'EventTagsPatch' request conforms to.
 type EventTagsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "eventTags" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] EventTag :> Patch '[JSON] EventTag
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] EventTag :> Patch '[JSON] EventTag
 
 -- | Updates an existing event tag. This method supports patch semantics.
 --
 -- /See:/ 'eventTagsPatch' smart constructor.
 data EventTagsPatch = EventTagsPatch'
     { _etpProFileId :: !(Textual Int64)
-    , _etpPayload   :: !EventTag
-    , _etpId        :: !(Textual Int64)
+    , _etpPayload :: !EventTag
+    , _etpId :: !(Textual Int64)
+    , _etpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EventTagsPatch' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data EventTagsPatch = EventTagsPatch'
 -- * 'etpPayload'
 --
 -- * 'etpId'
+--
+-- * 'etpFields'
 eventTagsPatch
     :: Int64 -- ^ 'etpProFileId'
     -> EventTag -- ^ 'etpPayload'
     -> Int64 -- ^ 'etpId'
     -> EventTagsPatch
-eventTagsPatch pEtpProFileId_ pEtpPayload_ pEtpId_ =
+eventTagsPatch pEtpProFileId_ pEtpPayload_ pEtpId_ = 
     EventTagsPatch'
     { _etpProFileId = _Coerce # pEtpProFileId_
     , _etpPayload = pEtpPayload_
     , _etpId = _Coerce # pEtpId_
+    , _etpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -99,12 +105,18 @@ etpId :: Lens' EventTagsPatch Int64
 etpId
   = lens _etpId (\ s a -> s{_etpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+etpFields :: Lens' EventTagsPatch (Maybe Text)
+etpFields
+  = lens _etpFields (\ s a -> s{_etpFields = a})
+
 instance GoogleRequest EventTagsPatch where
         type Rs EventTagsPatch = EventTag
         type Scopes EventTagsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient EventTagsPatch'{..}
-          = go _etpProFileId (Just _etpId) (Just AltJSON)
+          = go _etpProFileId (Just _etpId) _etpFields
+              (Just AltJSON)
               _etpPayload
               dFAReportingService
           where go

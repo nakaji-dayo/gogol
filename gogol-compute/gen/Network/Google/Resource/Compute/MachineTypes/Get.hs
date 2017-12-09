@@ -37,10 +37,11 @@ module Network.Google.Resource.Compute.MachineTypes.Get
     , mtgProject
     , mtgZone
     , mtgMachineType
+    , mtgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.machineTypes.get@ method which the
 -- 'MachineTypesGet' request conforms to.
@@ -53,16 +54,18 @@ type MachineTypesGetResource =
                Capture "zone" Text :>
                  "machineTypes" :>
                    Capture "machineType" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] MachineType
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] MachineType
 
 -- | Returns the specified machine type. Get a list of available machine
 -- types by making a list() request.
 --
 -- /See:/ 'machineTypesGet' smart constructor.
 data MachineTypesGet = MachineTypesGet'
-    { _mtgProject     :: !Text
-    , _mtgZone        :: !Text
+    { _mtgProject :: !Text
+    , _mtgZone :: !Text
     , _mtgMachineType :: !Text
+    , _mtgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MachineTypesGet' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data MachineTypesGet = MachineTypesGet'
 -- * 'mtgZone'
 --
 -- * 'mtgMachineType'
+--
+-- * 'mtgFields'
 machineTypesGet
     :: Text -- ^ 'mtgProject'
     -> Text -- ^ 'mtgZone'
     -> Text -- ^ 'mtgMachineType'
     -> MachineTypesGet
-machineTypesGet pMtgProject_ pMtgZone_ pMtgMachineType_ =
+machineTypesGet pMtgProject_ pMtgZone_ pMtgMachineType_ = 
     MachineTypesGet'
     { _mtgProject = pMtgProject_
     , _mtgZone = pMtgZone_
     , _mtgMachineType = pMtgMachineType_
+    , _mtgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -101,6 +107,11 @@ mtgMachineType
   = lens _mtgMachineType
       (\ s a -> s{_mtgMachineType = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mtgFields :: Lens' MachineTypesGet (Maybe Text)
+mtgFields
+  = lens _mtgFields (\ s a -> s{_mtgFields = a})
+
 instance GoogleRequest MachineTypesGet where
         type Rs MachineTypesGet = MachineType
         type Scopes MachineTypesGet =
@@ -108,7 +119,7 @@ instance GoogleRequest MachineTypesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient MachineTypesGet'{..}
-          = go _mtgProject _mtgZone _mtgMachineType
+          = go _mtgProject _mtgZone _mtgMachineType _mtgFields
               (Just AltJSON)
               computeService
           where go

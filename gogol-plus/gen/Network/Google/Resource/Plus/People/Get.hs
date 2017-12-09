@@ -36,10 +36,11 @@ module Network.Google.Resource.Plus.People.Get
 
     -- * Request Lenses
     , pgUserId
+    , pgFields
     ) where
 
-import           Network.Google.Plus.Types
-import           Network.Google.Prelude
+import Network.Google.Plus.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @plus.people.get@ method which the
 -- 'PeopleGet' request conforms to.
@@ -48,15 +49,17 @@ type PeopleGetResource =
        "v1" :>
          "people" :>
            Capture "userId" Text :>
-             QueryParam "alt" AltJSON :> Get '[JSON] Person
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Get '[JSON] Person
 
 -- | Get a person\'s profile. If your app uses scope
 -- https:\/\/www.googleapis.com\/auth\/plus.login, this method is
 -- guaranteed to return ageRange and language.
 --
 -- /See:/ 'peopleGet' smart constructor.
-newtype PeopleGet = PeopleGet'
-    { _pgUserId :: Text
+data PeopleGet = PeopleGet'
+    { _pgUserId :: !Text
+    , _pgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PeopleGet' with the minimum fields required to make a request.
@@ -64,18 +67,25 @@ newtype PeopleGet = PeopleGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'pgUserId'
+--
+-- * 'pgFields'
 peopleGet
     :: Text -- ^ 'pgUserId'
     -> PeopleGet
-peopleGet pPgUserId_ =
+peopleGet pPgUserId_ = 
     PeopleGet'
     { _pgUserId = pPgUserId_
+    , _pgFields = Nothing
     }
 
 -- | The ID of the person to get the profile for. The special value \"me\"
 -- can be used to indicate the authenticated user.
 pgUserId :: Lens' PeopleGet Text
 pgUserId = lens _pgUserId (\ s a -> s{_pgUserId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+pgFields :: Lens' PeopleGet (Maybe Text)
+pgFields = lens _pgFields (\ s a -> s{_pgFields = a})
 
 instance GoogleRequest PeopleGet where
         type Rs PeopleGet = Person
@@ -85,7 +95,7 @@ instance GoogleRequest PeopleGet where
                "https://www.googleapis.com/auth/userinfo.email",
                "https://www.googleapis.com/auth/userinfo.profile"]
         requestClient PeopleGet'{..}
-          = go _pgUserId (Just AltJSON) plusService
+          = go _pgUserId _pgFields (Just AltJSON) plusService
           where go
                   = buildClient (Proxy :: Proxy PeopleGetResource)
                       mempty

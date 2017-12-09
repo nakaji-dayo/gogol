@@ -35,10 +35,11 @@ module Network.Google.Resource.YouTube.Thumbnails.Set
     -- * Request Lenses
     , tsOnBehalfOfContentOwner
     , tsVideoId
+    , tsFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.thumbnails.set@ method which the
 -- 'ThumbnailsSet' request conforms to.
@@ -49,8 +50,9 @@ type ThumbnailsSetResource =
            "set" :>
              QueryParam "videoId" Text :>
                QueryParam "onBehalfOfContentOwner" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Post '[JSON] ThumbnailSetResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Post '[JSON] ThumbnailSetResponse
        :<|>
        "upload" :>
          "youtube" :>
@@ -59,16 +61,18 @@ type ThumbnailsSetResource =
                "set" :>
                  QueryParam "videoId" Text :>
                    QueryParam "onBehalfOfContentOwner" Text :>
-                     QueryParam "alt" AltJSON :>
-                       QueryParam "uploadType" AltMedia :>
-                         AltMedia :> Post '[JSON] ThumbnailSetResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         QueryParam "uploadType" AltMedia :>
+                           AltMedia :> Post '[JSON] ThumbnailSetResponse
 
 -- | Uploads a custom video thumbnail to YouTube and sets it for a video.
 --
 -- /See:/ 'thumbnailsSet' smart constructor.
 data ThumbnailsSet = ThumbnailsSet'
     { _tsOnBehalfOfContentOwner :: !(Maybe Text)
-    , _tsVideoId                :: !Text
+    , _tsVideoId :: !Text
+    , _tsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ThumbnailsSet' with the minimum fields required to make a request.
@@ -78,13 +82,16 @@ data ThumbnailsSet = ThumbnailsSet'
 -- * 'tsOnBehalfOfContentOwner'
 --
 -- * 'tsVideoId'
+--
+-- * 'tsFields'
 thumbnailsSet
     :: Text -- ^ 'tsVideoId'
     -> ThumbnailsSet
-thumbnailsSet pTsVideoId_ =
+thumbnailsSet pTsVideoId_ = 
     ThumbnailsSet'
     { _tsOnBehalfOfContentOwner = Nothing
     , _tsVideoId = pTsVideoId_
+    , _tsFields = Nothing
     }
 
 -- | Note: This parameter is intended exclusively for YouTube content
@@ -108,6 +115,10 @@ tsVideoId :: Lens' ThumbnailsSet Text
 tsVideoId
   = lens _tsVideoId (\ s a -> s{_tsVideoId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tsFields :: Lens' ThumbnailsSet (Maybe Text)
+tsFields = lens _tsFields (\ s a -> s{_tsFields = a})
+
 instance GoogleRequest ThumbnailsSet where
         type Rs ThumbnailsSet = ThumbnailSetResponse
         type Scopes ThumbnailsSet =
@@ -117,6 +128,7 @@ instance GoogleRequest ThumbnailsSet where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient ThumbnailsSet'{..}
           = go (Just _tsVideoId) _tsOnBehalfOfContentOwner
+              _tsFields
               (Just AltJSON)
               youTubeService
           where go :<|> _
@@ -131,6 +143,7 @@ instance GoogleRequest (MediaUpload ThumbnailsSet)
              Scopes ThumbnailsSet
         requestClient (MediaUpload ThumbnailsSet'{..} body)
           = go (Just _tsVideoId) _tsOnBehalfOfContentOwner
+              _tsFields
               (Just AltJSON)
               (Just AltMedia)
               body

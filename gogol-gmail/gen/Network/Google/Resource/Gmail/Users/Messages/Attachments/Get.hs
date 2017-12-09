@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Messages.Attachments.Get
     , umagUserId
     , umagId
     , umagMessageId
+    , umagFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.messages.attachments.get@ method which the
 -- 'UsersMessagesAttachmentsGet' request conforms to.
@@ -52,16 +53,18 @@ type UsersMessagesAttachmentsGetResource =
                Capture "messageId" Text :>
                  "attachments" :>
                    Capture "id" Text :>
-                     QueryParam "alt" AltJSON :>
-                       Get '[JSON] MessagePartBody
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Get '[JSON] MessagePartBody
 
 -- | Gets the specified message attachment.
 --
 -- /See:/ 'usersMessagesAttachmentsGet' smart constructor.
 data UsersMessagesAttachmentsGet = UsersMessagesAttachmentsGet'
-    { _umagUserId    :: !Text
-    , _umagId        :: !Text
+    { _umagUserId :: !Text
+    , _umagId :: !Text
     , _umagMessageId :: !Text
+    , _umagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersMessagesAttachmentsGet' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data UsersMessagesAttachmentsGet = UsersMessagesAttachmentsGet'
 -- * 'umagId'
 --
 -- * 'umagMessageId'
+--
+-- * 'umagFields'
 usersMessagesAttachmentsGet
     :: Text -- ^ 'umagId'
     -> Text -- ^ 'umagMessageId'
     -> UsersMessagesAttachmentsGet
-usersMessagesAttachmentsGet pUmagId_ pUmagMessageId_ =
+usersMessagesAttachmentsGet pUmagId_ pUmagMessageId_ = 
     UsersMessagesAttachmentsGet'
     { _umagUserId = "me"
     , _umagId = pUmagId_
     , _umagMessageId = pUmagMessageId_
+    , _umagFields = Nothing
     }
 
 -- | The user\'s email address. The special value me can be used to indicate
@@ -100,6 +106,11 @@ umagMessageId
   = lens _umagMessageId
       (\ s a -> s{_umagMessageId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+umagFields :: Lens' UsersMessagesAttachmentsGet (Maybe Text)
+umagFields
+  = lens _umagFields (\ s a -> s{_umagFields = a})
+
 instance GoogleRequest UsersMessagesAttachmentsGet
          where
         type Rs UsersMessagesAttachmentsGet = MessagePartBody
@@ -108,7 +119,7 @@ instance GoogleRequest UsersMessagesAttachmentsGet
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersMessagesAttachmentsGet'{..}
-          = go _umagUserId _umagMessageId _umagId
+          = go _umagUserId _umagMessageId _umagId _umagFields
               (Just AltJSON)
               gmailService
           where go

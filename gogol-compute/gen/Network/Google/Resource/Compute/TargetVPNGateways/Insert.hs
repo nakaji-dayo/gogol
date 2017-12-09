@@ -34,13 +34,15 @@ module Network.Google.Resource.Compute.TargetVPNGateways.Insert
     , TargetVPNGatewaysInsert
 
     -- * Request Lenses
+    , tvgiRequestId
     , tvgiProject
     , tvgiPayload
     , tvgiRegion
+    , tvgiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.targetVpnGateways.insert@ method which the
 -- 'TargetVPNGatewaysInsert' request conforms to.
@@ -52,40 +54,65 @@ type TargetVPNGatewaysInsertResource =
              "regions" :>
                Capture "region" Text :>
                  "targetVpnGateways" :>
-                   QueryParam "alt" AltJSON :>
-                     ReqBody '[JSON] TargetVPNGateway :>
-                       Post '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] TargetVPNGateway :>
+                           Post '[JSON] Operation
 
 -- | Creates a target VPN gateway in the specified project and region using
 -- the data included in the request.
 --
 -- /See:/ 'targetVPNGatewaysInsert' smart constructor.
 data TargetVPNGatewaysInsert = TargetVPNGatewaysInsert'
-    { _tvgiProject :: !Text
+    { _tvgiRequestId :: !(Maybe Text)
+    , _tvgiProject :: !Text
     , _tvgiPayload :: !TargetVPNGateway
-    , _tvgiRegion  :: !Text
+    , _tvgiRegion :: !Text
+    , _tvgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TargetVPNGatewaysInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'tvgiRequestId'
+--
 -- * 'tvgiProject'
 --
 -- * 'tvgiPayload'
 --
 -- * 'tvgiRegion'
+--
+-- * 'tvgiFields'
 targetVPNGatewaysInsert
     :: Text -- ^ 'tvgiProject'
     -> TargetVPNGateway -- ^ 'tvgiPayload'
     -> Text -- ^ 'tvgiRegion'
     -> TargetVPNGatewaysInsert
-targetVPNGatewaysInsert pTvgiProject_ pTvgiPayload_ pTvgiRegion_ =
+targetVPNGatewaysInsert pTvgiProject_ pTvgiPayload_ pTvgiRegion_ = 
     TargetVPNGatewaysInsert'
-    { _tvgiProject = pTvgiProject_
+    { _tvgiRequestId = Nothing
+    , _tvgiProject = pTvgiProject_
     , _tvgiPayload = pTvgiPayload_
     , _tvgiRegion = pTvgiRegion_
+    , _tvgiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+tvgiRequestId :: Lens' TargetVPNGatewaysInsert (Maybe Text)
+tvgiRequestId
+  = lens _tvgiRequestId
+      (\ s a -> s{_tvgiRequestId = a})
 
 -- | Project ID for this request.
 tvgiProject :: Lens' TargetVPNGatewaysInsert Text
@@ -102,13 +129,20 @@ tvgiRegion :: Lens' TargetVPNGatewaysInsert Text
 tvgiRegion
   = lens _tvgiRegion (\ s a -> s{_tvgiRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tvgiFields :: Lens' TargetVPNGatewaysInsert (Maybe Text)
+tvgiFields
+  = lens _tvgiFields (\ s a -> s{_tvgiFields = a})
+
 instance GoogleRequest TargetVPNGatewaysInsert where
         type Rs TargetVPNGatewaysInsert = Operation
         type Scopes TargetVPNGatewaysInsert =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient TargetVPNGatewaysInsert'{..}
-          = go _tvgiProject _tvgiRegion (Just AltJSON)
+          = go _tvgiProject _tvgiRegion _tvgiRequestId
+              _tvgiFields
+              (Just AltJSON)
               _tvgiPayload
               computeService
           where go

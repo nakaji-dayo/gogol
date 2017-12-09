@@ -36,10 +36,11 @@ module Network.Google.Resource.Licensing.LicenseAssignments.Delete
     , ladSKUId
     , ladUserId
     , ladProductId
+    , ladFields
     ) where
 
-import           Network.Google.AppsLicensing.Types
-import           Network.Google.Prelude
+import Network.Google.AppsLicensing.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @licensing.licenseAssignments.delete@ method which the
 -- 'LicenseAssignmentsDelete' request conforms to.
@@ -53,15 +54,17 @@ type LicenseAssignmentsDeleteResource =
                  Capture "skuId" Text :>
                    "user" :>
                      Capture "userId" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Revoke License.
 --
 -- /See:/ 'licenseAssignmentsDelete' smart constructor.
 data LicenseAssignmentsDelete = LicenseAssignmentsDelete'
-    { _ladSKUId     :: !Text
-    , _ladUserId    :: !Text
+    { _ladSKUId :: !Text
+    , _ladUserId :: !Text
     , _ladProductId :: !Text
+    , _ladFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LicenseAssignmentsDelete' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data LicenseAssignmentsDelete = LicenseAssignmentsDelete'
 -- * 'ladUserId'
 --
 -- * 'ladProductId'
+--
+-- * 'ladFields'
 licenseAssignmentsDelete
     :: Text -- ^ 'ladSKUId'
     -> Text -- ^ 'ladUserId'
     -> Text -- ^ 'ladProductId'
     -> LicenseAssignmentsDelete
-licenseAssignmentsDelete pLadSKUId_ pLadUserId_ pLadProductId_ =
+licenseAssignmentsDelete pLadSKUId_ pLadUserId_ pLadProductId_ = 
     LicenseAssignmentsDelete'
     { _ladSKUId = pLadSKUId_
     , _ladUserId = pLadUserId_
     , _ladProductId = pLadProductId_
+    , _ladFields = Nothing
     }
 
 -- | Name for sku
@@ -99,12 +105,17 @@ ladProductId :: Lens' LicenseAssignmentsDelete Text
 ladProductId
   = lens _ladProductId (\ s a -> s{_ladProductId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ladFields :: Lens' LicenseAssignmentsDelete (Maybe Text)
+ladFields
+  = lens _ladFields (\ s a -> s{_ladFields = a})
+
 instance GoogleRequest LicenseAssignmentsDelete where
         type Rs LicenseAssignmentsDelete = ()
         type Scopes LicenseAssignmentsDelete =
              '["https://www.googleapis.com/auth/apps.licensing"]
         requestClient LicenseAssignmentsDelete'{..}
-          = go _ladProductId _ladSKUId _ladUserId
+          = go _ladProductId _ladSKUId _ladUserId _ladFields
               (Just AltJSON)
               appsLicensingService
           where go

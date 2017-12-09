@@ -34,10 +34,11 @@ module Network.Google.Resource.Calendar.Calendars.Insert
 
     -- * Request Lenses
     , ciPayload
+    , ciFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendars.insert@ method which the
 -- 'CalendarsInsert' request conforms to.
@@ -45,14 +46,16 @@ type CalendarsInsertResource =
      "calendar" :>
        "v3" :>
          "calendars" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] Calendar :> Post '[JSON] Calendar
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] Calendar :> Post '[JSON] Calendar
 
 -- | Creates a secondary calendar.
 --
 -- /See:/ 'calendarsInsert' smart constructor.
-newtype CalendarsInsert = CalendarsInsert'
-    { _ciPayload :: Calendar
+data CalendarsInsert = CalendarsInsert'
+    { _ciPayload :: !Calendar
+    , _ciFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarsInsert' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype CalendarsInsert = CalendarsInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ciPayload'
+--
+-- * 'ciFields'
 calendarsInsert
     :: Calendar -- ^ 'ciPayload'
     -> CalendarsInsert
-calendarsInsert pCiPayload_ =
+calendarsInsert pCiPayload_ = 
     CalendarsInsert'
     { _ciPayload = pCiPayload_
+    , _ciFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -73,12 +79,17 @@ ciPayload :: Lens' CalendarsInsert Calendar
 ciPayload
   = lens _ciPayload (\ s a -> s{_ciPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ciFields :: Lens' CalendarsInsert (Maybe Text)
+ciFields = lens _ciFields (\ s a -> s{_ciFields = a})
+
 instance GoogleRequest CalendarsInsert where
         type Rs CalendarsInsert = Calendar
         type Scopes CalendarsInsert =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarsInsert'{..}
-          = go (Just AltJSON) _ciPayload appsCalendarService
+          = go _ciFields (Just AltJSON) _ciPayload
+              appsCalendarService
           where go
                   = buildClient
                       (Proxy :: Proxy CalendarsInsertResource)

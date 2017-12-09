@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.RemarketingListShares.Update
     -- * Request Lenses
     , rlsuProFileId
     , rlsuPayload
+    , rlsuFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.remarketingListShares.update@ method which the
 -- 'RemarketingListSharesUpdate' request conforms to.
 type RemarketingListSharesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "remarketingListShares" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] RemarketingListShare :>
-                   Put '[JSON] RemarketingListShare
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] RemarketingListShare :>
+                     Put '[JSON] RemarketingListShare
 
 -- | Updates an existing remarketing list share.
 --
 -- /See:/ 'remarketingListSharesUpdate' smart constructor.
 data RemarketingListSharesUpdate = RemarketingListSharesUpdate'
     { _rlsuProFileId :: !(Textual Int64)
-    , _rlsuPayload   :: !RemarketingListShare
+    , _rlsuPayload :: !RemarketingListShare
+    , _rlsuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RemarketingListSharesUpdate' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data RemarketingListSharesUpdate = RemarketingListSharesUpdate'
 -- * 'rlsuProFileId'
 --
 -- * 'rlsuPayload'
+--
+-- * 'rlsuFields'
 remarketingListSharesUpdate
     :: Int64 -- ^ 'rlsuProFileId'
     -> RemarketingListShare -- ^ 'rlsuPayload'
     -> RemarketingListSharesUpdate
-remarketingListSharesUpdate pRlsuProFileId_ pRlsuPayload_ =
+remarketingListSharesUpdate pRlsuProFileId_ pRlsuPayload_ = 
     RemarketingListSharesUpdate'
     { _rlsuProFileId = _Coerce # pRlsuProFileId_
     , _rlsuPayload = pRlsuPayload_
+    , _rlsuFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -89,6 +95,11 @@ rlsuPayload :: Lens' RemarketingListSharesUpdate RemarketingListShare
 rlsuPayload
   = lens _rlsuPayload (\ s a -> s{_rlsuPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rlsuFields :: Lens' RemarketingListSharesUpdate (Maybe Text)
+rlsuFields
+  = lens _rlsuFields (\ s a -> s{_rlsuFields = a})
+
 instance GoogleRequest RemarketingListSharesUpdate
          where
         type Rs RemarketingListSharesUpdate =
@@ -96,7 +107,8 @@ instance GoogleRequest RemarketingListSharesUpdate
         type Scopes RemarketingListSharesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RemarketingListSharesUpdate'{..}
-          = go _rlsuProFileId (Just AltJSON) _rlsuPayload
+          = go _rlsuProFileId _rlsuFields (Just AltJSON)
+              _rlsuPayload
               dFAReportingService
           where go
                   = buildClient

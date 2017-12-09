@@ -35,10 +35,11 @@ module Network.Google.Resource.CloudUserAccounts.Users.Delete
     -- * Request Lenses
     , udProject
     , udUser
+    , udFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.UserAccounts.Types
+import Network.Google.Prelude
+import Network.Google.UserAccounts.Types
 
 -- | A resource alias for @clouduseraccounts.users.delete@ method which the
 -- 'UsersDelete' request conforms to.
@@ -50,14 +51,16 @@ type UsersDeleteResource =
              "global" :>
                "users" :>
                  Capture "user" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified User resource.
 --
 -- /See:/ 'usersDelete' smart constructor.
 data UsersDelete = UsersDelete'
     { _udProject :: !Text
-    , _udUser    :: !Text
+    , _udUser :: !Text
+    , _udFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UsersDelete = UsersDelete'
 -- * 'udProject'
 --
 -- * 'udUser'
+--
+-- * 'udFields'
 usersDelete
     :: Text -- ^ 'udProject'
     -> Text -- ^ 'udUser'
     -> UsersDelete
-usersDelete pUdProject_ pUdUser_ =
+usersDelete pUdProject_ pUdUser_ = 
     UsersDelete'
     { _udProject = pUdProject_
     , _udUser = pUdUser_
+    , _udFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -86,13 +92,17 @@ udProject
 udUser :: Lens' UsersDelete Text
 udUser = lens _udUser (\ s a -> s{_udUser = a})
 
+-- | Selector specifying which fields to include in a partial response.
+udFields :: Lens' UsersDelete (Maybe Text)
+udFields = lens _udFields (\ s a -> s{_udFields = a})
+
 instance GoogleRequest UsersDelete where
         type Rs UsersDelete = Operation
         type Scopes UsersDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud.useraccounts"]
         requestClient UsersDelete'{..}
-          = go _udProject _udUser (Just AltJSON)
+          = go _udProject _udUser _udFields (Just AltJSON)
               userAccountsService
           where go
                   = buildClient (Proxy :: Proxy UsersDeleteResource)

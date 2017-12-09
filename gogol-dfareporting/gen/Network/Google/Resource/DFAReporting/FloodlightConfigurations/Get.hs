@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.FloodlightConfigurations.Get
     -- * Request Lenses
     , fcgProFileId
     , fcgId
+    , fcgFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.floodlightConfigurations.get@ method which the
 -- 'FloodlightConfigurationsGet' request conforms to.
 type FloodlightConfigurationsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "floodlightConfigurations" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] FloodlightConfiguration
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] FloodlightConfiguration
 
 -- | Gets one floodlight configuration by ID.
 --
 -- /See:/ 'floodlightConfigurationsGet' smart constructor.
 data FloodlightConfigurationsGet = FloodlightConfigurationsGet'
     { _fcgProFileId :: !(Textual Int64)
-    , _fcgId        :: !(Textual Int64)
+    , _fcgId :: !(Textual Int64)
+    , _fcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloodlightConfigurationsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data FloodlightConfigurationsGet = FloodlightConfigurationsGet'
 -- * 'fcgProFileId'
 --
 -- * 'fcgId'
+--
+-- * 'fcgFields'
 floodlightConfigurationsGet
     :: Int64 -- ^ 'fcgProFileId'
     -> Int64 -- ^ 'fcgId'
     -> FloodlightConfigurationsGet
-floodlightConfigurationsGet pFcgProFileId_ pFcgId_ =
+floodlightConfigurationsGet pFcgProFileId_ pFcgId_ = 
     FloodlightConfigurationsGet'
     { _fcgProFileId = _Coerce # pFcgProFileId_
     , _fcgId = _Coerce # pFcgId_
+    , _fcgFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,6 +94,11 @@ fcgId :: Lens' FloodlightConfigurationsGet Int64
 fcgId
   = lens _fcgId (\ s a -> s{_fcgId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fcgFields :: Lens' FloodlightConfigurationsGet (Maybe Text)
+fcgFields
+  = lens _fcgFields (\ s a -> s{_fcgFields = a})
+
 instance GoogleRequest FloodlightConfigurationsGet
          where
         type Rs FloodlightConfigurationsGet =
@@ -95,7 +106,7 @@ instance GoogleRequest FloodlightConfigurationsGet
         type Scopes FloodlightConfigurationsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient FloodlightConfigurationsGet'{..}
-          = go _fcgProFileId _fcgId (Just AltJSON)
+          = go _fcgProFileId _fcgId _fcgFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

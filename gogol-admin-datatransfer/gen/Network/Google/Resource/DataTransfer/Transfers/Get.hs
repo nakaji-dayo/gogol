@@ -34,10 +34,11 @@ module Network.Google.Resource.DataTransfer.Transfers.Get
 
     -- * Request Lenses
     , tgDataTransferId
+    , tgFields
     ) where
 
-import           Network.Google.DataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.DataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @datatransfer.transfers.get@ method which the
 -- 'TransfersGet' request conforms to.
@@ -47,13 +48,15 @@ type TransfersGetResource =
          "v1" :>
            "transfers" :>
              Capture "dataTransferId" Text :>
-               QueryParam "alt" AltJSON :> Get '[JSON] DataTransfer
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] DataTransfer
 
 -- | Retrieves a data transfer request by its resource ID.
 --
 -- /See:/ 'transfersGet' smart constructor.
-newtype TransfersGet = TransfersGet'
-    { _tgDataTransferId :: Text
+data TransfersGet = TransfersGet'
+    { _tgDataTransferId :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TransfersGet' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype TransfersGet = TransfersGet'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tgDataTransferId'
+--
+-- * 'tgFields'
 transfersGet
     :: Text -- ^ 'tgDataTransferId'
     -> TransfersGet
-transfersGet pTgDataTransferId_ =
+transfersGet pTgDataTransferId_ = 
     TransfersGet'
     { _tgDataTransferId = pTgDataTransferId_
+    , _tgFields = Nothing
     }
 
 -- | ID of the resource to be retrieved. This is returned in the response
@@ -76,13 +82,17 @@ tgDataTransferId
   = lens _tgDataTransferId
       (\ s a -> s{_tgDataTransferId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TransfersGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
+
 instance GoogleRequest TransfersGet where
         type Rs TransfersGet = DataTransfer
         type Scopes TransfersGet =
              '["https://www.googleapis.com/auth/admin.datatransfer",
                "https://www.googleapis.com/auth/admin.datatransfer.readonly"]
         requestClient TransfersGet'{..}
-          = go _tgDataTransferId (Just AltJSON)
+          = go _tgDataTransferId _tgFields (Just AltJSON)
               dataTransferService
           where go
                   = buildClient (Proxy :: Proxy TransfersGetResource)

@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.RegionOperations.Get
     , rogProject
     , rogOperation
     , rogRegion
+    , rogFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.regionOperations.get@ method which the
 -- 'RegionOperationsGet' request conforms to.
@@ -52,15 +53,17 @@ type RegionOperationsGetResource =
                Capture "region" Text :>
                  "operations" :>
                    Capture "operation" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Operation
 
 -- | Retrieves the specified region-specific Operations resource.
 --
 -- /See:/ 'regionOperationsGet' smart constructor.
 data RegionOperationsGet = RegionOperationsGet'
-    { _rogProject   :: !Text
+    { _rogProject :: !Text
     , _rogOperation :: !Text
-    , _rogRegion    :: !Text
+    , _rogRegion :: !Text
+    , _rogFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionOperationsGet' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data RegionOperationsGet = RegionOperationsGet'
 -- * 'rogOperation'
 --
 -- * 'rogRegion'
+--
+-- * 'rogFields'
 regionOperationsGet
     :: Text -- ^ 'rogProject'
     -> Text -- ^ 'rogOperation'
     -> Text -- ^ 'rogRegion'
     -> RegionOperationsGet
-regionOperationsGet pRogProject_ pRogOperation_ pRogRegion_ =
+regionOperationsGet pRogProject_ pRogOperation_ pRogRegion_ = 
     RegionOperationsGet'
     { _rogProject = pRogProject_
     , _rogOperation = pRogOperation_
     , _rogRegion = pRogRegion_
+    , _rogFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -99,6 +105,11 @@ rogRegion :: Lens' RegionOperationsGet Text
 rogRegion
   = lens _rogRegion (\ s a -> s{_rogRegion = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rogFields :: Lens' RegionOperationsGet (Maybe Text)
+rogFields
+  = lens _rogFields (\ s a -> s{_rogFields = a})
+
 instance GoogleRequest RegionOperationsGet where
         type Rs RegionOperationsGet = Operation
         type Scopes RegionOperationsGet =
@@ -106,7 +117,7 @@ instance GoogleRequest RegionOperationsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient RegionOperationsGet'{..}
-          = go _rogProject _rogRegion _rogOperation
+          = go _rogProject _rogRegion _rogOperation _rogFields
               (Just AltJSON)
               computeService
           where go

@@ -34,27 +34,30 @@ module Network.Google.Resource.DFAReporting.Regions.List
 
     -- * Request Lenses
     , rProFileId
+    , rFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.regions.list@ method which the
 -- 'RegionsList' request conforms to.
 type RegionsListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "regions" :>
-               QueryParam "alt" AltJSON :>
-                 Get '[JSON] RegionsListResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   Get '[JSON] RegionsListResponse
 
 -- | Retrieves a list of regions.
 --
 -- /See:/ 'regionsList' smart constructor.
-newtype RegionsList = RegionsList'
-    { _rProFileId :: Textual Int64
+data RegionsList = RegionsList'
+    { _rProFileId :: !(Textual Int64)
+    , _rFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RegionsList' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype RegionsList = RegionsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rProFileId'
+--
+-- * 'rFields'
 regionsList
     :: Int64 -- ^ 'rProFileId'
     -> RegionsList
-regionsList pRProFileId_ =
+regionsList pRProFileId_ = 
     RegionsList'
     { _rProFileId = _Coerce # pRProFileId_
+    , _rFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -76,12 +82,17 @@ rProFileId
   = lens _rProFileId (\ s a -> s{_rProFileId = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rFields :: Lens' RegionsList (Maybe Text)
+rFields = lens _rFields (\ s a -> s{_rFields = a})
+
 instance GoogleRequest RegionsList where
         type Rs RegionsList = RegionsListResponse
         type Scopes RegionsList =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient RegionsList'{..}
-          = go _rProFileId (Just AltJSON) dFAReportingService
+          = go _rProFileId _rFields (Just AltJSON)
+              dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy RegionsListResource)
                       mempty

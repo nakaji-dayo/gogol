@@ -34,10 +34,11 @@ module Network.Google.Resource.AdSense.Accounts.Payments.List
 
     -- * Request Lenses
     , aplAccountId
+    , aplFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.payments.list@ method which the
 -- 'AccountsPaymentsList' request conforms to.
@@ -47,13 +48,15 @@ type AccountsPaymentsListResource =
          "accounts" :>
            Capture "accountId" Text :>
              "payments" :>
-               QueryParam "alt" AltJSON :> Get '[JSON] Payments
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] Payments
 
 -- | List the payments for the specified AdSense account.
 --
 -- /See:/ 'accountsPaymentsList' smart constructor.
-newtype AccountsPaymentsList = AccountsPaymentsList'
-    { _aplAccountId :: Text
+data AccountsPaymentsList = AccountsPaymentsList'
+    { _aplAccountId :: !Text
+    , _aplFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsPaymentsList' with the minimum fields required to make a request.
@@ -61,12 +64,15 @@ newtype AccountsPaymentsList = AccountsPaymentsList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'aplAccountId'
+--
+-- * 'aplFields'
 accountsPaymentsList
     :: Text -- ^ 'aplAccountId'
     -> AccountsPaymentsList
-accountsPaymentsList pAplAccountId_ =
+accountsPaymentsList pAplAccountId_ = 
     AccountsPaymentsList'
     { _aplAccountId = pAplAccountId_
+    , _aplFields = Nothing
     }
 
 -- | Account for which to retrieve the payments.
@@ -74,13 +80,19 @@ aplAccountId :: Lens' AccountsPaymentsList Text
 aplAccountId
   = lens _aplAccountId (\ s a -> s{_aplAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+aplFields :: Lens' AccountsPaymentsList (Maybe Text)
+aplFields
+  = lens _aplFields (\ s a -> s{_aplFields = a})
+
 instance GoogleRequest AccountsPaymentsList where
         type Rs AccountsPaymentsList = Payments
         type Scopes AccountsPaymentsList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsPaymentsList'{..}
-          = go _aplAccountId (Just AltJSON) adSenseService
+          = go _aplAccountId _aplFields (Just AltJSON)
+              adSenseService
           where go
                   = buildClient
                       (Proxy :: Proxy AccountsPaymentsListResource)

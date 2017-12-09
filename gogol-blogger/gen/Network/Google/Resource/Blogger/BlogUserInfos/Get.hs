@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.BlogUserInfos.Get
     , buigBlogId
     , buigUserId
     , buigMaxPosts
+    , buigFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.blogUserInfos.get@ method which the
 -- 'BlogUserInfosGet' request conforms to.
@@ -51,15 +52,17 @@ type BlogUserInfosGetResource =
              "blogs" :>
                Capture "blogId" Text :>
                  QueryParam "maxPosts" (Textual Word32) :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] BlogUserInfo
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] BlogUserInfo
 
 -- | Gets one blog and user info pair by blogId and userId.
 --
 -- /See:/ 'blogUserInfosGet' smart constructor.
 data BlogUserInfosGet = BlogUserInfosGet'
-    { _buigBlogId   :: !Text
-    , _buigUserId   :: !Text
+    { _buigBlogId :: !Text
+    , _buigUserId :: !Text
     , _buigMaxPosts :: !(Maybe (Textual Word32))
+    , _buigFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BlogUserInfosGet' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data BlogUserInfosGet = BlogUserInfosGet'
 -- * 'buigUserId'
 --
 -- * 'buigMaxPosts'
+--
+-- * 'buigFields'
 blogUserInfosGet
     :: Text -- ^ 'buigBlogId'
     -> Text -- ^ 'buigUserId'
     -> BlogUserInfosGet
-blogUserInfosGet pBuigBlogId_ pBuigUserId_ =
+blogUserInfosGet pBuigBlogId_ pBuigUserId_ = 
     BlogUserInfosGet'
     { _buigBlogId = pBuigBlogId_
     , _buigUserId = pBuigUserId_
     , _buigMaxPosts = Nothing
+    , _buigFields = Nothing
     }
 
 -- | The ID of the blog to get.
@@ -99,6 +105,11 @@ buigMaxPosts
   = lens _buigMaxPosts (\ s a -> s{_buigMaxPosts = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+buigFields :: Lens' BlogUserInfosGet (Maybe Text)
+buigFields
+  = lens _buigFields (\ s a -> s{_buigFields = a})
+
 instance GoogleRequest BlogUserInfosGet where
         type Rs BlogUserInfosGet = BlogUserInfo
         type Scopes BlogUserInfosGet =
@@ -106,6 +117,7 @@ instance GoogleRequest BlogUserInfosGet where
                "https://www.googleapis.com/auth/blogger.readonly"]
         requestClient BlogUserInfosGet'{..}
           = go _buigUserId _buigBlogId _buigMaxPosts
+              _buigFields
               (Just AltJSON)
               bloggerService
           where go

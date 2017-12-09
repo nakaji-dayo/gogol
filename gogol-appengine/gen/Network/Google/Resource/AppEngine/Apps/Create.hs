@@ -21,10 +21,12 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Creates an App Engine application for a Google Cloud Platform project.
--- This requires a project that excludes an App Engine application. For
--- details about creating a project without an application, see the Google
--- Cloud Resource Manager create project topic
--- (https:\/\/cloud.google.com\/resource-manager\/docs\/creating-project).
+-- Required fields: id - The ID of the target Cloud Platform project.
+-- location - The region
+-- (https:\/\/cloud.google.com\/appengine\/docs\/locations) where you want
+-- the App Engine application located.For more information about App Engine
+-- applications, see Managing Projects, Applications, and Billing
+-- (https:\/\/cloud.google.com\/appengine\/docs\/python\/console\/).
 --
 -- /See:/ <https://cloud.google.com/appengine/docs/admin-api/ Google App Engine Admin API Reference> for @appengine.apps.create@.
 module Network.Google.Resource.AppEngine.Apps.Create
@@ -44,43 +46,48 @@ module Network.Google.Resource.AppEngine.Apps.Create
     , acUploadType
     , acPayload
     , acBearerToken
+    , acFields
     , acCallback
     ) where
 
-import           Network.Google.AppEngine.Types
-import           Network.Google.Prelude
+import Network.Google.AppEngine.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @appengine.apps.create@ method which the
 -- 'AppsCreate' request conforms to.
 type AppsCreateResource =
      "v1" :>
        "apps" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Application :> Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Application :> Post '[JSON] Operation
 
 -- | Creates an App Engine application for a Google Cloud Platform project.
--- This requires a project that excludes an App Engine application. For
--- details about creating a project without an application, see the Google
--- Cloud Resource Manager create project topic
--- (https:\/\/cloud.google.com\/resource-manager\/docs\/creating-project).
+-- Required fields: id - The ID of the target Cloud Platform project.
+-- location - The region
+-- (https:\/\/cloud.google.com\/appengine\/docs\/locations) where you want
+-- the App Engine application located.For more information about App Engine
+-- applications, see Managing Projects, Applications, and Billing
+-- (https:\/\/cloud.google.com\/appengine\/docs\/python\/console\/).
 --
 -- /See:/ 'appsCreate' smart constructor.
 data AppsCreate = AppsCreate'
-    { _acXgafv          :: !(Maybe Text)
+    { _acXgafv :: !(Maybe Xgafv)
     , _acUploadProtocol :: !(Maybe Text)
-    , _acPp             :: !Bool
-    , _acAccessToken    :: !(Maybe Text)
-    , _acUploadType     :: !(Maybe Text)
-    , _acPayload        :: !Application
-    , _acBearerToken    :: !(Maybe Text)
-    , _acCallback       :: !(Maybe Text)
+    , _acPp :: !Bool
+    , _acAccessToken :: !(Maybe Text)
+    , _acUploadType :: !(Maybe Text)
+    , _acPayload :: !Application
+    , _acBearerToken :: !(Maybe Text)
+    , _acFields :: !(Maybe Text)
+    , _acCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AppsCreate' with the minimum fields required to make a request.
@@ -101,11 +108,13 @@ data AppsCreate = AppsCreate'
 --
 -- * 'acBearerToken'
 --
+-- * 'acFields'
+--
 -- * 'acCallback'
 appsCreate
     :: Application -- ^ 'acPayload'
     -> AppsCreate
-appsCreate pAcPayload_ =
+appsCreate pAcPayload_ = 
     AppsCreate'
     { _acXgafv = Nothing
     , _acUploadProtocol = Nothing
@@ -114,11 +123,12 @@ appsCreate pAcPayload_ =
     , _acUploadType = Nothing
     , _acPayload = pAcPayload_
     , _acBearerToken = Nothing
+    , _acFields = Nothing
     , _acCallback = Nothing
     }
 
 -- | V1 error format.
-acXgafv :: Lens' AppsCreate (Maybe Text)
+acXgafv :: Lens' AppsCreate (Maybe Xgafv)
 acXgafv = lens _acXgafv (\ s a -> s{_acXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -153,6 +163,10 @@ acBearerToken
   = lens _acBearerToken
       (\ s a -> s{_acBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+acFields :: Lens' AppsCreate (Maybe Text)
+acFields = lens _acFields (\ s a -> s{_acFields = a})
+
 -- | JSONP
 acCallback :: Lens' AppsCreate (Maybe Text)
 acCallback
@@ -168,6 +182,7 @@ instance GoogleRequest AppsCreate where
               _acUploadType
               _acBearerToken
               _acCallback
+              _acFields
               (Just AltJSON)
               _acPayload
               appEngineService

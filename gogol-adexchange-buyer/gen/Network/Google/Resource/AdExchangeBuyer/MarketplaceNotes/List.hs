@@ -35,10 +35,11 @@ module Network.Google.Resource.AdExchangeBuyer.MarketplaceNotes.List
     -- * Request Lenses
     , mnlProposalId
     , mnlPqlQuery
+    , mnlFields
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adexchangebuyer.marketplacenotes.list@ method which the
 -- 'MarketplaceNotesList' request conforms to.
@@ -49,15 +50,17 @@ type MarketplaceNotesListResource =
            Capture "proposalId" Text :>
              "notes" :>
                QueryParam "pqlQuery" Text :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] GetOrderNotesResponse
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] GetOrderNotesResponse
 
 -- | Get all the notes associated with a proposal
 --
 -- /See:/ 'marketplaceNotesList' smart constructor.
 data MarketplaceNotesList = MarketplaceNotesList'
     { _mnlProposalId :: !Text
-    , _mnlPqlQuery   :: !(Maybe Text)
+    , _mnlPqlQuery :: !(Maybe Text)
+    , _mnlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MarketplaceNotesList' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data MarketplaceNotesList = MarketplaceNotesList'
 -- * 'mnlProposalId'
 --
 -- * 'mnlPqlQuery'
+--
+-- * 'mnlFields'
 marketplaceNotesList
     :: Text -- ^ 'mnlProposalId'
     -> MarketplaceNotesList
-marketplaceNotesList pMnlProposalId_ =
+marketplaceNotesList pMnlProposalId_ = 
     MarketplaceNotesList'
     { _mnlProposalId = pMnlProposalId_
     , _mnlPqlQuery = Nothing
+    , _mnlFields = Nothing
     }
 
 -- | The proposalId to get notes for. To search across all proposals specify
@@ -90,12 +96,18 @@ mnlPqlQuery :: Lens' MarketplaceNotesList (Maybe Text)
 mnlPqlQuery
   = lens _mnlPqlQuery (\ s a -> s{_mnlPqlQuery = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mnlFields :: Lens' MarketplaceNotesList (Maybe Text)
+mnlFields
+  = lens _mnlFields (\ s a -> s{_mnlFields = a})
+
 instance GoogleRequest MarketplaceNotesList where
         type Rs MarketplaceNotesList = GetOrderNotesResponse
         type Scopes MarketplaceNotesList =
              '["https://www.googleapis.com/auth/adexchange.buyer"]
         requestClient MarketplaceNotesList'{..}
-          = go _mnlProposalId _mnlPqlQuery (Just AltJSON)
+          = go _mnlProposalId _mnlPqlQuery _mnlFields
+              (Just AltJSON)
               adExchangeBuyerService
           where go
                   = buildClient

@@ -34,10 +34,11 @@ module Network.Google.Resource.GamesConfiguration.LeaderboardConfigurations.Dele
 
     -- * Request Lenses
     , lcdLeaderboardId
+    , lcdFields
     ) where
 
-import           Network.Google.GamesConfiguration.Types
-import           Network.Google.Prelude
+import Network.Google.GamesConfiguration.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gamesConfiguration.leaderboardConfigurations.delete@ method which the
 -- 'LeaderboardConfigurationsDelete' request conforms to.
@@ -46,13 +47,15 @@ type LeaderboardConfigurationsDeleteResource =
        "v1configuration" :>
          "leaderboards" :>
            Capture "leaderboardId" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete the leaderboard configuration with the given ID.
 --
 -- /See:/ 'leaderboardConfigurationsDelete' smart constructor.
-newtype LeaderboardConfigurationsDelete = LeaderboardConfigurationsDelete'
-    { _lcdLeaderboardId :: Text
+data LeaderboardConfigurationsDelete = LeaderboardConfigurationsDelete'
+    { _lcdLeaderboardId :: !Text
+    , _lcdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaderboardConfigurationsDelete' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype LeaderboardConfigurationsDelete = LeaderboardConfigurationsDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'lcdLeaderboardId'
+--
+-- * 'lcdFields'
 leaderboardConfigurationsDelete
     :: Text -- ^ 'lcdLeaderboardId'
     -> LeaderboardConfigurationsDelete
-leaderboardConfigurationsDelete pLcdLeaderboardId_ =
+leaderboardConfigurationsDelete pLcdLeaderboardId_ = 
     LeaderboardConfigurationsDelete'
     { _lcdLeaderboardId = pLcdLeaderboardId_
+    , _lcdFields = Nothing
     }
 
 -- | The ID of the leaderboard.
@@ -74,13 +80,18 @@ lcdLeaderboardId
   = lens _lcdLeaderboardId
       (\ s a -> s{_lcdLeaderboardId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+lcdFields :: Lens' LeaderboardConfigurationsDelete (Maybe Text)
+lcdFields
+  = lens _lcdFields (\ s a -> s{_lcdFields = a})
+
 instance GoogleRequest
          LeaderboardConfigurationsDelete where
         type Rs LeaderboardConfigurationsDelete = ()
         type Scopes LeaderboardConfigurationsDelete =
              '["https://www.googleapis.com/auth/androidpublisher"]
         requestClient LeaderboardConfigurationsDelete'{..}
-          = go _lcdLeaderboardId (Just AltJSON)
+          = go _lcdLeaderboardId _lcdFields (Just AltJSON)
               gamesConfigurationService
           where go
                   = buildClient

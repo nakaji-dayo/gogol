@@ -34,10 +34,11 @@ module Network.Google.Resource.IdentityToolkit.RelyingParty.SetProjectConfig
 
     -- * Request Lenses
     , rpspcPayload
+    , rpspcFields
     ) where
 
-import           Network.Google.IdentityToolkit.Types
-import           Network.Google.Prelude
+import Network.Google.IdentityToolkit.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @identitytoolkit.relyingparty.setProjectConfig@ method which the
 -- 'RelyingPartySetProjectConfig' request conforms to.
@@ -46,18 +47,20 @@ type RelyingPartySetProjectConfigResource =
        "v3" :>
          "relyingparty" :>
            "setProjectConfig" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON]
-                 IdentitytoolkitRelyingPartySetProjectConfigRequest
-                 :>
-                 Post '[JSON]
-                   IdentitytoolkitRelyingPartySetProjectConfigResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON]
+                   IdentitytoolkitRelyingPartySetProjectConfigRequest
+                   :>
+                   Post '[JSON]
+                     IdentitytoolkitRelyingPartySetProjectConfigResponse
 
 -- | Set project configuration.
 --
 -- /See:/ 'relyingPartySetProjectConfig' smart constructor.
-newtype RelyingPartySetProjectConfig = RelyingPartySetProjectConfig'
-    { _rpspcPayload :: IdentitytoolkitRelyingPartySetProjectConfigRequest
+data RelyingPartySetProjectConfig = RelyingPartySetProjectConfig'
+    { _rpspcPayload :: !IdentitytoolkitRelyingPartySetProjectConfigRequest
+    , _rpspcFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RelyingPartySetProjectConfig' with the minimum fields required to make a request.
@@ -65,18 +68,26 @@ newtype RelyingPartySetProjectConfig = RelyingPartySetProjectConfig'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'rpspcPayload'
+--
+-- * 'rpspcFields'
 relyingPartySetProjectConfig
     :: IdentitytoolkitRelyingPartySetProjectConfigRequest -- ^ 'rpspcPayload'
     -> RelyingPartySetProjectConfig
-relyingPartySetProjectConfig pRpspcPayload_ =
+relyingPartySetProjectConfig pRpspcPayload_ = 
     RelyingPartySetProjectConfig'
     { _rpspcPayload = pRpspcPayload_
+    , _rpspcFields = Nothing
     }
 
 -- | Multipart request metadata.
 rpspcPayload :: Lens' RelyingPartySetProjectConfig IdentitytoolkitRelyingPartySetProjectConfigRequest
 rpspcPayload
   = lens _rpspcPayload (\ s a -> s{_rpspcPayload = a})
+
+-- | Selector specifying which fields to include in a partial response.
+rpspcFields :: Lens' RelyingPartySetProjectConfig (Maybe Text)
+rpspcFields
+  = lens _rpspcFields (\ s a -> s{_rpspcFields = a})
 
 instance GoogleRequest RelyingPartySetProjectConfig
          where
@@ -85,7 +96,7 @@ instance GoogleRequest RelyingPartySetProjectConfig
         type Scopes RelyingPartySetProjectConfig =
              '["https://www.googleapis.com/auth/cloud-platform"]
         requestClient RelyingPartySetProjectConfig'{..}
-          = go (Just AltJSON) _rpspcPayload
+          = go _rpspcFields (Just AltJSON) _rpspcPayload
               identityToolkitService
           where go
                   = buildClient

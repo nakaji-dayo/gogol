@@ -41,11 +41,12 @@ module Network.Google.Resource.Monitoring.Projects.MetricDescriptors.Delete
     , pmddUploadType
     , pmddBearerToken
     , pmddName
+    , pmddFields
     , pmddCallback
     ) where
 
-import           Network.Google.Monitoring.Types
-import           Network.Google.Prelude
+import Network.Google.Monitoring.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @monitoring.projects.metricDescriptors.delete@ method which the
 -- 'ProjectsMetricDescriptorsDelete' request conforms to.
@@ -59,21 +60,23 @@ type ProjectsMetricDescriptorsDeleteResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :> Delete '[JSON] Empty
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
 -- | Deletes a metric descriptor. Only user-created custom metrics can be
 -- deleted.
 --
 -- /See:/ 'projectsMetricDescriptorsDelete' smart constructor.
 data ProjectsMetricDescriptorsDelete = ProjectsMetricDescriptorsDelete'
-    { _pmddXgafv          :: !(Maybe Xgafv)
+    { _pmddXgafv :: !(Maybe Xgafv)
     , _pmddUploadProtocol :: !(Maybe Text)
-    , _pmddPp             :: !Bool
-    , _pmddAccessToken    :: !(Maybe Text)
-    , _pmddUploadType     :: !(Maybe Text)
-    , _pmddBearerToken    :: !(Maybe Text)
-    , _pmddName           :: !Text
-    , _pmddCallback       :: !(Maybe Text)
+    , _pmddPp :: !Bool
+    , _pmddAccessToken :: !(Maybe Text)
+    , _pmddUploadType :: !(Maybe Text)
+    , _pmddBearerToken :: !(Maybe Text)
+    , _pmddName :: !Text
+    , _pmddFields :: !(Maybe Text)
+    , _pmddCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMetricDescriptorsDelete' with the minimum fields required to make a request.
@@ -94,11 +97,13 @@ data ProjectsMetricDescriptorsDelete = ProjectsMetricDescriptorsDelete'
 --
 -- * 'pmddName'
 --
+-- * 'pmddFields'
+--
 -- * 'pmddCallback'
 projectsMetricDescriptorsDelete
     :: Text -- ^ 'pmddName'
     -> ProjectsMetricDescriptorsDelete
-projectsMetricDescriptorsDelete pPmddName_ =
+projectsMetricDescriptorsDelete pPmddName_ = 
     ProjectsMetricDescriptorsDelete'
     { _pmddXgafv = Nothing
     , _pmddUploadProtocol = Nothing
@@ -107,6 +112,7 @@ projectsMetricDescriptorsDelete pPmddName_ =
     , _pmddUploadType = Nothing
     , _pmddBearerToken = Nothing
     , _pmddName = pPmddName_
+    , _pmddFields = Nothing
     , _pmddCallback = Nothing
     }
 
@@ -149,6 +155,11 @@ pmddBearerToken
 pmddName :: Lens' ProjectsMetricDescriptorsDelete Text
 pmddName = lens _pmddName (\ s a -> s{_pmddName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmddFields :: Lens' ProjectsMetricDescriptorsDelete (Maybe Text)
+pmddFields
+  = lens _pmddFields (\ s a -> s{_pmddFields = a})
+
 -- | JSONP
 pmddCallback :: Lens' ProjectsMetricDescriptorsDelete (Maybe Text)
 pmddCallback
@@ -167,6 +178,7 @@ instance GoogleRequest
               _pmddUploadType
               _pmddBearerToken
               _pmddCallback
+              _pmddFields
               (Just AltJSON)
               monitoringService
           where go

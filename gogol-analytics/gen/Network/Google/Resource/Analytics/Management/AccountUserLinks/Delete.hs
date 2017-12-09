@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.AccountUserLinks.Delete
     -- * Request Lenses
     , mauldAccountId
     , mauldLinkId
+    , mauldFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.accountUserLinks.delete@ method which the
 -- 'ManagementAccountUserLinksDelete' request conforms to.
@@ -50,14 +51,16 @@ type ManagementAccountUserLinksDeleteResource =
              Capture "accountId" Text :>
                "entityUserLinks" :>
                  Capture "linkId" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a user from the given account.
 --
 -- /See:/ 'managementAccountUserLinksDelete' smart constructor.
 data ManagementAccountUserLinksDelete = ManagementAccountUserLinksDelete'
     { _mauldAccountId :: !Text
-    , _mauldLinkId    :: !Text
+    , _mauldLinkId :: !Text
+    , _mauldFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementAccountUserLinksDelete' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ManagementAccountUserLinksDelete = ManagementAccountUserLinksDelete'
 -- * 'mauldAccountId'
 --
 -- * 'mauldLinkId'
+--
+-- * 'mauldFields'
 managementAccountUserLinksDelete
     :: Text -- ^ 'mauldAccountId'
     -> Text -- ^ 'mauldLinkId'
     -> ManagementAccountUserLinksDelete
-managementAccountUserLinksDelete pMauldAccountId_ pMauldLinkId_ =
+managementAccountUserLinksDelete pMauldAccountId_ pMauldLinkId_ = 
     ManagementAccountUserLinksDelete'
     { _mauldAccountId = pMauldAccountId_
     , _mauldLinkId = pMauldLinkId_
+    , _mauldFields = Nothing
     }
 
 -- | Account ID to delete the user link for.
@@ -88,13 +94,19 @@ mauldLinkId :: Lens' ManagementAccountUserLinksDelete Text
 mauldLinkId
   = lens _mauldLinkId (\ s a -> s{_mauldLinkId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mauldFields :: Lens' ManagementAccountUserLinksDelete (Maybe Text)
+mauldFields
+  = lens _mauldFields (\ s a -> s{_mauldFields = a})
+
 instance GoogleRequest
          ManagementAccountUserLinksDelete where
         type Rs ManagementAccountUserLinksDelete = ()
         type Scopes ManagementAccountUserLinksDelete =
              '["https://www.googleapis.com/auth/analytics.manage.users"]
         requestClient ManagementAccountUserLinksDelete'{..}
-          = go _mauldAccountId _mauldLinkId (Just AltJSON)
+          = go _mauldAccountId _mauldLinkId _mauldFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

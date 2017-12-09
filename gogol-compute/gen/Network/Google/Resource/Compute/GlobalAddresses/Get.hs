@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.GlobalAddresses.Get
     -- * Request Lenses
     , gagProject
     , gagAddress
+    , gagFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.globalAddresses.get@ method which the
 -- 'GlobalAddressesGet' request conforms to.
@@ -51,7 +52,8 @@ type GlobalAddressesGetResource =
              "global" :>
                "addresses" :>
                  Capture "address" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Address
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Address
 
 -- | Returns the specified address resource. Get a list of available
 -- addresses by making a list() request.
@@ -60,6 +62,7 @@ type GlobalAddressesGetResource =
 data GlobalAddressesGet = GlobalAddressesGet'
     { _gagProject :: !Text
     , _gagAddress :: !Text
+    , _gagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GlobalAddressesGet' with the minimum fields required to make a request.
@@ -69,14 +72,17 @@ data GlobalAddressesGet = GlobalAddressesGet'
 -- * 'gagProject'
 --
 -- * 'gagAddress'
+--
+-- * 'gagFields'
 globalAddressesGet
     :: Text -- ^ 'gagProject'
     -> Text -- ^ 'gagAddress'
     -> GlobalAddressesGet
-globalAddressesGet pGagProject_ pGagAddress_ =
+globalAddressesGet pGagProject_ pGagAddress_ = 
     GlobalAddressesGet'
     { _gagProject = pGagProject_
     , _gagAddress = pGagAddress_
+    , _gagFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -89,6 +95,11 @@ gagAddress :: Lens' GlobalAddressesGet Text
 gagAddress
   = lens _gagAddress (\ s a -> s{_gagAddress = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gagFields :: Lens' GlobalAddressesGet (Maybe Text)
+gagFields
+  = lens _gagFields (\ s a -> s{_gagFields = a})
+
 instance GoogleRequest GlobalAddressesGet where
         type Rs GlobalAddressesGet = Address
         type Scopes GlobalAddressesGet =
@@ -96,7 +107,8 @@ instance GoogleRequest GlobalAddressesGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient GlobalAddressesGet'{..}
-          = go _gagProject _gagAddress (Just AltJSON)
+          = go _gagProject _gagAddress _gagFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

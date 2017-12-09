@@ -42,11 +42,12 @@ module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.Set
     , ddbsBearerToken
     , ddbsDebuggeeId
     , ddbsClientVersion
+    , ddbsFields
     , ddbsCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.debugger.debuggees.breakpoints.set@ method which the
 -- 'DebuggerDebuggeesBreakpointsSet' request conforms to.
@@ -65,24 +66,26 @@ type DebuggerDebuggeesBreakpointsSetResource =
                            QueryParam "bearer_token" Text :>
                              QueryParam "clientVersion" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] Breakpoint :>
-                                     Post '[JSON] SetBreakpointResponse
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] Breakpoint :>
+                                       Post '[JSON] SetBreakpointResponse
 
 -- | Sets the breakpoint to the debuggee.
 --
 -- /See:/ 'debuggerDebuggeesBreakpointsSet' smart constructor.
 data DebuggerDebuggeesBreakpointsSet = DebuggerDebuggeesBreakpointsSet'
-    { _ddbsXgafv          :: !(Maybe Xgafv)
+    { _ddbsXgafv :: !(Maybe Xgafv)
     , _ddbsUploadProtocol :: !(Maybe Text)
-    , _ddbsPp             :: !Bool
-    , _ddbsAccessToken    :: !(Maybe Text)
-    , _ddbsUploadType     :: !(Maybe Text)
-    , _ddbsPayload        :: !Breakpoint
-    , _ddbsBearerToken    :: !(Maybe Text)
-    , _ddbsDebuggeeId     :: !Text
-    , _ddbsClientVersion  :: !(Maybe Text)
-    , _ddbsCallback       :: !(Maybe Text)
+    , _ddbsPp :: !Bool
+    , _ddbsAccessToken :: !(Maybe Text)
+    , _ddbsUploadType :: !(Maybe Text)
+    , _ddbsPayload :: !Breakpoint
+    , _ddbsBearerToken :: !(Maybe Text)
+    , _ddbsDebuggeeId :: !Text
+    , _ddbsClientVersion :: !(Maybe Text)
+    , _ddbsFields :: !(Maybe Text)
+    , _ddbsCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DebuggerDebuggeesBreakpointsSet' with the minimum fields required to make a request.
@@ -107,12 +110,14 @@ data DebuggerDebuggeesBreakpointsSet = DebuggerDebuggeesBreakpointsSet'
 --
 -- * 'ddbsClientVersion'
 --
+-- * 'ddbsFields'
+--
 -- * 'ddbsCallback'
 debuggerDebuggeesBreakpointsSet
     :: Breakpoint -- ^ 'ddbsPayload'
     -> Text -- ^ 'ddbsDebuggeeId'
     -> DebuggerDebuggeesBreakpointsSet
-debuggerDebuggeesBreakpointsSet pDdbsPayload_ pDdbsDebuggeeId_ =
+debuggerDebuggeesBreakpointsSet pDdbsPayload_ pDdbsDebuggeeId_ = 
     DebuggerDebuggeesBreakpointsSet'
     { _ddbsXgafv = Nothing
     , _ddbsUploadProtocol = Nothing
@@ -123,6 +128,7 @@ debuggerDebuggeesBreakpointsSet pDdbsPayload_ pDdbsDebuggeeId_ =
     , _ddbsBearerToken = Nothing
     , _ddbsDebuggeeId = pDdbsDebuggeeId_
     , _ddbsClientVersion = Nothing
+    , _ddbsFields = Nothing
     , _ddbsCallback = Nothing
     }
 
@@ -170,12 +176,17 @@ ddbsDebuggeeId
   = lens _ddbsDebuggeeId
       (\ s a -> s{_ddbsDebuggeeId = a})
 
--- | The client version making the call. Following: \`domain\/type\/version\`
+-- | The client version making the call. Schema: \`domain\/type\/version\`
 -- (e.g., \`google.com\/intellij\/v1\`).
 ddbsClientVersion :: Lens' DebuggerDebuggeesBreakpointsSet (Maybe Text)
 ddbsClientVersion
   = lens _ddbsClientVersion
       (\ s a -> s{_ddbsClientVersion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ddbsFields :: Lens' DebuggerDebuggeesBreakpointsSet (Maybe Text)
+ddbsFields
+  = lens _ddbsFields (\ s a -> s{_ddbsFields = a})
 
 -- | JSONP
 ddbsCallback :: Lens' DebuggerDebuggeesBreakpointsSet (Maybe Text)
@@ -197,6 +208,7 @@ instance GoogleRequest
               _ddbsBearerToken
               _ddbsClientVersion
               _ddbsCallback
+              _ddbsFields
               (Just AltJSON)
               _ddbsPayload
               debuggerService

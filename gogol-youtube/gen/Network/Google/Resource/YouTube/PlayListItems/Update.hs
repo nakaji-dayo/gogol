@@ -37,10 +37,11 @@ module Network.Google.Resource.YouTube.PlayListItems.Update
     , pliuPart
     , pliuPayload
     , pliuOnBehalfOfContentOwner
+    , pliuFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.YouTube.Types
+import Network.Google.Prelude
+import Network.Google.YouTube.Types
 
 -- | A resource alias for @youtube.playlistItems.update@ method which the
 -- 'PlayListItemsUpdate' request conforms to.
@@ -50,18 +51,20 @@ type PlayListItemsUpdateResource =
          "playlistItems" :>
            QueryParam "part" Text :>
              QueryParam "onBehalfOfContentOwner" Text :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlayListItem :>
-                   Put '[JSON] PlayListItem
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlayListItem :>
+                     Put '[JSON] PlayListItem
 
 -- | Modifies a playlist item. For example, you could update the item\'s
 -- position in the playlist.
 --
 -- /See:/ 'playListItemsUpdate' smart constructor.
 data PlayListItemsUpdate = PlayListItemsUpdate'
-    { _pliuPart                   :: !Text
-    , _pliuPayload                :: !PlayListItem
+    { _pliuPart :: !Text
+    , _pliuPayload :: !PlayListItem
     , _pliuOnBehalfOfContentOwner :: !(Maybe Text)
+    , _pliuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlayListItemsUpdate' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data PlayListItemsUpdate = PlayListItemsUpdate'
 -- * 'pliuPayload'
 --
 -- * 'pliuOnBehalfOfContentOwner'
+--
+-- * 'pliuFields'
 playListItemsUpdate
     :: Text -- ^ 'pliuPart'
     -> PlayListItem -- ^ 'pliuPayload'
     -> PlayListItemsUpdate
-playListItemsUpdate pPliuPart_ pPliuPayload_ =
+playListItemsUpdate pPliuPart_ pPliuPayload_ = 
     PlayListItemsUpdate'
     { _pliuPart = pPliuPart_
     , _pliuPayload = pPliuPayload_
     , _pliuOnBehalfOfContentOwner = Nothing
+    , _pliuFields = Nothing
     }
 
 -- | The part parameter serves two purposes in this operation. It identifies
@@ -120,6 +126,11 @@ pliuOnBehalfOfContentOwner
   = lens _pliuOnBehalfOfContentOwner
       (\ s a -> s{_pliuOnBehalfOfContentOwner = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pliuFields :: Lens' PlayListItemsUpdate (Maybe Text)
+pliuFields
+  = lens _pliuFields (\ s a -> s{_pliuFields = a})
+
 instance GoogleRequest PlayListItemsUpdate where
         type Rs PlayListItemsUpdate = PlayListItem
         type Scopes PlayListItemsUpdate =
@@ -128,6 +139,7 @@ instance GoogleRequest PlayListItemsUpdate where
                "https://www.googleapis.com/auth/youtubepartner"]
         requestClient PlayListItemsUpdate'{..}
           = go (Just _pliuPart) _pliuOnBehalfOfContentOwner
+              _pliuFields
               (Just AltJSON)
               _pliuPayload
               youTubeService

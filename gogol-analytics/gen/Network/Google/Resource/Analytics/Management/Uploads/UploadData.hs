@@ -36,10 +36,11 @@ module Network.Google.Resource.Analytics.Management.Uploads.UploadData
     , muudWebPropertyId
     , muudCustomDataSourceId
     , muudAccountId
+    , muudFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.uploads.uploadData@ method which the
 -- 'ManagementUploadsUploadData' request conforms to.
@@ -54,7 +55,8 @@ type ManagementUploadsUploadDataResource =
                    "customDataSources" :>
                      Capture "customDataSourceId" Text :>
                        "uploads" :>
-                         QueryParam "alt" AltJSON :> Post '[JSON] Upload
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :> Post '[JSON] Upload
        :<|>
        "upload" :>
          "analytics" :>
@@ -67,17 +69,19 @@ type ManagementUploadsUploadDataResource =
                        "customDataSources" :>
                          Capture "customDataSourceId" Text :>
                            "uploads" :>
-                             QueryParam "alt" AltJSON :>
-                               QueryParam "uploadType" AltMedia :>
-                                 AltMedia :> Post '[JSON] Upload
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 QueryParam "uploadType" AltMedia :>
+                                   AltMedia :> Post '[JSON] Upload
 
 -- | Upload data for a custom data source.
 --
 -- /See:/ 'managementUploadsUploadData' smart constructor.
 data ManagementUploadsUploadData = ManagementUploadsUploadData'
-    { _muudWebPropertyId      :: !Text
+    { _muudWebPropertyId :: !Text
     , _muudCustomDataSourceId :: !Text
-    , _muudAccountId          :: !Text
+    , _muudAccountId :: !Text
+    , _muudFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementUploadsUploadData' with the minimum fields required to make a request.
@@ -89,16 +93,19 @@ data ManagementUploadsUploadData = ManagementUploadsUploadData'
 -- * 'muudCustomDataSourceId'
 --
 -- * 'muudAccountId'
+--
+-- * 'muudFields'
 managementUploadsUploadData
     :: Text -- ^ 'muudWebPropertyId'
     -> Text -- ^ 'muudCustomDataSourceId'
     -> Text -- ^ 'muudAccountId'
     -> ManagementUploadsUploadData
-managementUploadsUploadData pMuudWebPropertyId_ pMuudCustomDataSourceId_ pMuudAccountId_ =
+managementUploadsUploadData pMuudWebPropertyId_ pMuudCustomDataSourceId_ pMuudAccountId_ = 
     ManagementUploadsUploadData'
     { _muudWebPropertyId = pMuudWebPropertyId_
     , _muudCustomDataSourceId = pMuudCustomDataSourceId_
     , _muudAccountId = pMuudAccountId_
+    , _muudFields = Nothing
     }
 
 -- | Web property UA-string associated with the upload.
@@ -119,6 +126,11 @@ muudAccountId
   = lens _muudAccountId
       (\ s a -> s{_muudAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+muudFields :: Lens' ManagementUploadsUploadData (Maybe Text)
+muudFields
+  = lens _muudFields (\ s a -> s{_muudFields = a})
+
 instance GoogleRequest ManagementUploadsUploadData
          where
         type Rs ManagementUploadsUploadData = Upload
@@ -128,6 +140,7 @@ instance GoogleRequest ManagementUploadsUploadData
         requestClient ManagementUploadsUploadData'{..}
           = go _muudAccountId _muudWebPropertyId
               _muudCustomDataSourceId
+              _muudFields
               (Just AltJSON)
               analyticsService
           where go :<|> _
@@ -145,6 +158,7 @@ instance GoogleRequest
           (MediaUpload ManagementUploadsUploadData'{..} body)
           = go _muudAccountId _muudWebPropertyId
               _muudCustomDataSourceId
+              _muudFields
               (Just AltJSON)
               (Just AltMedia)
               body

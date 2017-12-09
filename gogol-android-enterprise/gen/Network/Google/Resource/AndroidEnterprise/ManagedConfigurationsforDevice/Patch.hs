@@ -39,10 +39,11 @@ module Network.Google.Resource.AndroidEnterprise.ManagedConfigurationsforDevice.
     , mcdpUserId
     , mcdpDeviceId
     , mcdpManagedConfigurationForDeviceId
+    , mcdpFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.managedconfigurationsfordevice.patch@ method which the
 -- 'ManagedConfigurationsforDevicePatch' request conforms to.
@@ -57,20 +58,22 @@ type ManagedConfigurationsforDevicePatchResource =
                    Capture "deviceId" Text :>
                      "managedConfigurationsForDevice" :>
                        Capture "managedConfigurationForDeviceId" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ManagedConfiguration :>
-                             Patch '[JSON] ManagedConfiguration
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ManagedConfiguration :>
+                               Patch '[JSON] ManagedConfiguration
 
 -- | Adds or updates a per-device managed configuration for an app for the
 -- specified device. This method supports patch semantics.
 --
 -- /See:/ 'managedConfigurationsforDevicePatch' smart constructor.
 data ManagedConfigurationsforDevicePatch = ManagedConfigurationsforDevicePatch'
-    { _mcdpEnterpriseId                    :: !Text
-    , _mcdpPayload                         :: !ManagedConfiguration
-    , _mcdpUserId                          :: !Text
-    , _mcdpDeviceId                        :: !Text
+    { _mcdpEnterpriseId :: !Text
+    , _mcdpPayload :: !ManagedConfiguration
+    , _mcdpUserId :: !Text
+    , _mcdpDeviceId :: !Text
     , _mcdpManagedConfigurationForDeviceId :: !Text
+    , _mcdpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagedConfigurationsforDevicePatch' with the minimum fields required to make a request.
@@ -86,6 +89,8 @@ data ManagedConfigurationsforDevicePatch = ManagedConfigurationsforDevicePatch'
 -- * 'mcdpDeviceId'
 --
 -- * 'mcdpManagedConfigurationForDeviceId'
+--
+-- * 'mcdpFields'
 managedConfigurationsforDevicePatch
     :: Text -- ^ 'mcdpEnterpriseId'
     -> ManagedConfiguration -- ^ 'mcdpPayload'
@@ -93,13 +98,14 @@ managedConfigurationsforDevicePatch
     -> Text -- ^ 'mcdpDeviceId'
     -> Text -- ^ 'mcdpManagedConfigurationForDeviceId'
     -> ManagedConfigurationsforDevicePatch
-managedConfigurationsforDevicePatch pMcdpEnterpriseId_ pMcdpPayload_ pMcdpUserId_ pMcdpDeviceId_ pMcdpManagedConfigurationForDeviceId_ =
+managedConfigurationsforDevicePatch pMcdpEnterpriseId_ pMcdpPayload_ pMcdpUserId_ pMcdpDeviceId_ pMcdpManagedConfigurationForDeviceId_ = 
     ManagedConfigurationsforDevicePatch'
     { _mcdpEnterpriseId = pMcdpEnterpriseId_
     , _mcdpPayload = pMcdpPayload_
     , _mcdpUserId = pMcdpUserId_
     , _mcdpDeviceId = pMcdpDeviceId_
     , _mcdpManagedConfigurationForDeviceId = pMcdpManagedConfigurationForDeviceId_
+    , _mcdpFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -131,6 +137,11 @@ mcdpManagedConfigurationForDeviceId
       (\ s a ->
          s{_mcdpManagedConfigurationForDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mcdpFields :: Lens' ManagedConfigurationsforDevicePatch (Maybe Text)
+mcdpFields
+  = lens _mcdpFields (\ s a -> s{_mcdpFields = a})
+
 instance GoogleRequest
          ManagedConfigurationsforDevicePatch where
         type Rs ManagedConfigurationsforDevicePatch =
@@ -141,6 +152,7 @@ instance GoogleRequest
           ManagedConfigurationsforDevicePatch'{..}
           = go _mcdpEnterpriseId _mcdpUserId _mcdpDeviceId
               _mcdpManagedConfigurationForDeviceId
+              _mcdpFields
               (Just AltJSON)
               _mcdpPayload
               androidEnterpriseService

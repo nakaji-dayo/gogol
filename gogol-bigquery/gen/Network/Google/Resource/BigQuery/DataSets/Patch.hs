@@ -39,10 +39,11 @@ module Network.Google.Resource.BigQuery.DataSets.Patch
     , dspPayload
     , dspDataSetId
     , dspProjectId
+    , dspFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.patch@ method which the
 -- 'DataSetsPatch' request conforms to.
@@ -53,8 +54,9 @@ type DataSetsPatchResource =
            Capture "projectId" Text :>
              "datasets" :>
                Capture "datasetId" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] DataSet :> Patch '[JSON] DataSet
 
 -- | Updates information in an existing dataset. The update method replaces
 -- the entire dataset resource, whereas the patch method only replaces
@@ -63,9 +65,10 @@ type DataSetsPatchResource =
 --
 -- /See:/ 'dataSetsPatch' smart constructor.
 data DataSetsPatch = DataSetsPatch'
-    { _dspPayload   :: !DataSet
+    { _dspPayload :: !DataSet
     , _dspDataSetId :: !Text
     , _dspProjectId :: !Text
+    , _dspFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataSetsPatch' with the minimum fields required to make a request.
@@ -77,16 +80,19 @@ data DataSetsPatch = DataSetsPatch'
 -- * 'dspDataSetId'
 --
 -- * 'dspProjectId'
+--
+-- * 'dspFields'
 dataSetsPatch
     :: DataSet -- ^ 'dspPayload'
     -> Text -- ^ 'dspDataSetId'
     -> Text -- ^ 'dspProjectId'
     -> DataSetsPatch
-dataSetsPatch pDspPayload_ pDspDataSetId_ pDspProjectId_ =
+dataSetsPatch pDspPayload_ pDspDataSetId_ pDspProjectId_ = 
     DataSetsPatch'
     { _dspPayload = pDspPayload_
     , _dspDataSetId = pDspDataSetId_
     , _dspProjectId = pDspProjectId_
+    , _dspFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -104,13 +110,19 @@ dspProjectId :: Lens' DataSetsPatch Text
 dspProjectId
   = lens _dspProjectId (\ s a -> s{_dspProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dspFields :: Lens' DataSetsPatch (Maybe Text)
+dspFields
+  = lens _dspFields (\ s a -> s{_dspFields = a})
+
 instance GoogleRequest DataSetsPatch where
         type Rs DataSetsPatch = DataSet
         type Scopes DataSetsPatch =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient DataSetsPatch'{..}
-          = go _dspProjectId _dspDataSetId (Just AltJSON)
+          = go _dspProjectId _dspDataSetId _dspFields
+              (Just AltJSON)
               _dspPayload
               bigQueryService
           where go

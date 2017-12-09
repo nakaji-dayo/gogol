@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Tokens.List
 
     -- * Request Lenses
     , tlUserKey
+    , tlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.tokens.list@ method which the
 -- 'TokensList' request conforms to.
@@ -49,14 +50,16 @@ type TokensListResource =
            "users" :>
              Capture "userKey" Text :>
                "tokens" :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Tokens
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Tokens
 
 -- | Returns the set of tokens specified user has issued to 3rd party
 -- applications.
 --
 -- /See:/ 'tokensList' smart constructor.
-newtype TokensList = TokensList'
-    { _tlUserKey :: Text
+data TokensList = TokensList'
+    { _tlUserKey :: !Text
+    , _tlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TokensList' with the minimum fields required to make a request.
@@ -64,12 +67,15 @@ newtype TokensList = TokensList'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tlUserKey'
+--
+-- * 'tlFields'
 tokensList
     :: Text -- ^ 'tlUserKey'
     -> TokensList
-tokensList pTlUserKey_ =
+tokensList pTlUserKey_ = 
     TokensList'
     { _tlUserKey = pTlUserKey_
+    , _tlFields = Nothing
     }
 
 -- | Identifies the user in the API request. The value can be the user\'s
@@ -78,12 +84,17 @@ tlUserKey :: Lens' TokensList Text
 tlUserKey
   = lens _tlUserKey (\ s a -> s{_tlUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tlFields :: Lens' TokensList (Maybe Text)
+tlFields = lens _tlFields (\ s a -> s{_tlFields = a})
+
 instance GoogleRequest TokensList where
         type Rs TokensList = Tokens
         type Scopes TokensList =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient TokensList'{..}
-          = go _tlUserKey (Just AltJSON) directoryService
+          = go _tlUserKey _tlFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient (Proxy :: Proxy TokensListResource)
                       mempty

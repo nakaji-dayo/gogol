@@ -32,10 +32,12 @@ module Network.Google.Resource.DoubleClickBidManager.Queries.Listqueries
     , queriesListqueries
     , QueriesListqueries
 
+    -- * Request Lenses
+    , qlFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.queries.listqueries@ method which the
 -- 'QueriesListqueries' request conforms to.
@@ -43,27 +45,39 @@ type QueriesListqueriesResource =
      "doubleclickbidmanager" :>
        "v1" :>
          "queries" :>
-           QueryParam "alt" AltJSON :>
-             Get '[JSON] ListQueriesResponse
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               Get '[JSON] ListQueriesResponse
 
 -- | Retrieves stored queries.
 --
 -- /See:/ 'queriesListqueries' smart constructor.
-data QueriesListqueries =
-    QueriesListqueries'
-    deriving (Eq,Show,Data,Typeable,Generic)
+newtype QueriesListqueries = QueriesListqueries'
+    { _qlFields :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'QueriesListqueries' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'qlFields'
 queriesListqueries
     :: QueriesListqueries
-queriesListqueries = QueriesListqueries'
+queriesListqueries = 
+    QueriesListqueries'
+    { _qlFields = Nothing
+    }
+
+-- | Selector specifying which fields to include in a partial response.
+qlFields :: Lens' QueriesListqueries (Maybe Text)
+qlFields = lens _qlFields (\ s a -> s{_qlFields = a})
 
 instance GoogleRequest QueriesListqueries where
         type Rs QueriesListqueries = ListQueriesResponse
-        type Scopes QueriesListqueries = '[]
-        requestClient QueriesListqueries'{}
-          = go (Just AltJSON) doubleClickBidsService
+        type Scopes QueriesListqueries =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
+        requestClient QueriesListqueries'{..}
+          = go _qlFields (Just AltJSON) doubleClickBidsService
           where go
                   = buildClient
                       (Proxy :: Proxy QueriesListqueriesResource)

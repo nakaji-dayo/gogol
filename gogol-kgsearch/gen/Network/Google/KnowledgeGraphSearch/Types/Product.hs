@@ -17,17 +17,17 @@
 --
 module Network.Google.KnowledgeGraphSearch.Types.Product where
 
-import           Network.Google.KnowledgeGraphSearch.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.KnowledgeGraphSearch.Types.Sum
+import Network.Google.Prelude
 
 -- | Response message includes the context and a list of matching results
 -- which contain the detail of associated entities.
 --
 -- /See:/ 'searchResponse' smart constructor.
 data SearchResponse = SearchResponse'
-    { _srContext         :: !(Maybe JSONValue)
+    { _srContext :: !(Maybe JSONValue)
     , _srItemListElement :: !(Maybe [JSONValue])
-    , _srType            :: !(Maybe JSONValue)
+    , _srType :: !(Maybe JSONValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SearchResponse' with the minimum fields required to make a request.
@@ -41,7 +41,7 @@ data SearchResponse = SearchResponse'
 -- * 'srType'
 searchResponse
     :: SearchResponse
-searchResponse =
+searchResponse = 
     SearchResponse'
     { _srContext = Nothing
     , _srItemListElement = Nothing

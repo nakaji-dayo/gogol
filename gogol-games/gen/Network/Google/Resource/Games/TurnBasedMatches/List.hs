@@ -39,10 +39,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.List
     , turLanguage
     , turPageToken
     , turMaxResults
+    , turFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.list@ method which the
 -- 'TurnBasedMatchesList' request conforms to.
@@ -56,19 +57,21 @@ type TurnBasedMatchesListResource =
                  QueryParam "language" Text :>
                    QueryParam "pageToken" Text :>
                      QueryParam "maxResults" (Textual Int32) :>
-                       QueryParam "alt" AltJSON :>
-                         Get '[JSON] TurnBasedMatchList
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           Get '[JSON] TurnBasedMatchList
 
 -- | Returns turn-based matches the player is or was involved in.
 --
 -- /See:/ 'turnBasedMatchesList' smart constructor.
 data TurnBasedMatchesList = TurnBasedMatchesList'
     { _turMaxCompletedMatches :: !(Maybe (Textual Int32))
-    , _turConsistencyToken    :: !(Maybe (Textual Int64))
-    , _turIncludeMatchData    :: !(Maybe Bool)
-    , _turLanguage            :: !(Maybe Text)
-    , _turPageToken           :: !(Maybe Text)
-    , _turMaxResults          :: !(Maybe (Textual Int32))
+    , _turConsistencyToken :: !(Maybe (Textual Int64))
+    , _turIncludeMatchData :: !(Maybe Bool)
+    , _turLanguage :: !(Maybe Text)
+    , _turPageToken :: !(Maybe Text)
+    , _turMaxResults :: !(Maybe (Textual Int32))
+    , _turFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesList' with the minimum fields required to make a request.
@@ -86,9 +89,11 @@ data TurnBasedMatchesList = TurnBasedMatchesList'
 -- * 'turPageToken'
 --
 -- * 'turMaxResults'
+--
+-- * 'turFields'
 turnBasedMatchesList
     :: TurnBasedMatchesList
-turnBasedMatchesList =
+turnBasedMatchesList = 
     TurnBasedMatchesList'
     { _turMaxCompletedMatches = Nothing
     , _turConsistencyToken = Nothing
@@ -96,6 +101,7 @@ turnBasedMatchesList =
     , _turLanguage = Nothing
     , _turPageToken = Nothing
     , _turMaxResults = Nothing
+    , _turFields = Nothing
     }
 
 -- | The maximum number of completed or canceled matches to return in the
@@ -143,6 +149,11 @@ turMaxResults
       (\ s a -> s{_turMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+turFields :: Lens' TurnBasedMatchesList (Maybe Text)
+turFields
+  = lens _turFields (\ s a -> s{_turFields = a})
+
 instance GoogleRequest TurnBasedMatchesList where
         type Rs TurnBasedMatchesList = TurnBasedMatchList
         type Scopes TurnBasedMatchesList =
@@ -154,6 +165,7 @@ instance GoogleRequest TurnBasedMatchesList where
               _turLanguage
               _turPageToken
               _turMaxResults
+              _turFields
               (Just AltJSON)
               gamesService
           where go

@@ -34,10 +34,11 @@ module Network.Google.Resource.Webmasters.Sites.Delete
 
     -- * Request Lenses
     , sSiteURL
+    , sFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.WebmasterTools.Types
 
 -- | A resource alias for @webmasters.sites.delete@ method which the
 -- 'SitesDelete' request conforms to.
@@ -46,13 +47,15 @@ type SitesDeleteResource =
        "v3" :>
          "sites" :>
            Capture "siteUrl" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Removes a site from the set of the user\'s Search Console sites.
 --
 -- /See:/ 'sitesDelete' smart constructor.
-newtype SitesDelete = SitesDelete'
-    { _sSiteURL :: Text
+data SitesDelete = SitesDelete'
+    { _sSiteURL :: !Text
+    , _sFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesDelete' with the minimum fields required to make a request.
@@ -60,12 +63,15 @@ newtype SitesDelete = SitesDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sSiteURL'
+--
+-- * 'sFields'
 sitesDelete
     :: Text -- ^ 'sSiteURL'
     -> SitesDelete
-sitesDelete pSSiteURL_ =
+sitesDelete pSSiteURL_ = 
     SitesDelete'
     { _sSiteURL = pSSiteURL_
+    , _sFields = Nothing
     }
 
 -- | The URI of the property as defined in Search Console. Examples:
@@ -73,12 +79,17 @@ sitesDelete pSSiteURL_ =
 sSiteURL :: Lens' SitesDelete Text
 sSiteURL = lens _sSiteURL (\ s a -> s{_sSiteURL = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sFields :: Lens' SitesDelete (Maybe Text)
+sFields = lens _sFields (\ s a -> s{_sFields = a})
+
 instance GoogleRequest SitesDelete where
         type Rs SitesDelete = ()
         type Scopes SitesDelete =
              '["https://www.googleapis.com/auth/webmasters"]
         requestClient SitesDelete'{..}
-          = go _sSiteURL (Just AltJSON) webmasterToolsService
+          = go _sSiteURL _sFields (Just AltJSON)
+              webmasterToolsService
           where go
                   = buildClient (Proxy :: Proxy SitesDeleteResource)
                       mempty

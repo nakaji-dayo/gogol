@@ -20,9 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Update a \`Release\`. Only updates to the \`ruleset_name\` field will be
--- honored. \`Release\` rename is not supported. To create a \`Release\`
--- use the CreateRelease method instead.
+-- Update a \`Release\`. Only updates to the \`ruleset_name\` and
+-- \`test_suite_name\` fields will be honored. \`Release\` rename is not
+-- supported. To create a \`Release\` use the CreateRelease method.
 --
 -- /See:/ <https://firebase.google.com/docs/storage/security Firebase Rules API Reference> for @firebaserules.projects.releases.update@.
 module Network.Google.Resource.FirebaseRules.Projects.Releases.Update
@@ -43,11 +43,12 @@ module Network.Google.Resource.FirebaseRules.Projects.Releases.Update
     , pruPayload
     , pruBearerToken
     , pruName
+    , pruFields
     , pruCallback
     ) where
 
-import           Network.Google.FirebaseRules.Types
-import           Network.Google.Prelude
+import Network.Google.FirebaseRules.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @firebaserules.projects.releases.update@ method which the
 -- 'ProjectsReleasesUpdate' request conforms to.
@@ -61,24 +62,26 @@ type ProjectsReleasesUpdateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] Release :> Put '[JSON] Release
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] Release :> Put '[JSON] Release
 
--- | Update a \`Release\`. Only updates to the \`ruleset_name\` field will be
--- honored. \`Release\` rename is not supported. To create a \`Release\`
--- use the CreateRelease method instead.
+-- | Update a \`Release\`. Only updates to the \`ruleset_name\` and
+-- \`test_suite_name\` fields will be honored. \`Release\` rename is not
+-- supported. To create a \`Release\` use the CreateRelease method.
 --
 -- /See:/ 'projectsReleasesUpdate' smart constructor.
 data ProjectsReleasesUpdate = ProjectsReleasesUpdate'
-    { _pruXgafv          :: !(Maybe Xgafv)
+    { _pruXgafv :: !(Maybe Xgafv)
     , _pruUploadProtocol :: !(Maybe Text)
-    , _pruPp             :: !Bool
-    , _pruAccessToken    :: !(Maybe Text)
-    , _pruUploadType     :: !(Maybe Text)
-    , _pruPayload        :: !Release
-    , _pruBearerToken    :: !(Maybe Text)
-    , _pruName           :: !Text
-    , _pruCallback       :: !(Maybe Text)
+    , _pruPp :: !Bool
+    , _pruAccessToken :: !(Maybe Text)
+    , _pruUploadType :: !(Maybe Text)
+    , _pruPayload :: !Release
+    , _pruBearerToken :: !(Maybe Text)
+    , _pruName :: !Text
+    , _pruFields :: !(Maybe Text)
+    , _pruCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsReleasesUpdate' with the minimum fields required to make a request.
@@ -101,12 +104,14 @@ data ProjectsReleasesUpdate = ProjectsReleasesUpdate'
 --
 -- * 'pruName'
 --
+-- * 'pruFields'
+--
 -- * 'pruCallback'
 projectsReleasesUpdate
     :: Release -- ^ 'pruPayload'
     -> Text -- ^ 'pruName'
     -> ProjectsReleasesUpdate
-projectsReleasesUpdate pPruPayload_ pPruName_ =
+projectsReleasesUpdate pPruPayload_ pPruName_ = 
     ProjectsReleasesUpdate'
     { _pruXgafv = Nothing
     , _pruUploadProtocol = Nothing
@@ -116,6 +121,7 @@ projectsReleasesUpdate pPruPayload_ pPruName_ =
     , _pruPayload = pPruPayload_
     , _pruBearerToken = Nothing
     , _pruName = pPruName_
+    , _pruFields = Nothing
     , _pruCallback = Nothing
     }
 
@@ -176,6 +182,11 @@ pruBearerToken
 pruName :: Lens' ProjectsReleasesUpdate Text
 pruName = lens _pruName (\ s a -> s{_pruName = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pruFields :: Lens' ProjectsReleasesUpdate (Maybe Text)
+pruFields
+  = lens _pruFields (\ s a -> s{_pruFields = a})
+
 -- | JSONP
 pruCallback :: Lens' ProjectsReleasesUpdate (Maybe Text)
 pruCallback
@@ -193,6 +204,7 @@ instance GoogleRequest ProjectsReleasesUpdate where
               _pruUploadType
               _pruBearerToken
               _pruCallback
+              _pruFields
               (Just AltJSON)
               _pruPayload
               firebaseRulesService

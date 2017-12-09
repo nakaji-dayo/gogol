@@ -36,31 +36,34 @@ module Network.Google.Resource.DFAReporting.Advertisers.Patch
     , apProFileId
     , apPayload
     , apId
+    , apFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertisers.patch@ method which the
 -- 'AdvertisersPatch' request conforms to.
 type AdvertisersPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertisers" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Advertiser :>
-                     Patch '[JSON] Advertiser
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Advertiser :>
+                       Patch '[JSON] Advertiser
 
 -- | Updates an existing advertiser. This method supports patch semantics.
 --
 -- /See:/ 'advertisersPatch' smart constructor.
 data AdvertisersPatch = AdvertisersPatch'
     { _apProFileId :: !(Textual Int64)
-    , _apPayload   :: !Advertiser
-    , _apId        :: !(Textual Int64)
+    , _apPayload :: !Advertiser
+    , _apId :: !(Textual Int64)
+    , _apFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertisersPatch' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data AdvertisersPatch = AdvertisersPatch'
 -- * 'apPayload'
 --
 -- * 'apId'
+--
+-- * 'apFields'
 advertisersPatch
     :: Int64 -- ^ 'apProFileId'
     -> Advertiser -- ^ 'apPayload'
     -> Int64 -- ^ 'apId'
     -> AdvertisersPatch
-advertisersPatch pApProFileId_ pApPayload_ pApId_ =
+advertisersPatch pApProFileId_ pApPayload_ pApId_ = 
     AdvertisersPatch'
     { _apProFileId = _Coerce # pApProFileId_
     , _apPayload = pApPayload_
     , _apId = _Coerce # pApId_
+    , _apFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -99,12 +105,17 @@ apPayload
 apId :: Lens' AdvertisersPatch Int64
 apId = lens _apId (\ s a -> s{_apId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+apFields :: Lens' AdvertisersPatch (Maybe Text)
+apFields = lens _apFields (\ s a -> s{_apFields = a})
+
 instance GoogleRequest AdvertisersPatch where
         type Rs AdvertisersPatch = Advertiser
         type Scopes AdvertisersPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertisersPatch'{..}
-          = go _apProFileId (Just _apId) (Just AltJSON)
+          = go _apProFileId (Just _apId) _apFields
+              (Just AltJSON)
               _apPayload
               dFAReportingService
           where go

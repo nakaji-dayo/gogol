@@ -43,16 +43,17 @@ module Network.Google.Resource.DFAReporting.UserRoles.List
     , urlSortField
     , urlSubAccountId
     , urlMaxResults
+    , urlFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRoles.list@ method which the
 -- 'UserRolesList' request conforms to.
 type UserRolesListResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRoles" :>
@@ -64,23 +65,25 @@ type UserRolesListResource =
                          QueryParam "sortField" UserRolesListSortField :>
                            QueryParam "subaccountId" (Textual Int64) :>
                              QueryParam "maxResults" (Textual Int32) :>
-                               QueryParam "alt" AltJSON :>
-                                 Get '[JSON] UserRolesListResponse
+                               QueryParam "fields" Text :>
+                                 QueryParam "alt" AltJSON :>
+                                   Get '[JSON] UserRolesListResponse
 
 -- | Retrieves a list of user roles, possibly filtered. This method supports
 -- paging.
 --
 -- /See:/ 'userRolesList' smart constructor.
 data UserRolesList = UserRolesList'
-    { _urlSearchString        :: !(Maybe Text)
-    , _urlIds                 :: !(Maybe [Textual Int64])
-    , _urlProFileId           :: !(Textual Int64)
-    , _urlSortOrder           :: !(Maybe UserRolesListSortOrder)
+    { _urlSearchString :: !(Maybe Text)
+    , _urlIds :: !(Maybe [Textual Int64])
+    , _urlProFileId :: !(Textual Int64)
+    , _urlSortOrder :: !UserRolesListSortOrder
     , _urlAccountUserRoleOnly :: !(Maybe Bool)
-    , _urlPageToken           :: !(Maybe Text)
-    , _urlSortField           :: !(Maybe UserRolesListSortField)
-    , _urlSubAccountId        :: !(Maybe (Textual Int64))
-    , _urlMaxResults          :: !(Maybe (Textual Int32))
+    , _urlPageToken :: !(Maybe Text)
+    , _urlSortField :: !UserRolesListSortField
+    , _urlSubAccountId :: !(Maybe (Textual Int64))
+    , _urlMaxResults :: !(Textual Int32)
+    , _urlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolesList' with the minimum fields required to make a request.
@@ -104,20 +107,23 @@ data UserRolesList = UserRolesList'
 -- * 'urlSubAccountId'
 --
 -- * 'urlMaxResults'
+--
+-- * 'urlFields'
 userRolesList
     :: Int64 -- ^ 'urlProFileId'
     -> UserRolesList
-userRolesList pUrlProFileId_ =
+userRolesList pUrlProFileId_ = 
     UserRolesList'
     { _urlSearchString = Nothing
     , _urlIds = Nothing
     , _urlProFileId = _Coerce # pUrlProFileId_
-    , _urlSortOrder = Nothing
+    , _urlSortOrder = URLSOAscending
     , _urlAccountUserRoleOnly = Nothing
     , _urlPageToken = Nothing
-    , _urlSortField = Nothing
+    , _urlSortField = URLSFID
     , _urlSubAccountId = Nothing
-    , _urlMaxResults = Nothing
+    , _urlMaxResults = 1000
+    , _urlFields = Nothing
     }
 
 -- | Allows searching for objects by name or ID. Wildcards (*) are allowed.
@@ -144,8 +150,8 @@ urlProFileId
   = lens _urlProFileId (\ s a -> s{_urlProFileId = a})
       . _Coerce
 
--- | Order of sorted results, default is ASCENDING.
-urlSortOrder :: Lens' UserRolesList (Maybe UserRolesListSortOrder)
+-- | Order of sorted results.
+urlSortOrder :: Lens' UserRolesList UserRolesListSortOrder
 urlSortOrder
   = lens _urlSortOrder (\ s a -> s{_urlSortOrder = a})
 
@@ -162,7 +168,7 @@ urlPageToken
   = lens _urlPageToken (\ s a -> s{_urlPageToken = a})
 
 -- | Field by which to sort the list.
-urlSortField :: Lens' UserRolesList (Maybe UserRolesListSortField)
+urlSortField :: Lens' UserRolesList UserRolesListSortField
 urlSortField
   = lens _urlSortField (\ s a -> s{_urlSortField = a})
 
@@ -174,11 +180,16 @@ urlSubAccountId
       . mapping _Coerce
 
 -- | Maximum number of results to return.
-urlMaxResults :: Lens' UserRolesList (Maybe Int32)
+urlMaxResults :: Lens' UserRolesList Int32
 urlMaxResults
   = lens _urlMaxResults
       (\ s a -> s{_urlMaxResults = a})
-      . mapping _Coerce
+      . _Coerce
+
+-- | Selector specifying which fields to include in a partial response.
+urlFields :: Lens' UserRolesList (Maybe Text)
+urlFields
+  = lens _urlFields (\ s a -> s{_urlFields = a})
 
 instance GoogleRequest UserRolesList where
         type Rs UserRolesList = UserRolesListResponse
@@ -187,12 +198,13 @@ instance GoogleRequest UserRolesList where
         requestClient UserRolesList'{..}
           = go _urlProFileId _urlSearchString
               (_urlIds ^. _Default)
-              _urlSortOrder
+              (Just _urlSortOrder)
               _urlAccountUserRoleOnly
               _urlPageToken
-              _urlSortField
+              (Just _urlSortField)
               _urlSubAccountId
-              _urlMaxResults
+              (Just _urlMaxResults)
+              _urlFields
               (Just AltJSON)
               dFAReportingService
           where go

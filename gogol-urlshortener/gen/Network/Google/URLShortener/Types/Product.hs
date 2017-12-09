@@ -17,18 +17,18 @@
 --
 module Network.Google.URLShortener.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.URLShortener.Types.Sum
+import Network.Google.Prelude
+import Network.Google.URLShortener.Types.Sum
 
 --
 -- /See:/ 'url' smart constructor.
 data URL = URL'
-    { _uStatus    :: !(Maybe Text)
-    , _uKind      :: !Text
-    , _uCreated   :: !(Maybe Text)
+    { _uStatus :: !(Maybe Text)
+    , _uKind :: !Text
+    , _uCreated :: !(Maybe Text)
     , _uAnalytics :: !(Maybe AnalyticsSummary)
-    , _uLongURL   :: !(Maybe Text)
-    , _uId        :: !(Maybe Text)
+    , _uLongURL :: !(Maybe Text)
+    , _uId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URL' with the minimum fields required to make a request.
@@ -48,7 +48,7 @@ data URL = URL'
 -- * 'uId'
 url
     :: URL
-url =
+url = 
     URL'
     { _uStatus = Nothing
     , _uKind = "urlshortener#url"
@@ -114,7 +114,7 @@ instance ToJSON URL where
 -- /See:/ 'stringCount' smart constructor.
 data StringCount = StringCount'
     { _scCount :: !(Maybe (Textual Int64))
-    , _scId    :: !(Maybe Text)
+    , _scId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StringCount' with the minimum fields required to make a request.
@@ -126,7 +126,7 @@ data StringCount = StringCount'
 -- * 'scId'
 stringCount
     :: StringCount
-stringCount =
+stringCount = 
     StringCount'
     { _scCount = Nothing
     , _scId = Nothing
@@ -158,12 +158,12 @@ instance ToJSON StringCount where
 --
 -- /See:/ 'analyticsSnapshot' smart constructor.
 data AnalyticsSnapshot = AnalyticsSnapshot'
-    { _asPlatforms      :: !(Maybe [StringCount])
+    { _asPlatforms :: !(Maybe [StringCount])
     , _asShortURLClicks :: !(Maybe (Textual Int64))
-    , _asReferrers      :: !(Maybe [StringCount])
-    , _asCountries      :: !(Maybe [StringCount])
-    , _asLongURLClicks  :: !(Maybe (Textual Int64))
-    , _asBrowsers       :: !(Maybe [StringCount])
+    , _asReferrers :: !(Maybe [StringCount])
+    , _asCountries :: !(Maybe [StringCount])
+    , _asLongURLClicks :: !(Maybe (Textual Int64))
+    , _asBrowsers :: !(Maybe [StringCount])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnalyticsSnapshot' with the minimum fields required to make a request.
@@ -183,7 +183,7 @@ data AnalyticsSnapshot = AnalyticsSnapshot'
 -- * 'asBrowsers'
 analyticsSnapshot
     :: AnalyticsSnapshot
-analyticsSnapshot =
+analyticsSnapshot = 
     AnalyticsSnapshot'
     { _asPlatforms = Nothing
     , _asShortURLClicks = Nothing
@@ -266,11 +266,11 @@ instance ToJSON AnalyticsSnapshot where
 --
 -- /See:/ 'analyticsSummary' smart constructor.
 data AnalyticsSummary = AnalyticsSummary'
-    { _asWeek     :: !(Maybe AnalyticsSnapshot)
-    , _asAllTime  :: !(Maybe AnalyticsSnapshot)
-    , _asDay      :: !(Maybe AnalyticsSnapshot)
+    { _asWeek :: !(Maybe AnalyticsSnapshot)
+    , _asAllTime :: !(Maybe AnalyticsSnapshot)
+    , _asDay :: !(Maybe AnalyticsSnapshot)
     , _asTwoHours :: !(Maybe AnalyticsSnapshot)
-    , _asMonth    :: !(Maybe AnalyticsSnapshot)
+    , _asMonth :: !(Maybe AnalyticsSnapshot)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnalyticsSummary' with the minimum fields required to make a request.
@@ -288,7 +288,7 @@ data AnalyticsSummary = AnalyticsSummary'
 -- * 'asMonth'
 analyticsSummary
     :: AnalyticsSummary
-analyticsSummary =
+analyticsSummary = 
     AnalyticsSummary'
     { _asWeek = Nothing
     , _asAllTime = Nothing
@@ -341,11 +341,11 @@ instance ToJSON AnalyticsSummary where
 --
 -- /See:/ 'urlHistory' smart constructor.
 data URLHistory = URLHistory'
-    { _uhTotalItems    :: !(Maybe (Textual Int32))
+    { _uhTotalItems :: !(Maybe (Textual Int32))
     , _uhNextPageToken :: !(Maybe Text)
-    , _uhItemsPerPage  :: !(Maybe (Textual Int32))
-    , _uhKind          :: !Text
-    , _uhItems         :: !(Maybe [URL])
+    , _uhItemsPerPage :: !(Maybe (Textual Int32))
+    , _uhKind :: !Text
+    , _uhItems :: !(Maybe [URL])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'URLHistory' with the minimum fields required to make a request.
@@ -363,7 +363,7 @@ data URLHistory = URLHistory'
 -- * 'uhItems'
 urlHistory
     :: URLHistory
-urlHistory =
+urlHistory = 
     URLHistory'
     { _uhTotalItems = Nothing
     , _uhNextPageToken = Nothing

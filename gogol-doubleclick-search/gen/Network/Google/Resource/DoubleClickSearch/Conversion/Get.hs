@@ -45,10 +45,11 @@ module Network.Google.Resource.DoubleClickSearch.Conversion.Get
     , cgStartRow
     , cgAdId
     , cgRowCount
+    , cgFields
     ) where
 
-import           Network.Google.DoubleClickSearch.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickSearch.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclicksearch.conversion.get@ method which the
 -- 'ConversionGet' request conforms to.
@@ -70,25 +71,27 @@ type ConversionGetResource =
                                  QueryParam "campaignId" (Textual Int64) :>
                                    QueryParam "criterionId" (Textual Int64) :>
                                      QueryParam "adId" (Textual Int64) :>
-                                       QueryParam "alt" AltJSON :>
-                                         Get '[JSON] ConversionList
+                                       QueryParam "fields" Text :>
+                                         QueryParam "alt" AltJSON :>
+                                           Get '[JSON] ConversionList
 
 -- | Retrieves a list of conversions from a DoubleClick Search engine
 -- account.
 --
 -- /See:/ 'conversionGet' smart constructor.
 data ConversionGet = ConversionGet'
-    { _cgAdGroupId       :: !(Maybe (Textual Int64))
+    { _cgAdGroupId :: !(Maybe (Textual Int64))
     , _cgEngineAccountId :: !(Textual Int64)
-    , _cgAgencyId        :: !(Textual Int64)
-    , _cgAdvertiserId    :: !(Textual Int64)
-    , _cgEndDate         :: !(Textual Int32)
-    , _cgCampaignId      :: !(Maybe (Textual Int64))
-    , _cgCriterionId     :: !(Maybe (Textual Int64))
-    , _cgStartDate       :: !(Textual Int32)
-    , _cgStartRow        :: !(Textual Word32)
-    , _cgAdId            :: !(Maybe (Textual Int64))
-    , _cgRowCount        :: !(Textual Int32)
+    , _cgAgencyId :: !(Textual Int64)
+    , _cgAdvertiserId :: !(Textual Int64)
+    , _cgEndDate :: !(Textual Int32)
+    , _cgCampaignId :: !(Maybe (Textual Int64))
+    , _cgCriterionId :: !(Maybe (Textual Int64))
+    , _cgStartDate :: !(Textual Int32)
+    , _cgStartRow :: !(Textual Word32)
+    , _cgAdId :: !(Maybe (Textual Int64))
+    , _cgRowCount :: !(Textual Int32)
+    , _cgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ConversionGet' with the minimum fields required to make a request.
@@ -116,6 +119,8 @@ data ConversionGet = ConversionGet'
 -- * 'cgAdId'
 --
 -- * 'cgRowCount'
+--
+-- * 'cgFields'
 conversionGet
     :: Int64 -- ^ 'cgEngineAccountId'
     -> Int64 -- ^ 'cgAgencyId'
@@ -125,7 +130,7 @@ conversionGet
     -> Word32 -- ^ 'cgStartRow'
     -> Int32 -- ^ 'cgRowCount'
     -> ConversionGet
-conversionGet pCgEngineAccountId_ pCgAgencyId_ pCgAdvertiserId_ pCgEndDate_ pCgStartDate_ pCgStartRow_ pCgRowCount_ =
+conversionGet pCgEngineAccountId_ pCgAgencyId_ pCgAdvertiserId_ pCgEndDate_ pCgStartDate_ pCgStartRow_ pCgRowCount_ = 
     ConversionGet'
     { _cgAdGroupId = Nothing
     , _cgEngineAccountId = _Coerce # pCgEngineAccountId_
@@ -138,6 +143,7 @@ conversionGet pCgEngineAccountId_ pCgAgencyId_ pCgAdvertiserId_ pCgEndDate_ pCgS
     , _cgStartRow = _Coerce # pCgStartRow_
     , _cgAdId = Nothing
     , _cgRowCount = _Coerce # pCgRowCount_
+    , _cgFields = Nothing
     }
 
 -- | Numeric ID of the ad group.
@@ -211,6 +217,10 @@ cgRowCount
   = lens _cgRowCount (\ s a -> s{_cgRowCount = a}) .
       _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+cgFields :: Lens' ConversionGet (Maybe Text)
+cgFields = lens _cgFields (\ s a -> s{_cgFields = a})
+
 instance GoogleRequest ConversionGet where
         type Rs ConversionGet = ConversionList
         type Scopes ConversionGet =
@@ -225,6 +235,7 @@ instance GoogleRequest ConversionGet where
               _cgCampaignId
               _cgCriterionId
               _cgAdId
+              _cgFields
               (Just AltJSON)
               doubleClickSearchService
           where go

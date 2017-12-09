@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Watch
     -- * Request Lenses
     , uwPayload
     , uwUserId
+    , uwFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.watch@ method which the
 -- 'UsersWatch' request conforms to.
@@ -48,16 +49,18 @@ type UsersWatchResource =
          "users" :>
            Capture "userId" Text :>
              "watch" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] WatchRequest :>
-                   Post '[JSON] WatchResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] WatchRequest :>
+                     Post '[JSON] WatchResponse
 
 -- | Set up or update a push notification watch on the given user mailbox.
 --
 -- /See:/ 'usersWatch' smart constructor.
 data UsersWatch = UsersWatch'
     { _uwPayload :: !WatchRequest
-    , _uwUserId  :: !Text
+    , _uwUserId :: !Text
+    , _uwFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersWatch' with the minimum fields required to make a request.
@@ -67,13 +70,16 @@ data UsersWatch = UsersWatch'
 -- * 'uwPayload'
 --
 -- * 'uwUserId'
+--
+-- * 'uwFields'
 usersWatch
     :: WatchRequest -- ^ 'uwPayload'
     -> UsersWatch
-usersWatch pUwPayload_ =
+usersWatch pUwPayload_ = 
     UsersWatch'
     { _uwPayload = pUwPayload_
     , _uwUserId = "me"
+    , _uwFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,6 +92,10 @@ uwPayload
 uwUserId :: Lens' UsersWatch Text
 uwUserId = lens _uwUserId (\ s a -> s{_uwUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uwFields :: Lens' UsersWatch (Maybe Text)
+uwFields = lens _uwFields (\ s a -> s{_uwFields = a})
+
 instance GoogleRequest UsersWatch where
         type Rs UsersWatch = WatchResponse
         type Scopes UsersWatch =
@@ -94,7 +104,8 @@ instance GoogleRequest UsersWatch where
                "https://www.googleapis.com/auth/gmail.modify",
                "https://www.googleapis.com/auth/gmail.readonly"]
         requestClient UsersWatch'{..}
-          = go _uwUserId (Just AltJSON) _uwPayload gmailService
+          = go _uwUserId _uwFields (Just AltJSON) _uwPayload
+              gmailService
           where go
                   = buildClient (Proxy :: Proxy UsersWatchResource)
                       mempty

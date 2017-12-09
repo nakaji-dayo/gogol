@@ -35,10 +35,11 @@ module Network.Google.Resource.Calendar.CalendarList.Insert
     -- * Request Lenses
     , cliPayload
     , cliColorRgbFormat
+    , cliFields
     ) where
 
-import           Network.Google.AppsCalendar.Types
-import           Network.Google.Prelude
+import Network.Google.AppsCalendar.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @calendar.calendarList.insert@ method which the
 -- 'CalendarListInsert' request conforms to.
@@ -49,16 +50,18 @@ type CalendarListInsertResource =
            "me" :>
              "calendarList" :>
                QueryParam "colorRgbFormat" Bool :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] CalendarListEntry :>
-                     Post '[JSON] CalendarListEntry
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] CalendarListEntry :>
+                       Post '[JSON] CalendarListEntry
 
 -- | Adds an entry to the user\'s calendar list.
 --
 -- /See:/ 'calendarListInsert' smart constructor.
 data CalendarListInsert = CalendarListInsert'
-    { _cliPayload        :: !CalendarListEntry
+    { _cliPayload :: !CalendarListEntry
     , _cliColorRgbFormat :: !(Maybe Bool)
+    , _cliFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CalendarListInsert' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data CalendarListInsert = CalendarListInsert'
 -- * 'cliPayload'
 --
 -- * 'cliColorRgbFormat'
+--
+-- * 'cliFields'
 calendarListInsert
     :: CalendarListEntry -- ^ 'cliPayload'
     -> CalendarListInsert
-calendarListInsert pCliPayload_ =
+calendarListInsert pCliPayload_ = 
     CalendarListInsert'
     { _cliPayload = pCliPayload_
     , _cliColorRgbFormat = Nothing
+    , _cliFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -91,12 +97,18 @@ cliColorRgbFormat
   = lens _cliColorRgbFormat
       (\ s a -> s{_cliColorRgbFormat = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cliFields :: Lens' CalendarListInsert (Maybe Text)
+cliFields
+  = lens _cliFields (\ s a -> s{_cliFields = a})
+
 instance GoogleRequest CalendarListInsert where
         type Rs CalendarListInsert = CalendarListEntry
         type Scopes CalendarListInsert =
              '["https://www.googleapis.com/auth/calendar"]
         requestClient CalendarListInsert'{..}
-          = go _cliColorRgbFormat (Just AltJSON) _cliPayload
+          = go _cliColorRgbFormat _cliFields (Just AltJSON)
+              _cliPayload
               appsCalendarService
           where go
                   = buildClient

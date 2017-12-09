@@ -34,10 +34,11 @@ module Network.Google.Resource.Directory.VerificationCodes.Generate
 
     -- * Request Lenses
     , vcgUserKey
+    , vcgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.verificationCodes.generate@ method which the
 -- 'VerificationCodesGenerate' request conforms to.
@@ -49,13 +50,15 @@ type VerificationCodesGenerateResource =
              Capture "userKey" Text :>
                "verificationCodes" :>
                  "generate" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] ()
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Generate new backup verification codes for the user.
 --
 -- /See:/ 'verificationCodesGenerate' smart constructor.
-newtype VerificationCodesGenerate = VerificationCodesGenerate'
-    { _vcgUserKey :: Text
+data VerificationCodesGenerate = VerificationCodesGenerate'
+    { _vcgUserKey :: !Text
+    , _vcgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'VerificationCodesGenerate' with the minimum fields required to make a request.
@@ -63,18 +66,26 @@ newtype VerificationCodesGenerate = VerificationCodesGenerate'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'vcgUserKey'
+--
+-- * 'vcgFields'
 verificationCodesGenerate
     :: Text -- ^ 'vcgUserKey'
     -> VerificationCodesGenerate
-verificationCodesGenerate pVcgUserKey_ =
+verificationCodesGenerate pVcgUserKey_ = 
     VerificationCodesGenerate'
     { _vcgUserKey = pVcgUserKey_
+    , _vcgFields = Nothing
     }
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 vcgUserKey :: Lens' VerificationCodesGenerate Text
 vcgUserKey
   = lens _vcgUserKey (\ s a -> s{_vcgUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+vcgFields :: Lens' VerificationCodesGenerate (Maybe Text)
+vcgFields
+  = lens _vcgFields (\ s a -> s{_vcgFields = a})
 
 instance GoogleRequest VerificationCodesGenerate
          where
@@ -82,7 +93,8 @@ instance GoogleRequest VerificationCodesGenerate
         type Scopes VerificationCodesGenerate =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient VerificationCodesGenerate'{..}
-          = go _vcgUserKey (Just AltJSON) directoryService
+          = go _vcgUserKey _vcgFields (Just AltJSON)
+              directoryService
           where go
                   = buildClient
                       (Proxy :: Proxy VerificationCodesGenerateResource)

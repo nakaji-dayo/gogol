@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Placements.Update
     -- * Request Lenses
     , puProFileId
     , puPayload
+    , puFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placements.update@ method which the
 -- 'PlacementsUpdate' request conforms to.
 type PlacementsUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placements" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Placement :> Put '[JSON] Placement
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Placement :> Put '[JSON] Placement
 
 -- | Updates an existing placement.
 --
 -- /See:/ 'placementsUpdate' smart constructor.
 data PlacementsUpdate = PlacementsUpdate'
     { _puProFileId :: !(Textual Int64)
-    , _puPayload   :: !Placement
+    , _puPayload :: !Placement
+    , _puFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementsUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PlacementsUpdate = PlacementsUpdate'
 -- * 'puProFileId'
 --
 -- * 'puPayload'
+--
+-- * 'puFields'
 placementsUpdate
     :: Int64 -- ^ 'puProFileId'
     -> Placement -- ^ 'puPayload'
     -> PlacementsUpdate
-placementsUpdate pPuProFileId_ pPuPayload_ =
+placementsUpdate pPuProFileId_ pPuPayload_ = 
     PlacementsUpdate'
     { _puProFileId = _Coerce # pPuProFileId_
     , _puPayload = pPuPayload_
+    , _puFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ puPayload :: Lens' PlacementsUpdate Placement
 puPayload
   = lens _puPayload (\ s a -> s{_puPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+puFields :: Lens' PlacementsUpdate (Maybe Text)
+puFields = lens _puFields (\ s a -> s{_puFields = a})
+
 instance GoogleRequest PlacementsUpdate where
         type Rs PlacementsUpdate = Placement
         type Scopes PlacementsUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementsUpdate'{..}
-          = go _puProFileId (Just AltJSON) _puPayload
+          = go _puProFileId _puFields (Just AltJSON) _puPayload
               dFAReportingService
           where go
                   = buildClient

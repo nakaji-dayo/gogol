@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.WebProperties.Get
     -- * Request Lenses
     , mwpgWebPropertyId
     , mwpgAccountId
+    , mwpgFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.webproperties.get@ method which the
 -- 'ManagementWebPropertiesGet' request conforms to.
@@ -50,14 +51,16 @@ type ManagementWebPropertiesGetResource =
              Capture "accountId" Text :>
                "webproperties" :>
                  Capture "webPropertyId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] WebProperty
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] WebProperty
 
 -- | Gets a web property to which the user has access.
 --
 -- /See:/ 'managementWebPropertiesGet' smart constructor.
 data ManagementWebPropertiesGet = ManagementWebPropertiesGet'
     { _mwpgWebPropertyId :: !Text
-    , _mwpgAccountId     :: !Text
+    , _mwpgAccountId :: !Text
+    , _mwpgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementWebPropertiesGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data ManagementWebPropertiesGet = ManagementWebPropertiesGet'
 -- * 'mwpgWebPropertyId'
 --
 -- * 'mwpgAccountId'
+--
+-- * 'mwpgFields'
 managementWebPropertiesGet
     :: Text -- ^ 'mwpgWebPropertyId'
     -> Text -- ^ 'mwpgAccountId'
     -> ManagementWebPropertiesGet
-managementWebPropertiesGet pMwpgWebPropertyId_ pMwpgAccountId_ =
+managementWebPropertiesGet pMwpgWebPropertyId_ pMwpgAccountId_ = 
     ManagementWebPropertiesGet'
     { _mwpgWebPropertyId = pMwpgWebPropertyId_
     , _mwpgAccountId = pMwpgAccountId_
+    , _mwpgFields = Nothing
     }
 
 -- | ID to retrieve the web property for.
@@ -89,6 +95,11 @@ mwpgAccountId
   = lens _mwpgAccountId
       (\ s a -> s{_mwpgAccountId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+mwpgFields :: Lens' ManagementWebPropertiesGet (Maybe Text)
+mwpgFields
+  = lens _mwpgFields (\ s a -> s{_mwpgFields = a})
+
 instance GoogleRequest ManagementWebPropertiesGet
          where
         type Rs ManagementWebPropertiesGet = WebProperty
@@ -96,7 +107,8 @@ instance GoogleRequest ManagementWebPropertiesGet
              '["https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementWebPropertiesGet'{..}
-          = go _mwpgAccountId _mwpgWebPropertyId (Just AltJSON)
+          = go _mwpgAccountId _mwpgWebPropertyId _mwpgFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

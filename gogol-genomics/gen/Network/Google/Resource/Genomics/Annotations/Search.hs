@@ -46,11 +46,12 @@ module Network.Google.Resource.Genomics.Annotations.Search
     , asUploadType
     , asPayload
     , asBearerToken
+    , asFields
     , asCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.annotations.search@ method which the
 -- 'AnnotationsSearch' request conforms to.
@@ -65,9 +66,10 @@ type AnnotationsSearchResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] SearchAnnotationsRequest :>
-                             Post '[JSON] SearchAnnotationsResponse
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] SearchAnnotationsRequest :>
+                               Post '[JSON] SearchAnnotationsResponse
 
 -- | Searches for annotations that match the given criteria. Results are
 -- ordered by genomic coordinate (by reference sequence, then position).
@@ -79,14 +81,15 @@ type AnnotationsSearchResource =
 --
 -- /See:/ 'annotationsSearch' smart constructor.
 data AnnotationsSearch = AnnotationsSearch'
-    { _asXgafv          :: !(Maybe Xgafv)
+    { _asXgafv :: !(Maybe Xgafv)
     , _asUploadProtocol :: !(Maybe Text)
-    , _asPp             :: !Bool
-    , _asAccessToken    :: !(Maybe Text)
-    , _asUploadType     :: !(Maybe Text)
-    , _asPayload        :: !SearchAnnotationsRequest
-    , _asBearerToken    :: !(Maybe Text)
-    , _asCallback       :: !(Maybe Text)
+    , _asPp :: !Bool
+    , _asAccessToken :: !(Maybe Text)
+    , _asUploadType :: !(Maybe Text)
+    , _asPayload :: !SearchAnnotationsRequest
+    , _asBearerToken :: !(Maybe Text)
+    , _asFields :: !(Maybe Text)
+    , _asCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AnnotationsSearch' with the minimum fields required to make a request.
@@ -107,11 +110,13 @@ data AnnotationsSearch = AnnotationsSearch'
 --
 -- * 'asBearerToken'
 --
+-- * 'asFields'
+--
 -- * 'asCallback'
 annotationsSearch
     :: SearchAnnotationsRequest -- ^ 'asPayload'
     -> AnnotationsSearch
-annotationsSearch pAsPayload_ =
+annotationsSearch pAsPayload_ = 
     AnnotationsSearch'
     { _asXgafv = Nothing
     , _asUploadProtocol = Nothing
@@ -120,6 +125,7 @@ annotationsSearch pAsPayload_ =
     , _asUploadType = Nothing
     , _asPayload = pAsPayload_
     , _asBearerToken = Nothing
+    , _asFields = Nothing
     , _asCallback = Nothing
     }
 
@@ -159,6 +165,10 @@ asBearerToken
   = lens _asBearerToken
       (\ s a -> s{_asBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+asFields :: Lens' AnnotationsSearch (Maybe Text)
+asFields = lens _asFields (\ s a -> s{_asFields = a})
+
 -- | JSONP
 asCallback :: Lens' AnnotationsSearch (Maybe Text)
 asCallback
@@ -176,6 +186,7 @@ instance GoogleRequest AnnotationsSearch where
               _asUploadType
               _asBearerToken
               _asCallback
+              _asFields
               (Just AltJSON)
               _asPayload
               genomicsService

@@ -34,12 +34,14 @@ module Network.Google.Resource.Compute.Projects.MoveInstance
     , ProjectsMoveInstance
 
     -- * Request Lenses
+    , pmiRequestId
     , pmiProject
     , pmiPayload
+    , pmiFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.projects.moveInstance@ method which the
 -- 'ProjectsMoveInstance' request conforms to.
@@ -49,35 +51,59 @@ type ProjectsMoveInstanceResource =
          "projects" :>
            Capture "project" Text :>
              "moveInstance" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] InstanceMoveRequest :>
-                   Post '[JSON] Operation
+               QueryParam "requestId" Text :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] InstanceMoveRequest :>
+                       Post '[JSON] Operation
 
 -- | Moves an instance and its attached persistent disks from one zone to
 -- another.
 --
 -- /See:/ 'projectsMoveInstance' smart constructor.
 data ProjectsMoveInstance = ProjectsMoveInstance'
-    { _pmiProject :: !Text
+    { _pmiRequestId :: !(Maybe Text)
+    , _pmiProject :: !Text
     , _pmiPayload :: !InstanceMoveRequest
+    , _pmiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsMoveInstance' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'pmiRequestId'
+--
 -- * 'pmiProject'
 --
 -- * 'pmiPayload'
+--
+-- * 'pmiFields'
 projectsMoveInstance
     :: Text -- ^ 'pmiProject'
     -> InstanceMoveRequest -- ^ 'pmiPayload'
     -> ProjectsMoveInstance
-projectsMoveInstance pPmiProject_ pPmiPayload_ =
+projectsMoveInstance pPmiProject_ pPmiPayload_ = 
     ProjectsMoveInstance'
-    { _pmiProject = pPmiProject_
+    { _pmiRequestId = Nothing
+    , _pmiProject = pPmiProject_
     , _pmiPayload = pPmiPayload_
+    , _pmiFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+pmiRequestId :: Lens' ProjectsMoveInstance (Maybe Text)
+pmiRequestId
+  = lens _pmiRequestId (\ s a -> s{_pmiRequestId = a})
 
 -- | Project ID for this request.
 pmiProject :: Lens' ProjectsMoveInstance Text
@@ -89,13 +115,20 @@ pmiPayload :: Lens' ProjectsMoveInstance InstanceMoveRequest
 pmiPayload
   = lens _pmiPayload (\ s a -> s{_pmiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pmiFields :: Lens' ProjectsMoveInstance (Maybe Text)
+pmiFields
+  = lens _pmiFields (\ s a -> s{_pmiFields = a})
+
 instance GoogleRequest ProjectsMoveInstance where
         type Rs ProjectsMoveInstance = Operation
         type Scopes ProjectsMoveInstance =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient ProjectsMoveInstance'{..}
-          = go _pmiProject (Just AltJSON) _pmiPayload
+          = go _pmiProject _pmiRequestId _pmiFields
+              (Just AltJSON)
+              _pmiPayload
               computeService
           where go
                   = buildClient

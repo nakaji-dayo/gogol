@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Advertisers.Get
     -- * Request Lenses
     , advProFileId
     , advId
+    , advFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.advertisers.get@ method which the
 -- 'AdvertisersGet' request conforms to.
 type AdvertisersGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "advertisers" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Advertiser
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Advertiser
 
 -- | Gets one advertiser by ID.
 --
 -- /See:/ 'advertisersGet' smart constructor.
 data AdvertisersGet = AdvertisersGet'
     { _advProFileId :: !(Textual Int64)
-    , _advId        :: !(Textual Int64)
+    , _advId :: !(Textual Int64)
+    , _advFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AdvertisersGet' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data AdvertisersGet = AdvertisersGet'
 -- * 'advProFileId'
 --
 -- * 'advId'
+--
+-- * 'advFields'
 advertisersGet
     :: Int64 -- ^ 'advProFileId'
     -> Int64 -- ^ 'advId'
     -> AdvertisersGet
-advertisersGet pAdvProFileId_ pAdvId_ =
+advertisersGet pAdvProFileId_ pAdvId_ = 
     AdvertisersGet'
     { _advProFileId = _Coerce # pAdvProFileId_
     , _advId = _Coerce # pAdvId_
+    , _advFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,17 @@ advId :: Lens' AdvertisersGet Int64
 advId
   = lens _advId (\ s a -> s{_advId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+advFields :: Lens' AdvertisersGet (Maybe Text)
+advFields
+  = lens _advFields (\ s a -> s{_advFields = a})
+
 instance GoogleRequest AdvertisersGet where
         type Rs AdvertisersGet = Advertiser
         type Scopes AdvertisersGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient AdvertisersGet'{..}
-          = go _advProFileId _advId (Just AltJSON)
+          = go _advProFileId _advId _advFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy AdvertisersGetResource)

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.PlacementGroups.Insert
     -- * Request Lenses
     , pgiProFileId
     , pgiPayload
+    , pgiFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementGroups.insert@ method which the
 -- 'PlacementGroupsInsert' request conforms to.
 type PlacementGroupsInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementGroups" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] PlacementGroup :>
-                   Post '[JSON] PlacementGroup
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] PlacementGroup :>
+                     Post '[JSON] PlacementGroup
 
 -- | Inserts a new placement group.
 --
 -- /See:/ 'placementGroupsInsert' smart constructor.
 data PlacementGroupsInsert = PlacementGroupsInsert'
     { _pgiProFileId :: !(Textual Int64)
-    , _pgiPayload   :: !PlacementGroup
+    , _pgiPayload :: !PlacementGroup
+    , _pgiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroupsInsert' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data PlacementGroupsInsert = PlacementGroupsInsert'
 -- * 'pgiProFileId'
 --
 -- * 'pgiPayload'
+--
+-- * 'pgiFields'
 placementGroupsInsert
     :: Int64 -- ^ 'pgiProFileId'
     -> PlacementGroup -- ^ 'pgiPayload'
     -> PlacementGroupsInsert
-placementGroupsInsert pPgiProFileId_ pPgiPayload_ =
+placementGroupsInsert pPgiProFileId_ pPgiPayload_ = 
     PlacementGroupsInsert'
     { _pgiProFileId = _Coerce # pPgiProFileId_
     , _pgiPayload = pPgiPayload_
+    , _pgiFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -88,12 +94,18 @@ pgiPayload :: Lens' PlacementGroupsInsert PlacementGroup
 pgiPayload
   = lens _pgiPayload (\ s a -> s{_pgiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pgiFields :: Lens' PlacementGroupsInsert (Maybe Text)
+pgiFields
+  = lens _pgiFields (\ s a -> s{_pgiFields = a})
+
 instance GoogleRequest PlacementGroupsInsert where
         type Rs PlacementGroupsInsert = PlacementGroup
         type Scopes PlacementGroupsInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementGroupsInsert'{..}
-          = go _pgiProFileId (Just AltJSON) _pgiPayload
+          = go _pgiProFileId _pgiFields (Just AltJSON)
+              _pgiPayload
               dFAReportingService
           where go
                   = buildClient

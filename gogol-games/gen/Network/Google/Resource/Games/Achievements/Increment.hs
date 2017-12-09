@@ -38,10 +38,11 @@ module Network.Google.Resource.Games.Achievements.Increment
     , aiAchievementId
     , aiConsistencyToken
     , aiStepsToIncrement
+    , aiFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.achievements.increment@ method which the
 -- 'AchievementsIncrement' request conforms to.
@@ -54,18 +55,20 @@ type AchievementsIncrementResource =
                QueryParam "stepsToIncrement" (Textual Int32) :>
                  QueryParam "requestId" (Textual Int64) :>
                    QueryParam "consistencyToken" (Textual Int64) :>
-                     QueryParam "alt" AltJSON :>
-                       Post '[JSON] AchievementIncrementResponse
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         Post '[JSON] AchievementIncrementResponse
 
 -- | Increments the steps of the achievement with the given ID for the
 -- currently authenticated player.
 --
 -- /See:/ 'achievementsIncrement' smart constructor.
 data AchievementsIncrement = AchievementsIncrement'
-    { _aiRequestId        :: !(Maybe (Textual Int64))
-    , _aiAchievementId    :: !Text
+    { _aiRequestId :: !(Maybe (Textual Int64))
+    , _aiAchievementId :: !Text
     , _aiConsistencyToken :: !(Maybe (Textual Int64))
     , _aiStepsToIncrement :: !(Textual Int32)
+    , _aiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AchievementsIncrement' with the minimum fields required to make a request.
@@ -79,16 +82,19 @@ data AchievementsIncrement = AchievementsIncrement'
 -- * 'aiConsistencyToken'
 --
 -- * 'aiStepsToIncrement'
+--
+-- * 'aiFields'
 achievementsIncrement
     :: Text -- ^ 'aiAchievementId'
     -> Int32 -- ^ 'aiStepsToIncrement'
     -> AchievementsIncrement
-achievementsIncrement pAiAchievementId_ pAiStepsToIncrement_ =
+achievementsIncrement pAiAchievementId_ pAiStepsToIncrement_ = 
     AchievementsIncrement'
     { _aiRequestId = Nothing
     , _aiAchievementId = pAiAchievementId_
     , _aiConsistencyToken = Nothing
     , _aiStepsToIncrement = _Coerce # pAiStepsToIncrement_
+    , _aiFields = Nothing
     }
 
 -- | A randomly generated numeric ID for each request specified by the
@@ -119,6 +125,10 @@ aiStepsToIncrement
       (\ s a -> s{_aiStepsToIncrement = a})
       . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+aiFields :: Lens' AchievementsIncrement (Maybe Text)
+aiFields = lens _aiFields (\ s a -> s{_aiFields = a})
+
 instance GoogleRequest AchievementsIncrement where
         type Rs AchievementsIncrement =
              AchievementIncrementResponse
@@ -129,6 +139,7 @@ instance GoogleRequest AchievementsIncrement where
           = go _aiAchievementId (Just _aiStepsToIncrement)
               _aiRequestId
               _aiConsistencyToken
+              _aiFields
               (Just AltJSON)
               gamesService
           where go

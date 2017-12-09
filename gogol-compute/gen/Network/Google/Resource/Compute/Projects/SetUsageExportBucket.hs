@@ -35,12 +35,14 @@ module Network.Google.Resource.Compute.Projects.SetUsageExportBucket
     , ProjectsSetUsageExportBucket
 
     -- * Request Lenses
+    , psuebRequestId
     , psuebProject
     , psuebPayload
+    , psuebFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.projects.setUsageExportBucket@ method which the
 -- 'ProjectsSetUsageExportBucket' request conforms to.
@@ -50,9 +52,11 @@ type ProjectsSetUsageExportBucketResource =
          "projects" :>
            Capture "project" Text :>
              "setUsageExportBucket" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] UsageExportLocation :>
-                   Post '[JSON] Operation
+               QueryParam "requestId" Text :>
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] UsageExportLocation :>
+                       Post '[JSON] Operation
 
 -- | Enables the usage export feature and sets the usage export bucket where
 -- reports are stored. If you provide an empty request body using this
@@ -60,26 +64,49 @@ type ProjectsSetUsageExportBucketResource =
 --
 -- /See:/ 'projectsSetUsageExportBucket' smart constructor.
 data ProjectsSetUsageExportBucket = ProjectsSetUsageExportBucket'
-    { _psuebProject :: !Text
+    { _psuebRequestId :: !(Maybe Text)
+    , _psuebProject :: !Text
     , _psuebPayload :: !UsageExportLocation
+    , _psuebFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsSetUsageExportBucket' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'psuebRequestId'
+--
 -- * 'psuebProject'
 --
 -- * 'psuebPayload'
+--
+-- * 'psuebFields'
 projectsSetUsageExportBucket
     :: Text -- ^ 'psuebProject'
     -> UsageExportLocation -- ^ 'psuebPayload'
     -> ProjectsSetUsageExportBucket
-projectsSetUsageExportBucket pPsuebProject_ pPsuebPayload_ =
+projectsSetUsageExportBucket pPsuebProject_ pPsuebPayload_ = 
     ProjectsSetUsageExportBucket'
-    { _psuebProject = pPsuebProject_
+    { _psuebRequestId = Nothing
+    , _psuebProject = pPsuebProject_
     , _psuebPayload = pPsuebPayload_
+    , _psuebFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+psuebRequestId :: Lens' ProjectsSetUsageExportBucket (Maybe Text)
+psuebRequestId
+  = lens _psuebRequestId
+      (\ s a -> s{_psuebRequestId = a})
 
 -- | Project ID for this request.
 psuebProject :: Lens' ProjectsSetUsageExportBucket Text
@@ -91,6 +118,11 @@ psuebPayload :: Lens' ProjectsSetUsageExportBucket UsageExportLocation
 psuebPayload
   = lens _psuebPayload (\ s a -> s{_psuebPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+psuebFields :: Lens' ProjectsSetUsageExportBucket (Maybe Text)
+psuebFields
+  = lens _psuebFields (\ s a -> s{_psuebFields = a})
+
 instance GoogleRequest ProjectsSetUsageExportBucket
          where
         type Rs ProjectsSetUsageExportBucket = Operation
@@ -101,7 +133,9 @@ instance GoogleRequest ProjectsSetUsageExportBucket
                "https://www.googleapis.com/auth/devstorage.read_only",
                "https://www.googleapis.com/auth/devstorage.read_write"]
         requestClient ProjectsSetUsageExportBucket'{..}
-          = go _psuebProject (Just AltJSON) _psuebPayload
+          = go _psuebProject _psuebRequestId _psuebFields
+              (Just AltJSON)
+              _psuebPayload
               computeService
           where go
                   = buildClient

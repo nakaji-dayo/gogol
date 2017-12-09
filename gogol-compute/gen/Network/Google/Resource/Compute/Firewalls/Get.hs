@@ -35,10 +35,11 @@ module Network.Google.Resource.Compute.Firewalls.Get
     -- * Request Lenses
     , fgProject
     , fgFirewall
+    , fgFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.firewalls.get@ method which the
 -- 'FirewallsGet' request conforms to.
@@ -50,14 +51,16 @@ type FirewallsGetResource =
              "global" :>
                "firewalls" :>
                  Capture "firewall" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Firewall
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Firewall
 
 -- | Returns the specified firewall.
 --
 -- /See:/ 'firewallsGet' smart constructor.
 data FirewallsGet = FirewallsGet'
-    { _fgProject  :: !Text
+    { _fgProject :: !Text
     , _fgFirewall :: !Text
+    , _fgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FirewallsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data FirewallsGet = FirewallsGet'
 -- * 'fgProject'
 --
 -- * 'fgFirewall'
+--
+-- * 'fgFields'
 firewallsGet
     :: Text -- ^ 'fgProject'
     -> Text -- ^ 'fgFirewall'
     -> FirewallsGet
-firewallsGet pFgProject_ pFgFirewall_ =
+firewallsGet pFgProject_ pFgFirewall_ = 
     FirewallsGet'
     { _fgProject = pFgProject_
     , _fgFirewall = pFgFirewall_
+    , _fgFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -87,6 +93,10 @@ fgFirewall :: Lens' FirewallsGet Text
 fgFirewall
   = lens _fgFirewall (\ s a -> s{_fgFirewall = a})
 
+-- | Selector specifying which fields to include in a partial response.
+fgFields :: Lens' FirewallsGet (Maybe Text)
+fgFields = lens _fgFields (\ s a -> s{_fgFields = a})
+
 instance GoogleRequest FirewallsGet where
         type Rs FirewallsGet = Firewall
         type Scopes FirewallsGet =
@@ -94,7 +104,7 @@ instance GoogleRequest FirewallsGet where
                "https://www.googleapis.com/auth/compute",
                "https://www.googleapis.com/auth/compute.readonly"]
         requestClient FirewallsGet'{..}
-          = go _fgProject _fgFirewall (Just AltJSON)
+          = go _fgProject _fgFirewall _fgFields (Just AltJSON)
               computeService
           where go
                   = buildClient (Proxy :: Proxy FirewallsGetResource)

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Sites.Update
     -- * Request Lenses
     , suProFileId
     , suPayload
+    , suFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sites.update@ method which the
 -- 'SitesUpdate' request conforms to.
 type SitesUpdateResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sites" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Site :> Put '[JSON] Site
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Site :> Put '[JSON] Site
 
 -- | Updates an existing site.
 --
 -- /See:/ 'sitesUpdate' smart constructor.
 data SitesUpdate = SitesUpdate'
     { _suProFileId :: !(Textual Int64)
-    , _suPayload   :: !Site
+    , _suPayload :: !Site
+    , _suFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SitesUpdate' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SitesUpdate = SitesUpdate'
 -- * 'suProFileId'
 --
 -- * 'suPayload'
+--
+-- * 'suFields'
 sitesUpdate
     :: Int64 -- ^ 'suProFileId'
     -> Site -- ^ 'suPayload'
     -> SitesUpdate
-sitesUpdate pSuProFileId_ pSuPayload_ =
+sitesUpdate pSuProFileId_ pSuPayload_ = 
     SitesUpdate'
     { _suProFileId = _Coerce # pSuProFileId_
     , _suPayload = pSuPayload_
+    , _suFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ suPayload :: Lens' SitesUpdate Site
 suPayload
   = lens _suPayload (\ s a -> s{_suPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+suFields :: Lens' SitesUpdate (Maybe Text)
+suFields = lens _suFields (\ s a -> s{_suFields = a})
+
 instance GoogleRequest SitesUpdate where
         type Rs SitesUpdate = Site
         type Scopes SitesUpdate =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SitesUpdate'{..}
-          = go _suProFileId (Just AltJSON) _suPayload
+          = go _suProFileId _suFields (Just AltJSON) _suPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy SitesUpdateResource)

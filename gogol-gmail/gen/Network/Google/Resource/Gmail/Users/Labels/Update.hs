@@ -36,10 +36,11 @@ module Network.Google.Resource.Gmail.Users.Labels.Update
     , uluPayload
     , uluUserId
     , uluId
+    , uluFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.labels.update@ method which the
 -- 'UsersLabelsUpdate' request conforms to.
@@ -50,16 +51,18 @@ type UsersLabelsUpdateResource =
            Capture "userId" Text :>
              "labels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Label :> Put '[JSON] Label
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Label :> Put '[JSON] Label
 
 -- | Updates the specified label.
 --
 -- /See:/ 'usersLabelsUpdate' smart constructor.
 data UsersLabelsUpdate = UsersLabelsUpdate'
     { _uluPayload :: !Label
-    , _uluUserId  :: !Text
-    , _uluId      :: !Text
+    , _uluUserId :: !Text
+    , _uluId :: !Text
+    , _uluFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersLabelsUpdate' with the minimum fields required to make a request.
@@ -71,15 +74,18 @@ data UsersLabelsUpdate = UsersLabelsUpdate'
 -- * 'uluUserId'
 --
 -- * 'uluId'
+--
+-- * 'uluFields'
 usersLabelsUpdate
     :: Label -- ^ 'uluPayload'
     -> Text -- ^ 'uluId'
     -> UsersLabelsUpdate
-usersLabelsUpdate pUluPayload_ pUluId_ =
+usersLabelsUpdate pUluPayload_ pUluId_ = 
     UsersLabelsUpdate'
     { _uluPayload = pUluPayload_
     , _uluUserId = "me"
     , _uluId = pUluId_
+    , _uluFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -97,6 +103,11 @@ uluUserId
 uluId :: Lens' UsersLabelsUpdate Text
 uluId = lens _uluId (\ s a -> s{_uluId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+uluFields :: Lens' UsersLabelsUpdate (Maybe Text)
+uluFields
+  = lens _uluFields (\ s a -> s{_uluFields = a})
+
 instance GoogleRequest UsersLabelsUpdate where
         type Rs UsersLabelsUpdate = Label
         type Scopes UsersLabelsUpdate =
@@ -104,7 +115,8 @@ instance GoogleRequest UsersLabelsUpdate where
                "https://www.googleapis.com/auth/gmail.labels",
                "https://www.googleapis.com/auth/gmail.modify"]
         requestClient UsersLabelsUpdate'{..}
-          = go _uluUserId _uluId (Just AltJSON) _uluPayload
+          = go _uluUserId _uluId _uluFields (Just AltJSON)
+              _uluPayload
               gmailService
           where go
                   = buildClient

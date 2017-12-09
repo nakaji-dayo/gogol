@@ -37,12 +37,14 @@ module Network.Google.Resource.Compute.InstanceTemplates.Delete
     , InstanceTemplatesDelete
 
     -- * Request Lenses
+    , itdRequestId
     , itdProject
     , itdInstanceTemplate
+    , itdFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.instanceTemplates.delete@ method which the
 -- 'InstanceTemplatesDelete' request conforms to.
@@ -54,7 +56,9 @@ type InstanceTemplatesDeleteResource =
              "global" :>
                "instanceTemplates" :>
                  Capture "instanceTemplate" Text :>
-                   QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                   QueryParam "requestId" Text :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes the specified instance template. If you delete an instance
 -- template that is being referenced from another instance group, the
@@ -64,26 +68,48 @@ type InstanceTemplatesDeleteResource =
 --
 -- /See:/ 'instanceTemplatesDelete' smart constructor.
 data InstanceTemplatesDelete = InstanceTemplatesDelete'
-    { _itdProject          :: !Text
+    { _itdRequestId :: !(Maybe Text)
+    , _itdProject :: !Text
     , _itdInstanceTemplate :: !Text
+    , _itdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstanceTemplatesDelete' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'itdRequestId'
+--
 -- * 'itdProject'
 --
 -- * 'itdInstanceTemplate'
+--
+-- * 'itdFields'
 instanceTemplatesDelete
     :: Text -- ^ 'itdProject'
     -> Text -- ^ 'itdInstanceTemplate'
     -> InstanceTemplatesDelete
-instanceTemplatesDelete pItdProject_ pItdInstanceTemplate_ =
+instanceTemplatesDelete pItdProject_ pItdInstanceTemplate_ = 
     InstanceTemplatesDelete'
-    { _itdProject = pItdProject_
+    { _itdRequestId = Nothing
+    , _itdProject = pItdProject_
     , _itdInstanceTemplate = pItdInstanceTemplate_
+    , _itdFields = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+itdRequestId :: Lens' InstanceTemplatesDelete (Maybe Text)
+itdRequestId
+  = lens _itdRequestId (\ s a -> s{_itdRequestId = a})
 
 -- | Project ID for this request.
 itdProject :: Lens' InstanceTemplatesDelete Text
@@ -96,13 +122,20 @@ itdInstanceTemplate
   = lens _itdInstanceTemplate
       (\ s a -> s{_itdInstanceTemplate = a})
 
+-- | Selector specifying which fields to include in a partial response.
+itdFields :: Lens' InstanceTemplatesDelete (Maybe Text)
+itdFields
+  = lens _itdFields (\ s a -> s{_itdFields = a})
+
 instance GoogleRequest InstanceTemplatesDelete where
         type Rs InstanceTemplatesDelete = Operation
         type Scopes InstanceTemplatesDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient InstanceTemplatesDelete'{..}
-          = go _itdProject _itdInstanceTemplate (Just AltJSON)
+          = go _itdProject _itdInstanceTemplate _itdRequestId
+              _itdFields
+              (Just AltJSON)
               computeService
           where go
                   = buildClient

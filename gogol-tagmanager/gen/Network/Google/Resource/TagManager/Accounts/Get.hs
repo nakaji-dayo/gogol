@@ -22,7 +22,7 @@
 --
 -- Gets a GTM Account.
 --
--- /See:/ <https://developers.google.com/tag-manager/api/v1/ Tag Manager API Reference> for @tagmanager.accounts.get@.
+-- /See:/ <https://developers.google.com/tag-manager/api/v2/ Tag Manager API Reference> for @tagmanager.accounts.get@.
 module Network.Google.Resource.TagManager.Accounts.Get
     (
     -- * REST Resource
@@ -33,45 +33,53 @@ module Network.Google.Resource.TagManager.Accounts.Get
     , AccountsGet
 
     -- * Request Lenses
-    , agAccountId
+    , agPath
+    , agFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.TagManager.Types
+import Network.Google.Prelude
+import Network.Google.TagManager.Types
 
 -- | A resource alias for @tagmanager.accounts.get@ method which the
 -- 'AccountsGet' request conforms to.
 type AccountsGetResource =
      "tagmanager" :>
-       "v1" :>
-         "accounts" :>
-           Capture "accountId" Text :>
+       "v2" :>
+         Capture "path" Text :>
+           QueryParam "fields" Text :>
              QueryParam "alt" AltJSON :> Get '[JSON] Account
 
 -- | Gets a GTM Account.
 --
 -- /See:/ 'accountsGet' smart constructor.
-newtype AccountsGet = AccountsGet'
-    { _agAccountId :: Text
+data AccountsGet = AccountsGet'
+    { _agPath :: !Text
+    , _agFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AccountsGet' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'agAccountId'
+-- * 'agPath'
+--
+-- * 'agFields'
 accountsGet
-    :: Text -- ^ 'agAccountId'
+    :: Text -- ^ 'agPath'
     -> AccountsGet
-accountsGet pAgAccountId_ =
+accountsGet pAgPath_ = 
     AccountsGet'
-    { _agAccountId = pAgAccountId_
+    { _agPath = pAgPath_
+    , _agFields = Nothing
     }
 
--- | The GTM Account ID.
-agAccountId :: Lens' AccountsGet Text
-agAccountId
-  = lens _agAccountId (\ s a -> s{_agAccountId = a})
+-- | GTM Accounts\'s API relative path. Example: accounts\/{account_id}
+agPath :: Lens' AccountsGet Text
+agPath = lens _agPath (\ s a -> s{_agPath = a})
+
+-- | Selector specifying which fields to include in a partial response.
+agFields :: Lens' AccountsGet (Maybe Text)
+agFields = lens _agFields (\ s a -> s{_agFields = a})
 
 instance GoogleRequest AccountsGet where
         type Rs AccountsGet = Account
@@ -80,7 +88,8 @@ instance GoogleRequest AccountsGet where
                "https://www.googleapis.com/auth/tagmanager.manage.accounts",
                "https://www.googleapis.com/auth/tagmanager.readonly"]
         requestClient AccountsGet'{..}
-          = go _agAccountId (Just AltJSON) tagManagerService
+          = go _agPath _agFields (Just AltJSON)
+              tagManagerService
           where go
                   = buildClient (Proxy :: Proxy AccountsGetResource)
                       mempty

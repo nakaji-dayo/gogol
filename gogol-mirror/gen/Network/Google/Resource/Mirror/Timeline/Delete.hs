@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Timeline.Delete
 
     -- * Request Lenses
     , tdId
+    , tdFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.delete@ method which the
 -- 'TimelineDelete' request conforms to.
@@ -46,13 +47,15 @@ type TimelineDeleteResource =
        "v1" :>
          "timeline" :>
            Capture "id" Text :>
-             QueryParam "alt" AltJSON :> Delete '[JSON] ()
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes a timeline item.
 --
 -- /See:/ 'timelineDelete' smart constructor.
-newtype TimelineDelete = TimelineDelete'
-    { _tdId :: Text
+data TimelineDelete = TimelineDelete'
+    { _tdId :: !Text
+    , _tdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineDelete' with the minimum fields required to make a request.
@@ -60,17 +63,24 @@ newtype TimelineDelete = TimelineDelete'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tdId'
+--
+-- * 'tdFields'
 timelineDelete
     :: Text -- ^ 'tdId'
     -> TimelineDelete
-timelineDelete pTdId_ =
+timelineDelete pTdId_ = 
     TimelineDelete'
     { _tdId = pTdId_
+    , _tdFields = Nothing
     }
 
 -- | The ID of the timeline item.
 tdId :: Lens' TimelineDelete Text
 tdId = lens _tdId (\ s a -> s{_tdId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+tdFields :: Lens' TimelineDelete (Maybe Text)
+tdFields = lens _tdFields (\ s a -> s{_tdFields = a})
 
 instance GoogleRequest TimelineDelete where
         type Rs TimelineDelete = ()
@@ -78,7 +88,7 @@ instance GoogleRequest TimelineDelete where
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineDelete'{..}
-          = go _tdId (Just AltJSON) mirrorService
+          = go _tdId _tdFields (Just AltJSON) mirrorService
           where go
                   = buildClient (Proxy :: Proxy TimelineDeleteResource)
                       mempty

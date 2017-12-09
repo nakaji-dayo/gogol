@@ -23,7 +23,10 @@
 -- Creates an alias for a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
 -- to create the alias or for access errors. * \`NOT_FOUND\` if the course
--- does not exist. * \`ALREADY_EXISTS\` if the alias already exists.
+-- does not exist. * \`ALREADY_EXISTS\` if the alias already exists. *
+-- \`FAILED_PRECONDITION\` if the alias requested does not make sense for
+-- the requesting user or course (for example, if a user not in a domain
+-- attempts to access a domain-scoped alias).
 --
 -- /See:/ <https://developers.google.com/classroom/ Google Classroom API Reference> for @classroom.courses.aliases.create@.
 module Network.Google.Resource.Classroom.Courses.Aliases.Create
@@ -44,11 +47,12 @@ module Network.Google.Resource.Classroom.Courses.Aliases.Create
     , cacUploadType
     , cacPayload
     , cacBearerToken
+    , cacFields
     , cacCallback
     ) where
 
-import           Network.Google.Classroom.Types
-import           Network.Google.Prelude
+import Network.Google.Classroom.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @classroom.courses.aliases.create@ method which the
 -- 'CoursesAliasesCreate' request conforms to.
@@ -57,33 +61,38 @@ type CoursesAliasesCreateResource =
        "courses" :>
          Capture "courseId" Text :>
            "aliases" :>
-             QueryParam "$.xgafv" Text :>
+             QueryParam "$.xgafv" Xgafv :>
                QueryParam "upload_protocol" Text :>
                  QueryParam "pp" Bool :>
                    QueryParam "access_token" Text :>
                      QueryParam "uploadType" Text :>
                        QueryParam "bearer_token" Text :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             ReqBody '[JSON] CourseAlias :>
-                               Post '[JSON] CourseAlias
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               ReqBody '[JSON] CourseAlias :>
+                                 Post '[JSON] CourseAlias
 
 -- | Creates an alias for a course. This method returns the following error
 -- codes: * \`PERMISSION_DENIED\` if the requesting user is not permitted
 -- to create the alias or for access errors. * \`NOT_FOUND\` if the course
--- does not exist. * \`ALREADY_EXISTS\` if the alias already exists.
+-- does not exist. * \`ALREADY_EXISTS\` if the alias already exists. *
+-- \`FAILED_PRECONDITION\` if the alias requested does not make sense for
+-- the requesting user or course (for example, if a user not in a domain
+-- attempts to access a domain-scoped alias).
 --
 -- /See:/ 'coursesAliasesCreate' smart constructor.
 data CoursesAliasesCreate = CoursesAliasesCreate'
-    { _cacXgafv          :: !(Maybe Text)
+    { _cacXgafv :: !(Maybe Xgafv)
     , _cacUploadProtocol :: !(Maybe Text)
-    , _cacPp             :: !Bool
-    , _cacCourseId       :: !Text
-    , _cacAccessToken    :: !(Maybe Text)
-    , _cacUploadType     :: !(Maybe Text)
-    , _cacPayload        :: !CourseAlias
-    , _cacBearerToken    :: !(Maybe Text)
-    , _cacCallback       :: !(Maybe Text)
+    , _cacPp :: !Bool
+    , _cacCourseId :: !Text
+    , _cacAccessToken :: !(Maybe Text)
+    , _cacUploadType :: !(Maybe Text)
+    , _cacPayload :: !CourseAlias
+    , _cacBearerToken :: !(Maybe Text)
+    , _cacFields :: !(Maybe Text)
+    , _cacCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CoursesAliasesCreate' with the minimum fields required to make a request.
@@ -106,12 +115,14 @@ data CoursesAliasesCreate = CoursesAliasesCreate'
 --
 -- * 'cacBearerToken'
 --
+-- * 'cacFields'
+--
 -- * 'cacCallback'
 coursesAliasesCreate
     :: Text -- ^ 'cacCourseId'
     -> CourseAlias -- ^ 'cacPayload'
     -> CoursesAliasesCreate
-coursesAliasesCreate pCacCourseId_ pCacPayload_ =
+coursesAliasesCreate pCacCourseId_ pCacPayload_ = 
     CoursesAliasesCreate'
     { _cacXgafv = Nothing
     , _cacUploadProtocol = Nothing
@@ -121,11 +132,12 @@ coursesAliasesCreate pCacCourseId_ pCacPayload_ =
     , _cacUploadType = Nothing
     , _cacPayload = pCacPayload_
     , _cacBearerToken = Nothing
+    , _cacFields = Nothing
     , _cacCallback = Nothing
     }
 
 -- | V1 error format.
-cacXgafv :: Lens' CoursesAliasesCreate (Maybe Text)
+cacXgafv :: Lens' CoursesAliasesCreate (Maybe Xgafv)
 cacXgafv = lens _cacXgafv (\ s a -> s{_cacXgafv = a})
 
 -- | Upload protocol for media (e.g. \"raw\", \"multipart\").
@@ -167,6 +179,11 @@ cacBearerToken
   = lens _cacBearerToken
       (\ s a -> s{_cacBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+cacFields :: Lens' CoursesAliasesCreate (Maybe Text)
+cacFields
+  = lens _cacFields (\ s a -> s{_cacFields = a})
+
 -- | JSONP
 cacCallback :: Lens' CoursesAliasesCreate (Maybe Text)
 cacCallback
@@ -183,6 +200,7 @@ instance GoogleRequest CoursesAliasesCreate where
               _cacUploadType
               _cacBearerToken
               _cacCallback
+              _cacFields
               (Just AltJSON)
               _cacPayload
               classroomService

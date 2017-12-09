@@ -47,11 +47,12 @@ module Network.Google.Resource.Genomics.ReadGroupSets.Export
     , rgseUploadType
     , rgsePayload
     , rgseBearerToken
+    , rgseFields
     , rgseCallback
     ) where
 
-import           Network.Google.Genomics.Types
-import           Network.Google.Prelude
+import Network.Google.Genomics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @genomics.readgroupsets.export@ method which the
 -- 'ReadGroupSetsExport' request conforms to.
@@ -66,9 +67,10 @@ type ReadGroupSetsExportResource =
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           ReqBody '[JSON] ExportReadGroupSetRequest :>
-                             Post '[JSON] Operation
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             ReqBody '[JSON] ExportReadGroupSetRequest :>
+                               Post '[JSON] Operation
 
 -- | Exports a read group set to a BAM file in Google Cloud Storage. For the
 -- definitions of read group sets and other genomics resources, see
@@ -80,15 +82,16 @@ type ReadGroupSetsExportResource =
 --
 -- /See:/ 'readGroupSetsExport' smart constructor.
 data ReadGroupSetsExport = ReadGroupSetsExport'
-    { _rgseXgafv          :: !(Maybe Xgafv)
+    { _rgseXgafv :: !(Maybe Xgafv)
     , _rgseReadGroupSetId :: !Text
     , _rgseUploadProtocol :: !(Maybe Text)
-    , _rgsePp             :: !Bool
-    , _rgseAccessToken    :: !(Maybe Text)
-    , _rgseUploadType     :: !(Maybe Text)
-    , _rgsePayload        :: !ExportReadGroupSetRequest
-    , _rgseBearerToken    :: !(Maybe Text)
-    , _rgseCallback       :: !(Maybe Text)
+    , _rgsePp :: !Bool
+    , _rgseAccessToken :: !(Maybe Text)
+    , _rgseUploadType :: !(Maybe Text)
+    , _rgsePayload :: !ExportReadGroupSetRequest
+    , _rgseBearerToken :: !(Maybe Text)
+    , _rgseFields :: !(Maybe Text)
+    , _rgseCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReadGroupSetsExport' with the minimum fields required to make a request.
@@ -111,12 +114,14 @@ data ReadGroupSetsExport = ReadGroupSetsExport'
 --
 -- * 'rgseBearerToken'
 --
+-- * 'rgseFields'
+--
 -- * 'rgseCallback'
 readGroupSetsExport
     :: Text -- ^ 'rgseReadGroupSetId'
     -> ExportReadGroupSetRequest -- ^ 'rgsePayload'
     -> ReadGroupSetsExport
-readGroupSetsExport pRgseReadGroupSetId_ pRgsePayload_ =
+readGroupSetsExport pRgseReadGroupSetId_ pRgsePayload_ = 
     ReadGroupSetsExport'
     { _rgseXgafv = Nothing
     , _rgseReadGroupSetId = pRgseReadGroupSetId_
@@ -126,6 +131,7 @@ readGroupSetsExport pRgseReadGroupSetId_ pRgsePayload_ =
     , _rgseUploadType = Nothing
     , _rgsePayload = pRgsePayload_
     , _rgseBearerToken = Nothing
+    , _rgseFields = Nothing
     , _rgseCallback = Nothing
     }
 
@@ -174,6 +180,11 @@ rgseBearerToken
   = lens _rgseBearerToken
       (\ s a -> s{_rgseBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rgseFields :: Lens' ReadGroupSetsExport (Maybe Text)
+rgseFields
+  = lens _rgseFields (\ s a -> s{_rgseFields = a})
+
 -- | JSONP
 rgseCallback :: Lens' ReadGroupSetsExport (Maybe Text)
 rgseCallback
@@ -193,6 +204,7 @@ instance GoogleRequest ReadGroupSetsExport where
               _rgseUploadType
               _rgseBearerToken
               _rgseCallback
+              _rgseFields
               (Just AltJSON)
               _rgsePayload
               genomicsService

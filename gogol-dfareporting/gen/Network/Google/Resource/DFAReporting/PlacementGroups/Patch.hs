@@ -37,23 +37,25 @@ module Network.Google.Resource.DFAReporting.PlacementGroups.Patch
     , pgpProFileId
     , pgpPayload
     , pgpId
+    , pgpFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.placementGroups.patch@ method which the
 -- 'PlacementGroupsPatch' request conforms to.
 type PlacementGroupsPatchResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "placementGroups" :>
                QueryParam "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] PlacementGroup :>
-                     Patch '[JSON] PlacementGroup
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] PlacementGroup :>
+                       Patch '[JSON] PlacementGroup
 
 -- | Updates an existing placement group. This method supports patch
 -- semantics.
@@ -61,8 +63,9 @@ type PlacementGroupsPatchResource =
 -- /See:/ 'placementGroupsPatch' smart constructor.
 data PlacementGroupsPatch = PlacementGroupsPatch'
     { _pgpProFileId :: !(Textual Int64)
-    , _pgpPayload   :: !PlacementGroup
-    , _pgpId        :: !(Textual Int64)
+    , _pgpPayload :: !PlacementGroup
+    , _pgpId :: !(Textual Int64)
+    , _pgpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PlacementGroupsPatch' with the minimum fields required to make a request.
@@ -74,16 +77,19 @@ data PlacementGroupsPatch = PlacementGroupsPatch'
 -- * 'pgpPayload'
 --
 -- * 'pgpId'
+--
+-- * 'pgpFields'
 placementGroupsPatch
     :: Int64 -- ^ 'pgpProFileId'
     -> PlacementGroup -- ^ 'pgpPayload'
     -> Int64 -- ^ 'pgpId'
     -> PlacementGroupsPatch
-placementGroupsPatch pPgpProFileId_ pPgpPayload_ pPgpId_ =
+placementGroupsPatch pPgpProFileId_ pPgpPayload_ pPgpId_ = 
     PlacementGroupsPatch'
     { _pgpProFileId = _Coerce # pPgpProFileId_
     , _pgpPayload = pPgpPayload_
     , _pgpId = _Coerce # pPgpId_
+    , _pgpFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -102,12 +108,18 @@ pgpId :: Lens' PlacementGroupsPatch Int64
 pgpId
   = lens _pgpId (\ s a -> s{_pgpId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+pgpFields :: Lens' PlacementGroupsPatch (Maybe Text)
+pgpFields
+  = lens _pgpFields (\ s a -> s{_pgpFields = a})
+
 instance GoogleRequest PlacementGroupsPatch where
         type Rs PlacementGroupsPatch = PlacementGroup
         type Scopes PlacementGroupsPatch =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient PlacementGroupsPatch'{..}
-          = go _pgpProFileId (Just _pgpId) (Just AltJSON)
+          = go _pgpProFileId (Just _pgpId) _pgpFields
+              (Just AltJSON)
               _pgpPayload
               dFAReportingService
           where go

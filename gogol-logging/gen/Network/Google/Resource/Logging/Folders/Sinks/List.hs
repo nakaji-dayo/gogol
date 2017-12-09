@@ -42,11 +42,12 @@ module Network.Google.Resource.Logging.Folders.Sinks.List
     , fslBearerToken
     , fslPageToken
     , fslPageSize
+    , fslFields
     , fslCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.folders.sinks.list@ method which the
 -- 'FoldersSinksList' request conforms to.
@@ -63,23 +64,25 @@ type FoldersSinksListResource =
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ListSinksResponse
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ListSinksResponse
 
 -- | Lists sinks.
 --
 -- /See:/ 'foldersSinksList' smart constructor.
 data FoldersSinksList = FoldersSinksList'
-    { _fslParent         :: !Text
-    , _fslXgafv          :: !(Maybe Xgafv)
+    { _fslParent :: !Text
+    , _fslXgafv :: !(Maybe Xgafv)
     , _fslUploadProtocol :: !(Maybe Text)
-    , _fslPp             :: !Bool
-    , _fslAccessToken    :: !(Maybe Text)
-    , _fslUploadType     :: !(Maybe Text)
-    , _fslBearerToken    :: !(Maybe Text)
-    , _fslPageToken      :: !(Maybe Text)
-    , _fslPageSize       :: !(Maybe (Textual Int32))
-    , _fslCallback       :: !(Maybe Text)
+    , _fslPp :: !Bool
+    , _fslAccessToken :: !(Maybe Text)
+    , _fslUploadType :: !(Maybe Text)
+    , _fslBearerToken :: !(Maybe Text)
+    , _fslPageToken :: !(Maybe Text)
+    , _fslPageSize :: !(Maybe (Textual Int32))
+    , _fslFields :: !(Maybe Text)
+    , _fslCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FoldersSinksList' with the minimum fields required to make a request.
@@ -104,11 +107,13 @@ data FoldersSinksList = FoldersSinksList'
 --
 -- * 'fslPageSize'
 --
+-- * 'fslFields'
+--
 -- * 'fslCallback'
 foldersSinksList
     :: Text -- ^ 'fslParent'
     -> FoldersSinksList
-foldersSinksList pFslParent_ =
+foldersSinksList pFslParent_ = 
     FoldersSinksList'
     { _fslParent = pFslParent_
     , _fslXgafv = Nothing
@@ -119,11 +124,13 @@ foldersSinksList pFslParent_ =
     , _fslBearerToken = Nothing
     , _fslPageToken = Nothing
     , _fslPageSize = Nothing
+    , _fslFields = Nothing
     , _fslCallback = Nothing
     }
 
--- | Required. The parent resource whose sinks are to be listed. Examples:
--- \"projects\/my-logging-project\", \"organizations\/123456789\".
+-- | Required. The parent resource whose sinks are to be listed:
+-- \"projects\/[PROJECT_ID]\" \"organizations\/[ORGANIZATION_ID]\"
+-- \"billingAccounts\/[BILLING_ACCOUNT_ID]\" \"folders\/[FOLDER_ID]\"
 fslParent :: Lens' FoldersSinksList Text
 fslParent
   = lens _fslParent (\ s a -> s{_fslParent = a})
@@ -176,6 +183,11 @@ fslPageSize
   = lens _fslPageSize (\ s a -> s{_fslPageSize = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+fslFields :: Lens' FoldersSinksList (Maybe Text)
+fslFields
+  = lens _fslFields (\ s a -> s{_fslFields = a})
+
 -- | JSONP
 fslCallback :: Lens' FoldersSinksList (Maybe Text)
 fslCallback
@@ -197,6 +209,7 @@ instance GoogleRequest FoldersSinksList where
               _fslPageToken
               _fslPageSize
               _fslCallback
+              _fslFields
               (Just AltJSON)
               loggingService
           where go

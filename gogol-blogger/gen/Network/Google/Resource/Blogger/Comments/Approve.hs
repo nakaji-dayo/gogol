@@ -36,10 +36,11 @@ module Network.Google.Resource.Blogger.Comments.Approve
     , caBlogId
     , caPostId
     , caCommentId
+    , caFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.comments.approve@ method which the
 -- 'CommentsApprove' request conforms to.
@@ -53,15 +54,17 @@ type CommentsApproveResource =
                  "comments" :>
                    Capture "commentId" Text :>
                      "approve" :>
-                       QueryParam "alt" AltJSON :> Post '[JSON] Comment
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Post '[JSON] Comment
 
 -- | Marks a comment as not spam.
 --
 -- /See:/ 'commentsApprove' smart constructor.
 data CommentsApprove = CommentsApprove'
-    { _caBlogId    :: !Text
-    , _caPostId    :: !Text
+    { _caBlogId :: !Text
+    , _caPostId :: !Text
     , _caCommentId :: !Text
+    , _caFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CommentsApprove' with the minimum fields required to make a request.
@@ -73,16 +76,19 @@ data CommentsApprove = CommentsApprove'
 -- * 'caPostId'
 --
 -- * 'caCommentId'
+--
+-- * 'caFields'
 commentsApprove
     :: Text -- ^ 'caBlogId'
     -> Text -- ^ 'caPostId'
     -> Text -- ^ 'caCommentId'
     -> CommentsApprove
-commentsApprove pCaBlogId_ pCaPostId_ pCaCommentId_ =
+commentsApprove pCaBlogId_ pCaPostId_ pCaCommentId_ = 
     CommentsApprove'
     { _caBlogId = pCaBlogId_
     , _caPostId = pCaPostId_
     , _caCommentId = pCaCommentId_
+    , _caFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -98,12 +104,17 @@ caCommentId :: Lens' CommentsApprove Text
 caCommentId
   = lens _caCommentId (\ s a -> s{_caCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+caFields :: Lens' CommentsApprove (Maybe Text)
+caFields = lens _caFields (\ s a -> s{_caFields = a})
+
 instance GoogleRequest CommentsApprove where
         type Rs CommentsApprove = Comment
         type Scopes CommentsApprove =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient CommentsApprove'{..}
-          = go _caBlogId _caPostId _caCommentId (Just AltJSON)
+          = go _caBlogId _caPostId _caCommentId _caFields
+              (Just AltJSON)
               bloggerService
           where go
                   = buildClient

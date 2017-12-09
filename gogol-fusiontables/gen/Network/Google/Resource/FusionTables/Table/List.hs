@@ -35,10 +35,11 @@ module Network.Google.Resource.FusionTables.Table.List
     -- * Request Lenses
     , tPageToken
     , tMaxResults
+    , tFields
     ) where
 
-import           Network.Google.FusionTables.Types
-import           Network.Google.Prelude
+import Network.Google.FusionTables.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fusiontables.table.list@ method which the
 -- 'TableList'' request conforms to.
@@ -48,14 +49,16 @@ type TableListResource =
          "tables" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Word32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] TableList
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] TableList
 
 -- | Retrieves a list of tables a user owns.
 --
 -- /See:/ 'tableList'' smart constructor.
 data TableList' = TableList''
-    { _tPageToken  :: !(Maybe Text)
+    { _tPageToken :: !(Maybe Text)
     , _tMaxResults :: !(Maybe (Textual Word32))
+    , _tFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TableList'' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data TableList' = TableList''
 -- * 'tPageToken'
 --
 -- * 'tMaxResults'
+--
+-- * 'tFields'
 tableList'
     :: TableList'
-tableList' =
+tableList' = 
     TableList''
     { _tPageToken = Nothing
     , _tMaxResults = Nothing
+    , _tFields = Nothing
     }
 
 -- | Continuation token specifying which result page to return.
@@ -84,13 +90,17 @@ tMaxResults
   = lens _tMaxResults (\ s a -> s{_tMaxResults = a}) .
       mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tFields :: Lens' TableList' (Maybe Text)
+tFields = lens _tFields (\ s a -> s{_tFields = a})
+
 instance GoogleRequest TableList' where
         type Rs TableList' = TableList
         type Scopes TableList' =
              '["https://www.googleapis.com/auth/fusiontables",
                "https://www.googleapis.com/auth/fusiontables.readonly"]
         requestClient TableList''{..}
-          = go _tPageToken _tMaxResults (Just AltJSON)
+          = go _tPageToken _tMaxResults _tFields (Just AltJSON)
               fusionTablesService
           where go
                   = buildClient (Proxy :: Proxy TableListResource)

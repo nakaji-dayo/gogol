@@ -43,11 +43,12 @@ module Network.Google.Resource.Container.Projects.Zones.Operations.Cancel
     , pzocBearerToken
     , pzocProjectId
     , pzocOperationId
+    , pzocFields
     , pzocCallback
     ) where
 
-import           Network.Google.Container.Types
-import           Network.Google.Prelude
+import Network.Google.Container.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @container.projects.zones.operations.cancel@ method which the
 -- 'ProjectsZonesOperationsCancel' request conforms to.
@@ -59,32 +60,34 @@ type ProjectsZonesOperationsCancelResource =
              Capture "zone" Text :>
                "operations" :>
                  CaptureMode "operationId" "cancel" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
                            QueryParam "uploadType" Text :>
                              QueryParam "bearer_token" Text :>
                                QueryParam "callback" Text :>
-                                 QueryParam "alt" AltJSON :>
-                                   ReqBody '[JSON] CancelOperationRequest :>
-                                     Post '[JSON] Empty
+                                 QueryParam "fields" Text :>
+                                   QueryParam "alt" AltJSON :>
+                                     ReqBody '[JSON] CancelOperationRequest :>
+                                       Post '[JSON] Empty
 
 -- | Cancels the specified operation.
 --
 -- /See:/ 'projectsZonesOperationsCancel' smart constructor.
 data ProjectsZonesOperationsCancel = ProjectsZonesOperationsCancel'
-    { _pzocXgafv          :: !(Maybe Text)
+    { _pzocXgafv :: !(Maybe Xgafv)
     , _pzocUploadProtocol :: !(Maybe Text)
-    , _pzocPp             :: !Bool
-    , _pzocAccessToken    :: !(Maybe Text)
-    , _pzocUploadType     :: !(Maybe Text)
-    , _pzocZone           :: !Text
-    , _pzocPayload        :: !CancelOperationRequest
-    , _pzocBearerToken    :: !(Maybe Text)
-    , _pzocProjectId      :: !Text
-    , _pzocOperationId    :: !Text
-    , _pzocCallback       :: !(Maybe Text)
+    , _pzocPp :: !Bool
+    , _pzocAccessToken :: !(Maybe Text)
+    , _pzocUploadType :: !(Maybe Text)
+    , _pzocZone :: !Text
+    , _pzocPayload :: !CancelOperationRequest
+    , _pzocBearerToken :: !(Maybe Text)
+    , _pzocProjectId :: !Text
+    , _pzocOperationId :: !Text
+    , _pzocFields :: !(Maybe Text)
+    , _pzocCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsZonesOperationsCancel' with the minimum fields required to make a request.
@@ -111,6 +114,8 @@ data ProjectsZonesOperationsCancel = ProjectsZonesOperationsCancel'
 --
 -- * 'pzocOperationId'
 --
+-- * 'pzocFields'
+--
 -- * 'pzocCallback'
 projectsZonesOperationsCancel
     :: Text -- ^ 'pzocZone'
@@ -118,7 +123,7 @@ projectsZonesOperationsCancel
     -> Text -- ^ 'pzocProjectId'
     -> Text -- ^ 'pzocOperationId'
     -> ProjectsZonesOperationsCancel
-projectsZonesOperationsCancel pPzocZone_ pPzocPayload_ pPzocProjectId_ pPzocOperationId_ =
+projectsZonesOperationsCancel pPzocZone_ pPzocPayload_ pPzocProjectId_ pPzocOperationId_ = 
     ProjectsZonesOperationsCancel'
     { _pzocXgafv = Nothing
     , _pzocUploadProtocol = Nothing
@@ -130,11 +135,12 @@ projectsZonesOperationsCancel pPzocZone_ pPzocPayload_ pPzocProjectId_ pPzocOper
     , _pzocBearerToken = Nothing
     , _pzocProjectId = pPzocProjectId_
     , _pzocOperationId = pPzocOperationId_
+    , _pzocFields = Nothing
     , _pzocCallback = Nothing
     }
 
 -- | V1 error format.
-pzocXgafv :: Lens' ProjectsZonesOperationsCancel (Maybe Text)
+pzocXgafv :: Lens' ProjectsZonesOperationsCancel (Maybe Xgafv)
 pzocXgafv
   = lens _pzocXgafv (\ s a -> s{_pzocXgafv = a})
 
@@ -189,6 +195,11 @@ pzocOperationId
   = lens _pzocOperationId
       (\ s a -> s{_pzocOperationId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pzocFields :: Lens' ProjectsZonesOperationsCancel (Maybe Text)
+pzocFields
+  = lens _pzocFields (\ s a -> s{_pzocFields = a})
+
 -- | JSONP
 pzocCallback :: Lens' ProjectsZonesOperationsCancel (Maybe Text)
 pzocCallback
@@ -208,6 +219,7 @@ instance GoogleRequest ProjectsZonesOperationsCancel
               _pzocUploadType
               _pzocBearerToken
               _pzocCallback
+              _pzocFields
               (Just AltJSON)
               _pzocPayload
               containerService

@@ -35,29 +35,32 @@ module Network.Google.Resource.DFAReporting.UserRolePermissions.Get
     -- * Request Lenses
     , uProFileId
     , uId
+    , uFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.userRolePermissions.get@ method which the
 -- 'UserRolePermissionsGet' request conforms to.
 type UserRolePermissionsGetResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "userRolePermissions" :>
                Capture "id" (Textual Int64) :>
-                 QueryParam "alt" AltJSON :>
-                   Get '[JSON] UserRolePermission
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     Get '[JSON] UserRolePermission
 
 -- | Gets one user role permission by ID.
 --
 -- /See:/ 'userRolePermissionsGet' smart constructor.
 data UserRolePermissionsGet = UserRolePermissionsGet'
     { _uProFileId :: !(Textual Int64)
-    , _uId        :: !(Textual Int64)
+    , _uId :: !(Textual Int64)
+    , _uFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UserRolePermissionsGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data UserRolePermissionsGet = UserRolePermissionsGet'
 -- * 'uProFileId'
 --
 -- * 'uId'
+--
+-- * 'uFields'
 userRolePermissionsGet
     :: Int64 -- ^ 'uProFileId'
     -> Int64 -- ^ 'uId'
     -> UserRolePermissionsGet
-userRolePermissionsGet pUProFileId_ pUId_ =
+userRolePermissionsGet pUProFileId_ pUId_ = 
     UserRolePermissionsGet'
     { _uProFileId = _Coerce # pUProFileId_
     , _uId = _Coerce # pUId_
+    , _uFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ uProFileId
 uId :: Lens' UserRolePermissionsGet Int64
 uId = lens _uId (\ s a -> s{_uId = a}) . _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+uFields :: Lens' UserRolePermissionsGet (Maybe Text)
+uFields = lens _uFields (\ s a -> s{_uFields = a})
+
 instance GoogleRequest UserRolePermissionsGet where
         type Rs UserRolePermissionsGet = UserRolePermission
         type Scopes UserRolePermissionsGet =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient UserRolePermissionsGet'{..}
-          = go _uProFileId _uId (Just AltJSON)
+          = go _uProFileId _uId _uFields (Just AltJSON)
               dFAReportingService
           where go
                   = buildClient

@@ -35,28 +35,31 @@ module Network.Google.Resource.DFAReporting.Sizes.Insert
     -- * Request Lenses
     , siProFileId
     , siPayload
+    , siFields
     ) where
 
-import           Network.Google.DFAReporting.Types
-import           Network.Google.Prelude
+import Network.Google.DFAReporting.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dfareporting.sizes.insert@ method which the
 -- 'SizesInsert' request conforms to.
 type SizesInsertResource =
      "dfareporting" :>
-       "v2.7" :>
+       "v3.0" :>
          "userprofiles" :>
            Capture "profileId" (Textual Int64) :>
              "sizes" :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] Size :> Post '[JSON] Size
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] Size :> Post '[JSON] Size
 
 -- | Inserts a new size.
 --
 -- /See:/ 'sizesInsert' smart constructor.
 data SizesInsert = SizesInsert'
     { _siProFileId :: !(Textual Int64)
-    , _siPayload   :: !Size
+    , _siPayload :: !Size
+    , _siFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SizesInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data SizesInsert = SizesInsert'
 -- * 'siProFileId'
 --
 -- * 'siPayload'
+--
+-- * 'siFields'
 sizesInsert
     :: Int64 -- ^ 'siProFileId'
     -> Size -- ^ 'siPayload'
     -> SizesInsert
-sizesInsert pSiProFileId_ pSiPayload_ =
+sizesInsert pSiProFileId_ pSiPayload_ = 
     SizesInsert'
     { _siProFileId = _Coerce # pSiProFileId_
     , _siPayload = pSiPayload_
+    , _siFields = Nothing
     }
 
 -- | User profile ID associated with this request.
@@ -87,12 +93,16 @@ siPayload :: Lens' SizesInsert Size
 siPayload
   = lens _siPayload (\ s a -> s{_siPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+siFields :: Lens' SizesInsert (Maybe Text)
+siFields = lens _siFields (\ s a -> s{_siFields = a})
+
 instance GoogleRequest SizesInsert where
         type Rs SizesInsert = Size
         type Scopes SizesInsert =
              '["https://www.googleapis.com/auth/dfatrafficking"]
         requestClient SizesInsert'{..}
-          = go _siProFileId (Just AltJSON) _siPayload
+          = go _siProFileId _siFields (Just AltJSON) _siPayload
               dFAReportingService
           where go
                   = buildClient (Proxy :: Proxy SizesInsertResource)

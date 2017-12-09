@@ -20,7 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Updates a calendar resource.
+-- Updates a calendar resource. This method supports patch semantics,
+-- meaning you only need to include the fields you wish to update. Fields
+-- that are not present in the request will be preserved.
 --
 -- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.resources.calendars.update@.
 module Network.Google.Resource.Directory.Resources.Calendars.Update
@@ -36,10 +38,11 @@ module Network.Google.Resource.Directory.Resources.Calendars.Update
     , rcuPayload
     , rcuCustomer
     , rcuCalendarResourceId
+    , rcuFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.resources.calendars.update@ method which the
 -- 'ResourcesCalendarsUpdate' request conforms to.
@@ -52,17 +55,21 @@ type ResourcesCalendarsUpdateResource =
                "resources" :>
                  "calendars" :>
                    Capture "calendarResourceId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] CalendarResource :>
-                         Put '[JSON] CalendarResource
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] CalendarResource :>
+                           Put '[JSON] CalendarResource
 
--- | Updates a calendar resource.
+-- | Updates a calendar resource. This method supports patch semantics,
+-- meaning you only need to include the fields you wish to update. Fields
+-- that are not present in the request will be preserved.
 --
 -- /See:/ 'resourcesCalendarsUpdate' smart constructor.
 data ResourcesCalendarsUpdate = ResourcesCalendarsUpdate'
-    { _rcuPayload            :: !CalendarResource
-    , _rcuCustomer           :: !Text
+    { _rcuPayload :: !CalendarResource
+    , _rcuCustomer :: !Text
     , _rcuCalendarResourceId :: !Text
+    , _rcuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourcesCalendarsUpdate' with the minimum fields required to make a request.
@@ -74,16 +81,19 @@ data ResourcesCalendarsUpdate = ResourcesCalendarsUpdate'
 -- * 'rcuCustomer'
 --
 -- * 'rcuCalendarResourceId'
+--
+-- * 'rcuFields'
 resourcesCalendarsUpdate
     :: CalendarResource -- ^ 'rcuPayload'
     -> Text -- ^ 'rcuCustomer'
     -> Text -- ^ 'rcuCalendarResourceId'
     -> ResourcesCalendarsUpdate
-resourcesCalendarsUpdate pRcuPayload_ pRcuCustomer_ pRcuCalendarResourceId_ =
+resourcesCalendarsUpdate pRcuPayload_ pRcuCustomer_ pRcuCalendarResourceId_ = 
     ResourcesCalendarsUpdate'
     { _rcuPayload = pRcuPayload_
     , _rcuCustomer = pRcuCustomer_
     , _rcuCalendarResourceId = pRcuCalendarResourceId_
+    , _rcuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -91,7 +101,7 @@ rcuPayload :: Lens' ResourcesCalendarsUpdate CalendarResource
 rcuPayload
   = lens _rcuPayload (\ s a -> s{_rcuPayload = a})
 
--- | The unique ID for the customer\'s Google account. As an account
+-- | The unique ID for the customer\'s G Suite account. As an account
 -- administrator, you can also use the my_customer alias to represent your
 -- account\'s customer ID.
 rcuCustomer :: Lens' ResourcesCalendarsUpdate Text
@@ -104,12 +114,17 @@ rcuCalendarResourceId
   = lens _rcuCalendarResourceId
       (\ s a -> s{_rcuCalendarResourceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+rcuFields :: Lens' ResourcesCalendarsUpdate (Maybe Text)
+rcuFields
+  = lens _rcuFields (\ s a -> s{_rcuFields = a})
+
 instance GoogleRequest ResourcesCalendarsUpdate where
         type Rs ResourcesCalendarsUpdate = CalendarResource
         type Scopes ResourcesCalendarsUpdate =
              '["https://www.googleapis.com/auth/admin.directory.resource.calendar"]
         requestClient ResourcesCalendarsUpdate'{..}
-          = go _rcuCustomer _rcuCalendarResourceId
+          = go _rcuCustomer _rcuCalendarResourceId _rcuFields
               (Just AltJSON)
               _rcuPayload
               directoryService

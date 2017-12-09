@@ -17,8 +17,8 @@
 --
 module Network.Google.Dataflow.Types.Product where
 
-import           Network.Google.Dataflow.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types.Sum
+import Network.Google.Prelude
 
 -- | A mapping from each stage to the information about that stage.
 --
@@ -35,7 +35,7 @@ newtype JobExecutionInfoStages = JobExecutionInfoStages'
 jobExecutionInfoStages
     :: HashMap Text JobExecutionStageInfo -- ^ 'jeisAddtional'
     -> JobExecutionInfoStages
-jobExecutionInfoStages pJeisAddtional_ =
+jobExecutionInfoStages pJeisAddtional_ = 
     JobExecutionInfoStages'
     { _jeisAddtional = _Coerce # pJeisAddtional_
     }
@@ -59,12 +59,11 @@ instance ToJSON JobExecutionInfoStages where
 --
 -- /See:/ 'computationTopology' smart constructor.
 data ComputationTopology = ComputationTopology'
-    { _ctStateFamilies   :: !(Maybe [StateFamilyConfig])
-    , _ctUserStageName   :: !(Maybe Text)
-    , _ctInputs          :: !(Maybe [StreamLocation])
-    , _ctKeyRanges       :: !(Maybe [KeyRangeLocation])
-    , _ctOutputs         :: !(Maybe [StreamLocation])
-    , _ctComputationId   :: !(Maybe Text)
+    { _ctStateFamilies :: !(Maybe [StateFamilyConfig])
+    , _ctInputs :: !(Maybe [StreamLocation])
+    , _ctKeyRanges :: !(Maybe [KeyRangeLocation])
+    , _ctOutputs :: !(Maybe [StreamLocation])
+    , _ctComputationId :: !(Maybe Text)
     , _ctSystemStageName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -73,8 +72,6 @@ data ComputationTopology = ComputationTopology'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'ctStateFamilies'
---
--- * 'ctUserStageName'
 --
 -- * 'ctInputs'
 --
@@ -87,10 +84,9 @@ data ComputationTopology = ComputationTopology'
 -- * 'ctSystemStageName'
 computationTopology
     :: ComputationTopology
-computationTopology =
+computationTopology = 
     ComputationTopology'
     { _ctStateFamilies = Nothing
-    , _ctUserStageName = Nothing
     , _ctInputs = Nothing
     , _ctKeyRanges = Nothing
     , _ctOutputs = Nothing
@@ -105,12 +101,6 @@ ctStateFamilies
       (\ s a -> s{_ctStateFamilies = a})
       . _Default
       . _Coerce
-
--- | The user stage name.
-ctUserStageName :: Lens' ComputationTopology (Maybe Text)
-ctUserStageName
-  = lens _ctUserStageName
-      (\ s a -> s{_ctUserStageName = a})
 
 -- | The inputs to the computation.
 ctInputs :: Lens' ComputationTopology [StreamLocation]
@@ -151,8 +141,7 @@ instance FromJSON ComputationTopology where
               (\ o ->
                  ComputationTopology' <$>
                    (o .:? "stateFamilies" .!= mempty) <*>
-                     (o .:? "userStageName")
-                     <*> (o .:? "inputs" .!= mempty)
+                     (o .:? "inputs" .!= mempty)
                      <*> (o .:? "keyRanges" .!= mempty)
                      <*> (o .:? "outputs" .!= mempty)
                      <*> (o .:? "computationId")
@@ -163,7 +152,6 @@ instance ToJSON ComputationTopology where
           = object
               (catMaybes
                  [("stateFamilies" .=) <$> _ctStateFamilies,
-                  ("userStageName" .=) <$> _ctUserStageName,
                   ("inputs" .=) <$> _ctInputs,
                   ("keyRanges" .=) <$> _ctKeyRanges,
                   ("outputs" .=) <$> _ctOutputs,
@@ -175,8 +163,8 @@ instance ToJSON ComputationTopology where
 -- /See:/ 'sourceSplitResponse' smart constructor.
 data SourceSplitResponse = SourceSplitResponse'
     { _ssrBundles :: !(Maybe [DerivedSource])
-    , _ssrShards  :: !(Maybe [SourceSplitShard])
-    , _ssrOutcome :: !(Maybe Text)
+    , _ssrShards :: !(Maybe [SourceSplitShard])
+    , _ssrOutcome :: !(Maybe SourceSplitResponseOutcome)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SourceSplitResponse' with the minimum fields required to make a request.
@@ -190,7 +178,7 @@ data SourceSplitResponse = SourceSplitResponse'
 -- * 'ssrOutcome'
 sourceSplitResponse
     :: SourceSplitResponse
-sourceSplitResponse =
+sourceSplitResponse = 
     SourceSplitResponse'
     { _ssrBundles = Nothing
     , _ssrShards = Nothing
@@ -218,7 +206,7 @@ ssrShards
 -- \"as is\" without splitting. \"bundles\" is ignored in this case. If
 -- this is SPLITTING_HAPPENED, then \"bundles\" contains a list of bundles
 -- into which the source was split.
-ssrOutcome :: Lens' SourceSplitResponse (Maybe Text)
+ssrOutcome :: Lens' SourceSplitResponse (Maybe SourceSplitResponseOutcome)
 ssrOutcome
   = lens _ssrOutcome (\ s a -> s{_ssrOutcome = a})
 
@@ -239,57 +227,102 @@ instance ToJSON SourceSplitResponse where
                   ("shards" .=) <$> _ssrShards,
                   ("outcome" .=) <$> _ssrOutcome])
 
+-- | Metadata for a specific parameter.
 --
--- /See:/ 'resourceUtilizationReportMetricsItem' smart constructor.
-newtype ResourceUtilizationReportMetricsItem = ResourceUtilizationReportMetricsItem'
-    { _rurmiAddtional :: HashMap Text JSONValue
+-- /See:/ 'parameterMetadata' smart constructor.
+data ParameterMetadata = ParameterMetadata'
+    { _pmHelpText :: !(Maybe Text)
+    , _pmIsOptional :: !(Maybe Bool)
+    , _pmName :: !(Maybe Text)
+    , _pmRegexes :: !(Maybe [Text])
+    , _pmLabel :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
--- | Creates a value of 'ResourceUtilizationReportMetricsItem' with the minimum fields required to make a request.
+-- | Creates a value of 'ParameterMetadata' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'rurmiAddtional'
-resourceUtilizationReportMetricsItem
-    :: HashMap Text JSONValue -- ^ 'rurmiAddtional'
-    -> ResourceUtilizationReportMetricsItem
-resourceUtilizationReportMetricsItem pRurmiAddtional_ =
-    ResourceUtilizationReportMetricsItem'
-    { _rurmiAddtional = _Coerce # pRurmiAddtional_
+-- * 'pmHelpText'
+--
+-- * 'pmIsOptional'
+--
+-- * 'pmName'
+--
+-- * 'pmRegexes'
+--
+-- * 'pmLabel'
+parameterMetadata
+    :: ParameterMetadata
+parameterMetadata = 
+    ParameterMetadata'
+    { _pmHelpText = Nothing
+    , _pmIsOptional = Nothing
+    , _pmName = Nothing
+    , _pmRegexes = Nothing
+    , _pmLabel = Nothing
     }
 
--- | Properties of the object.
-rurmiAddtional :: Lens' ResourceUtilizationReportMetricsItem (HashMap Text JSONValue)
-rurmiAddtional
-  = lens _rurmiAddtional
-      (\ s a -> s{_rurmiAddtional = a})
+-- | Required. The help text to display for the parameter.
+pmHelpText :: Lens' ParameterMetadata (Maybe Text)
+pmHelpText
+  = lens _pmHelpText (\ s a -> s{_pmHelpText = a})
+
+-- | Optional. Whether the parameter is optional. Defaults to false.
+pmIsOptional :: Lens' ParameterMetadata (Maybe Bool)
+pmIsOptional
+  = lens _pmIsOptional (\ s a -> s{_pmIsOptional = a})
+
+-- | Required. The name of the parameter.
+pmName :: Lens' ParameterMetadata (Maybe Text)
+pmName = lens _pmName (\ s a -> s{_pmName = a})
+
+-- | Optional. Regexes that the parameter must match.
+pmRegexes :: Lens' ParameterMetadata [Text]
+pmRegexes
+  = lens _pmRegexes (\ s a -> s{_pmRegexes = a}) .
+      _Default
       . _Coerce
 
-instance FromJSON
-         ResourceUtilizationReportMetricsItem where
-        parseJSON
-          = withObject "ResourceUtilizationReportMetricsItem"
-              (\ o ->
-                 ResourceUtilizationReportMetricsItem' <$>
-                   (parseJSONObject o))
+-- | Required. The label to display for the parameter.
+pmLabel :: Lens' ParameterMetadata (Maybe Text)
+pmLabel = lens _pmLabel (\ s a -> s{_pmLabel = a})
 
-instance ToJSON ResourceUtilizationReportMetricsItem
-         where
-        toJSON = toJSON . _rurmiAddtional
+instance FromJSON ParameterMetadata where
+        parseJSON
+          = withObject "ParameterMetadata"
+              (\ o ->
+                 ParameterMetadata' <$>
+                   (o .:? "helpText") <*> (o .:? "isOptional") <*>
+                     (o .:? "name")
+                     <*> (o .:? "regexes" .!= mempty)
+                     <*> (o .:? "label"))
+
+instance ToJSON ParameterMetadata where
+        toJSON ParameterMetadata'{..}
+          = object
+              (catMaybes
+                 [("helpText" .=) <$> _pmHelpText,
+                  ("isOptional" .=) <$> _pmIsOptional,
+                  ("name" .=) <$> _pmName,
+                  ("regexes" .=) <$> _pmRegexes,
+                  ("label" .=) <$> _pmLabel])
 
 -- | A request to create a Cloud Dataflow job from a template.
 --
 -- /See:/ 'createJobFromTemplateRequest' smart constructor.
 data CreateJobFromTemplateRequest = CreateJobFromTemplateRequest'
-    { _cjftrEnvironment :: !(Maybe RuntimeEnvironment)
-    , _cjftrJobName     :: !(Maybe Text)
-    , _cjftrGcsPath     :: !(Maybe Text)
-    , _cjftrParameters  :: !(Maybe CreateJobFromTemplateRequestParameters)
+    { _cjftrLocation :: !(Maybe Text)
+    , _cjftrEnvironment :: !(Maybe RuntimeEnvironment)
+    , _cjftrJobName :: !(Maybe Text)
+    , _cjftrGcsPath :: !(Maybe Text)
+    , _cjftrParameters :: !(Maybe CreateJobFromTemplateRequestParameters)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CreateJobFromTemplateRequest' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cjftrLocation'
 --
 -- * 'cjftrEnvironment'
 --
@@ -300,13 +333,20 @@ data CreateJobFromTemplateRequest = CreateJobFromTemplateRequest'
 -- * 'cjftrParameters'
 createJobFromTemplateRequest
     :: CreateJobFromTemplateRequest
-createJobFromTemplateRequest =
+createJobFromTemplateRequest = 
     CreateJobFromTemplateRequest'
-    { _cjftrEnvironment = Nothing
+    { _cjftrLocation = Nothing
+    , _cjftrEnvironment = Nothing
     , _cjftrJobName = Nothing
     , _cjftrGcsPath = Nothing
     , _cjftrParameters = Nothing
     }
+
+-- | The location to which to direct the request.
+cjftrLocation :: Lens' CreateJobFromTemplateRequest (Maybe Text)
+cjftrLocation
+  = lens _cjftrLocation
+      (\ s a -> s{_cjftrLocation = a})
 
 -- | The runtime environment for the job.
 cjftrEnvironment :: Lens' CreateJobFromTemplateRequest (Maybe RuntimeEnvironment)
@@ -336,15 +376,17 @@ instance FromJSON CreateJobFromTemplateRequest where
           = withObject "CreateJobFromTemplateRequest"
               (\ o ->
                  CreateJobFromTemplateRequest' <$>
-                   (o .:? "environment") <*> (o .:? "jobName") <*>
-                     (o .:? "gcsPath")
+                   (o .:? "location") <*> (o .:? "environment") <*>
+                     (o .:? "jobName")
+                     <*> (o .:? "gcsPath")
                      <*> (o .:? "parameters"))
 
 instance ToJSON CreateJobFromTemplateRequest where
         toJSON CreateJobFromTemplateRequest'{..}
           = object
               (catMaybes
-                 [("environment" .=) <$> _cjftrEnvironment,
+                 [("location" .=) <$> _cjftrLocation,
+                  ("environment" .=) <$> _cjftrEnvironment,
                   ("jobName" .=) <$> _cjftrJobName,
                   ("gcsPath" .=) <$> _cjftrGcsPath,
                   ("parameters" .=) <$> _cjftrParameters])
@@ -362,7 +404,7 @@ instance ToJSON CreateJobFromTemplateRequest where
 -- needed, put the localized message in the error details or localize it in
 -- the client. The optional error details may contain arbitrary information
 -- about the error. There is a predefined set of error detail types in the
--- package \`google.rpc\` which can be used for common error conditions. #
+-- package \`google.rpc\` that can be used for common error conditions. #
 -- Language mapping The \`Status\` message is the logical representation of
 -- the error model, but it is not necessarily the actual wire format. When
 -- the \`Status\` message is exposed in different client libraries and
@@ -375,20 +417,20 @@ instance ToJSON CreateJobFromTemplateRequest where
 -- Partial errors. If a service needs to return partial errors to the
 -- client, it may embed the \`Status\` in the normal response to indicate
 -- the partial errors. - Workflow errors. A typical workflow has multiple
--- steps. Each step may have a \`Status\` message for error reporting
--- purpose. - Batch operations. If a client uses batch request and batch
--- response, the \`Status\` message should be used directly inside batch
--- response, one for each error sub-response. - Asynchronous operations. If
--- an API call embeds asynchronous operation results in its response, the
--- status of those operations should be represented directly using the
--- \`Status\` message. - Logging. If some API errors are stored in logs,
--- the message \`Status\` could be used directly after any stripping needed
--- for security\/privacy reasons.
+-- steps. Each step may have a \`Status\` message for error reporting. -
+-- Batch operations. If a client uses batch request and batch response, the
+-- \`Status\` message should be used directly inside batch response, one
+-- for each error sub-response. - Asynchronous operations. If an API call
+-- embeds asynchronous operation results in its response, the status of
+-- those operations should be represented directly using the \`Status\`
+-- message. - Logging. If some API errors are stored in logs, the message
+-- \`Status\` could be used directly after any stripping needed for
+-- security\/privacy reasons.
 --
 -- /See:/ 'status' smart constructor.
 data Status = Status'
     { _sDetails :: !(Maybe [StatusDetailsItem])
-    , _sCode    :: !(Maybe (Textual Int32))
+    , _sCode :: !(Maybe (Textual Int32))
     , _sMessage :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -403,15 +445,15 @@ data Status = Status'
 -- * 'sMessage'
 status
     :: Status
-status =
+status = 
     Status'
     { _sDetails = Nothing
     , _sCode = Nothing
     , _sMessage = Nothing
     }
 
--- | A list of messages that carry the error details. There will be a common
--- set of message types for APIs to use.
+-- | A list of messages that carry the error details. There is a common set
+-- of message types for APIs to use.
 sDetails :: Lens' Status [StatusDetailsItem]
 sDetails
   = lens _sDetails (\ s a -> s{_sDetails = a}) .
@@ -450,7 +492,7 @@ instance ToJSON Status where
 --
 -- /See:/ 'nameAndKind' smart constructor.
 data NameAndKind = NameAndKind'
-    { _nakKind :: !(Maybe Text)
+    { _nakKind :: !(Maybe NameAndKindKind)
     , _nakName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -463,14 +505,14 @@ data NameAndKind = NameAndKind'
 -- * 'nakName'
 nameAndKind
     :: NameAndKind
-nameAndKind =
+nameAndKind = 
     NameAndKind'
     { _nakKind = Nothing
     , _nakName = Nothing
     }
 
 -- | Counter aggregation kind.
-nakKind :: Lens' NameAndKind (Maybe Text)
+nakKind :: Lens' NameAndKind (Maybe NameAndKindKind)
 nakKind = lens _nakKind (\ s a -> s{_nakKind = a})
 
 -- | Name of the counter.
@@ -503,7 +545,7 @@ newtype IntegerList = IntegerList'
 -- * 'ilElements'
 integerList
     :: IntegerList
-integerList =
+integerList = 
     IntegerList'
     { _ilElements = Nothing
     }
@@ -531,21 +573,21 @@ instance ToJSON IntegerList where
 --
 -- /See:/ 'workItem' smart constructor.
 data WorkItem = WorkItem'
-    { _wiJobId                    :: !(Maybe Text)
-    , _wiReportStatusInterval     :: !(Maybe Text)
-    , _wiShellTask                :: !(Maybe ShellTask)
-    , _wiStreamingSetupTask       :: !(Maybe StreamingSetupTask)
-    , _wiInitialReportIndex       :: !(Maybe (Textual Int64))
-    , _wiMapTask                  :: !(Maybe MapTask)
-    , _wiPackages                 :: !(Maybe [Package])
+    { _wiJobId :: !(Maybe Text)
+    , _wiReportStatusInterval :: !(Maybe Duration)
+    , _wiShellTask :: !(Maybe ShellTask)
+    , _wiStreamingSetupTask :: !(Maybe StreamingSetupTask)
+    , _wiInitialReportIndex :: !(Maybe (Textual Int64))
+    , _wiMapTask :: !(Maybe MapTask)
+    , _wiPackages :: !(Maybe [Package])
     , _wiStreamingComputationTask :: !(Maybe StreamingComputationTask)
-    , _wiSourceOperationTask      :: !(Maybe SourceOperationRequest)
-    , _wiId                       :: !(Maybe (Textual Int64))
-    , _wiProjectId                :: !(Maybe Text)
-    , _wiLeaseExpireTime          :: !(Maybe Text)
-    , _wiConfiguration            :: !(Maybe Text)
-    , _wiStreamingConfigTask      :: !(Maybe StreamingConfigTask)
-    , _wiSeqMapTask               :: !(Maybe SeqMapTask)
+    , _wiSourceOperationTask :: !(Maybe SourceOperationRequest)
+    , _wiId :: !(Maybe (Textual Int64))
+    , _wiProjectId :: !(Maybe Text)
+    , _wiLeaseExpireTime :: !(Maybe DateTime')
+    , _wiConfiguration :: !(Maybe Text)
+    , _wiStreamingConfigTask :: !(Maybe StreamingConfigTask)
+    , _wiSeqMapTask :: !(Maybe SeqMapTask)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkItem' with the minimum fields required to make a request.
@@ -583,7 +625,7 @@ data WorkItem = WorkItem'
 -- * 'wiSeqMapTask'
 workItem
     :: WorkItem
-workItem =
+workItem = 
     WorkItem'
     { _wiJobId = Nothing
     , _wiReportStatusInterval = Nothing
@@ -607,10 +649,11 @@ wiJobId :: Lens' WorkItem (Maybe Text)
 wiJobId = lens _wiJobId (\ s a -> s{_wiJobId = a})
 
 -- | Recommended reporting interval.
-wiReportStatusInterval :: Lens' WorkItem (Maybe Text)
+wiReportStatusInterval :: Lens' WorkItem (Maybe Scientific)
 wiReportStatusInterval
   = lens _wiReportStatusInterval
       (\ s a -> s{_wiReportStatusInterval = a})
+      . mapping _Duration
 
 -- | Additional information for ShellTask WorkItems.
 wiShellTask :: Lens' WorkItem (Maybe ShellTask)
@@ -667,10 +710,11 @@ wiProjectId
   = lens _wiProjectId (\ s a -> s{_wiProjectId = a})
 
 -- | Time when the lease on this Work will expire.
-wiLeaseExpireTime :: Lens' WorkItem (Maybe Text)
+wiLeaseExpireTime :: Lens' WorkItem (Maybe UTCTime)
 wiLeaseExpireTime
   = lens _wiLeaseExpireTime
       (\ s a -> s{_wiLeaseExpireTime = a})
+      . mapping _DateTime
 
 -- | Work item-specific configuration as an opaque blob.
 wiConfiguration :: Lens' WorkItem (Maybe Text)
@@ -739,10 +783,10 @@ instance ToJSON WorkItem where
 --
 -- /See:/ 'workerHealthReport' smart constructor.
 data WorkerHealthReport = WorkerHealthReport'
-    { _whrVMIsHealthy    :: !(Maybe Bool)
-    , _whrReportInterval :: !(Maybe Text)
-    , _whrPods           :: !(Maybe [WorkerHealthReportPodsItem])
-    , _whrVMStartupTime  :: !(Maybe Text)
+    { _whrVMIsHealthy :: !(Maybe Bool)
+    , _whrReportInterval :: !(Maybe Duration)
+    , _whrPods :: !(Maybe [WorkerHealthReportPodsItem])
+    , _whrVMStartupTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerHealthReport' with the minimum fields required to make a request.
@@ -758,7 +802,7 @@ data WorkerHealthReport = WorkerHealthReport'
 -- * 'whrVMStartupTime'
 workerHealthReport
     :: WorkerHealthReport
-workerHealthReport =
+workerHealthReport = 
     WorkerHealthReport'
     { _whrVMIsHealthy = Nothing
     , _whrReportInterval = Nothing
@@ -775,10 +819,11 @@ whrVMIsHealthy
 -- | The interval at which the worker is sending health reports. The default
 -- value of 0 should be interpreted as the field is not being explicitly
 -- set by the worker.
-whrReportInterval :: Lens' WorkerHealthReport (Maybe Text)
+whrReportInterval :: Lens' WorkerHealthReport (Maybe Scientific)
 whrReportInterval
   = lens _whrReportInterval
       (\ s a -> s{_whrReportInterval = a})
+      . mapping _Duration
 
 -- | The pods running on the worker. See:
 -- http:\/\/kubernetes.io\/v1.1\/docs\/api-reference\/v1\/definitions.html#_v1_pod
@@ -790,10 +835,11 @@ whrPods
       . _Coerce
 
 -- | The time the VM was booted.
-whrVMStartupTime :: Lens' WorkerHealthReport (Maybe Text)
+whrVMStartupTime :: Lens' WorkerHealthReport (Maybe UTCTime)
 whrVMStartupTime
   = lens _whrVMStartupTime
       (\ s a -> s{_whrVMStartupTime = a})
+      . mapping _DateTime
 
 instance FromJSON WorkerHealthReport where
         parseJSON
@@ -818,7 +864,7 @@ instance ToJSON WorkerHealthReport where
 --
 -- /See:/ 'sourceSplitOptions' smart constructor.
 data SourceSplitOptions = SourceSplitOptions'
-    { _ssoDesiredShardSizeBytes  :: !(Maybe (Textual Int64))
+    { _ssoDesiredShardSizeBytes :: !(Maybe (Textual Int64))
     , _ssoDesiredBundleSizeBytes :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -831,7 +877,7 @@ data SourceSplitOptions = SourceSplitOptions'
 -- * 'ssoDesiredBundleSizeBytes'
 sourceSplitOptions
     :: SourceSplitOptions
-sourceSplitOptions =
+sourceSplitOptions = 
     SourceSplitOptions'
     { _ssoDesiredShardSizeBytes = Nothing
     , _ssoDesiredBundleSizeBytes = Nothing
@@ -884,7 +930,7 @@ newtype WorkerPoolMetadata = WorkerPoolMetadata'
 workerPoolMetadata
     :: HashMap Text Text -- ^ 'wpmAddtional'
     -> WorkerPoolMetadata
-workerPoolMetadata pWpmAddtional_ =
+workerPoolMetadata pWpmAddtional_ = 
     WorkerPoolMetadata'
     { _wpmAddtional = _Coerce # pWpmAddtional_
     }
@@ -907,7 +953,7 @@ instance ToJSON WorkerPoolMetadata where
 -- /See:/ 'autoscalingSettings' smart constructor.
 data AutoscalingSettings = AutoscalingSettings'
     { _asMaxNumWorkers :: !(Maybe (Textual Int32))
-    , _asAlgorithm     :: !(Maybe Text)
+    , _asAlgorithm :: !(Maybe AutoscalingSettingsAlgorithm)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'AutoscalingSettings' with the minimum fields required to make a request.
@@ -919,7 +965,7 @@ data AutoscalingSettings = AutoscalingSettings'
 -- * 'asAlgorithm'
 autoscalingSettings
     :: AutoscalingSettings
-autoscalingSettings =
+autoscalingSettings = 
     AutoscalingSettings'
     { _asMaxNumWorkers = Nothing
     , _asAlgorithm = Nothing
@@ -933,7 +979,7 @@ asMaxNumWorkers
       . mapping _Coerce
 
 -- | The algorithm to use for autoscaling.
-asAlgorithm :: Lens' AutoscalingSettings (Maybe Text)
+asAlgorithm :: Lens' AutoscalingSettings (Maybe AutoscalingSettingsAlgorithm)
 asAlgorithm
   = lens _asAlgorithm (\ s a -> s{_asAlgorithm = a})
 
@@ -966,7 +1012,7 @@ newtype JobExecutionStageInfo = JobExecutionStageInfo'
 -- * 'jesiStepName'
 jobExecutionStageInfo
     :: JobExecutionStageInfo
-jobExecutionStageInfo =
+jobExecutionStageInfo = 
     JobExecutionStageInfo'
     { _jesiStepName = Nothing
     }
@@ -997,11 +1043,11 @@ instance ToJSON JobExecutionStageInfo where
 -- /See:/ 'instructionOutput' smart constructor.
 data InstructionOutput = InstructionOutput'
     { _ioOnlyCountValueBytes :: !(Maybe Bool)
-    , _ioCodec               :: !(Maybe InstructionOutputCodec)
-    , _ioName                :: !(Maybe Text)
-    , _ioSystemName          :: !(Maybe Text)
-    , _ioOriginalName        :: !(Maybe Text)
-    , _ioOnlyCountKeyBytes   :: !(Maybe Bool)
+    , _ioCodec :: !(Maybe InstructionOutputCodec)
+    , _ioName :: !(Maybe Text)
+    , _ioSystemName :: !(Maybe Text)
+    , _ioOriginalName :: !(Maybe Text)
+    , _ioOnlyCountKeyBytes :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstructionOutput' with the minimum fields required to make a request.
@@ -1021,7 +1067,7 @@ data InstructionOutput = InstructionOutput'
 -- * 'ioOnlyCountKeyBytes'
 instructionOutput
     :: InstructionOutput
-instructionOutput =
+instructionOutput = 
     InstructionOutput'
     { _ioOnlyCountValueBytes = Nothing
     , _ioCodec = Nothing
@@ -1088,14 +1134,74 @@ instance ToJSON InstructionOutput where
                   ("originalName" .=) <$> _ioOriginalName,
                   ("onlyCountKeyBytes" .=) <$> _ioOnlyCountKeyBytes])
 
+-- | Parameters to provide to the template being launched.
+--
+-- /See:/ 'launchTemplateParameters' smart constructor.
+data LaunchTemplateParameters = LaunchTemplateParameters'
+    { _ltpEnvironment :: !(Maybe RuntimeEnvironment)
+    , _ltpJobName :: !(Maybe Text)
+    , _ltpParameters :: !(Maybe LaunchTemplateParametersParameters)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'LaunchTemplateParameters' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltpEnvironment'
+--
+-- * 'ltpJobName'
+--
+-- * 'ltpParameters'
+launchTemplateParameters
+    :: LaunchTemplateParameters
+launchTemplateParameters = 
+    LaunchTemplateParameters'
+    { _ltpEnvironment = Nothing
+    , _ltpJobName = Nothing
+    , _ltpParameters = Nothing
+    }
+
+-- | The runtime environment for the job.
+ltpEnvironment :: Lens' LaunchTemplateParameters (Maybe RuntimeEnvironment)
+ltpEnvironment
+  = lens _ltpEnvironment
+      (\ s a -> s{_ltpEnvironment = a})
+
+-- | Required. The job name to use for the created job.
+ltpJobName :: Lens' LaunchTemplateParameters (Maybe Text)
+ltpJobName
+  = lens _ltpJobName (\ s a -> s{_ltpJobName = a})
+
+-- | The runtime parameters to pass to the job.
+ltpParameters :: Lens' LaunchTemplateParameters (Maybe LaunchTemplateParametersParameters)
+ltpParameters
+  = lens _ltpParameters
+      (\ s a -> s{_ltpParameters = a})
+
+instance FromJSON LaunchTemplateParameters where
+        parseJSON
+          = withObject "LaunchTemplateParameters"
+              (\ o ->
+                 LaunchTemplateParameters' <$>
+                   (o .:? "environment") <*> (o .:? "jobName") <*>
+                     (o .:? "parameters"))
+
+instance ToJSON LaunchTemplateParameters where
+        toJSON LaunchTemplateParameters'{..}
+          = object
+              (catMaybes
+                 [("environment" .=) <$> _ltpEnvironment,
+                  ("jobName" .=) <$> _ltpJobName,
+                  ("parameters" .=) <$> _ltpParameters])
+
 -- | Request to report the status of WorkItems.
 --
 -- /See:/ 'reportWorkItemStatusRequest' smart constructor.
 data ReportWorkItemStatusRequest = ReportWorkItemStatusRequest'
-    { _rwisrCurrentWorkerTime :: !(Maybe Text)
-    , _rwisrLocation          :: !(Maybe Text)
-    , _rwisrWorkItemStatuses  :: !(Maybe [WorkItemStatus])
-    , _rwisrWorkerId          :: !(Maybe Text)
+    { _rwisrCurrentWorkerTime :: !(Maybe DateTime')
+    , _rwisrLocation :: !(Maybe Text)
+    , _rwisrWorkItemStatuses :: !(Maybe [WorkItemStatus])
+    , _rwisrWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ReportWorkItemStatusRequest' with the minimum fields required to make a request.
@@ -1111,7 +1217,7 @@ data ReportWorkItemStatusRequest = ReportWorkItemStatusRequest'
 -- * 'rwisrWorkerId'
 reportWorkItemStatusRequest
     :: ReportWorkItemStatusRequest
-reportWorkItemStatusRequest =
+reportWorkItemStatusRequest = 
     ReportWorkItemStatusRequest'
     { _rwisrCurrentWorkerTime = Nothing
     , _rwisrLocation = Nothing
@@ -1120,10 +1226,11 @@ reportWorkItemStatusRequest =
     }
 
 -- | The current timestamp at the worker.
-rwisrCurrentWorkerTime :: Lens' ReportWorkItemStatusRequest (Maybe Text)
+rwisrCurrentWorkerTime :: Lens' ReportWorkItemStatusRequest (Maybe UTCTime)
 rwisrCurrentWorkerTime
   = lens _rwisrCurrentWorkerTime
       (\ s a -> s{_rwisrCurrentWorkerTime = a})
+      . mapping _DateTime
 
 -- | The location which contains the WorkItem\'s job.
 rwisrLocation :: Lens' ReportWorkItemStatusRequest (Maybe Text)
@@ -1185,7 +1292,7 @@ newtype EnvironmentVersion = EnvironmentVersion'
 environmentVersion
     :: HashMap Text JSONValue -- ^ 'evAddtional'
     -> EnvironmentVersion
-environmentVersion pEvAddtional_ =
+environmentVersion pEvAddtional_ = 
     EnvironmentVersion'
     { _evAddtional = _Coerce # pEvAddtional_
     }
@@ -1209,7 +1316,7 @@ instance ToJSON EnvironmentVersion where
 -- /See:/ 'sink' smart constructor.
 data Sink = Sink'
     { _sCodec :: !(Maybe SinkCodec)
-    , _sSpec  :: !(Maybe SinkSpec)
+    , _sSpec :: !(Maybe SinkSpec)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Sink' with the minimum fields required to make a request.
@@ -1221,7 +1328,7 @@ data Sink = Sink'
 -- * 'sSpec'
 sink
     :: Sink
-sink =
+sink = 
     Sink'
     { _sCodec = Nothing
     , _sSpec = Nothing
@@ -1260,7 +1367,7 @@ newtype StringList = StringList'
 -- * 'slElements'
 stringList
     :: StringList
-stringList =
+stringList = 
     StringList'
     { _slElements = Nothing
     }
@@ -1288,7 +1395,7 @@ instance ToJSON StringList where
 --
 -- /See:/ 'workerHealthReportResponse' smart constructor.
 newtype WorkerHealthReportResponse = WorkerHealthReportResponse'
-    { _whrrReportInterval :: Maybe Text
+    { _whrrReportInterval :: Maybe Duration
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerHealthReportResponse' with the minimum fields required to make a request.
@@ -1298,7 +1405,7 @@ newtype WorkerHealthReportResponse = WorkerHealthReportResponse'
 -- * 'whrrReportInterval'
 workerHealthReportResponse
     :: WorkerHealthReportResponse
-workerHealthReportResponse =
+workerHealthReportResponse = 
     WorkerHealthReportResponse'
     { _whrrReportInterval = Nothing
     }
@@ -1306,10 +1413,11 @@ workerHealthReportResponse =
 -- | A positive value indicates the worker should change its reporting
 -- interval to the specified value. The default value of zero means no
 -- change in report rate is requested by the server.
-whrrReportInterval :: Lens' WorkerHealthReportResponse (Maybe Text)
+whrrReportInterval :: Lens' WorkerHealthReportResponse (Maybe Scientific)
 whrrReportInterval
   = lens _whrrReportInterval
       (\ s a -> s{_whrrReportInterval = a})
+      . mapping _Duration
 
 instance FromJSON WorkerHealthReportResponse where
         parseJSON
@@ -1324,11 +1432,181 @@ instance ToJSON WorkerHealthReportResponse where
               (catMaybes
                  [("reportInterval" .=) <$> _whrrReportInterval])
 
+-- | Data provided with a pipeline or transform to provide descriptive info.
+--
+-- /See:/ 'displayData' smart constructor.
+data DisplayData = DisplayData'
+    { _ddDurationValue :: !(Maybe Duration)
+    , _ddBoolValue :: !(Maybe Bool)
+    , _ddTimestampValue :: !(Maybe DateTime')
+    , _ddURL :: !(Maybe Text)
+    , _ddNamespace :: !(Maybe Text)
+    , _ddJavaClassValue :: !(Maybe Text)
+    , _ddShortStrValue :: !(Maybe Text)
+    , _ddKey :: !(Maybe Text)
+    , _ddInt64Value :: !(Maybe (Textual Int64))
+    , _ddFloatValue :: !(Maybe (Textual Double))
+    , _ddStrValue :: !(Maybe Text)
+    , _ddLabel :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'DisplayData' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ddDurationValue'
+--
+-- * 'ddBoolValue'
+--
+-- * 'ddTimestampValue'
+--
+-- * 'ddURL'
+--
+-- * 'ddNamespace'
+--
+-- * 'ddJavaClassValue'
+--
+-- * 'ddShortStrValue'
+--
+-- * 'ddKey'
+--
+-- * 'ddInt64Value'
+--
+-- * 'ddFloatValue'
+--
+-- * 'ddStrValue'
+--
+-- * 'ddLabel'
+displayData
+    :: DisplayData
+displayData = 
+    DisplayData'
+    { _ddDurationValue = Nothing
+    , _ddBoolValue = Nothing
+    , _ddTimestampValue = Nothing
+    , _ddURL = Nothing
+    , _ddNamespace = Nothing
+    , _ddJavaClassValue = Nothing
+    , _ddShortStrValue = Nothing
+    , _ddKey = Nothing
+    , _ddInt64Value = Nothing
+    , _ddFloatValue = Nothing
+    , _ddStrValue = Nothing
+    , _ddLabel = Nothing
+    }
+
+-- | Contains value if the data is of duration type.
+ddDurationValue :: Lens' DisplayData (Maybe Scientific)
+ddDurationValue
+  = lens _ddDurationValue
+      (\ s a -> s{_ddDurationValue = a})
+      . mapping _Duration
+
+-- | Contains value if the data is of a boolean type.
+ddBoolValue :: Lens' DisplayData (Maybe Bool)
+ddBoolValue
+  = lens _ddBoolValue (\ s a -> s{_ddBoolValue = a})
+
+-- | Contains value if the data is of timestamp type.
+ddTimestampValue :: Lens' DisplayData (Maybe UTCTime)
+ddTimestampValue
+  = lens _ddTimestampValue
+      (\ s a -> s{_ddTimestampValue = a})
+      . mapping _DateTime
+
+-- | An optional full URL.
+ddURL :: Lens' DisplayData (Maybe Text)
+ddURL = lens _ddURL (\ s a -> s{_ddURL = a})
+
+-- | The namespace for the key. This is usually a class name or programming
+-- language namespace (i.e. python module) which defines the display data.
+-- This allows a dax monitoring system to specially handle the data and
+-- perform custom rendering.
+ddNamespace :: Lens' DisplayData (Maybe Text)
+ddNamespace
+  = lens _ddNamespace (\ s a -> s{_ddNamespace = a})
+
+-- | Contains value if the data is of java class type.
+ddJavaClassValue :: Lens' DisplayData (Maybe Text)
+ddJavaClassValue
+  = lens _ddJavaClassValue
+      (\ s a -> s{_ddJavaClassValue = a})
+
+-- | A possible additional shorter value to display. For example a
+-- java_class_name_value of com.mypackage.MyDoFn will be stored with MyDoFn
+-- as the short_str_value and com.mypackage.MyDoFn as the java_class_name
+-- value. short_str_value can be displayed and java_class_name_value will
+-- be displayed as a tooltip.
+ddShortStrValue :: Lens' DisplayData (Maybe Text)
+ddShortStrValue
+  = lens _ddShortStrValue
+      (\ s a -> s{_ddShortStrValue = a})
+
+-- | The key identifying the display data. This is intended to be used as a
+-- label for the display data when viewed in a dax monitoring system.
+ddKey :: Lens' DisplayData (Maybe Text)
+ddKey = lens _ddKey (\ s a -> s{_ddKey = a})
+
+-- | Contains value if the data is of int64 type.
+ddInt64Value :: Lens' DisplayData (Maybe Int64)
+ddInt64Value
+  = lens _ddInt64Value (\ s a -> s{_ddInt64Value = a})
+      . mapping _Coerce
+
+-- | Contains value if the data is of float type.
+ddFloatValue :: Lens' DisplayData (Maybe Double)
+ddFloatValue
+  = lens _ddFloatValue (\ s a -> s{_ddFloatValue = a})
+      . mapping _Coerce
+
+-- | Contains value if the data is of string type.
+ddStrValue :: Lens' DisplayData (Maybe Text)
+ddStrValue
+  = lens _ddStrValue (\ s a -> s{_ddStrValue = a})
+
+-- | An optional label to display in a dax UI for the element.
+ddLabel :: Lens' DisplayData (Maybe Text)
+ddLabel = lens _ddLabel (\ s a -> s{_ddLabel = a})
+
+instance FromJSON DisplayData where
+        parseJSON
+          = withObject "DisplayData"
+              (\ o ->
+                 DisplayData' <$>
+                   (o .:? "durationValue") <*> (o .:? "boolValue") <*>
+                     (o .:? "timestampValue")
+                     <*> (o .:? "url")
+                     <*> (o .:? "namespace")
+                     <*> (o .:? "javaClassValue")
+                     <*> (o .:? "shortStrValue")
+                     <*> (o .:? "key")
+                     <*> (o .:? "int64Value")
+                     <*> (o .:? "floatValue")
+                     <*> (o .:? "strValue")
+                     <*> (o .:? "label"))
+
+instance ToJSON DisplayData where
+        toJSON DisplayData'{..}
+          = object
+              (catMaybes
+                 [("durationValue" .=) <$> _ddDurationValue,
+                  ("boolValue" .=) <$> _ddBoolValue,
+                  ("timestampValue" .=) <$> _ddTimestampValue,
+                  ("url" .=) <$> _ddURL,
+                  ("namespace" .=) <$> _ddNamespace,
+                  ("javaClassValue" .=) <$> _ddJavaClassValue,
+                  ("shortStrValue" .=) <$> _ddShortStrValue,
+                  ("key" .=) <$> _ddKey,
+                  ("int64Value" .=) <$> _ddInt64Value,
+                  ("floatValue" .=) <$> _ddFloatValue,
+                  ("strValue" .=) <$> _ddStrValue,
+                  ("label" .=) <$> _ddLabel])
+
 -- | Response to a send capture request. nothing
 --
 -- /See:/ 'sendDebugCaptureResponse' smart constructor.
 data SendDebugCaptureResponse =
-    SendDebugCaptureResponse'
+    SendDebugCaptureResponse' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SendDebugCaptureResponse' with the minimum fields required to make a request.
@@ -1344,6 +1622,70 @@ instance FromJSON SendDebugCaptureResponse where
 
 instance ToJSON SendDebugCaptureResponse where
         toJSON = const emptyObject
+
+-- | A rich message format, including a human readable string, a key for
+-- identifying the message, and structured data associated with the message
+-- for programmatic consumption.
+--
+-- /See:/ 'structuredMessage' smart constructor.
+data StructuredMessage = StructuredMessage'
+    { _smMessageText :: !(Maybe Text)
+    , _smMessageKey :: !(Maybe Text)
+    , _smParameters :: !(Maybe [Parameter])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'StructuredMessage' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'smMessageText'
+--
+-- * 'smMessageKey'
+--
+-- * 'smParameters'
+structuredMessage
+    :: StructuredMessage
+structuredMessage = 
+    StructuredMessage'
+    { _smMessageText = Nothing
+    , _smMessageKey = Nothing
+    , _smParameters = Nothing
+    }
+
+-- | Human-readable version of message.
+smMessageText :: Lens' StructuredMessage (Maybe Text)
+smMessageText
+  = lens _smMessageText
+      (\ s a -> s{_smMessageText = a})
+
+-- | Idenfier for this message type. Used by external systems to
+-- internationalize or personalize message.
+smMessageKey :: Lens' StructuredMessage (Maybe Text)
+smMessageKey
+  = lens _smMessageKey (\ s a -> s{_smMessageKey = a})
+
+-- | The structured data associated with this message.
+smParameters :: Lens' StructuredMessage [Parameter]
+smParameters
+  = lens _smParameters (\ s a -> s{_smParameters = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON StructuredMessage where
+        parseJSON
+          = withObject "StructuredMessage"
+              (\ o ->
+                 StructuredMessage' <$>
+                   (o .:? "messageText") <*> (o .:? "messageKey") <*>
+                     (o .:? "parameters" .!= mempty))
+
+instance ToJSON StructuredMessage where
+        toJSON StructuredMessage'{..}
+          = object
+              (catMaybes
+                 [("messageText" .=) <$> _smMessageText,
+                  ("messageKey" .=) <$> _smMessageKey,
+                  ("parameters" .=) <$> _smParameters])
 
 -- | User-defined labels for this job. The labels map can contain no more
 -- than 64 entries. Entries of the labels map are UTF8 strings that comply
@@ -1365,7 +1707,7 @@ newtype JobLabels = JobLabels'
 jobLabels
     :: HashMap Text Text -- ^ 'jlAddtional'
     -> JobLabels
-jobLabels pJlAddtional_ =
+jobLabels pJlAddtional_ = 
     JobLabels'
     { _jlAddtional = _Coerce # pJlAddtional_
     }
@@ -1388,9 +1730,9 @@ instance ToJSON JobLabels where
 --
 -- /See:/ 'metricStructuredName' smart constructor.
 data MetricStructuredName = MetricStructuredName'
-    { _msnOrigin  :: !(Maybe Text)
+    { _msnOrigin :: !(Maybe Text)
     , _msnContext :: !(Maybe MetricStructuredNameContext)
-    , _msnName    :: !(Maybe Text)
+    , _msnName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricStructuredName' with the minimum fields required to make a request.
@@ -1404,7 +1746,7 @@ data MetricStructuredName = MetricStructuredName'
 -- * 'msnName'
 metricStructuredName
     :: MetricStructuredName
-metricStructuredName =
+metricStructuredName = 
     MetricStructuredName'
     { _msnOrigin = Nothing
     , _msnContext = Nothing
@@ -1452,25 +1794,27 @@ instance ToJSON MetricStructuredName where
 --
 -- /See:/ 'counterStructuredName' smart constructor.
 data CounterStructuredName = CounterStructuredName'
-    { _csnStandardOrigin    :: !(Maybe Text)
+    { _csnOrigin :: !(Maybe CounterStructuredNameOrigin)
+    , _csnOriginNamespace :: !(Maybe Text)
     , _csnComponentStepName :: !(Maybe Text)
-    , _csnOtherOrigin       :: !(Maybe Text)
-    , _csnPortion           :: !(Maybe Text)
-    , _csnOriginalStepName  :: !(Maybe Text)
-    , _csnName              :: !(Maybe Text)
+    , _csnPortion :: !(Maybe CounterStructuredNamePortion)
+    , _csnOriginalStepName :: !(Maybe Text)
+    , _csnName :: !(Maybe Text)
     , _csnExecutionStepName :: !(Maybe Text)
-    , _csnWorkerId          :: !(Maybe Text)
+    , _csnOriginalRequestingStepName :: !(Maybe Text)
+    , _csnInputIndex :: !(Maybe (Textual Int32))
+    , _csnWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CounterStructuredName' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'csnStandardOrigin'
+-- * 'csnOrigin'
+--
+-- * 'csnOriginNamespace'
 --
 -- * 'csnComponentStepName'
---
--- * 'csnOtherOrigin'
 --
 -- * 'csnPortion'
 --
@@ -1480,26 +1824,37 @@ data CounterStructuredName = CounterStructuredName'
 --
 -- * 'csnExecutionStepName'
 --
+-- * 'csnOriginalRequestingStepName'
+--
+-- * 'csnInputIndex'
+--
 -- * 'csnWorkerId'
 counterStructuredName
     :: CounterStructuredName
-counterStructuredName =
+counterStructuredName = 
     CounterStructuredName'
-    { _csnStandardOrigin = Nothing
+    { _csnOrigin = Nothing
+    , _csnOriginNamespace = Nothing
     , _csnComponentStepName = Nothing
-    , _csnOtherOrigin = Nothing
     , _csnPortion = Nothing
     , _csnOriginalStepName = Nothing
     , _csnName = Nothing
     , _csnExecutionStepName = Nothing
+    , _csnOriginalRequestingStepName = Nothing
+    , _csnInputIndex = Nothing
     , _csnWorkerId = Nothing
     }
 
 -- | One of the standard Origins defined above.
-csnStandardOrigin :: Lens' CounterStructuredName (Maybe Text)
-csnStandardOrigin
-  = lens _csnStandardOrigin
-      (\ s a -> s{_csnStandardOrigin = a})
+csnOrigin :: Lens' CounterStructuredName (Maybe CounterStructuredNameOrigin)
+csnOrigin
+  = lens _csnOrigin (\ s a -> s{_csnOrigin = a})
+
+-- | A string containing a more specific namespace of the counter\'s origin.
+csnOriginNamespace :: Lens' CounterStructuredName (Maybe Text)
+csnOriginNamespace
+  = lens _csnOriginNamespace
+      (\ s a -> s{_csnOriginNamespace = a})
 
 -- | Name of the optimized step being executed by the workers.
 csnComponentStepName :: Lens' CounterStructuredName (Maybe Text)
@@ -1507,14 +1862,8 @@ csnComponentStepName
   = lens _csnComponentStepName
       (\ s a -> s{_csnComponentStepName = a})
 
--- | A string containing the origin of the counter.
-csnOtherOrigin :: Lens' CounterStructuredName (Maybe Text)
-csnOtherOrigin
-  = lens _csnOtherOrigin
-      (\ s a -> s{_csnOtherOrigin = a})
-
 -- | Portion of this counter, either key or value.
-csnPortion :: Lens' CounterStructuredName (Maybe Text)
+csnPortion :: Lens' CounterStructuredName (Maybe CounterStructuredNamePortion)
 csnPortion
   = lens _csnPortion (\ s a -> s{_csnPortion = a})
 
@@ -1536,6 +1885,24 @@ csnExecutionStepName
   = lens _csnExecutionStepName
       (\ s a -> s{_csnExecutionStepName = a})
 
+-- | The step name requesting an operation, such as GBK. I.e. the ParDo
+-- causing a read\/write from shuffle to occur, or a read from side inputs.
+csnOriginalRequestingStepName :: Lens' CounterStructuredName (Maybe Text)
+csnOriginalRequestingStepName
+  = lens _csnOriginalRequestingStepName
+      (\ s a -> s{_csnOriginalRequestingStepName = a})
+
+-- | Index of an input collection that\'s being read from\/written to as a
+-- side input. The index identifies a step\'s side inputs starting by 1
+-- (e.g. the first side input has input_index 1, the third has input_index
+-- 3). Side inputs are identified by a pair of (original_step_name,
+-- input_index). This field helps uniquely identify them.
+csnInputIndex :: Lens' CounterStructuredName (Maybe Int32)
+csnInputIndex
+  = lens _csnInputIndex
+      (\ s a -> s{_csnInputIndex = a})
+      . mapping _Coerce
+
 -- | ID of a particular worker.
 csnWorkerId :: Lens' CounterStructuredName (Maybe Text)
 csnWorkerId
@@ -1546,34 +1913,87 @@ instance FromJSON CounterStructuredName where
           = withObject "CounterStructuredName"
               (\ o ->
                  CounterStructuredName' <$>
-                   (o .:? "standardOrigin") <*>
+                   (o .:? "origin") <*> (o .:? "originNamespace") <*>
                      (o .:? "componentStepName")
-                     <*> (o .:? "otherOrigin")
                      <*> (o .:? "portion")
                      <*> (o .:? "originalStepName")
                      <*> (o .:? "name")
                      <*> (o .:? "executionStepName")
+                     <*> (o .:? "originalRequestingStepName")
+                     <*> (o .:? "inputIndex")
                      <*> (o .:? "workerId"))
 
 instance ToJSON CounterStructuredName where
         toJSON CounterStructuredName'{..}
           = object
               (catMaybes
-                 [("standardOrigin" .=) <$> _csnStandardOrigin,
+                 [("origin" .=) <$> _csnOrigin,
+                  ("originNamespace" .=) <$> _csnOriginNamespace,
                   ("componentStepName" .=) <$> _csnComponentStepName,
-                  ("otherOrigin" .=) <$> _csnOtherOrigin,
                   ("portion" .=) <$> _csnPortion,
                   ("originalStepName" .=) <$> _csnOriginalStepName,
                   ("name" .=) <$> _csnName,
                   ("executionStepName" .=) <$> _csnExecutionStepName,
+                  ("originalRequestingStepName" .=) <$>
+                    _csnOriginalRequestingStepName,
+                  ("inputIndex" .=) <$> _csnInputIndex,
                   ("workerId" .=) <$> _csnWorkerId])
+
+-- | The response to a GetTemplate request.
+--
+-- /See:/ 'getTemplateResponse' smart constructor.
+data GetTemplateResponse = GetTemplateResponse'
+    { _gtrStatus :: !(Maybe Status)
+    , _gtrMetadata :: !(Maybe TemplateMetadata)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'GetTemplateResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'gtrStatus'
+--
+-- * 'gtrMetadata'
+getTemplateResponse
+    :: GetTemplateResponse
+getTemplateResponse = 
+    GetTemplateResponse'
+    { _gtrStatus = Nothing
+    , _gtrMetadata = Nothing
+    }
+
+-- | The status of the get template request. Any problems with the request
+-- will be indicated in the error_details.
+gtrStatus :: Lens' GetTemplateResponse (Maybe Status)
+gtrStatus
+  = lens _gtrStatus (\ s a -> s{_gtrStatus = a})
+
+-- | The template metadata describing the template name, available
+-- parameters, etc.
+gtrMetadata :: Lens' GetTemplateResponse (Maybe TemplateMetadata)
+gtrMetadata
+  = lens _gtrMetadata (\ s a -> s{_gtrMetadata = a})
+
+instance FromJSON GetTemplateResponse where
+        parseJSON
+          = withObject "GetTemplateResponse"
+              (\ o ->
+                 GetTemplateResponse' <$>
+                   (o .:? "status") <*> (o .:? "metadata"))
+
+instance ToJSON GetTemplateResponse where
+        toJSON GetTemplateResponse'{..}
+          = object
+              (catMaybes
+                 [("status" .=) <$> _gtrStatus,
+                  ("metadata" .=) <$> _gtrMetadata])
 
 -- | An instruction that writes records. Takes one input, produces no
 -- outputs.
 --
 -- /See:/ 'writeInstruction' smart constructor.
 data WriteInstruction = WriteInstruction'
-    { _wiSink  :: !(Maybe Sink)
+    { _wiSink :: !(Maybe Sink)
     , _wiInput :: !(Maybe InstructionInput)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1586,7 +2006,7 @@ data WriteInstruction = WriteInstruction'
 -- * 'wiInput'
 writeInstruction
     :: WriteInstruction
-writeInstruction =
+writeInstruction = 
     WriteInstruction'
     { _wiSink = Nothing
     , _wiInput = Nothing
@@ -1628,7 +2048,7 @@ newtype EnvironmentUserAgent = EnvironmentUserAgent'
 environmentUserAgent
     :: HashMap Text JSONValue -- ^ 'euaAddtional'
     -> EnvironmentUserAgent
-environmentUserAgent pEuaAddtional_ =
+environmentUserAgent pEuaAddtional_ = 
     EnvironmentUserAgent'
     { _euaAddtional = _Coerce # pEuaAddtional_
     }
@@ -1652,8 +2072,8 @@ instance ToJSON EnvironmentUserAgent where
 --
 -- /See:/ 'disk' smart constructor.
 data Disk = Disk'
-    { _dSizeGb     :: !(Maybe (Textual Int32))
-    , _dDiskType   :: !(Maybe Text)
+    { _dSizeGb :: !(Maybe (Textual Int32))
+    , _dDiskType :: !(Maybe Text)
     , _dMountPoint :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1668,7 +2088,7 @@ data Disk = Disk'
 -- * 'dMountPoint'
 disk
     :: Disk
-disk =
+disk = 
     Disk'
     { _dSizeGb = Nothing
     , _dDiskType = Nothing
@@ -1724,15 +2144,16 @@ instance ToJSON Disk where
 --
 -- /See:/ 'metricUpdate' smart constructor.
 data MetricUpdate = MetricUpdate'
-    { _muMeanSum    :: !(Maybe JSONValue)
-    , _muInternal   :: !(Maybe JSONValue)
-    , _muSet        :: !(Maybe JSONValue)
+    { _muMeanSum :: !(Maybe JSONValue)
+    , _muInternal :: !(Maybe JSONValue)
+    , _muSet :: !(Maybe JSONValue)
+    , _muDistribution :: !(Maybe JSONValue)
     , _muCumulative :: !(Maybe Bool)
-    , _muKind       :: !(Maybe Text)
-    , _muUpdateTime :: !(Maybe Text)
-    , _muMeanCount  :: !(Maybe JSONValue)
-    , _muName       :: !(Maybe MetricStructuredName)
-    , _muScalar     :: !(Maybe JSONValue)
+    , _muKind :: !(Maybe Text)
+    , _muUpdateTime :: !(Maybe DateTime')
+    , _muMeanCount :: !(Maybe JSONValue)
+    , _muName :: !(Maybe MetricStructuredName)
+    , _muScalar :: !(Maybe JSONValue)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MetricUpdate' with the minimum fields required to make a request.
@@ -1744,6 +2165,8 @@ data MetricUpdate = MetricUpdate'
 -- * 'muInternal'
 --
 -- * 'muSet'
+--
+-- * 'muDistribution'
 --
 -- * 'muCumulative'
 --
@@ -1758,11 +2181,12 @@ data MetricUpdate = MetricUpdate'
 -- * 'muScalar'
 metricUpdate
     :: MetricUpdate
-metricUpdate =
+metricUpdate = 
     MetricUpdate'
     { _muMeanSum = Nothing
     , _muInternal = Nothing
     , _muSet = Nothing
+    , _muDistribution = Nothing
     , _muCumulative = Nothing
     , _muKind = Nothing
     , _muUpdateTime = Nothing
@@ -1792,6 +2216,13 @@ muInternal
 muSet :: Lens' MetricUpdate (Maybe JSONValue)
 muSet = lens _muSet (\ s a -> s{_muSet = a})
 
+-- | A struct value describing properties of a distribution of numeric
+-- values.
+muDistribution :: Lens' MetricUpdate (Maybe JSONValue)
+muDistribution
+  = lens _muDistribution
+      (\ s a -> s{_muDistribution = a})
+
 -- | True if this metric is reported as the total cumulative aggregate value
 -- accumulated since the worker started working on this WorkItem. By
 -- default this is false, indicating that this metric is reported as a
@@ -1801,18 +2232,20 @@ muCumulative
   = lens _muCumulative (\ s a -> s{_muCumulative = a})
 
 -- | Metric aggregation kind. The possible metric aggregation kinds are
--- \"Sum\", \"Max\", \"Min\", \"Mean\", \"Set\", \"And\", and \"Or\". The
--- specified aggregation kind is case-insensitive. If omitted, this is not
--- an aggregated value but instead a single metric sample value.
+-- \"Sum\", \"Max\", \"Min\", \"Mean\", \"Set\", \"And\", \"Or\", and
+-- \"Distribution\". The specified aggregation kind is case-insensitive. If
+-- omitted, this is not an aggregated value but instead a single metric
+-- sample value.
 muKind :: Lens' MetricUpdate (Maybe Text)
 muKind = lens _muKind (\ s a -> s{_muKind = a})
 
 -- | Timestamp associated with the metric value. Optional when workers are
 -- reporting work progress; it will be filled in responses from the metrics
 -- API.
-muUpdateTime :: Lens' MetricUpdate (Maybe Text)
+muUpdateTime :: Lens' MetricUpdate (Maybe UTCTime)
 muUpdateTime
   = lens _muUpdateTime (\ s a -> s{_muUpdateTime = a})
+      . mapping _DateTime
 
 -- | Worker-computed aggregate value for the \"Mean\" aggregation kind. This
 -- holds the count of the aggregated values and is used in combination with
@@ -1839,6 +2272,7 @@ instance FromJSON MetricUpdate where
                  MetricUpdate' <$>
                    (o .:? "meanSum") <*> (o .:? "internal") <*>
                      (o .:? "set")
+                     <*> (o .:? "distribution")
                      <*> (o .:? "cumulative")
                      <*> (o .:? "kind")
                      <*> (o .:? "updateTime")
@@ -1853,6 +2287,7 @@ instance ToJSON MetricUpdate where
                  [("meanSum" .=) <$> _muMeanSum,
                   ("internal" .=) <$> _muInternal,
                   ("set" .=) <$> _muSet,
+                  ("distribution" .=) <$> _muDistribution,
                   ("cumulative" .=) <$> _muCumulative,
                   ("kind" .=) <$> _muKind,
                   ("updateTime" .=) <$> _muUpdateTime,
@@ -1874,7 +2309,7 @@ newtype SourceGetMetadataResponse = SourceGetMetadataResponse'
 -- * 'sgmrMetadata'
 sourceGetMetadataResponse
     :: SourceGetMetadataResponse
-sourceGetMetadataResponse =
+sourceGetMetadataResponse = 
     SourceGetMetadataResponse'
     { _sgmrMetadata = Nothing
     }
@@ -1895,20 +2330,80 @@ instance ToJSON SourceGetMetadataResponse where
           = object
               (catMaybes [("metadata" .=) <$> _sgmrMetadata])
 
+-- | Metadata describing a template.
+--
+-- /See:/ 'templateMetadata' smart constructor.
+data TemplateMetadata = TemplateMetadata'
+    { _tmName :: !(Maybe Text)
+    , _tmParameters :: !(Maybe [ParameterMetadata])
+    , _tmDescription :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TemplateMetadata' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tmName'
+--
+-- * 'tmParameters'
+--
+-- * 'tmDescription'
+templateMetadata
+    :: TemplateMetadata
+templateMetadata = 
+    TemplateMetadata'
+    { _tmName = Nothing
+    , _tmParameters = Nothing
+    , _tmDescription = Nothing
+    }
+
+-- | Required. The name of the template.
+tmName :: Lens' TemplateMetadata (Maybe Text)
+tmName = lens _tmName (\ s a -> s{_tmName = a})
+
+-- | The parameters for the template.
+tmParameters :: Lens' TemplateMetadata [ParameterMetadata]
+tmParameters
+  = lens _tmParameters (\ s a -> s{_tmParameters = a})
+      . _Default
+      . _Coerce
+
+-- | Optional. A description of the template.
+tmDescription :: Lens' TemplateMetadata (Maybe Text)
+tmDescription
+  = lens _tmDescription
+      (\ s a -> s{_tmDescription = a})
+
+instance FromJSON TemplateMetadata where
+        parseJSON
+          = withObject "TemplateMetadata"
+              (\ o ->
+                 TemplateMetadata' <$>
+                   (o .:? "name") <*> (o .:? "parameters" .!= mempty)
+                     <*> (o .:? "description"))
+
+instance ToJSON TemplateMetadata where
+        toJSON TemplateMetadata'{..}
+          = object
+              (catMaybes
+                 [("name" .=) <$> _tmName,
+                  ("parameters" .=) <$> _tmParameters,
+                  ("description" .=) <$> _tmDescription])
+
 -- | Describes the environment in which a Dataflow Job runs.
 --
 -- /See:/ 'environment' smart constructor.
 data Environment = Environment'
-    { _eDataSet                  :: !(Maybe Text)
-    , _eExperiments              :: !(Maybe [Text])
-    , _eWorkerPools              :: !(Maybe [WorkerPool])
+    { _eDataSet :: !(Maybe Text)
+    , _eExperiments :: !(Maybe [Text])
+    , _eWorkerPools :: !(Maybe [WorkerPool])
     , _eClusterManagerAPIService :: !(Maybe Text)
-    , _eVersion                  :: !(Maybe EnvironmentVersion)
-    , _eInternalExperiments      :: !(Maybe EnvironmentInternalExperiments)
-    , _eTempStoragePrefix        :: !(Maybe Text)
-    , _eServiceAccountEmail      :: !(Maybe Text)
-    , _eUserAgent                :: !(Maybe EnvironmentUserAgent)
-    , _eSdkPipelineOptions       :: !(Maybe EnvironmentSdkPipelineOptions)
+    , _eVersion :: !(Maybe EnvironmentVersion)
+    , _eInternalExperiments :: !(Maybe EnvironmentInternalExperiments)
+    , _eTempStoragePrefix :: !(Maybe Text)
+    , _eServiceAccountEmail :: !(Maybe Text)
+    , _eUserAgent :: !(Maybe EnvironmentUserAgent)
+    , _eSdkPipelineOptions :: !(Maybe EnvironmentSdkPipelineOptions)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Environment' with the minimum fields required to make a request.
@@ -1936,7 +2431,7 @@ data Environment = Environment'
 -- * 'eSdkPipelineOptions'
 environment
     :: Environment
-environment =
+environment = 
     Environment'
     { _eDataSet = Nothing
     , _eExperiments = Nothing
@@ -2062,7 +2557,7 @@ instance ToJSON Environment where
 --
 -- /See:/ 'concatPosition' smart constructor.
 data ConcatPosition = ConcatPosition'
-    { _cpIndex    :: !(Maybe (Textual Int32))
+    { _cpIndex :: !(Maybe (Textual Int32))
     , _cpPosition :: !(Maybe Position)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2075,7 +2570,7 @@ data ConcatPosition = ConcatPosition'
 -- * 'cpPosition'
 concatPosition
     :: ConcatPosition
-concatPosition =
+concatPosition = 
     ConcatPosition'
     { _cpIndex = Nothing
     , _cpPosition = Nothing
@@ -2125,7 +2620,7 @@ newtype MetricStructuredNameContext = MetricStructuredNameContext'
 metricStructuredNameContext
     :: HashMap Text Text -- ^ 'msncAddtional'
     -> MetricStructuredNameContext
-metricStructuredNameContext pMsncAddtional_ =
+metricStructuredNameContext pMsncAddtional_ = 
     MetricStructuredNameContext'
     { _msncAddtional = _Coerce # pMsncAddtional_
     }
@@ -2149,20 +2644,20 @@ instance ToJSON MetricStructuredNameContext where
 --
 -- /See:/ 'counterUpdate' smart constructor.
 data CounterUpdate = CounterUpdate'
-    { _cuNameAndKind               :: !(Maybe NameAndKind)
-    , _cuIntegerList               :: !(Maybe IntegerList)
-    , _cuFloatingPoint             :: !(Maybe (Textual Double))
-    , _cuInternal                  :: !(Maybe JSONValue)
-    , _cuStringList                :: !(Maybe StringList)
-    , _cuShortId                   :: !(Maybe (Textual Int64))
-    , _cuDistribution              :: !(Maybe DistributionUpdate)
-    , _cuCumulative                :: !(Maybe Bool)
+    { _cuNameAndKind :: !(Maybe NameAndKind)
+    , _cuIntegerList :: !(Maybe IntegerList)
+    , _cuFloatingPoint :: !(Maybe (Textual Double))
+    , _cuInternal :: !(Maybe JSONValue)
+    , _cuStringList :: !(Maybe StringList)
+    , _cuShortId :: !(Maybe (Textual Int64))
+    , _cuDistribution :: !(Maybe DistributionUpdate)
+    , _cuCumulative :: !(Maybe Bool)
     , _cuStructuredNameAndMetadata :: !(Maybe CounterStructuredNameAndMetadata)
-    , _cuFloatingPointMean         :: !(Maybe FloatingPointMean)
-    , _cuIntegerMean               :: !(Maybe IntegerMean)
-    , _cuBoolean                   :: !(Maybe Bool)
-    , _cuFloatingPointList         :: !(Maybe FloatingPointList)
-    , _cuInteger                   :: !(Maybe SplitInt64)
+    , _cuFloatingPointMean :: !(Maybe FloatingPointMean)
+    , _cuIntegerMean :: !(Maybe IntegerMean)
+    , _cuBoolean :: !(Maybe Bool)
+    , _cuFloatingPointList :: !(Maybe FloatingPointList)
+    , _cuInteger :: !(Maybe SplitInt64)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CounterUpdate' with the minimum fields required to make a request.
@@ -2198,7 +2693,7 @@ data CounterUpdate = CounterUpdate'
 -- * 'cuInteger'
 counterUpdate
     :: CounterUpdate
-counterUpdate =
+counterUpdate = 
     CounterUpdate'
     { _cuNameAndKind = Nothing
     , _cuIntegerList = Nothing
@@ -2354,7 +2849,7 @@ newtype StreamingStageLocation = StreamingStageLocation'
 -- * 'sslStreamId'
 streamingStageLocation
     :: StreamingStageLocation
-streamingStageLocation =
+streamingStageLocation = 
     StreamingStageLocation'
     { _sslStreamId = Nothing
     }
@@ -2382,8 +2877,8 @@ instance ToJSON StreamingStageLocation where
 --
 -- /See:/ 'derivedSource' smart constructor.
 data DerivedSource = DerivedSource'
-    { _dsDerivationMode :: !(Maybe Text)
-    , _dsSource         :: !(Maybe Source)
+    { _dsDerivationMode :: !(Maybe DerivedSourceDerivationMode)
+    , _dsSource :: !(Maybe Source)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DerivedSource' with the minimum fields required to make a request.
@@ -2395,14 +2890,14 @@ data DerivedSource = DerivedSource'
 -- * 'dsSource'
 derivedSource
     :: DerivedSource
-derivedSource =
+derivedSource = 
     DerivedSource'
     { _dsDerivationMode = Nothing
     , _dsSource = Nothing
     }
 
 -- | What source to base the produced source on (if any).
-dsDerivationMode :: Lens' DerivedSource (Maybe Text)
+dsDerivationMode :: Lens' DerivedSource (Maybe DerivedSourceDerivationMode)
 dsDerivationMode
   = lens _dsDerivationMode
       (\ s a -> s{_dsDerivationMode = a})
@@ -2433,8 +2928,8 @@ instance ToJSON DerivedSource where
 --
 -- /See:/ 'jobMetrics' smart constructor.
 data JobMetrics = JobMetrics'
-    { _jmMetrics    :: !(Maybe [MetricUpdate])
-    , _jmMetricTime :: !(Maybe Text)
+    { _jmMetrics :: !(Maybe [MetricUpdate])
+    , _jmMetricTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobMetrics' with the minimum fields required to make a request.
@@ -2446,7 +2941,7 @@ data JobMetrics = JobMetrics'
 -- * 'jmMetricTime'
 jobMetrics
     :: JobMetrics
-jobMetrics =
+jobMetrics = 
     JobMetrics'
     { _jmMetrics = Nothing
     , _jmMetricTime = Nothing
@@ -2460,9 +2955,10 @@ jmMetrics
       . _Coerce
 
 -- | Timestamp as of which metric values are current.
-jmMetricTime :: Lens' JobMetrics (Maybe Text)
+jmMetricTime :: Lens' JobMetrics (Maybe UTCTime)
 jmMetricTime
   = lens _jmMetricTime (\ s a -> s{_jmMetricTime = a})
+      . mapping _DateTime
 
 instance FromJSON JobMetrics where
         parseJSON
@@ -2483,14 +2979,17 @@ instance ToJSON JobMetrics where
 --
 -- /See:/ 'sendDebugCaptureRequest' smart constructor.
 data SendDebugCaptureRequest = SendDebugCaptureRequest'
-    { _sdcrData        :: !(Maybe Text)
+    { _sdcrLocation :: !(Maybe Text)
+    , _sdcrData :: !(Maybe Text)
     , _sdcrComponentId :: !(Maybe Text)
-    , _sdcrWorkerId    :: !(Maybe Text)
+    , _sdcrWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SendDebugCaptureRequest' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'sdcrLocation'
 --
 -- * 'sdcrData'
 --
@@ -2499,12 +2998,18 @@ data SendDebugCaptureRequest = SendDebugCaptureRequest'
 -- * 'sdcrWorkerId'
 sendDebugCaptureRequest
     :: SendDebugCaptureRequest
-sendDebugCaptureRequest =
+sendDebugCaptureRequest = 
     SendDebugCaptureRequest'
-    { _sdcrData = Nothing
+    { _sdcrLocation = Nothing
+    , _sdcrData = Nothing
     , _sdcrComponentId = Nothing
     , _sdcrWorkerId = Nothing
     }
+
+-- | The location which contains the job specified by job_id.
+sdcrLocation :: Lens' SendDebugCaptureRequest (Maybe Text)
+sdcrLocation
+  = lens _sdcrLocation (\ s a -> s{_sdcrLocation = a})
 
 -- | The encoded debug information.
 sdcrData :: Lens' SendDebugCaptureRequest (Maybe Text)
@@ -2526,14 +3031,16 @@ instance FromJSON SendDebugCaptureRequest where
           = withObject "SendDebugCaptureRequest"
               (\ o ->
                  SendDebugCaptureRequest' <$>
-                   (o .:? "data") <*> (o .:? "componentId") <*>
-                     (o .:? "workerId"))
+                   (o .:? "location") <*> (o .:? "data") <*>
+                     (o .:? "componentId")
+                     <*> (o .:? "workerId"))
 
 instance ToJSON SendDebugCaptureRequest where
         toJSON SendDebugCaptureRequest'{..}
           = object
               (catMaybes
-                 [("data" .=) <$> _sdcrData,
+                 [("location" .=) <$> _sdcrLocation,
+                  ("data" .=) <$> _sdcrData,
                   ("componentId" .=) <$> _sdcrComponentId,
                   ("workerId" .=) <$> _sdcrWorkerId])
 
@@ -2541,19 +3048,20 @@ instance ToJSON SendDebugCaptureRequest where
 --
 -- /See:/ 'workItemStatus' smart constructor.
 data WorkItemStatus = WorkItemStatus'
-    { _wisReportedProgress        :: !(Maybe ApproximateReportedProgress)
-    , _wisProgress                :: !(Maybe ApproximateProgress)
+    { _wisReportedProgress :: !(Maybe ApproximateReportedProgress)
+    , _wisProgress :: !(Maybe ApproximateProgress)
+    , _wisTotalThrottlerWaitTimeSeconds :: !(Maybe (Textual Double))
     , _wisSourceOperationResponse :: !(Maybe SourceOperationResponse)
-    , _wisStopPosition            :: !(Maybe Position)
-    , _wisDynamicSourceSplit      :: !(Maybe DynamicSourceSplit)
-    , _wisCompleted               :: !(Maybe Bool)
-    , _wisSourceFork              :: !(Maybe SourceFork)
-    , _wisReportIndex             :: !(Maybe (Textual Int64))
-    , _wisRequestedLeaseDuration  :: !(Maybe Text)
-    , _wisErrors                  :: !(Maybe [Status])
-    , _wisCounterUpdates          :: !(Maybe [CounterUpdate])
-    , _wisMetricUpdates           :: !(Maybe [MetricUpdate])
-    , _wisWorkItemId              :: !(Maybe Text)
+    , _wisStopPosition :: !(Maybe Position)
+    , _wisDynamicSourceSplit :: !(Maybe DynamicSourceSplit)
+    , _wisCompleted :: !(Maybe Bool)
+    , _wisSourceFork :: !(Maybe SourceFork)
+    , _wisReportIndex :: !(Maybe (Textual Int64))
+    , _wisRequestedLeaseDuration :: !(Maybe Duration)
+    , _wisErrors :: !(Maybe [Status])
+    , _wisCounterUpdates :: !(Maybe [CounterUpdate])
+    , _wisMetricUpdates :: !(Maybe [MetricUpdate])
+    , _wisWorkItemId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkItemStatus' with the minimum fields required to make a request.
@@ -2563,6 +3071,8 @@ data WorkItemStatus = WorkItemStatus'
 -- * 'wisReportedProgress'
 --
 -- * 'wisProgress'
+--
+-- * 'wisTotalThrottlerWaitTimeSeconds'
 --
 -- * 'wisSourceOperationResponse'
 --
@@ -2587,10 +3097,11 @@ data WorkItemStatus = WorkItemStatus'
 -- * 'wisWorkItemId'
 workItemStatus
     :: WorkItemStatus
-workItemStatus =
+workItemStatus = 
     WorkItemStatus'
     { _wisReportedProgress = Nothing
     , _wisProgress = Nothing
+    , _wisTotalThrottlerWaitTimeSeconds = Nothing
     , _wisSourceOperationResponse = Nothing
     , _wisStopPosition = Nothing
     , _wisDynamicSourceSplit = Nothing
@@ -2614,6 +3125,13 @@ wisReportedProgress
 wisProgress :: Lens' WorkItemStatus (Maybe ApproximateProgress)
 wisProgress
   = lens _wisProgress (\ s a -> s{_wisProgress = a})
+
+-- | Total time the worker spent being throttled by external systems.
+wisTotalThrottlerWaitTimeSeconds :: Lens' WorkItemStatus (Maybe Double)
+wisTotalThrottlerWaitTimeSeconds
+  = lens _wisTotalThrottlerWaitTimeSeconds
+      (\ s a -> s{_wisTotalThrottlerWaitTimeSeconds = a})
+      . mapping _Coerce
 
 -- | If the work item represented a SourceOperationRequest, and the work is
 -- completed, contains the result of the operation.
@@ -2685,10 +3203,11 @@ wisReportIndex
       . mapping _Coerce
 
 -- | Amount of time the worker requests for its lease.
-wisRequestedLeaseDuration :: Lens' WorkItemStatus (Maybe Text)
+wisRequestedLeaseDuration :: Lens' WorkItemStatus (Maybe Scientific)
 wisRequestedLeaseDuration
   = lens _wisRequestedLeaseDuration
       (\ s a -> s{_wisRequestedLeaseDuration = a})
+      . mapping _Duration
 
 -- | Specifies errors which occurred during processing. If errors are
 -- provided, and completed = true, then the WorkItem is considered to have
@@ -2727,7 +3246,8 @@ instance FromJSON WorkItemStatus where
               (\ o ->
                  WorkItemStatus' <$>
                    (o .:? "reportedProgress") <*> (o .:? "progress") <*>
-                     (o .:? "sourceOperationResponse")
+                     (o .:? "totalThrottlerWaitTimeSeconds")
+                     <*> (o .:? "sourceOperationResponse")
                      <*> (o .:? "stopPosition")
                      <*> (o .:? "dynamicSourceSplit")
                      <*> (o .:? "completed")
@@ -2745,6 +3265,8 @@ instance ToJSON WorkItemStatus where
               (catMaybes
                  [("reportedProgress" .=) <$> _wisReportedProgress,
                   ("progress" .=) <$> _wisProgress,
+                  ("totalThrottlerWaitTimeSeconds" .=) <$>
+                    _wisTotalThrottlerWaitTimeSeconds,
                   ("sourceOperationResponse" .=) <$>
                     _wisSourceOperationResponse,
                   ("stopPosition" .=) <$> _wisStopPosition,
@@ -2780,7 +3302,7 @@ newtype WorkerMessageLabels = WorkerMessageLabels'
 workerMessageLabels
     :: HashMap Text Text -- ^ 'wmlAddtional'
     -> WorkerMessageLabels
-workerMessageLabels pWmlAddtional_ =
+workerMessageLabels pWmlAddtional_ = 
     WorkerMessageLabels'
     { _wmlAddtional = _Coerce # pWmlAddtional_
     }
@@ -2813,7 +3335,7 @@ newtype FlattenInstruction = FlattenInstruction'
 -- * 'fiInputs'
 flattenInstruction
     :: FlattenInstruction
-flattenInstruction =
+flattenInstruction = 
     FlattenInstruction'
     { _fiInputs = Nothing
     }
@@ -2845,7 +3367,7 @@ instance ToJSON FlattenInstruction where
 -- /See:/ 'workerMessageCode' smart constructor.
 data WorkerMessageCode = WorkerMessageCode'
     { _wmcParameters :: !(Maybe WorkerMessageCodeParameters)
-    , _wmcCode       :: !(Maybe Text)
+    , _wmcCode :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerMessageCode' with the minimum fields required to make a request.
@@ -2857,7 +3379,7 @@ data WorkerMessageCode = WorkerMessageCode'
 -- * 'wmcCode'
 workerMessageCode
     :: WorkerMessageCode
-workerMessageCode =
+workerMessageCode = 
     WorkerMessageCode'
     { _wmcParameters = Nothing
     , _wmcCode = Nothing
@@ -2905,6 +3427,104 @@ instance ToJSON WorkerMessageCode where
                  [("parameters" .=) <$> _wmcParameters,
                   ("code" .=) <$> _wmcCode])
 
+-- | Description of the type, names\/ids, and input\/outputs for a transform.
+--
+-- /See:/ 'transformSummary' smart constructor.
+data TransformSummary = TransformSummary'
+    { _tsDisplayData :: !(Maybe [DisplayData])
+    , _tsKind :: !(Maybe TransformSummaryKind)
+    , _tsOutputCollectionName :: !(Maybe [Text])
+    , _tsInputCollectionName :: !(Maybe [Text])
+    , _tsName :: !(Maybe Text)
+    , _tsId :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'TransformSummary' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tsDisplayData'
+--
+-- * 'tsKind'
+--
+-- * 'tsOutputCollectionName'
+--
+-- * 'tsInputCollectionName'
+--
+-- * 'tsName'
+--
+-- * 'tsId'
+transformSummary
+    :: TransformSummary
+transformSummary = 
+    TransformSummary'
+    { _tsDisplayData = Nothing
+    , _tsKind = Nothing
+    , _tsOutputCollectionName = Nothing
+    , _tsInputCollectionName = Nothing
+    , _tsName = Nothing
+    , _tsId = Nothing
+    }
+
+-- | Transform-specific display data.
+tsDisplayData :: Lens' TransformSummary [DisplayData]
+tsDisplayData
+  = lens _tsDisplayData
+      (\ s a -> s{_tsDisplayData = a})
+      . _Default
+      . _Coerce
+
+-- | Type of transform.
+tsKind :: Lens' TransformSummary (Maybe TransformSummaryKind)
+tsKind = lens _tsKind (\ s a -> s{_tsKind = a})
+
+-- | User names for all collection outputs to this transform.
+tsOutputCollectionName :: Lens' TransformSummary [Text]
+tsOutputCollectionName
+  = lens _tsOutputCollectionName
+      (\ s a -> s{_tsOutputCollectionName = a})
+      . _Default
+      . _Coerce
+
+-- | User names for all collection inputs to this transform.
+tsInputCollectionName :: Lens' TransformSummary [Text]
+tsInputCollectionName
+  = lens _tsInputCollectionName
+      (\ s a -> s{_tsInputCollectionName = a})
+      . _Default
+      . _Coerce
+
+-- | User provided name for this transform instance.
+tsName :: Lens' TransformSummary (Maybe Text)
+tsName = lens _tsName (\ s a -> s{_tsName = a})
+
+-- | SDK generated id of this transform instance.
+tsId :: Lens' TransformSummary (Maybe Text)
+tsId = lens _tsId (\ s a -> s{_tsId = a})
+
+instance FromJSON TransformSummary where
+        parseJSON
+          = withObject "TransformSummary"
+              (\ o ->
+                 TransformSummary' <$>
+                   (o .:? "displayData" .!= mempty) <*> (o .:? "kind")
+                     <*> (o .:? "outputCollectionName" .!= mempty)
+                     <*> (o .:? "inputCollectionName" .!= mempty)
+                     <*> (o .:? "name")
+                     <*> (o .:? "id"))
+
+instance ToJSON TransformSummary where
+        toJSON TransformSummary'{..}
+          = object
+              (catMaybes
+                 [("displayData" .=) <$> _tsDisplayData,
+                  ("kind" .=) <$> _tsKind,
+                  ("outputCollectionName" .=) <$>
+                    _tsOutputCollectionName,
+                  ("inputCollectionName" .=) <$>
+                    _tsInputCollectionName,
+                  ("name" .=) <$> _tsName, ("id" .=) <$> _tsId])
+
 -- | The map of transform name prefixes of the job to be replaced to the
 -- corresponding name prefixes of the new job.
 --
@@ -2921,7 +3541,7 @@ newtype JobTransformNameMApping = JobTransformNameMApping'
 jobTransformNameMApping
     :: HashMap Text Text -- ^ 'jtnmaAddtional'
     -> JobTransformNameMApping
-jobTransformNameMApping pJtnmaAddtional_ =
+jobTransformNameMApping pJtnmaAddtional_ = 
     JobTransformNameMApping'
     { _jtnmaAddtional = _Coerce # pJtnmaAddtional_
     }
@@ -2956,7 +3576,7 @@ newtype SourceSpec = SourceSpec'
 sourceSpec
     :: HashMap Text JSONValue -- ^ 'ssAddtional'
     -> SourceSpec
-sourceSpec pSsAddtional_ =
+sourceSpec pSsAddtional_ = 
     SourceSpec'
     { _ssAddtional = _Coerce # pSsAddtional_
     }
@@ -2982,7 +3602,7 @@ instance ToJSON SourceSpec where
 data SourceMetadata = SourceMetadata'
     { _smEstimatedSizeBytes :: !(Maybe (Textual Int64))
     , _smProducesSortedKeys :: !(Maybe Bool)
-    , _smInfinite           :: !(Maybe Bool)
+    , _smInfinite :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SourceMetadata' with the minimum fields required to make a request.
@@ -2996,7 +3616,7 @@ data SourceMetadata = SourceMetadata'
 -- * 'smInfinite'
 sourceMetadata
     :: SourceMetadata
-sourceMetadata =
+sourceMetadata = 
     SourceMetadata'
     { _smEstimatedSizeBytes = Nothing
     , _smProducesSortedKeys = Nothing
@@ -3057,7 +3677,7 @@ newtype EnvironmentInternalExperiments = EnvironmentInternalExperiments'
 environmentInternalExperiments
     :: HashMap Text JSONValue -- ^ 'eieAddtional'
     -> EnvironmentInternalExperiments
-environmentInternalExperiments pEieAddtional_ =
+environmentInternalExperiments pEieAddtional_ = 
     EnvironmentInternalExperiments'
     { _eieAddtional = _Coerce # pEieAddtional_
     }
@@ -3083,25 +3703,25 @@ instance ToJSON EnvironmentInternalExperiments where
 --
 -- /See:/ 'taskRunnerSettings' smart constructor.
 data TaskRunnerSettings = TaskRunnerSettings'
-    { _trsContinueOnException      :: !(Maybe Bool)
-    , _trsHarnessCommand           :: !(Maybe Text)
-    , _trsWorkflowFileName         :: !(Maybe Text)
-    , _trsTaskGroup                :: !(Maybe Text)
-    , _trsAlsologtostderr          :: !(Maybe Bool)
-    , _trsDataflowAPIVersion       :: !(Maybe Text)
-    , _trsLogDir                   :: !(Maybe Text)
-    , _trsCommandlinesFileName     :: !(Maybe Text)
-    , _trsVMId                     :: !(Maybe Text)
-    , _trsBaseURL                  :: !(Maybe Text)
-    , _trsOAuthScopes              :: !(Maybe [Text])
-    , _trsTaskUser                 :: !(Maybe Text)
+    { _trsContinueOnException :: !(Maybe Bool)
+    , _trsHarnessCommand :: !(Maybe Text)
+    , _trsWorkflowFileName :: !(Maybe Text)
+    , _trsTaskGroup :: !(Maybe Text)
+    , _trsAlsologtostderr :: !(Maybe Bool)
+    , _trsDataflowAPIVersion :: !(Maybe Text)
+    , _trsLogDir :: !(Maybe Text)
+    , _trsCommandlinesFileName :: !(Maybe Text)
+    , _trsVMId :: !(Maybe Text)
+    , _trsBaseURL :: !(Maybe Text)
+    , _trsOAuthScopes :: !(Maybe [Text])
+    , _trsTaskUser :: !(Maybe Text)
     , _trsStreamingWorkerMainClass :: !(Maybe Text)
-    , _trsBaseTaskDir              :: !(Maybe Text)
-    , _trsLogUploadLocation        :: !(Maybe Text)
-    , _trsTempStoragePrefix        :: !(Maybe Text)
-    , _trsLogToSerialconsole       :: !(Maybe Bool)
-    , _trsParallelWorkerSettings   :: !(Maybe WorkerSettings)
-    , _trsLanguageHint             :: !(Maybe Text)
+    , _trsBaseTaskDir :: !(Maybe Text)
+    , _trsLogUploadLocation :: !(Maybe Text)
+    , _trsTempStoragePrefix :: !(Maybe Text)
+    , _trsLogToSerialconsole :: !(Maybe Bool)
+    , _trsParallelWorkerSettings :: !(Maybe WorkerSettings)
+    , _trsLanguageHint :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TaskRunnerSettings' with the minimum fields required to make a request.
@@ -3147,7 +3767,7 @@ data TaskRunnerSettings = TaskRunnerSettings'
 -- * 'trsLanguageHint'
 taskRunnerSettings
     :: TaskRunnerSettings
-taskRunnerSettings =
+taskRunnerSettings = 
     TaskRunnerSettings'
     { _trsContinueOnException = Nothing
     , _trsHarnessCommand = Nothing
@@ -3352,10 +3972,10 @@ instance ToJSON TaskRunnerSettings where
 --
 -- /See:/ 'streamingComputationConfig' smart constructor.
 data StreamingComputationConfig = StreamingComputationConfig'
-    { _sccInstructions  :: !(Maybe [ParallelInstruction])
-    , _sccSystemName    :: !(Maybe Text)
+    { _sccInstructions :: !(Maybe [ParallelInstruction])
+    , _sccSystemName :: !(Maybe Text)
     , _sccComputationId :: !(Maybe Text)
-    , _sccStageName     :: !(Maybe Text)
+    , _sccStageName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StreamingComputationConfig' with the minimum fields required to make a request.
@@ -3371,7 +3991,7 @@ data StreamingComputationConfig = StreamingComputationConfig'
 -- * 'sccStageName'
 streamingComputationConfig
     :: StreamingComputationConfig
-streamingComputationConfig =
+streamingComputationConfig = 
     StreamingComputationConfig'
     { _sccInstructions = Nothing
     , _sccSystemName = Nothing
@@ -3441,7 +4061,7 @@ newtype EnvironmentSdkPipelineOptions = EnvironmentSdkPipelineOptions'
 environmentSdkPipelineOptions
     :: HashMap Text JSONValue -- ^ 'espoAddtional'
     -> EnvironmentSdkPipelineOptions
-environmentSdkPipelineOptions pEspoAddtional_ =
+environmentSdkPipelineOptions pEspoAddtional_ = 
     EnvironmentSdkPipelineOptions'
     { _espoAddtional = _Coerce # pEspoAddtional_
     }
@@ -3468,7 +4088,7 @@ instance ToJSON EnvironmentSdkPipelineOptions where
 -- /See:/ 'floatingPointMean' smart constructor.
 data FloatingPointMean = FloatingPointMean'
     { _fpmCount :: !(Maybe SplitInt64)
-    , _fpmSum   :: !(Maybe (Textual Double))
+    , _fpmSum :: !(Maybe (Textual Double))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'FloatingPointMean' with the minimum fields required to make a request.
@@ -3480,7 +4100,7 @@ data FloatingPointMean = FloatingPointMean'
 -- * 'fpmSum'
 floatingPointMean
     :: FloatingPointMean
-floatingPointMean =
+floatingPointMean = 
     FloatingPointMean'
     { _fpmCount = Nothing
     , _fpmSum = Nothing
@@ -3509,16 +4129,79 @@ instance ToJSON FloatingPointMean where
               (catMaybes
                  [("count" .=) <$> _fpmCount, ("sum" .=) <$> _fpmSum])
 
+-- | Modeled after information exposed by \/proc\/stat.
+--
+-- /See:/ 'cpuTime' smart constructor.
+data CPUTime = CPUTime'
+    { _ctTotalMs :: !(Maybe (Textual Word64))
+    , _ctRate :: !(Maybe (Textual Double))
+    , _ctTimestamp :: !(Maybe DateTime')
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'CPUTime' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ctTotalMs'
+--
+-- * 'ctRate'
+--
+-- * 'ctTimestamp'
+cpuTime
+    :: CPUTime
+cpuTime = 
+    CPUTime'
+    { _ctTotalMs = Nothing
+    , _ctRate = Nothing
+    , _ctTimestamp = Nothing
+    }
+
+-- | Total active CPU time across all cores (ie., non-idle) in milliseconds
+-- since start-up.
+ctTotalMs :: Lens' CPUTime (Maybe Word64)
+ctTotalMs
+  = lens _ctTotalMs (\ s a -> s{_ctTotalMs = a}) .
+      mapping _Coerce
+
+-- | Average CPU utilization rate (% non-idle cpu \/ second) since previous
+-- sample.
+ctRate :: Lens' CPUTime (Maybe Double)
+ctRate
+  = lens _ctRate (\ s a -> s{_ctRate = a}) .
+      mapping _Coerce
+
+-- | Timestamp of the measurement.
+ctTimestamp :: Lens' CPUTime (Maybe UTCTime)
+ctTimestamp
+  = lens _ctTimestamp (\ s a -> s{_ctTimestamp = a}) .
+      mapping _DateTime
+
+instance FromJSON CPUTime where
+        parseJSON
+          = withObject "CPUTime"
+              (\ o ->
+                 CPUTime' <$>
+                   (o .:? "totalMs") <*> (o .:? "rate") <*>
+                     (o .:? "timestamp"))
+
+instance ToJSON CPUTime where
+        toJSON CPUTime'{..}
+          = object
+              (catMaybes
+                 [("totalMs" .=) <$> _ctTotalMs,
+                  ("rate" .=) <$> _ctRate,
+                  ("timestamp" .=) <$> _ctTimestamp])
+
 -- | Request to lease WorkItems.
 --
 -- /See:/ 'leaseWorkItemRequest' smart constructor.
 data LeaseWorkItemRequest = LeaseWorkItemRequest'
-    { _lwirWorkItemTypes          :: !(Maybe [Text])
-    , _lwirCurrentWorkerTime      :: !(Maybe Text)
-    , _lwirLocation               :: !(Maybe Text)
-    , _lwirWorkerCapabilities     :: !(Maybe [Text])
-    , _lwirRequestedLeaseDuration :: !(Maybe Text)
-    , _lwirWorkerId               :: !(Maybe Text)
+    { _lwirWorkItemTypes :: !(Maybe [Text])
+    , _lwirCurrentWorkerTime :: !(Maybe DateTime')
+    , _lwirLocation :: !(Maybe Text)
+    , _lwirWorkerCapabilities :: !(Maybe [Text])
+    , _lwirRequestedLeaseDuration :: !(Maybe Duration)
+    , _lwirWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'LeaseWorkItemRequest' with the minimum fields required to make a request.
@@ -3538,7 +4221,7 @@ data LeaseWorkItemRequest = LeaseWorkItemRequest'
 -- * 'lwirWorkerId'
 leaseWorkItemRequest
     :: LeaseWorkItemRequest
-leaseWorkItemRequest =
+leaseWorkItemRequest = 
     LeaseWorkItemRequest'
     { _lwirWorkItemTypes = Nothing
     , _lwirCurrentWorkerTime = Nothing
@@ -3557,10 +4240,11 @@ lwirWorkItemTypes
       . _Coerce
 
 -- | The current timestamp at the worker.
-lwirCurrentWorkerTime :: Lens' LeaseWorkItemRequest (Maybe Text)
+lwirCurrentWorkerTime :: Lens' LeaseWorkItemRequest (Maybe UTCTime)
 lwirCurrentWorkerTime
   = lens _lwirCurrentWorkerTime
       (\ s a -> s{_lwirCurrentWorkerTime = a})
+      . mapping _DateTime
 
 -- | The location which contains the WorkItem\'s job.
 lwirLocation :: Lens' LeaseWorkItemRequest (Maybe Text)
@@ -3577,10 +4261,11 @@ lwirWorkerCapabilities
       . _Coerce
 
 -- | The initial lease period.
-lwirRequestedLeaseDuration :: Lens' LeaseWorkItemRequest (Maybe Text)
+lwirRequestedLeaseDuration :: Lens' LeaseWorkItemRequest (Maybe Scientific)
 lwirRequestedLeaseDuration
   = lens _lwirRequestedLeaseDuration
       (\ s a -> s{_lwirRequestedLeaseDuration = a})
+      . mapping _Duration
 
 -- | Identifies the worker leasing work -- typically the ID of the virtual
 -- machine running the worker.
@@ -3619,7 +4304,7 @@ instance ToJSON LeaseWorkItemRequest where
 --
 -- /See:/ 'sourceOperationResponse' smart constructor.
 data SourceOperationResponse = SourceOperationResponse'
-    { _sorSplit       :: !(Maybe SourceSplitResponse)
+    { _sorSplit :: !(Maybe SourceSplitResponse)
     , _sorGetMetadata :: !(Maybe SourceGetMetadataResponse)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3632,7 +4317,7 @@ data SourceOperationResponse = SourceOperationResponse'
 -- * 'sorGetMetadata'
 sourceOperationResponse
     :: SourceOperationResponse
-sourceOperationResponse =
+sourceOperationResponse = 
     SourceOperationResponse'
     { _sorSplit = Nothing
     , _sorGetMetadata = Nothing
@@ -3677,7 +4362,7 @@ newtype TopologyConfigUserStageToComputationNameMap = TopologyConfigUserStageToC
 topologyConfigUserStageToComputationNameMap
     :: HashMap Text Text -- ^ 'tcustcnmAddtional'
     -> TopologyConfigUserStageToComputationNameMap
-topologyConfigUserStageToComputationNameMap pTcustcnmAddtional_ =
+topologyConfigUserStageToComputationNameMap pTcustcnmAddtional_ = 
     TopologyConfigUserStageToComputationNameMap'
     { _tcustcnmAddtional = _Coerce # pTcustcnmAddtional_
     }
@@ -3705,7 +4390,7 @@ instance ToJSON
 --
 -- /See:/ 'shellTask' smart constructor.
 data ShellTask = ShellTask'
-    { _stCommand  :: !(Maybe Text)
+    { _stCommand :: !(Maybe Text)
     , _stExitCode :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3718,7 +4403,7 @@ data ShellTask = ShellTask'
 -- * 'stExitCode'
 shellTask
     :: ShellTask
-shellTask =
+shellTask = 
     ShellTask'
     { _stCommand = Nothing
     , _stExitCode = Nothing
@@ -3763,7 +4448,7 @@ newtype StatusDetailsItem = StatusDetailsItem'
 statusDetailsItem
     :: HashMap Text JSONValue -- ^ 'sdiAddtional'
     -> StatusDetailsItem
-statusDetailsItem pSdiAddtional_ =
+statusDetailsItem pSdiAddtional_ = 
     StatusDetailsItem'
     { _sdiAddtional = _Coerce # pSdiAddtional_
     }
@@ -3787,7 +4472,7 @@ instance ToJSON StatusDetailsItem where
 --
 -- /See:/ 'reportedParallelism' smart constructor.
 data ReportedParallelism = ReportedParallelism'
-    { _rpValue      :: !(Maybe (Textual Double))
+    { _rpValue :: !(Maybe (Textual Double))
     , _rpIsInfinite :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -3800,7 +4485,7 @@ data ReportedParallelism = ReportedParallelism'
 -- * 'rpIsInfinite'
 reportedParallelism
     :: ReportedParallelism
-reportedParallelism =
+reportedParallelism = 
     ReportedParallelism'
     { _rpValue = Nothing
     , _rpIsInfinite = Nothing
@@ -3836,7 +4521,8 @@ instance ToJSON ReportedParallelism where
                   ("isInfinite" .=) <$> _rpIsInfinite])
 
 -- | Named properties associated with the step. Each kind of predefined step
--- has its own required set of properties.
+-- has its own required set of properties. Must be provided on Create. Only
+-- retrieved with JOB_VIEW_ALL.
 --
 -- /See:/ 'stepProperties' smart constructor.
 newtype StepProperties = StepProperties'
@@ -3851,7 +4537,7 @@ newtype StepProperties = StepProperties'
 stepProperties
     :: HashMap Text JSONValue -- ^ 'spAddtional'
     -> StepProperties
-stepProperties pSpAddtional_ =
+stepProperties pSpAddtional_ = 
     StepProperties'
     { _spAddtional = _Coerce # pSpAddtional_
     }
@@ -3875,11 +4561,11 @@ instance ToJSON StepProperties where
 --
 -- /See:/ 'topologyConfig' smart constructor.
 data TopologyConfig = TopologyConfig'
-    { _tcDataDiskAssignments           :: !(Maybe [DataDiskAssignment])
-    , _tcPersistentStateVersion        :: !(Maybe (Textual Int32))
-    , _tcForwardingKeyBits             :: !(Maybe (Textual Int32))
+    { _tcDataDiskAssignments :: !(Maybe [DataDiskAssignment])
+    , _tcPersistentStateVersion :: !(Maybe (Textual Int32))
+    , _tcForwardingKeyBits :: !(Maybe (Textual Int32))
     , _tcUserStageToComputationNameMap :: !(Maybe TopologyConfigUserStageToComputationNameMap)
-    , _tcComputations                  :: !(Maybe [ComputationTopology])
+    , _tcComputations :: !(Maybe [ComputationTopology])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TopologyConfig' with the minimum fields required to make a request.
@@ -3897,7 +4583,7 @@ data TopologyConfig = TopologyConfig'
 -- * 'tcComputations'
 topologyConfig
     :: TopologyConfig
-topologyConfig =
+topologyConfig = 
     TopologyConfig'
     { _tcDataDiskAssignments = Nothing
     , _tcPersistentStateVersion = Nothing
@@ -3972,7 +4658,7 @@ instance ToJSON TopologyConfig where
 -- /See:/ 'approximateSplitRequest' smart constructor.
 data ApproximateSplitRequest = ApproximateSplitRequest'
     { _asrFractionConsumed :: !(Maybe (Textual Double))
-    , _asrPosition         :: !(Maybe Position)
+    , _asrPosition :: !(Maybe Position)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApproximateSplitRequest' with the minimum fields required to make a request.
@@ -3984,7 +4670,7 @@ data ApproximateSplitRequest = ApproximateSplitRequest'
 -- * 'asrPosition'
 approximateSplitRequest
     :: ApproximateSplitRequest
-approximateSplitRequest =
+approximateSplitRequest = 
     ApproximateSplitRequest'
     { _asrFractionConsumed = Nothing
     , _asrPosition = Nothing
@@ -4023,7 +4709,7 @@ instance ToJSON ApproximateSplitRequest where
 -- /See:/ 'splitInt64' smart constructor.
 data SplitInt64 = SplitInt64'
     { _siHighBits :: !(Maybe (Textual Int32))
-    , _siLowBits  :: !(Maybe (Textual Word32))
+    , _siLowBits :: !(Maybe (Textual Word32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SplitInt64' with the minimum fields required to make a request.
@@ -4035,7 +4721,7 @@ data SplitInt64 = SplitInt64'
 -- * 'siLowBits'
 splitInt64
     :: SplitInt64
-splitInt64 =
+splitInt64 = 
     SplitInt64'
     { _siHighBits = Nothing
     , _siLowBits = Nothing
@@ -4071,12 +4757,12 @@ instance ToJSON SplitInt64 where
 --
 -- /See:/ 'workerSettings' smart constructor.
 data WorkerSettings = WorkerSettings'
-    { _wsServicePath        :: !(Maybe Text)
-    , _wsBaseURL            :: !(Maybe Text)
+    { _wsServicePath :: !(Maybe Text)
+    , _wsBaseURL :: !(Maybe Text)
     , _wsShuffleServicePath :: !(Maybe Text)
-    , _wsTempStoragePrefix  :: !(Maybe Text)
-    , _wsReportingEnabled   :: !(Maybe Bool)
-    , _wsWorkerId           :: !(Maybe Text)
+    , _wsTempStoragePrefix :: !(Maybe Text)
+    , _wsReportingEnabled :: !(Maybe Bool)
+    , _wsWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerSettings' with the minimum fields required to make a request.
@@ -4096,7 +4782,7 @@ data WorkerSettings = WorkerSettings'
 -- * 'wsWorkerId'
 workerSettings
     :: WorkerSettings
-workerSettings =
+workerSettings = 
     WorkerSettings'
     { _wsServicePath = Nothing
     , _wsBaseURL = Nothing
@@ -4186,7 +4872,7 @@ newtype GetDebugConfigResponse = GetDebugConfigResponse'
 -- * 'gdcrConfig'
 getDebugConfigResponse
     :: GetDebugConfigResponse
-getDebugConfigResponse =
+getDebugConfigResponse = 
     GetDebugConfigResponse'
     { _gdcrConfig = Nothing
     }
@@ -4221,7 +4907,7 @@ newtype WorkItemServiceStateHarnessData = WorkItemServiceStateHarnessData'
 workItemServiceStateHarnessData
     :: HashMap Text JSONValue -- ^ 'wisshdAddtional'
     -> WorkItemServiceStateHarnessData
-workItemServiceStateHarnessData pWisshdAddtional_ =
+workItemServiceStateHarnessData pWisshdAddtional_ = 
     WorkItemServiceStateHarnessData'
     { _wisshdAddtional = _Coerce # pWisshdAddtional_
     }
@@ -4249,7 +4935,7 @@ instance ToJSON WorkItemServiceStateHarnessData where
 -- /See:/ 'dataDiskAssignment' smart constructor.
 data DataDiskAssignment = DataDiskAssignment'
     { _ddaVMInstance :: !(Maybe Text)
-    , _ddaDataDisks  :: !(Maybe [Text])
+    , _ddaDataDisks :: !(Maybe [Text])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DataDiskAssignment' with the minimum fields required to make a request.
@@ -4261,7 +4947,7 @@ data DataDiskAssignment = DataDiskAssignment'
 -- * 'ddaDataDisks'
 dataDiskAssignment
     :: DataDiskAssignment
-dataDiskAssignment =
+dataDiskAssignment = 
     DataDiskAssignment'
     { _ddaVMInstance = Nothing
     , _ddaDataDisks = Nothing
@@ -4301,31 +4987,29 @@ instance ToJSON DataDiskAssignment where
 
 -- | Worker metrics exported from workers. This contains resource utilization
 -- metrics accumulated from a variety of sources. For more information, see
--- go\/df-resource-signals. Note that this proto closely follows the
--- structure of its DFE siblings in its contents.
+-- go\/df-resource-signals.
 --
 -- /See:/ 'resourceUtilizationReport' smart constructor.
 newtype ResourceUtilizationReport = ResourceUtilizationReport'
-    { _rurMetrics :: Maybe [ResourceUtilizationReportMetricsItem]
+    { _rurCPUTime :: Maybe [CPUTime]
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourceUtilizationReport' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'rurMetrics'
+-- * 'rurCPUTime'
 resourceUtilizationReport
     :: ResourceUtilizationReport
-resourceUtilizationReport =
+resourceUtilizationReport = 
     ResourceUtilizationReport'
-    { _rurMetrics = Nothing
+    { _rurCPUTime = Nothing
     }
 
--- | Each Struct must parallel DFE worker metrics protos (eg., cpu_time
--- metric will have nested values “timestamp_ms, total_ms, rate”).
-rurMetrics :: Lens' ResourceUtilizationReport [ResourceUtilizationReportMetricsItem]
-rurMetrics
-  = lens _rurMetrics (\ s a -> s{_rurMetrics = a}) .
+-- | CPU utilization samples.
+rurCPUTime :: Lens' ResourceUtilizationReport [CPUTime]
+rurCPUTime
+  = lens _rurCPUTime (\ s a -> s{_rurCPUTime = a}) .
       _Default
       . _Coerce
 
@@ -4334,11 +5018,11 @@ instance FromJSON ResourceUtilizationReport where
           = withObject "ResourceUtilizationReport"
               (\ o ->
                  ResourceUtilizationReport' <$>
-                   (o .:? "metrics" .!= mempty))
+                   (o .:? "cpuTime" .!= mempty))
 
 instance ToJSON ResourceUtilizationReport where
         toJSON ResourceUtilizationReport'{..}
-          = object (catMaybes [("metrics" .=) <$> _rurMetrics])
+          = object (catMaybes [("cpuTime" .=) <$> _rurCPUTime])
 
 -- | Indicates which location failed to respond to a request for data.
 --
@@ -4354,7 +5038,7 @@ newtype FailedLocation = FailedLocation'
 -- * 'flName'
 failedLocation
     :: FailedLocation
-failedLocation =
+failedLocation = 
     FailedLocation'
     { _flName = Nothing
     }
@@ -4378,7 +5062,8 @@ instance ToJSON FailedLocation where
 -- /See:/ 'workerMessageResponse' smart constructor.
 data WorkerMessageResponse = WorkerMessageResponse'
     { _wmrWorkerHealthReportResponse :: !(Maybe WorkerHealthReportResponse)
-    , _wmrWorkerMetricsResponse      :: !(Maybe ResourceUtilizationReportResponse)
+    , _wmrWorkerMetricsResponse :: !(Maybe ResourceUtilizationReportResponse)
+    , _wmrWorkerShutdownNoticeResponse :: !(Maybe WorkerShutdownNoticeResponse)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerMessageResponse' with the minimum fields required to make a request.
@@ -4388,12 +5073,15 @@ data WorkerMessageResponse = WorkerMessageResponse'
 -- * 'wmrWorkerHealthReportResponse'
 --
 -- * 'wmrWorkerMetricsResponse'
+--
+-- * 'wmrWorkerShutdownNoticeResponse'
 workerMessageResponse
     :: WorkerMessageResponse
-workerMessageResponse =
+workerMessageResponse = 
     WorkerMessageResponse'
     { _wmrWorkerHealthReportResponse = Nothing
     , _wmrWorkerMetricsResponse = Nothing
+    , _wmrWorkerShutdownNoticeResponse = Nothing
     }
 
 -- | The service\'s response to a worker\'s health report.
@@ -4408,13 +5096,20 @@ wmrWorkerMetricsResponse
   = lens _wmrWorkerMetricsResponse
       (\ s a -> s{_wmrWorkerMetricsResponse = a})
 
+-- | Service\'s response to shutdown notice (currently empty).
+wmrWorkerShutdownNoticeResponse :: Lens' WorkerMessageResponse (Maybe WorkerShutdownNoticeResponse)
+wmrWorkerShutdownNoticeResponse
+  = lens _wmrWorkerShutdownNoticeResponse
+      (\ s a -> s{_wmrWorkerShutdownNoticeResponse = a})
+
 instance FromJSON WorkerMessageResponse where
         parseJSON
           = withObject "WorkerMessageResponse"
               (\ o ->
                  WorkerMessageResponse' <$>
                    (o .:? "workerHealthReportResponse") <*>
-                     (o .:? "workerMetricsResponse"))
+                     (o .:? "workerMetricsResponse")
+                     <*> (o .:? "workerShutdownNoticeResponse"))
 
 instance ToJSON WorkerMessageResponse where
         toJSON WorkerMessageResponse'{..}
@@ -4423,7 +5118,9 @@ instance ToJSON WorkerMessageResponse where
                  [("workerHealthReportResponse" .=) <$>
                     _wmrWorkerHealthReportResponse,
                   ("workerMetricsResponse" .=) <$>
-                    _wmrWorkerMetricsResponse])
+                    _wmrWorkerMetricsResponse,
+                  ("workerShutdownNoticeResponse" .=) <$>
+                    _wmrWorkerShutdownNoticeResponse])
 
 -- | The runtime parameters to pass to the job.
 --
@@ -4440,7 +5137,7 @@ newtype CreateJobFromTemplateRequestParameters = CreateJobFromTemplateRequestPar
 createJobFromTemplateRequestParameters
     :: HashMap Text Text -- ^ 'cjftrpAddtional'
     -> CreateJobFromTemplateRequestParameters
-createJobFromTemplateRequestParameters pCjftrpAddtional_ =
+createJobFromTemplateRequestParameters pCjftrpAddtional_ = 
     CreateJobFromTemplateRequestParameters'
     { _cjftrpAddtional = _Coerce # pCjftrpAddtional_
     }
@@ -4468,14 +5165,14 @@ instance ToJSON
 --
 -- /See:/ 'workItemServiceState' smart constructor.
 data WorkItemServiceState = WorkItemServiceState'
-    { _wissNextReportIndex       :: !(Maybe (Textual Int64))
-    , _wissReportStatusInterval  :: !(Maybe Text)
-    , _wissHarnessData           :: !(Maybe WorkItemServiceStateHarnessData)
-    , _wissSuggestedStopPoint    :: !(Maybe ApproximateProgress)
+    { _wissNextReportIndex :: !(Maybe (Textual Int64))
+    , _wissReportStatusInterval :: !(Maybe Duration)
+    , _wissHarnessData :: !(Maybe WorkItemServiceStateHarnessData)
+    , _wissSuggestedStopPoint :: !(Maybe ApproximateProgress)
     , _wissSuggestedStopPosition :: !(Maybe Position)
-    , _wissLeaseExpireTime       :: !(Maybe Text)
-    , _wissSplitRequest          :: !(Maybe ApproximateSplitRequest)
-    , _wissMetricShortId         :: !(Maybe [MetricShortId])
+    , _wissLeaseExpireTime :: !(Maybe DateTime')
+    , _wissSplitRequest :: !(Maybe ApproximateSplitRequest)
+    , _wissMetricShortId :: !(Maybe [MetricShortId])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkItemServiceState' with the minimum fields required to make a request.
@@ -4499,7 +5196,7 @@ data WorkItemServiceState = WorkItemServiceState'
 -- * 'wissMetricShortId'
 workItemServiceState
     :: WorkItemServiceState
-workItemServiceState =
+workItemServiceState = 
     WorkItemServiceState'
     { _wissNextReportIndex = Nothing
     , _wissReportStatusInterval = Nothing
@@ -4521,10 +5218,11 @@ wissNextReportIndex
       . mapping _Coerce
 
 -- | New recommended reporting interval.
-wissReportStatusInterval :: Lens' WorkItemServiceState (Maybe Text)
+wissReportStatusInterval :: Lens' WorkItemServiceState (Maybe Scientific)
 wissReportStatusInterval
   = lens _wissReportStatusInterval
       (\ s a -> s{_wissReportStatusInterval = a})
+      . mapping _Duration
 
 -- | Other data returned by the service, specific to the particular worker
 -- harness.
@@ -4546,10 +5244,11 @@ wissSuggestedStopPosition
       (\ s a -> s{_wissSuggestedStopPosition = a})
 
 -- | Time at which the current lease will expire.
-wissLeaseExpireTime :: Lens' WorkItemServiceState (Maybe Text)
+wissLeaseExpireTime :: Lens' WorkItemServiceState (Maybe UTCTime)
 wissLeaseExpireTime
   = lens _wissLeaseExpireTime
       (\ s a -> s{_wissLeaseExpireTime = a})
+      . mapping _DateTime
 
 -- | The progress point in the WorkItem where the Dataflow service suggests
 -- that the worker truncate the task.
@@ -4600,14 +5299,47 @@ instance ToJSON WorkItemServiceState where
                   ("splitRequest" .=) <$> _wissSplitRequest,
                   ("metricShortId" .=) <$> _wissMetricShortId])
 
+-- | Response to the request to launch a template.
+--
+-- /See:/ 'launchTemplateResponse' smart constructor.
+newtype LaunchTemplateResponse = LaunchTemplateResponse'
+    { _ltrJob :: Maybe Job
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'LaunchTemplateResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltrJob'
+launchTemplateResponse
+    :: LaunchTemplateResponse
+launchTemplateResponse = 
+    LaunchTemplateResponse'
+    { _ltrJob = Nothing
+    }
+
+-- | The job that was launched, if the request was not a dry run and the job
+-- was successfully launched.
+ltrJob :: Lens' LaunchTemplateResponse (Maybe Job)
+ltrJob = lens _ltrJob (\ s a -> s{_ltrJob = a})
+
+instance FromJSON LaunchTemplateResponse where
+        parseJSON
+          = withObject "LaunchTemplateResponse"
+              (\ o -> LaunchTemplateResponse' <$> (o .:? "job"))
+
+instance ToJSON LaunchTemplateResponse where
+        toJSON LaunchTemplateResponse'{..}
+          = object (catMaybes [("job" .=) <$> _ltrJob])
+
 -- | A task which initializes part of a streaming Dataflow job.
 --
 -- /See:/ 'streamingSetupTask' smart constructor.
 data StreamingSetupTask = StreamingSetupTask'
     { _sstStreamingComputationTopology :: !(Maybe TopologyConfig)
-    , _sstReceiveWorkPort              :: !(Maybe (Textual Int32))
-    , _sstWorkerHarnessPort            :: !(Maybe (Textual Int32))
-    , _sstDrain                        :: !(Maybe Bool)
+    , _sstReceiveWorkPort :: !(Maybe (Textual Int32))
+    , _sstWorkerHarnessPort :: !(Maybe (Textual Int32))
+    , _sstDrain :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StreamingSetupTask' with the minimum fields required to make a request.
@@ -4623,7 +5355,7 @@ data StreamingSetupTask = StreamingSetupTask'
 -- * 'sstDrain'
 streamingSetupTask
     :: StreamingSetupTask
-streamingSetupTask =
+streamingSetupTask = 
     StreamingSetupTask'
     { _sstStreamingComputationTopology = Nothing
     , _sstReceiveWorkPort = Nothing
@@ -4692,7 +5424,7 @@ newtype PartialGroupByKeyInstructionInputElementCodec = PartialGroupByKeyInstruc
 partialGroupByKeyInstructionInputElementCodec
     :: HashMap Text JSONValue -- ^ 'pgbkiiecAddtional'
     -> PartialGroupByKeyInstructionInputElementCodec
-partialGroupByKeyInstructionInputElementCodec pPgbkiiecAddtional_ =
+partialGroupByKeyInstructionInputElementCodec pPgbkiiecAddtional_ = 
     PartialGroupByKeyInstructionInputElementCodec'
     { _pgbkiiecAddtional = _Coerce # pPgbkiiecAddtional_
     }
@@ -4725,8 +5457,8 @@ instance ToJSON
 -- /See:/ 'mapTask' smart constructor.
 data MapTask = MapTask'
     { _mtInstructions :: !(Maybe [ParallelInstruction])
-    , _mtSystemName   :: !(Maybe Text)
-    , _mtStageName    :: !(Maybe Text)
+    , _mtSystemName :: !(Maybe Text)
+    , _mtStageName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MapTask' with the minimum fields required to make a request.
@@ -4740,7 +5472,7 @@ data MapTask = MapTask'
 -- * 'mtStageName'
 mapTask
     :: MapTask
-mapTask =
+mapTask = 
     MapTask'
     { _mtInstructions = Nothing
     , _mtSystemName = Nothing
@@ -4797,7 +5529,7 @@ newtype MountedDataDisk = MountedDataDisk'
 -- * 'mddDataDisk'
 mountedDataDisk
     :: MountedDataDisk
-mountedDataDisk =
+mountedDataDisk = 
     MountedDataDisk'
     { _mddDataDisk = Nothing
     }
@@ -4834,7 +5566,7 @@ newtype SinkCodec = SinkCodec'
 sinkCodec
     :: HashMap Text JSONValue -- ^ 'scAddtional'
     -> SinkCodec
-sinkCodec pScAddtional_ =
+sinkCodec pScAddtional_ = 
     SinkCodec'
     { _scAddtional = _Coerce # pScAddtional_
     }
@@ -4858,7 +5590,7 @@ instance ToJSON SinkCodec where
 -- /See:/ 'integerMean' smart constructor.
 data IntegerMean = IntegerMean'
     { _imCount :: !(Maybe SplitInt64)
-    , _imSum   :: !(Maybe SplitInt64)
+    , _imSum :: !(Maybe SplitInt64)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'IntegerMean' with the minimum fields required to make a request.
@@ -4870,7 +5602,7 @@ data IntegerMean = IntegerMean'
 -- * 'imSum'
 integerMean
     :: IntegerMean
-integerMean =
+integerMean = 
     IntegerMean'
     { _imCount = Nothing
     , _imSum = Nothing
@@ -4910,7 +5642,7 @@ newtype WorkerHealthReportPodsItem = WorkerHealthReportPodsItem'
 workerHealthReportPodsItem
     :: HashMap Text JSONValue -- ^ 'whrpiAddtional'
     -> WorkerHealthReportPodsItem
-workerHealthReportPodsItem pWhrpiAddtional_ =
+workerHealthReportPodsItem pWhrpiAddtional_ = 
     WorkerHealthReportPodsItem'
     { _whrpiAddtional = _Coerce # pWhrpiAddtional_
     }
@@ -4946,7 +5678,7 @@ newtype ParDoInstructionUserFn = ParDoInstructionUserFn'
 parDoInstructionUserFn
     :: HashMap Text JSONValue -- ^ 'pdiufAddtional'
     -> ParDoInstructionUserFn
-parDoInstructionUserFn pPdiufAddtional_ =
+parDoInstructionUserFn pPdiufAddtional_ = 
     ParDoInstructionUserFn'
     { _pdiufAddtional = _Coerce # pPdiufAddtional_
     }
@@ -4982,7 +5714,7 @@ newtype InstructionOutputCodec = InstructionOutputCodec'
 instructionOutputCodec
     :: HashMap Text JSONValue -- ^ 'iocAddtional'
     -> InstructionOutputCodec
-instructionOutputCodec pIocAddtional_ =
+instructionOutputCodec pIocAddtional_ = 
     InstructionOutputCodec'
     { _iocAddtional = _Coerce # pIocAddtional_
     }
@@ -5008,9 +5740,9 @@ instance ToJSON InstructionOutputCodec where
 -- /See:/ 'streamLocation' smart constructor.
 data StreamLocation = StreamLocation'
     { _slStreamingStageLocation :: !(Maybe StreamingStageLocation)
-    , _slSideInputLocation      :: !(Maybe StreamingSideInputLocation)
-    , _slCustomSourceLocation   :: !(Maybe CustomSourceLocation)
-    , _slPubsubLocation         :: !(Maybe PubsubLocation)
+    , _slSideInputLocation :: !(Maybe StreamingSideInputLocation)
+    , _slCustomSourceLocation :: !(Maybe CustomSourceLocation)
+    , _slPubsubLocation :: !(Maybe PubsubLocation)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StreamLocation' with the minimum fields required to make a request.
@@ -5026,7 +5758,7 @@ data StreamLocation = StreamLocation'
 -- * 'slPubsubLocation'
 streamLocation
     :: StreamLocation
-streamLocation =
+streamLocation = 
     StreamLocation'
     { _slStreamingStageLocation = Nothing
     , _slSideInputLocation = Nothing
@@ -5095,7 +5827,7 @@ newtype WorkerPoolPoolArgs = WorkerPoolPoolArgs'
 workerPoolPoolArgs
     :: HashMap Text JSONValue -- ^ 'wppaAddtional'
     -> WorkerPoolPoolArgs
-workerPoolPoolArgs pWppaAddtional_ =
+workerPoolPoolArgs pWppaAddtional_ = 
     WorkerPoolPoolArgs'
     { _wppaAddtional = _Coerce # pWppaAddtional_
     }
@@ -5119,11 +5851,12 @@ instance ToJSON WorkerPoolPoolArgs where
 --
 -- /See:/ 'runtimeEnvironment' smart constructor.
 data RuntimeEnvironment = RuntimeEnvironment'
-    { _reZone                    :: !(Maybe Text)
+    { _reZone :: !(Maybe Text)
     , _reBypassTempDirValidation :: !(Maybe Bool)
-    , _reServiceAccountEmail     :: !(Maybe Text)
-    , _reMaxWorkers              :: !(Maybe (Textual Int32))
-    , _reTempLocation            :: !(Maybe Text)
+    , _reMachineType :: !(Maybe Text)
+    , _reServiceAccountEmail :: !(Maybe Text)
+    , _reMaxWorkers :: !(Maybe (Textual Int32))
+    , _reTempLocation :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RuntimeEnvironment' with the minimum fields required to make a request.
@@ -5134,6 +5867,8 @@ data RuntimeEnvironment = RuntimeEnvironment'
 --
 -- * 'reBypassTempDirValidation'
 --
+-- * 'reMachineType'
+--
 -- * 'reServiceAccountEmail'
 --
 -- * 'reMaxWorkers'
@@ -5141,10 +5876,11 @@ data RuntimeEnvironment = RuntimeEnvironment'
 -- * 'reTempLocation'
 runtimeEnvironment
     :: RuntimeEnvironment
-runtimeEnvironment =
+runtimeEnvironment = 
     RuntimeEnvironment'
     { _reZone = Nothing
     , _reBypassTempDirValidation = Nothing
+    , _reMachineType = Nothing
     , _reServiceAccountEmail = Nothing
     , _reMaxWorkers = Nothing
     , _reTempLocation = Nothing
@@ -5162,6 +5898,13 @@ reBypassTempDirValidation :: Lens' RuntimeEnvironment (Maybe Bool)
 reBypassTempDirValidation
   = lens _reBypassTempDirValidation
       (\ s a -> s{_reBypassTempDirValidation = a})
+
+-- | The machine type to use for the job. Defaults to the value from the
+-- template if not specified.
+reMachineType :: Lens' RuntimeEnvironment (Maybe Text)
+reMachineType
+  = lens _reMachineType
+      (\ s a -> s{_reMachineType = a})
 
 -- | The email address of the service account to run the job as.
 reServiceAccountEmail :: Lens' RuntimeEnvironment (Maybe Text)
@@ -5189,6 +5932,7 @@ instance FromJSON RuntimeEnvironment where
               (\ o ->
                  RuntimeEnvironment' <$>
                    (o .:? "zone") <*> (o .:? "bypassTempDirValidation")
+                     <*> (o .:? "machineType")
                      <*> (o .:? "serviceAccountEmail")
                      <*> (o .:? "maxWorkers")
                      <*> (o .:? "tempLocation"))
@@ -5200,6 +5944,7 @@ instance ToJSON RuntimeEnvironment where
                  [("zone" .=) <$> _reZone,
                   ("bypassTempDirValidation" .=) <$>
                     _reBypassTempDirValidation,
+                  ("machineType" .=) <$> _reMachineType,
                   ("serviceAccountEmail" .=) <$>
                     _reServiceAccountEmail,
                   ("maxWorkers" .=) <$> _reMaxWorkers,
@@ -5210,10 +5955,10 @@ instance ToJSON RuntimeEnvironment where
 --
 -- /See:/ 'counterMetadata' smart constructor.
 data CounterMetadata = CounterMetadata'
-    { _cmKind          :: !(Maybe Text)
-    , _cmDescription   :: !(Maybe Text)
-    , _cmStandardUnits :: !(Maybe Text)
-    , _cmOtherUnits    :: !(Maybe Text)
+    { _cmKind :: !(Maybe CounterMetadataKind)
+    , _cmDescription :: !(Maybe Text)
+    , _cmStandardUnits :: !(Maybe CounterMetadataStandardUnits)
+    , _cmOtherUnits :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'CounterMetadata' with the minimum fields required to make a request.
@@ -5229,7 +5974,7 @@ data CounterMetadata = CounterMetadata'
 -- * 'cmOtherUnits'
 counterMetadata
     :: CounterMetadata
-counterMetadata =
+counterMetadata = 
     CounterMetadata'
     { _cmKind = Nothing
     , _cmDescription = Nothing
@@ -5238,7 +5983,7 @@ counterMetadata =
     }
 
 -- | Counter aggregation kind.
-cmKind :: Lens' CounterMetadata (Maybe Text)
+cmKind :: Lens' CounterMetadata (Maybe CounterMetadataKind)
 cmKind = lens _cmKind (\ s a -> s{_cmKind = a})
 
 -- | Human-readable description of the counter semantics.
@@ -5248,7 +5993,7 @@ cmDescription
       (\ s a -> s{_cmDescription = a})
 
 -- | System defined Units, see above enum.
-cmStandardUnits :: Lens' CounterMetadata (Maybe Text)
+cmStandardUnits :: Lens' CounterMetadata (Maybe CounterMetadataStandardUnits)
 cmStandardUnits
   = lens _cmStandardUnits
       (\ s a -> s{_cmStandardUnits = a})
@@ -5290,7 +6035,7 @@ newtype SendWorkerMessagesResponse = SendWorkerMessagesResponse'
 -- * 'swmrWorkerMessageResponses'
 sendWorkerMessagesResponse
     :: SendWorkerMessagesResponse
-sendWorkerMessagesResponse =
+sendWorkerMessagesResponse = 
     SendWorkerMessagesResponse'
     { _swmrWorkerMessageResponses = Nothing
     }
@@ -5321,7 +6066,7 @@ instance ToJSON SendWorkerMessagesResponse where
 --
 -- /See:/ 'streamingSideInputLocation' smart constructor.
 data StreamingSideInputLocation = StreamingSideInputLocation'
-    { _ssilTag         :: !(Maybe Text)
+    { _ssilTag :: !(Maybe Text)
     , _ssilStateFamily :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5334,7 +6079,7 @@ data StreamingSideInputLocation = StreamingSideInputLocation'
 -- * 'ssilStateFamily'
 streamingSideInputLocation
     :: StreamingSideInputLocation
-streamingSideInputLocation =
+streamingSideInputLocation = 
     StreamingSideInputLocation'
     { _ssilTag = Nothing
     , _ssilStateFamily = Nothing
@@ -5368,24 +6113,33 @@ instance ToJSON StreamingSideInputLocation where
 --
 -- /See:/ 'getDebugConfigRequest' smart constructor.
 data GetDebugConfigRequest = GetDebugConfigRequest'
-    { _gdcrComponentId :: !(Maybe Text)
-    , _gdcrWorkerId    :: !(Maybe Text)
+    { _gdcrLocation :: !(Maybe Text)
+    , _gdcrComponentId :: !(Maybe Text)
+    , _gdcrWorkerId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GetDebugConfigRequest' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'gdcrLocation'
+--
 -- * 'gdcrComponentId'
 --
 -- * 'gdcrWorkerId'
 getDebugConfigRequest
     :: GetDebugConfigRequest
-getDebugConfigRequest =
+getDebugConfigRequest = 
     GetDebugConfigRequest'
-    { _gdcrComponentId = Nothing
+    { _gdcrLocation = Nothing
+    , _gdcrComponentId = Nothing
     , _gdcrWorkerId = Nothing
     }
+
+-- | The location which contains the job specified by job_id.
+gdcrLocation :: Lens' GetDebugConfigRequest (Maybe Text)
+gdcrLocation
+  = lens _gdcrLocation (\ s a -> s{_gdcrLocation = a})
 
 -- | The internal component id for which debug configuration is requested.
 gdcrComponentId :: Lens' GetDebugConfigRequest (Maybe Text)
@@ -5403,13 +6157,15 @@ instance FromJSON GetDebugConfigRequest where
           = withObject "GetDebugConfigRequest"
               (\ o ->
                  GetDebugConfigRequest' <$>
-                   (o .:? "componentId") <*> (o .:? "workerId"))
+                   (o .:? "location") <*> (o .:? "componentId") <*>
+                     (o .:? "workerId"))
 
 instance ToJSON GetDebugConfigRequest where
         toJSON GetDebugConfigRequest'{..}
           = object
               (catMaybes
-                 [("componentId" .=) <$> _gdcrComponentId,
+                 [("location" .=) <$> _gdcrLocation,
+                  ("componentId" .=) <$> _gdcrComponentId,
                   ("workerId" .=) <$> _gdcrWorkerId])
 
 -- | A single message which encapsulates structured name and metadata for a
@@ -5417,7 +6173,7 @@ instance ToJSON GetDebugConfigRequest where
 --
 -- /See:/ 'counterStructuredNameAndMetadata' smart constructor.
 data CounterStructuredNameAndMetadata = CounterStructuredNameAndMetadata'
-    { _csnamName     :: !(Maybe CounterStructuredName)
+    { _csnamName :: !(Maybe CounterStructuredName)
     , _csnamMetadata :: !(Maybe CounterMetadata)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5430,7 +6186,7 @@ data CounterStructuredNameAndMetadata = CounterStructuredNameAndMetadata'
 -- * 'csnamMetadata'
 counterStructuredNameAndMetadata
     :: CounterStructuredNameAndMetadata
-counterStructuredNameAndMetadata =
+counterStructuredNameAndMetadata = 
     CounterStructuredNameAndMetadata'
     { _csnamName = Nothing
     , _csnamMetadata = Nothing
@@ -5463,13 +6219,50 @@ instance ToJSON CounterStructuredNameAndMetadata
                  [("name" .=) <$> _csnamName,
                   ("metadata" .=) <$> _csnamMetadata])
 
+-- | Shutdown notification from workers. This is to be sent by the shutdown
+-- script of the worker VM so that the backend knows that the VM is being
+-- shut down.
+--
+-- /See:/ 'workerShutdownNotice' smart constructor.
+newtype WorkerShutdownNotice = WorkerShutdownNotice'
+    { _wsnReason :: Maybe Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'WorkerShutdownNotice' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'wsnReason'
+workerShutdownNotice
+    :: WorkerShutdownNotice
+workerShutdownNotice = 
+    WorkerShutdownNotice'
+    { _wsnReason = Nothing
+    }
+
+-- | The reason for the worker shutdown. Current possible values are:
+-- \"UNKNOWN\": shutdown reason is unknown. \"PREEMPTION\": shutdown reason
+-- is preemption. Other possible reasons may be added in the future.
+wsnReason :: Lens' WorkerShutdownNotice (Maybe Text)
+wsnReason
+  = lens _wsnReason (\ s a -> s{_wsnReason = a})
+
+instance FromJSON WorkerShutdownNotice where
+        parseJSON
+          = withObject "WorkerShutdownNotice"
+              (\ o -> WorkerShutdownNotice' <$> (o .:? "reason"))
+
+instance ToJSON WorkerShutdownNotice where
+        toJSON WorkerShutdownNotice'{..}
+          = object (catMaybes [("reason" .=) <$> _wsnReason])
+
 -- | A task which describes what action should be performed for the specified
 -- streaming computation ranges.
 --
 -- /See:/ 'streamingComputationTask' smart constructor.
 data StreamingComputationTask = StreamingComputationTask'
-    { _sctTaskType          :: !(Maybe Text)
-    , _sctDataDisks         :: !(Maybe [MountedDataDisk])
+    { _sctTaskType :: !(Maybe StreamingComputationTaskTaskType)
+    , _sctDataDisks :: !(Maybe [MountedDataDisk])
     , _sctComputationRanges :: !(Maybe [StreamingComputationRanges])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -5484,7 +6277,7 @@ data StreamingComputationTask = StreamingComputationTask'
 -- * 'sctComputationRanges'
 streamingComputationTask
     :: StreamingComputationTask
-streamingComputationTask =
+streamingComputationTask = 
     StreamingComputationTask'
     { _sctTaskType = Nothing
     , _sctDataDisks = Nothing
@@ -5492,7 +6285,7 @@ streamingComputationTask =
     }
 
 -- | A type of streaming computation task.
-sctTaskType :: Lens' StreamingComputationTask (Maybe Text)
+sctTaskType :: Lens' StreamingComputationTask (Maybe StreamingComputationTaskTaskType)
 sctTaskType
   = lens _sctTaskType (\ s a -> s{_sctTaskType = a})
 
@@ -5527,14 +6320,87 @@ instance ToJSON StreamingComputationTask where
                   ("dataDisks" .=) <$> _sctDataDisks,
                   ("computationRanges" .=) <$> _sctComputationRanges])
 
+-- | A descriptive representation of submitted pipeline as well as the
+-- executed form. This data is provided by the Dataflow service for ease of
+-- visualizing the pipeline and interpretting Dataflow provided metrics.
+--
+-- /See:/ 'pipelineDescription' smart constructor.
+data PipelineDescription = PipelineDescription'
+    { _pdExecutionPipelineStage :: !(Maybe [ExecutionStageSummary])
+    , _pdDisplayData :: !(Maybe [DisplayData])
+    , _pdOriginalPipelineTransform :: !(Maybe [TransformSummary])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'PipelineDescription' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'pdExecutionPipelineStage'
+--
+-- * 'pdDisplayData'
+--
+-- * 'pdOriginalPipelineTransform'
+pipelineDescription
+    :: PipelineDescription
+pipelineDescription = 
+    PipelineDescription'
+    { _pdExecutionPipelineStage = Nothing
+    , _pdDisplayData = Nothing
+    , _pdOriginalPipelineTransform = Nothing
+    }
+
+-- | Description of each stage of execution of the pipeline.
+pdExecutionPipelineStage :: Lens' PipelineDescription [ExecutionStageSummary]
+pdExecutionPipelineStage
+  = lens _pdExecutionPipelineStage
+      (\ s a -> s{_pdExecutionPipelineStage = a})
+      . _Default
+      . _Coerce
+
+-- | Pipeline level display data.
+pdDisplayData :: Lens' PipelineDescription [DisplayData]
+pdDisplayData
+  = lens _pdDisplayData
+      (\ s a -> s{_pdDisplayData = a})
+      . _Default
+      . _Coerce
+
+-- | Description of each transform in the pipeline and collections between
+-- them.
+pdOriginalPipelineTransform :: Lens' PipelineDescription [TransformSummary]
+pdOriginalPipelineTransform
+  = lens _pdOriginalPipelineTransform
+      (\ s a -> s{_pdOriginalPipelineTransform = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON PipelineDescription where
+        parseJSON
+          = withObject "PipelineDescription"
+              (\ o ->
+                 PipelineDescription' <$>
+                   (o .:? "executionPipelineStage" .!= mempty) <*>
+                     (o .:? "displayData" .!= mempty)
+                     <*> (o .:? "originalPipelineTransform" .!= mempty))
+
+instance ToJSON PipelineDescription where
+        toJSON PipelineDescription'{..}
+          = object
+              (catMaybes
+                 [("executionPipelineStage" .=) <$>
+                    _pdExecutionPipelineStage,
+                  ("displayData" .=) <$> _pdDisplayData,
+                  ("originalPipelineTransform" .=) <$>
+                    _pdOriginalPipelineTransform])
+
 -- | A particular message pertaining to a Dataflow job.
 --
 -- /See:/ 'jobMessage' smart constructor.
 data JobMessage = JobMessage'
-    { _jmTime              :: !(Maybe Text)
-    , _jmMessageText       :: !(Maybe Text)
-    , _jmMessageImportance :: !(Maybe Text)
-    , _jmId                :: !(Maybe Text)
+    { _jmTime :: !(Maybe DateTime')
+    , _jmMessageText :: !(Maybe Text)
+    , _jmMessageImportance :: !(Maybe JobMessageMessageImportance)
+    , _jmId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JobMessage' with the minimum fields required to make a request.
@@ -5550,7 +6416,7 @@ data JobMessage = JobMessage'
 -- * 'jmId'
 jobMessage
     :: JobMessage
-jobMessage =
+jobMessage = 
     JobMessage'
     { _jmTime = Nothing
     , _jmMessageText = Nothing
@@ -5559,8 +6425,10 @@ jobMessage =
     }
 
 -- | The timestamp of the message.
-jmTime :: Lens' JobMessage (Maybe Text)
-jmTime = lens _jmTime (\ s a -> s{_jmTime = a})
+jmTime :: Lens' JobMessage (Maybe UTCTime)
+jmTime
+  = lens _jmTime (\ s a -> s{_jmTime = a}) .
+      mapping _DateTime
 
 -- | The text of the message.
 jmMessageText :: Lens' JobMessage (Maybe Text)
@@ -5569,13 +6437,12 @@ jmMessageText
       (\ s a -> s{_jmMessageText = a})
 
 -- | Importance level of the message.
-jmMessageImportance :: Lens' JobMessage (Maybe Text)
+jmMessageImportance :: Lens' JobMessage (Maybe JobMessageMessageImportance)
 jmMessageImportance
   = lens _jmMessageImportance
       (\ s a -> s{_jmMessageImportance = a})
 
--- | Identifies the message. This is automatically generated by the service;
--- the caller should treat it as an opaque string.
+-- | Deprecated.
 jmId :: Lens' JobMessage (Maybe Text)
 jmId = lens _jmId (\ s a -> s{_jmId = a})
 
@@ -5602,7 +6469,7 @@ instance ToJSON JobMessage where
 -- /See:/ 'seqMapTaskOutputInfo' smart constructor.
 data SeqMapTaskOutputInfo = SeqMapTaskOutputInfo'
     { _smtoiSink :: !(Maybe Sink)
-    , _smtoiTag  :: !(Maybe Text)
+    , _smtoiTag :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SeqMapTaskOutputInfo' with the minimum fields required to make a request.
@@ -5614,7 +6481,7 @@ data SeqMapTaskOutputInfo = SeqMapTaskOutputInfo'
 -- * 'smtoiTag'
 seqMapTaskOutputInfo
     :: SeqMapTaskOutputInfo
-seqMapTaskOutputInfo =
+seqMapTaskOutputInfo = 
     SeqMapTaskOutputInfo'
     { _smtoiSink = Nothing
     , _smtoiTag = Nothing
@@ -5657,7 +6524,7 @@ newtype SourceGetMetadataRequest = SourceGetMetadataRequest'
 -- * 'sgmrSource'
 sourceGetMetadataRequest
     :: SourceGetMetadataRequest
-sourceGetMetadataRequest =
+sourceGetMetadataRequest = 
     SourceGetMetadataRequest'
     { _sgmrSource = Nothing
     }
@@ -5677,6 +6544,27 @@ instance ToJSON SourceGetMetadataRequest where
         toJSON SourceGetMetadataRequest'{..}
           = object (catMaybes [("source" .=) <$> _sgmrSource])
 
+-- | Service-side response to WorkerMessage issuing shutdown notice.
+--
+-- /See:/ 'workerShutdownNoticeResponse' smart constructor.
+data WorkerShutdownNoticeResponse =
+    WorkerShutdownNoticeResponse' 
+    deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'WorkerShutdownNoticeResponse' with the minimum fields required to make a request.
+--
+workerShutdownNoticeResponse
+    :: WorkerShutdownNoticeResponse
+workerShutdownNoticeResponse = WorkerShutdownNoticeResponse'
+
+instance FromJSON WorkerShutdownNoticeResponse where
+        parseJSON
+          = withObject "WorkerShutdownNoticeResponse"
+              (\ o -> pure WorkerShutdownNoticeResponse')
+
+instance ToJSON WorkerShutdownNoticeResponse where
+        toJSON = const emptyObject
+
 -- | The user function to invoke.
 --
 -- /See:/ 'seqMapTaskUserFn' smart constructor.
@@ -5692,7 +6580,7 @@ newtype SeqMapTaskUserFn = SeqMapTaskUserFn'
 seqMapTaskUserFn
     :: HashMap Text JSONValue -- ^ 'smtufAddtional'
     -> SeqMapTaskUserFn
-seqMapTaskUserFn pSmtufAddtional_ =
+seqMapTaskUserFn pSmtufAddtional_ = 
     SeqMapTaskUserFn'
     { _smtufAddtional = _Coerce # pSmtufAddtional_
     }
@@ -5727,7 +6615,7 @@ newtype PartialGroupByKeyInstructionValueCombiningFn = PartialGroupByKeyInstruct
 partialGroupByKeyInstructionValueCombiningFn
     :: HashMap Text JSONValue -- ^ 'pgbkivcfAddtional'
     -> PartialGroupByKeyInstructionValueCombiningFn
-partialGroupByKeyInstructionValueCombiningFn pPgbkivcfAddtional_ =
+partialGroupByKeyInstructionValueCombiningFn pPgbkivcfAddtional_ = 
     PartialGroupByKeyInstructionValueCombiningFn'
     { _pgbkivcfAddtional = _Coerce # pPgbkivcfAddtional_
     }
@@ -5756,24 +6644,26 @@ instance ToJSON
 --
 -- /See:/ 'job' smart constructor.
 data Job = Job'
-    { _jRequestedState       :: !(Maybe Text)
-    , _jLocation             :: !(Maybe Text)
-    , _jEnvironment          :: !(Maybe Environment)
-    , _jClientRequestId      :: !(Maybe Text)
-    , _jCurrentState         :: !(Maybe Text)
-    , _jReplacedByJobId      :: !(Maybe Text)
-    , _jTempFiles            :: !(Maybe [Text])
-    , _jSteps                :: !(Maybe [Step])
-    , _jExecutionInfo        :: !(Maybe JobExecutionInfo)
-    , _jName                 :: !(Maybe Text)
+    { _jRequestedState :: !(Maybe JobRequestedState)
+    , _jLocation :: !(Maybe Text)
+    , _jEnvironment :: !(Maybe Environment)
+    , _jClientRequestId :: !(Maybe Text)
+    , _jStageStates :: !(Maybe [ExecutionStageState])
+    , _jCurrentState :: !(Maybe JobCurrentState)
+    , _jReplacedByJobId :: !(Maybe Text)
+    , _jTempFiles :: !(Maybe [Text])
+    , _jSteps :: !(Maybe [Step])
+    , _jPipelineDescription :: !(Maybe PipelineDescription)
+    , _jExecutionInfo :: !(Maybe JobExecutionInfo)
+    , _jName :: !(Maybe Text)
     , _jTransformNameMApping :: !(Maybe JobTransformNameMApping)
-    , _jId                   :: !(Maybe Text)
-    , _jLabels               :: !(Maybe JobLabels)
-    , _jProjectId            :: !(Maybe Text)
-    , _jType                 :: !(Maybe Text)
-    , _jCurrentStateTime     :: !(Maybe Text)
-    , _jReplaceJobId         :: !(Maybe Text)
-    , _jCreateTime           :: !(Maybe Text)
+    , _jId :: !(Maybe Text)
+    , _jLabels :: !(Maybe JobLabels)
+    , _jProjectId :: !(Maybe Text)
+    , _jType :: !(Maybe JobType)
+    , _jCurrentStateTime :: !(Maybe DateTime')
+    , _jReplaceJobId :: !(Maybe Text)
+    , _jCreateTime :: !(Maybe DateTime')
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Job' with the minimum fields required to make a request.
@@ -5788,6 +6678,8 @@ data Job = Job'
 --
 -- * 'jClientRequestId'
 --
+-- * 'jStageStates'
+--
 -- * 'jCurrentState'
 --
 -- * 'jReplacedByJobId'
@@ -5795,6 +6687,8 @@ data Job = Job'
 -- * 'jTempFiles'
 --
 -- * 'jSteps'
+--
+-- * 'jPipelineDescription'
 --
 -- * 'jExecutionInfo'
 --
@@ -5817,16 +6711,18 @@ data Job = Job'
 -- * 'jCreateTime'
 job
     :: Job
-job =
+job = 
     Job'
     { _jRequestedState = Nothing
     , _jLocation = Nothing
     , _jEnvironment = Nothing
     , _jClientRequestId = Nothing
+    , _jStageStates = Nothing
     , _jCurrentState = Nothing
     , _jReplacedByJobId = Nothing
     , _jTempFiles = Nothing
     , _jSteps = Nothing
+    , _jPipelineDescription = Nothing
     , _jExecutionInfo = Nothing
     , _jName = Nothing
     , _jTransformNameMApping = Nothing
@@ -5845,7 +6741,7 @@ job =
 -- requested state to \`JOB_STATE_CANCELLED\` or \`JOB_STATE_DONE\`,
 -- irrevocably terminating the job if it has not already reached a terminal
 -- state.
-jRequestedState :: Lens' Job (Maybe Text)
+jRequestedState :: Lens' Job (Maybe JobRequestedState)
 jRequestedState
   = lens _jRequestedState
       (\ s a -> s{_jRequestedState = a})
@@ -5872,13 +6768,21 @@ jClientRequestId
   = lens _jClientRequestId
       (\ s a -> s{_jClientRequestId = a})
 
+-- | This field may be mutated by the Cloud Dataflow service; callers cannot
+-- mutate it.
+jStageStates :: Lens' Job [ExecutionStageState]
+jStageStates
+  = lens _jStageStates (\ s a -> s{_jStageStates = a})
+      . _Default
+      . _Coerce
+
 -- | The current state of the job. Jobs are created in the
 -- \`JOB_STATE_STOPPED\` state unless otherwise specified. A job in the
 -- \`JOB_STATE_RUNNING\` state may asynchronously enter a terminal state.
 -- After a job has reached a terminal state, no further state updates may
 -- be made. This field may be mutated by the Cloud Dataflow service;
 -- callers cannot mutate it.
-jCurrentState :: Lens' Job (Maybe Text)
+jCurrentState :: Lens' Job (Maybe JobCurrentState)
 jCurrentState
   = lens _jCurrentState
       (\ s a -> s{_jCurrentState = a})
@@ -5908,7 +6812,16 @@ jSteps
   = lens _jSteps (\ s a -> s{_jSteps = a}) . _Default .
       _Coerce
 
--- | Information about how the Cloud Dataflow service will run the job.
+-- | Preliminary field: The format of this data may change at any time. A
+-- description of the user pipeline and stages through which it is
+-- executed. Created by Cloud Dataflow service. Only retrieved with
+-- JOB_VIEW_DESCRIPTION or JOB_VIEW_ALL.
+jPipelineDescription :: Lens' Job (Maybe PipelineDescription)
+jPipelineDescription
+  = lens _jPipelineDescription
+      (\ s a -> s{_jPipelineDescription = a})
+
+-- | Deprecated.
 jExecutionInfo :: Lens' Job (Maybe JobExecutionInfo)
 jExecutionInfo
   = lens _jExecutionInfo
@@ -5950,14 +6863,15 @@ jProjectId
   = lens _jProjectId (\ s a -> s{_jProjectId = a})
 
 -- | The type of Cloud Dataflow job.
-jType :: Lens' Job (Maybe Text)
+jType :: Lens' Job (Maybe JobType)
 jType = lens _jType (\ s a -> s{_jType = a})
 
 -- | The timestamp associated with the current state.
-jCurrentStateTime :: Lens' Job (Maybe Text)
+jCurrentStateTime :: Lens' Job (Maybe UTCTime)
 jCurrentStateTime
   = lens _jCurrentStateTime
       (\ s a -> s{_jCurrentStateTime = a})
+      . mapping _DateTime
 
 -- | If this job is an update of an existing job, this field is the job ID of
 -- the job it replaced. When sending a \`CreateJobRequest\`, you can update
@@ -5970,9 +6884,10 @@ jReplaceJobId
 
 -- | The timestamp when the job was initially created. Immutable and set by
 -- the Cloud Dataflow service.
-jCreateTime :: Lens' Job (Maybe Text)
+jCreateTime :: Lens' Job (Maybe UTCTime)
 jCreateTime
-  = lens _jCreateTime (\ s a -> s{_jCreateTime = a})
+  = lens _jCreateTime (\ s a -> s{_jCreateTime = a}) .
+      mapping _DateTime
 
 instance FromJSON Job where
         parseJSON
@@ -5982,10 +6897,12 @@ instance FromJSON Job where
                    (o .:? "requestedState") <*> (o .:? "location") <*>
                      (o .:? "environment")
                      <*> (o .:? "clientRequestId")
+                     <*> (o .:? "stageStates" .!= mempty)
                      <*> (o .:? "currentState")
                      <*> (o .:? "replacedByJobId")
                      <*> (o .:? "tempFiles" .!= mempty)
                      <*> (o .:? "steps" .!= mempty)
+                     <*> (o .:? "pipelineDescription")
                      <*> (o .:? "executionInfo")
                      <*> (o .:? "name")
                      <*> (o .:? "transformNameMapping")
@@ -6005,10 +6922,12 @@ instance ToJSON Job where
                   ("location" .=) <$> _jLocation,
                   ("environment" .=) <$> _jEnvironment,
                   ("clientRequestId" .=) <$> _jClientRequestId,
+                  ("stageStates" .=) <$> _jStageStates,
                   ("currentState" .=) <$> _jCurrentState,
                   ("replacedByJobId" .=) <$> _jReplacedByJobId,
                   ("tempFiles" .=) <$> _jTempFiles,
                   ("steps" .=) <$> _jSteps,
+                  ("pipelineDescription" .=) <$> _jPipelineDescription,
                   ("executionInfo" .=) <$> _jExecutionInfo,
                   ("name" .=) <$> _jName,
                   ("transformNameMapping" .=) <$>
@@ -6034,7 +6953,7 @@ newtype ReadInstruction = ReadInstruction'
 -- * 'riSource'
 readInstruction
     :: ReadInstruction
-readInstruction =
+readInstruction = 
     ReadInstruction'
     { _riSource = Nothing
     }
@@ -6056,10 +6975,10 @@ instance ToJSON ReadInstruction where
 --
 -- /See:/ 'approximateReportedProgress' smart constructor.
 data ApproximateReportedProgress = ApproximateReportedProgress'
-    { _arpFractionConsumed     :: !(Maybe (Textual Double))
-    , _arpConsumedParallelism  :: !(Maybe ReportedParallelism)
+    { _arpFractionConsumed :: !(Maybe (Textual Double))
+    , _arpConsumedParallelism :: !(Maybe ReportedParallelism)
     , _arpRemainingParallelism :: !(Maybe ReportedParallelism)
-    , _arpPosition             :: !(Maybe Position)
+    , _arpPosition :: !(Maybe Position)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApproximateReportedProgress' with the minimum fields required to make a request.
@@ -6075,7 +6994,7 @@ data ApproximateReportedProgress = ApproximateReportedProgress'
 -- * 'arpPosition'
 approximateReportedProgress
     :: ApproximateReportedProgress
-approximateReportedProgress =
+approximateReportedProgress = 
     ApproximateReportedProgress'
     { _arpFractionConsumed = Nothing
     , _arpConsumedParallelism = Nothing
@@ -6167,7 +7086,7 @@ newtype SinkSpec = SinkSpec'
 sinkSpec
     :: HashMap Text JSONValue -- ^ 'sAddtional'
     -> SinkSpec
-sinkSpec pSAddtional_ =
+sinkSpec pSAddtional_ = 
     SinkSpec'
     { _sAddtional = _Coerce # pSAddtional_
     }
@@ -6194,27 +7113,27 @@ instance ToJSON SinkSpec where
 --
 -- /See:/ 'workerPool' smart constructor.
 data WorkerPool = WorkerPool'
-    { _wpAutoscalingSettings         :: !(Maybe AutoscalingSettings)
-    , _wpNumThreadsPerWorker         :: !(Maybe (Textual Int32))
-    , _wpDiskSizeGb                  :: !(Maybe (Textual Int32))
-    , _wpKind                        :: !(Maybe Text)
-    , _wpTaskrunnerSettings          :: !(Maybe TaskRunnerSettings)
-    , _wpNumWorkers                  :: !(Maybe (Textual Int32))
-    , _wpNetwork                     :: !(Maybe Text)
-    , _wpZone                        :: !(Maybe Text)
-    , _wpIPConfiguration             :: !(Maybe Text)
-    , _wpPackages                    :: !(Maybe [Package])
-    , _wpOnHostMaintenance           :: !(Maybe Text)
-    , _wpDiskSourceImage             :: !(Maybe Text)
-    , _wpSubnetwork                  :: !(Maybe Text)
-    , _wpMachineType                 :: !(Maybe Text)
-    , _wpMetadata                    :: !(Maybe WorkerPoolMetadata)
-    , _wpDiskType                    :: !(Maybe Text)
-    , _wpTeardownPolicy              :: !(Maybe Text)
-    , _wpDefaultPackageSet           :: !(Maybe Text)
-    , _wpPoolArgs                    :: !(Maybe WorkerPoolPoolArgs)
+    { _wpAutoscalingSettings :: !(Maybe AutoscalingSettings)
+    , _wpNumThreadsPerWorker :: !(Maybe (Textual Int32))
+    , _wpDiskSizeGb :: !(Maybe (Textual Int32))
+    , _wpKind :: !(Maybe Text)
+    , _wpTaskrunnerSettings :: !(Maybe TaskRunnerSettings)
+    , _wpNumWorkers :: !(Maybe (Textual Int32))
+    , _wpNetwork :: !(Maybe Text)
+    , _wpZone :: !(Maybe Text)
+    , _wpIPConfiguration :: !(Maybe WorkerPoolIPConfiguration)
+    , _wpPackages :: !(Maybe [Package])
+    , _wpOnHostMaintenance :: !(Maybe Text)
+    , _wpDiskSourceImage :: !(Maybe Text)
+    , _wpSubnetwork :: !(Maybe Text)
+    , _wpMachineType :: !(Maybe Text)
+    , _wpMetadata :: !(Maybe WorkerPoolMetadata)
+    , _wpDiskType :: !(Maybe Text)
+    , _wpTeardownPolicy :: !(Maybe WorkerPoolTeardownPolicy)
+    , _wpDefaultPackageSet :: !(Maybe WorkerPoolDefaultPackageSet)
+    , _wpPoolArgs :: !(Maybe WorkerPoolPoolArgs)
     , _wpWorkerHarnessContainerImage :: !(Maybe Text)
-    , _wpDataDisks                   :: !(Maybe [Disk])
+    , _wpDataDisks :: !(Maybe [Disk])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerPool' with the minimum fields required to make a request.
@@ -6264,7 +7183,7 @@ data WorkerPool = WorkerPool'
 -- * 'wpDataDisks'
 workerPool
     :: WorkerPool
-workerPool =
+workerPool = 
     WorkerPool'
     { _wpAutoscalingSettings = Nothing
     , _wpNumThreadsPerWorker = Nothing
@@ -6344,7 +7263,7 @@ wpZone :: Lens' WorkerPool (Maybe Text)
 wpZone = lens _wpZone (\ s a -> s{_wpZone = a})
 
 -- | Configuration for VM IPs.
-wpIPConfiguration :: Lens' WorkerPool (Maybe Text)
+wpIPConfiguration :: Lens' WorkerPool (Maybe WorkerPoolIPConfiguration)
 wpIPConfiguration
   = lens _wpIPConfiguration
       (\ s a -> s{_wpIPConfiguration = a})
@@ -6405,7 +7324,7 @@ wpDiskType
 -- \`TEARDOWN_ALWAYS\` policy except for small, manually supervised test
 -- jobs. If unknown or unspecified, the service will attempt to choose a
 -- reasonable default.
-wpTeardownPolicy :: Lens' WorkerPool (Maybe Text)
+wpTeardownPolicy :: Lens' WorkerPool (Maybe WorkerPoolTeardownPolicy)
 wpTeardownPolicy
   = lens _wpTeardownPolicy
       (\ s a -> s{_wpTeardownPolicy = a})
@@ -6413,7 +7332,7 @@ wpTeardownPolicy
 -- | The default package set to install. This allows the service to select a
 -- default set of packages which are useful to worker harnesses written in
 -- a particular language.
-wpDefaultPackageSet :: Lens' WorkerPool (Maybe Text)
+wpDefaultPackageSet :: Lens' WorkerPool (Maybe WorkerPoolDefaultPackageSet)
 wpDefaultPackageSet
   = lens _wpDefaultPackageSet
       (\ s a -> s{_wpDefaultPackageSet = a})
@@ -6508,8 +7427,8 @@ instance ToJSON WorkerPool where
 --
 -- /See:/ 'step' smart constructor.
 data Step = Step'
-    { _sKind       :: !(Maybe Text)
-    , _sName       :: !(Maybe Text)
+    { _sKind :: !(Maybe Text)
+    , _sName :: !(Maybe Text)
     , _sProperties :: !(Maybe StepProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6524,7 +7443,7 @@ data Step = Step'
 -- * 'sProperties'
 step
     :: Step
-step =
+step = 
     Step'
     { _sKind = Nothing
     , _sName = Nothing
@@ -6541,7 +7460,8 @@ sName :: Lens' Step (Maybe Text)
 sName = lens _sName (\ s a -> s{_sName = a})
 
 -- | Named properties associated with the step. Each kind of predefined step
--- has its own required set of properties.
+-- has its own required set of properties. Must be provided on Create. Only
+-- retrieved with JOB_VIEW_ALL.
 sProperties :: Lens' Step (Maybe StepProperties)
 sProperties
   = lens _sProperties (\ s a -> s{_sProperties = a})
@@ -6561,6 +7481,67 @@ instance ToJSON Step where
                  [("kind" .=) <$> _sKind, ("name" .=) <$> _sName,
                   ("properties" .=) <$> _sProperties])
 
+-- | Description of an interstitial value between transforms in an execution
+-- stage.
+--
+-- /See:/ 'componentSource' smart constructor.
+data ComponentSource = ComponentSource'
+    { _csUserName :: !(Maybe Text)
+    , _csName :: !(Maybe Text)
+    , _csOriginalTransformOrCollection :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ComponentSource' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'csUserName'
+--
+-- * 'csName'
+--
+-- * 'csOriginalTransformOrCollection'
+componentSource
+    :: ComponentSource
+componentSource = 
+    ComponentSource'
+    { _csUserName = Nothing
+    , _csName = Nothing
+    , _csOriginalTransformOrCollection = Nothing
+    }
+
+-- | Human-readable name for this transform; may be user or system generated.
+csUserName :: Lens' ComponentSource (Maybe Text)
+csUserName
+  = lens _csUserName (\ s a -> s{_csUserName = a})
+
+-- | Dataflow service generated name for this source.
+csName :: Lens' ComponentSource (Maybe Text)
+csName = lens _csName (\ s a -> s{_csName = a})
+
+-- | User name for the original user transform or collection with which this
+-- source is most closely associated.
+csOriginalTransformOrCollection :: Lens' ComponentSource (Maybe Text)
+csOriginalTransformOrCollection
+  = lens _csOriginalTransformOrCollection
+      (\ s a -> s{_csOriginalTransformOrCollection = a})
+
+instance FromJSON ComponentSource where
+        parseJSON
+          = withObject "ComponentSource"
+              (\ o ->
+                 ComponentSource' <$>
+                   (o .:? "userName") <*> (o .:? "name") <*>
+                     (o .:? "originalTransformOrCollection"))
+
+instance ToJSON ComponentSource where
+        toJSON ComponentSource'{..}
+          = object
+              (catMaybes
+                 [("userName" .=) <$> _csUserName,
+                  ("name" .=) <$> _csName,
+                  ("originalTransformOrCollection" .=) <$>
+                    _csOriginalTransformOrCollection])
+
 -- | The packages that must be installed in order for a worker to run the
 -- steps of the Cloud Dataflow job that will be assigned to its worker
 -- pool. This is the mechanism by which the Cloud Dataflow SDK causes code
@@ -6572,7 +7553,7 @@ instance ToJSON Step where
 -- /See:/ 'package' smart constructor.
 data Package = Package'
     { _pLocation :: !(Maybe Text)
-    , _pName     :: !(Maybe Text)
+    , _pName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Package' with the minimum fields required to make a request.
@@ -6584,7 +7565,7 @@ data Package = Package'
 -- * 'pName'
 package
     :: Package
-package =
+package = 
     Package'
     { _pLocation = Nothing
     , _pName = Nothing
@@ -6614,6 +7595,120 @@ instance ToJSON Package where
                  [("location" .=) <$> _pLocation,
                   ("name" .=) <$> _pName])
 
+-- | Description of the composing transforms, names\/ids, and input\/outputs
+-- of a stage of execution. Some composing transforms and sources may have
+-- been generated by the Dataflow service during execution planning.
+--
+-- /See:/ 'executionStageSummary' smart constructor.
+data ExecutionStageSummary = ExecutionStageSummary'
+    { _essOutputSource :: !(Maybe [StageSource])
+    , _essKind :: !(Maybe ExecutionStageSummaryKind)
+    , _essInputSource :: !(Maybe [StageSource])
+    , _essName :: !(Maybe Text)
+    , _essComponentSource :: !(Maybe [ComponentSource])
+    , _essId :: !(Maybe Text)
+    , _essComponentTransform :: !(Maybe [ComponentTransform])
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ExecutionStageSummary' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'essOutputSource'
+--
+-- * 'essKind'
+--
+-- * 'essInputSource'
+--
+-- * 'essName'
+--
+-- * 'essComponentSource'
+--
+-- * 'essId'
+--
+-- * 'essComponentTransform'
+executionStageSummary
+    :: ExecutionStageSummary
+executionStageSummary = 
+    ExecutionStageSummary'
+    { _essOutputSource = Nothing
+    , _essKind = Nothing
+    , _essInputSource = Nothing
+    , _essName = Nothing
+    , _essComponentSource = Nothing
+    , _essId = Nothing
+    , _essComponentTransform = Nothing
+    }
+
+-- | Output sources for this stage.
+essOutputSource :: Lens' ExecutionStageSummary [StageSource]
+essOutputSource
+  = lens _essOutputSource
+      (\ s a -> s{_essOutputSource = a})
+      . _Default
+      . _Coerce
+
+-- | Type of tranform this stage is executing.
+essKind :: Lens' ExecutionStageSummary (Maybe ExecutionStageSummaryKind)
+essKind = lens _essKind (\ s a -> s{_essKind = a})
+
+-- | Input sources for this stage.
+essInputSource :: Lens' ExecutionStageSummary [StageSource]
+essInputSource
+  = lens _essInputSource
+      (\ s a -> s{_essInputSource = a})
+      . _Default
+      . _Coerce
+
+-- | Dataflow service generated name for this stage.
+essName :: Lens' ExecutionStageSummary (Maybe Text)
+essName = lens _essName (\ s a -> s{_essName = a})
+
+-- | Collections produced and consumed by component transforms of this stage.
+essComponentSource :: Lens' ExecutionStageSummary [ComponentSource]
+essComponentSource
+  = lens _essComponentSource
+      (\ s a -> s{_essComponentSource = a})
+      . _Default
+      . _Coerce
+
+-- | Dataflow service generated id for this stage.
+essId :: Lens' ExecutionStageSummary (Maybe Text)
+essId = lens _essId (\ s a -> s{_essId = a})
+
+-- | Transforms that comprise this execution stage.
+essComponentTransform :: Lens' ExecutionStageSummary [ComponentTransform]
+essComponentTransform
+  = lens _essComponentTransform
+      (\ s a -> s{_essComponentTransform = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ExecutionStageSummary where
+        parseJSON
+          = withObject "ExecutionStageSummary"
+              (\ o ->
+                 ExecutionStageSummary' <$>
+                   (o .:? "outputSource" .!= mempty) <*> (o .:? "kind")
+                     <*> (o .:? "inputSource" .!= mempty)
+                     <*> (o .:? "name")
+                     <*> (o .:? "componentSource" .!= mempty)
+                     <*> (o .:? "id")
+                     <*> (o .:? "componentTransform" .!= mempty))
+
+instance ToJSON ExecutionStageSummary where
+        toJSON ExecutionStageSummary'{..}
+          = object
+              (catMaybes
+                 [("outputSource" .=) <$> _essOutputSource,
+                  ("kind" .=) <$> _essKind,
+                  ("inputSource" .=) <$> _essInputSource,
+                  ("name" .=) <$> _essName,
+                  ("componentSource" .=) <$> _essComponentSource,
+                  ("id" .=) <$> _essId,
+                  ("componentTransform" .=) <$>
+                    _essComponentTransform])
+
 -- | Parameters contains specific information about the code. This is a
 -- struct to allow parameters of different types. Examples: 1. For a
 -- \"HARNESS_STARTED\" message parameters might provide the name of the
@@ -6641,7 +7736,7 @@ newtype WorkerMessageCodeParameters = WorkerMessageCodeParameters'
 workerMessageCodeParameters
     :: HashMap Text JSONValue -- ^ 'wmcpAddtional'
     -> WorkerMessageCodeParameters
-workerMessageCodeParameters pWmcpAddtional_ =
+workerMessageCodeParameters pWmcpAddtional_ = 
     WorkerMessageCodeParameters'
     { _wmcpAddtional = _Coerce # pWmcpAddtional_
     }
@@ -6669,7 +7764,7 @@ instance ToJSON WorkerMessageCodeParameters where
 -- /See:/ 'dynamicSourceSplit' smart constructor.
 data DynamicSourceSplit = DynamicSourceSplit'
     { _dssResidual :: !(Maybe DerivedSource)
-    , _dssPrimary  :: !(Maybe DerivedSource)
+    , _dssPrimary :: !(Maybe DerivedSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DynamicSourceSplit' with the minimum fields required to make a request.
@@ -6681,7 +7776,7 @@ data DynamicSourceSplit = DynamicSourceSplit'
 -- * 'dssPrimary'
 dynamicSourceSplit
     :: DynamicSourceSplit
-dynamicSourceSplit =
+dynamicSourceSplit = 
     DynamicSourceSplit'
     { _dssResidual = Nothing
     , _dssPrimary = Nothing
@@ -6727,7 +7822,7 @@ newtype ReportWorkItemStatusResponse = ReportWorkItemStatusResponse'
 -- * 'rwisrWorkItemServiceStates'
 reportWorkItemStatusResponse
     :: ReportWorkItemStatusResponse
-reportWorkItemStatusResponse =
+reportWorkItemStatusResponse = 
     ReportWorkItemStatusResponse'
     { _rwisrWorkItemServiceStates = Nothing
     }
@@ -6761,9 +7856,9 @@ instance ToJSON ReportWorkItemStatusResponse where
 --
 -- /See:/ 'sourceFork' smart constructor.
 data SourceFork = SourceFork'
-    { _sfResidual       :: !(Maybe SourceSplitShard)
-    , _sfPrimarySource  :: !(Maybe DerivedSource)
-    , _sfPrimary        :: !(Maybe SourceSplitShard)
+    { _sfResidual :: !(Maybe SourceSplitShard)
+    , _sfPrimarySource :: !(Maybe DerivedSource)
+    , _sfPrimary :: !(Maybe SourceSplitShard)
     , _sfResidualSource :: !(Maybe DerivedSource)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -6780,7 +7875,7 @@ data SourceFork = SourceFork'
 -- * 'sfResidualSource'
 sourceFork
     :: SourceFork
-sourceFork =
+sourceFork = 
     SourceFork'
     { _sfResidual = Nothing
     , _sfPrimarySource = Nothing
@@ -6832,7 +7927,7 @@ instance ToJSON SourceFork where
 --
 -- /See:/ 'resourceUtilizationReportResponse' smart constructor.
 data ResourceUtilizationReportResponse =
-    ResourceUtilizationReportResponse'
+    ResourceUtilizationReportResponse' 
     deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ResourceUtilizationReportResponse' with the minimum fields required to make a request.
@@ -6857,7 +7952,7 @@ instance ToJSON ResourceUtilizationReportResponse
 -- /See:/ 'streamingComputationRanges' smart constructor.
 data StreamingComputationRanges = StreamingComputationRanges'
     { _scrRangeAssignments :: !(Maybe [KeyRangeDataDiskAssignment])
-    , _scrComputationId    :: !(Maybe Text)
+    , _scrComputationId :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StreamingComputationRanges' with the minimum fields required to make a request.
@@ -6869,7 +7964,7 @@ data StreamingComputationRanges = StreamingComputationRanges'
 -- * 'scrComputationId'
 streamingComputationRanges
     :: StreamingComputationRanges
-streamingComputationRanges =
+streamingComputationRanges = 
     StreamingComputationRanges'
     { _scrRangeAssignments = Nothing
     , _scrComputationId = Nothing
@@ -6909,9 +8004,9 @@ instance ToJSON StreamingComputationRanges where
 --
 -- /See:/ 'listJobsResponse' smart constructor.
 data ListJobsResponse = ListJobsResponse'
-    { _ljrNextPageToken  :: !(Maybe Text)
+    { _ljrNextPageToken :: !(Maybe Text)
     , _ljrFailedLocation :: !(Maybe [FailedLocation])
-    , _ljrJobs           :: !(Maybe [Job])
+    , _ljrJobs :: !(Maybe [Job])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListJobsResponse' with the minimum fields required to make a request.
@@ -6925,7 +8020,7 @@ data ListJobsResponse = ListJobsResponse'
 -- * 'ljrJobs'
 listJobsResponse
     :: ListJobsResponse
-listJobsResponse =
+listJobsResponse = 
     ListJobsResponse'
     { _ljrNextPageToken = Nothing
     , _ljrFailedLocation = Nothing
@@ -6969,15 +8064,53 @@ instance ToJSON ListJobsResponse where
                   ("failedLocation" .=) <$> _ljrFailedLocation,
                   ("jobs" .=) <$> _ljrJobs])
 
+-- | The runtime parameters to pass to the job.
+--
+-- /See:/ 'launchTemplateParametersParameters' smart constructor.
+newtype LaunchTemplateParametersParameters = LaunchTemplateParametersParameters'
+    { _ltppAddtional :: HashMap Text Text
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'LaunchTemplateParametersParameters' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltppAddtional'
+launchTemplateParametersParameters
+    :: HashMap Text Text -- ^ 'ltppAddtional'
+    -> LaunchTemplateParametersParameters
+launchTemplateParametersParameters pLtppAddtional_ = 
+    LaunchTemplateParametersParameters'
+    { _ltppAddtional = _Coerce # pLtppAddtional_
+    }
+
+ltppAddtional :: Lens' LaunchTemplateParametersParameters (HashMap Text Text)
+ltppAddtional
+  = lens _ltppAddtional
+      (\ s a -> s{_ltppAddtional = a})
+      . _Coerce
+
+instance FromJSON LaunchTemplateParametersParameters
+         where
+        parseJSON
+          = withObject "LaunchTemplateParametersParameters"
+              (\ o ->
+                 LaunchTemplateParametersParameters' <$>
+                   (parseJSONObject o))
+
+instance ToJSON LaunchTemplateParametersParameters
+         where
+        toJSON = toJSON . _ltppAddtional
+
 -- | A source that records can be read and decoded from.
 --
 -- /See:/ 'source' smart constructor.
 data Source = Source'
     { _souDoesNotNeedSplitting :: !(Maybe Bool)
-    , _souBaseSpecs            :: !(Maybe [SourceBaseSpecsItem])
-    , _souCodec                :: !(Maybe SourceCodec)
-    , _souSpec                 :: !(Maybe SourceSpec)
-    , _souMetadata             :: !(Maybe SourceMetadata)
+    , _souBaseSpecs :: !(Maybe [SourceBaseSpecsItem])
+    , _souCodec :: !(Maybe SourceCodec)
+    , _souSpec :: !(Maybe SourceSpec)
+    , _souMetadata :: !(Maybe SourceMetadata)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Source' with the minimum fields required to make a request.
@@ -6995,7 +8128,7 @@ data Source = Source'
 -- * 'souMetadata'
 source
     :: Source
-source =
+source = 
     Source'
     { _souDoesNotNeedSplitting = Nothing
     , _souBaseSpecs = Nothing
@@ -7078,9 +8211,9 @@ instance ToJSON Source where
 --
 -- /See:/ 'approximateProgress' smart constructor.
 data ApproximateProgress = ApproximateProgress'
-    { _apRemainingTime   :: !(Maybe Text)
+    { _apRemainingTime :: !(Maybe Duration)
     , _apPercentComplete :: !(Maybe (Textual Double))
-    , _apPosition        :: !(Maybe Position)
+    , _apPosition :: !(Maybe Position)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ApproximateProgress' with the minimum fields required to make a request.
@@ -7094,7 +8227,7 @@ data ApproximateProgress = ApproximateProgress'
 -- * 'apPosition'
 approximateProgress
     :: ApproximateProgress
-approximateProgress =
+approximateProgress = 
     ApproximateProgress'
     { _apRemainingTime = Nothing
     , _apPercentComplete = Nothing
@@ -7102,10 +8235,11 @@ approximateProgress =
     }
 
 -- | Obsolete.
-apRemainingTime :: Lens' ApproximateProgress (Maybe Text)
+apRemainingTime :: Lens' ApproximateProgress (Maybe Scientific)
 apRemainingTime
   = lens _apRemainingTime
       (\ s a -> s{_apRemainingTime = a})
+      . mapping _Duration
 
 -- | Obsolete.
 apPercentComplete :: Lens' ApproximateProgress (Maybe Double)
@@ -7140,10 +8274,11 @@ instance ToJSON ApproximateProgress where
 -- /See:/ 'workerMessage' smart constructor.
 data WorkerMessage = WorkerMessage'
     { _wmWorkerHealthReport :: !(Maybe WorkerHealthReport)
-    , _wmTime               :: !(Maybe Text)
-    , _wmWorkerMessageCode  :: !(Maybe WorkerMessageCode)
-    , _wmWorkerMetrics      :: !(Maybe ResourceUtilizationReport)
-    , _wmLabels             :: !(Maybe WorkerMessageLabels)
+    , _wmTime :: !(Maybe DateTime')
+    , _wmWorkerMessageCode :: !(Maybe WorkerMessageCode)
+    , _wmWorkerMetrics :: !(Maybe ResourceUtilizationReport)
+    , _wmWorkerShutdownNotice :: !(Maybe WorkerShutdownNotice)
+    , _wmLabels :: !(Maybe WorkerMessageLabels)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WorkerMessage' with the minimum fields required to make a request.
@@ -7158,15 +8293,18 @@ data WorkerMessage = WorkerMessage'
 --
 -- * 'wmWorkerMetrics'
 --
+-- * 'wmWorkerShutdownNotice'
+--
 -- * 'wmLabels'
 workerMessage
     :: WorkerMessage
-workerMessage =
+workerMessage = 
     WorkerMessage'
     { _wmWorkerHealthReport = Nothing
     , _wmTime = Nothing
     , _wmWorkerMessageCode = Nothing
     , _wmWorkerMetrics = Nothing
+    , _wmWorkerShutdownNotice = Nothing
     , _wmLabels = Nothing
     }
 
@@ -7177,8 +8315,10 @@ wmWorkerHealthReport
       (\ s a -> s{_wmWorkerHealthReport = a})
 
 -- | The timestamp of the worker_message.
-wmTime :: Lens' WorkerMessage (Maybe Text)
-wmTime = lens _wmTime (\ s a -> s{_wmTime = a})
+wmTime :: Lens' WorkerMessage (Maybe UTCTime)
+wmTime
+  = lens _wmTime (\ s a -> s{_wmTime = a}) .
+      mapping _DateTime
 
 -- | A worker message code.
 wmWorkerMessageCode :: Lens' WorkerMessage (Maybe WorkerMessageCode)
@@ -7191,6 +8331,12 @@ wmWorkerMetrics :: Lens' WorkerMessage (Maybe ResourceUtilizationReport)
 wmWorkerMetrics
   = lens _wmWorkerMetrics
       (\ s a -> s{_wmWorkerMetrics = a})
+
+-- | Shutdown notice by workers.
+wmWorkerShutdownNotice :: Lens' WorkerMessage (Maybe WorkerShutdownNotice)
+wmWorkerShutdownNotice
+  = lens _wmWorkerShutdownNotice
+      (\ s a -> s{_wmWorkerShutdownNotice = a})
 
 -- | Labels are used to group WorkerMessages. For example, a worker_message
 -- about a particular container might have the labels: { \"JOB_ID\":
@@ -7210,6 +8356,7 @@ instance FromJSON WorkerMessage where
                    (o .:? "workerHealthReport") <*> (o .:? "time") <*>
                      (o .:? "workerMessageCode")
                      <*> (o .:? "workerMetrics")
+                     <*> (o .:? "workerShutdownNotice")
                      <*> (o .:? "labels"))
 
 instance ToJSON WorkerMessage where
@@ -7220,6 +8367,8 @@ instance ToJSON WorkerMessage where
                   ("time" .=) <$> _wmTime,
                   ("workerMessageCode" .=) <$> _wmWorkerMessageCode,
                   ("workerMetrics" .=) <$> _wmWorkerMetrics,
+                  ("workerShutdownNotice" .=) <$>
+                    _wmWorkerShutdownNotice,
                   ("labels" .=) <$> _wmLabels])
 
 -- | Location information for a specific key-range of a sharded computation.
@@ -7228,20 +8377,20 @@ instance ToJSON WorkerMessage where
 --
 -- /See:/ 'keyRangeLocation' smart constructor.
 data KeyRangeLocation = KeyRangeLocation'
-    { _krlPersistentDirectory :: !(Maybe Text)
-    , _krlDataDisk            :: !(Maybe Text)
-    , _krlStart               :: !(Maybe Text)
-    , _krlDeliveryEndpoint    :: !(Maybe Text)
-    , _krlEnd                 :: !(Maybe Text)
+    { _krlDataDisk :: !(Maybe Text)
+    , _krlDeprecatedPersistentDirectory :: !(Maybe Text)
+    , _krlStart :: !(Maybe Text)
+    , _krlDeliveryEndpoint :: !(Maybe Text)
+    , _krlEnd :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'KeyRangeLocation' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'krlPersistentDirectory'
---
 -- * 'krlDataDisk'
+--
+-- * 'krlDeprecatedPersistentDirectory'
 --
 -- * 'krlStart'
 --
@@ -7250,21 +8399,14 @@ data KeyRangeLocation = KeyRangeLocation'
 -- * 'krlEnd'
 keyRangeLocation
     :: KeyRangeLocation
-keyRangeLocation =
+keyRangeLocation = 
     KeyRangeLocation'
-    { _krlPersistentDirectory = Nothing
-    , _krlDataDisk = Nothing
+    { _krlDataDisk = Nothing
+    , _krlDeprecatedPersistentDirectory = Nothing
     , _krlStart = Nothing
     , _krlDeliveryEndpoint = Nothing
     , _krlEnd = Nothing
     }
-
--- | The location of the persistent state for this range, as a persistent
--- directory in the worker local filesystem.
-krlPersistentDirectory :: Lens' KeyRangeLocation (Maybe Text)
-krlPersistentDirectory
-  = lens _krlPersistentDirectory
-      (\ s a -> s{_krlPersistentDirectory = a})
 
 -- | The name of the data disk where data for this range is stored. This name
 -- is local to the Google Cloud Platform project and uniquely identifies
@@ -7273,6 +8415,13 @@ krlPersistentDirectory
 krlDataDisk :: Lens' KeyRangeLocation (Maybe Text)
 krlDataDisk
   = lens _krlDataDisk (\ s a -> s{_krlDataDisk = a})
+
+-- | DEPRECATED. The location of the persistent state for this range, as a
+-- persistent directory in the worker local filesystem.
+krlDeprecatedPersistentDirectory :: Lens' KeyRangeLocation (Maybe Text)
+krlDeprecatedPersistentDirectory
+  = lens _krlDeprecatedPersistentDirectory
+      (\ s a -> s{_krlDeprecatedPersistentDirectory = a})
 
 -- | The start (inclusive) of the key range.
 krlStart :: Lens' KeyRangeLocation (Maybe Text)
@@ -7294,7 +8443,8 @@ instance FromJSON KeyRangeLocation where
           = withObject "KeyRangeLocation"
               (\ o ->
                  KeyRangeLocation' <$>
-                   (o .:? "persistentDirectory") <*> (o .:? "dataDisk")
+                   (o .:? "dataDisk") <*>
+                     (o .:? "deprecatedPersistentDirectory")
                      <*> (o .:? "start")
                      <*> (o .:? "deliveryEndpoint")
                      <*> (o .:? "end"))
@@ -7303,12 +8453,75 @@ instance ToJSON KeyRangeLocation where
         toJSON KeyRangeLocation'{..}
           = object
               (catMaybes
-                 [("persistentDirectory" .=) <$>
-                    _krlPersistentDirectory,
-                  ("dataDisk" .=) <$> _krlDataDisk,
+                 [("dataDisk" .=) <$> _krlDataDisk,
+                  ("deprecatedPersistentDirectory" .=) <$>
+                    _krlDeprecatedPersistentDirectory,
                   ("start" .=) <$> _krlStart,
                   ("deliveryEndpoint" .=) <$> _krlDeliveryEndpoint,
                   ("end" .=) <$> _krlEnd])
+
+-- | Histogram of value counts for a distribution. Buckets have an inclusive
+-- lower bound and exclusive upper bound and use \"1,2,5 bucketing\": The
+-- first bucket range is from [0,1) and all subsequent bucket boundaries
+-- are powers of ten multiplied by 1, 2, or 5. Thus, bucket boundaries are
+-- 0, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, ... Negative values are not
+-- supported.
+--
+-- /See:/ 'histogram' smart constructor.
+data Histogram = Histogram'
+    { _hBucketCounts :: !(Maybe [Textual Int64])
+    , _hFirstBucketOffSet :: !(Maybe (Textual Int32))
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Histogram' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'hBucketCounts'
+--
+-- * 'hFirstBucketOffSet'
+histogram
+    :: Histogram
+histogram = 
+    Histogram'
+    { _hBucketCounts = Nothing
+    , _hFirstBucketOffSet = Nothing
+    }
+
+-- | Counts of values in each bucket. For efficiency, prefix and trailing
+-- buckets with count = 0 are elided. Buckets can store the full range of
+-- values of an unsigned long, with ULLONG_MAX falling into the 59th bucket
+-- with range [1e19, 2e19).
+hBucketCounts :: Lens' Histogram [Int64]
+hBucketCounts
+  = lens _hBucketCounts
+      (\ s a -> s{_hBucketCounts = a})
+      . _Default
+      . _Coerce
+
+-- | Starting index of first stored bucket. The non-inclusive upper-bound of
+-- the ith bucket is given by: pow(10,(i-first_bucket_offset)\/3) *
+-- (1,2,5)[(i-first_bucket_offset)%3]
+hFirstBucketOffSet :: Lens' Histogram (Maybe Int32)
+hFirstBucketOffSet
+  = lens _hFirstBucketOffSet
+      (\ s a -> s{_hFirstBucketOffSet = a})
+      . mapping _Coerce
+
+instance FromJSON Histogram where
+        parseJSON
+          = withObject "Histogram"
+              (\ o ->
+                 Histogram' <$>
+                   (o .:? "bucketCounts" .!= mempty) <*>
+                     (o .:? "firstBucketOffset"))
+
+instance ToJSON Histogram where
+        toJSON Histogram'{..}
+          = object
+              (catMaybes
+                 [("bucketCounts" .=) <$> _hBucketCounts,
+                  ("firstBucketOffset" .=) <$> _hFirstBucketOffSet])
 
 -- | Information about an output of a multi-output DoFn.
 --
@@ -7324,7 +8537,7 @@ newtype MultiOutputInfo = MultiOutputInfo'
 -- * 'moiTag'
 multiOutputInfo
     :: MultiOutputInfo
-multiOutputInfo =
+multiOutputInfo = 
     MultiOutputInfo'
     { _moiTag = Nothing
     }
@@ -7348,11 +8561,11 @@ instance ToJSON MultiOutputInfo where
 --
 -- /See:/ 'partialGroupByKeyInstruction' smart constructor.
 data PartialGroupByKeyInstruction = PartialGroupByKeyInstruction'
-    { _pgbkiValueCombiningFn                    :: !(Maybe PartialGroupByKeyInstructionValueCombiningFn)
-    , _pgbkiSideInputs                          :: !(Maybe [SideInputInfo])
-    , _pgbkiInput                               :: !(Maybe InstructionInput)
-    , _pgbkiOriginalCombineValuesStepName       :: !(Maybe Text)
-    , _pgbkiInputElementCodec                   :: !(Maybe PartialGroupByKeyInstructionInputElementCodec)
+    { _pgbkiValueCombiningFn :: !(Maybe PartialGroupByKeyInstructionValueCombiningFn)
+    , _pgbkiSideInputs :: !(Maybe [SideInputInfo])
+    , _pgbkiInput :: !(Maybe InstructionInput)
+    , _pgbkiOriginalCombineValuesStepName :: !(Maybe Text)
+    , _pgbkiInputElementCodec :: !(Maybe PartialGroupByKeyInstructionInputElementCodec)
     , _pgbkiOriginalCombineValuesInputStoreName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7373,7 +8586,7 @@ data PartialGroupByKeyInstruction = PartialGroupByKeyInstruction'
 -- * 'pgbkiOriginalCombineValuesInputStoreName'
 partialGroupByKeyInstruction
     :: PartialGroupByKeyInstruction
-partialGroupByKeyInstruction =
+partialGroupByKeyInstruction = 
     PartialGroupByKeyInstruction'
     { _pgbkiValueCombiningFn = Nothing
     , _pgbkiSideInputs = Nothing
@@ -7454,11 +8667,11 @@ instance ToJSON PartialGroupByKeyInstruction where
 --
 -- /See:/ 'parDoInstruction' smart constructor.
 data ParDoInstruction = ParDoInstruction'
-    { _pdiNumOutputs       :: !(Maybe (Textual Int32))
+    { _pdiNumOutputs :: !(Maybe (Textual Int32))
     , _pdiMultiOutputInfos :: !(Maybe [MultiOutputInfo])
-    , _pdiSideInputs       :: !(Maybe [SideInputInfo])
-    , _pdiInput            :: !(Maybe InstructionInput)
-    , _pdiUserFn           :: !(Maybe ParDoInstructionUserFn)
+    , _pdiSideInputs :: !(Maybe [SideInputInfo])
+    , _pdiInput :: !(Maybe InstructionInput)
+    , _pdiUserFn :: !(Maybe ParDoInstructionUserFn)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ParDoInstruction' with the minimum fields required to make a request.
@@ -7476,7 +8689,7 @@ data ParDoInstruction = ParDoInstruction'
 -- * 'pdiUserFn'
 parDoInstruction
     :: ParDoInstruction
-parDoInstruction =
+parDoInstruction = 
     ParDoInstruction'
     { _pdiNumOutputs = Nothing
     , _pdiMultiOutputInfos = Nothing
@@ -7552,7 +8765,7 @@ newtype CustomSourceLocation = CustomSourceLocation'
 -- * 'cslStateful'
 customSourceLocation
     :: CustomSourceLocation
-customSourceLocation =
+customSourceLocation = 
     CustomSourceLocation'
     { _cslStateful = Nothing
     }
@@ -7576,11 +8789,12 @@ instance ToJSON CustomSourceLocation where
 --
 -- /See:/ 'distributionUpdate' smart constructor.
 data DistributionUpdate = DistributionUpdate'
-    { _duMax          :: !(Maybe SplitInt64)
-    , _duCount        :: !(Maybe SplitInt64)
-    , _duMin          :: !(Maybe SplitInt64)
+    { _duMax :: !(Maybe SplitInt64)
+    , _duCount :: !(Maybe SplitInt64)
+    , _duMin :: !(Maybe SplitInt64)
+    , _duHistogram :: !(Maybe Histogram)
     , _duSumOfSquares :: !(Maybe (Textual Double))
-    , _duSum          :: !(Maybe SplitInt64)
+    , _duSum :: !(Maybe SplitInt64)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DistributionUpdate' with the minimum fields required to make a request.
@@ -7593,16 +8807,19 @@ data DistributionUpdate = DistributionUpdate'
 --
 -- * 'duMin'
 --
+-- * 'duHistogram'
+--
 -- * 'duSumOfSquares'
 --
 -- * 'duSum'
 distributionUpdate
     :: DistributionUpdate
-distributionUpdate =
+distributionUpdate = 
     DistributionUpdate'
     { _duMax = Nothing
     , _duCount = Nothing
     , _duMin = Nothing
+    , _duHistogram = Nothing
     , _duSumOfSquares = Nothing
     , _duSum = Nothing
     }
@@ -7618,6 +8835,11 @@ duCount = lens _duCount (\ s a -> s{_duCount = a})
 -- | The minimum value present in the distribution.
 duMin :: Lens' DistributionUpdate (Maybe SplitInt64)
 duMin = lens _duMin (\ s a -> s{_duMin = a})
+
+-- | (Optional) Histogram of value counts for the distribution.
+duHistogram :: Lens' DistributionUpdate (Maybe Histogram)
+duHistogram
+  = lens _duHistogram (\ s a -> s{_duHistogram = a})
 
 -- | Use a double since the sum of squares is likely to overflow int64.
 duSumOfSquares :: Lens' DistributionUpdate (Maybe Double)
@@ -7637,6 +8859,7 @@ instance FromJSON DistributionUpdate where
               (\ o ->
                  DistributionUpdate' <$>
                    (o .:? "max") <*> (o .:? "count") <*> (o .:? "min")
+                     <*> (o .:? "histogram")
                      <*> (o .:? "sumOfSquares")
                      <*> (o .:? "sum"))
 
@@ -7646,6 +8869,7 @@ instance ToJSON DistributionUpdate where
               (catMaybes
                  [("max" .=) <$> _duMax, ("count" .=) <$> _duCount,
                   ("min" .=) <$> _duMin,
+                  ("histogram" .=) <$> _duHistogram,
                   ("sumOfSquares" .=) <$> _duSumOfSquares,
                   ("sum" .=) <$> _duSum])
 
@@ -7663,7 +8887,7 @@ newtype SourceBaseSpecsItem = SourceBaseSpecsItem'
 sourceBaseSpecsItem
     :: HashMap Text JSONValue -- ^ 'sbsiAddtional'
     -> SourceBaseSpecsItem
-sourceBaseSpecsItem pSbsiAddtional_ =
+sourceBaseSpecsItem pSbsiAddtional_ = 
     SourceBaseSpecsItem'
     { _sbsiAddtional = _Coerce # pSbsiAddtional_
     }
@@ -7687,15 +8911,15 @@ instance ToJSON SourceBaseSpecsItem where
 --
 -- /See:/ 'parallelInstruction' smart constructor.
 data ParallelInstruction = ParallelInstruction'
-    { _piRead              :: !(Maybe ReadInstruction)
-    , _piWrite             :: !(Maybe WriteInstruction)
-    , _piParDo             :: !(Maybe ParDoInstruction)
+    { _piRead :: !(Maybe ReadInstruction)
+    , _piWrite :: !(Maybe WriteInstruction)
+    , _piParDo :: !(Maybe ParDoInstruction)
     , _piPartialGroupByKey :: !(Maybe PartialGroupByKeyInstruction)
-    , _piOutputs           :: !(Maybe [InstructionOutput])
-    , _piName              :: !(Maybe Text)
-    , _piSystemName        :: !(Maybe Text)
-    , _piFlatten           :: !(Maybe FlattenInstruction)
-    , _piOriginalName      :: !(Maybe Text)
+    , _piOutputs :: !(Maybe [InstructionOutput])
+    , _piName :: !(Maybe Text)
+    , _piSystemName :: !(Maybe Text)
+    , _piFlatten :: !(Maybe FlattenInstruction)
+    , _piOriginalName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ParallelInstruction' with the minimum fields required to make a request.
@@ -7721,7 +8945,7 @@ data ParallelInstruction = ParallelInstruction'
 -- * 'piOriginalName'
 parallelInstruction
     :: ParallelInstruction
-parallelInstruction =
+parallelInstruction = 
     ParallelInstruction'
     { _piRead = Nothing
     , _piWrite = Nothing
@@ -7821,7 +9045,7 @@ newtype SideInputInfoKind = SideInputInfoKind'
 sideInputInfoKind
     :: HashMap Text JSONValue -- ^ 'siikAddtional'
     -> SideInputInfoKind
-sideInputInfoKind pSiikAddtional_ =
+sideInputInfoKind pSiikAddtional_ = 
     SideInputInfoKind'
     { _siikAddtional = _Coerce # pSiikAddtional_
     }
@@ -7847,7 +9071,9 @@ instance ToJSON SideInputInfoKind where
 -- /See:/ 'streamingConfigTask' smart constructor.
 data StreamingConfigTask = StreamingConfigTask'
     { _sctUserStepToStateFamilyNameMap :: !(Maybe StreamingConfigTaskUserStepToStateFamilyNameMap)
-    , _sctStreamingComputationConfigs  :: !(Maybe [StreamingComputationConfig])
+    , _sctStreamingComputationConfigs :: !(Maybe [StreamingComputationConfig])
+    , _sctWindmillServiceEndpoint :: !(Maybe Text)
+    , _sctWindmillServicePort :: !(Maybe (Textual Int64))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'StreamingConfigTask' with the minimum fields required to make a request.
@@ -7857,12 +9083,18 @@ data StreamingConfigTask = StreamingConfigTask'
 -- * 'sctUserStepToStateFamilyNameMap'
 --
 -- * 'sctStreamingComputationConfigs'
+--
+-- * 'sctWindmillServiceEndpoint'
+--
+-- * 'sctWindmillServicePort'
 streamingConfigTask
     :: StreamingConfigTask
-streamingConfigTask =
+streamingConfigTask = 
     StreamingConfigTask'
     { _sctUserStepToStateFamilyNameMap = Nothing
     , _sctStreamingComputationConfigs = Nothing
+    , _sctWindmillServiceEndpoint = Nothing
+    , _sctWindmillServicePort = Nothing
     }
 
 -- | Map from user step names to state families.
@@ -7879,13 +9111,32 @@ sctStreamingComputationConfigs
       . _Default
       . _Coerce
 
+-- | If present, the worker must use this endpoint to communicate with
+-- Windmill Service dispatchers, otherwise the worker must continue to use
+-- whatever endpoint it had been using.
+sctWindmillServiceEndpoint :: Lens' StreamingConfigTask (Maybe Text)
+sctWindmillServiceEndpoint
+  = lens _sctWindmillServiceEndpoint
+      (\ s a -> s{_sctWindmillServiceEndpoint = a})
+
+-- | If present, the worker must use this port to communicate with Windmill
+-- Service dispatchers. Only applicable when windmill_service_endpoint is
+-- specified.
+sctWindmillServicePort :: Lens' StreamingConfigTask (Maybe Int64)
+sctWindmillServicePort
+  = lens _sctWindmillServicePort
+      (\ s a -> s{_sctWindmillServicePort = a})
+      . mapping _Coerce
+
 instance FromJSON StreamingConfigTask where
         parseJSON
           = withObject "StreamingConfigTask"
               (\ o ->
                  StreamingConfigTask' <$>
                    (o .:? "userStepToStateFamilyNameMap") <*>
-                     (o .:? "streamingComputationConfigs" .!= mempty))
+                     (o .:? "streamingComputationConfigs" .!= mempty)
+                     <*> (o .:? "windmillServiceEndpoint")
+                     <*> (o .:? "windmillServicePort"))
 
 instance ToJSON StreamingConfigTask where
         toJSON StreamingConfigTask'{..}
@@ -7894,14 +9145,18 @@ instance ToJSON StreamingConfigTask where
                  [("userStepToStateFamilyNameMap" .=) <$>
                     _sctUserStepToStateFamilyNameMap,
                   ("streamingComputationConfigs" .=) <$>
-                    _sctStreamingComputationConfigs])
+                    _sctStreamingComputationConfigs,
+                  ("windmillServiceEndpoint" .=) <$>
+                    _sctWindmillServiceEndpoint,
+                  ("windmillServicePort" .=) <$>
+                    _sctWindmillServicePort])
 
 -- | The metric short id is returned to the user alongside an offset into
 -- ReportWorkItemStatusRequest
 --
 -- /See:/ 'metricShortId' smart constructor.
 data MetricShortId = MetricShortId'
-    { _msiShortId     :: !(Maybe (Textual Int64))
+    { _msiShortId :: !(Maybe (Textual Int64))
     , _msiMetricIndex :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -7914,7 +9169,7 @@ data MetricShortId = MetricShortId'
 -- * 'msiMetricIndex'
 metricShortId
     :: MetricShortId
-metricShortId =
+metricShortId = 
     MetricShortId'
     { _msiShortId = Nothing
     , _msiMetricIndex = Nothing
@@ -7951,21 +9206,30 @@ instance ToJSON MetricShortId where
 -- | A request for sending worker messages to the service.
 --
 -- /See:/ 'sendWorkerMessagesRequest' smart constructor.
-newtype SendWorkerMessagesRequest = SendWorkerMessagesRequest'
-    { _swmrWorkerMessages :: Maybe [WorkerMessage]
+data SendWorkerMessagesRequest = SendWorkerMessagesRequest'
+    { _swmrLocation :: !(Maybe Text)
+    , _swmrWorkerMessages :: !(Maybe [WorkerMessage])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SendWorkerMessagesRequest' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'swmrLocation'
+--
 -- * 'swmrWorkerMessages'
 sendWorkerMessagesRequest
     :: SendWorkerMessagesRequest
-sendWorkerMessagesRequest =
+sendWorkerMessagesRequest = 
     SendWorkerMessagesRequest'
-    { _swmrWorkerMessages = Nothing
+    { _swmrLocation = Nothing
+    , _swmrWorkerMessages = Nothing
     }
+
+-- | The location which contains the job
+swmrLocation :: Lens' SendWorkerMessagesRequest (Maybe Text)
+swmrLocation
+  = lens _swmrLocation (\ s a -> s{_swmrLocation = a})
 
 -- | The WorkerMessages to send.
 swmrWorkerMessages :: Lens' SendWorkerMessagesRequest [WorkerMessage]
@@ -7980,20 +9244,22 @@ instance FromJSON SendWorkerMessagesRequest where
           = withObject "SendWorkerMessagesRequest"
               (\ o ->
                  SendWorkerMessagesRequest' <$>
-                   (o .:? "workerMessages" .!= mempty))
+                   (o .:? "location") <*>
+                     (o .:? "workerMessages" .!= mempty))
 
 instance ToJSON SendWorkerMessagesRequest where
         toJSON SendWorkerMessagesRequest'{..}
           = object
               (catMaybes
-                 [("workerMessages" .=) <$> _swmrWorkerMessages])
+                 [("location" .=) <$> _swmrLocation,
+                  ("workerMessages" .=) <$> _swmrWorkerMessages])
 
 -- | DEPRECATED in favor of DerivedSource.
 --
 -- /See:/ 'sourceSplitShard' smart constructor.
 data SourceSplitShard = SourceSplitShard'
-    { _sssDerivationMode :: !(Maybe Text)
-    , _sssSource         :: !(Maybe Source)
+    { _sssDerivationMode :: !(Maybe SourceSplitShardDerivationMode)
+    , _sssSource :: !(Maybe Source)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SourceSplitShard' with the minimum fields required to make a request.
@@ -8005,14 +9271,14 @@ data SourceSplitShard = SourceSplitShard'
 -- * 'sssSource'
 sourceSplitShard
     :: SourceSplitShard
-sourceSplitShard =
+sourceSplitShard = 
     SourceSplitShard'
     { _sssDerivationMode = Nothing
     , _sssSource = Nothing
     }
 
 -- | DEPRECATED
-sssDerivationMode :: Lens' SourceSplitShard (Maybe Text)
+sssDerivationMode :: Lens' SourceSplitShard (Maybe SourceSplitShardDerivationMode)
 sssDerivationMode
   = lens _sssDerivationMode
       (\ s a -> s{_sssDerivationMode = a})
@@ -8040,8 +9306,8 @@ instance ToJSON SourceSplitShard where
 --
 -- /See:/ 'sideInputInfo' smart constructor.
 data SideInputInfo = SideInputInfo'
-    { _siiTag     :: !(Maybe Text)
-    , _siiKind    :: !(Maybe SideInputInfoKind)
+    { _siiTag :: !(Maybe Text)
+    , _siiKind :: !(Maybe SideInputInfoKind)
     , _siiSources :: !(Maybe [Source])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8056,7 +9322,7 @@ data SideInputInfo = SideInputInfo'
 -- * 'siiSources'
 sideInputInfo
     :: SideInputInfo
-sideInputInfo =
+sideInputInfo = 
     SideInputInfo'
     { _siiTag = Nothing
     , _siiKind = Nothing
@@ -8097,6 +9363,65 @@ instance ToJSON SideInputInfo where
                  [("tag" .=) <$> _siiTag, ("kind" .=) <$> _siiKind,
                   ("sources" .=) <$> _siiSources])
 
+-- | Description of a transform executed as part of an execution stage.
+--
+-- /See:/ 'componentTransform' smart constructor.
+data ComponentTransform = ComponentTransform'
+    { _ctOriginalTransform :: !(Maybe Text)
+    , _ctUserName :: !(Maybe Text)
+    , _ctName :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ComponentTransform' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ctOriginalTransform'
+--
+-- * 'ctUserName'
+--
+-- * 'ctName'
+componentTransform
+    :: ComponentTransform
+componentTransform = 
+    ComponentTransform'
+    { _ctOriginalTransform = Nothing
+    , _ctUserName = Nothing
+    , _ctName = Nothing
+    }
+
+-- | User name for the original user transform with which this transform is
+-- most closely associated.
+ctOriginalTransform :: Lens' ComponentTransform (Maybe Text)
+ctOriginalTransform
+  = lens _ctOriginalTransform
+      (\ s a -> s{_ctOriginalTransform = a})
+
+-- | Human-readable name for this transform; may be user or system generated.
+ctUserName :: Lens' ComponentTransform (Maybe Text)
+ctUserName
+  = lens _ctUserName (\ s a -> s{_ctUserName = a})
+
+-- | Dataflow service generated name for this source.
+ctName :: Lens' ComponentTransform (Maybe Text)
+ctName = lens _ctName (\ s a -> s{_ctName = a})
+
+instance FromJSON ComponentTransform where
+        parseJSON
+          = withObject "ComponentTransform"
+              (\ o ->
+                 ComponentTransform' <$>
+                   (o .:? "originalTransform") <*> (o .:? "userName")
+                     <*> (o .:? "name"))
+
+instance ToJSON ComponentTransform where
+        toJSON ComponentTransform'{..}
+          = object
+              (catMaybes
+                 [("originalTransform" .=) <$> _ctOriginalTransform,
+                  ("userName" .=) <$> _ctUserName,
+                  ("name" .=) <$> _ctName])
+
 -- | Additional information about how a Cloud Dataflow job will be executed
 -- that isn\'t contained in the submitted job.
 --
@@ -8112,7 +9437,7 @@ newtype JobExecutionInfo = JobExecutionInfo'
 -- * 'jeiStages'
 jobExecutionInfo
     :: JobExecutionInfo
-jobExecutionInfo =
+jobExecutionInfo = 
     JobExecutionInfo'
     { _jeiStages = Nothing
     }
@@ -8146,7 +9471,7 @@ newtype SourceCodec = SourceCodec'
 sourceCodec
     :: HashMap Text JSONValue -- ^ 'souAddtional'
     -> SourceCodec
-sourceCodec pSouAddtional_ =
+sourceCodec pSouAddtional_ = 
     SourceCodec'
     { _souAddtional = _Coerce # pSouAddtional_
     }
@@ -8169,7 +9494,7 @@ instance ToJSON SourceCodec where
 --
 -- /See:/ 'stateFamilyConfig' smart constructor.
 data StateFamilyConfig = StateFamilyConfig'
-    { _sfcIsRead      :: !(Maybe Bool)
+    { _sfcIsRead :: !(Maybe Bool)
     , _sfcStateFamily :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8182,7 +9507,7 @@ data StateFamilyConfig = StateFamilyConfig'
 -- * 'sfcStateFamily'
 stateFamilyConfig
     :: StateFamilyConfig
-stateFamilyConfig =
+stateFamilyConfig = 
     StateFamilyConfig'
     { _sfcIsRead = Nothing
     , _sfcStateFamily = Nothing
@@ -8220,8 +9545,8 @@ instance ToJSON StateFamilyConfig where
 -- /See:/ 'keyRangeDataDiskAssignment' smart constructor.
 data KeyRangeDataDiskAssignment = KeyRangeDataDiskAssignment'
     { _krddaDataDisk :: !(Maybe Text)
-    , _krddaStart    :: !(Maybe Text)
-    , _krddaEnd      :: !(Maybe Text)
+    , _krddaStart :: !(Maybe Text)
+    , _krddaEnd :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'KeyRangeDataDiskAssignment' with the minimum fields required to make a request.
@@ -8235,7 +9560,7 @@ data KeyRangeDataDiskAssignment = KeyRangeDataDiskAssignment'
 -- * 'krddaEnd'
 keyRangeDataDiskAssignment
     :: KeyRangeDataDiskAssignment
-keyRangeDataDiskAssignment =
+keyRangeDataDiskAssignment = 
     KeyRangeDataDiskAssignment'
     { _krddaDataDisk = Nothing
     , _krddaStart = Nothing
@@ -8276,6 +9601,96 @@ instance ToJSON KeyRangeDataDiskAssignment where
                   ("start" .=) <$> _krddaStart,
                   ("end" .=) <$> _krddaEnd])
 
+-- | A structured message reporting an autoscaling decision made by the
+-- Dataflow service.
+--
+-- /See:/ 'autoscalingEvent' smart constructor.
+data AutoscalingEvent = AutoscalingEvent'
+    { _aeCurrentNumWorkers :: !(Maybe (Textual Int64))
+    , _aeTime :: !(Maybe DateTime')
+    , _aeEventType :: !(Maybe AutoscalingEventEventType)
+    , _aeTargetNumWorkers :: !(Maybe (Textual Int64))
+    , _aeDescription :: !(Maybe StructuredMessage)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'AutoscalingEvent' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'aeCurrentNumWorkers'
+--
+-- * 'aeTime'
+--
+-- * 'aeEventType'
+--
+-- * 'aeTargetNumWorkers'
+--
+-- * 'aeDescription'
+autoscalingEvent
+    :: AutoscalingEvent
+autoscalingEvent = 
+    AutoscalingEvent'
+    { _aeCurrentNumWorkers = Nothing
+    , _aeTime = Nothing
+    , _aeEventType = Nothing
+    , _aeTargetNumWorkers = Nothing
+    , _aeDescription = Nothing
+    }
+
+-- | The current number of workers the job has.
+aeCurrentNumWorkers :: Lens' AutoscalingEvent (Maybe Int64)
+aeCurrentNumWorkers
+  = lens _aeCurrentNumWorkers
+      (\ s a -> s{_aeCurrentNumWorkers = a})
+      . mapping _Coerce
+
+-- | The time this event was emitted to indicate a new target or current
+-- num_workers value.
+aeTime :: Lens' AutoscalingEvent (Maybe UTCTime)
+aeTime
+  = lens _aeTime (\ s a -> s{_aeTime = a}) .
+      mapping _DateTime
+
+-- | The type of autoscaling event to report.
+aeEventType :: Lens' AutoscalingEvent (Maybe AutoscalingEventEventType)
+aeEventType
+  = lens _aeEventType (\ s a -> s{_aeEventType = a})
+
+-- | The target number of workers the worker pool wants to resize to use.
+aeTargetNumWorkers :: Lens' AutoscalingEvent (Maybe Int64)
+aeTargetNumWorkers
+  = lens _aeTargetNumWorkers
+      (\ s a -> s{_aeTargetNumWorkers = a})
+      . mapping _Coerce
+
+-- | A message describing why the system decided to adjust the current number
+-- of workers, why it failed, or why the system decided to not make any
+-- changes to the number of workers.
+aeDescription :: Lens' AutoscalingEvent (Maybe StructuredMessage)
+aeDescription
+  = lens _aeDescription
+      (\ s a -> s{_aeDescription = a})
+
+instance FromJSON AutoscalingEvent where
+        parseJSON
+          = withObject "AutoscalingEvent"
+              (\ o ->
+                 AutoscalingEvent' <$>
+                   (o .:? "currentNumWorkers") <*> (o .:? "time") <*>
+                     (o .:? "eventType")
+                     <*> (o .:? "targetNumWorkers")
+                     <*> (o .:? "description"))
+
+instance ToJSON AutoscalingEvent where
+        toJSON AutoscalingEvent'{..}
+          = object
+              (catMaybes
+                 [("currentNumWorkers" .=) <$> _aeCurrentNumWorkers,
+                  ("time" .=) <$> _aeTime,
+                  ("eventType" .=) <$> _aeEventType,
+                  ("targetNumWorkers" .=) <$> _aeTargetNumWorkers,
+                  ("description" .=) <$> _aeDescription])
+
 -- | Represents the operation to split a high-level Source specification into
 -- bundles (parts for parallel processing). At a high level, splitting of a
 -- source into bundles happens as follows: SourceSplitRequest is applied to
@@ -8290,7 +9705,7 @@ instance ToJSON KeyRangeDataDiskAssignment where
 --
 -- /See:/ 'sourceSplitRequest' smart constructor.
 data SourceSplitRequest = SourceSplitRequest'
-    { _ssrSource  :: !(Maybe Source)
+    { _ssrSource :: !(Maybe Source)
     , _ssrOptions :: !(Maybe SourceSplitOptions)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -8303,7 +9718,7 @@ data SourceSplitRequest = SourceSplitRequest'
 -- * 'ssrOptions'
 sourceSplitRequest
     :: SourceSplitRequest
-sourceSplitRequest =
+sourceSplitRequest = 
     SourceSplitRequest'
     { _ssrSource = Nothing
     , _ssrOptions = Nothing
@@ -8337,8 +9752,9 @@ instance ToJSON SourceSplitRequest where
 --
 -- /See:/ 'listJobMessagesResponse' smart constructor.
 data ListJobMessagesResponse = ListJobMessagesResponse'
-    { _ljmrJobMessages   :: !(Maybe [JobMessage])
+    { _ljmrJobMessages :: !(Maybe [JobMessage])
     , _ljmrNextPageToken :: !(Maybe Text)
+    , _ljmrAutoscalingEvents :: !(Maybe [AutoscalingEvent])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ListJobMessagesResponse' with the minimum fields required to make a request.
@@ -8348,12 +9764,15 @@ data ListJobMessagesResponse = ListJobMessagesResponse'
 -- * 'ljmrJobMessages'
 --
 -- * 'ljmrNextPageToken'
+--
+-- * 'ljmrAutoscalingEvents'
 listJobMessagesResponse
     :: ListJobMessagesResponse
-listJobMessagesResponse =
+listJobMessagesResponse = 
     ListJobMessagesResponse'
     { _ljmrJobMessages = Nothing
     , _ljmrNextPageToken = Nothing
+    , _ljmrAutoscalingEvents = Nothing
     }
 
 -- | Messages in ascending timestamp order.
@@ -8370,20 +9789,30 @@ ljmrNextPageToken
   = lens _ljmrNextPageToken
       (\ s a -> s{_ljmrNextPageToken = a})
 
+-- | Autoscaling events in ascending timestamp order.
+ljmrAutoscalingEvents :: Lens' ListJobMessagesResponse [AutoscalingEvent]
+ljmrAutoscalingEvents
+  = lens _ljmrAutoscalingEvents
+      (\ s a -> s{_ljmrAutoscalingEvents = a})
+      . _Default
+      . _Coerce
+
 instance FromJSON ListJobMessagesResponse where
         parseJSON
           = withObject "ListJobMessagesResponse"
               (\ o ->
                  ListJobMessagesResponse' <$>
                    (o .:? "jobMessages" .!= mempty) <*>
-                     (o .:? "nextPageToken"))
+                     (o .:? "nextPageToken")
+                     <*> (o .:? "autoscalingEvents" .!= mempty))
 
 instance ToJSON ListJobMessagesResponse where
         toJSON ListJobMessagesResponse'{..}
           = object
               (catMaybes
                  [("jobMessages" .=) <$> _ljmrJobMessages,
-                  ("nextPageToken" .=) <$> _ljmrNextPageToken])
+                  ("nextPageToken" .=) <$> _ljmrNextPageToken,
+                  ("autoscalingEvents" .=) <$> _ljmrAutoscalingEvents])
 
 -- | Identifies a pubsub location to use for transferring data into or out of
 -- a streaming Dataflow job.
@@ -8391,12 +9820,12 @@ instance ToJSON ListJobMessagesResponse where
 -- /See:/ 'pubsubLocation' smart constructor.
 data PubsubLocation = PubsubLocation'
     { _plTrackingSubscription :: !(Maybe Text)
-    , _plDropLateData         :: !(Maybe Bool)
-    , _plTimestampLabel       :: !(Maybe Text)
-    , _plIdLabel              :: !(Maybe Text)
-    , _plTopic                :: !(Maybe Text)
-    , _plWithAttributes       :: !(Maybe Bool)
-    , _plSubscription         :: !(Maybe Text)
+    , _plDropLateData :: !(Maybe Bool)
+    , _plTimestampLabel :: !(Maybe Text)
+    , _plIdLabel :: !(Maybe Text)
+    , _plTopic :: !(Maybe Text)
+    , _plWithAttributes :: !(Maybe Bool)
+    , _plSubscription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PubsubLocation' with the minimum fields required to make a request.
@@ -8418,7 +9847,7 @@ data PubsubLocation = PubsubLocation'
 -- * 'plSubscription'
 pubsubLocation
     :: PubsubLocation
-pubsubLocation =
+pubsubLocation = 
     PubsubLocation'
     { _plTrackingSubscription = Nothing
     , _plDropLateData = Nothing
@@ -8455,7 +9884,7 @@ plIdLabel :: Lens' PubsubLocation (Maybe Text)
 plIdLabel
   = lens _plIdLabel (\ s a -> s{_plIdLabel = a})
 
--- | A pubsub topic, in the form of \"pubsub.googleapis.com\/topics\/ \/\"
+-- | A pubsub topic, in the form of \"pubsub.googleapis.com\/topics\/\/\"
 plTopic :: Lens' PubsubLocation (Maybe Text)
 plTopic = lens _plTopic (\ s a -> s{_plTopic = a})
 
@@ -8466,7 +9895,7 @@ plWithAttributes
       (\ s a -> s{_plWithAttributes = a})
 
 -- | A pubsub subscription, in the form of
--- \"pubsub.googleapis.com\/subscriptions\/ \/\"
+-- \"pubsub.googleapis.com\/subscriptions\/\/\"
 plSubscription :: Lens' PubsubLocation (Maybe Text)
 plSubscription
   = lens _plSubscription
@@ -8512,7 +9941,7 @@ newtype FloatingPointList = FloatingPointList'
 -- * 'fplElements'
 floatingPointList
     :: FloatingPointList
-floatingPointList =
+floatingPointList = 
     FloatingPointList'
     { _fplElements = Nothing
     }
@@ -8541,7 +9970,7 @@ instance ToJSON FloatingPointList where
 -- /See:/ 'instructionInput' smart constructor.
 data InstructionInput = InstructionInput'
     { _iiProducerInstructionIndex :: !(Maybe (Textual Int32))
-    , _iiOutputNum                :: !(Maybe (Textual Int32))
+    , _iiOutputNum :: !(Maybe (Textual Int32))
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'InstructionInput' with the minimum fields required to make a request.
@@ -8553,7 +9982,7 @@ data InstructionInput = InstructionInput'
 -- * 'iiOutputNum'
 instructionInput
     :: InstructionInput
-instructionInput =
+instructionInput = 
     InstructionInput'
     { _iiProducerInstructionIndex = Nothing
     , _iiOutputNum = Nothing
@@ -8594,12 +10023,12 @@ instance ToJSON InstructionInput where
 --
 -- /See:/ 'seqMapTask' smart constructor.
 data SeqMapTask = SeqMapTask'
-    { _smtInputs      :: !(Maybe [SideInputInfo])
-    , _smtName        :: !(Maybe Text)
+    { _smtInputs :: !(Maybe [SideInputInfo])
+    , _smtName :: !(Maybe Text)
     , _smtOutputInfos :: !(Maybe [SeqMapTaskOutputInfo])
-    , _smtSystemName  :: !(Maybe Text)
-    , _smtStageName   :: !(Maybe Text)
-    , _smtUserFn      :: !(Maybe SeqMapTaskUserFn)
+    , _smtSystemName :: !(Maybe Text)
+    , _smtStageName :: !(Maybe Text)
+    , _smtUserFn :: !(Maybe SeqMapTaskUserFn)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SeqMapTask' with the minimum fields required to make a request.
@@ -8619,7 +10048,7 @@ data SeqMapTask = SeqMapTask'
 -- * 'smtUserFn'
 seqMapTask
     :: SeqMapTask
-seqMapTask =
+seqMapTask = 
     SeqMapTask'
     { _smtInputs = Nothing
     , _smtName = Nothing
@@ -8702,7 +10131,7 @@ newtype StreamingConfigTaskUserStepToStateFamilyNameMap = StreamingConfigTaskUse
 streamingConfigTaskUserStepToStateFamilyNameMap
     :: HashMap Text Text -- ^ 'sctustsfnmAddtional'
     -> StreamingConfigTaskUserStepToStateFamilyNameMap
-streamingConfigTaskUserStepToStateFamilyNameMap pSctustsfnmAddtional_ =
+streamingConfigTaskUserStepToStateFamilyNameMap pSctustsfnmAddtional_ = 
     StreamingConfigTaskUserStepToStateFamilyNameMap'
     { _sctustsfnmAddtional = _Coerce # pSctustsfnmAddtional_
     }
@@ -8726,52 +10155,238 @@ instance ToJSON
          StreamingConfigTaskUserStepToStateFamilyNameMap where
         toJSON = toJSON . _sctustsfnmAddtional
 
+-- | A message describing the state of a particular execution stage.
+--
+-- /See:/ 'executionStageState' smart constructor.
+data ExecutionStageState = ExecutionStageState'
+    { _essExecutionStageName :: !(Maybe Text)
+    , _essCurrentStateTime :: !(Maybe DateTime')
+    , _essExecutionStageState :: !(Maybe ExecutionStageStateExecutionStageState)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'ExecutionStageState' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'essExecutionStageName'
+--
+-- * 'essCurrentStateTime'
+--
+-- * 'essExecutionStageState'
+executionStageState
+    :: ExecutionStageState
+executionStageState = 
+    ExecutionStageState'
+    { _essExecutionStageName = Nothing
+    , _essCurrentStateTime = Nothing
+    , _essExecutionStageState = Nothing
+    }
+
+-- | The name of the execution stage.
+essExecutionStageName :: Lens' ExecutionStageState (Maybe Text)
+essExecutionStageName
+  = lens _essExecutionStageName
+      (\ s a -> s{_essExecutionStageName = a})
+
+-- | The time at which the stage transitioned to this state.
+essCurrentStateTime :: Lens' ExecutionStageState (Maybe UTCTime)
+essCurrentStateTime
+  = lens _essCurrentStateTime
+      (\ s a -> s{_essCurrentStateTime = a})
+      . mapping _DateTime
+
+-- | Executions stage states allow the same set of values as JobState.
+essExecutionStageState :: Lens' ExecutionStageState (Maybe ExecutionStageStateExecutionStageState)
+essExecutionStageState
+  = lens _essExecutionStageState
+      (\ s a -> s{_essExecutionStageState = a})
+
+instance FromJSON ExecutionStageState where
+        parseJSON
+          = withObject "ExecutionStageState"
+              (\ o ->
+                 ExecutionStageState' <$>
+                   (o .:? "executionStageName") <*>
+                     (o .:? "currentStateTime")
+                     <*> (o .:? "executionStageState"))
+
+instance ToJSON ExecutionStageState where
+        toJSON ExecutionStageState'{..}
+          = object
+              (catMaybes
+                 [("executionStageName" .=) <$>
+                    _essExecutionStageName,
+                  ("currentStateTime" .=) <$> _essCurrentStateTime,
+                  ("executionStageState" .=) <$>
+                    _essExecutionStageState])
+
+-- | Description of an input or output of an execution stage.
+--
+-- /See:/ 'stageSource' smart constructor.
+data StageSource = StageSource'
+    { _ssSizeBytes :: !(Maybe (Textual Int64))
+    , _ssUserName :: !(Maybe Text)
+    , _ssName :: !(Maybe Text)
+    , _ssOriginalTransformOrCollection :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'StageSource' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ssSizeBytes'
+--
+-- * 'ssUserName'
+--
+-- * 'ssName'
+--
+-- * 'ssOriginalTransformOrCollection'
+stageSource
+    :: StageSource
+stageSource = 
+    StageSource'
+    { _ssSizeBytes = Nothing
+    , _ssUserName = Nothing
+    , _ssName = Nothing
+    , _ssOriginalTransformOrCollection = Nothing
+    }
+
+-- | Size of the source, if measurable.
+ssSizeBytes :: Lens' StageSource (Maybe Int64)
+ssSizeBytes
+  = lens _ssSizeBytes (\ s a -> s{_ssSizeBytes = a}) .
+      mapping _Coerce
+
+-- | Human-readable name for this source; may be user or system generated.
+ssUserName :: Lens' StageSource (Maybe Text)
+ssUserName
+  = lens _ssUserName (\ s a -> s{_ssUserName = a})
+
+-- | Dataflow service generated name for this source.
+ssName :: Lens' StageSource (Maybe Text)
+ssName = lens _ssName (\ s a -> s{_ssName = a})
+
+-- | User name for the original user transform or collection with which this
+-- source is most closely associated.
+ssOriginalTransformOrCollection :: Lens' StageSource (Maybe Text)
+ssOriginalTransformOrCollection
+  = lens _ssOriginalTransformOrCollection
+      (\ s a -> s{_ssOriginalTransformOrCollection = a})
+
+instance FromJSON StageSource where
+        parseJSON
+          = withObject "StageSource"
+              (\ o ->
+                 StageSource' <$>
+                   (o .:? "sizeBytes") <*> (o .:? "userName") <*>
+                     (o .:? "name")
+                     <*> (o .:? "originalTransformOrCollection"))
+
+instance ToJSON StageSource where
+        toJSON StageSource'{..}
+          = object
+              (catMaybes
+                 [("sizeBytes" .=) <$> _ssSizeBytes,
+                  ("userName" .=) <$> _ssUserName,
+                  ("name" .=) <$> _ssName,
+                  ("originalTransformOrCollection" .=) <$>
+                    _ssOriginalTransformOrCollection])
+
 -- | A work item that represents the different operations that can be
 -- performed on a user-defined Source specification.
 --
 -- /See:/ 'sourceOperationRequest' smart constructor.
 data SourceOperationRequest = SourceOperationRequest'
-    { _sSplit       :: !(Maybe SourceSplitRequest)
-    , _sGetMetadata :: !(Maybe SourceGetMetadataRequest)
+    { _souSplit :: !(Maybe SourceSplitRequest)
+    , _souGetMetadata :: !(Maybe SourceGetMetadataRequest)
+    , _souName :: !(Maybe Text)
+    , _souSystemName :: !(Maybe Text)
+    , _souStageName :: !(Maybe Text)
+    , _souOriginalName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SourceOperationRequest' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'sSplit'
+-- * 'souSplit'
 --
--- * 'sGetMetadata'
+-- * 'souGetMetadata'
+--
+-- * 'souName'
+--
+-- * 'souSystemName'
+--
+-- * 'souStageName'
+--
+-- * 'souOriginalName'
 sourceOperationRequest
     :: SourceOperationRequest
-sourceOperationRequest =
+sourceOperationRequest = 
     SourceOperationRequest'
-    { _sSplit = Nothing
-    , _sGetMetadata = Nothing
+    { _souSplit = Nothing
+    , _souGetMetadata = Nothing
+    , _souName = Nothing
+    , _souSystemName = Nothing
+    , _souStageName = Nothing
+    , _souOriginalName = Nothing
     }
 
 -- | Information about a request to split a source.
-sSplit :: Lens' SourceOperationRequest (Maybe SourceSplitRequest)
-sSplit = lens _sSplit (\ s a -> s{_sSplit = a})
+souSplit :: Lens' SourceOperationRequest (Maybe SourceSplitRequest)
+souSplit = lens _souSplit (\ s a -> s{_souSplit = a})
 
 -- | Information about a request to get metadata about a source.
-sGetMetadata :: Lens' SourceOperationRequest (Maybe SourceGetMetadataRequest)
-sGetMetadata
-  = lens _sGetMetadata (\ s a -> s{_sGetMetadata = a})
+souGetMetadata :: Lens' SourceOperationRequest (Maybe SourceGetMetadataRequest)
+souGetMetadata
+  = lens _souGetMetadata
+      (\ s a -> s{_souGetMetadata = a})
+
+-- | User-provided name of the Read instruction for this source.
+souName :: Lens' SourceOperationRequest (Maybe Text)
+souName = lens _souName (\ s a -> s{_souName = a})
+
+-- | System-defined name of the Read instruction for this source. Unique
+-- across the workflow.
+souSystemName :: Lens' SourceOperationRequest (Maybe Text)
+souSystemName
+  = lens _souSystemName
+      (\ s a -> s{_souSystemName = a})
+
+-- | System-defined name of the stage containing the source operation. Unique
+-- across the workflow.
+souStageName :: Lens' SourceOperationRequest (Maybe Text)
+souStageName
+  = lens _souStageName (\ s a -> s{_souStageName = a})
+
+-- | System-defined name for the Read instruction for this source in the
+-- original workflow graph.
+souOriginalName :: Lens' SourceOperationRequest (Maybe Text)
+souOriginalName
+  = lens _souOriginalName
+      (\ s a -> s{_souOriginalName = a})
 
 instance FromJSON SourceOperationRequest where
         parseJSON
           = withObject "SourceOperationRequest"
               (\ o ->
                  SourceOperationRequest' <$>
-                   (o .:? "split") <*> (o .:? "getMetadata"))
+                   (o .:? "split") <*> (o .:? "getMetadata") <*>
+                     (o .:? "name")
+                     <*> (o .:? "systemName")
+                     <*> (o .:? "stageName")
+                     <*> (o .:? "originalName"))
 
 instance ToJSON SourceOperationRequest where
         toJSON SourceOperationRequest'{..}
           = object
               (catMaybes
-                 [("split" .=) <$> _sSplit,
-                  ("getMetadata" .=) <$> _sGetMetadata])
+                 [("split" .=) <$> _souSplit,
+                  ("getMetadata" .=) <$> _souGetMetadata,
+                  ("name" .=) <$> _souName,
+                  ("systemName" .=) <$> _souSystemName,
+                  ("stageName" .=) <$> _souStageName,
+                  ("originalName" .=) <$> _souOriginalName])
 
 -- | Response to a request to lease WorkItems.
 --
@@ -8787,7 +10402,7 @@ newtype LeaseWorkItemResponse = LeaseWorkItemResponse'
 -- * 'lwirWorkItems'
 leaseWorkItemResponse
     :: LeaseWorkItemResponse
-leaseWorkItemResponse =
+leaseWorkItemResponse = 
     LeaseWorkItemResponse'
     { _lwirWorkItems = Nothing
     }
@@ -8818,12 +10433,12 @@ instance ToJSON LeaseWorkItemResponse where
 --
 -- /See:/ 'position' smart constructor.
 data Position = Position'
-    { _pByteOffSet      :: !(Maybe (Textual Int64))
-    , _pConcatPosition  :: !(Maybe ConcatPosition)
-    , _pRecordIndex     :: !(Maybe (Textual Int64))
+    { _pByteOffSet :: !(Maybe (Textual Int64))
+    , _pConcatPosition :: !(Maybe ConcatPosition)
+    , _pRecordIndex :: !(Maybe (Textual Int64))
     , _pShufflePosition :: !(Maybe Text)
-    , _pKey             :: !(Maybe Text)
-    , _pEnd             :: !(Maybe Bool)
+    , _pKey :: !(Maybe Text)
+    , _pEnd :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'Position' with the minimum fields required to make a request.
@@ -8843,7 +10458,7 @@ data Position = Position'
 -- * 'pEnd'
 position
     :: Position
-position =
+position = 
     Position'
     { _pByteOffSet = Nothing
     , _pConcatPosition = Nothing
@@ -8907,3 +10522,46 @@ instance ToJSON Position where
                   ("recordIndex" .=) <$> _pRecordIndex,
                   ("shufflePosition" .=) <$> _pShufflePosition,
                   ("key" .=) <$> _pKey, ("end" .=) <$> _pEnd])
+
+-- | Structured data associated with this message.
+--
+-- /See:/ 'parameter' smart constructor.
+data Parameter = Parameter'
+    { _parValue :: !(Maybe JSONValue)
+    , _parKey :: !(Maybe Text)
+    } deriving (Eq,Show,Data,Typeable,Generic)
+
+-- | Creates a value of 'Parameter' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'parValue'
+--
+-- * 'parKey'
+parameter
+    :: Parameter
+parameter = 
+    Parameter'
+    { _parValue = Nothing
+    , _parKey = Nothing
+    }
+
+-- | Value for this parameter.
+parValue :: Lens' Parameter (Maybe JSONValue)
+parValue = lens _parValue (\ s a -> s{_parValue = a})
+
+-- | Key or name for this parameter.
+parKey :: Lens' Parameter (Maybe Text)
+parKey = lens _parKey (\ s a -> s{_parKey = a})
+
+instance FromJSON Parameter where
+        parseJSON
+          = withObject "Parameter"
+              (\ o ->
+                 Parameter' <$> (o .:? "value") <*> (o .:? "key"))
+
+instance ToJSON Parameter where
+        toJSON Parameter'{..}
+          = object
+              (catMaybes
+                 [("value" .=) <$> _parValue, ("key" .=) <$> _parKey])

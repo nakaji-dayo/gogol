@@ -36,10 +36,11 @@ module Network.Google.Resource.Prediction.TrainedModels.Update
     , tmuProject
     , tmuPayload
     , tmuId
+    , tmuFields
     ) where
 
-import           Network.Google.Prediction.Types
-import           Network.Google.Prelude
+import Network.Google.Prediction.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @prediction.trainedmodels.update@ method which the
 -- 'TrainedModelsUpdate' request conforms to.
@@ -50,8 +51,9 @@ type TrainedModelsUpdateResource =
            Capture "project" Text :>
              "trainedmodels" :>
                Capture "id" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Update :> Put '[JSON] Insert2
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Update :> Put '[JSON] Insert2
 
 -- | Add new data to a trained model.
 --
@@ -59,7 +61,8 @@ type TrainedModelsUpdateResource =
 data TrainedModelsUpdate = TrainedModelsUpdate'
     { _tmuProject :: !Text
     , _tmuPayload :: !Update
-    , _tmuId      :: !Text
+    , _tmuId :: !Text
+    , _tmuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TrainedModelsUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data TrainedModelsUpdate = TrainedModelsUpdate'
 -- * 'tmuPayload'
 --
 -- * 'tmuId'
+--
+-- * 'tmuFields'
 trainedModelsUpdate
     :: Text -- ^ 'tmuProject'
     -> Update -- ^ 'tmuPayload'
     -> Text -- ^ 'tmuId'
     -> TrainedModelsUpdate
-trainedModelsUpdate pTmuProject_ pTmuPayload_ pTmuId_ =
+trainedModelsUpdate pTmuProject_ pTmuPayload_ pTmuId_ = 
     TrainedModelsUpdate'
     { _tmuProject = pTmuProject_
     , _tmuPayload = pTmuPayload_
     , _tmuId = pTmuId_
+    , _tmuFields = Nothing
     }
 
 -- | The project associated with the model.
@@ -97,13 +103,19 @@ tmuPayload
 tmuId :: Lens' TrainedModelsUpdate Text
 tmuId = lens _tmuId (\ s a -> s{_tmuId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tmuFields :: Lens' TrainedModelsUpdate (Maybe Text)
+tmuFields
+  = lens _tmuFields (\ s a -> s{_tmuFields = a})
+
 instance GoogleRequest TrainedModelsUpdate where
         type Rs TrainedModelsUpdate = Insert2
         type Scopes TrainedModelsUpdate =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/prediction"]
         requestClient TrainedModelsUpdate'{..}
-          = go _tmuProject _tmuId (Just AltJSON) _tmuPayload
+          = go _tmuProject _tmuId _tmuFields (Just AltJSON)
+              _tmuPayload
               predictionService
           where go
                   = buildClient

@@ -42,11 +42,12 @@ module Network.Google.Resource.Logging.MonitoredResourceDescriptors.List
     , mrdlBearerToken
     , mrdlPageToken
     , mrdlPageSize
+    , mrdlFields
     , mrdlCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.monitoredResourceDescriptors.list@ method which the
 -- 'MonitoredResourceDescriptorsList' request conforms to.
@@ -62,24 +63,26 @@ type MonitoredResourceDescriptorsListResource =
                      QueryParam "pageToken" Text :>
                        QueryParam "pageSize" (Textual Int32) :>
                          QueryParam "callback" Text :>
-                           QueryParam "alt" AltJSON :>
-                             Get '[JSON]
-                               ListMonitoredResourceDescriptorsResponse
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :>
+                               Get '[JSON]
+                                 ListMonitoredResourceDescriptorsResponse
 
 -- | Lists the descriptors for monitored resource types used by Stackdriver
 -- Logging.
 --
 -- /See:/ 'monitoredResourceDescriptorsList' smart constructor.
 data MonitoredResourceDescriptorsList = MonitoredResourceDescriptorsList'
-    { _mrdlXgafv          :: !(Maybe Xgafv)
+    { _mrdlXgafv :: !(Maybe Xgafv)
     , _mrdlUploadProtocol :: !(Maybe Text)
-    , _mrdlPp             :: !Bool
-    , _mrdlAccessToken    :: !(Maybe Text)
-    , _mrdlUploadType     :: !(Maybe Text)
-    , _mrdlBearerToken    :: !(Maybe Text)
-    , _mrdlPageToken      :: !(Maybe Text)
-    , _mrdlPageSize       :: !(Maybe (Textual Int32))
-    , _mrdlCallback       :: !(Maybe Text)
+    , _mrdlPp :: !Bool
+    , _mrdlAccessToken :: !(Maybe Text)
+    , _mrdlUploadType :: !(Maybe Text)
+    , _mrdlBearerToken :: !(Maybe Text)
+    , _mrdlPageToken :: !(Maybe Text)
+    , _mrdlPageSize :: !(Maybe (Textual Int32))
+    , _mrdlFields :: !(Maybe Text)
+    , _mrdlCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'MonitoredResourceDescriptorsList' with the minimum fields required to make a request.
@@ -102,10 +105,12 @@ data MonitoredResourceDescriptorsList = MonitoredResourceDescriptorsList'
 --
 -- * 'mrdlPageSize'
 --
+-- * 'mrdlFields'
+--
 -- * 'mrdlCallback'
 monitoredResourceDescriptorsList
     :: MonitoredResourceDescriptorsList
-monitoredResourceDescriptorsList =
+monitoredResourceDescriptorsList = 
     MonitoredResourceDescriptorsList'
     { _mrdlXgafv = Nothing
     , _mrdlUploadProtocol = Nothing
@@ -115,6 +120,7 @@ monitoredResourceDescriptorsList =
     , _mrdlBearerToken = Nothing
     , _mrdlPageToken = Nothing
     , _mrdlPageSize = Nothing
+    , _mrdlFields = Nothing
     , _mrdlCallback = Nothing
     }
 
@@ -168,6 +174,11 @@ mrdlPageSize
   = lens _mrdlPageSize (\ s a -> s{_mrdlPageSize = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mrdlFields :: Lens' MonitoredResourceDescriptorsList (Maybe Text)
+mrdlFields
+  = lens _mrdlFields (\ s a -> s{_mrdlFields = a})
+
 -- | JSONP
 mrdlCallback :: Lens' MonitoredResourceDescriptorsList (Maybe Text)
 mrdlCallback
@@ -190,6 +201,7 @@ instance GoogleRequest
               _mrdlPageToken
               _mrdlPageSize
               _mrdlCallback
+              _mrdlFields
               (Just AltJSON)
               loggingService
           where go

@@ -40,10 +40,11 @@ module Network.Google.Resource.AndroidEnterprise.Devices.GetState
     , dgsEnterpriseId
     , dgsUserId
     , dgsDeviceId
+    , dgsFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.devices.getState@ method which the
 -- 'DevicesGetState' request conforms to.
@@ -57,7 +58,8 @@ type DevicesGetStateResource =
                  "devices" :>
                    Capture "deviceId" Text :>
                      "state" :>
-                       QueryParam "alt" AltJSON :> Get '[JSON] DeviceState
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] DeviceState
 
 -- | Retrieves whether a device\'s access to Google services is enabled or
 -- disabled. The device state takes effect only if enforcing EMM policies
@@ -68,8 +70,9 @@ type DevicesGetStateResource =
 -- /See:/ 'devicesGetState' smart constructor.
 data DevicesGetState = DevicesGetState'
     { _dgsEnterpriseId :: !Text
-    , _dgsUserId       :: !Text
-    , _dgsDeviceId     :: !Text
+    , _dgsUserId :: !Text
+    , _dgsDeviceId :: !Text
+    , _dgsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DevicesGetState' with the minimum fields required to make a request.
@@ -81,16 +84,19 @@ data DevicesGetState = DevicesGetState'
 -- * 'dgsUserId'
 --
 -- * 'dgsDeviceId'
+--
+-- * 'dgsFields'
 devicesGetState
     :: Text -- ^ 'dgsEnterpriseId'
     -> Text -- ^ 'dgsUserId'
     -> Text -- ^ 'dgsDeviceId'
     -> DevicesGetState
-devicesGetState pDgsEnterpriseId_ pDgsUserId_ pDgsDeviceId_ =
+devicesGetState pDgsEnterpriseId_ pDgsUserId_ pDgsDeviceId_ = 
     DevicesGetState'
     { _dgsEnterpriseId = pDgsEnterpriseId_
     , _dgsUserId = pDgsUserId_
     , _dgsDeviceId = pDgsDeviceId_
+    , _dgsFields = Nothing
     }
 
 -- | The ID of the enterprise.
@@ -109,12 +115,18 @@ dgsDeviceId :: Lens' DevicesGetState Text
 dgsDeviceId
   = lens _dgsDeviceId (\ s a -> s{_dgsDeviceId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dgsFields :: Lens' DevicesGetState (Maybe Text)
+dgsFields
+  = lens _dgsFields (\ s a -> s{_dgsFields = a})
+
 instance GoogleRequest DevicesGetState where
         type Rs DevicesGetState = DeviceState
         type Scopes DevicesGetState =
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient DevicesGetState'{..}
           = go _dgsEnterpriseId _dgsUserId _dgsDeviceId
+              _dgsFields
               (Just AltJSON)
               androidEnterpriseService
           where go

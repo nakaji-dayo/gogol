@@ -46,11 +46,12 @@ module Network.Google.Resource.CloudDebugger.Debugger.Debuggees.Breakpoints.List
     , ddblWaitToken
     , ddblDebuggeeId
     , ddblClientVersion
+    , ddblFields
     , ddblCallback
     ) where
 
-import           Network.Google.Debugger.Types
-import           Network.Google.Prelude
+import Network.Google.Debugger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @clouddebugger.debugger.debuggees.breakpoints.list@ method which the
 -- 'DebuggerDebuggeesBreakpointsList' request conforms to.
@@ -73,27 +74,29 @@ type DebuggerDebuggeesBreakpointsListResource =
                                    QueryParam "waitToken" Text :>
                                      QueryParam "clientVersion" Text :>
                                        QueryParam "callback" Text :>
-                                         QueryParam "alt" AltJSON :>
-                                           Get '[JSON] ListBreakpointsResponse
+                                         QueryParam "fields" Text :>
+                                           QueryParam "alt" AltJSON :>
+                                             Get '[JSON] ListBreakpointsResponse
 
 -- | Lists all breakpoints for the debuggee.
 --
 -- /See:/ 'debuggerDebuggeesBreakpointsList' smart constructor.
 data DebuggerDebuggeesBreakpointsList = DebuggerDebuggeesBreakpointsList'
-    { _ddblXgafv           :: !(Maybe Xgafv)
+    { _ddblXgafv :: !(Maybe Xgafv)
     , _ddblIncludeInactive :: !(Maybe Bool)
-    , _ddblUploadProtocol  :: !(Maybe Text)
-    , _ddblPp              :: !Bool
-    , _ddblAccessToken     :: !(Maybe Text)
-    , _ddblActionValue     :: !(Maybe Text)
-    , _ddblUploadType      :: !(Maybe Text)
-    , _ddblStripResults    :: !(Maybe Bool)
-    , _ddblBearerToken     :: !(Maybe Text)
+    , _ddblUploadProtocol :: !(Maybe Text)
+    , _ddblPp :: !Bool
+    , _ddblAccessToken :: !(Maybe Text)
+    , _ddblActionValue :: !(Maybe Text)
+    , _ddblUploadType :: !(Maybe Text)
+    , _ddblStripResults :: !(Maybe Bool)
+    , _ddblBearerToken :: !(Maybe Text)
     , _ddblIncludeAllUsers :: !(Maybe Bool)
-    , _ddblWaitToken       :: !(Maybe Text)
-    , _ddblDebuggeeId      :: !Text
-    , _ddblClientVersion   :: !(Maybe Text)
-    , _ddblCallback        :: !(Maybe Text)
+    , _ddblWaitToken :: !(Maybe Text)
+    , _ddblDebuggeeId :: !Text
+    , _ddblClientVersion :: !(Maybe Text)
+    , _ddblFields :: !(Maybe Text)
+    , _ddblCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DebuggerDebuggeesBreakpointsList' with the minimum fields required to make a request.
@@ -126,11 +129,13 @@ data DebuggerDebuggeesBreakpointsList = DebuggerDebuggeesBreakpointsList'
 --
 -- * 'ddblClientVersion'
 --
+-- * 'ddblFields'
+--
 -- * 'ddblCallback'
 debuggerDebuggeesBreakpointsList
     :: Text -- ^ 'ddblDebuggeeId'
     -> DebuggerDebuggeesBreakpointsList
-debuggerDebuggeesBreakpointsList pDdblDebuggeeId_ =
+debuggerDebuggeesBreakpointsList pDdblDebuggeeId_ = 
     DebuggerDebuggeesBreakpointsList'
     { _ddblXgafv = Nothing
     , _ddblIncludeInactive = Nothing
@@ -145,6 +150,7 @@ debuggerDebuggeesBreakpointsList pDdblDebuggeeId_ =
     , _ddblWaitToken = Nothing
     , _ddblDebuggeeId = pDdblDebuggeeId_
     , _ddblClientVersion = Nothing
+    , _ddblFields = Nothing
     , _ddblCallback = Nothing
     }
 
@@ -225,12 +231,17 @@ ddblDebuggeeId
   = lens _ddblDebuggeeId
       (\ s a -> s{_ddblDebuggeeId = a})
 
--- | The client version making the call. Following: \`domain\/type\/version\`
+-- | The client version making the call. Schema: \`domain\/type\/version\`
 -- (e.g., \`google.com\/intellij\/v1\`).
 ddblClientVersion :: Lens' DebuggerDebuggeesBreakpointsList (Maybe Text)
 ddblClientVersion
   = lens _ddblClientVersion
       (\ s a -> s{_ddblClientVersion = a})
+
+-- | Selector specifying which fields to include in a partial response.
+ddblFields :: Lens' DebuggerDebuggeesBreakpointsList (Maybe Text)
+ddblFields
+  = lens _ddblFields (\ s a -> s{_ddblFields = a})
 
 -- | JSONP
 ddblCallback :: Lens' DebuggerDebuggeesBreakpointsList (Maybe Text)
@@ -257,6 +268,7 @@ instance GoogleRequest
               _ddblWaitToken
               _ddblClientVersion
               _ddblCallback
+              _ddblFields
               (Just AltJSON)
               debuggerService
           where go

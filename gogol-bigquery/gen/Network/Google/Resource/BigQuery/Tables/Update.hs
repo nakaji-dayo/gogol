@@ -39,10 +39,11 @@ module Network.Google.Resource.BigQuery.Tables.Update
     , tuDataSetId
     , tuProjectId
     , tuTableId
+    , tuFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tables.update@ method which the
 -- 'TablesUpdate' request conforms to.
@@ -55,8 +56,9 @@ type TablesUpdateResource =
                Capture "datasetId" Text :>
                  "tables" :>
                    Capture "tableId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Table :> Put '[JSON] Table
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Table :> Put '[JSON] Table
 
 -- | Updates information in an existing table. The update method replaces the
 -- entire table resource, whereas the patch method only replaces fields
@@ -64,10 +66,11 @@ type TablesUpdateResource =
 --
 -- /See:/ 'tablesUpdate' smart constructor.
 data TablesUpdate = TablesUpdate'
-    { _tuPayload   :: !Table
+    { _tuPayload :: !Table
     , _tuDataSetId :: !Text
     , _tuProjectId :: !Text
-    , _tuTableId   :: !Text
+    , _tuTableId :: !Text
+    , _tuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TablesUpdate' with the minimum fields required to make a request.
@@ -81,18 +84,21 @@ data TablesUpdate = TablesUpdate'
 -- * 'tuProjectId'
 --
 -- * 'tuTableId'
+--
+-- * 'tuFields'
 tablesUpdate
     :: Table -- ^ 'tuPayload'
     -> Text -- ^ 'tuDataSetId'
     -> Text -- ^ 'tuProjectId'
     -> Text -- ^ 'tuTableId'
     -> TablesUpdate
-tablesUpdate pTuPayload_ pTuDataSetId_ pTuProjectId_ pTuTableId_ =
+tablesUpdate pTuPayload_ pTuDataSetId_ pTuProjectId_ pTuTableId_ = 
     TablesUpdate'
     { _tuPayload = pTuPayload_
     , _tuDataSetId = pTuDataSetId_
     , _tuProjectId = pTuProjectId_
     , _tuTableId = pTuTableId_
+    , _tuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -115,13 +121,17 @@ tuTableId :: Lens' TablesUpdate Text
 tuTableId
   = lens _tuTableId (\ s a -> s{_tuTableId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tuFields :: Lens' TablesUpdate (Maybe Text)
+tuFields = lens _tuFields (\ s a -> s{_tuFields = a})
+
 instance GoogleRequest TablesUpdate where
         type Rs TablesUpdate = Table
         type Scopes TablesUpdate =
              '["https://www.googleapis.com/auth/bigquery",
                "https://www.googleapis.com/auth/cloud-platform"]
         requestClient TablesUpdate'{..}
-          = go _tuProjectId _tuDataSetId _tuTableId
+          = go _tuProjectId _tuDataSetId _tuTableId _tuFields
               (Just AltJSON)
               _tuPayload
               bigQueryService

@@ -37,11 +37,13 @@ module Network.Google.Resource.BigQuery.Tables.Get
     -- * Request Lenses
     , tgDataSetId
     , tgProjectId
+    , tgSelectedFields
     , tgTableId
+    , tgFields
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.tables.get@ method which the
 -- 'TablesGet' request conforms to.
@@ -54,7 +56,9 @@ type TablesGetResource =
                Capture "datasetId" Text :>
                  "tables" :>
                    Capture "tableId" Text :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Table
+                     QueryParam "selectedFields" Text :>
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :> Get '[JSON] Table
 
 -- | Gets the specified table resource by table ID. This method does not
 -- return the data in the table, it only returns the table resource, which
@@ -64,7 +68,9 @@ type TablesGetResource =
 data TablesGet = TablesGet'
     { _tgDataSetId :: !Text
     , _tgProjectId :: !Text
-    , _tgTableId   :: !Text
+    , _tgSelectedFields :: !(Maybe Text)
+    , _tgTableId :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TablesGet' with the minimum fields required to make a request.
@@ -75,17 +81,23 @@ data TablesGet = TablesGet'
 --
 -- * 'tgProjectId'
 --
+-- * 'tgSelectedFields'
+--
 -- * 'tgTableId'
+--
+-- * 'tgFields'
 tablesGet
     :: Text -- ^ 'tgDataSetId'
     -> Text -- ^ 'tgProjectId'
     -> Text -- ^ 'tgTableId'
     -> TablesGet
-tablesGet pTgDataSetId_ pTgProjectId_ pTgTableId_ =
+tablesGet pTgDataSetId_ pTgProjectId_ pTgTableId_ = 
     TablesGet'
     { _tgDataSetId = pTgDataSetId_
     , _tgProjectId = pTgProjectId_
+    , _tgSelectedFields = Nothing
     , _tgTableId = pTgTableId_
+    , _tgFields = Nothing
     }
 
 -- | Dataset ID of the requested table
@@ -98,10 +110,21 @@ tgProjectId :: Lens' TablesGet Text
 tgProjectId
   = lens _tgProjectId (\ s a -> s{_tgProjectId = a})
 
+-- | List of fields to return (comma-separated). If unspecified, all fields
+-- are returned
+tgSelectedFields :: Lens' TablesGet (Maybe Text)
+tgSelectedFields
+  = lens _tgSelectedFields
+      (\ s a -> s{_tgSelectedFields = a})
+
 -- | Table ID of the requested table
 tgTableId :: Lens' TablesGet Text
 tgTableId
   = lens _tgTableId (\ s a -> s{_tgTableId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TablesGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
 
 instance GoogleRequest TablesGet where
         type Rs TablesGet = Table
@@ -111,6 +134,8 @@ instance GoogleRequest TablesGet where
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient TablesGet'{..}
           = go _tgProjectId _tgDataSetId _tgTableId
+              _tgSelectedFields
+              _tgFields
               (Just AltJSON)
               bigQueryService
           where go

@@ -42,10 +42,11 @@ module Network.Google.Resource.Games.TurnBasedMatches.Sync
     , tbmsLanguage
     , tbmsPageToken
     , tbmsMaxResults
+    , tbmsFields
     ) where
 
-import           Network.Google.Games.Types
-import           Network.Google.Prelude
+import Network.Google.Games.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @games.turnBasedMatches.sync@ method which the
 -- 'TurnBasedMatchesSync' request conforms to.
@@ -60,8 +61,9 @@ type TurnBasedMatchesSyncResource =
                    QueryParam "language" Text :>
                      QueryParam "pageToken" Text :>
                        QueryParam "maxResults" (Textual Int32) :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] TurnBasedMatchSync
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] TurnBasedMatchSync
 
 -- | Returns turn-based matches the player is or was involved in that changed
 -- since the last sync call, with the least recent changes coming first.
@@ -71,11 +73,12 @@ type TurnBasedMatchesSyncResource =
 -- /See:/ 'turnBasedMatchesSync' smart constructor.
 data TurnBasedMatchesSync = TurnBasedMatchesSync'
     { _tbmsMaxCompletedMatches :: !(Maybe (Textual Int32))
-    , _tbmsConsistencyToken    :: !(Maybe (Textual Int64))
-    , _tbmsIncludeMatchData    :: !(Maybe Bool)
-    , _tbmsLanguage            :: !(Maybe Text)
-    , _tbmsPageToken           :: !(Maybe Text)
-    , _tbmsMaxResults          :: !(Maybe (Textual Int32))
+    , _tbmsConsistencyToken :: !(Maybe (Textual Int64))
+    , _tbmsIncludeMatchData :: !(Maybe Bool)
+    , _tbmsLanguage :: !(Maybe Text)
+    , _tbmsPageToken :: !(Maybe Text)
+    , _tbmsMaxResults :: !(Maybe (Textual Int32))
+    , _tbmsFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TurnBasedMatchesSync' with the minimum fields required to make a request.
@@ -93,9 +96,11 @@ data TurnBasedMatchesSync = TurnBasedMatchesSync'
 -- * 'tbmsPageToken'
 --
 -- * 'tbmsMaxResults'
+--
+-- * 'tbmsFields'
 turnBasedMatchesSync
     :: TurnBasedMatchesSync
-turnBasedMatchesSync =
+turnBasedMatchesSync = 
     TurnBasedMatchesSync'
     { _tbmsMaxCompletedMatches = Nothing
     , _tbmsConsistencyToken = Nothing
@@ -103,6 +108,7 @@ turnBasedMatchesSync =
     , _tbmsLanguage = Nothing
     , _tbmsPageToken = Nothing
     , _tbmsMaxResults = Nothing
+    , _tbmsFields = Nothing
     }
 
 -- | The maximum number of completed or canceled matches to return in the
@@ -151,6 +157,11 @@ tbmsMaxResults
       (\ s a -> s{_tbmsMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+tbmsFields :: Lens' TurnBasedMatchesSync (Maybe Text)
+tbmsFields
+  = lens _tbmsFields (\ s a -> s{_tbmsFields = a})
+
 instance GoogleRequest TurnBasedMatchesSync where
         type Rs TurnBasedMatchesSync = TurnBasedMatchSync
         type Scopes TurnBasedMatchesSync =
@@ -162,6 +173,7 @@ instance GoogleRequest TurnBasedMatchesSync where
               _tbmsLanguage
               _tbmsPageToken
               _tbmsMaxResults
+              _tbmsFields
               (Just AltJSON)
               gamesService
           where go

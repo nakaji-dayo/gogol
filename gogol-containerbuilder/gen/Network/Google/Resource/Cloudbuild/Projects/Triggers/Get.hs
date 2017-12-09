@@ -41,11 +41,12 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.Get
     , ptgUploadType
     , ptgBearerToken
     , ptgProjectId
+    , ptgFields
     , ptgCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.get@ method which the
 -- 'ProjectsTriggersGet' request conforms to.
@@ -62,22 +63,24 @@ type ProjectsTriggersGetResource =
                        QueryParam "uploadType" Text :>
                          QueryParam "bearer_token" Text :>
                            QueryParam "callback" Text :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] BuildTrigger
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] BuildTrigger
 
 -- | Gets information about a BuildTrigger. This API is experimental.
 --
 -- /See:/ 'projectsTriggersGet' smart constructor.
 data ProjectsTriggersGet = ProjectsTriggersGet'
-    { _ptgXgafv          :: !(Maybe Xgafv)
+    { _ptgXgafv :: !(Maybe Xgafv)
     , _ptgUploadProtocol :: !(Maybe Text)
-    , _ptgTriggerId      :: !Text
-    , _ptgPp             :: !Bool
-    , _ptgAccessToken    :: !(Maybe Text)
-    , _ptgUploadType     :: !(Maybe Text)
-    , _ptgBearerToken    :: !(Maybe Text)
-    , _ptgProjectId      :: !Text
-    , _ptgCallback       :: !(Maybe Text)
+    , _ptgTriggerId :: !Text
+    , _ptgPp :: !Bool
+    , _ptgAccessToken :: !(Maybe Text)
+    , _ptgUploadType :: !(Maybe Text)
+    , _ptgBearerToken :: !(Maybe Text)
+    , _ptgProjectId :: !Text
+    , _ptgFields :: !(Maybe Text)
+    , _ptgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsTriggersGet' with the minimum fields required to make a request.
@@ -100,12 +103,14 @@ data ProjectsTriggersGet = ProjectsTriggersGet'
 --
 -- * 'ptgProjectId'
 --
+-- * 'ptgFields'
+--
 -- * 'ptgCallback'
 projectsTriggersGet
     :: Text -- ^ 'ptgTriggerId'
     -> Text -- ^ 'ptgProjectId'
     -> ProjectsTriggersGet
-projectsTriggersGet pPtgTriggerId_ pPtgProjectId_ =
+projectsTriggersGet pPtgTriggerId_ pPtgProjectId_ = 
     ProjectsTriggersGet'
     { _ptgXgafv = Nothing
     , _ptgUploadProtocol = Nothing
@@ -115,6 +120,7 @@ projectsTriggersGet pPtgTriggerId_ pPtgProjectId_ =
     , _ptgUploadType = Nothing
     , _ptgBearerToken = Nothing
     , _ptgProjectId = pPtgProjectId_
+    , _ptgFields = Nothing
     , _ptgCallback = Nothing
     }
 
@@ -160,6 +166,11 @@ ptgProjectId :: Lens' ProjectsTriggersGet Text
 ptgProjectId
   = lens _ptgProjectId (\ s a -> s{_ptgProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ptgFields :: Lens' ProjectsTriggersGet (Maybe Text)
+ptgFields
+  = lens _ptgFields (\ s a -> s{_ptgFields = a})
+
 -- | JSONP
 ptgCallback :: Lens' ProjectsTriggersGet (Maybe Text)
 ptgCallback
@@ -177,6 +188,7 @@ instance GoogleRequest ProjectsTriggersGet where
               _ptgUploadType
               _ptgBearerToken
               _ptgCallback
+              _ptgFields
               (Just AltJSON)
               containerBuilderService
           where go

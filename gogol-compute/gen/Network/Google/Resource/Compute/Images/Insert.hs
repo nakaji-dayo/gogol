@@ -34,12 +34,15 @@ module Network.Google.Resource.Compute.Images.Insert
     , ImagesInsert
 
     -- * Request Lenses
+    , iiRequestId
     , iiProject
     , iiPayload
+    , iiFields
+    , iiForceCreate
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.images.insert@ method which the
 -- 'ImagesInsert' request conforms to.
@@ -50,34 +53,63 @@ type ImagesInsertResource =
            Capture "project" Text :>
              "global" :>
                "images" :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Image :> Post '[JSON] Operation
+                 QueryParam "requestId" Text :>
+                   QueryParam "forceCreate" Bool :>
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Image :> Post '[JSON] Operation
 
 -- | Creates an image in the specified project using the data included in the
 -- request.
 --
 -- /See:/ 'imagesInsert' smart constructor.
 data ImagesInsert = ImagesInsert'
-    { _iiProject :: !Text
+    { _iiRequestId :: !(Maybe Text)
+    , _iiProject :: !Text
     , _iiPayload :: !Image
+    , _iiFields :: !(Maybe Text)
+    , _iiForceCreate :: !(Maybe Bool)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ImagesInsert' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'iiRequestId'
+--
 -- * 'iiProject'
 --
 -- * 'iiPayload'
+--
+-- * 'iiFields'
+--
+-- * 'iiForceCreate'
 imagesInsert
     :: Text -- ^ 'iiProject'
     -> Image -- ^ 'iiPayload'
     -> ImagesInsert
-imagesInsert pIiProject_ pIiPayload_ =
+imagesInsert pIiProject_ pIiPayload_ = 
     ImagesInsert'
-    { _iiProject = pIiProject_
+    { _iiRequestId = Nothing
+    , _iiProject = pIiProject_
     , _iiPayload = pIiPayload_
+    , _iiFields = Nothing
+    , _iiForceCreate = Nothing
     }
+
+-- | An optional request ID to identify requests. Specify a unique request ID
+-- so that if you must retry your request, the server will know to ignore
+-- the request if it has already been completed. For example, consider a
+-- situation where you make an initial request and the request times out.
+-- If you make the request again with the same request ID, the server can
+-- check if original operation with the same request ID was received, and
+-- if so, will ignore the second request. This prevents clients from
+-- accidentally creating duplicate commitments. The request ID must be a
+-- valid UUID with the exception that zero UUID is not supported
+-- (00000000-0000-0000-0000-000000000000).
+iiRequestId :: Lens' ImagesInsert (Maybe Text)
+iiRequestId
+  = lens _iiRequestId (\ s a -> s{_iiRequestId = a})
 
 -- | Project ID for this request.
 iiProject :: Lens' ImagesInsert Text
@@ -89,6 +121,16 @@ iiPayload :: Lens' ImagesInsert Image
 iiPayload
   = lens _iiPayload (\ s a -> s{_iiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+iiFields :: Lens' ImagesInsert (Maybe Text)
+iiFields = lens _iiFields (\ s a -> s{_iiFields = a})
+
+-- | Force image creation if true.
+iiForceCreate :: Lens' ImagesInsert (Maybe Bool)
+iiForceCreate
+  = lens _iiForceCreate
+      (\ s a -> s{_iiForceCreate = a})
+
 instance GoogleRequest ImagesInsert where
         type Rs ImagesInsert = Operation
         type Scopes ImagesInsert =
@@ -98,7 +140,9 @@ instance GoogleRequest ImagesInsert where
                "https://www.googleapis.com/auth/devstorage.read_only",
                "https://www.googleapis.com/auth/devstorage.read_write"]
         requestClient ImagesInsert'{..}
-          = go _iiProject (Just AltJSON) _iiPayload
+          = go _iiProject _iiRequestId _iiForceCreate _iiFields
+              (Just AltJSON)
+              _iiPayload
               computeService
           where go
                   = buildClient (Proxy :: Proxy ImagesInsertResource)

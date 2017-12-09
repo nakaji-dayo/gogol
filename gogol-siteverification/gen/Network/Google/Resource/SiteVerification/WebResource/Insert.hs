@@ -35,10 +35,11 @@ module Network.Google.Resource.SiteVerification.WebResource.Insert
     -- * Request Lenses
     , wriPayload
     , wriVerificationMethod
+    , wriFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SiteVerification.Types
+import Network.Google.Prelude
+import Network.Google.SiteVerification.Types
 
 -- | A resource alias for @siteVerification.webResource.insert@ method which the
 -- 'WebResourceInsert' request conforms to.
@@ -47,16 +48,18 @@ type WebResourceInsertResource =
        "v1" :>
          "webResource" :>
            QueryParam "verificationMethod" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] SiteVerificationWebResourceResource
-                 :> Post '[JSON] SiteVerificationWebResourceResource
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] SiteVerificationWebResourceResource
+                   :> Post '[JSON] SiteVerificationWebResourceResource
 
 -- | Attempt verification of a website or domain.
 --
 -- /See:/ 'webResourceInsert' smart constructor.
 data WebResourceInsert = WebResourceInsert'
-    { _wriPayload            :: !SiteVerificationWebResourceResource
+    { _wriPayload :: !SiteVerificationWebResourceResource
     , _wriVerificationMethod :: !Text
+    , _wriFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'WebResourceInsert' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data WebResourceInsert = WebResourceInsert'
 -- * 'wriPayload'
 --
 -- * 'wriVerificationMethod'
+--
+-- * 'wriFields'
 webResourceInsert
     :: SiteVerificationWebResourceResource -- ^ 'wriPayload'
     -> Text -- ^ 'wriVerificationMethod'
     -> WebResourceInsert
-webResourceInsert pWriPayload_ pWriVerificationMethod_ =
+webResourceInsert pWriPayload_ pWriVerificationMethod_ = 
     WebResourceInsert'
     { _wriPayload = pWriPayload_
     , _wriVerificationMethod = pWriVerificationMethod_
+    , _wriFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -87,6 +93,11 @@ wriVerificationMethod
   = lens _wriVerificationMethod
       (\ s a -> s{_wriVerificationMethod = a})
 
+-- | Selector specifying which fields to include in a partial response.
+wriFields :: Lens' WebResourceInsert (Maybe Text)
+wriFields
+  = lens _wriFields (\ s a -> s{_wriFields = a})
+
 instance GoogleRequest WebResourceInsert where
         type Rs WebResourceInsert =
              SiteVerificationWebResourceResource
@@ -94,7 +105,8 @@ instance GoogleRequest WebResourceInsert where
              '["https://www.googleapis.com/auth/siteverification",
                "https://www.googleapis.com/auth/siteverification.verify_only"]
         requestClient WebResourceInsert'{..}
-          = go (Just _wriVerificationMethod) (Just AltJSON)
+          = go (Just _wriVerificationMethod) _wriFields
+              (Just AltJSON)
               _wriPayload
               siteVerificationService
           where go

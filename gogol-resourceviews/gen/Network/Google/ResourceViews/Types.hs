@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -171,9 +171,9 @@ module Network.Google.ResourceViews.Types
     , owiMessage
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceViews.Types.Product
-import           Network.Google.ResourceViews.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ResourceViews.Types.Product
+import Network.Google.ResourceViews.Types.Sum
 
 -- | Default request referring to version 'v1beta2' of the Google Compute Engine Instance Groups API. This contains the host and root path used as a starting point for constructing service requests.
 resourceViewsService :: ServiceConfig

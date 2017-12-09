@@ -37,10 +37,11 @@ module Network.Google.Resource.Drive.Replies.Update
     , ruReplyId
     , ruFileId
     , ruCommentId
+    , ruFields
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.replies.update@ method which the
 -- 'RepliesUpdate' request conforms to.
@@ -53,17 +54,19 @@ type RepliesUpdateResource =
                Capture "commentId" Text :>
                  "replies" :>
                    Capture "replyId" Text :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Reply :> Patch '[JSON] Reply
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Reply :> Patch '[JSON] Reply
 
 -- | Updates a reply with patch semantics.
 --
 -- /See:/ 'repliesUpdate' smart constructor.
 data RepliesUpdate = RepliesUpdate'
-    { _ruPayload   :: !Reply
-    , _ruReplyId   :: !Text
-    , _ruFileId    :: !Text
+    { _ruPayload :: !Reply
+    , _ruReplyId :: !Text
+    , _ruFileId :: !Text
     , _ruCommentId :: !Text
+    , _ruFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RepliesUpdate' with the minimum fields required to make a request.
@@ -77,18 +80,21 @@ data RepliesUpdate = RepliesUpdate'
 -- * 'ruFileId'
 --
 -- * 'ruCommentId'
+--
+-- * 'ruFields'
 repliesUpdate
     :: Reply -- ^ 'ruPayload'
     -> Text -- ^ 'ruReplyId'
     -> Text -- ^ 'ruFileId'
     -> Text -- ^ 'ruCommentId'
     -> RepliesUpdate
-repliesUpdate pRuPayload_ pRuReplyId_ pRuFileId_ pRuCommentId_ =
+repliesUpdate pRuPayload_ pRuReplyId_ pRuFileId_ pRuCommentId_ = 
     RepliesUpdate'
     { _ruPayload = pRuPayload_
     , _ruReplyId = pRuReplyId_
     , _ruFileId = pRuFileId_
     , _ruCommentId = pRuCommentId_
+    , _ruFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -110,13 +116,18 @@ ruCommentId :: Lens' RepliesUpdate Text
 ruCommentId
   = lens _ruCommentId (\ s a -> s{_ruCommentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ruFields :: Lens' RepliesUpdate (Maybe Text)
+ruFields = lens _ruFields (\ s a -> s{_ruFields = a})
+
 instance GoogleRequest RepliesUpdate where
         type Rs RepliesUpdate = Reply
         type Scopes RepliesUpdate =
              '["https://www.googleapis.com/auth/drive",
                "https://www.googleapis.com/auth/drive.file"]
         requestClient RepliesUpdate'{..}
-          = go _ruFileId _ruCommentId _ruReplyId (Just AltJSON)
+          = go _ruFileId _ruCommentId _ruReplyId _ruFields
+              (Just AltJSON)
               _ruPayload
               driveService
           where go

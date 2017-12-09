@@ -37,10 +37,11 @@ module Network.Google.Resource.Analytics.Management.Experiments.Get
     , megProFileId
     , megAccountId
     , megExperimentId
+    , megFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.experiments.get@ method which the
 -- 'ManagementExperimentsGet' request conforms to.
@@ -56,16 +57,18 @@ type ManagementExperimentsGetResource =
                      Capture "profileId" Text :>
                        "experiments" :>
                          Capture "experimentId" Text :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Experiment
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Experiment
 
 -- | Returns an experiment to which the user has access.
 --
 -- /See:/ 'managementExperimentsGet' smart constructor.
 data ManagementExperimentsGet = ManagementExperimentsGet'
     { _megWebPropertyId :: !Text
-    , _megProFileId     :: !Text
-    , _megAccountId     :: !Text
-    , _megExperimentId  :: !Text
+    , _megProFileId :: !Text
+    , _megAccountId :: !Text
+    , _megExperimentId :: !Text
+    , _megFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementExperimentsGet' with the minimum fields required to make a request.
@@ -79,18 +82,21 @@ data ManagementExperimentsGet = ManagementExperimentsGet'
 -- * 'megAccountId'
 --
 -- * 'megExperimentId'
+--
+-- * 'megFields'
 managementExperimentsGet
     :: Text -- ^ 'megWebPropertyId'
     -> Text -- ^ 'megProFileId'
     -> Text -- ^ 'megAccountId'
     -> Text -- ^ 'megExperimentId'
     -> ManagementExperimentsGet
-managementExperimentsGet pMegWebPropertyId_ pMegProFileId_ pMegAccountId_ pMegExperimentId_ =
+managementExperimentsGet pMegWebPropertyId_ pMegProFileId_ pMegAccountId_ pMegExperimentId_ = 
     ManagementExperimentsGet'
     { _megWebPropertyId = pMegWebPropertyId_
     , _megProFileId = pMegProFileId_
     , _megAccountId = pMegAccountId_
     , _megExperimentId = pMegExperimentId_
+    , _megFields = Nothing
     }
 
 -- | Web property ID to retrieve the experiment for.
@@ -115,6 +121,11 @@ megExperimentId
   = lens _megExperimentId
       (\ s a -> s{_megExperimentId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+megFields :: Lens' ManagementExperimentsGet (Maybe Text)
+megFields
+  = lens _megFields (\ s a -> s{_megFields = a})
+
 instance GoogleRequest ManagementExperimentsGet where
         type Rs ManagementExperimentsGet = Experiment
         type Scopes ManagementExperimentsGet =
@@ -124,6 +135,7 @@ instance GoogleRequest ManagementExperimentsGet where
         requestClient ManagementExperimentsGet'{..}
           = go _megAccountId _megWebPropertyId _megProFileId
               _megExperimentId
+              _megFields
               (Just AltJSON)
               analyticsService
           where go

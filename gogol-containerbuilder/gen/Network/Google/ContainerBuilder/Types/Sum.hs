@@ -16,7 +16,7 @@
 --
 module Network.Google.ContainerBuilder.Types.Sum where
 
-import           Network.Google.Prelude
+import Network.Google.Prelude
 
 -- | Requested verifiability options.
 data BuildOptionsRequestedVerifyOption
@@ -135,6 +135,36 @@ instance FromJSON BuildStatus where
 instance ToJSON BuildStatus where
     toJSON = toJSONText
 
+-- | SubstitutionOption to allow unmatch substitutions.
+data BuildOptionsSubstitutionOption
+    = MustMatch
+      -- ^ @MUST_MATCH@
+      -- Fails the build if error in substitutions checks, like missing a
+      -- substitution in the template or in the map.
+    | AllowLoose
+      -- ^ @ALLOW_LOOSE@
+      -- Do not fail the build if error in substitutions checks.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable BuildOptionsSubstitutionOption
+
+instance FromHttpApiData BuildOptionsSubstitutionOption where
+    parseQueryParam = \case
+        "MUST_MATCH" -> Right MustMatch
+        "ALLOW_LOOSE" -> Right AllowLoose
+        x -> Left ("Unable to parse BuildOptionsSubstitutionOption from: " <> x)
+
+instance ToHttpApiData BuildOptionsSubstitutionOption where
+    toQueryParam = \case
+        MustMatch -> "MUST_MATCH"
+        AllowLoose -> "ALLOW_LOOSE"
+
+instance FromJSON BuildOptionsSubstitutionOption where
+    parseJSON = parseJSONText "BuildOptionsSubstitutionOption"
+
+instance ToJSON BuildOptionsSubstitutionOption where
+    toJSON = toJSONText
+
 -- | The type of hash that was performed.
 data HashType
     = None
@@ -162,4 +192,74 @@ instance FromJSON HashType where
     parseJSON = parseJSONText "HashType"
 
 instance ToJSON HashType where
+    toJSON = toJSONText
+
+-- | LogStreamingOption to define build log streaming behavior to Google
+-- Cloud Storage.
+data BuildOptionsLogStreamingOption
+    = StreamDefault
+      -- ^ @STREAM_DEFAULT@
+      -- Service may automatically determine build log streaming behavior.
+    | StreamOn
+      -- ^ @STREAM_ON@
+      -- Build logs should be streamed to Google Cloud Storage.
+    | StreamOff
+      -- ^ @STREAM_OFF@
+      -- Build logs should not be streamed to Google Cloud Storage; they will be
+      -- written when the build is completed.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable BuildOptionsLogStreamingOption
+
+instance FromHttpApiData BuildOptionsLogStreamingOption where
+    parseQueryParam = \case
+        "STREAM_DEFAULT" -> Right StreamDefault
+        "STREAM_ON" -> Right StreamOn
+        "STREAM_OFF" -> Right StreamOff
+        x -> Left ("Unable to parse BuildOptionsLogStreamingOption from: " <> x)
+
+instance ToHttpApiData BuildOptionsLogStreamingOption where
+    toQueryParam = \case
+        StreamDefault -> "STREAM_DEFAULT"
+        StreamOn -> "STREAM_ON"
+        StreamOff -> "STREAM_OFF"
+
+instance FromJSON BuildOptionsLogStreamingOption where
+    parseJSON = parseJSONText "BuildOptionsLogStreamingOption"
+
+instance ToJSON BuildOptionsLogStreamingOption where
+    toJSON = toJSONText
+
+-- | GCE VM size to run the build on.
+data BuildOptionsMachineType
+    = Unspecified
+      -- ^ @UNSPECIFIED@
+      -- Standard machine type.
+    | N1Highcpu8
+      -- ^ @N1_HIGHCPU_8@
+      -- Highcpu machine with 8 CPUs.
+    | N1Highcpu32
+      -- ^ @N1_HIGHCPU_32@
+      -- Highcpu machine with 32 CPUs.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable BuildOptionsMachineType
+
+instance FromHttpApiData BuildOptionsMachineType where
+    parseQueryParam = \case
+        "UNSPECIFIED" -> Right Unspecified
+        "N1_HIGHCPU_8" -> Right N1Highcpu8
+        "N1_HIGHCPU_32" -> Right N1Highcpu32
+        x -> Left ("Unable to parse BuildOptionsMachineType from: " <> x)
+
+instance ToHttpApiData BuildOptionsMachineType where
+    toQueryParam = \case
+        Unspecified -> "UNSPECIFIED"
+        N1Highcpu8 -> "N1_HIGHCPU_8"
+        N1Highcpu32 -> "N1_HIGHCPU_32"
+
+instance FromJSON BuildOptionsMachineType where
+    parseJSON = parseJSONText "BuildOptionsMachineType"
+
+instance ToJSON BuildOptionsMachineType where
     toJSON = toJSONText

@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Users.Aliases.Watch
     , uawEvent
     , uawPayload
     , uawUserKey
+    , uawFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.aliases.watch@ method which the
 -- 'UsersAliasesWatch' request conforms to.
@@ -52,16 +53,18 @@ type UsersAliasesWatchResource =
                "aliases" :>
                  "watch" :>
                    QueryParam "event" UsersAliasesWatchEvent :>
-                     QueryParam "alt" AltJSON :>
-                       ReqBody '[JSON] Channel :> Post '[JSON] Channel
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :>
+                         ReqBody '[JSON] Channel :> Post '[JSON] Channel
 
 -- | Watch for changes in user aliases list
 --
 -- /See:/ 'usersAliasesWatch' smart constructor.
 data UsersAliasesWatch = UsersAliasesWatch'
-    { _uawEvent   :: !(Maybe UsersAliasesWatchEvent)
+    { _uawEvent :: !(Maybe UsersAliasesWatchEvent)
     , _uawPayload :: !Channel
     , _uawUserKey :: !Text
+    , _uawFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersAliasesWatch' with the minimum fields required to make a request.
@@ -73,15 +76,18 @@ data UsersAliasesWatch = UsersAliasesWatch'
 -- * 'uawPayload'
 --
 -- * 'uawUserKey'
+--
+-- * 'uawFields'
 usersAliasesWatch
     :: Channel -- ^ 'uawPayload'
     -> Text -- ^ 'uawUserKey'
     -> UsersAliasesWatch
-usersAliasesWatch pUawPayload_ pUawUserKey_ =
+usersAliasesWatch pUawPayload_ pUawUserKey_ = 
     UsersAliasesWatch'
     { _uawEvent = Nothing
     , _uawPayload = pUawPayload_
     , _uawUserKey = pUawUserKey_
+    , _uawFields = Nothing
     }
 
 -- | Event on which subscription is intended (if subscribing)
@@ -93,10 +99,15 @@ uawPayload :: Lens' UsersAliasesWatch Channel
 uawPayload
   = lens _uawPayload (\ s a -> s{_uawPayload = a})
 
--- | Email or immutable Id of the user
+-- | Email or immutable ID of the user
 uawUserKey :: Lens' UsersAliasesWatch Text
 uawUserKey
   = lens _uawUserKey (\ s a -> s{_uawUserKey = a})
+
+-- | Selector specifying which fields to include in a partial response.
+uawFields :: Lens' UsersAliasesWatch (Maybe Text)
+uawFields
+  = lens _uawFields (\ s a -> s{_uawFields = a})
 
 instance GoogleRequest UsersAliasesWatch where
         type Rs UsersAliasesWatch = Channel
@@ -106,7 +117,8 @@ instance GoogleRequest UsersAliasesWatch where
                "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
                "https://www.googleapis.com/auth/admin.directory.user.readonly"]
         requestClient UsersAliasesWatch'{..}
-          = go _uawUserKey _uawEvent (Just AltJSON) _uawPayload
+          = go _uawUserKey _uawEvent _uawFields (Just AltJSON)
+              _uawPayload
               directoryService
           where go
                   = buildClient

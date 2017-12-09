@@ -38,10 +38,11 @@ module Network.Google.Resource.Analytics.Management.ProFileFilterLinks.List
     , mpffllAccountId
     , mpffllStartIndex
     , mpffllMaxResults
+    , mpffllFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.profileFilterLinks.list@ method which the
 -- 'ManagementProFileFilterLinksList' request conforms to.
@@ -58,18 +59,20 @@ type ManagementProFileFilterLinksListResource =
                        "profileFilterLinks" :>
                          QueryParam "start-index" (Textual Int32) :>
                            QueryParam "max-results" (Textual Int32) :>
-                             QueryParam "alt" AltJSON :>
-                               Get '[JSON] ProFileFilterLinks
+                             QueryParam "fields" Text :>
+                               QueryParam "alt" AltJSON :>
+                                 Get '[JSON] ProFileFilterLinks
 
 -- | Lists all profile filter links for a profile.
 --
 -- /See:/ 'managementProFileFilterLinksList' smart constructor.
 data ManagementProFileFilterLinksList = ManagementProFileFilterLinksList'
     { _mpffllWebPropertyId :: !Text
-    , _mpffllProFileId     :: !Text
-    , _mpffllAccountId     :: !Text
-    , _mpffllStartIndex    :: !(Maybe (Textual Int32))
-    , _mpffllMaxResults    :: !(Maybe (Textual Int32))
+    , _mpffllProFileId :: !Text
+    , _mpffllAccountId :: !Text
+    , _mpffllStartIndex :: !(Maybe (Textual Int32))
+    , _mpffllMaxResults :: !(Maybe (Textual Int32))
+    , _mpffllFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementProFileFilterLinksList' with the minimum fields required to make a request.
@@ -85,18 +88,21 @@ data ManagementProFileFilterLinksList = ManagementProFileFilterLinksList'
 -- * 'mpffllStartIndex'
 --
 -- * 'mpffllMaxResults'
+--
+-- * 'mpffllFields'
 managementProFileFilterLinksList
     :: Text -- ^ 'mpffllWebPropertyId'
     -> Text -- ^ 'mpffllProFileId'
     -> Text -- ^ 'mpffllAccountId'
     -> ManagementProFileFilterLinksList
-managementProFileFilterLinksList pMpffllWebPropertyId_ pMpffllProFileId_ pMpffllAccountId_ =
+managementProFileFilterLinksList pMpffllWebPropertyId_ pMpffllProFileId_ pMpffllAccountId_ = 
     ManagementProFileFilterLinksList'
     { _mpffllWebPropertyId = pMpffllWebPropertyId_
     , _mpffllProFileId = pMpffllProFileId_
     , _mpffllAccountId = pMpffllAccountId_
     , _mpffllStartIndex = Nothing
     , _mpffllMaxResults = Nothing
+    , _mpffllFields = Nothing
     }
 
 -- | Web property Id for profile filter links for. Can either be a specific
@@ -136,6 +142,11 @@ mpffllMaxResults
       (\ s a -> s{_mpffllMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+mpffllFields :: Lens' ManagementProFileFilterLinksList (Maybe Text)
+mpffllFields
+  = lens _mpffllFields (\ s a -> s{_mpffllFields = a})
+
 instance GoogleRequest
          ManagementProFileFilterLinksList where
         type Rs ManagementProFileFilterLinksList =
@@ -148,6 +159,7 @@ instance GoogleRequest
               _mpffllProFileId
               _mpffllStartIndex
               _mpffllMaxResults
+              _mpffllFields
               (Just AltJSON)
               analyticsService
           where go

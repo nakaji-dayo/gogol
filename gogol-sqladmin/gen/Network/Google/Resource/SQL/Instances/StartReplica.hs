@@ -34,11 +34,12 @@ module Network.Google.Resource.SQL.Instances.StartReplica
 
     -- * Request Lenses
     , iProject
+    , iFields
     , iInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.instances.startReplica@ method which the
 -- 'InstancesStartReplica' request conforms to.
@@ -50,13 +51,15 @@ type InstancesStartReplicaResource =
              "instances" :>
                Capture "instance" Text :>
                  "startReplica" :>
-                   QueryParam "alt" AltJSON :> Post '[JSON] Operation
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Post '[JSON] Operation
 
 -- | Starts the replication in the read replica instance.
 --
 -- /See:/ 'instancesStartReplica' smart constructor.
 data InstancesStartReplica = InstancesStartReplica'
-    { _iProject  :: !Text
+    { _iProject :: !Text
+    , _iFields :: !(Maybe Text)
     , _iInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -66,20 +69,27 @@ data InstancesStartReplica = InstancesStartReplica'
 --
 -- * 'iProject'
 --
+-- * 'iFields'
+--
 -- * 'iInstance'
 instancesStartReplica
     :: Text -- ^ 'iProject'
     -> Text -- ^ 'iInstance'
     -> InstancesStartReplica
-instancesStartReplica pIProject_ pIInstance_ =
+instancesStartReplica pIProject_ pIInstance_ = 
     InstancesStartReplica'
     { _iProject = pIProject_
+    , _iFields = Nothing
     , _iInstance = pIInstance_
     }
 
 -- | ID of the project that contains the read replica.
 iProject :: Lens' InstancesStartReplica Text
 iProject = lens _iProject (\ s a -> s{_iProject = a})
+
+-- | Selector specifying which fields to include in a partial response.
+iFields :: Lens' InstancesStartReplica (Maybe Text)
+iFields = lens _iFields (\ s a -> s{_iFields = a})
 
 -- | Cloud SQL read replica instance name.
 iInstance :: Lens' InstancesStartReplica Text
@@ -92,7 +102,7 @@ instance GoogleRequest InstancesStartReplica where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient InstancesStartReplica'{..}
-          = go _iProject _iInstance (Just AltJSON)
+          = go _iProject _iInstance _iFields (Just AltJSON)
               sQLAdminService
           where go
                   = buildClient

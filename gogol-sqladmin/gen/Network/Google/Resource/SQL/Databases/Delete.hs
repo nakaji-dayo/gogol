@@ -35,11 +35,12 @@ module Network.Google.Resource.SQL.Databases.Delete
     -- * Request Lenses
     , ddProject
     , ddDatabase
+    , ddFields
     , ddInstance
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.SQLAdmin.Types
+import Network.Google.Prelude
+import Network.Google.SQLAdmin.Types
 
 -- | A resource alias for @sql.databases.delete@ method which the
 -- 'DatabasesDelete' request conforms to.
@@ -52,14 +53,16 @@ type DatabasesDeleteResource =
                Capture "instance" Text :>
                  "databases" :>
                    Capture "database" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] Operation
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] Operation
 
 -- | Deletes a database from a Cloud SQL instance.
 --
 -- /See:/ 'databasesDelete' smart constructor.
 data DatabasesDelete = DatabasesDelete'
-    { _ddProject  :: !Text
+    { _ddProject :: !Text
     , _ddDatabase :: !Text
+    , _ddFields :: !(Maybe Text)
     , _ddInstance :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -71,16 +74,19 @@ data DatabasesDelete = DatabasesDelete'
 --
 -- * 'ddDatabase'
 --
+-- * 'ddFields'
+--
 -- * 'ddInstance'
 databasesDelete
     :: Text -- ^ 'ddProject'
     -> Text -- ^ 'ddDatabase'
     -> Text -- ^ 'ddInstance'
     -> DatabasesDelete
-databasesDelete pDdProject_ pDdDatabase_ pDdInstance_ =
+databasesDelete pDdProject_ pDdDatabase_ pDdInstance_ = 
     DatabasesDelete'
     { _ddProject = pDdProject_
     , _ddDatabase = pDdDatabase_
+    , _ddFields = Nothing
     , _ddInstance = pDdInstance_
     }
 
@@ -94,6 +100,10 @@ ddDatabase :: Lens' DatabasesDelete Text
 ddDatabase
   = lens _ddDatabase (\ s a -> s{_ddDatabase = a})
 
+-- | Selector specifying which fields to include in a partial response.
+ddFields :: Lens' DatabasesDelete (Maybe Text)
+ddFields = lens _ddFields (\ s a -> s{_ddFields = a})
+
 -- | Database instance ID. This does not include the project ID.
 ddInstance :: Lens' DatabasesDelete Text
 ddInstance
@@ -105,7 +115,7 @@ instance GoogleRequest DatabasesDelete where
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/sqlservice.admin"]
         requestClient DatabasesDelete'{..}
-          = go _ddProject _ddInstance _ddDatabase
+          = go _ddProject _ddInstance _ddDatabase _ddFields
               (Just AltJSON)
               sQLAdminService
           where go

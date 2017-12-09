@@ -36,10 +36,11 @@ module Network.Google.Resource.Tasks.Tasks.Update
     , tuPayload
     , tuTaskList
     , tuTask
+    , tuFields
     ) where
 
-import           Network.Google.AppsTasks.Types
-import           Network.Google.Prelude
+import Network.Google.AppsTasks.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @tasks.tasks.update@ method which the
 -- 'TasksUpdate' request conforms to.
@@ -50,16 +51,18 @@ type TasksUpdateResource =
            Capture "tasklist" Text :>
              "tasks" :>
                Capture "task" Text :>
-                 QueryParam "alt" AltJSON :>
-                   ReqBody '[JSON] Task :> Put '[JSON] Task
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :>
+                     ReqBody '[JSON] Task :> Put '[JSON] Task
 
 -- | Updates the specified task.
 --
 -- /See:/ 'tasksUpdate' smart constructor.
 data TasksUpdate = TasksUpdate'
-    { _tuPayload  :: !Task
+    { _tuPayload :: !Task
     , _tuTaskList :: !Text
-    , _tuTask     :: !Text
+    , _tuTask :: !Text
+    , _tuFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TasksUpdate' with the minimum fields required to make a request.
@@ -71,16 +74,19 @@ data TasksUpdate = TasksUpdate'
 -- * 'tuTaskList'
 --
 -- * 'tuTask'
+--
+-- * 'tuFields'
 tasksUpdate
     :: Task -- ^ 'tuPayload'
     -> Text -- ^ 'tuTaskList'
     -> Text -- ^ 'tuTask'
     -> TasksUpdate
-tasksUpdate pTuPayload_ pTuTaskList_ pTuTask_ =
+tasksUpdate pTuPayload_ pTuTaskList_ pTuTask_ = 
     TasksUpdate'
     { _tuPayload = pTuPayload_
     , _tuTaskList = pTuTaskList_
     , _tuTask = pTuTask_
+    , _tuFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -97,12 +103,17 @@ tuTaskList
 tuTask :: Lens' TasksUpdate Text
 tuTask = lens _tuTask (\ s a -> s{_tuTask = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tuFields :: Lens' TasksUpdate (Maybe Text)
+tuFields = lens _tuFields (\ s a -> s{_tuFields = a})
+
 instance GoogleRequest TasksUpdate where
         type Rs TasksUpdate = Task
         type Scopes TasksUpdate =
              '["https://www.googleapis.com/auth/tasks"]
         requestClient TasksUpdate'{..}
-          = go _tuTaskList _tuTask (Just AltJSON) _tuPayload
+          = go _tuTaskList _tuTask _tuFields (Just AltJSON)
+              _tuPayload
               appsTasksService
           where go
                   = buildClient (Proxy :: Proxy TasksUpdateResource)

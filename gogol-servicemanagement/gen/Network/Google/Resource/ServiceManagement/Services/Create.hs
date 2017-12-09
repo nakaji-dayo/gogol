@@ -41,11 +41,12 @@ module Network.Google.Resource.ServiceManagement.Services.Create
     , scUploadType
     , scPayload
     , scBearerToken
+    , scFields
     , scCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.ServiceManagement.Types
 
 -- | A resource alias for @servicemanagement.services.create@ method which the
 -- 'ServicesCreate' request conforms to.
@@ -59,23 +60,25 @@ type ServicesCreateResource =
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] ManagedService :>
-                           Post '[JSON] Operation
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] ManagedService :>
+                             Post '[JSON] Operation
 
 -- | Creates a new managed service. Please note one producer project can own
 -- no more than 20 services. Operation
 --
 -- /See:/ 'servicesCreate' smart constructor.
 data ServicesCreate = ServicesCreate'
-    { _scXgafv          :: !(Maybe Xgafv)
+    { _scXgafv :: !(Maybe Xgafv)
     , _scUploadProtocol :: !(Maybe Text)
-    , _scPp             :: !Bool
-    , _scAccessToken    :: !(Maybe Text)
-    , _scUploadType     :: !(Maybe Text)
-    , _scPayload        :: !ManagedService
-    , _scBearerToken    :: !(Maybe Text)
-    , _scCallback       :: !(Maybe Text)
+    , _scPp :: !Bool
+    , _scAccessToken :: !(Maybe Text)
+    , _scUploadType :: !(Maybe Text)
+    , _scPayload :: !ManagedService
+    , _scBearerToken :: !(Maybe Text)
+    , _scFields :: !(Maybe Text)
+    , _scCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ServicesCreate' with the minimum fields required to make a request.
@@ -96,11 +99,13 @@ data ServicesCreate = ServicesCreate'
 --
 -- * 'scBearerToken'
 --
+-- * 'scFields'
+--
 -- * 'scCallback'
 servicesCreate
     :: ManagedService -- ^ 'scPayload'
     -> ServicesCreate
-servicesCreate pScPayload_ =
+servicesCreate pScPayload_ = 
     ServicesCreate'
     { _scXgafv = Nothing
     , _scUploadProtocol = Nothing
@@ -109,6 +114,7 @@ servicesCreate pScPayload_ =
     , _scUploadType = Nothing
     , _scPayload = pScPayload_
     , _scBearerToken = Nothing
+    , _scFields = Nothing
     , _scCallback = Nothing
     }
 
@@ -148,6 +154,10 @@ scBearerToken
   = lens _scBearerToken
       (\ s a -> s{_scBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+scFields :: Lens' ServicesCreate (Maybe Text)
+scFields = lens _scFields (\ s a -> s{_scFields = a})
+
 -- | JSONP
 scCallback :: Lens' ServicesCreate (Maybe Text)
 scCallback
@@ -164,6 +174,7 @@ instance GoogleRequest ServicesCreate where
               _scUploadType
               _scBearerToken
               _scCallback
+              _scFields
               (Just AltJSON)
               _scPayload
               serviceManagementService

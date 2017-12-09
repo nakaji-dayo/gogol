@@ -23,7 +23,7 @@
 -- Given one or more beacon observations, returns any beacon information
 -- and attachments accessible to your application. Authorize by using the
 -- [API
--- key](https:\/\/developers.google.com\/beacons\/proximity\/how-tos\/authorizing#APIKey)
+-- key](https:\/\/developers.google.com\/beacons\/proximity\/get-started#request_a_browser_api_key)
 -- for the application.
 --
 -- /See:/ <https://developers.google.com/beacons/proximity/ Google Proximity Beacon API Reference> for @proximitybeacon.beaconinfo.getforobserved@.
@@ -44,44 +44,47 @@ module Network.Google.Resource.ProximityBeacon.BeaconInfo.GetforObserved
     , bigoUploadType
     , bigoPayload
     , bigoBearerToken
+    , bigoFields
     , bigoCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ProximityBeacon.Types
+import Network.Google.Prelude
+import Network.Google.ProximityBeacon.Types
 
 -- | A resource alias for @proximitybeacon.beaconinfo.getforobserved@ method which the
 -- 'BeaconInfoGetforObserved' request conforms to.
 type BeaconInfoGetforObservedResource =
      "v1beta1" :>
        "beaconinfo:getforobserved" :>
-         QueryParam "$.xgafv" Text :>
+         QueryParam "$.xgafv" Xgafv :>
            QueryParam "upload_protocol" Text :>
              QueryParam "pp" Bool :>
                QueryParam "access_token" Text :>
                  QueryParam "uploadType" Text :>
                    QueryParam "bearer_token" Text :>
                      QueryParam "callback" Text :>
-                       QueryParam "alt" AltJSON :>
-                         ReqBody '[JSON] GetInfoForObservedBeaconsRequest :>
-                           Post '[JSON] GetInfoForObservedBeaconsResponse
+                       QueryParam "fields" Text :>
+                         QueryParam "alt" AltJSON :>
+                           ReqBody '[JSON] GetInfoForObservedBeaconsRequest :>
+                             Post '[JSON] GetInfoForObservedBeaconsResponse
 
 -- | Given one or more beacon observations, returns any beacon information
 -- and attachments accessible to your application. Authorize by using the
 -- [API
--- key](https:\/\/developers.google.com\/beacons\/proximity\/how-tos\/authorizing#APIKey)
+-- key](https:\/\/developers.google.com\/beacons\/proximity\/get-started#request_a_browser_api_key)
 -- for the application.
 --
 -- /See:/ 'beaconInfoGetforObserved' smart constructor.
 data BeaconInfoGetforObserved = BeaconInfoGetforObserved'
-    { _bigoXgafv          :: !(Maybe Text)
+    { _bigoXgafv :: !(Maybe Xgafv)
     , _bigoUploadProtocol :: !(Maybe Text)
-    , _bigoPp             :: !Bool
-    , _bigoAccessToken    :: !(Maybe Text)
-    , _bigoUploadType     :: !(Maybe Text)
-    , _bigoPayload        :: !GetInfoForObservedBeaconsRequest
-    , _bigoBearerToken    :: !(Maybe Text)
-    , _bigoCallback       :: !(Maybe Text)
+    , _bigoPp :: !Bool
+    , _bigoAccessToken :: !(Maybe Text)
+    , _bigoUploadType :: !(Maybe Text)
+    , _bigoPayload :: !GetInfoForObservedBeaconsRequest
+    , _bigoBearerToken :: !(Maybe Text)
+    , _bigoFields :: !(Maybe Text)
+    , _bigoCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BeaconInfoGetforObserved' with the minimum fields required to make a request.
@@ -102,11 +105,13 @@ data BeaconInfoGetforObserved = BeaconInfoGetforObserved'
 --
 -- * 'bigoBearerToken'
 --
+-- * 'bigoFields'
+--
 -- * 'bigoCallback'
 beaconInfoGetforObserved
     :: GetInfoForObservedBeaconsRequest -- ^ 'bigoPayload'
     -> BeaconInfoGetforObserved
-beaconInfoGetforObserved pBigoPayload_ =
+beaconInfoGetforObserved pBigoPayload_ = 
     BeaconInfoGetforObserved'
     { _bigoXgafv = Nothing
     , _bigoUploadProtocol = Nothing
@@ -115,11 +120,12 @@ beaconInfoGetforObserved pBigoPayload_ =
     , _bigoUploadType = Nothing
     , _bigoPayload = pBigoPayload_
     , _bigoBearerToken = Nothing
+    , _bigoFields = Nothing
     , _bigoCallback = Nothing
     }
 
 -- | V1 error format.
-bigoXgafv :: Lens' BeaconInfoGetforObserved (Maybe Text)
+bigoXgafv :: Lens' BeaconInfoGetforObserved (Maybe Xgafv)
 bigoXgafv
   = lens _bigoXgafv (\ s a -> s{_bigoXgafv = a})
 
@@ -156,6 +162,11 @@ bigoBearerToken
   = lens _bigoBearerToken
       (\ s a -> s{_bigoBearerToken = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bigoFields :: Lens' BeaconInfoGetforObserved (Maybe Text)
+bigoFields
+  = lens _bigoFields (\ s a -> s{_bigoFields = a})
+
 -- | JSONP
 bigoCallback :: Lens' BeaconInfoGetforObserved (Maybe Text)
 bigoCallback
@@ -171,6 +182,7 @@ instance GoogleRequest BeaconInfoGetforObserved where
               _bigoUploadType
               _bigoBearerToken
               _bigoCallback
+              _bigoFields
               (Just AltJSON)
               _bigoPayload
               proximityBeaconService

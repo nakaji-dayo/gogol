@@ -35,10 +35,11 @@ module Network.Google.Resource.Analytics.Management.Accounts.List
     -- * Request Lenses
     , malStartIndex
     , malMaxResults
+    , malFields
     ) where
 
-import           Network.Google.Analytics.Types
-import           Network.Google.Prelude
+import Network.Google.Analytics.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @analytics.management.accounts.list@ method which the
 -- 'ManagementAccountsList' request conforms to.
@@ -49,7 +50,8 @@ type ManagementAccountsListResource =
            "accounts" :>
              QueryParam "start-index" (Textual Int32) :>
                QueryParam "max-results" (Textual Int32) :>
-                 QueryParam "alt" AltJSON :> Get '[JSON] Accounts
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Get '[JSON] Accounts
 
 -- | Lists all accounts to which the user has access.
 --
@@ -57,6 +59,7 @@ type ManagementAccountsListResource =
 data ManagementAccountsList = ManagementAccountsList'
     { _malStartIndex :: !(Maybe (Textual Int32))
     , _malMaxResults :: !(Maybe (Textual Int32))
+    , _malFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ManagementAccountsList' with the minimum fields required to make a request.
@@ -66,12 +69,15 @@ data ManagementAccountsList = ManagementAccountsList'
 -- * 'malStartIndex'
 --
 -- * 'malMaxResults'
+--
+-- * 'malFields'
 managementAccountsList
     :: ManagementAccountsList
-managementAccountsList =
+managementAccountsList = 
     ManagementAccountsList'
     { _malStartIndex = Nothing
     , _malMaxResults = Nothing
+    , _malFields = Nothing
     }
 
 -- | An index of the first account to retrieve. Use this parameter as a
@@ -89,6 +95,11 @@ malMaxResults
       (\ s a -> s{_malMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+malFields :: Lens' ManagementAccountsList (Maybe Text)
+malFields
+  = lens _malFields (\ s a -> s{_malFields = a})
+
 instance GoogleRequest ManagementAccountsList where
         type Rs ManagementAccountsList = Accounts
         type Scopes ManagementAccountsList =
@@ -96,7 +107,8 @@ instance GoogleRequest ManagementAccountsList where
                "https://www.googleapis.com/auth/analytics.edit",
                "https://www.googleapis.com/auth/analytics.readonly"]
         requestClient ManagementAccountsList'{..}
-          = go _malStartIndex _malMaxResults (Just AltJSON)
+          = go _malStartIndex _malMaxResults _malFields
+              (Just AltJSON)
               analyticsService
           where go
                   = buildClient

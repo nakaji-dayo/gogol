@@ -36,10 +36,11 @@ module Network.Google.Resource.AndroidEnterprise.Enterprises.AcknowledgeNotifica
 
     -- * Request Lenses
     , eansNotificationSetId
+    , eansFields
     ) where
 
-import           Network.Google.AndroidEnterprise.Types
-import           Network.Google.Prelude
+import Network.Google.AndroidEnterprise.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @androidenterprise.enterprises.acknowledgeNotificationSet@ method which the
 -- 'EnterprisesAcknowledgeNotificationSet' request conforms to.
@@ -49,15 +50,17 @@ type EnterprisesAcknowledgeNotificationSetResource =
          "enterprises" :>
            "acknowledgeNotificationSet" :>
              QueryParam "notificationSetId" Text :>
-               QueryParam "alt" AltJSON :> Post '[JSON] ()
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Post '[JSON] ()
 
 -- | Acknowledges notifications that were received from
 -- Enterprises.PullNotificationSet to prevent subsequent calls from
 -- returning the same notifications.
 --
 -- /See:/ 'enterprisesAcknowledgeNotificationSet' smart constructor.
-newtype EnterprisesAcknowledgeNotificationSet = EnterprisesAcknowledgeNotificationSet'
-    { _eansNotificationSetId :: Maybe Text
+data EnterprisesAcknowledgeNotificationSet = EnterprisesAcknowledgeNotificationSet'
+    { _eansNotificationSetId :: !(Maybe Text)
+    , _eansFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'EnterprisesAcknowledgeNotificationSet' with the minimum fields required to make a request.
@@ -65,11 +68,14 @@ newtype EnterprisesAcknowledgeNotificationSet = EnterprisesAcknowledgeNotificati
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'eansNotificationSetId'
+--
+-- * 'eansFields'
 enterprisesAcknowledgeNotificationSet
     :: EnterprisesAcknowledgeNotificationSet
-enterprisesAcknowledgeNotificationSet =
+enterprisesAcknowledgeNotificationSet = 
     EnterprisesAcknowledgeNotificationSet'
     { _eansNotificationSetId = Nothing
+    , _eansFields = Nothing
     }
 
 -- | The notification set ID as returned by Enterprises.PullNotificationSet.
@@ -79,6 +85,11 @@ eansNotificationSetId
   = lens _eansNotificationSetId
       (\ s a -> s{_eansNotificationSetId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+eansFields :: Lens' EnterprisesAcknowledgeNotificationSet (Maybe Text)
+eansFields
+  = lens _eansFields (\ s a -> s{_eansFields = a})
+
 instance GoogleRequest
          EnterprisesAcknowledgeNotificationSet where
         type Rs EnterprisesAcknowledgeNotificationSet = ()
@@ -86,7 +97,8 @@ instance GoogleRequest
              '["https://www.googleapis.com/auth/androidenterprise"]
         requestClient
           EnterprisesAcknowledgeNotificationSet'{..}
-          = go _eansNotificationSetId (Just AltJSON)
+          = go _eansNotificationSetId _eansFields
+              (Just AltJSON)
               androidEnterpriseService
           where go
                   = buildClient

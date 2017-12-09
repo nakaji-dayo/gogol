@@ -34,10 +34,11 @@ module Network.Google.Resource.Mirror.Timeline.Insert
 
     -- * Request Lenses
     , tiPayload
+    , tiFields
     ) where
 
-import           Network.Google.Mirror.Types
-import           Network.Google.Prelude
+import Network.Google.Mirror.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @mirror.timeline.insert@ method which the
 -- 'TimelineInsert' request conforms to.
@@ -45,24 +46,27 @@ type TimelineInsertResource =
      "mirror" :>
        "v1" :>
          "timeline" :>
-           QueryParam "alt" AltJSON :>
-             ReqBody '[JSON] TimelineItem :>
-               Post '[JSON] TimelineItem
+           QueryParam "fields" Text :>
+             QueryParam "alt" AltJSON :>
+               ReqBody '[JSON] TimelineItem :>
+                 Post '[JSON] TimelineItem
        :<|>
        "upload" :>
          "mirror" :>
            "v1" :>
              "timeline" :>
-               QueryParam "alt" AltJSON :>
-                 QueryParam "uploadType" Multipart :>
-                   MultipartRelated '[JSON] TimelineItem :>
-                     Post '[JSON] TimelineItem
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   QueryParam "uploadType" Multipart :>
+                     MultipartRelated '[JSON] TimelineItem :>
+                       Post '[JSON] TimelineItem
 
 -- | Inserts a new item into the timeline.
 --
 -- /See:/ 'timelineInsert' smart constructor.
-newtype TimelineInsert = TimelineInsert'
-    { _tiPayload :: TimelineItem
+data TimelineInsert = TimelineInsert'
+    { _tiPayload :: !TimelineItem
+    , _tiFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TimelineInsert' with the minimum fields required to make a request.
@@ -70,12 +74,15 @@ newtype TimelineInsert = TimelineInsert'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'tiPayload'
+--
+-- * 'tiFields'
 timelineInsert
     :: TimelineItem -- ^ 'tiPayload'
     -> TimelineInsert
-timelineInsert pTiPayload_ =
+timelineInsert pTiPayload_ = 
     TimelineInsert'
     { _tiPayload = pTiPayload_
+    , _tiFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -83,13 +90,18 @@ tiPayload :: Lens' TimelineInsert TimelineItem
 tiPayload
   = lens _tiPayload (\ s a -> s{_tiPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tiFields :: Lens' TimelineInsert (Maybe Text)
+tiFields = lens _tiFields (\ s a -> s{_tiFields = a})
+
 instance GoogleRequest TimelineInsert where
         type Rs TimelineInsert = TimelineItem
         type Scopes TimelineInsert =
              '["https://www.googleapis.com/auth/glass.location",
                "https://www.googleapis.com/auth/glass.timeline"]
         requestClient TimelineInsert'{..}
-          = go (Just AltJSON) _tiPayload mirrorService
+          = go _tiFields (Just AltJSON) _tiPayload
+              mirrorService
           where go :<|> _
                   = buildClient (Proxy :: Proxy TimelineInsertResource)
                       mempty
@@ -100,7 +112,9 @@ instance GoogleRequest (MediaUpload TimelineInsert)
         type Scopes (MediaUpload TimelineInsert) =
              Scopes TimelineInsert
         requestClient (MediaUpload TimelineInsert'{..} body)
-          = go (Just AltJSON) (Just Multipart) _tiPayload body
+          = go _tiFields (Just AltJSON) (Just Multipart)
+              _tiPayload
+              body
               mirrorService
           where _ :<|> go
                   = buildClient (Proxy :: Proxy TimelineInsertResource)

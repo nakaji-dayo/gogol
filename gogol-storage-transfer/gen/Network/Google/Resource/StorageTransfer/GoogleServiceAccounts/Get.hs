@@ -23,8 +23,8 @@
 -- Returns the Google service account that is used by Storage Transfer
 -- Service to access buckets in the project where transfers run or in other
 -- projects. Each Google service account is associated with one Google
--- Developers Console project. Users should add this service account to the
--- Google Cloud Storage bucket ACLs to grant access to Storage Transfer
+-- Cloud Platform Console project. Users should add this service account to
+-- the Google Cloud Storage bucket ACLs to grant access to Storage Transfer
 -- Service. This service account is created and owned by Storage Transfer
 -- Service and can only be used by Storage Transfer Service.
 --
@@ -46,11 +46,12 @@ module Network.Google.Resource.StorageTransfer.GoogleServiceAccounts.Get
     , gsagUploadType
     , gsagBearerToken
     , gsagProjectId
+    , gsagFields
     , gsagCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types
 
 -- | A resource alias for @storagetransfer.googleServiceAccounts.get@ method which the
 -- 'GoogleServiceAccountsGet' request conforms to.
@@ -58,34 +59,36 @@ type GoogleServiceAccountsGetResource =
      "v1" :>
        "googleServiceAccounts" :>
          Capture "projectId" Text :>
-           QueryParam "$.xgafv" Text :>
+           QueryParam "$.xgafv" Xgafv :>
              QueryParam "upload_protocol" Text :>
                QueryParam "pp" Bool :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
                      QueryParam "bearer_token" Text :>
                        QueryParam "callback" Text :>
-                         QueryParam "alt" AltJSON :>
-                           Get '[JSON] GoogleServiceAccount
+                         QueryParam "fields" Text :>
+                           QueryParam "alt" AltJSON :>
+                             Get '[JSON] GoogleServiceAccount
 
 -- | Returns the Google service account that is used by Storage Transfer
 -- Service to access buckets in the project where transfers run or in other
 -- projects. Each Google service account is associated with one Google
--- Developers Console project. Users should add this service account to the
--- Google Cloud Storage bucket ACLs to grant access to Storage Transfer
+-- Cloud Platform Console project. Users should add this service account to
+-- the Google Cloud Storage bucket ACLs to grant access to Storage Transfer
 -- Service. This service account is created and owned by Storage Transfer
 -- Service and can only be used by Storage Transfer Service.
 --
 -- /See:/ 'googleServiceAccountsGet' smart constructor.
 data GoogleServiceAccountsGet = GoogleServiceAccountsGet'
-    { _gsagXgafv          :: !(Maybe Text)
+    { _gsagXgafv :: !(Maybe Xgafv)
     , _gsagUploadProtocol :: !(Maybe Text)
-    , _gsagPp             :: !Bool
-    , _gsagAccessToken    :: !(Maybe Text)
-    , _gsagUploadType     :: !(Maybe Text)
-    , _gsagBearerToken    :: !(Maybe Text)
-    , _gsagProjectId      :: !Text
-    , _gsagCallback       :: !(Maybe Text)
+    , _gsagPp :: !Bool
+    , _gsagAccessToken :: !(Maybe Text)
+    , _gsagUploadType :: !(Maybe Text)
+    , _gsagBearerToken :: !(Maybe Text)
+    , _gsagProjectId :: !Text
+    , _gsagFields :: !(Maybe Text)
+    , _gsagCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GoogleServiceAccountsGet' with the minimum fields required to make a request.
@@ -106,11 +109,13 @@ data GoogleServiceAccountsGet = GoogleServiceAccountsGet'
 --
 -- * 'gsagProjectId'
 --
+-- * 'gsagFields'
+--
 -- * 'gsagCallback'
 googleServiceAccountsGet
     :: Text -- ^ 'gsagProjectId'
     -> GoogleServiceAccountsGet
-googleServiceAccountsGet pGsagProjectId_ =
+googleServiceAccountsGet pGsagProjectId_ = 
     GoogleServiceAccountsGet'
     { _gsagXgafv = Nothing
     , _gsagUploadProtocol = Nothing
@@ -119,11 +124,12 @@ googleServiceAccountsGet pGsagProjectId_ =
     , _gsagUploadType = Nothing
     , _gsagBearerToken = Nothing
     , _gsagProjectId = pGsagProjectId_
+    , _gsagFields = Nothing
     , _gsagCallback = Nothing
     }
 
 -- | V1 error format.
-gsagXgafv :: Lens' GoogleServiceAccountsGet (Maybe Text)
+gsagXgafv :: Lens' GoogleServiceAccountsGet (Maybe Xgafv)
 gsagXgafv
   = lens _gsagXgafv (\ s a -> s{_gsagXgafv = a})
 
@@ -155,12 +161,17 @@ gsagBearerToken
   = lens _gsagBearerToken
       (\ s a -> s{_gsagBearerToken = a})
 
--- | The ID of the Google Developers Console project that the Google service
--- account is associated with. Required.
+-- | The ID of the Google Cloud Platform Console project that the Google
+-- service account is associated with. Required.
 gsagProjectId :: Lens' GoogleServiceAccountsGet Text
 gsagProjectId
   = lens _gsagProjectId
       (\ s a -> s{_gsagProjectId = a})
+
+-- | Selector specifying which fields to include in a partial response.
+gsagFields :: Lens' GoogleServiceAccountsGet (Maybe Text)
+gsagFields
+  = lens _gsagFields (\ s a -> s{_gsagFields = a})
 
 -- | JSONP
 gsagCallback :: Lens' GoogleServiceAccountsGet (Maybe Text)
@@ -179,6 +190,7 @@ instance GoogleRequest GoogleServiceAccountsGet where
               _gsagUploadType
               _gsagBearerToken
               _gsagCallback
+              _gsagFields
               (Just AltJSON)
               storageTransferService
           where go

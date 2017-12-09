@@ -43,11 +43,12 @@ module Network.Google.Resource.Dataflow.Projects.Locations.Jobs.Get
     , pljgBearerToken
     , pljgView
     , pljgProjectId
+    , pljgFields
     , pljgCallback
     ) where
 
-import           Network.Google.Dataflow.Types
-import           Network.Google.Prelude
+import Network.Google.Dataflow.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @dataflow.projects.locations.jobs.get@ method which the
 -- 'ProjectsLocationsJobsGet' request conforms to.
@@ -59,7 +60,7 @@ type ProjectsLocationsJobsGetResource =
              Capture "location" Text :>
                "jobs" :>
                  Capture "jobId" Text :>
-                   QueryParam "$.xgafv" Text :>
+                   QueryParam "$.xgafv" Xgafv :>
                      QueryParam "upload_protocol" Text :>
                        QueryParam "pp" Bool :>
                          QueryParam "access_token" Text :>
@@ -67,23 +68,25 @@ type ProjectsLocationsJobsGetResource =
                              QueryParam "bearer_token" Text :>
                                QueryParam "view" Text :>
                                  QueryParam "callback" Text :>
-                                   QueryParam "alt" AltJSON :> Get '[JSON] Job
+                                   QueryParam "fields" Text :>
+                                     QueryParam "alt" AltJSON :> Get '[JSON] Job
 
 -- | Gets the state of the specified Cloud Dataflow job.
 --
 -- /See:/ 'projectsLocationsJobsGet' smart constructor.
 data ProjectsLocationsJobsGet = ProjectsLocationsJobsGet'
-    { _pljgXgafv          :: !(Maybe Text)
-    , _pljgJobId          :: !Text
+    { _pljgXgafv :: !(Maybe Xgafv)
+    , _pljgJobId :: !Text
     , _pljgUploadProtocol :: !(Maybe Text)
-    , _pljgLocation       :: !Text
-    , _pljgPp             :: !Bool
-    , _pljgAccessToken    :: !(Maybe Text)
-    , _pljgUploadType     :: !(Maybe Text)
-    , _pljgBearerToken    :: !(Maybe Text)
-    , _pljgView           :: !(Maybe Text)
-    , _pljgProjectId      :: !Text
-    , _pljgCallback       :: !(Maybe Text)
+    , _pljgLocation :: !Text
+    , _pljgPp :: !Bool
+    , _pljgAccessToken :: !(Maybe Text)
+    , _pljgUploadType :: !(Maybe Text)
+    , _pljgBearerToken :: !(Maybe Text)
+    , _pljgView :: !(Maybe Text)
+    , _pljgProjectId :: !Text
+    , _pljgFields :: !(Maybe Text)
+    , _pljgCallback :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ProjectsLocationsJobsGet' with the minimum fields required to make a request.
@@ -110,13 +113,15 @@ data ProjectsLocationsJobsGet = ProjectsLocationsJobsGet'
 --
 -- * 'pljgProjectId'
 --
+-- * 'pljgFields'
+--
 -- * 'pljgCallback'
 projectsLocationsJobsGet
     :: Text -- ^ 'pljgJobId'
     -> Text -- ^ 'pljgLocation'
     -> Text -- ^ 'pljgProjectId'
     -> ProjectsLocationsJobsGet
-projectsLocationsJobsGet pPljgJobId_ pPljgLocation_ pPljgProjectId_ =
+projectsLocationsJobsGet pPljgJobId_ pPljgLocation_ pPljgProjectId_ = 
     ProjectsLocationsJobsGet'
     { _pljgXgafv = Nothing
     , _pljgJobId = pPljgJobId_
@@ -128,11 +133,12 @@ projectsLocationsJobsGet pPljgJobId_ pPljgLocation_ pPljgProjectId_ =
     , _pljgBearerToken = Nothing
     , _pljgView = Nothing
     , _pljgProjectId = pPljgProjectId_
+    , _pljgFields = Nothing
     , _pljgCallback = Nothing
     }
 
 -- | V1 error format.
-pljgXgafv :: Lens' ProjectsLocationsJobsGet (Maybe Text)
+pljgXgafv :: Lens' ProjectsLocationsJobsGet (Maybe Xgafv)
 pljgXgafv
   = lens _pljgXgafv (\ s a -> s{_pljgXgafv = a})
 
@@ -184,6 +190,11 @@ pljgProjectId
   = lens _pljgProjectId
       (\ s a -> s{_pljgProjectId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pljgFields :: Lens' ProjectsLocationsJobsGet (Maybe Text)
+pljgFields
+  = lens _pljgFields (\ s a -> s{_pljgFields = a})
+
 -- | JSONP
 pljgCallback :: Lens' ProjectsLocationsJobsGet (Maybe Text)
 pljgCallback
@@ -193,6 +204,8 @@ instance GoogleRequest ProjectsLocationsJobsGet where
         type Rs ProjectsLocationsJobsGet = Job
         type Scopes ProjectsLocationsJobsGet =
              '["https://www.googleapis.com/auth/cloud-platform",
+               "https://www.googleapis.com/auth/compute",
+               "https://www.googleapis.com/auth/compute.readonly",
                "https://www.googleapis.com/auth/userinfo.email"]
         requestClient ProjectsLocationsJobsGet'{..}
           = go _pljgProjectId _pljgLocation _pljgJobId
@@ -204,6 +217,7 @@ instance GoogleRequest ProjectsLocationsJobsGet where
               _pljgBearerToken
               _pljgView
               _pljgCallback
+              _pljgFields
               (Just AltJSON)
               dataflowService
           where go

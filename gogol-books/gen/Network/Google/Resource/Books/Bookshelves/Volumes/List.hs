@@ -39,10 +39,11 @@ module Network.Google.Resource.Books.Bookshelves.Volumes.List
     , bvlStartIndex
     , bvlMaxResults
     , bvlShowPreOrders
+    , bvlFields
     ) where
 
-import           Network.Google.Books.Types
-import           Network.Google.Prelude
+import Network.Google.Books.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @books.bookshelves.volumes.list@ method which the
 -- 'BookshelvesVolumesList' request conforms to.
@@ -58,18 +59,20 @@ type BookshelvesVolumesListResource =
                      QueryParam "startIndex" (Textual Word32) :>
                        QueryParam "maxResults" (Textual Word32) :>
                          QueryParam "showPreorders" Bool :>
-                           QueryParam "alt" AltJSON :> Get '[JSON] Volumes
+                           QueryParam "fields" Text :>
+                             QueryParam "alt" AltJSON :> Get '[JSON] Volumes
 
 -- | Retrieves volumes in a specific bookshelf for the specified user.
 --
 -- /See:/ 'bookshelvesVolumesList' smart constructor.
 data BookshelvesVolumesList = BookshelvesVolumesList'
-    { _bvlUserId        :: !Text
-    , _bvlShelf         :: !Text
-    , _bvlSource        :: !(Maybe Text)
-    , _bvlStartIndex    :: !(Maybe (Textual Word32))
-    , _bvlMaxResults    :: !(Maybe (Textual Word32))
+    { _bvlUserId :: !Text
+    , _bvlShelf :: !Text
+    , _bvlSource :: !(Maybe Text)
+    , _bvlStartIndex :: !(Maybe (Textual Word32))
+    , _bvlMaxResults :: !(Maybe (Textual Word32))
     , _bvlShowPreOrders :: !(Maybe Bool)
+    , _bvlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'BookshelvesVolumesList' with the minimum fields required to make a request.
@@ -87,11 +90,13 @@ data BookshelvesVolumesList = BookshelvesVolumesList'
 -- * 'bvlMaxResults'
 --
 -- * 'bvlShowPreOrders'
+--
+-- * 'bvlFields'
 bookshelvesVolumesList
     :: Text -- ^ 'bvlUserId'
     -> Text -- ^ 'bvlShelf'
     -> BookshelvesVolumesList
-bookshelvesVolumesList pBvlUserId_ pBvlShelf_ =
+bookshelvesVolumesList pBvlUserId_ pBvlShelf_ = 
     BookshelvesVolumesList'
     { _bvlUserId = pBvlUserId_
     , _bvlShelf = pBvlShelf_
@@ -99,6 +104,7 @@ bookshelvesVolumesList pBvlUserId_ pBvlShelf_ =
     , _bvlStartIndex = Nothing
     , _bvlMaxResults = Nothing
     , _bvlShowPreOrders = Nothing
+    , _bvlFields = Nothing
     }
 
 -- | ID of user for whom to retrieve bookshelf volumes.
@@ -135,6 +141,11 @@ bvlShowPreOrders
   = lens _bvlShowPreOrders
       (\ s a -> s{_bvlShowPreOrders = a})
 
+-- | Selector specifying which fields to include in a partial response.
+bvlFields :: Lens' BookshelvesVolumesList (Maybe Text)
+bvlFields
+  = lens _bvlFields (\ s a -> s{_bvlFields = a})
+
 instance GoogleRequest BookshelvesVolumesList where
         type Rs BookshelvesVolumesList = Volumes
         type Scopes BookshelvesVolumesList =
@@ -143,6 +154,7 @@ instance GoogleRequest BookshelvesVolumesList where
           = go _bvlUserId _bvlShelf _bvlSource _bvlStartIndex
               _bvlMaxResults
               _bvlShowPreOrders
+              _bvlFields
               (Just AltJSON)
               booksService
           where go

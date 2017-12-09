@@ -35,10 +35,11 @@ module Network.Google.Resource.AdSense.Savedadstyles.List
     -- * Request Lenses
     , slPageToken
     , slMaxResults
+    , slFields
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.savedadstyles.list@ method which the
 -- 'SavedadstylesList' request conforms to.
@@ -48,14 +49,16 @@ type SavedadstylesListResource =
          "savedadstyles" :>
            QueryParam "pageToken" Text :>
              QueryParam "maxResults" (Textual Int32) :>
-               QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyles
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :> Get '[JSON] SavedAdStyles
 
 -- | List all saved ad styles in the user\'s account.
 --
 -- /See:/ 'savedadstylesList' smart constructor.
 data SavedadstylesList = SavedadstylesList'
-    { _slPageToken  :: !(Maybe Text)
+    { _slPageToken :: !(Maybe Text)
     , _slMaxResults :: !(Maybe (Textual Int32))
+    , _slFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SavedadstylesList' with the minimum fields required to make a request.
@@ -65,12 +68,15 @@ data SavedadstylesList = SavedadstylesList'
 -- * 'slPageToken'
 --
 -- * 'slMaxResults'
+--
+-- * 'slFields'
 savedadstylesList
     :: SavedadstylesList
-savedadstylesList =
+savedadstylesList = 
     SavedadstylesList'
     { _slPageToken = Nothing
     , _slMaxResults = Nothing
+    , _slFields = Nothing
     }
 
 -- | A continuation token, used to page through saved ad styles. To retrieve
@@ -87,13 +93,18 @@ slMaxResults
   = lens _slMaxResults (\ s a -> s{_slMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+slFields :: Lens' SavedadstylesList (Maybe Text)
+slFields = lens _slFields (\ s a -> s{_slFields = a})
+
 instance GoogleRequest SavedadstylesList where
         type Rs SavedadstylesList = SavedAdStyles
         type Scopes SavedadstylesList =
              '["https://www.googleapis.com/auth/adsense",
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient SavedadstylesList'{..}
-          = go _slPageToken _slMaxResults (Just AltJSON)
+          = go _slPageToken _slMaxResults _slFields
+              (Just AltJSON)
               adSenseService
           where go
                   = buildClient

@@ -33,10 +33,11 @@ module Network.Google.Resource.Content.Datafeeds.Custombatch
     -- * Request Lenses
     , dPayload
     , dDryRun
+    , dFields
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ShoppingContent.Types
+import Network.Google.Prelude
+import Network.Google.ShoppingContent.Types
 
 -- | A resource alias for @content.datafeeds.custombatch@ method which the
 -- 'DatafeedsCustombatch' request conforms to.
@@ -46,15 +47,17 @@ type DatafeedsCustombatchResource =
          "datafeeds" :>
            "batch" :>
              QueryParam "dryRun" Bool :>
-               QueryParam "alt" AltJSON :>
-                 ReqBody '[JSON] DatafeedsCustomBatchRequest :>
-                   Post '[JSON] DatafeedsCustomBatchResponse
+               QueryParam "fields" Text :>
+                 QueryParam "alt" AltJSON :>
+                   ReqBody '[JSON] DatafeedsCustomBatchRequest :>
+                     Post '[JSON] DatafeedsCustomBatchResponse
 
 --
 -- /See:/ 'datafeedsCustombatch' smart constructor.
 data DatafeedsCustombatch = DatafeedsCustombatch'
     { _dPayload :: !DatafeedsCustomBatchRequest
-    , _dDryRun  :: !(Maybe Bool)
+    , _dDryRun :: !(Maybe Bool)
+    , _dFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DatafeedsCustombatch' with the minimum fields required to make a request.
@@ -64,13 +67,16 @@ data DatafeedsCustombatch = DatafeedsCustombatch'
 -- * 'dPayload'
 --
 -- * 'dDryRun'
+--
+-- * 'dFields'
 datafeedsCustombatch
     :: DatafeedsCustomBatchRequest -- ^ 'dPayload'
     -> DatafeedsCustombatch
-datafeedsCustombatch pDPayload_ =
+datafeedsCustombatch pDPayload_ = 
     DatafeedsCustombatch'
     { _dPayload = pDPayload_
     , _dDryRun = Nothing
+    , _dFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -81,13 +87,17 @@ dPayload = lens _dPayload (\ s a -> s{_dPayload = a})
 dDryRun :: Lens' DatafeedsCustombatch (Maybe Bool)
 dDryRun = lens _dDryRun (\ s a -> s{_dDryRun = a})
 
+-- | Selector specifying which fields to include in a partial response.
+dFields :: Lens' DatafeedsCustombatch (Maybe Text)
+dFields = lens _dFields (\ s a -> s{_dFields = a})
+
 instance GoogleRequest DatafeedsCustombatch where
         type Rs DatafeedsCustombatch =
              DatafeedsCustomBatchResponse
         type Scopes DatafeedsCustombatch =
              '["https://www.googleapis.com/auth/content"]
         requestClient DatafeedsCustombatch'{..}
-          = go _dDryRun (Just AltJSON) _dPayload
+          = go _dDryRun _dFields (Just AltJSON) _dPayload
               shoppingContentService
           where go
                   = buildClient

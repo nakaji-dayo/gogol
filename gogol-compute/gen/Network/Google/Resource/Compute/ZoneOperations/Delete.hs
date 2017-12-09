@@ -36,10 +36,11 @@ module Network.Google.Resource.Compute.ZoneOperations.Delete
     , zodProject
     , zodOperation
     , zodZone
+    , zodFields
     ) where
 
-import           Network.Google.Compute.Types
-import           Network.Google.Prelude
+import Network.Google.Compute.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @compute.zoneOperations.delete@ method which the
 -- 'ZoneOperationsDelete' request conforms to.
@@ -52,15 +53,17 @@ type ZoneOperationsDeleteResource =
                Capture "zone" Text :>
                  "operations" :>
                    Capture "operation" Text :>
-                     QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Deletes the specified zone-specific Operations resource.
 --
 -- /See:/ 'zoneOperationsDelete' smart constructor.
 data ZoneOperationsDelete = ZoneOperationsDelete'
-    { _zodProject   :: !Text
+    { _zodProject :: !Text
     , _zodOperation :: !Text
-    , _zodZone      :: !Text
+    , _zodZone :: !Text
+    , _zodFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'ZoneOperationsDelete' with the minimum fields required to make a request.
@@ -72,16 +75,19 @@ data ZoneOperationsDelete = ZoneOperationsDelete'
 -- * 'zodOperation'
 --
 -- * 'zodZone'
+--
+-- * 'zodFields'
 zoneOperationsDelete
     :: Text -- ^ 'zodProject'
     -> Text -- ^ 'zodOperation'
     -> Text -- ^ 'zodZone'
     -> ZoneOperationsDelete
-zoneOperationsDelete pZodProject_ pZodOperation_ pZodZone_ =
+zoneOperationsDelete pZodProject_ pZodOperation_ pZodZone_ = 
     ZoneOperationsDelete'
     { _zodProject = pZodProject_
     , _zodOperation = pZodOperation_
     , _zodZone = pZodZone_
+    , _zodFields = Nothing
     }
 
 -- | Project ID for this request.
@@ -98,13 +104,18 @@ zodOperation
 zodZone :: Lens' ZoneOperationsDelete Text
 zodZone = lens _zodZone (\ s a -> s{_zodZone = a})
 
+-- | Selector specifying which fields to include in a partial response.
+zodFields :: Lens' ZoneOperationsDelete (Maybe Text)
+zodFields
+  = lens _zodFields (\ s a -> s{_zodFields = a})
+
 instance GoogleRequest ZoneOperationsDelete where
         type Rs ZoneOperationsDelete = ()
         type Scopes ZoneOperationsDelete =
              '["https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/compute"]
         requestClient ZoneOperationsDelete'{..}
-          = go _zodProject _zodZone _zodOperation
+          = go _zodProject _zodZone _zodOperation _zodFields
               (Just AltJSON)
               computeService
           where go

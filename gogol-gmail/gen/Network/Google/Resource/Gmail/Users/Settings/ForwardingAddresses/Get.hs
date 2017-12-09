@@ -35,10 +35,11 @@ module Network.Google.Resource.Gmail.Users.Settings.ForwardingAddresses.Get
     -- * Request Lenses
     , usfagForwardingEmail
     , usfagUserId
+    , usfagFields
     ) where
 
-import           Network.Google.Gmail.Types
-import           Network.Google.Prelude
+import Network.Google.Gmail.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @gmail.users.settings.forwardingAddresses.get@ method which the
 -- 'UsersSettingsForwardingAddressesGet' request conforms to.
@@ -50,15 +51,17 @@ type UsersSettingsForwardingAddressesGetResource =
              "settings" :>
                "forwardingAddresses" :>
                  Capture "forwardingEmail" Text :>
-                   QueryParam "alt" AltJSON :>
-                     Get '[JSON] ForwardingAddress
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :>
+                       Get '[JSON] ForwardingAddress
 
 -- | Gets the specified forwarding address.
 --
 -- /See:/ 'usersSettingsForwardingAddressesGet' smart constructor.
 data UsersSettingsForwardingAddressesGet = UsersSettingsForwardingAddressesGet'
     { _usfagForwardingEmail :: !Text
-    , _usfagUserId          :: !Text
+    , _usfagUserId :: !Text
+    , _usfagFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'UsersSettingsForwardingAddressesGet' with the minimum fields required to make a request.
@@ -68,13 +71,16 @@ data UsersSettingsForwardingAddressesGet = UsersSettingsForwardingAddressesGet'
 -- * 'usfagForwardingEmail'
 --
 -- * 'usfagUserId'
+--
+-- * 'usfagFields'
 usersSettingsForwardingAddressesGet
     :: Text -- ^ 'usfagForwardingEmail'
     -> UsersSettingsForwardingAddressesGet
-usersSettingsForwardingAddressesGet pUsfagForwardingEmail_ =
+usersSettingsForwardingAddressesGet pUsfagForwardingEmail_ = 
     UsersSettingsForwardingAddressesGet'
     { _usfagForwardingEmail = pUsfagForwardingEmail_
     , _usfagUserId = "me"
+    , _usfagFields = Nothing
     }
 
 -- | The forwarding address to be retrieved.
@@ -89,6 +95,11 @@ usfagUserId :: Lens' UsersSettingsForwardingAddressesGet Text
 usfagUserId
   = lens _usfagUserId (\ s a -> s{_usfagUserId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+usfagFields :: Lens' UsersSettingsForwardingAddressesGet (Maybe Text)
+usfagFields
+  = lens _usfagFields (\ s a -> s{_usfagFields = a})
+
 instance GoogleRequest
          UsersSettingsForwardingAddressesGet where
         type Rs UsersSettingsForwardingAddressesGet =
@@ -100,7 +111,7 @@ instance GoogleRequest
                "https://www.googleapis.com/auth/gmail.settings.basic"]
         requestClient
           UsersSettingsForwardingAddressesGet'{..}
-          = go _usfagUserId _usfagForwardingEmail
+          = go _usfagUserId _usfagForwardingEmail _usfagFields
               (Just AltJSON)
               gmailService
           where go

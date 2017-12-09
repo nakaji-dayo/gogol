@@ -36,10 +36,11 @@ module Network.Google.Resource.Directory.Roles.List
     , rlCustomer
     , rlPageToken
     , rlMaxResults
+    , rlFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.roles.list@ method which the
 -- 'RolesList' request conforms to.
@@ -52,15 +53,17 @@ type RolesListResource =
                "roles" :>
                  QueryParam "pageToken" Text :>
                    QueryParam "maxResults" (Textual Int32) :>
-                     QueryParam "alt" AltJSON :> Get '[JSON] Roles
+                     QueryParam "fields" Text :>
+                       QueryParam "alt" AltJSON :> Get '[JSON] Roles
 
 -- | Retrieves a paginated list of all the roles in a domain.
 --
 -- /See:/ 'rolesList' smart constructor.
 data RolesList = RolesList'
-    { _rlCustomer   :: !Text
-    , _rlPageToken  :: !(Maybe Text)
+    { _rlCustomer :: !Text
+    , _rlPageToken :: !(Maybe Text)
     , _rlMaxResults :: !(Maybe (Textual Int32))
+    , _rlFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RolesList' with the minimum fields required to make a request.
@@ -72,17 +75,20 @@ data RolesList = RolesList'
 -- * 'rlPageToken'
 --
 -- * 'rlMaxResults'
+--
+-- * 'rlFields'
 rolesList
     :: Text -- ^ 'rlCustomer'
     -> RolesList
-rolesList pRlCustomer_ =
+rolesList pRlCustomer_ = 
     RolesList'
     { _rlCustomer = pRlCustomer_
     , _rlPageToken = Nothing
     , _rlMaxResults = Nothing
+    , _rlFields = Nothing
     }
 
--- | Immutable id of the Google Apps account.
+-- | Immutable ID of the G Suite account.
 rlCustomer :: Lens' RolesList Text
 rlCustomer
   = lens _rlCustomer (\ s a -> s{_rlCustomer = a})
@@ -98,13 +104,17 @@ rlMaxResults
   = lens _rlMaxResults (\ s a -> s{_rlMaxResults = a})
       . mapping _Coerce
 
+-- | Selector specifying which fields to include in a partial response.
+rlFields :: Lens' RolesList (Maybe Text)
+rlFields = lens _rlFields (\ s a -> s{_rlFields = a})
+
 instance GoogleRequest RolesList where
         type Rs RolesList = Roles
         type Scopes RolesList =
              '["https://www.googleapis.com/auth/admin.directory.rolemanagement",
                "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"]
         requestClient RolesList'{..}
-          = go _rlCustomer _rlPageToken _rlMaxResults
+          = go _rlCustomer _rlPageToken _rlMaxResults _rlFields
               (Just AltJSON)
               directoryService
           where go

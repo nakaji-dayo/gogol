@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -178,6 +178,7 @@ module Network.Google.AdExchangeBuyer.Types
     , DealServingMetadata
     , dealServingMetadata
     , dsmDealPauseStatus
+    , dsmAlcoholAdsAllowed
 
     -- * AddOrderDealsResponse
     , AddOrderDealsResponse
@@ -195,6 +196,7 @@ module Network.Google.AdExchangeBuyer.Types
     -- * PricePerBuyer
     , PricePerBuyer
     , pricePerBuyer
+    , ppbBilledBuyer
     , ppbPrice
     , ppbAuctionTier
     , ppbBuyer
@@ -385,6 +387,7 @@ module Network.Google.AdExchangeBuyer.Types
     , tvcsCompanionSizes
     , tvcsSkippableAdType
     , tvcsCreativeSizeType
+    , tvcsNATiveTemplate
 
     -- * DealTermsGuaranteedFixedPriceTermsBillingInfo
     , DealTermsGuaranteedFixedPriceTermsBillingInfo
@@ -549,6 +552,7 @@ module Network.Google.AdExchangeBuyer.Types
     , proLastUpdateTimeMs
     , proKind
     , proRevisionNumber
+    , proBilledBuyer
     , proPrivateAuctionId
     , proDeliveryControl
     , proHasCreatorSignedOff
@@ -562,9 +566,11 @@ module Network.Google.AdExchangeBuyer.Types
     , proMarketplacePublisherProFileId
     , proPublisherProvidedForecast
     , proLabels
+    , proCreatorRole
     , proPublisherProFileId
     , proLegacyOfferId
     , proProductId
+    , proBuyer
 
     -- * CreativeServingRestrictionsItem
     , CreativeServingRestrictionsItem
@@ -617,6 +623,7 @@ module Network.Google.AdExchangeBuyer.Types
     , marketplaceDeal
     , mdExternalDealId
     , mdBuyerPrivateData
+    , mdIsSetupComplete
     , mdWebPropertyCode
     , mdCreationTimeMs
     , mdTerms
@@ -725,9 +732,9 @@ module Network.Google.AdExchangeBuyer.Types
     , dtgfptMinimumDailyLooks
     ) where
 
-import           Network.Google.AdExchangeBuyer.Types.Product
-import           Network.Google.AdExchangeBuyer.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer.Types.Product
+import Network.Google.AdExchangeBuyer.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1.4' of the Ad Exchange Buyer API. This contains the host and root path used as a starting point for constructing service requests.
 adExchangeBuyerService :: ServiceConfig

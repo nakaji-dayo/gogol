@@ -210,21 +210,21 @@ module Network.Google.WebmasterTools
     , URLCrawlErrorscountsQueryCategory (..)
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.Webmasters.Searchanalytics.Query
-import           Network.Google.Resource.Webmasters.Sitemaps.Delete
-import           Network.Google.Resource.Webmasters.Sitemaps.Get
-import           Network.Google.Resource.Webmasters.Sitemaps.List
-import           Network.Google.Resource.Webmasters.Sitemaps.Submit
-import           Network.Google.Resource.Webmasters.Sites.Add
-import           Network.Google.Resource.Webmasters.Sites.Delete
-import           Network.Google.Resource.Webmasters.Sites.Get
-import           Network.Google.Resource.Webmasters.Sites.List
-import           Network.Google.Resource.Webmasters.URLCrawlErrorscounts.Query
-import           Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.Get
-import           Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.List
-import           Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.MarkAsFixed
-import           Network.Google.WebmasterTools.Types
+import Network.Google.Prelude
+import Network.Google.Resource.Webmasters.Searchanalytics.Query
+import Network.Google.Resource.Webmasters.Sitemaps.Delete
+import Network.Google.Resource.Webmasters.Sitemaps.Get
+import Network.Google.Resource.Webmasters.Sitemaps.List
+import Network.Google.Resource.Webmasters.Sitemaps.Submit
+import Network.Google.Resource.Webmasters.Sites.Add
+import Network.Google.Resource.Webmasters.Sites.Delete
+import Network.Google.Resource.Webmasters.Sites.Get
+import Network.Google.Resource.Webmasters.Sites.List
+import Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.Get
+import Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.List
+import Network.Google.Resource.Webmasters.URLCrawlErrorsSamples.MarkAsFixed
+import Network.Google.Resource.Webmasters.URLCrawlErrorscounts.Query
+import Network.Google.WebmasterTools.Types
 
 {- $resources
 TODO

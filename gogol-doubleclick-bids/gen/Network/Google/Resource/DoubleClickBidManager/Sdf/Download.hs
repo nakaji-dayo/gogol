@@ -34,10 +34,11 @@ module Network.Google.Resource.DoubleClickBidManager.Sdf.Download
 
     -- * Request Lenses
     , sdPayload
+    , sdFields
     ) where
 
-import           Network.Google.DoubleClickBids.Types
-import           Network.Google.Prelude
+import Network.Google.DoubleClickBids.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @doubleclickbidmanager.sdf.download@ method which the
 -- 'SdfDownload' request conforms to.
@@ -46,15 +47,17 @@ type SdfDownloadResource =
        "v1" :>
          "sdf" :>
            "download" :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] DownloadRequest :>
-                 Post '[JSON] DownloadResponse
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] DownloadRequest :>
+                   Post '[JSON] DownloadResponse
 
 -- | Retrieves entities in SDF format.
 --
 -- /See:/ 'sdfDownload' smart constructor.
-newtype SdfDownload = SdfDownload'
-    { _sdPayload :: DownloadRequest
+data SdfDownload = SdfDownload'
+    { _sdPayload :: !DownloadRequest
+    , _sdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'SdfDownload' with the minimum fields required to make a request.
@@ -62,12 +65,15 @@ newtype SdfDownload = SdfDownload'
 -- Use one of the following lenses to modify other fields as desired:
 --
 -- * 'sdPayload'
+--
+-- * 'sdFields'
 sdfDownload
     :: DownloadRequest -- ^ 'sdPayload'
     -> SdfDownload
-sdfDownload pSdPayload_ =
+sdfDownload pSdPayload_ = 
     SdfDownload'
     { _sdPayload = pSdPayload_
+    , _sdFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -75,11 +81,17 @@ sdPayload :: Lens' SdfDownload DownloadRequest
 sdPayload
   = lens _sdPayload (\ s a -> s{_sdPayload = a})
 
+-- | Selector specifying which fields to include in a partial response.
+sdFields :: Lens' SdfDownload (Maybe Text)
+sdFields = lens _sdFields (\ s a -> s{_sdFields = a})
+
 instance GoogleRequest SdfDownload where
         type Rs SdfDownload = DownloadResponse
-        type Scopes SdfDownload = '[]
+        type Scopes SdfDownload =
+             '["https://www.googleapis.com/auth/doubleclickbidmanager"]
         requestClient SdfDownload'{..}
-          = go (Just AltJSON) _sdPayload doubleClickBidsService
+          = go _sdFields (Just AltJSON) _sdPayload
+              doubleClickBidsService
           where go
                   = buildClient (Proxy :: Proxy SdfDownloadResource)
                       mempty

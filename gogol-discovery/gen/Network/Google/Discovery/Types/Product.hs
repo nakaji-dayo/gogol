@@ -17,8 +17,8 @@
 --
 module Network.Google.Discovery.Types.Product where
 
-import           Network.Google.Discovery.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Discovery.Types.Sum
+import Network.Google.Prelude
 
 -- | The schema for the response.
 --
@@ -34,7 +34,7 @@ newtype RestMethodResponse = RestMethodResponse'
 -- * 'rmrRef'
 restMethodResponse
     :: RestMethodResponse
-restMethodResponse =
+restMethodResponse = 
     RestMethodResponse'
     { _rmrRef = Nothing
     }
@@ -67,7 +67,7 @@ newtype RestDescriptionParameters = RestDescriptionParameters'
 restDescriptionParameters
     :: HashMap Text JSONSchema -- ^ 'rdpAddtional'
     -> RestDescriptionParameters
-restDescriptionParameters pRdpAddtional_ =
+restDescriptionParameters pRdpAddtional_ = 
     RestDescriptionParameters'
     { _rdpAddtional = _Coerce # pRdpAddtional_
     }
@@ -90,21 +90,21 @@ instance ToJSON RestDescriptionParameters where
 --
 -- /See:/ 'restMethod' smart constructor.
 data RestMethod = RestMethod'
-    { _rmSupportsMediaDownload   :: !(Maybe Bool)
-    , _rmParameterOrder          :: !(Maybe [Text])
-    , _rmMediaUpload             :: !(Maybe RestMethodMediaUpload)
-    , _rmHTTPMethod              :: !(Maybe Text)
-    , _rmPath                    :: !(Maybe Text)
-    , _rmResponse                :: !(Maybe RestMethodResponse)
-    , _rmSupportsMediaUpload     :: !(Maybe Bool)
-    , _rmScopes                  :: !(Maybe [Text])
-    , _rmSupportsSubscription    :: !(Maybe Bool)
-    , _rmParameters              :: !(Maybe RestMethodParameters)
-    , _rmId                      :: !(Maybe Text)
-    , _rmEtagRequired            :: !(Maybe Bool)
+    { _rmSupportsMediaDownload :: !(Maybe Bool)
+    , _rmParameterOrder :: !(Maybe [Text])
+    , _rmMediaUpload :: !(Maybe RestMethodMediaUpload)
+    , _rmHTTPMethod :: !(Maybe Text)
+    , _rmPath :: !(Maybe Text)
+    , _rmResponse :: !(Maybe RestMethodResponse)
+    , _rmSupportsMediaUpload :: !(Maybe Bool)
+    , _rmScopes :: !(Maybe [Text])
+    , _rmSupportsSubscription :: !(Maybe Bool)
+    , _rmParameters :: !(Maybe RestMethodParameters)
+    , _rmId :: !(Maybe Text)
+    , _rmEtagRequired :: !(Maybe Bool)
     , _rmUseMediaDownloadService :: !(Maybe Bool)
-    , _rmDescription             :: !(Maybe Text)
-    , _rmRequest                 :: !(Maybe RestMethodRequest)
+    , _rmDescription :: !(Maybe Text)
+    , _rmRequest :: !(Maybe RestMethodRequest)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RestMethod' with the minimum fields required to make a request.
@@ -142,7 +142,7 @@ data RestMethod = RestMethod'
 -- * 'rmRequest'
 restMethod
     :: RestMethod
-restMethod =
+restMethod = 
     RestMethod'
     { _rmSupportsMediaDownload = Nothing
     , _rmParameterOrder = Nothing
@@ -302,7 +302,7 @@ instance ToJSON RestMethod where
 -- /See:/ 'restResource' smart constructor.
 data RestResource = RestResource'
     { _rrResources :: !(Maybe RestResourceResources)
-    , _rrMethods   :: !(Maybe RestResourceMethods)
+    , _rrMethods :: !(Maybe RestResourceMethods)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RestResource' with the minimum fields required to make a request.
@@ -314,7 +314,7 @@ data RestResource = RestResource'
 -- * 'rrMethods'
 restResource
     :: RestResource
-restResource =
+restResource = 
     RestResource'
     { _rrResources = Nothing
     , _rrMethods = Nothing
@@ -359,7 +359,7 @@ newtype RestDescriptionAuthOAuth2Scopes = RestDescriptionAuthOAuth2Scopes'
 restDescriptionAuthOAuth2Scopes
     :: HashMap Text RestDescriptionAuthOAuth2ScopesAdditional -- ^ 'rdaoasAddtional'
     -> RestDescriptionAuthOAuth2Scopes
-restDescriptionAuthOAuth2Scopes pRdaoasAddtional_ =
+restDescriptionAuthOAuth2Scopes pRdaoasAddtional_ = 
     RestDescriptionAuthOAuth2Scopes'
     { _rdaoasAddtional = _Coerce # pRdaoasAddtional_
     }
@@ -397,7 +397,7 @@ newtype RestDescriptionMethods = RestDescriptionMethods'
 restDescriptionMethods
     :: HashMap Text RestMethod -- ^ 'rdmAddtional'
     -> RestDescriptionMethods
-restDescriptionMethods pRdmAddtional_ =
+restDescriptionMethods pRdmAddtional_ = 
     RestDescriptionMethods'
     { _rdmAddtional = _Coerce # pRdmAddtional_
     }
@@ -420,18 +420,18 @@ instance ToJSON RestDescriptionMethods where
 --
 -- /See:/ 'directoryListItemsItem' smart constructor.
 data DirectoryListItemsItem = DirectoryListItemsItem'
-    { _dliiDiscoveryLink     :: !(Maybe Text)
-    , _dliiPreferred         :: !(Maybe Bool)
-    , _dliiKind              :: !Text
-    , _dliiIcons             :: !(Maybe DirectoryListItemsItemIcons)
-    , _dliiName              :: !(Maybe Text)
-    , _dliiVersion           :: !(Maybe Text)
+    { _dliiDiscoveryLink :: !(Maybe Text)
+    , _dliiPreferred :: !(Maybe Bool)
+    , _dliiKind :: !Text
+    , _dliiIcons :: !(Maybe DirectoryListItemsItemIcons)
+    , _dliiName :: !(Maybe Text)
+    , _dliiVersion :: !(Maybe Text)
     , _dliiDocumentationLink :: !(Maybe Text)
-    , _dliiId                :: !(Maybe Text)
-    , _dliiLabels            :: !(Maybe [Text])
-    , _dliiTitle             :: !(Maybe Text)
-    , _dliiDescription       :: !(Maybe Text)
-    , _dliiDiscoveryRestURL  :: !(Maybe Text)
+    , _dliiId :: !(Maybe Text)
+    , _dliiLabels :: !(Maybe [Text])
+    , _dliiTitle :: !(Maybe Text)
+    , _dliiDescription :: !(Maybe Text)
+    , _dliiDiscoveryRestURL :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'DirectoryListItemsItem' with the minimum fields required to make a request.
@@ -463,7 +463,7 @@ data DirectoryListItemsItem = DirectoryListItemsItem'
 -- * 'dliiDiscoveryRestURL'
 directoryListItemsItem
     :: DirectoryListItemsItem
-directoryListItemsItem =
+directoryListItemsItem = 
     DirectoryListItemsItem'
     { _dliiDiscoveryLink = Nothing
     , _dliiPreferred = Nothing
@@ -593,7 +593,7 @@ data DirectoryListItemsItemIcons = DirectoryListItemsItemIcons'
 -- * 'dliiiX32'
 directoryListItemsItemIcons
     :: DirectoryListItemsItemIcons
-directoryListItemsItemIcons =
+directoryListItemsItemIcons = 
     DirectoryListItemsItemIcons'
     { _dliiiX16 = Nothing
     , _dliiiX32 = Nothing
@@ -635,7 +635,7 @@ newtype RestResourceResources = RestResourceResources'
 restResourceResources
     :: HashMap Text RestResource -- ^ 'rrrAddtional'
     -> RestResourceResources
-restResourceResources pRrrAddtional_ =
+restResourceResources pRrrAddtional_ = 
     RestResourceResources'
     { _rrrAddtional = _Coerce # pRrrAddtional_
     }
@@ -669,7 +669,7 @@ newtype RestDescriptionAuthOAuth2 = RestDescriptionAuthOAuth2'
 -- * 'rdaoaScopes'
 restDescriptionAuthOAuth2
     :: RestDescriptionAuthOAuth2
-restDescriptionAuthOAuth2 =
+restDescriptionAuthOAuth2 = 
     RestDescriptionAuthOAuth2'
     { _rdaoaScopes = Nothing
     }
@@ -703,7 +703,7 @@ newtype RestDescriptionAuthOAuth2ScopesAdditional = RestDescriptionAuthOAuth2Sco
 -- * 'rdaoasaDescription'
 restDescriptionAuthOAuth2ScopesAdditional
     :: RestDescriptionAuthOAuth2ScopesAdditional
-restDescriptionAuthOAuth2ScopesAdditional =
+restDescriptionAuthOAuth2ScopesAdditional = 
     RestDescriptionAuthOAuth2ScopesAdditional'
     { _rdaoasaDescription = Nothing
     }
@@ -734,7 +734,7 @@ instance ToJSON
 --
 -- /See:/ 'restMethodMediaUploadProtocolsSimple' smart constructor.
 data RestMethodMediaUploadProtocolsSimple = RestMethodMediaUploadProtocolsSimple'
-    { _rmmupsPath      :: !(Maybe Text)
+    { _rmmupsPath :: !(Maybe Text)
     , _rmmupsMultiPart :: !Bool
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -747,7 +747,7 @@ data RestMethodMediaUploadProtocolsSimple = RestMethodMediaUploadProtocolsSimple
 -- * 'rmmupsMultiPart'
 restMethodMediaUploadProtocolsSimple
     :: RestMethodMediaUploadProtocolsSimple
-restMethodMediaUploadProtocolsSimple =
+restMethodMediaUploadProtocolsSimple = 
     RestMethodMediaUploadProtocolsSimple'
     { _rmmupsPath = Nothing
     , _rmmupsMultiPart = True
@@ -798,7 +798,7 @@ data RestDescriptionIcons = RestDescriptionIcons'
 -- * 'rdiX32'
 restDescriptionIcons
     :: RestDescriptionIcons
-restDescriptionIcons =
+restDescriptionIcons = 
     RestDescriptionIcons'
     { _rdiX16 = Nothing
     , _rdiX32 = Nothing
@@ -832,7 +832,7 @@ instance ToJSON RestDescriptionIcons where
 -- /See:/ 'jsonSchemaVariant' smart constructor.
 data JSONSchemaVariant = JSONSchemaVariant'
     { _jsvDiscriminant :: !(Maybe Text)
-    , _jsvMap          :: !(Maybe [JSONSchemaVariantMapItem])
+    , _jsvMap :: !(Maybe [JSONSchemaVariantMapItem])
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JSONSchemaVariant' with the minimum fields required to make a request.
@@ -844,7 +844,7 @@ data JSONSchemaVariant = JSONSchemaVariant'
 -- * 'jsvMap'
 jsonSchemaVariant
     :: JSONSchemaVariant
-jsonSchemaVariant =
+jsonSchemaVariant = 
     JSONSchemaVariant'
     { _jsvDiscriminant = Nothing
     , _jsvMap = Nothing
@@ -891,7 +891,7 @@ newtype RestResourceMethods = RestResourceMethods'
 restResourceMethods
     :: HashMap Text RestMethod -- ^ 'rrmAddtional'
     -> RestResourceMethods
-restResourceMethods pRrmAddtional_ =
+restResourceMethods pRrmAddtional_ = 
     RestResourceMethods'
     { _rrmAddtional = _Coerce # pRrmAddtional_
     }
@@ -924,7 +924,7 @@ newtype RestDescriptionAuth = RestDescriptionAuth'
 -- * 'rdaOAuth2'
 restDescriptionAuth
     :: RestDescriptionAuth
-restDescriptionAuth =
+restDescriptionAuth = 
     RestDescriptionAuth'
     { _rdaOAuth2 = Nothing
     }
@@ -946,36 +946,36 @@ instance ToJSON RestDescriptionAuth where
 --
 -- /See:/ 'restDescription' smart constructor.
 data RestDescription = RestDescription'
-    { _rdEtag                      :: !(Maybe Text)
-    , _rdSchemas                   :: !(Maybe RestDescriptionSchemas)
-    , _rdServicePath               :: !(Maybe Text)
-    , _rdBasePath                  :: !(Maybe Text)
-    , _rdKind                      :: !Text
+    { _rdEtag :: !(Maybe Text)
+    , _rdSchemas :: !(Maybe RestDescriptionSchemas)
+    , _rdServicePath :: !(Maybe Text)
+    , _rdBasePath :: !(Maybe Text)
+    , _rdKind :: !Text
     , _rdExponentialBackoffDefault :: !(Maybe Bool)
-    , _rdAuth                      :: !(Maybe RestDescriptionAuth)
-    , _rdIcons                     :: !(Maybe RestDescriptionIcons)
-    , _rdBaseURL                   :: !(Maybe Text)
-    , _rdProtocol                  :: !Text
-    , _rdOwnerName                 :: !(Maybe Text)
-    , _rdResources                 :: !(Maybe RestDescriptionResources)
-    , _rdOwnerDomain               :: !(Maybe Text)
-    , _rdBatchPath                 :: !Text
-    , _rdMethods                   :: !(Maybe RestDescriptionMethods)
-    , _rdName                      :: !(Maybe Text)
-    , _rdPackagePath               :: !(Maybe Text)
-    , _rdFeatures                  :: !(Maybe [Text])
-    , _rdVersionModule             :: !(Maybe Bool)
-    , _rdVersion                   :: !(Maybe Text)
-    , _rdParameters                :: !(Maybe RestDescriptionParameters)
-    , _rdDocumentationLink         :: !(Maybe Text)
-    , _rdRootURL                   :: !(Maybe Text)
-    , _rdId                        :: !(Maybe Text)
-    , _rdCanonicalName             :: !(Maybe Text)
-    , _rdLabels                    :: !(Maybe [Text])
-    , _rdDiscoveryVersion          :: !Text
-    , _rdTitle                     :: !(Maybe Text)
-    , _rdRevision                  :: !(Maybe Text)
-    , _rdDescription               :: !(Maybe Text)
+    , _rdAuth :: !(Maybe RestDescriptionAuth)
+    , _rdIcons :: !(Maybe RestDescriptionIcons)
+    , _rdBaseURL :: !(Maybe Text)
+    , _rdProtocol :: !Text
+    , _rdOwnerName :: !(Maybe Text)
+    , _rdResources :: !(Maybe RestDescriptionResources)
+    , _rdOwnerDomain :: !(Maybe Text)
+    , _rdBatchPath :: !(Maybe Text)
+    , _rdMethods :: !(Maybe RestDescriptionMethods)
+    , _rdName :: !(Maybe Text)
+    , _rdPackagePath :: !(Maybe Text)
+    , _rdFeatures :: !(Maybe [Text])
+    , _rdVersionModule :: !(Maybe Bool)
+    , _rdVersion :: !(Maybe Text)
+    , _rdParameters :: !(Maybe RestDescriptionParameters)
+    , _rdDocumentationLink :: !(Maybe Text)
+    , _rdRootURL :: !(Maybe Text)
+    , _rdId :: !(Maybe Text)
+    , _rdCanonicalName :: !(Maybe Text)
+    , _rdLabels :: !(Maybe [Text])
+    , _rdDiscoveryVersion :: !Text
+    , _rdTitle :: !(Maybe Text)
+    , _rdRevision :: !(Maybe Text)
+    , _rdDescription :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RestDescription' with the minimum fields required to make a request.
@@ -1043,7 +1043,7 @@ data RestDescription = RestDescription'
 -- * 'rdDescription'
 restDescription
     :: RestDescription
-restDescription =
+restDescription = 
     RestDescription'
     { _rdEtag = Nothing
     , _rdSchemas = Nothing
@@ -1058,7 +1058,7 @@ restDescription =
     , _rdOwnerName = Nothing
     , _rdResources = Nothing
     , _rdOwnerDomain = Nothing
-    , _rdBatchPath = "batch"
+    , _rdBatchPath = Nothing
     , _rdMethods = Nothing
     , _rdName = Nothing
     , _rdPackagePath = Nothing
@@ -1145,7 +1145,7 @@ rdOwnerDomain
       (\ s a -> s{_rdOwnerDomain = a})
 
 -- | The path for REST batch requests.
-rdBatchPath :: Lens' RestDescription Text
+rdBatchPath :: Lens' RestDescription (Maybe Text)
 rdBatchPath
   = lens _rdBatchPath (\ s a -> s{_rdBatchPath = a})
 
@@ -1253,7 +1253,7 @@ instance FromJSON RestDescription where
                      <*> (o .:? "ownerName")
                      <*> (o .:? "resources")
                      <*> (o .:? "ownerDomain")
-                     <*> (o .:? "batchPath" .!= "batch")
+                     <*> (o .:? "batchPath")
                      <*> (o .:? "methods")
                      <*> (o .:? "name")
                      <*> (o .:? "packagePath")
@@ -1288,7 +1288,7 @@ instance ToJSON RestDescription where
                   ("ownerName" .=) <$> _rdOwnerName,
                   ("resources" .=) <$> _rdResources,
                   ("ownerDomain" .=) <$> _rdOwnerDomain,
-                  Just ("batchPath" .= _rdBatchPath),
+                  ("batchPath" .=) <$> _rdBatchPath,
                   ("methods" .=) <$> _rdMethods,
                   ("name" .=) <$> _rdName,
                   ("packagePath" .=) <$> _rdPackagePath,
@@ -1308,26 +1308,26 @@ instance ToJSON RestDescription where
 --
 -- /See:/ 'jsonSchema' smart constructor.
 data JSONSchema = JSONSchema'
-    { _jsAnnotations          :: !(Maybe JSONSchemaAnnotations)
-    , _jsVariant              :: !(Maybe JSONSchemaVariant)
-    , _jsLocation             :: !(Maybe Text)
-    , _jsRef                  :: !(Maybe Text)
-    , _jsPattern              :: !(Maybe Text)
-    , _jsMaximum              :: !(Maybe Text)
-    , _jsDefault              :: !(Maybe Text)
-    , _jsFormat               :: !(Maybe Text)
-    , _jsItems                :: !(Maybe JSONSchema)
-    , _jsMinimum              :: !(Maybe Text)
-    , _jsRequired             :: !(Maybe Bool)
-    , _jsId                   :: !(Maybe Text)
+    { _jsAnnotations :: !(Maybe JSONSchemaAnnotations)
+    , _jsVariant :: !(Maybe JSONSchemaVariant)
+    , _jsLocation :: !(Maybe Text)
+    , _jsRef :: !(Maybe Text)
+    , _jsPattern :: !(Maybe Text)
+    , _jsMaximum :: !(Maybe Text)
+    , _jsDefault :: !(Maybe Text)
+    , _jsFormat :: !(Maybe Text)
+    , _jsItems :: !(Maybe JSONSchema)
+    , _jsMinimum :: !(Maybe Text)
+    , _jsRequired :: !(Maybe Bool)
+    , _jsId :: !(Maybe Text)
     , _jsAdditionalProperties :: !(Maybe JSONSchema)
-    , _jsType                 :: !(Maybe Text)
-    , _jsEnum                 :: !(Maybe [Text])
-    , _jsRepeated             :: !(Maybe Bool)
-    , _jsReadOnly             :: !(Maybe Bool)
-    , _jsEnumDescriptions     :: !(Maybe [Text])
-    , _jsDescription          :: !(Maybe Text)
-    , _jsProperties           :: !(Maybe JSONSchemaProperties)
+    , _jsType :: !(Maybe Text)
+    , _jsEnum :: !(Maybe [Text])
+    , _jsRepeated :: !(Maybe Bool)
+    , _jsReadOnly :: !(Maybe Bool)
+    , _jsEnumDescriptions :: !(Maybe [Text])
+    , _jsDescription :: !(Maybe Text)
+    , _jsProperties :: !(Maybe JSONSchemaProperties)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'JSONSchema' with the minimum fields required to make a request.
@@ -1375,7 +1375,7 @@ data JSONSchema = JSONSchema'
 -- * 'jsProperties'
 jsonSchema
     :: JSONSchema
-jsonSchema =
+jsonSchema = 
     JSONSchema'
     { _jsAnnotations = Nothing
     , _jsVariant = Nothing
@@ -1579,7 +1579,7 @@ newtype RestDescriptionSchemas = RestDescriptionSchemas'
 restDescriptionSchemas
     :: HashMap Text JSONSchema -- ^ 'rdsAddtional'
     -> RestDescriptionSchemas
-restDescriptionSchemas pRdsAddtional_ =
+restDescriptionSchemas pRdsAddtional_ = 
     RestDescriptionSchemas'
     { _rdsAddtional = _Coerce # pRdsAddtional_
     }
@@ -1602,7 +1602,7 @@ instance ToJSON RestDescriptionSchemas where
 --
 -- /See:/ 'jsonSchemaVariantMapItem' smart constructor.
 data JSONSchemaVariantMapItem = JSONSchemaVariantMapItem'
-    { _jsvmiRef       :: !(Maybe Text)
+    { _jsvmiRef :: !(Maybe Text)
     , _jsvmiTypeValue :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1615,7 +1615,7 @@ data JSONSchemaVariantMapItem = JSONSchemaVariantMapItem'
 -- * 'jsvmiTypeValue'
 jsonSchemaVariantMapItem
     :: JSONSchemaVariantMapItem
-jsonSchemaVariantMapItem =
+jsonSchemaVariantMapItem = 
     JSONSchemaVariantMapItem'
     { _jsvmiRef = Nothing
     , _jsvmiTypeValue = Nothing
@@ -1658,7 +1658,7 @@ newtype RestDescriptionResources = RestDescriptionResources'
 restDescriptionResources
     :: HashMap Text RestResource -- ^ 'rdrAddtional'
     -> RestDescriptionResources
-restDescriptionResources pRdrAddtional_ =
+restDescriptionResources pRdrAddtional_ = 
     RestDescriptionResources'
     { _rdrAddtional = _Coerce # pRdrAddtional_
     }
@@ -1683,7 +1683,7 @@ instance ToJSON RestDescriptionResources where
 --
 -- /See:/ 'restMethodMediaUploadProtocols' smart constructor.
 data RestMethodMediaUploadProtocols = RestMethodMediaUploadProtocols'
-    { _rmmupSimple    :: !(Maybe RestMethodMediaUploadProtocolsSimple)
+    { _rmmupSimple :: !(Maybe RestMethodMediaUploadProtocolsSimple)
     , _rmmupResumable :: !(Maybe RestMethodMediaUploadProtocolsResumable)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1696,7 +1696,7 @@ data RestMethodMediaUploadProtocols = RestMethodMediaUploadProtocols'
 -- * 'rmmupResumable'
 restMethodMediaUploadProtocols
     :: RestMethodMediaUploadProtocols
-restMethodMediaUploadProtocols =
+restMethodMediaUploadProtocols = 
     RestMethodMediaUploadProtocols'
     { _rmmupSimple = Nothing
     , _rmmupResumable = Nothing
@@ -1742,7 +1742,7 @@ newtype JSONSchemaAnnotations = JSONSchemaAnnotations'
 -- * 'jsaRequired'
 jsonSchemaAnnotations
     :: JSONSchemaAnnotations
-jsonSchemaAnnotations =
+jsonSchemaAnnotations = 
     JSONSchemaAnnotations'
     { _jsaRequired = Nothing
     }
@@ -1781,7 +1781,7 @@ newtype RestMethodParameters = RestMethodParameters'
 restMethodParameters
     :: HashMap Text JSONSchema -- ^ 'rmpAddtional'
     -> RestMethodParameters
-restMethodParameters pRmpAddtional_ =
+restMethodParameters pRmpAddtional_ = 
     RestMethodParameters'
     { _rmpAddtional = _Coerce # pRmpAddtional_
     }
@@ -1806,8 +1806,8 @@ instance ToJSON RestMethodParameters where
 -- /See:/ 'restMethodMediaUpload' smart constructor.
 data RestMethodMediaUpload = RestMethodMediaUpload'
     { _rmmuProtocols :: !(Maybe RestMethodMediaUploadProtocols)
-    , _rmmuAccept    :: !(Maybe [Text])
-    , _rmmuMaxSize   :: !(Maybe Text)
+    , _rmmuAccept :: !(Maybe [Text])
+    , _rmmuMaxSize :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'RestMethodMediaUpload' with the minimum fields required to make a request.
@@ -1821,7 +1821,7 @@ data RestMethodMediaUpload = RestMethodMediaUpload'
 -- * 'rmmuMaxSize'
 restMethodMediaUpload
     :: RestMethodMediaUpload
-restMethodMediaUpload =
+restMethodMediaUpload = 
     RestMethodMediaUpload'
     { _rmmuProtocols = Nothing
     , _rmmuAccept = Nothing
@@ -1878,7 +1878,7 @@ newtype JSONSchemaProperties = JSONSchemaProperties'
 jsonSchemaProperties
     :: HashMap Text JSONSchema -- ^ 'jspAddtional'
     -> JSONSchemaProperties
-jsonSchemaProperties pJspAddtional_ =
+jsonSchemaProperties pJspAddtional_ = 
     JSONSchemaProperties'
     { _jspAddtional = _Coerce # pJspAddtional_
     }
@@ -1903,7 +1903,7 @@ instance ToJSON JSONSchemaProperties where
 --
 -- /See:/ 'restMethodMediaUploadProtocolsResumable' smart constructor.
 data RestMethodMediaUploadProtocolsResumable = RestMethodMediaUploadProtocolsResumable'
-    { _rmmuprPath      :: !(Maybe Text)
+    { _rmmuprPath :: !(Maybe Text)
     , _rmmuprMultiPart :: !Bool
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1916,7 +1916,7 @@ data RestMethodMediaUploadProtocolsResumable = RestMethodMediaUploadProtocolsRes
 -- * 'rmmuprMultiPart'
 restMethodMediaUploadProtocolsResumable
     :: RestMethodMediaUploadProtocolsResumable
-restMethodMediaUploadProtocolsResumable =
+restMethodMediaUploadProtocolsResumable = 
     RestMethodMediaUploadProtocolsResumable'
     { _rmmuprPath = Nothing
     , _rmmuprMultiPart = True
@@ -1954,8 +1954,8 @@ instance ToJSON
 --
 -- /See:/ 'directoryList' smart constructor.
 data DirectoryList = DirectoryList'
-    { _dlKind             :: !Text
-    , _dlItems            :: !(Maybe [DirectoryListItemsItem])
+    { _dlKind :: !Text
+    , _dlItems :: !(Maybe [DirectoryListItemsItem])
     , _dlDiscoveryVersion :: !Text
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -1970,7 +1970,7 @@ data DirectoryList = DirectoryList'
 -- * 'dlDiscoveryVersion'
 directoryList
     :: DirectoryList
-directoryList =
+directoryList = 
     DirectoryList'
     { _dlKind = "discovery#directoryList"
     , _dlItems = Nothing
@@ -2013,7 +2013,7 @@ instance ToJSON DirectoryList where
 --
 -- /See:/ 'restMethodRequest' smart constructor.
 data RestMethodRequest = RestMethodRequest'
-    { _rRef           :: !(Maybe Text)
+    { _rRef :: !(Maybe Text)
     , _rParameterName :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
@@ -2026,7 +2026,7 @@ data RestMethodRequest = RestMethodRequest'
 -- * 'rParameterName'
 restMethodRequest
     :: RestMethodRequest
-restMethodRequest =
+restMethodRequest = 
     RestMethodRequest'
     { _rRef = Nothing
     , _rParameterName = Nothing

@@ -35,10 +35,11 @@ module Network.Google.Resource.Blogger.Posts.Delete
     -- * Request Lenses
     , pdBlogId
     , pdPostId
+    , pdFields
     ) where
 
-import           Network.Google.Blogger.Types
-import           Network.Google.Prelude
+import Network.Google.Blogger.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @blogger.posts.delete@ method which the
 -- 'PostsDelete' request conforms to.
@@ -49,7 +50,8 @@ type PostsDeleteResource =
            Capture "blogId" Text :>
              "posts" :>
                Capture "postId" Text :>
-                 QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                 QueryParam "fields" Text :>
+                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Delete a post by ID.
 --
@@ -57,6 +59,7 @@ type PostsDeleteResource =
 data PostsDelete = PostsDelete'
     { _pdBlogId :: !Text
     , _pdPostId :: !Text
+    , _pdFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'PostsDelete' with the minimum fields required to make a request.
@@ -66,14 +69,17 @@ data PostsDelete = PostsDelete'
 -- * 'pdBlogId'
 --
 -- * 'pdPostId'
+--
+-- * 'pdFields'
 postsDelete
     :: Text -- ^ 'pdBlogId'
     -> Text -- ^ 'pdPostId'
     -> PostsDelete
-postsDelete pPdBlogId_ pPdPostId_ =
+postsDelete pPdBlogId_ pPdPostId_ = 
     PostsDelete'
     { _pdBlogId = pPdBlogId_
     , _pdPostId = pPdPostId_
+    , _pdFields = Nothing
     }
 
 -- | The ID of the Blog.
@@ -84,12 +90,16 @@ pdBlogId = lens _pdBlogId (\ s a -> s{_pdBlogId = a})
 pdPostId :: Lens' PostsDelete Text
 pdPostId = lens _pdPostId (\ s a -> s{_pdPostId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+pdFields :: Lens' PostsDelete (Maybe Text)
+pdFields = lens _pdFields (\ s a -> s{_pdFields = a})
+
 instance GoogleRequest PostsDelete where
         type Rs PostsDelete = ()
         type Scopes PostsDelete =
              '["https://www.googleapis.com/auth/blogger"]
         requestClient PostsDelete'{..}
-          = go _pdBlogId _pdPostId (Just AltJSON)
+          = go _pdBlogId _pdPostId _pdFields (Just AltJSON)
               bloggerService
           where go
                   = buildClient (Proxy :: Proxy PostsDeleteResource)

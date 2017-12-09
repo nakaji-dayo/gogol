@@ -35,10 +35,11 @@ module Network.Google.Resource.Directory.Tokens.Get
     -- * Request Lenses
     , tgClientId
     , tgUserKey
+    , tgFields
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.tokens.get@ method which the
 -- 'TokensGet' request conforms to.
@@ -50,14 +51,16 @@ type TokensGetResource =
              Capture "userKey" Text :>
                "tokens" :>
                  Capture "clientId" Text :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Token
+                   QueryParam "fields" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] Token
 
 -- | Get information about an access token issued by a user.
 --
 -- /See:/ 'tokensGet' smart constructor.
 data TokensGet = TokensGet'
     { _tgClientId :: !Text
-    , _tgUserKey  :: !Text
+    , _tgUserKey :: !Text
+    , _tgFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'TokensGet' with the minimum fields required to make a request.
@@ -67,14 +70,17 @@ data TokensGet = TokensGet'
 -- * 'tgClientId'
 --
 -- * 'tgUserKey'
+--
+-- * 'tgFields'
 tokensGet
     :: Text -- ^ 'tgClientId'
     -> Text -- ^ 'tgUserKey'
     -> TokensGet
-tokensGet pTgClientId_ pTgUserKey_ =
+tokensGet pTgClientId_ pTgUserKey_ = 
     TokensGet'
     { _tgClientId = pTgClientId_
     , _tgUserKey = pTgUserKey_
+    , _tgFields = Nothing
     }
 
 -- | The Client ID of the application the token is issued to.
@@ -88,12 +94,16 @@ tgUserKey :: Lens' TokensGet Text
 tgUserKey
   = lens _tgUserKey (\ s a -> s{_tgUserKey = a})
 
+-- | Selector specifying which fields to include in a partial response.
+tgFields :: Lens' TokensGet (Maybe Text)
+tgFields = lens _tgFields (\ s a -> s{_tgFields = a})
+
 instance GoogleRequest TokensGet where
         type Rs TokensGet = Token
         type Scopes TokensGet =
              '["https://www.googleapis.com/auth/admin.directory.user.security"]
         requestClient TokensGet'{..}
-          = go _tgUserKey _tgClientId (Just AltJSON)
+          = go _tgUserKey _tgClientId _tgFields (Just AltJSON)
               directoryService
           where go
                   = buildClient (Proxy :: Proxy TokensGetResource)

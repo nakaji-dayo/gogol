@@ -35,10 +35,11 @@ module Network.Google.Resource.GroupsSettings.Groups.Patch
     -- * Request Lenses
     , gpPayload
     , gpGroupUniqueId
+    , gpFields
     ) where
 
-import           Network.Google.GroupsSettings.Types
-import           Network.Google.Prelude
+import Network.Google.GroupsSettings.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @groupsSettings.groups.patch@ method which the
 -- 'GroupsPatch' request conforms to.
@@ -47,15 +48,17 @@ type GroupsPatchResource =
        "v1" :>
          "groups" :>
            Capture "groupUniqueId" Text :>
-             QueryParam "alt" AltJSON :>
-               ReqBody '[JSON] Groups :> Patch '[JSON] Groups
+             QueryParam "fields" Text :>
+               QueryParam "alt" AltJSON :>
+                 ReqBody '[JSON] Groups :> Patch '[JSON] Groups
 
 -- | Updates an existing resource. This method supports patch semantics.
 --
 -- /See:/ 'groupsPatch' smart constructor.
 data GroupsPatch = GroupsPatch'
-    { _gpPayload       :: !Groups
+    { _gpPayload :: !Groups
     , _gpGroupUniqueId :: !Text
+    , _gpFields :: !(Maybe Text)
     } deriving (Eq,Show,Data,Typeable,Generic)
 
 -- | Creates a value of 'GroupsPatch' with the minimum fields required to make a request.
@@ -65,14 +68,17 @@ data GroupsPatch = GroupsPatch'
 -- * 'gpPayload'
 --
 -- * 'gpGroupUniqueId'
+--
+-- * 'gpFields'
 groupsPatch
     :: Groups -- ^ 'gpPayload'
     -> Text -- ^ 'gpGroupUniqueId'
     -> GroupsPatch
-groupsPatch pGpPayload_ pGpGroupUniqueId_ =
+groupsPatch pGpPayload_ pGpGroupUniqueId_ = 
     GroupsPatch'
     { _gpPayload = pGpPayload_
     , _gpGroupUniqueId = pGpGroupUniqueId_
+    , _gpFields = Nothing
     }
 
 -- | Multipart request metadata.
@@ -86,12 +92,17 @@ gpGroupUniqueId
   = lens _gpGroupUniqueId
       (\ s a -> s{_gpGroupUniqueId = a})
 
+-- | Selector specifying which fields to include in a partial response.
+gpFields :: Lens' GroupsPatch (Maybe Text)
+gpFields = lens _gpFields (\ s a -> s{_gpFields = a})
+
 instance GoogleRequest GroupsPatch where
         type Rs GroupsPatch = Groups
         type Scopes GroupsPatch =
              '["https://www.googleapis.com/auth/apps.groups.settings"]
         requestClient GroupsPatch'{..}
-          = go _gpGroupUniqueId (Just AltJSON) _gpPayload
+          = go _gpGroupUniqueId _gpFields (Just AltJSON)
+              _gpPayload
               groupsSettingsService
           where go
                   = buildClient (Proxy :: Proxy GroupsPatchResource)
