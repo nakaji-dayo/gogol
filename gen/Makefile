@@ -34,7 +34,6 @@ format:
 	@find $(wildcard $(OUT_DIR)/gogol-*/gen) \
  -type f \
  -name '*.hs' \
- -printf ' -> %p\n' \
  -exec stylish-haskell -i {} \;
 
 $(BIN)/gogol-gen: $(BIN)
