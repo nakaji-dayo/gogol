@@ -102,7 +102,7 @@ makeClassy ''Versions
 data Release
     = Sandbox
     | Alpha   (Maybe Int) (Maybe Char)
-    | Beta    (Maybe Int) (Maybe Char)
+    | Beta    (Maybe Int) (Maybe Text.Text)
       deriving (Eq, Ord, Show)
 
 data ModelVersion = ModelVersion Double (Maybe Release)
@@ -126,14 +126,14 @@ parseVersion x = first (mappend (Text.unpack x) . mappend " -> ") $
         <*> (alpha <|> beta <|> sandbox <|> pure Nothing)
 
     preface = A.takeWhile (/= '_') *> void (A.char '_') <|> pure ()
-    number  = A.takeWhile  (/= 'v') *> A.char 'v' *> A.double
+    number  = A.takeWhile  (/= 'v') *> A.char 'v' *> A.double <* optional (A.string "p1") -- todo use pN
 
     alpha = A.string "alpha"
          *> (Alpha <$> optional A.decimal <*> optional A.letter)
         <&> Just
 
     beta  = A.string "beta"
-         *> (Beta <$> optional A.decimal <*> optional A.letter)
+         *> (Beta <$> optional A.decimal <*> optional A.takeText)
         <&> Just
 
     sandbox = Just Sandbox <$ A.string "sandbox"
