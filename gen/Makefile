@@ -4,7 +4,7 @@ BIN       := bin
 MODEL_DIR := model
 OUT_DIR   := ..
 
-define version =
+define version
 $(shell sed -n 's/^version: *\([0-9]*\.[0-9]*\.[0-9]\).*$$/\1/p' $(1))
 endef
 
