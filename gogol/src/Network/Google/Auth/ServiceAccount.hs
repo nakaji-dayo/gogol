@@ -22,6 +22,7 @@ import           Control.Monad.Catch
 import           Control.Monad.IO.Class
 import           Crypto.Hash.Algorithms          (SHA256 (..))
 import           Crypto.PubKey.RSA.PKCS15        (signSafer)
+import           Crypto.PubKey.RSA.Types         (PrivateKey)
 import           Data.Aeson
 import           Data.ByteString                 (ByteString)
 import qualified Data.ByteString.Char8           as BS8
@@ -132,3 +133,7 @@ encodeBearerJWT s p = liftIO $ do
             , "exp"   .= (n + seconds maxTokenLifetime)
             , "iss"   .= _serviceEmail s
             ] <> maybe [] (\sub -> ["sub" .= sub]) (_serviceAccountUser s)
+
+
+getPrivateKey :: ServiceAccount -> PrivateKey
+getPrivateKey (ServiceAccount { _servicePrivateKey = key }) = key
