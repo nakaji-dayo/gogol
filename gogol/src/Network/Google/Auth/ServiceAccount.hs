@@ -135,5 +135,8 @@ encodeBearerJWT s p = liftIO $ do
             ] <> maybe [] (\sub -> ["sub" .= sub]) (_serviceAccountUser s)
 
 
-getPrivateKey :: ServiceAccount -> PrivateKey
-getPrivateKey (ServiceAccount { _servicePrivateKey = key }) = key
+getServicePrivateKey :: ServiceAccount -> PrivateKey
+getServicePrivateKey = _servicePrivateKey
+
+getServiceEmail :: ServiceAccount -> Text
+getServiceEmail = _serviceEmail
